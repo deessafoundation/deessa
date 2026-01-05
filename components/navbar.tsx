@@ -19,9 +19,14 @@ import {
   LayoutGrid,
   Star,
   Headphones,
+  LifeBuoy,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+interface NavbarProps {
+  supportEnabled?: boolean
+}
 
 const primaryNavLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -37,18 +42,15 @@ const primaryNavLinks = [
 const secondaryNavLinks = [
   { href: "/impact", label: "Impact", icon: Award },
   { href: "/podcasts", label: "Podcasts", icon: Headphones },
-  { href: "/events", label: "Events", icon: Calendar },
+  { href: "/support", label: "Support", icon: LifeBuoy },
   { href: "/contact", label: "Contact", icon: Mail },
 ] as const
-
-const mobileNavLinks = Array.from(
-  new Map([...primaryNavLinks, ...secondaryNavLinks].map((link) => [link.href + link.label, link])).values()
-)
 
 const tabletQuickLinks = [
   { href: "/programs", label: "Programs", icon: Briefcase },
   { href: "/events", label: "Events", icon: Calendar },
   { href: "/contact", label: "Contact", icon: Mail },
+  { href: "/support", label: "Support", icon: LifeBuoy },
 ] as const
 
 function useHash() {
@@ -72,13 +74,26 @@ function isNavLinkActive(pathname: string, hash: string, href: string) {
   return pathname === href
 }
 
-export function Navbar() {
+export function Navbar({ supportEnabled = true }: NavbarProps) {
   const pathname = usePathname()
   const hash = useHash()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hideNavbarLogo, setHideNavbarLogo] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const LOGO_ZONE_WIDTH = 220
+
+  // Filter nav links based on support status
+  const filteredSecondaryNavLinks = secondaryNavLinks.filter(link => 
+    supportEnabled || link.href !== '/support'
+  )
+  
+  const filteredTabletQuickLinks = tabletQuickLinks.filter(link => 
+    supportEnabled || link.href !== '/support'
+  )
+  
+  const mobileNavLinks = Array.from(
+    new Map([...primaryNavLinks, ...filteredSecondaryNavLinks].map((link) => [link.href + link.label, link])).values()
+  )
 
   useEffect(() => {
     const handleLogoFlying = () => setHideNavbarLogo(true)
@@ -209,6 +224,32 @@ export function Navbar() {
               </div>
             </Link>
 
+            {/* Development Badge - Desktop: In gap between logo and nav */}
+            {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+              <div className="absolute left-[176px] top-1/2 z-30 hidden -translate-y-1/2 lg:block">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 shadow-lg">
+                  <span className="relative flex size-1.5">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
+                  </span>
+                  Beta
+                </div>
+              </div>
+            )}
+
+            {/* Development Badge - Mobile/Tablet: Top right corner */}
+            {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+              <div className="absolute right-16 top-1/2 z-30 -translate-y-1/2 lg:hidden">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 shadow-lg">
+                  <span className="relative flex size-1.5">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
+                  </span>
+                  Beta
+                </div>
+              </div>
+            )}
+
             <div className="hidden min-w-0 flex-1 items-center justify-center lg:flex lg:pl-1">
               <div className="flex flex-wrap items-center justify-center gap-x-0">
                 {primaryNavLinks.map((link, i) =>
@@ -276,7 +317,7 @@ export function Navbar() {
           {/* Layer 1.5 (tablet): Quick links and key actions */}
           <div className="hidden border-t border-slate-200/80 bg-white px-4 py-2.5 md:block lg:hidden">
             <div className="flex items-center gap-2 overflow-x-auto">
-              {tabletQuickLinks.map((link) => {
+              {filteredTabletQuickLinks.map((link) => {
                 const IconComponent = link.icon
                 const active = isNavLinkActive(pathname, hash, link.href)
                 return (
@@ -322,7 +363,7 @@ export function Navbar() {
             )}
           >
             <div className="flex flex-wrap items-center justify-center gap-x-0.5">
-              {secondaryNavLinks.map((link, i) =>
+              {filteredSecondaryNavLinks.map((link, i) =>
                 renderNavLink(link, { variant: "secondary", showDivider: i > 0 })
               )}
             </div>
@@ -399,6 +440,17 @@ export function Navbar() {
             </div>
 
             <div className="mt-auto grid gap-2 border-t border-slate-200 p-3 dark:border-slate-800 sm:p-4">
+              {supportEnabled && (
+                <Link
+                  href="/support"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 hover:text-amber-950"
+                >
+                  <LifeBuoy className="size-4" />
+                  Support
+                </Link>
+              )}
+
               <Link
                 href="/conference/register"
                 onClick={() => setMobileMenuOpen(false)}

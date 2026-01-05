@@ -13,8 +13,8 @@
 ### Primary Brand Colors
 
 ```css
---brand-primary: 63 171 222;           /* #3FABDE - Main brand color */
---brand-primary-dark: 11 95 138;       /* #0B5F8A - Emphasis & hover states */
+--brand-primary: 63 171 222; /* #3FABDE - Main brand color */
+--brand-primary-dark: 11 95 138; /* #0B5F8A - Emphasis & hover states */
 ```
 
 **Usage:**
@@ -27,9 +27,9 @@
 ### Logo-Derived Accent Colors (Three Pillars)
 
 ```css
---accent-empowerment: 214 51 108;      /* #D6336C - Magenta/Pink */
---accent-environment: 149 193 31;      /* #95C11F - Lime Green */
---accent-education: 245 158 11;        /* #F59E0B - Amber */
+--accent-empowerment: 214 51 108; /* #D6336C - Magenta/Pink */
+--accent-environment: 149 193 31; /* #95C11F - Lime Green */
+--accent-education: 245 158 11; /* #F59E0B - Amber */
 ```
 
 **Pillar Mapping:**
@@ -43,10 +43,10 @@
 ### Semantic/Functional Colors
 
 ```css
---success: 22 163 74;                  /* #16A34A - green-600 */
---warning: 245 158 11;                 /* #F59E0B - amber-500 */
---danger: 220 38 38;                   /* #DC2626 - red-600 */
---info: 37 99 235;                     /* #2563EB - blue-600 */
+--success: 22 163 74; /* #16A34A - green-600 */
+--warning: 245 158 11; /* #F59E0B - amber-500 */
+--danger: 220 38 38; /* #DC2626 - red-600 */
+--info: 37 99 235; /* #2563EB - blue-600 */
 ```
 
 **States:**
@@ -61,11 +61,11 @@
 ### Neutral Palette
 
 ```css
---bg-white: 255 255 255;               /* #FFFFFF - Pure white */
---bg-soft: 248 249 250;                /* #F8F9FA - Soft gray background */
---border: 229 231 235;                 /* #E5E7EB - Borders & dividers */
---text-main: 33 37 41;                 /* #212529 - Primary text */
---text-muted: 108 117 125;             /* #6C757D - Secondary text */
+--bg-white: 255 255 255; /* #FFFFFF - Pure white */
+--bg-soft: 248 249 250; /* #F8F9FA - Soft gray background */
+--border: 229 231 235; /* #E5E7EB - Borders & dividers */
+--text-main: 33 37 41; /* #212529 - Primary text */
+--text-muted: 108 117 125; /* #6C757D - Secondary text */
 ```
 
 ---
@@ -76,27 +76,27 @@
 
 ```css
 /* Light backgrounds & surfaces */
---primary-light: 232 246 252;          /* #E8F6FC - 10% opacity */
---primary-soft: 179 224 245;           /* #B3E0F5 - 30% opacity */
---primary-medium: 125 200 235;         /* #7DC8EB - 50% opacity */
+--primary-light: 232 246 252; /* #E8F6FC - 10% opacity */
+--primary-soft: 179 224 245; /* #B3E0F5 - 30% opacity */
+--primary-medium: 125 200 235; /* #7DC8EB - 50% opacity */
 
 /* Hover states */
---primary-hover: 11 95 138;            /* Darkens to primary-dark */
---primary-light-hover: 232 246 252;    /* Background hover effect */
+--primary-hover: 11 95 138; /* Darkens to primary-dark */
+--primary-light-hover: 232 246 252; /* Background hover effect */
 ```
 
 ### Accent Variants
 
 ```css
 /* Light backgrounds for each pillar */
---empowerment-light: 251 232 240;      /* #FBE8F0 - 10% */
---environment-light: 243 248 229;      /* #F3F8E5 - 10% */
---education-light: 254 243 229;        /* #FEF3E5 - 10% */
+--empowerment-light: 251 232 240; /* #FBE8F0 - 10% */
+--environment-light: 243 248 229; /* #F3F8E5 - 10% */
+--education-light: 254 243 229; /* #FEF3E5 - 10% */
 
 /* Hover states (darken by ~15%) */
---empowerment-hover: 184 43 91;        /* #B82B5B */
---environment-hover: 127 165 26;       /* #7FA51A */
---education-hover: 208 134 9;          /* #D08609 */
+--empowerment-hover: 184 43 91; /* #B82B5B */
+--environment-hover: 127 165 26; /* #7FA51A */
+--education-hover: 208 134 9; /* #D08609 */
 ```
 
 ---
@@ -105,13 +105,13 @@
 
 ### Button States
 
-| State | Primary | Accent | Outline |
-|-------|---------|--------|---------|
-| **Default** | `bg-[rgb(63,171,222)]` | `bg-[pillar-color]` | `border-primary text-primary` |
-| **Hover** | `bg-[rgb(11,95,138)]` | `darken(15%)` | `bg-primary-light text-primary-dark` |
-| **Active** | `bg-[rgb(11,95,138)] scale-95` | `darken(20%)` | `bg-primary-soft` |
-| **Focus** | `ring-2 ring-primary/50 ring-offset-2` | `ring-accent/50` | `ring-primary/50` |
-| **Disabled** | `bg-primary/50 cursor-not-allowed` | `bg-accent/50` | `border-border text-muted` |
+| State        | Primary                                | Accent              | Outline                              |
+| ------------ | -------------------------------------- | ------------------- | ------------------------------------ |
+| **Default**  | `bg-[rgb(63,171,222)]`                 | `bg-[pillar-color]` | `border-primary text-primary`        |
+| **Hover**    | `bg-[rgb(11,95,138)]`                  | `darken(15%)`       | `bg-primary-light text-primary-dark` |
+| **Active**   | `bg-[rgb(11,95,138)] scale-95`         | `darken(20%)`       | `bg-primary-soft`                    |
+| **Focus**    | `ring-2 ring-primary/50 ring-offset-2` | `ring-accent/50`    | `ring-primary/50`                    |
+| **Disabled** | `bg-primary/50 cursor-not-allowed`     | `bg-accent/50`      | `border-border text-muted`           |
 
 ### Card Hover Effects
 
@@ -183,7 +183,7 @@ a.underline-effect {
   text-decoration: none;
 }
 a.underline-effect::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -208,31 +208,52 @@ a.underline-effect:hover::after {
 background: linear-gradient(135deg, rgb(63 171 222) 0%, rgb(11 95 138) 100%);
 
 /* Soft Background Fade */
-background: linear-gradient(to bottom, rgb(232 246 252) 0%, rgb(255 255 255) 100%);
+background: linear-gradient(
+  to bottom,
+  rgb(232 246 252) 0%,
+  rgb(255 255 255) 100%
+);
 
 /* Radial Overlay */
-background: radial-gradient(circle at top right, rgb(63 171 222 / 0.1) 0%, transparent 100%);
+background: radial-gradient(
+  circle at top right,
+  rgb(63 171 222 / 0.1) 0%,
+  transparent 100%
+);
 ```
 
 ### Multi-Pillar Gradients
 
 ```css
 /* Three Pillars Rainbow */
-background: linear-gradient(135deg, 
-  rgb(214 51 108) 0%,      /* Empowerment */
-  rgb(245 158 11) 50%,     /* Education */
-  rgb(149 193 31) 100%     /* Environment */
+background: linear-gradient(
+  135deg,
+  rgb(214 51 108) 0%,
+  /* Empowerment */ rgb(245 158 11) 50%,
+  /* Education */ rgb(149 193 31) 100% /* Environment */
 );
 
 /* Pillar Card Backgrounds */
 .empowerment-gradient {
-  background: linear-gradient(135deg, rgb(214 51 108 / 0.1) 0%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(214 51 108 / 0.1) 0%,
+    transparent 100%
+  );
 }
 .environment-gradient {
-  background: linear-gradient(135deg, rgb(149 193 31 / 0.1) 0%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(149 193 31 / 0.1) 0%,
+    transparent 100%
+  );
 }
 .education-gradient {
-  background: linear-gradient(135deg, rgb(245 158 11 / 0.1) 0%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(245 158 11 / 0.1) 0%,
+    transparent 100%
+  );
 }
 ```
 
@@ -245,42 +266,42 @@ background: linear-gradient(135deg,
 ```css
 /* Using Ocean Blue theme colors */
 h1 {
-  font-size: 3rem;           /* 48px */
-  font-weight: 700;          /* Bold */
-  color: rgb(11 95 138);     /* Primary Dark */
+  font-size: 3rem; /* 48px */
+  font-weight: 700; /* Bold */
+  color: rgb(11 95 138); /* Primary Dark */
   line-height: 1.2;
 }
 
 h2 {
-  font-size: 2.25rem;        /* 36px */
+  font-size: 2.25rem; /* 36px */
   font-weight: 700;
   color: rgb(11 95 138);
   line-height: 1.3;
 }
 
 h3 {
-  font-size: 1.875rem;       /* 30px */
-  font-weight: 600;          /* Semibold */
-  color: rgb(63 171 222);    /* Primary */
+  font-size: 1.875rem; /* 30px */
+  font-weight: 600; /* Semibold */
+  color: rgb(63 171 222); /* Primary */
   line-height: 1.4;
 }
 
 h4 {
-  font-size: 1.5rem;         /* 24px */
+  font-size: 1.5rem; /* 24px */
   font-weight: 600;
-  color: rgb(33 37 41);      /* Text Main */
+  color: rgb(33 37 41); /* Text Main */
   line-height: 1.4;
 }
 
 h5 {
-  font-size: 1.25rem;        /* 20px */
+  font-size: 1.25rem; /* 20px */
   font-weight: 600;
   color: rgb(33 37 41);
   line-height: 1.5;
 }
 
 h6 {
-  font-size: 1rem;           /* 16px */
+  font-size: 1rem; /* 16px */
   font-weight: 600;
   color: rgb(33 37 41);
   line-height: 1.5;
@@ -291,25 +312,25 @@ h6 {
 
 ```css
 .text-large {
-  font-size: 1.125rem;       /* 18px */
+  font-size: 1.125rem; /* 18px */
   color: rgb(33 37 41);
   line-height: 1.75;
 }
 
 .text-body {
-  font-size: 1rem;           /* 16px */
+  font-size: 1rem; /* 16px */
   color: rgb(33 37 41);
   line-height: 1.6;
 }
 
 .text-small {
-  font-size: 0.875rem;       /* 14px */
-  color: rgb(108 117 125);   /* Text Muted */
+  font-size: 0.875rem; /* 14px */
+  color: rgb(108 117 125); /* Text Muted */
   line-height: 1.5;
 }
 
 .text-tiny {
-  font-size: 0.75rem;        /* 12px */
+  font-size: 0.75rem; /* 12px */
   color: rgb(108 117 125);
   line-height: 1.4;
 }
@@ -339,14 +360,32 @@ h6 {
 }
 
 /* Pillar Badges */
-.badge-empowerment { background: rgb(214 51 108); color: white; }
-.badge-environment { background: rgb(149 193 31); color: white; }
-.badge-education { background: rgb(245 158 11); color: white; }
+.badge-empowerment {
+  background: rgb(214 51 108);
+  color: white;
+}
+.badge-environment {
+  background: rgb(149 193 31);
+  color: white;
+}
+.badge-education {
+  background: rgb(245 158 11);
+  color: white;
+}
 
 /* Status Badges */
-.badge-success { background: rgb(22 163 74); color: white; }
-.badge-warning { background: rgb(245 158 11); color: white; }
-.badge-danger { background: rgb(220 38 38); color: white; }
+.badge-success {
+  background: rgb(22 163 74);
+  color: white;
+}
+.badge-warning {
+  background: rgb(245 158 11);
+  color: white;
+}
+.badge-danger {
+  background: rgb(220 38 38);
+  color: white;
+}
 ```
 
 ### Progress Bars
@@ -354,22 +393,34 @@ h6 {
 ```css
 /* Primary Progress */
 .progress-primary {
-  background: rgb(232 246 252);      /* Track */
+  background: rgb(232 246 252); /* Track */
 }
 .progress-primary-fill {
-  background: rgb(63 171 222);       /* Fill */
+  background: rgb(63 171 222); /* Fill */
   transition: width 300ms ease;
 }
 
 /* Pillar Progress Bars */
-.progress-empowerment-track { background: rgb(251 232 240); }
-.progress-empowerment-fill { background: rgb(214 51 108); }
+.progress-empowerment-track {
+  background: rgb(251 232 240);
+}
+.progress-empowerment-fill {
+  background: rgb(214 51 108);
+}
 
-.progress-environment-track { background: rgb(243 248 229); }
-.progress-environment-fill { background: rgb(149 193 31); }
+.progress-environment-track {
+  background: rgb(243 248 229);
+}
+.progress-environment-fill {
+  background: rgb(149 193 31);
+}
 
-.progress-education-track { background: rgb(254 243 229); }
-.progress-education-fill { background: rgb(245 158 11); }
+.progress-education-track {
+  background: rgb(254 243 229);
+}
+.progress-education-fill {
+  background: rgb(245 158 11);
+}
 ```
 
 ### Alerts
@@ -377,30 +428,30 @@ h6 {
 ```css
 /* Info Alert */
 .alert-info {
-  background: rgb(219 234 254);      /* blue-100 */
+  background: rgb(219 234 254); /* blue-100 */
   border: 1px solid rgb(37 99 235);
-  color: rgb(30 58 138);             /* blue-900 */
+  color: rgb(30 58 138); /* blue-900 */
 }
 
 /* Success Alert */
 .alert-success {
-  background: rgb(220 252 231);      /* green-100 */
+  background: rgb(220 252 231); /* green-100 */
   border: 1px solid rgb(22 163 74);
-  color: rgb(22 101 52);             /* green-900 */
+  color: rgb(22 101 52); /* green-900 */
 }
 
 /* Warning Alert */
 .alert-warning {
-  background: rgb(254 243 199);      /* amber-100 */
+  background: rgb(254 243 199); /* amber-100 */
   border: 1px solid rgb(245 158 11);
-  color: rgb(146 64 14);             /* amber-900 */
+  color: rgb(146 64 14); /* amber-900 */
 }
 
 /* Error Alert */
 .alert-error {
-  background: rgb(254 226 226);      /* red-100 */
+  background: rgb(254 226 226); /* red-100 */
   border: 1px solid rgb(220 38 38);
-  color: rgb(153 27 27);             /* red-900 */
+  color: rgb(153 27 27); /* red-900 */
 }
 ```
 
@@ -411,24 +462,24 @@ h6 {
 ### Border Radius Scale
 
 ```css
---radius-sm: 8px;                    /* Small elements (badges, inputs) */
---radius-md: 12px;                   /* Medium elements (buttons, cards) */
---radius-lg: 16px;                   /* Large elements (modals, sections) */
---radius-xl: 24px;                   /* Extra large (feature cards) */
---radius-full: 9999px;               /* Pills, circular avatars */
+--radius-sm: 8px; /* Small elements (badges, inputs) */
+--radius-md: 12px; /* Medium elements (buttons, cards) */
+--radius-lg: 16px; /* Large elements (modals, sections) */
+--radius-xl: 24px; /* Extra large (feature cards) */
+--radius-full: 9999px; /* Pills, circular avatars */
 ```
 
 ### Spacing Scale
 
 ```css
 /* Consistent with Tailwind defaults */
---space-xs: 0.25rem;    /* 4px */
---space-sm: 0.5rem;     /* 8px */
---space-md: 1rem;       /* 16px */
---space-lg: 1.5rem;     /* 24px */
---space-xl: 2rem;       /* 32px */
---space-2xl: 3rem;      /* 48px */
---space-3xl: 4rem;      /* 64px */
+--space-xs: 0.25rem; /* 4px */
+--space-sm: 0.5rem; /* 8px */
+--space-md: 1rem; /* 16px */
+--space-lg: 1.5rem; /* 24px */
+--space-xl: 2rem; /* 32px */
+--space-2xl: 3rem; /* 48px */
+--space-3xl: 4rem; /* 64px */
 ```
 
 ---
@@ -437,14 +488,14 @@ h6 {
 
 ### Contrast Ratios (WCAG AA Compliant)
 
-| Combination | Ratio | Status |
-|-------------|-------|--------|
-| Primary on White | 4.52:1 | ✅ Pass |
-| Primary Dark on White | 7.89:1 | ✅ Pass AAA |
-| Text Main on White | 14.23:1 | ✅ Pass AAA |
-| Text Muted on White | 4.61:1 | ✅ Pass |
-| Success on White | 4.85:1 | ✅ Pass |
-| Danger on White | 5.21:1 | ✅ Pass |
+| Combination           | Ratio   | Status      |
+| --------------------- | ------- | ----------- |
+| Primary on White      | 4.52:1  | ✅ Pass     |
+| Primary Dark on White | 7.89:1  | ✅ Pass AAA |
+| Text Main on White    | 14.23:1 | ✅ Pass AAA |
+| Text Muted on White   | 4.61:1  | ✅ Pass     |
+| Success on White      | 4.85:1  | ✅ Pass     |
+| Danger on White       | 5.21:1  | ✅ Pass     |
 
 ### Focus Indicators
 
@@ -479,23 +530,23 @@ h6 {
 ```css
 .dark {
   /* Primary colors - reduce lightness */
-  --brand-primary: 50 158 206;         /* Slightly darker */
-  --brand-primary-dark: 38 112 154;    /* Adjusted for dark bg */
-  
+  --brand-primary: 50 158 206; /* Slightly darker */
+  --brand-primary-dark: 38 112 154; /* Adjusted for dark bg */
+
   /* Backgrounds */
-  --bg-dark: 17 24 39;                 /* gray-900 */
-  --bg-dark-elevated: 31 41 55;        /* gray-800 */
-  --border-dark: 55 65 81;             /* gray-700 */
-  
+  --bg-dark: 17 24 39; /* gray-900 */
+  --bg-dark-elevated: 31 41 55; /* gray-800 */
+  --border-dark: 55 65 81; /* gray-700 */
+
   /* Text */
-  --text-dark-main: 243 244 246;       /* gray-100 */
-  --text-dark-muted: 156 163 175;      /* gray-400 */
-  
+  --text-dark-main: 243 244 246; /* gray-100 */
+  --text-dark-muted: 156 163 175; /* gray-400 */
+
   /* Semantic - increased contrast */
-  --success-dark: 34 197 94;           /* green-500 */
-  --warning-dark: 251 191 36;          /* amber-400 */
-  --danger-dark: 239 68 68;            /* red-500 */
-  --info-dark: 59 130 246;             /* blue-500 */
+  --success-dark: 34 197 94; /* green-500 */
+  --warning-dark: 251 191 36; /* amber-400 */
+  --danger-dark: 239 68 68; /* red-500 */
+  --info-dark: 59 130 246; /* blue-500 */
 }
 ```
 
@@ -513,7 +564,10 @@ h6 {
 
 /* Smooth color transitions */
 .transition-colors {
-  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
 }
 
 /* Transform transitions */
@@ -537,8 +591,12 @@ h6 {
 ```css
 /* Shimmer effect for skeleton loaders */
 @keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
 .skeleton {
@@ -642,7 +700,7 @@ h6 {
 
 ```css
 /* Keep old variables temporarily with deprecation warnings */
---primary-old: oklch(0.55 0.22 25);  /* DEPRECATED: Use --brand-primary */
+--primary-old: oklch(0.55 0.22 25); /* DEPRECATED: Use --brand-primary */
 
 /* Provide mapping for transition period */
 --primary: rgb(var(--brand-primary));
