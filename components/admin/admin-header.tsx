@@ -16,6 +16,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, LogOut, User, ExternalLink, Heart, ChevronRight } from "lucide-react"
 import type { AdminUser } from "@/lib/types/admin"
 import { adminLogout } from "@/lib/actions/admin-auth"
+import { adminNavSections, canAccessAdminNavItem } from "@/components/admin/admin-nav-config"
+import NotificationBell from "@/components/admin/notification-bell"
 
 interface AdminHeaderProps {
   adminUser: AdminUser
@@ -48,35 +50,43 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
             <Heart className="h-6 w-6 text-primary fill-primary" />
             <span className="font-semibold">deessa Admin</span>
           </div>
-          <nav className="grid gap-1 p-4">
-            <Link
-              href="/admin"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium"
-              onClick={() => setMobileOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/admin/projects"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium"
-              onClick={() => setMobileOpen(false)}
-            >
-              Projects
-            </Link>
-            <Link
-              href="/admin/events"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium"
-              onClick={() => setMobileOpen(false)}
-            >
-              Events
-            </Link>
-            <Link
-              href="/admin/stories"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium"
-              onClick={() => setMobileOpen(false)}
-            >
-              Stories
-            </Link>
+          <nav className="space-y-5 overflow-y-auto scrollbar-hide p-4">
+            {adminNavSections.map((section) => {
+              const items = section.items.filter((item) => canAccessAdminNavItem(adminUser.role, item))
+
+              if (items.length === 0) return null
+
+              return (
+                <div key={section.label} className="space-y-2 rounded-2xl border border-border/70 bg-muted/20 p-3">
+                  <div className="flex items-center gap-3 px-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      {section.label}
+                    </p>
+                    <span className="h-px flex-1 bg-border/70" aria-hidden="true" />
+                  </div>
+                  <div className="grid gap-1">
+                    {items.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors hover:bg-background/80 border border-transparent hover:border-border/80"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <item.icon className="h-4 w-4 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span>{item.name}</span>
+                          </div>
+                          {item.description && (
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
           </nav>
         </SheetContent>
       </Sheet>
@@ -105,6 +115,9 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
             View Site
           </Link>
         </Button>
+
+        {/* Notification Bell */}
+        <NotificationBell />
 
         {/* User Menu */}
         <DropdownMenu>

@@ -167,6 +167,11 @@ export interface ContactSubmission {
   phone?: string
   subject: string
   message: string
+  issue_type?: string | null
+  page_url?: string | null
+  browser_info?: string | null
+  screenshot_path?: string | null
+  screenshot_name?: string | null
   created_at: string
 }
 
