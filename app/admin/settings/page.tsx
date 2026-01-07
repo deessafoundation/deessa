@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { getSiteSettings } from "@/lib/actions/admin-settings"
 import { SiteSettingsForm } from "@/components/admin/site-settings-form"
+import { SupportToggleModal } from "@/components/admin/support-toggle-modal"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 
 export default async function SiteSettingsPage() {
@@ -22,6 +23,13 @@ export default async function SiteSettingsPage() {
 
   return (
     <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Site Settings</h1>
+        <p className="text-muted-foreground mt-1">Manage site-wide configurations and features</p>
+      </div>
+      
+      <SupportToggleModal />
+      
       <SiteSettingsForm settings={settingsObj} />
     </div>
   )
