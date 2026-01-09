@@ -64,50 +64,56 @@ function buildInternalEmail(params: ContactEmailParams): string {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New Contact Form Submission</title>
+  <title>Website contact: ${escapeHtml(params.subject)}</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
-    .card { background: #ffffff; border-radius: 12px; max-width: 600px; margin: 0 auto; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .header { background: #1a1a2e; padding: 28px 32px; }
-    .header h1 { color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; }
-    .header p { color: rgba(255,255,255,0.6); margin: 4px 0 0; font-size: 13px; }
-    .body { padding: 28px 32px; }
-    .field { margin-bottom: 20px; }
-    .field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 6px; }
-    .field .value { font-size: 15px; color: #1a1a1a; }
-    .message-box { background: #f8f8f8; border-left: 3px solid #4f46e5; border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 14px; color: #333; line-height: 1.7; }
-    .divider { border: none; border-top: 1px solid #eee; margin: 24px 0; }
-    .footer { padding: 16px 32px; background: #fafafa; border-top: 1px solid #eee; font-size: 12px; color: #999; text-align: center; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; margin: 0; padding: 20px; }
+    .card { background: #ffffff; border-radius: 12px; max-width: 640px; margin: 0 auto; overflow: hidden; box-shadow: 0 4px 18px rgba(15,23,42,0.06); }
+    .header { background: linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding: 24px 28px; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 18px; font-weight: 700; }
+    .header p { color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 13px; }
+    .body { padding: 24px 28px; }
+    .meta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .meta .item { font-size:13px; color:#374151; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; margin-bottom: 6px; }
+    .field .value { font-size: 15px; color: #0f172a; }
+    .message-box { background: #fbfdff; border-left: 4px solid #6366f1; border-radius: 6px; padding: 14px 16px; font-size: 14px; color: #111827; line-height: 1.6; }
+    .divider { border: none; border-top: 1px solid #eef2f7; margin: 20px 0; }
+    .footer { padding: 14px 28px; background: #ffffff; border-top: 1px solid #f1f5f9; font-size: 13px; color: #6b7280; text-align: left; }
+    a { color: #4f46e5; text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="header">
-      <h1>📬 New Contact Form Submission</h1>
-      <p>Received via the website contact form</p>
+      <h1>New website contact request</h1>
+      <p>Submitted via the site contact form — quick details below</p>
     </div>
     <div class="body">
-      <div class="field">
-        <label>From</label>
-        <div class="value"><strong>${escapeHtml(params.name)}</strong> &lt;${escapeHtml(params.email)}&gt;</div>
+      <div class="meta">
+        <div class="item"><strong>From:</strong> ${escapeHtml(params.name)} &lt;${escapeHtml(params.email)}&gt;</div>
+        ${params.phone ? `<div class="item"><strong>Phone:</strong> ${escapeHtml(params.phone)}</div>` : ``}
       </div>
-      ${params.phone ? `
-      <div class="field">
-        <label>Phone</label>
-        <div class="value">${escapeHtml(params.phone)}</div>
-      </div>` : ""}
+
       <div class="field">
         <label>Subject</label>
         <div class="value">${escapeHtml(params.subject)}</div>
       </div>
-      <hr class="divider" />
+
       <div class="field">
         <label>Message</label>
         <div class="message-box">${escapeHtml(params.message)}</div>
       </div>
+
+      <hr class="divider" />
+
+      <div class="field">
+        <label>Action</label>
+        <div class="value">Reply to this notification to contact the sender directly, or assign to the appropriate team member.</div>
+      </div>
     </div>
     <div class="footer">
-      Reply directly to this email to respond to ${escapeHtml(params.name)}.
+      DEESSA Foundation — replies should go to the sender's address above. For internal routing, use your normal inbox labels.
     </div>
   </div>
 </body>
@@ -126,55 +132,54 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>We received your message</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
-    .card { background: #ffffff; border-radius: 12px; max-width: 580px; margin: 0 auto; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 36px 32px; text-align: center; }
-    .header h1 { color: #ffffff; margin: 0 0 8px; font-size: 22px; font-weight: 800; }
-    .header p { color: rgba(255,255,255,0.85); margin: 0; font-size: 14px; }
-    .body { padding: 32px; }
-    .body p { color: #444; line-height: 1.7; margin: 0 0 16px; font-size: 15px; }
-    .summary { background: #f8f8f8; border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7fafc; margin: 0; padding: 20px; }
+    .card { background: #ffffff; border-radius: 12px; max-width: 640px; margin: 0 auto; overflow: hidden; box-shadow: 0 6px 24px rgba(2,6,23,0.06); }
+    .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 28px 32px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0 0 8px; font-size: 20px; font-weight: 800; }
+    .header p { color: rgba(255,255,255,0.92); margin: 0; font-size: 14px; }
+    .body { padding: 24px 28px; }
+    .body p { color: #334155; line-height: 1.6; margin: 0 0 14px; font-size: 15px; }
+    .summary { background: #f8fafc; border-radius: 8px; padding: 14px 18px; margin: 18px 0; }
     .summary-row { display: flex; gap: 12px; margin-bottom: 8px; font-size: 14px; }
-    .summary-row:last-child { margin-bottom: 0; }
-    .summary-label { font-weight: 700; color: #888; min-width: 70px; }
-    .summary-value { color: #1a1a1a; }
-    .message-box { background: #f0f0ff; border-left: 3px solid #4f46e5; border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 14px; color: #333; line-height: 1.7; margin: 8px 0 20px; }
-    .divider { border: none; border-top: 1px solid #eee; margin: 24px 0; }
-    .footer { padding: 20px 32px; background: #fafafa; border-top: 1px solid #eee; font-size: 12px; color: #999; text-align: center; line-height: 1.6; }
+    .summary-label { font-weight: 700; color: #6b7280; min-width: 84px; }
+    .summary-value { color: #0f172a; }
+    .message-box { background: #f6f8ff; border-left: 4px solid #4f46e5; border-radius: 6px; padding: 12px 14px; font-size: 14px; color: #111827; line-height: 1.6; margin: 8px 0 18px; }
+    .divider { border: none; border-top: 1px solid #eef2f7; margin: 20px 0; }
+    .footer { padding: 16px 28px; background: #ffffff; border-top: 1px solid #f1f5f9; font-size: 13px; color: #6b7280; text-align: center; line-height: 1.5; }
+    a { color: #4f46e5; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="header">
-      <h1>✅ Message Received</h1>
-      <p>We'll get back to you within 24 hours</p>
+      <h1>Thanks — we received your message</h1>
+      <p>One of our team members will be in touch as soon as possible.</p>
     </div>
     <div class="body">
       <p>Hi <strong>${escapeHtml(params.name)}</strong>,</p>
-      <p>Thank you for reaching out to DEESSA Foundation. We've received your message and will respond within <strong>24 hours</strong>.</p>
+      <p>Thanks for contacting DEESSA Foundation. We've received your message and will respond within <strong>1–2 business days</strong>. If your request is urgent, please email <a href="mailto:support@dessafoundation.org">support@dessafoundation.org</a> with the word <strong>URGENT</strong> in the subject line.</p>
 
       <div class="summary">
         <div class="summary-row">
-          <span class="summary-label">Subject</span>
-          <span class="summary-value">${escapeHtml(params.subject)}</span>
+          <div class="summary-label">Subject</div>
+          <div class="summary-value">${escapeHtml(params.subject)}</div>
         </div>
         <div class="summary-row">
-          <span class="summary-label">Sent to</span>
-          <span class="summary-value">support@dessafoundation.org</span>
+          <div class="summary-label">Sent to</div>
+          <div class="summary-value">support@dessafoundation.org</div>
         </div>
       </div>
 
-      <p style="font-size:13px; color:#666; margin-bottom:6px;">Your message:</p>
+      <p style="font-size:13px; color:#475569; margin-bottom:6px;">Your message</p>
       <div class="message-box">${escapeHtml(params.message)}</div>
 
       <hr class="divider" />
-      <p style="font-size:14px;">For urgent matters, you can also reach us directly at <a href="mailto:support@dessafoundation.org" style="color:#4f46e5;">support@dessafoundation.org</a> or call us at <strong>+977 1-4123456</strong>.</p>
+      <p style="font-size:14px; margin-bottom:8px;">What happens next: our team will review your message, and a reply will be sent to this email address. If we need additional details, we may follow up requesting clarification.</p>
       <p style="font-size:14px;">Warm regards,<br /><strong>DEESSA Foundation Team</strong></p>
     </div>
     <div class="footer">
       DEESSA Foundation · Thamel, Kathmandu, Nepal 44600<br />
-      This is an automated confirmation. Please do not reply to this email.<br />
-      To reply, email <a href="mailto:support@dessafoundation.org" style="color:#4f46e5;">support@dessafoundation.org</a>
+      This is an automated confirmation. To follow up, reply to this message or contact <a href="mailto:support@dessafoundation.org">support@dessafoundation.org</a>.
     </div>
   </div>
 </body>

@@ -4,6 +4,8 @@ import { Mail, Phone, MapPin, Clock, Send, Shield, Award, Loader2 } from "lucide
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { ContactFormPrefilled } from "@/components/contact-form-prefilled"
+import { isSupportEnabled } from "@/lib/support/settings"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Contact Us - Dessa Foundation",
@@ -33,7 +35,9 @@ const contactInfo = [
   },
 ]
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const supportEnabled = await isSupportEnabled()
+  
   return (
     <>
       {/* Hero Section */}
@@ -55,6 +59,13 @@ export default function ContactPage() {
             <p className="text-white/90 text-lg font-medium max-w-2xl leading-relaxed">
               Have questions, ideas, or want to partner with us? Reach out today.
             </p>
+            {supportEnabled && (
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <Button asChild className="rounded-full bg-amber-400 px-5 text-slate-950 hover:bg-amber-300">
+                  <Link href="/support">Report a bug or suggest an improvement</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </section>
