@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Palette, Bell, AlertCircle, CheckCircle2, Info, Zap, Receipt } from "lucide-react"
+import { Palette, Bell, AlertCircle, CheckCircle2, Info, Zap, Receipt, ImageIcon } from "lucide-react"
 
 export default function DemoIndex() {
   const demos = [
@@ -52,6 +52,13 @@ export default function DemoIndex() {
       description: "Preview the donation receipt PDF template with sample data",
       icon: Receipt,
       href: "/demo/receipt",
+      status: "ready"
+    },
+    {
+      title: "Impact Photo Wall",
+      description: "A portrait-card collage inspired by the reference composition",
+      icon: ImageIcon,
+      href: "/demo/photo-wall",
       status: "ready"
     }
   ]
