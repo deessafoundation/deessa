@@ -5,6 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import { BrushStroke } from "@/components/ui/brush-stroke"
+import PhotoWall from "@/components/photo-wall/photo-wall"
+import { createClient } from "@/lib/supabase/client"
 
 // ─── BRUSH STROKE SVG COMPONENTS ─────────────────────────────────────────────
 
@@ -378,14 +380,139 @@ function StoryCard({
   )
 }
 
+// ─── DEFAULT HERO PHOTO WALL PANELS ───────────────────────────────────────────
+
+const defaultHeroPhotoWallPanels = [
+  {
+    src: "/OurStoryHeroImage.png",
+    alt: "Community members gathered for a program moment",
+    objectPosition: "50% 35%",
+    label: "Community",
+    title: "Arrival",
+    caption: "A warm opening frame for the impact story.",
+    tint: "from-amber-950/55",
+    height: "h-[392px]",
+  },
+  {
+    src: "/StoriesSectionImage.png",
+    alt: "Education story scene",
+    objectPosition: "50% 30%",
+    label: "Education",
+    title: "Working",
+    caption: "A steady rise as the strip moves inward.",
+    tint: "from-slate-950/55",
+    height: "h-[486px]",
+  },
+  {
+    src: "/missionVisionObjectives.png",
+    alt: "Mission and vision board",
+    objectPosition: "50% 38%",
+    label: "Mission",
+    title: "Focus",
+    caption: "The third panel gives the collage its structure.",
+    tint: "from-stone-950/50",
+    height: "h-[582px]",
+  },
+  {
+    src: "/JoinTheMovement.png",
+    alt: "Community participation and outreach",
+    objectPosition: "50% 28%",
+    label: "Outreach",
+    title: "Lift",
+    caption: "The fourth strip climbs closer to the peak.",
+    tint: "from-indigo-950/45",
+    height: "h-[682px]",
+  },
+  {
+    src: "/OurImpactThroughTheYear.png",
+    alt: "Annual impact across Nepal",
+    objectPosition: "50% 30%",
+    label: "Impact",
+    title: "Center",
+    caption: "The middle panel anchors the full composition.",
+    tint: "from-zinc-950/55",
+    height: "h-[768px]",
+  },
+  {
+    src: "/testimonials.png",
+    alt: "Community testimonial portrait",
+    objectPosition: "50% 32%",
+    label: "Voice",
+    title: "Return",
+    caption: "The sequence starts stepping back down.",
+    tint: "from-rose-950/50",
+    height: "h-[682px]",
+  },
+  {
+    src: "/ourStory.png",
+    alt: "Our story image",
+    objectPosition: "50% 28%",
+    label: "Story",
+    title: "Shared",
+    caption: "A mirrored panel that keeps the rhythm balanced.",
+    tint: "from-emerald-950/50",
+    height: "h-[582px]",
+  },
+  {
+    src: "/educationHealthShelterFreedom.png",
+    alt: "Education, health, shelter, and freedom illustration",
+    objectPosition: "50% 28%",
+    label: "Services",
+    title: "Meet",
+    caption: "The second-to-last card stays tall and steady.",
+    tint: "from-teal-950/50",
+    height: "h-[486px]",
+  },
+  {
+    src: "/SponsersAndPartnerships.png",
+    alt: "Partners and supporters",
+    objectPosition: "50% 35%",
+    label: "Partners",
+    title: "Exit",
+    caption: "A closing frame that finishes the collage softly.",
+    tint: "from-teal-950/50",
+    height: "h-[392px]",
+  },
+]
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 
 export default function ImpactClientPage() {
   const heroRef = useRef<HTMLElement>(null)
   const [heroLoaded, setHeroLoaded] = useState(false)
+  const [heroPhotoWallPanels, setHeroPhotoWallPanels] = useState<typeof defaultHeroPhotoWallPanels | null>(null)
 
   useEffect(() => {
     setHeroLoaded(true)
+  }, [])
+
+  // Load hero photo wall panels from admin settings
+  useEffect(() => {
+    async function loadHeroPhotoWallSettings() {
+      try {
+        const supabase = createClient()
+        const { data: row, error } = await supabase
+          .from("site_settings")
+          .select("value")
+          .eq("key", "photo_wall_images")
+          .single()
+
+        if (!error && row?.value) {
+          const val = typeof row.value === "string" ? JSON.parse(row.value) : row.value
+          if (Array.isArray(val) && val.length === 9) {
+            setHeroPhotoWallPanels(val)
+            return
+          }
+        }
+
+        setHeroPhotoWallPanels(defaultHeroPhotoWallPanels)
+      } catch (err) {
+        console.warn("Could not load impact photo wall settings, using defaults:", err)
+        setHeroPhotoWallPanels(defaultHeroPhotoWallPanels)
+      }
+    }
+
+    loadHeroPhotoWallSettings()
   }, [])
 
   // Inject fonts & custom styles once
@@ -582,114 +709,41 @@ export default function ImpactClientPage() {
           SECTION 1 — HERO
       ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col overflow-hidden">
-        {/* Full-bleed hero photo with gradient overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/OurImpactThroughTheYear.png"
-            alt="Deessa Foundation Nepal community impact"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          {/* Dark gradient overlay - left to right */}
-          <div 
-            className="absolute inset-0" 
-            style={{
-              background: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)'
-            }}
-          />
-        </div>
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_36%,#dff1f8_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(111,62,150,0.18),transparent_24%),radial-gradient(circle_at_78%_84%,rgba(247,197,43,0.16),transparent_20%),radial-gradient(circle_at_center,rgba(255,255,255,0.42),transparent_58%)]" />
+        <div className="absolute inset-0 z-0 opacity-[0.11] [background-image:linear-gradient(rgba(11,95,138,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.16)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:linear-gradient(to_bottom,black_18%,transparent_92%)]" />
 
-        {/* Photo credit */}
-        <div className="absolute bottom-8 left-8 z-20">
-          <p className="font-dm text-white/60 text-xs tracking-wide">Karnali Province, Nepal</p>
-        </div>
-
-        {/* Hero content - left-aligned */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-            <div className="max-w-2xl">
-              {/* Badge pill */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="mb-6"
-              >
-                <span className="font-comic font-bold bg-teal text-white px-5 py-2 rounded-full text-sm uppercase tracking-wider inline-block">
-                  ✦ OUR IMPACT 2014–2024
-                </span>
-              </motion.div>
-
-              {/* H1 - Two-line, two-color */}
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.7 }}
-                className="mb-6"
-              >
-                <div className="font-marissa text-white leading-none" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
-                  10,000+ Lives.
+        <div className="relative z-10 flex-1">
+          <div className="flex w-full flex-1 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full h-full"
+            >
+              <div className="absolute -left-6 top-8 h-40 w-40 rounded-full bg-[rgb(41,182,200)]/24 blur-3xl" />
+              <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-[rgb(111,62,150)]/20 blur-3xl" />
+              {heroPhotoWallPanels ? (
+                <PhotoWall
+                  panels={heroPhotoWallPanels}
+                  size="compact"
+                  eyebrow="Impact in motion"
+                  headline="A wall of lived change across Nepal"
+                  description="✦ OUR IMPACT 2014–2024\n10,000+ Lives. One Mission.\nFrom Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
+                  badges={["Govt Registered", "SWC Affiliated", "10+ Years"]}
+                  className="relative"
+                />
+              ) : (
+                <div className="relative h-[700px] sm:h-[800px] lg:h-[860px] rounded-none overflow-hidden" aria-hidden="true">
+                  <div className="absolute inset-0 bg-stone-50" />
                 </div>
-                <div className="font-marissa text-teal leading-none" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
-                  One Mission.
-                </div>
-              </motion.h1>
-
-              {/* Subtitle with semi-transparent background */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.7 }}
-                className="mb-8"
-              >
-                <div className="inline-block bg-black/40 backdrop-blur-sm px-6 py-4 rounded-2xl">
-                  <p className="font-dm text-white text-lg leading-relaxed max-w-lg">
-                    From Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities.
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Trust indicators */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.0, duration: 0.6 }}
-                className="flex flex-wrap items-center gap-3 mb-8 font-dm text-white/80 text-sm"
-              >
-                <span>● Govt Registered</span>
-                <span>● SWC Affiliated</span>
-                <span>● 10+ Years</span>
-              </motion.div>
-
-              {/* CTA buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.6 }}
-                className="flex flex-wrap gap-4"
-              >
-                <Link
-                  href="/stories"
-                  className="font-comic font-bold bg-teal hover:bg-[#1a8fa0] text-white px-8 py-4 rounded-full text-base transition-all duration-300 hover:shadow-[0_0_30px_#29b6c860] hover:-translate-y-1"
-                >
-                  See Stories
-                </Link>
-                <a
-                  href="/deesa-resources/deessa Foundation_ Short Bio -2.pdf"
-                  download
-                  className="font-comic font-bold bg-[#1a1a2e] hover:bg-[#0f0f1a] text-white px-8 py-4 rounded-full text-base transition-all duration-300 hover:-translate-y-1"
-                >
-                  Download Report
-                </a>
-              </motion.div>
-            </div>
+              )}
+            </motion.div>
           </div>
         </div>
 
         {/* Brush stroke bleeding into stats section */}
-        <div className="relative z-10">
+        <div className="relative z-10 -mb-px">
           <BrushDividerWhiteToBrush />
         </div>
       </section>
@@ -697,7 +751,7 @@ export default function ImpactClientPage() {
       {/* ═══════════════════════════════════════════
           SECTION 2 — STATS STRIP
       ═══════════════════════════════════════════ */}
-      <section className="bg-brush-bg py-20">
+      <section className="bg-brush-bg pt-0 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading className="text-center mb-12">
             <h2 className="font-marissa text-dark mb-4" style={{ fontSize: "clamp(36px,4vw,52px)" }}>
@@ -1011,35 +1065,7 @@ export default function ImpactClientPage() {
           SECTION 5 — GET INVOLVED CTA
       ═══════════════════════════════════════════ */}
       <div className="relative overflow-hidden">
-        {/* Animated rich gradient background matching Deessa's teal & cyan theme */}
-        <div className="absolute inset-0 z-0 bg-[#083344]">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 90, 0],
-              opacity: [0.4, 0.6, 0.4],
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-[30%] -left-[10%] w-[70vw] h-[70vw] rounded-full blur-[140px] mix-blend-screen opacity-50 bg-[#0ea5e9]"
-          />
-          <motion.div
-            animate={{
-              scale: [1, 1.5, 1],
-              rotate: [0, -90, 0],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear", delay: 2 }}
-            className="absolute top-[20%] -right-[20%] w-[60vw] h-[60vw] rounded-full blur-[120px] mix-blend-screen opacity-40 bg-[#f97316]"
-          />
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.4, 0.7, 0.4],
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: 5 }}
-            className="absolute -bottom-[20%] left-[20%] w-[80vw] h-[80vw] rounded-full blur-[160px] mix-blend-screen opacity-50 bg-[#14b8a6]"
-          />
-        </div>
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(135deg,#0b5f8a_0%,#083344_52%,#0b5f8a_100%)]" />
 
         <section className="relative z-10 py-32">
           <div className="max-w-6xl mx-auto px-6">
@@ -1067,9 +1093,9 @@ export default function ImpactClientPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/5 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden"
+                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/8 backdrop-blur-[22px] border border-white/15 shadow-[0_18px_55px_rgba(8,51,68,0.28)] hover:bg-white/12 hover:border-white/25 transition-all duration-500 overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#f97316]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(41,182,200,0.18),rgba(11,95,138,0.06),transparent_72%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="text-5xl drop-shadow-md relative z-10">❤️</span>
                 <div className="relative z-10">
                   <h3 className="font-comic font-bold text-white text-2xl mb-3 tracking-wide">Donate</h3>
@@ -1079,7 +1105,7 @@ export default function ImpactClientPage() {
                 </div>
                 <Link
                   href="/donate"
-                  className="relative z-10 font-comic font-bold bg-orange text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:shadow-[0_0_30px_#f9731660] hover:scale-105 mt-auto"
+                  className="relative z-10 font-comic font-bold bg-[#29b6c8] text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:bg-[#1a8fa0] hover:shadow-[0_0_30px_rgba(41,182,200,0.45)] hover:scale-105 mt-auto"
                 >
                   Fund a Child's Future
                 </Link>
@@ -1092,9 +1118,9 @@ export default function ImpactClientPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.15 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/5 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden"
+                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/8 backdrop-blur-[22px] border border-white/15 shadow-[0_18px_55px_rgba(8,51,68,0.28)] hover:bg-white/12 hover:border-white/25 transition-all duration-500 overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(111,62,150,0.08),transparent_72%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="text-5xl drop-shadow-md relative z-10">🙌</span>
                 <div className="relative z-10">
                   <h3 className="font-comic font-bold text-white text-2xl mb-3 tracking-wide">Volunteer</h3>
@@ -1104,7 +1130,7 @@ export default function ImpactClientPage() {
                 </div>
                 <Link
                   href="/get-involved"
-                  className="relative z-10 font-comic font-bold bg-white/10 backdrop-blur-md border-2 border-white/80 text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:bg-white hover:text-[#0f172a] mt-auto"
+                  className="relative z-10 font-comic font-bold bg-white/10 backdrop-blur-md border-2 border-[#e2f2f7]/70 text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:bg-white hover:text-[#0b5f8a] mt-auto"
                 >
                   Give Your Time & Skills
                 </Link>
@@ -1117,9 +1143,9 @@ export default function ImpactClientPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/5 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:bg-white/10 hover:border-white/20 transition-all duration-500 overflow-hidden"
+                className="group relative p-10 flex flex-col gap-6 rounded-3xl bg-white/8 backdrop-blur-[22px] border border-white/15 shadow-[0_18px_55px_rgba(8,51,68,0.28)] hover:bg-white/12 hover:border-white/25 transition-all duration-500 overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#06b6d4]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(247,197,43,0.14),rgba(41,182,200,0.08),transparent_72%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="text-5xl drop-shadow-md relative z-10">🤝</span>
                 <div className="relative z-10">
                   <h3 className="font-comic font-bold text-white text-2xl mb-3 tracking-wide">Partner</h3>
@@ -1129,7 +1155,7 @@ export default function ImpactClientPage() {
                 </div>
                 <Link
                   href="/contact"
-                  className="relative z-10 font-comic font-bold bg-transparent border-2 border-white/30 text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:border-white hover:bg-white/10 hover:shadow-[0_0_20px_white] mt-auto"
+                  className="relative z-10 font-comic font-bold bg-white/10 backdrop-blur-md border-2 border-white/30 text-white px-8 py-4 rounded-full text-base text-center transition-all duration-300 hover:border-white/60 hover:bg-white/15 hover:shadow-[0_0_24px_rgba(255,255,255,0.18)] mt-auto"
                 >
                   Grow Impact Together
                 </Link>
