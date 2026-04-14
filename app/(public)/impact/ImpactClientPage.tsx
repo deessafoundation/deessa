@@ -7,6 +7,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import PhotoWall from "@/components/photo-wall/photo-wall"
 import { createClient } from "@/lib/supabase/client"
+import type { HomepageStat, HomepageProgram } from "@/lib/types/homepage-settings"
 
 // ─── BRUSH STROKE SVG COMPONENTS ─────────────────────────────────────────────
 
@@ -477,7 +478,12 @@ const defaultHeroPhotoWallPanels = [
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 
-export default function ImpactClientPage() {
+interface ImpactClientPageProps {
+  statsFromCMS?: HomepageStat[]
+  programsFromCMS?: HomepageProgram[]
+}
+
+export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: ImpactClientPageProps = {}) {
   const heroRef = useRef<HTMLElement>(null)
   const [heroLoaded, setHeroLoaded] = useState(false)
   const [heroPhotoWallPanels, setHeroPhotoWallPanels] = useState<typeof defaultHeroPhotoWallPanels | null>(null)
@@ -613,6 +619,7 @@ export default function ImpactClientPage() {
     return () => { document.head.removeChild(style) }
   }, [])
 
+  // Hard-coded fallback stats
   const stats1 = [
     { value: 10000, suffix: "+", label: "Lives Impacted", sublabel: "Across Nepal" },
     { value: 50, suffix: "+", label: "Schools Built", sublabel: "& Renovated" },
@@ -621,16 +628,25 @@ export default function ImpactClientPage() {
   ]
   const stats2 = [
     { value: 120, suffix: "+", label: "Villages Served", sublabel: "Rural Nepal" },
-    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2015" },
+    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2014" },
     { value: 847, suffix: "+", label: "Autism Children", sublabel: "Supported" },
     { value: 200, suffix: "+", label: "Health Camps Run", sublabel: "Free of cost" },
   ]
+
+  // Use CMS stats if available, otherwise use hard-coded defaults
+  const allStats = statsFromCMS && statsFromCMS.length > 0 
+    ? statsFromCMS.sort((a, b) => a.order - b.order)
+    : [...stats1, ...stats2]
+  
+  // Split stats into two rows for display
+  const displayStats1 = allStats.slice(0, 4)
+  const displayStats2 = allStats.slice(4, 8)
 
   const programs = [
     {
       badge: "📚 Education",
       headline: "Building Classrooms, Building Futures",
-      body: "Since 2015, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+      body: "Since 2014, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
       bullets: [
         "50+ schools built & renovated from Humla to Dang",
         "500+ teachers trained in child-centered pedagogy",
@@ -677,6 +693,11 @@ export default function ImpactClientPage() {
     },
   ]
 
+  // Use CMS programs if available, otherwise use hard-coded defaults
+  const displayPrograms = programsFromCMS && programsFromCMS.length > 0
+    ? programsFromCMS.sort((a, b) => a.order - b.order)
+    : programs
+
   const stories = [
     {
       imageSrc: "/StoriesSectionImage.png",
@@ -709,60 +730,38 @@ export default function ImpactClientPage() {
           SECTION 1 — HERO
       ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col overflow-hidden">
-        {/* Full-bleed hero photo with gradient overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/OurImpactThroughTheYear.png"
-            alt="Deessa Foundation Nepal community impact"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          {/* Dark gradient overlay - left to right */}
-          <div 
-            className="absolute inset-0" 
-            style={{
-              background: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)'
-            }}
-          />
-        </div>
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_36%,#dff1f8_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(111,62,150,0.18),transparent_24%),radial-gradient(circle_at_78%_84%,rgba(247,197,43,0.16),transparent_20%),radial-gradient(circle_at_center,rgba(255,255,255,0.42),transparent_58%)]" />
+        <div className="absolute inset-0 z-0 opacity-[0.11] [background-image:linear-gradient(rgba(11,95,138,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.16)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:linear-gradient(to_bottom,black_18%,transparent_92%)]" />
 
-        {/* Photo credit */}
-        <div className="absolute bottom-8 left-8 z-20">
-          <p className="font-dm text-white/60 text-xs tracking-wide">Karnali Province, Nepal</p>
-        </div>
-
-        {/* Hero content - left-aligned */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-            <div className="max-w-2xl">
-              {/* Badge pill */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="mb-6"
-              >
-                <span className="font-comic font-bold bg-teal text-white px-5 py-2 rounded-full text-sm uppercase tracking-wider inline-block">
-                  ✦ OUR IMPACT 2015–2024
-                </span>
-              </motion.div>
-
-              {/* H1 - Two-line, two-color */}
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.7 }}
-                className="mb-6"
-              >
-                <div className="font-marissa text-white leading-none" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
-                  10,000+ Lives.
+        <div className="relative z-10 flex-1">
+          <div className="flex w-full flex-1 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={heroLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full h-full"
+            >
+              <div className="absolute -left-6 top-8 h-40 w-40 rounded-full bg-[rgb(41,182,200)]/24 blur-3xl" />
+              <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-[rgb(111,62,150)]/20 blur-3xl" />
+              {heroPhotoWallPanels ? (
+                <PhotoWall
+                  panels={heroPhotoWallPanels}
+                  size="compact"
+                  eyebrow="Impact in motion"
+                  headline="A wall of lived change across Nepal"
+                  description="✦ OUR IMPACT 2014–2024\n10,000+ Lives. One Mission.\nFrom Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
+                  badges={["Govt Registered", "SWC Affiliated", "10+ Years"]}
+                  className="relative"
+                />
+              ) : (
+                <div className="relative h-[700px] sm:h-[800px] lg:h-[860px] rounded-none overflow-hidden" aria-hidden="true">
+                  <div className="absolute inset-0 bg-stone-50" />
                 </div>
-              </motion.h1>
+              )}
+            </motion.div>
           </div>
         </div>
-      </div>
 
         {/* Brush stroke bleeding into stats section */}
         <div className="relative z-10 -mb-px">
@@ -786,13 +785,13 @@ export default function ImpactClientPage() {
 
           {/* Row 1 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            {stats1.map((s, i) => (
+            {displayStats1.map((s, i) => (
               <StatCounter key={s.label} {...s} delay={i * 150} />
             ))}
           </div>
           {/* Row 2 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats2.map((s, i) => (
+            {displayStats2.map((s, i) => (
               <StatCounter key={s.label} {...s} delay={400 + i * 150} />
             ))}
           </div>
@@ -815,7 +814,7 @@ export default function ImpactClientPage() {
 
           <div className="space-y-28">
             {/* Program 1 — Education */}
-            <ProgramBlock {...programs[0]} reversed={false} />
+            <ProgramBlock {...displayPrograms[0]} reversed={false} />
 
             {/* ─── PAINT-STROKE QUOTE BANNER ─── */}
             <div className="-mx-6 relative" style={{ margin: "4rem -1.5rem" }}>
@@ -892,7 +891,7 @@ export default function ImpactClientPage() {
             </div>
 
             {/* Program 2 — Healthcare */}
-            <ProgramBlock {...programs[1]} reversed={true} />
+            <ProgramBlock {...displayPrograms[1]} reversed={true} />
 
             {/* ─── AUTISM SPECIAL SECTION ─── */}
             <div className="-mx-6 relative">
@@ -996,7 +995,7 @@ export default function ImpactClientPage() {
             </div>
 
             {/* Program 3 — Women Empowerment */}
-            <ProgramBlock {...programs[2]} reversed={false} />
+            <ProgramBlock {...displayPrograms[2]} reversed={false} />
           </div>
         </div>
       </section>

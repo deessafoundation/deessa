@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import ImpactClientPage from "./ImpactClientPage"
+import { getHomepageStats, getHomepagePrograms } from "@/lib/data/homepage-settings"
 
 export const metadata: Metadata = {
   title: "Our Impact | Deessa Foundation — 10 Years of Change in Nepal",
@@ -12,6 +13,15 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ImpactPage() {
-  return <ImpactClientPage />
+export default async function ImpactPage() {
+  // Fetch homepage content from CMS (with fallbacks to hard-coded defaults)
+  const statsSettings = await getHomepageStats()
+  const programsSettings = await getHomepagePrograms()
+
+  return (
+    <ImpactClientPage 
+      statsFromCMS={statsSettings.stats}
+      programsFromCMS={programsSettings.programs}
+    />
+  )
 }
