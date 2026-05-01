@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
+import { notifications } from "@/lib/notifications"
 import { Badge } from "@/components/ui/badge"
 import { 
   Save, 
@@ -69,10 +69,17 @@ export default function HomepageManagerClient({
   const [timeline, setTimeline] = useState<HomepageTimelineSettings>(initialTimeline)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
-  const { toast } = useToast()
 
   const handleSave = async () => {
     setIsSaving(true)
+    
+    // Show loading notification
+    const loadingToast = notifications.showLoading({
+      title: "Saving...",
+      description: "Updating homepage settings...",
+      duration: 0, // Don't auto-dismiss
+    })
+    
     try {
       const response = await fetch("/api/admin/homepage-settings", {
         method: "POST",
@@ -87,18 +94,32 @@ export default function HomepageManagerClient({
         }),
       })
 
-      if (!response.ok) throw new Error("Failed to save settings")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Failed to save settings")
+      }
 
-      toast({
+      // Dismiss loading toast
+      notifications.dismiss()
+      
+      // Show success
+      notifications.showSuccess({
         title: "✅ Saved successfully",
         description: "Homepage settings have been updated.",
+        duration: 4000,
       })
+      
+      // Reset hasChanges flag
       setHasChanges(false)
     } catch (error) {
-      toast({
+      // Dismiss loading toast
+      notifications.dismiss()
+      
+      // Show error
+      notifications.showError({
         title: "❌ Save failed",
-        description: "Could not save homepage settings. Please try again.",
-        variant: "destructive",
+        description: error instanceof Error ? error.message : "Could not save homepage settings. Please try again.",
+        duration: 5000,
       })
     } finally {
       setIsSaving(false)
@@ -112,9 +133,11 @@ export default function HomepageManagerClient({
     setTestimonials(initialTestimonials)
     setTimeline(initialTimeline)
     setHasChanges(false)
-    toast({
-      title: "🔄 Reset",
-      description: "Changes have been discarded.",
+    
+    notifications.showInfo({
+      title: "🔄 Changes discarded",
+      description: "All unsaved changes have been reset to the last saved state.",
+      duration: 3000,
     })
   }
 
