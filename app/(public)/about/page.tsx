@@ -107,7 +107,7 @@ export default async function AboutPage() {
                   {/* Content */}
                   <div>
                     <h3 className="text-2xl font-bold text-primary">{item.year}</h3>
-                    <h4 className="text-xl font-bold text-foreground mt-1">{item.title}</h4>
+                    <h4 className="text-xl font-semibold text-foreground mt-1 font-comic">{item.title}</h4>
                     <p className="text-foreground-muted mt-2">{item.description}</p>
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export default async function AboutPage() {
                     {index % 2 === 0 && (
                       <>
                         <h3 className="text-2xl font-bold text-primary">{item.year}</h3>
-                        <h4 className="text-xl font-bold text-foreground mt-1">{item.title}</h4>
+                        <h4 className="text-xl font-semibold text-foreground mt-1 font-comic">{item.title}</h4>
                         <p className="text-foreground-muted mt-2">{item.description}</p>
                       </>
                     )}
@@ -133,7 +133,7 @@ export default async function AboutPage() {
                     {index % 2 === 1 && (
                       <>
                         <h3 className="text-2xl font-bold text-primary">{item.year}</h3>
-                        <h4 className="text-xl font-bold text-foreground mt-1">{item.title}</h4>
+                        <h4 className="text-xl font-semibold text-foreground mt-1 font-comic">{item.title}</h4>
                         <p className="text-foreground-muted mt-2">{item.description}</p>
                       </>
                     )}
@@ -252,7 +252,7 @@ export default async function AboutPage() {
                     <FileText className="size-5" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-foreground text-sm">{report.title}</h3>
+                    <h3 className="font-semibold text-foreground text-sm font-comic">{report.title}</h3>
                     <p className="text-xs text-foreground-muted">PDF • {report.size}</p>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-foreground-muted group-hover:bg-primary group-hover:text-white transition-all">
