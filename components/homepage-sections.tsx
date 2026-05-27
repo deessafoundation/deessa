@@ -81,12 +81,16 @@ export function OurStorySection() {
               <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Story</span>
               <div className="mx-auto w-full max-w-4xl">
                 <BrushStroke
-                  color="#6F3E96"
+                  variant="calligraphy"
+                  gradient="teal-blue"
+                  tilt={-1.5}
+                  padding="0.6rem 0.5rem"
+                  opacity={0.85}
                   animate={true}
                   animationDuration={1.2}
-                  className="mx-auto"
+                  className="w-fit mx-auto"
                 >
-                  <div className="py-2 px-3 md:px-8">
+                  <div className="py-0 px-2">
                     <h2 className="font-marissa text-3xl md:text-[42px] text-white text-center" style={{ lineHeight: 1.2 }}>
                       How Deesha Started
                     </h2>
@@ -374,13 +378,16 @@ export function TimelineSection() {
             <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Journey</span>
             <div className="mx-auto w-full max-w-4xl">
               <BrushStroke
-                color="#6F3E96"
+                variant="calligraphy"
+                gradient="golden-amber"
+                tilt={1.2}
+                padding="0.7rem 0.5rem"
+                opacity={0.85}
                 animate={true}
                 animationDuration={1.2}
-                className="mx-auto"
-                style={{ minHeight: 150 }}
+                className="w-fit mx-auto"
               >
-                <div className="py-4 md:py-5 px-3 md:px-10 flex items-center justify-center">
+                <div className="py-1 px-2 flex items-center justify-center">
                   <h2 className="text-2xl sm:text-3xl md:text-[3.1rem] font-black text-white leading-none tracking-tight text-center whitespace-nowrap">
                     Together, We Are Changing Lives
                   </h2>
