@@ -112,8 +112,7 @@ export default async function StoriesPage({ searchParams }: StoriesPageProps) {
             </h1>
 
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700 sm:text-xl">
-              These stories capture the small victories, careful routines, and steady hope that shape autism care.
-              The page stays focused on the stories themselves, with a clear featured piece and an asymmetric grid below.
+              These stories capture the small victories, careful routines, and steady hope that shape autism care — one family, one breakthrough, one milestone at a time.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -141,7 +140,7 @@ export default async function StoriesPage({ searchParams }: StoriesPageProps) {
                 Explore the latest journeys and milestones.
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Start with the featured story, then browse the full collection arranged below in a tighter, easier-to-scan layout.
+                Real accounts of growth, resilience, and community — from children, families, and therapists across our programmes.
               </p>
 
               <div className="mt-5 grid grid-cols-3 gap-3">
