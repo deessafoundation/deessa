@@ -33,14 +33,6 @@ import type {
   StartConferencePaymentResult,
 } from "@/lib/types/conference";
 
-// ── Re-export for consumers ───────────────────────────────────────────────────
-
-export type {
-  ConferenceRegistration,
-  ConferenceRegistrationPublic,
-  StartConferencePaymentResult,
-};
-
 // ── Input types ───────────────────────────────────────────────────────────────
 
 export type ConferenceRegistrationData = {
