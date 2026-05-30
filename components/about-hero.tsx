@@ -259,7 +259,7 @@ export function AboutHero() {
             flexWrap: "wrap",
           }}
         >
-          {"Est. 2015", "Govt Registered", "SWC Affiliated"].map((text) => (
+          {["Est. 2015", "Govt Registered", "SWC Affiliated"].map((text) => (
             <span key={text} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <span
                 style={{
