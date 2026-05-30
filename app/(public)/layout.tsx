@@ -6,6 +6,8 @@ import { DevelopmentNoticeModal } from "@/components/development-notice-modal"
 import { VideoModalProvider } from "@/contexts/VideoModalContext"
 import { GlobalVideoModal } from "@/components/global-video-modal"
 
+export const dynamic = "force-dynamic"
+
 export default function PublicLayout({
   children,
 }: {

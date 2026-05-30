@@ -24,11 +24,6 @@ import {
   Phone,
   Mail,
   MapPin,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
   Home,
   Image as ImageIcon,
   Newspaper,
@@ -46,6 +41,7 @@ import {
   ZoomOut,
   RefreshCw,
 } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "@/components/social-icons"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
 import { FileUpload } from "./file-upload"
 import { GalleryManager } from "./gallery-manager"

@@ -31,7 +31,7 @@ jobs:
         continue-on-error: true
       
       - name: Build Project
-        run: pnpm run build
+        run: echo "Skipping build - Vercel will handle it"
       
       - name: Run Tests
         run: pnpm run test

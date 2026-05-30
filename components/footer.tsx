@@ -3,8 +3,9 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Facebook, Twitter, Instagram, Youtube, Settings, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, TrendingUp, Newspaper, Music, Video, Briefcase, Camera, Archive, UserPlus, Handshake } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Settings, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, TrendingUp, Newspaper, Music, Video, Briefcase, Camera, Archive, UserPlus, Handshake } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter-form"
+import { Facebook, Twitter, Instagram, Youtube } from "@/components/social-icons"
 
 const footerLinks = {
   about: [

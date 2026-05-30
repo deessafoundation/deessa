@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server"
 import { AdminLayoutContent } from "@/components/admin/admin-layout-content"
 import type { AdminUser } from "@/lib/types/admin"
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "Admin Panel | deessa Foundation",
   description: "Manage deessa Foundation website content",
