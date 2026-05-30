@@ -41,24 +41,20 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
   return (
     <>
       {/* Filter Tabs */}
-      <div className="flex flex-wrap justify-center gap-3 mb-16">
+      <div className="flex flex-wrap justify-center gap-3 mb-12">
         {categories.map((cat) => (
-          <motion.button
+          <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            whileHover={{ scale: 1.04, y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            className={`min-w-[138px] px-6 py-3 rounded-full font-['Comic_Neue'] font-semibold text-[14px] tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--brand-primary))]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f8f6f1] ${
+            className={`px-5 py-2.5 rounded-full font-['Comic_Neue'] font-bold text-[14px] transition-all duration-300 ${
               activeCategory === cat.id
-                ? "bg-[#3FABDE] text-white border border-[#3FABDE] shadow-[0_12px_24px_rgba(63,171,222,0.28)] hover:bg-[#3FABDE] hover:shadow-[0_14px_28px_rgba(63,171,222,0.32)]"
-                : "bg-white text-[#0B5F8A] border border-[#3FABDE]/35 shadow-[0_1px_0_rgba(255,255,255,0.7)] hover:bg-[#3FABDE]/12 hover:text-[#0B5F8A] hover:border-[#3FABDE] hover:shadow-[0_10px_24px_rgba(63,171,222,0.14)]"
+                ? "bg-[#29b6c8] text-white shadow-lg"
+                : "bg-white text-[#1a1a2e] border-[1.5px] border-[#1a1a2e] hover:border-[#29b6c8]"
             }`}
           >
-            <span className="inline-flex items-center gap-2">
-              {cat.id === "autism" && <span aria-hidden="true">🧩</span>}
-              <span>{cat.label}</span>
-            </span>
-          </motion.button>
+            {cat.id === "autism" && "🧩 "}
+            {cat.label}
+          </button>
         ))}
       </div>
 
@@ -79,61 +75,43 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08, duration: 0.4 }}
-                whileHover={{ y: -8 }}
-                className="group bg-white rounded-2xl overflow-hidden border border-white transition-all duration-300 hover:border-[#29b6c8]/40 hover:shadow-[0_20px_40px_rgba(41,182,200,0.15)] hover:shadow-2xl"
+                className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
               >
                 {/* Image with Category Badge */}
-                <div className="relative h-[220px] overflow-hidden bg-gradient-to-br from-[#29b6c8]/5 to-transparent">
-                  <motion.img
+                <div className="relative h-[200px] overflow-hidden">
+                  <img
                     src={program.image}
                     alt={program.title}
-                    className="w-full h-full object-cover transition-transform duration-500"
-                    whileHover={{ scale: 1.08 }}
+                    className="w-full h-full object-cover"
                   />
-                  {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
                   {/* Category Badge */}
                   <div
-                    className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-['Comic_Neue'] font-bold tracking-wide shadow-lg shadow-black/20 group-hover:scale-105 transition-transform duration-300`}
+                    className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-['Comic_Neue'] font-bold tracking-wide shadow-lg`}
                   >
                     {program.categoryLabel}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-4">
-                  <div>
-                    <h3 className="text-[22px] font-['Marissa'] text-[#1a1a2e] mb-2 leading-tight group-hover:text-[#29b6c8] transition-colors duration-300">
-                      {program.title}
-                    </h3>
-                    <div className="h-0.5 w-8 bg-gradient-to-r from-[#29b6c8] to-[#29b6c8]/30 group-hover:w-12 transition-all duration-300" />
-                  </div>
-                  
-                  <p className="text-[15px] font-['DM_Sans'] text-[#1a1a2e]/70 leading-relaxed line-clamp-2">
+                <div className="p-6">
+                  <h3 className="text-[22px] font-['Marissa'] text-[#1a1a2e] mb-3 leading-tight">
+                    {program.title}
+                  </h3>
+                  <p className="text-[15px] font-['DM_Sans'] text-[#1a1a2e]/70 mb-4 leading-relaxed line-clamp-2">
                     {program.description}
                   </p>
                   
-                  {/* Stat with Icon */}
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#29b6c8]" />
-                    <span className="text-[13px] font-['DM_Sans'] font-semibold text-[#29b6c8]">
-                      {program.stat}
-                    </span>
+                  {/* Stat */}
+                  <div className="mb-4 text-[13px] font-['DM_Sans'] font-semibold text-[#29b6c8]">
+                    {program.stat}
                   </div>
 
-                  {/* Learn More Link with Arrow animation */}
+                  {/* Learn More Link */}
                   <Link
                     href={`/programs/${program.slug}`}
-                    className="inline-flex items-center gap-2 text-[14px] font-['Comic_Neue'] font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-all duration-300 group/link"
+                    className="inline-flex items-center text-[14px] font-['Comic_Neue'] font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-colors"
                   >
-                    <span>Learn More</span>
-                    <motion.span
-                      className="inline-block"
-                      whileHover={{ x: 4 }}
-                    >
-                      →
-                    </motion.span>
+                    Learn More →
                   </Link>
                 </div>
               </motion.div>
@@ -157,7 +135,7 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
             </p>
             <button
               onClick={() => setActiveCategory("all")}
-              className="px-6 py-3 rounded-xl bg-[#3FABDE] text-white font-['Comic_Neue'] font-semibold text-[14px] shadow-sm hover:bg-[#3FABDE] hover:shadow-md transition-all duration-300"
+              className="px-6 py-3 rounded-full bg-[#29b6c8] text-white font-['Comic_Neue'] font-bold text-[14px] hover:bg-[#1a8fa0] transition-colors"
             >
               View All Programs
             </button>

@@ -709,33 +709,55 @@ export default function ImpactClientPage() {
           SECTION 1 — HERO
       ═══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_36%,#dff1f8_100%)]" />
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(111,62,150,0.18),transparent_24%),radial-gradient(circle_at_78%_84%,rgba(247,197,43,0.16),transparent_20%),radial-gradient(circle_at_center,rgba(255,255,255,0.42),transparent_58%)]" />
-        <div className="absolute inset-0 z-0 opacity-[0.11] [background-image:linear-gradient(rgba(11,95,138,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.16)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:linear-gradient(to_bottom,black_18%,transparent_92%)]" />
+        {/* Full-bleed hero photo with gradient overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/OurImpactThroughTheYear.png"
+            alt="Deessa Foundation Nepal community impact"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          {/* Dark gradient overlay - left to right */}
+          <div 
+            className="absolute inset-0" 
+            style={{
+              background: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)'
+            }}
+          />
+        </div>
 
-        <div className="relative z-10 flex-1">
-          <div className="flex w-full flex-1 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={heroLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full h-full"
-            >
-              <div className="absolute -left-6 top-8 h-40 w-40 rounded-full bg-[rgb(41,182,200)]/24 blur-3xl" />
-              <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-[rgb(111,62,150)]/20 blur-3xl" />
-              {heroPhotoWallPanels ? (
-                <PhotoWall
-                  panels={heroPhotoWallPanels}
-                  size="compact"
-                  eyebrow="Impact in motion"
-                  headline="A wall of lived change across Nepal"
-                  description="✦ OUR IMPACT 2014–2024\n10,000+ Lives. One Mission.\nFrom Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
-                  badges={["Govt Registered", "SWC Affiliated", "10+ Years"]}
-                  className="relative"
-                />
-              ) : (
-                <div className="relative h-[700px] sm:h-[800px] lg:h-[860px] rounded-none overflow-hidden" aria-hidden="true">
-                  <div className="absolute inset-0 bg-stone-50" />
+        {/* Photo credit */}
+        <div className="absolute bottom-8 left-8 z-20">
+          <p className="font-dm text-white/60 text-xs tracking-wide">Karnali Province, Nepal</p>
+        </div>
+
+        {/* Hero content - left-aligned */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
+            <div className="max-w-2xl">
+              {/* Badge pill */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="mb-6"
+              >
+                <span className="font-comic font-bold bg-teal text-white px-5 py-2 rounded-full text-sm uppercase tracking-wider inline-block">
+                  ✦ OUR IMPACT 2015–2024
+                </span>
+              </motion.div>
+
+              {/* H1 - Two-line, two-color */}
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.7 }}
+                className="mb-6"
+              >
+                <div className="font-marissa text-white leading-none" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
+                  10,000+ Lives.
                 </div>
               )}
             </motion.div>
