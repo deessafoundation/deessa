@@ -1,0 +1,25 @@
+# Code Owners for Deesha Foundation
+# These owners will be requested for review when someone opens a pull request
+
+# Default owners for everything in the repo
+* @FarhanAlam
+
+# Critical configuration files require extra review
+/.github/ @FarhanAlam
+/vercel.json @FarhanAlam
+/next.config.* @FarhanAlam
+/.env* @FarhanAlam
+
+# Database and API routes
+/app/api/ @FarhanAlam
+/lib/supabase/ @FarhanAlam
+/scripts/*.sql @FarhanAlam
+
+# Payment processing (critical)
+/app/**/donate/ @FarhanAlam
+/app/**/payments/ @FarhanAlam
+/lib/payments/ @FarhanAlam
+
+# Admin functionality
+/app/admin/ @FarhanAlam
+/components/admin/ @FarhanAlam
