@@ -17,21 +17,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-
-      - name: Enable Corepack
-        run: corepack enable
       
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
       
       - name: Run Linter
-        run: pnpm run lint
+        run: npm run lint
         continue-on-error: true
       
       - name: Build Project
-        run: pnpm run build
+        run: npm run build
       
       - name: Run Tests
-        run: pnpm run test
+        run: npm run test
         continue-on-error: true
