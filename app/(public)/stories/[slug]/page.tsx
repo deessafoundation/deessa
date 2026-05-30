@@ -46,6 +46,12 @@ export default async function StoryDetailPage({ params }: PageProps) {
   const sameCategoryStories = otherStories.filter((item) => item.category === story.category).slice(0, 3)
   const relatedStories = sameCategoryStories.length >= 3 ? sameCategoryStories : [...sameCategoryStories, ...otherStories.filter((item) => item.category !== story.category)].slice(0, 3)
 
+  // Pre-sanitize story HTML on the server; sanitizer is async because it
+  // lazy-loads DOMPurify/JSDOM (see lib/sanitize/story-content.ts).
+  const sanitizedContent = story.content
+    ? await sanitizeStoryContent(processStoryContent(story.content), story.id)
+    : ""
+
   // Previous/next navigation
   const storyIndex = allStories.findIndex((item) => item.id === story.id)
   const prevStory = storyIndex > 0 ? allStories[storyIndex - 1] : null
@@ -140,9 +146,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
               <div className="overflow-x-auto">
                 <div
                   className="tiptap story-rich prose prose-lg max-w-none text-[1.1rem] leading-8 text-slate-700 [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:text-lg [&_h3]:font-semibold [&_p]:mb-5 [&_blockquote]:border-l-4 [&_blockquote]:border-cyan-400 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:ml-6 [&_ol]:mb-4"
-                  dangerouslySetInnerHTML={{ 
-                    __html: sanitizeStoryContent(processStoryContent(story.content), story.id) 
-                  }}
+                  dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
               </div>
             ) : (

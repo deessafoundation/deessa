@@ -494,7 +494,7 @@ export default function ImpactClientPage() {
   ]
   const stats2 = [
     { value: 120, suffix: "+", label: "Villages Served", sublabel: "Rural Nepal" },
-    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2014" },
+    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2015" },
     { value: 847, suffix: "+", label: "Autism Children", sublabel: "Supported" },
     { value: 200, suffix: "+", label: "Health Camps Run", sublabel: "Free of cost" },
   ]
@@ -503,7 +503,7 @@ export default function ImpactClientPage() {
     {
       badge: "📚 Education",
       headline: "Building Classrooms, Building Futures",
-      body: "Since 2014, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+      body: "Since 2015, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
       bullets: [
         "50+ schools built & renovated from Humla to Dang",
         "500+ teachers trained in child-centered pedagogy",
@@ -618,7 +618,7 @@ export default function ImpactClientPage() {
                 className="mb-6"
               >
                 <span className="font-comic font-bold bg-teal text-white px-5 py-2 rounded-full text-sm uppercase tracking-wider inline-block">
-                  ✦ OUR IMPACT 2014–2024
+                  ✦ OUR IMPACT 2015–2024
                 </span>
               </motion.div>
 
@@ -770,10 +770,10 @@ export default function ImpactClientPage() {
                   >
                     {/* Text content — on top of paint stroke */}
                     <motion.div
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-40px" }}
-                      transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      viewport={{ once: true, margin: "-30px" }}
+                      transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
                       style={{
                         position: "relative",
                         zIndex: 2,

@@ -234,7 +234,7 @@ export function Footer() {
             <div className="flex flex-wrap gap-3 mb-6">
               <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
                 <Award className="size-3.5 text-primary" />
-                <span className="text-gray-300">Govt Registered NGO since 2014</span>
+                <span className="text-gray-300">Govt Registered NGO since 2015</span>
               </div>
               <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
                 <CheckCircle className="size-3.5 text-primary" />
