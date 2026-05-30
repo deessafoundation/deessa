@@ -759,10 +759,10 @@ export default function ImpactClientPage() {
                 <div className="font-marissa text-white leading-none" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
                   10,000+ Lives.
                 </div>
-              )}
-            </motion.div>
+              </motion.h1>
           </div>
         </div>
+      </div>
 
         {/* Brush stroke bleeding into stats section */}
         <div className="relative z-10 -mb-px">
