@@ -72,7 +72,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
     subtitle:
       homeHero.subtitle ||
       "We are rewriting the future of rural Nepal through education, healthcare, and community empowerment.",
-    badge: homeHero.badge || "Est. 2014 • Kathmandu",
+    badge: homeHero.badge || "Est. 2015 • Kathmandu",
   })
   const [heroButtons, setHeroButtons] = useState({
     primaryText: homeHero.ctaButton?.text || "Start Making Impact",
@@ -579,7 +579,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
                   onChange={(e) =>
                     setHeroContent((prev) => ({ ...prev, badge: e.target.value }))
                   }
-                  placeholder="Est. 2014 • Kathmandu"
+                  placeholder="Est. 2015 • Kathmandu"
                 />
                 <p className="text-xs text-muted-foreground">
                   Small badge or tagline (optional)

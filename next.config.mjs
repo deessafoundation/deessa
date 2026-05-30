@@ -5,12 +5,13 @@ const nextConfig = {
   // runtime directly, not inlined by webpack.
   serverExternalPackages: [
     "@react-pdf/renderer",
+    "jsdom",
+    "isomorphic-dompurify",
+    "html-encoding-sniffer",
+    "@exodus/bytes",
   ],
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   images: {
     unoptimized: true,

@@ -621,7 +621,7 @@ export default function ImpactClientPage() {
   ]
   const stats2 = [
     { value: 120, suffix: "+", label: "Villages Served", sublabel: "Rural Nepal" },
-    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2014" },
+    { value: 3000, suffix: "+", label: "Scholarships Awarded", sublabel: "Since 2015" },
     { value: 847, suffix: "+", label: "Autism Children", sublabel: "Supported" },
     { value: 200, suffix: "+", label: "Health Camps Run", sublabel: "Free of cost" },
   ]
@@ -630,7 +630,7 @@ export default function ImpactClientPage() {
     {
       badge: "📚 Education",
       headline: "Building Classrooms, Building Futures",
-      body: "Since 2014, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+      body: "Since 2015, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
       bullets: [
         "50+ schools built & renovated from Humla to Dang",
         "500+ teachers trained in child-centered pedagogy",

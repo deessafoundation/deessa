@@ -68,7 +68,7 @@ export function OurStorySection() {
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden md:block animate-badge-bounce">
                   <p className="text-4xl font-black font-comic-num">
-                    <CountUp end={2014} prefix="" duration={1500} />
+                    <CountUp end={2015} prefix="" duration={1500} />
                   </p>
                   <p className="text-sm font-bold opacity-90">Founded</p>
                 </div>
@@ -81,12 +81,16 @@ export function OurStorySection() {
               <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Story</span>
               <div className="mx-auto w-full max-w-4xl">
                 <BrushStroke
-                  color="#6F3E96"
+                  variant="calligraphy"
+                  gradient="teal-blue"
+                  tilt={-1.5}
+                  padding="0.6rem 0.5rem"
+                  opacity={0.85}
                   animate={true}
                   animationDuration={1.2}
-                  className="mx-auto"
+                  className="w-fit mx-auto"
                 >
-                  <div className="py-2 px-3 md:px-8">
+                  <div className="py-0 px-2">
                     <h2 className="font-marissa text-3xl md:text-[42px] text-white text-center" style={{ lineHeight: 1.2 }}>
                       How Deesha Started
                     </h2>
@@ -95,7 +99,7 @@ export function OurStorySection() {
               </div>
               <p className="text-lg text-foreground/70 leading-relaxed mb-6">
                 Born from a deep passion for social justice and a belief in the power of community, Deesha Foundation
-                was established in 2014 in Kathmandu, Nepal. What began as a small group of dedicated individuals
+                was established in 2015 in Kathmandu, Nepal. What began as a small group of dedicated individuals
                 has grown into a movement touching thousands of lives.
               </p>
               <p className="text-lg text-foreground/70 leading-relaxed mb-8">
@@ -304,7 +308,7 @@ export function ProgramsSection() {
 export function TimelineSection() {
   const milestones = [
     {
-      year: "2014",
+      year: "2015",
       milestone: "Founded in Kathmandu",
       description: "Deesha Foundation began with a simple commitment: serve communities that are often left behind.",
       icon: MapPin,
@@ -370,24 +374,23 @@ export function TimelineSection() {
 
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
             <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Journey</span>
-            <div className="mx-auto w-full max-w-4xl">
+            <div className="w-full flex justify-center mb-8">
               <BrushStroke
                 color="#6F3E96"
                 animate={true}
                 animationDuration={1.2}
-                className="mx-auto"
-                style={{ minHeight: 150 }}
+                style={{ width: "100%", maxWidth: "850px" }}
               >
-                <div className="py-4 md:py-5 px-3 md:px-10 flex items-center justify-center">
-                  <h2 className="text-2xl sm:text-3xl md:text-[3.1rem] font-black text-white leading-none tracking-tight text-center whitespace-nowrap">
+                <div className="py-6 md:py-8 px-6 flex items-center justify-center relative z-10 w-full">
+                  <h2 className="text-2xl sm:text-3xl md:text-[3.2rem] font-black text-white leading-none tracking-tight text-center whitespace-nowrap">
                     Together, We Are Changing Lives
                   </h2>
                 </div>
               </BrushStroke>
             </div>
-            <p className="text-lg text-foreground/70 leading-relaxed">
+            <p className="text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
               Every year added a new layer of impact. From local beginnings to national outreach, these milestones trace how hope turned into measurable change.
             </p>
           </div>
