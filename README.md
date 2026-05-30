@@ -5,9 +5,11 @@
   
   **Empowering Nepal Through Sustainable Development**
   
-  [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat&logo=next.js)](https://nextjs.org/)
+  [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
   [![Supabase](https://img.shields.io/badge/Supabase-2.0-green?style=flat&logo=supabase)](https://supabase.com/)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+  [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat&logo=github-actions)](https://github.com/features/actions)
+  [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat&logo=vercel)](https://vercel.com/)
   
   **Website:** [deessa.org](https://deessa.org) | **Since:** 2015 | **Location:** Kathmandu, Nepal
   
@@ -15,7 +17,7 @@
   
   deessa Foundation is a non-profit organization dedicated to sustainable development, quality education, and social upliftment for the most vulnerable communities in Nepal.
   
-  [Demo](#demo) • [Features](#features) • [Tech Stack](#tech-stack) • [Getting Started](#getting-started) • [Contributing](#contributing) • [License](#license)
+  [Features](#features) • [Tech Stack](#tech-stack) • [Getting Started](#getting-started) • [Development Workflow](#-development-workflow) • [Contributing](#contributing) • [License](#license)
   
 </div>
 
@@ -67,14 +69,15 @@ Our approach is community-driven, ensuring sustainable change that comes from wi
 
 | Category          | Technology                                                                              |
 | ----------------- | --------------------------------------------------------------------------------------- |
-| **Frontend**      | [Next.js 14](https://nextjs.org/) with App Router                                       |
+| **Frontend**      | [Next.js 16](https://nextjs.org/) with App Router                                       |
 | **Backend**       | [Supabase](https://supabase.com/) (Database, Auth, Storage)                             |
 | **Styling**       | [Tailwind CSS](https://tailwindcss.com/) with custom design system                      |
 | **UI Components** | [shadcn/ui](https://ui.shadcn.com/) built on [Radix UI](https://www.radix-ui.com/)      |
 | **Forms**         | [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/) validation |
 | **Payments**      | Stripe, Khalti, eSewa                                                                   |
-| **Deployment**    | Vercel                                                                                  |
-| **Analytics**     | Vercel Analytics                                                                        |
+| **Deployment**    | [Vercel](https://vercel.com/) via GitHub Actions                                        |
+| **CI/CD**         | [GitHub Actions](https://github.com/features/actions)                                   |
+| **Analytics**     | Vercel Analytics & Speed Insights                                                       |
 
 ### Key Dependencies
 
@@ -88,9 +91,10 @@ Our approach is community-driven, ensuring sustainable change that comes from wi
 
 ### Prerequisites
 
-- Node.js >= 18.x
-- pnpm >= 8.x
+- Node.js >= 22.x
+- npm (comes with Node.js)
 - Supabase account (for database and auth)
+- Vercel account (for deployment)
 
 ### Installation
 
@@ -101,53 +105,46 @@ git clone https://github.com/your-username/deessa-foundation.git
 cd deessa-foundation
 ```
 
-1. **Install dependencies:**
+2. **Install dependencies:**
 
 ```bash
-pnpm install
+npm install
 ```
 
-1. **Environment Setup:**
-   Create a `.env.local` file in the root directory:
-
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Google Maps API (for conference venue map)
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-
-# Payment Providers (optional for development)
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
-KHALTI_SECRET_KEY=your_khalti_secret_key
-ESEWA_MERCHANT_ID=your_esewa_merchant_id
-
-# Payment Configuration
-PAYMENT_MODE=mock # or 'live' for production
-```
-
-1. **Database Setup:**
-   Run the SQL scripts in the `scripts/` directory in order:
-
-- `001-create-tables.sql`
-- `002-admin-schema.sql`
-
-1. **Run Development Server:**
+3. **Environment Setup:**
+   Copy `.env.example` to `.env.local` and fill in your values:
 
 ```bash
-pnpm dev
+cp .env.example .env.local
+# Then edit .env.local with your actual values
+```
+
+See `.env.example` for all required environment variables.
+
+4. **Database Setup:**
+   Run the SQL scripts in the `scripts/` directory in order in your Supabase SQL editor:
+
+   - `001-create-tables.sql`
+   - `002-admin-schema.sql`
+   - And any other numbered scripts in sequence
+
+5. **Run Development Server:**
+
+```bash
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Available Scripts
 
-- `pnpm dev` - Runs the app in development mode
-- `pnpm build` - Builds the app for production
-- `pnpm start` - Runs the built app in production mode
-- `pnpm lint` - Runs ESLint for code quality checks
+- `npm run dev` - Runs the app in development mode with Turbo
+- `npm run build` - Builds the app for production
+- `npm run start` - Runs the built app in production mode
+- `npm run lint` - Runs ESLint for code quality checks
+- `npm run test` - Runs Jest tests
+- `npm run test:watch` - Runs tests in watch mode
+- `npm run test:coverage` - Generates test coverage report
 
 ## 🏗 Project Structure
 
@@ -282,17 +279,146 @@ The admin dashboard includes:
 - Activity logs for audit trails
 - Volunteer and contact submission management
 
+## 🔄 Development Workflow
+
+This project uses a modern CI/CD pipeline with GitHub Actions and Vercel for automated deployments.
+
+### Branch Strategy
+
+```
+feature/your-feature → Pull Request → main → Production
+                       (automated checks)  (protected)  (auto-deploy)
+```
+
+### Creating a New Feature
+
+1. **Create a feature branch:**
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/your-feature-name
+```
+
+2. **Make your changes and commit:**
+
+```bash
+git add .
+git commit -m "feat: add your feature description"
+```
+
+3. **Push to GitHub:**
+
+```bash
+git push origin feature/your-feature-name
+```
+
+4. **Create a Pull Request on GitHub**
+   - Fill in the PR template
+   - Wait for automated checks to pass
+   - Request review from team members
+
+5. **After approval, merge the PR**
+   - Production deployment happens automatically
+   - Monitor the deployment in GitHub Actions
+
+### Automated Workflows
+
+#### Pull Request Checks (`pr-check.yml`)
+Runs on every PR to `main`:
+- ✅ Linting (ESLint)
+- ✅ Build verification
+- ✅ Test suite
+
+#### Preview Deployments (`preview-deploy.yml`)
+Creates a preview deployment for every PR:
+- 🚀 Deploys to Vercel preview environment
+- 💬 Posts preview URL as PR comment
+- 🔍 Allows testing before merging
+
+#### Production Deployment (`deploy.yml`)
+Automatically deploys when code is merged to `main`:
+- 🏗️ Builds the application
+- 🚀 Deploys to Vercel production
+- ✅ Runs in ~2-3 minutes
+
+#### Security Scanning (`security-scan.yml`)
+Runs weekly and on every push:
+- 🔒 npm audit for vulnerabilities
+- 📦 Dependency security checks
+
+#### Dependabot
+Automatically creates PRs for:
+- 📦 Dependency updates (monthly)
+- 🔒 Security patches (immediate)
+- 🤖 Grouped into single PR for convenience
+
+### Branch Protection
+
+The `main` branch is protected with:
+- ✅ Required pull request reviews (1 approval)
+- ✅ Required status checks (build, preview)
+- ✅ Up-to-date branch requirement
+- ✅ Conversation resolution requirement
+
+### Code Review Guidelines
+
+When reviewing PRs:
+1. Check the preview deployment
+2. Verify all tests pass
+3. Review code quality and style
+4. Ensure documentation is updated
+5. Test critical user flows
+
+### Deployment Environments
+
+| Environment | URL | Trigger | Purpose |
+|-------------|-----|---------|---------|
+| **Development** | `localhost:3000` | Manual | Local development |
+| **Preview** | `*.vercel.app` | Every PR | Testing before merge |
+| **Production** | `deessa.org` | Merge to `main` | Live website |
+
 ## 🤝 Contributing
 
 We welcome contributions from the community! Here's how you can help:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch:**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. **Make your changes and commit:**
+   ```bash
+   git commit -m 'feat: add some amazing feature'
+   ```
+4. **Push to your fork:**
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. **Open a Pull Request**
+   - Use the PR template
+   - Link any related issues
+   - Wait for automated checks
+   - Request review
 
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guidelines](CONTRIBUTING.md) for more details.
+### Commit Convention
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, etc.)
+- `refactor:` - Code refactoring
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks
+
+**Examples:**
+```bash
+git commit -m "feat: add donation receipt download"
+git commit -m "fix: resolve payment confirmation bug"
+git commit -m "docs: update deployment guide"
+```
 
 ### Areas for Contribution
 
