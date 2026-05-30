@@ -4,8 +4,13 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
+      interval: "monthly"  # Changed from weekly to monthly
+    open-pull-requests-limit: 5  # Reduced from 10 to 5
+    groups:
+      # Group all npm dependencies into a single PR
+      dependencies:
+        patterns:
+          - "*"
     reviewers:
       - "FarhanAlam"
     assignees:
