@@ -24,13 +24,18 @@ jobs:
         with:
           node-version: 22
       
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       
       - name: Run npm audit
-        run: npm audit --audit-level=moderate
+        run: pnpm audit --audit-level=moderate
         continue-on-error: true
       
       - name: Check for vulnerable dependencies
-        run: npm audit --production
+        run: pnpm audit --prod
         continue-on-error: true

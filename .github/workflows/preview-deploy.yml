@@ -20,8 +20,13 @@ jobs:
         with:
           node-version: 22
       
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
