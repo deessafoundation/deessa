@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-package-lock.json
 desktop.ini
 
 # next.js

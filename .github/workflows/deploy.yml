@@ -17,10 +17,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+           cache: pnpm
+
+        - name: Enable Corepack
+          run: corepack enable
       
       - name: Install Dependencies
-        run: npm ci
+         run: pnpm install --frozen-lockfile
       
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
