@@ -49,6 +49,7 @@ const secondaryNavLinks = [
 const tabletQuickLinks = [
   { href: "/programs", label: "Programs", icon: Briefcase },
   { href: "/events", label: "Events", icon: Calendar },
+  { href: "/stories", label: "Stories", icon: FileText },
   { href: "/contact", label: "Contact", icon: Mail },
   { href: "/support", label: "Support", icon: LifeBuoy },
 ] as const

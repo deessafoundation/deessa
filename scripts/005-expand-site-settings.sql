@@ -21,7 +21,7 @@ VALUES (
     "donorImage2": "https://lh3.googleusercontent.com/aida-public/AB6AXuAQzzIOZUDnI5i7x-Rnn2k4ELK3S1FCIb1F3EuSFxtUqWmskQ7-5WPPojjO-T1yebP4Zhgg-uFd3t4Hk6CSc5nT8xIoOsyxdpIQ5Zdyxboo1c4wL5UnBVoj1rY4vRO86yiTlhaheV6-PfvhGGWJWJVIHXp1jIfy84HkXDw5ZCKpkYujNgDoTCeJwKQNjZ9iLg_m-F0RkpFyF8pqHdtB7ydd2rNkidpGit3y_RPVuumO4GIzMhRneQ5STuJRSxMxhAG6TYvZBSVKoz4",
     "title": "Hope for Every Child.",
     "subtitle": "We are rewriting the future of rural Nepal through education, healthcare, and community empowerment.",
-    "badge": "Est. 2014 • Kathmandu"
+    "badge": "Est. 2015 • Kathmandu"
   }'::jsonb
 )
 ON CONFLICT (key) DO NOTHING;

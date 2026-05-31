@@ -14,8 +14,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  allowedDevOrigins: ["http://172.31.112.1:3000"],
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
