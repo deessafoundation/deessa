@@ -52,7 +52,7 @@ export function OurStorySection() {
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
@@ -79,19 +79,20 @@ export function OurStorySection() {
           <ScrollReveal animation="fade-left" delay={200}>
             <div>
               <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Story</span>
-              <div className="mx-auto w-full max-w-4xl">
+              <div className="mx-auto w-fit max-w-[92vw] mb-5 md:mb-6">
                 <BrushStroke
                   variant="calligraphy"
                   gradient="teal-blue"
-                  tilt={-1.5}
-                  padding="0.6rem 0.5rem"
+                  tilt={-1.2}
+                  width="fit-content"
+                  padding="0.45rem 0.4rem"
                   opacity={0.85}
                   animate={true}
                   animationDuration={1.2}
                   className="w-fit mx-auto"
                 >
-                  <div className="py-0 px-2">
-                    <h2 className="font-marissa text-3xl md:text-[42px] text-white text-center" style={{ lineHeight: 1.2 }}>
+                  <div className="py-0 px-1.5">
+                    <h2 className="font-marissa text-2xl md:text-[34px] text-white text-center" style={{ lineHeight: 1.15 }}>
                       How Deesha Started
                     </h2>
                   </div>
@@ -167,7 +168,7 @@ export function MissionVisionSection() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <ScrollReveal animation="scale-in">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <Image
@@ -573,7 +574,7 @@ export function TestimonialsSection() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {testimonials.map((testimonial, idx) => (
             <ScrollReveal key={testimonial.name} animation="fade-up" delay={idx * 150}>
               <div className="bg-background rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
@@ -831,7 +832,7 @@ export function ContactSection() {
             </h2>
           </div>
         </ScrollReveal>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="space-y-8">
             {contactItems.map((item, i) => {
               const IconComp = item.icon
@@ -852,7 +853,7 @@ export function ContactSection() {
             })}
           </div>
           <ScrollReveal animation="scale-in" delay={200}>
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[380px] md:h-[460px] lg:h-[520px]">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]">
               <iframe
                 src={`https://www.google.com/maps?q=${encodeURIComponent("Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal")}&output=embed&z=16`}
                 width="100%"

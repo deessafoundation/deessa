@@ -107,7 +107,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
-      className="relative w-full h-[100svh] min-h-[620px] overflow-hidden bg-slate-900"
+      className="relative w-full h-[92svh] min-h-[540px] overflow-hidden bg-slate-900 md:h-[100svh] md:min-h-[620px]"
     >
       {/* Slides */}
       {slides.map((slide, i) => (
@@ -143,7 +143,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
           {/* Content - Improved typography and hierarchy */}
           <div className="relative z-10 h-full flex items-center">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="max-w-2xl">
+              <div className="max-w-xl sm:max-w-2xl">
                 {/* Pre-heading tag */}
                 <div
                   className={cn(
@@ -151,14 +151,14 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
                 >
-                  <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full">
+                  <span className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm">
                     Supporting Children with Autism in Nepal
                   </span>
                 </div>
 
                 <h1
                   className={cn(
-                    "text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-5",
+                    "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5",
                     "transition-all duration-500 delay-100",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
@@ -167,7 +167,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                 </h1>
                 <p
                   className={cn(
-                    "text-lg sm:text-xl text-white/85 leading-relaxed mb-8 max-w-xl",
+                    "text-base sm:text-lg md:text-xl text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-lg sm:max-w-xl",
                     "transition-all duration-500 delay-200",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
@@ -176,7 +176,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                 </p>
                 <div
                   className={cn(
-                    "flex flex-wrap gap-4",
+                    "flex flex-col gap-3 sm:flex-row sm:gap-4",
                     "transition-all duration-500 delay-300",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
@@ -184,7 +184,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                   <Button
                     asChild
                     size="lg"
-                    className="h-14 px-8 text-base font-semibold rounded-lg shadow-lg btn-shine"
+                    className="h-12 w-full px-6 text-base font-semibold rounded-lg shadow-lg btn-shine sm:h-14 sm:w-auto sm:px-8"
                   >
                     <Link href={slide.ctaHref}>{slide.cta}</Link>
                   </Button>
@@ -192,7 +192,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     asChild
                     variant="outline"
                     size="lg"
-                    className="h-14 px-8 text-base font-semibold rounded-lg border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white"
+                    className="h-12 w-full px-6 text-base font-semibold rounded-lg border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
                   >
                     <Link href="/programs">Explore Programs</Link>
                   </Button>
@@ -201,7 +201,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                 {/* Trust indicators */}
                 <div
                   className={cn(
-                    "mt-10 flex flex-wrap items-center gap-6 text-sm text-white/70",
+                    "mt-8 hidden flex-wrap items-center gap-4 text-sm text-white/70 sm:flex sm:gap-6",
                     "transition-all duration-500 delay-500",
                     i === current ? "opacity-100" : "opacity-0"
                   )}
@@ -234,14 +234,14 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       {/* Arrow navigation - Always visible on desktop, larger touch targets */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-colors flex items-center justify-center opacity-60 hover:opacity-100 focus:opacity-100"
+        className="absolute left-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-colors flex items-center justify-center opacity-60 hover:opacity-100 focus:opacity-100"
+        className="absolute right-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6" />
@@ -249,7 +249,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
 
       {/* Scroll indicator - Only if motion is not reduced */}
       {!prefersReducedMotion && (
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 animate-scroll-bounce">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 animate-scroll-bounce md:bottom-24">
           <div className="w-6 h-10 rounded-full border-2 border-white/40 flex items-start justify-center p-1.5">
             <div className="w-1.5 h-3 rounded-full bg-white/70" />
           </div>
@@ -257,7 +257,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       )}
 
       {/* News ticker overlay (transparent, slight opacity) */}
-      <div className="absolute top-4 left-0 right-0 z-20 px-3 sm:px-4 lg:px-6">
+      <div className="absolute top-3 left-0 right-0 z-20 px-2 sm:top-4 sm:px-4 lg:px-6">
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-4 rounded-2xl px-4 py-2.5 text-white">
             <span className="shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 sm:text-xs">
@@ -290,7 +290,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       </div>
 
       {/* Bottom controls: dots + pause */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 md:bottom-6">
         {slides.map((_, i) => (
           <button
             key={i}
