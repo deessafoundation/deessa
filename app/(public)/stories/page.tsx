@@ -5,6 +5,10 @@ import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
 import { getPublishedStories, getFeaturedStory } from "@/lib/data/stories"
 import { StoriesSections } from "./StoriesSections"
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: "Stories - Deessa Foundation",
   description: "Read inspiring stories of impact and transformation from our community.",
@@ -28,15 +32,22 @@ interface StoriesPageProps {
   searchParams: Promise<{ filter?: string }>
 }
 
-export default async function StoriesPage({ searchParams }: StoriesPageProps) {
-  const [allStories, featuredStory, params] = await Promise.all([
+export default async function StoriesPage(props: StoriesPageProps) {
+  let searchParams: { filter?: string } = {}
+  
+  try {
+    searchParams = await props.searchParams
+  } catch (error) {
+    console.error("Error reading searchParams:", error)
+  }
+
+  const [allStories, featuredStory] = await Promise.all([
     getPublishedStories(),
     getFeaturedStory(),
-    searchParams,
   ])
 
   const filterOptions = ["all", "latest", "featured"] as const
-  const requestedFilter = (params.filter || "all").toLowerCase()
+  const requestedFilter = (searchParams?.filter || "all").toLowerCase()
   const activeFilter = filterOptions.includes(requestedFilter as (typeof filterOptions)[number])
     ? (requestedFilter as (typeof filterOptions)[number])
     : "all"
