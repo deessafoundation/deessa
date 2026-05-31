@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -15,27 +16,41 @@ import {
   BackToTop,
 } from "@/components/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
+import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
 
-export function ImpactStatsBar() {
-  const stats = [
-    { value: 10000, suffix: "+", label: "Children Supported" },
-    { value: 50, suffix: "+", label: "Schools Built" },
-    { value: 25, suffix: "+", label: "Districts Reached" },
-    { value: 500, suffix: "+", label: "Trained Teachers" },
+interface ImpactStatsBarProps {
+  stats?: HomepageStat[]
+}
+
+export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
+  // Fallback to default stats if not provided
+  const defaultStats = [
+    { value: 10000, suffix: "+", label: "Children Supported", order: 1 },
+    { value: 50, suffix: "+", label: "Schools Built", order: 2 },
+    { value: 25, suffix: "+", label: "Districts Reached", order: 3 },
+    { value: 500, suffix: "+", label: "Trained Teachers", order: 4 },
   ]
+
+  const displayStats = stats || defaultStats
+  
+  // Sort by order and take first 4 for homepage display
+  const sortedStats = [...displayStats].sort((a, b) => a.order - b.order).slice(0, 4)
 
   return (
     <section className="bg-primary/5 border-y border-primary/10 py-8 md:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
-          {stats.map((stat) => (
+          {sortedStats.map((stat) => (
             <div key={stat.label} className="space-y-1">
               <p className="text-2xl md:text-3xl font-bold text-primary font-comic-num">
-                <CountUp end={stat.value} suffix={stat.suffix} />
+                <CountUp end={stat.value} suffix={stat.suffix || ""} />
               </p>
               <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
+              {stat.sublabel && (
+                <p className="text-xs text-slate-500">{stat.sublabel}</p>
+              )}
             </div>
           ))}
         </div>
@@ -306,8 +321,19 @@ export function ProgramsSection() {
 
 /* ──────────────────  TIMELINE SECTION  ────────────────── */
 
-export function TimelineSection() {
-  const milestones = [
+interface TimelineSectionProps {
+  timeline?: HomepageTimelineSettings
+}
+
+export function TimelineSection({ timeline: timelineSettings }: TimelineSectionProps) {
+  // Icon mapping
+  const iconMap: Record<string, any> = {
+    MapPin, GraduationCap, Stethoscope, Heart, Globe, BookOpen,
+    Users, Star, Award, Building2, Leaf, Shield
+  }
+
+  // Default milestones if not provided from CMS
+  const defaultMilestones = [
     {
       year: "2015",
       milestone: "Founded in Kathmandu",
@@ -358,6 +384,20 @@ export function TimelineSection() {
     },
   ]
 
+  // Use CMS milestones if provided, otherwise use defaults
+  const milestones = timelineSettings?.milestones
+    ? timelineSettings.milestones
+        .filter(m => m.visible)
+        .sort((a, b) => a.order - b.order)
+        .map(m => ({
+          ...m,
+          icon: iconMap[m.icon] || MapPin
+        }))
+    : defaultMilestones
+
+  const title = timelineSettings?.title || "Together, We Are Changing Lives"
+  const subtitle = timelineSettings?.subtitle || "Every year added a new layer of impact. From local beginnings to national outreach, these milestones trace how hope turned into measurable change."
+
   const desktopPositions = [
     { top: "10%", left: "61%", width: "35%" },
     { top: "27%", left: "64%", width: "33%" },
@@ -386,13 +426,13 @@ export function TimelineSection() {
               >
                 <div className="py-6 md:py-8 px-6 flex items-center justify-center relative z-10 w-full">
                   <h2 className="text-2xl sm:text-3xl md:text-[3.2rem] font-black text-white leading-none tracking-tight text-center whitespace-nowrap">
-                    Together, We Are Changing Lives
+                    {title}
                   </h2>
                 </div>
               </BrushStroke>
             </div>
             <p className="text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
-              Every year added a new layer of impact. From local beginnings to national outreach, these milestones trace how hope turned into measurable change.
+              {subtitle}
             </p>
           </div>
         </ScrollReveal>
@@ -534,30 +574,43 @@ export function TimelineSection() {
 
 /* ──────────────────  TESTIMONIALS SECTION  ────────────────── */
 
-export function TestimonialsSection() {
-  const testimonials = [
+interface TestimonialsSectionProps {
+  testimonials?: HomepageTestimonialsSettings
+}
+
+export function TestimonialsSection({ testimonials: testimonialsSettings }: TestimonialsSectionProps) {
+  // Default testimonials if not provided from CMS
+  const defaultTestimonials = [
     {
       name: "Sita Sharma",
-      role: "Parent, Kathmandu",
+      role: "Parent",
+      location: "Kathmandu",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
       quote: "Deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
       rating: 5,
     },
     {
       name: "Ram Bahadur Thapa",
-      role: "Village Elder, Gorkha",
+      role: "Village Elder",
+      location: "Gorkha",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
       quote: "The health camp organized by Deesha brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
       rating: 5,
     },
     {
       name: "Maya Gurung",
-      role: "Volunteer, Pokhara",
+      role: "Volunteer",
+      location: "Pokhara",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
       quote: "Volunteering with Deesha has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
       rating: 5,
     },
   ]
+
+  // Use CMS testimonials if provided, otherwise use defaults
+  const testimonials = testimonialsSettings?.testimonials
+    .filter(t => t.visible)
+    .sort((a, b) => a.order - b.order) || defaultTestimonials
 
   return (
     <section className="py-16 md:py-24 bg-muted relative overflow-hidden">
@@ -611,7 +664,7 @@ export function TestimonialsSection() {
                   </div>
                   <div>
                     <h4 className="font-bold text-foreground">{testimonial.name}</h4>
-                    <p className="text-sm text-foreground/60">{testimonial.role}</p>
+                    <p className="text-sm text-foreground/60">{testimonial.role}, {testimonial.location}</p>
                   </div>
                 </div>
               </div>
@@ -741,7 +794,32 @@ const CareInternationalLogo = () => (
   </svg>
 )
 
-export function PartnersSection() {
+interface PartnersSectionProps {
+  settings?: HomepageMarqueeSettings
+}
+
+export function PartnersSection({ settings }: PartnersSectionProps) {
+  // Default settings if not provided from CMS
+  const defaultSettings: HomepageMarqueeSettings = {
+    enabled: true,
+    speed: 50,
+    pauseOnHover: true,
+    repeatOnMobile: true,
+    maxLogoHeight: 60,
+    spacing: "comfortable",
+    grouping: {
+      enabled: false,
+      groups: [],
+    },
+    spacingPresets: {
+      compact: 16,
+      comfortable: 32,
+      spacious: 48,
+    },
+  }
+
+  const marqueeSettings = settings || defaultSettings
+
   const partners = [
     { name: "World Vision", Component: WorldVisionLogo },
     { name: "saalt", Component: SaaltLogo },
@@ -760,6 +838,11 @@ export function PartnersSection() {
     { name: "Rotary International", Component: RotaryLogo },
     { name: "Care International", Component: CareInternationalLogo },
   ]
+
+  // Don't render if marquee is disabled in CMS
+  if (!marqueeSettings.enabled) {
+    return null
+  }
 
   return (
     <section className="relative overflow-hidden py-16 md:py-24 bg-[linear-gradient(180deg,#fffaf4_0%,#f7fbff_100%)]">
@@ -786,17 +869,84 @@ export function PartnersSection() {
 
       <div className="relative mx-auto max-w-[1600px] px-0 sm:px-0 lg:px-0">
         <div className="relative overflow-hidden py-6 md:py-8">
-          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
+            <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
 
-          <div className="flex items-center gap-12 animate-marquee py-3 md:gap-16" style={{ width: "max-content" }}>
-          {[...partners, ...partners, ...partners].map((partner, i) => {
+            {/* Responsive marquee: CMS-controlled settings */}
+            <MarqueeContainer 
+              partners={partners} 
+              settings={marqueeSettings}
+            />
+          </div>
+      </div>
+    </section>
+  )
+}
+
+  function MarqueeContainer({ 
+    partners, 
+    settings 
+  }: { 
+    partners: { name: string; Component: React.FC }[]
+    settings: HomepageMarqueeSettings
+  }) {
+    const [isPaused, setIsPaused] = useState(false)
+    const [repeatCount, setRepeatCount] = useState(3)
+    const [duration, setDuration] = useState(settings.speed || 30)
+
+    useEffect(() => {
+      const calc = () => {
+        const w = typeof window !== 'undefined' ? window.innerWidth : 1200
+        if (w < 640) {
+          setRepeatCount(settings.repeatOnMobile ? 2 : 1)
+          setDuration((settings.speed || 30) * 0.6)
+        } else if (w < 1024) {
+          setRepeatCount(3)
+          setDuration((settings.speed || 30) * 0.9)
+        } else if (w < 1280) {
+          setRepeatCount(4)
+          setDuration((settings.speed || 30) * 1.1)
+        } else {
+          setRepeatCount(6)
+          setDuration((settings.speed || 30) * 1.4)
+        }
+      }
+      calc()
+      window.addEventListener('resize', calc)
+      return () => window.removeEventListener('resize', calc)
+    }, [settings.speed, settings.repeatOnMobile])
+
+    const marqueePartners = Array.from({ length: repeatCount }).flatMap(() => partners)
+
+    // Get spacing based on CMS setting
+    const spacing = settings.spacingPresets[settings.spacing] || settings.spacingPresets.comfortable
+
+    const animationStyle: React.CSSProperties = {
+      width: 'max-content',
+      animation: `marquee ${duration}s linear infinite`,
+      animationPlayState: isPaused ? 'paused' : 'running',
+    }
+
+    return (
+      <div className="relative">
+        <div
+          className="flex items-center py-3 animate-marquee"
+          style={{
+            ...animationStyle,
+            gap: `${spacing}px`,
+          }}
+          onMouseEnter={() => settings.pauseOnHover && setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          aria-hidden="true"
+        >
+          {marqueePartners.map((partner, i) => {
             const LogoComponent = partner.Component
             return (
               <div
                 key={`partner-${i}`}
-                className="group flex-none flex items-center justify-center px-2 py-1 transition-transform duration-300 hover:scale-[1.06]"
+                className="group flex-none flex items-center justify-center px-2 py-1 md:px-3 md:py-2 transition-transform duration-300 hover:scale-105"
                 title={partner.name}
+                style={{ maxHeight: `${settings.maxLogoHeight}px` }}
               >
                 <div className="flex items-center justify-center text-slate-800/95 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
                   <LogoComponent />
@@ -804,12 +954,10 @@ export function PartnersSection() {
               </div>
             )
           })}
-          </div>
         </div>
       </div>
-    </section>
-  )
-}
+    )
+  }
 
 /* ──────────────────  CONTACT SECTION (RESTORED)  ────────────────── */
 
