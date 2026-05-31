@@ -200,7 +200,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
             <div className="relative flex h-16 items-center gap-1 px-3 sm:px-4 lg:px-6">
             <Link
               href="/"
-              className="group absolute left-1/2 flex shrink-0 -translate-x-1/2 items-center gap-3 lg:relative lg:left-auto lg:w-[220px] lg:translate-x-0"
+              className="group absolute left-[49%] flex shrink-0 -translate-x-1/2 items-center gap-3 lg:relative lg:left-auto lg:w-[220px] lg:translate-x-0"
             >
               <div
                 className={cn(
@@ -239,7 +239,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
             {/* Development Badge - Mobile/Tablet: Top right corner */}
             {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
-              <div className="absolute right-16 top-1/2 z-30 -translate-y-1/2 lg:hidden">
+              <div className="absolute left-[50px] top-1/2 z-30 -translate-y-1/2 sm:left-4 lg:hidden">
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 shadow-lg">
                   <span className="relative flex size-1.5">
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
