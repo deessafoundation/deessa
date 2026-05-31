@@ -26,11 +26,11 @@ interface ImpactStatsBarProps {
 
 export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
   // Fallback to default stats if not provided
-  const defaultStats = [
-    { value: 10000, suffix: "+", label: "Children Supported", order: 1 },
-    { value: 50, suffix: "+", label: "Schools Built", order: 2 },
-    { value: 25, suffix: "+", label: "Districts Reached", order: 3 },
-    { value: 500, suffix: "+", label: "Trained Teachers", order: 4 },
+  const defaultStats: HomepageStat[] = [
+    { value: 10000, suffix: "+", label: "Children Supported", sublabel: "Since 2015", order: 1 },
+    { value: 50, suffix: "+", label: "Schools Built", sublabel: "& Renovated", order: 2 },
+    { value: 25, suffix: "+", label: "Districts Reached", sublabel: "Out of 77", order: 3 },
+    { value: 500, suffix: "+", label: "Trained Teachers", sublabel: "In 10 Years", order: 4 },
   ]
 
   const displayStats = stats || defaultStats
