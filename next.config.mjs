@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Production optimizations
+  // Production optimizations and build configuration
   // Prevent Next.js from bundling packages that rely on Node.js native modules,
   // WASM binaries, or dynamic require() calls. These must be loaded by the Node.js
   // runtime directly, not inlined by webpack.
