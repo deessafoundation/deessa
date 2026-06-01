@@ -562,6 +562,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
 
 /* ──────────────────  TESTIMONIALS SECTION  ────────────────── */
 
+import { CircularTestimonials } from "@/components/circular-testimonials"
+
 interface TestimonialsSectionProps {
   testimonials?: HomepageTestimonialsSettings
 }
@@ -573,7 +575,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       name: "Sita Sharma",
       role: "Parent",
       location: "Kathmandu",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
       quote: "Deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
       rating: 5,
     },
@@ -581,7 +583,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       name: "Ram Bahadur Thapa",
       role: "Village Elder",
       location: "Gorkha",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
       quote: "The health camp organized by Deesha brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
       rating: 5,
     },
@@ -589,7 +591,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       name: "Maya Gurung",
       role: "Volunteer",
       location: "Pokhara",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
       quote: "Volunteering with Deesha has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
       rating: 5,
     },
@@ -597,8 +599,16 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
 
   // Use CMS testimonials if provided, otherwise use defaults
   const testimonials = testimonialsSettings?.testimonials
-    .filter(t => t.visible)
+    ?.filter(t => t.visible)
     .sort((a, b) => a.order - b.order) || defaultTestimonials
+
+  // Transform testimonials to match CircularTestimonials format
+  const circularTestimonials = testimonials.map(t => ({
+    name: t.name,
+    designation: `${t.role}, ${t.location}`,
+    quote: t.quote,
+    src: t.image,
+  }))
 
   return (
     <section className="py-16 md:py-24 bg-muted relative overflow-hidden">
@@ -615,49 +625,24 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, idx) => (
-            <ScrollReveal key={testimonial.name} animation="fade-up" delay={idx * 150}>
-              <div className="bg-background rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                <div className="text-primary/20 mb-4">
-                  <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
-                  </svg>
-                </div>
-
-                <p className="text-foreground/80 leading-relaxed mb-6 flex-grow italic">
-                  "{testimonial.quote}"
-                </p>
-
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-500 fill-current"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-4 pt-4 border-t border-border">
-                  <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-primary/20">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-foreground">{testimonial.name}</h4>
-                    <p className="text-sm text-foreground/60">{testimonial.role}, {testimonial.location}</p>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
+        <div className="flex justify-center">
+          <CircularTestimonials
+            testimonials={circularTestimonials}
+            autoplay={true}
+            colors={{
+              name: "hsl(var(--foreground))",
+              designation: "hsl(var(--muted-foreground))",
+              testimony: "hsl(var(--foreground) / 0.8)",
+              arrowBackground: "hsl(var(--primary))",
+              arrowForeground: "hsl(var(--primary-foreground))",
+              arrowHoverBackground: "hsl(var(--primary) / 0.8)",
+            }}
+            fontSizes={{
+              name: "1.75rem",
+              designation: "1rem",
+              quote: "1.125rem",
+            }}
+          />
         </div>
       </div>
     </section>
