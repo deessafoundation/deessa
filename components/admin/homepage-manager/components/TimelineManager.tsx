@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
 import type { HomepageTimelineSettings, TimelineMilestone } from "@/lib/types/homepage-settings"
+import { ColorPicker } from "./ColorPicker"
 
 interface TimelineManagerProps {
   timeline: HomepageTimelineSettings
@@ -25,6 +26,37 @@ export default function TimelineManager({ timeline, onChange }: TimelineManagerP
     updateTimeline({ milestones: newMilestones })
   }
 
+  // Helper function to parse color classes and convert to inline styles
+  const parseColorToStyle = (colorClass: string, type: 'gradient' | 'solid') => {
+    if (type === 'gradient') {
+      // Parse gradient: from-[#color] to-[#color] or from-#color to-#color
+      const fromMatch = colorClass.match(/#[0-9A-Fa-f]{3,6}/)
+      const colors = colorClass.match(/#[0-9A-Fa-f]{3,6}/g)
+      
+      if (colors && colors.length >= 2) {
+        return {
+          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`
+        }
+      } else if (fromMatch) {
+        // Single color gradient (fallback)
+        return {
+          background: fromMatch[0]
+        }
+      }
+    } else {
+      // Parse solid: bg-[#color] or bg-#color
+      const match = colorClass.match(/#[0-9A-Fa-f]{3,6}/)
+      if (match) {
+        return {
+          backgroundColor: match[0]
+        }
+      }
+    }
+    
+    // Fallback to class-based styling
+    return {}
+  }
+
   const addMilestone = () => {
     const newMilestone: TimelineMilestone = {
       id: `milestone-${Date.now()}`,
@@ -32,8 +64,8 @@ export default function TimelineManager({ timeline, onChange }: TimelineManagerP
       milestone: 'New Milestone',
       description: 'Add description here...',
       icon: 'Star',
-      badgeClass: 'from-blue-500 to-blue-600',
-      yearClass: 'bg-blue-500',
+      badgeClass: 'from-[#3FABDE] to-[#2E8BC0]',
+      yearClass: 'bg-[#3FABDE]',
       order: timeline.milestones.length + 1,
       visible: true,
     }
@@ -216,39 +248,39 @@ export default function TimelineManager({ timeline, onChange }: TimelineManagerP
                     <p className="text-xs text-gray-500 mt-1">Icon displayed with the milestone</p>
                   </div>
 
-                  {/* Badge and Year Classes */}
+                  {/* Badge and Year Colors */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Badge Gradient Class</Label>
-                      <Input
-                        value={milestone.badgeClass}
-                        onChange={(e) => updateMilestone(index, { badgeClass: e.target.value })}
-                        placeholder="from-blue-500 to-blue-600"
-                        className="mt-1"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Tailwind gradient classes</p>
-                    </div>
-                    <div>
-                      <Label>Year Badge Class</Label>
-                      <Input
-                        value={milestone.yearClass}
-                        onChange={(e) => updateMilestone(index, { yearClass: e.target.value })}
-                        placeholder="bg-blue-500"
-                        className="mt-1"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Tailwind background class</p>
-                    </div>
+                    <ColorPicker
+                      label="Badge Gradient"
+                      value={milestone.badgeClass}
+                      onChange={(value) => updateMilestone(index, { badgeClass: value })}
+                      type="gradient"
+                      helpText="Icon badge background gradient"
+                    />
+                    <ColorPicker
+                      label="Year Badge Color"
+                      value={milestone.yearClass}
+                      onChange={(value) => updateMilestone(index, { yearClass: value })}
+                      type="solid"
+                      helpText="Year badge background color"
+                    />
                   </div>
 
                   {/* Preview */}
                   <div className="p-4 bg-white rounded-lg border">
                     <div className="flex items-start gap-3">
-                      <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${milestone.badgeClass} flex items-center justify-center text-white shadow-lg`}>
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg"
+                        style={parseColorToStyle(milestone.badgeClass, 'gradient')}
+                      >
                         <span className="text-xs font-bold">{milestone.icon.slice(0, 2)}</span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`inline-flex items-center rounded-full ${milestone.yearClass} text-white text-xs font-black px-3 py-1`}>
+                          <span 
+                            className="inline-flex items-center rounded-full text-white text-xs font-black px-3 py-1"
+                            style={parseColorToStyle(milestone.yearClass, 'solid')}
+                          >
                             {milestone.year}
                           </span>
                         </div>

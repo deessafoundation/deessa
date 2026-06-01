@@ -6,35 +6,32 @@
  */
 
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
+import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { HOMEPAGE_SETTINGS_KEYS } from "@/lib/types/homepage-settings"
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    // Check authentication using the standard admin auth pattern
+    const currentAdmin = await getCurrentAdmin()
     
-    // Check authentication
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    if (!currentAdmin) {
       return NextResponse.json(
-        { error: "Unauthorized" },
+        { error: "Unauthorized - Please log in" },
         { status: 401 }
       )
     }
 
-    // Check if user is admin
-    const { data: adminUser } = await supabase
-      .from("admin_users")
-      .select("id, role")
-      .eq("user_id", user.id)
-      .single()
-
-    if (!adminUser || !["super_admin", "admin", "editor"].includes(adminUser.role)) {
+    // Check if user has permission (SUPER_ADMIN, ADMIN, or EDITOR)
+    if (!["SUPER_ADMIN", "ADMIN", "EDITOR"].includes(currentAdmin.role)) {
       return NextResponse.json(
         { error: "Forbidden - Admin access required" },
         { status: 403 }
       )
     }
+
+    // Use service role client to bypass RLS for admin operations
+    const supabase = createServiceRoleClient()
 
     // Parse request body
     const { settings, hero, heroCarousel, testimonials, timeline } = await request.json()
@@ -118,7 +115,7 @@ export async function POST(request: NextRequest) {
         .from("site_settings")
         .update({
           value: update.value,
-          updated_by: adminUser.id,
+          updated_by: currentAdmin.id,
           updated_at: new Date().toISOString(),
         })
         .eq("key", update.key)
@@ -135,7 +132,7 @@ export async function POST(request: NextRequest) {
         .from("site_settings")
         .update({
           value: hero,
-          updated_by: adminUser.id,
+          updated_by: currentAdmin.id,
           updated_at: new Date().toISOString(),
         })
         .eq("key", "home_hero")
@@ -151,7 +148,7 @@ export async function POST(request: NextRequest) {
     if (hero) updatedKeys.push("home_hero")
     
     await supabase.from("activity_logs").insert({
-      user_id: adminUser.id,
+      user_id: currentAdmin.id,
       action: "update",
       entity_type: "homepage_settings",
       entity_id: null,
@@ -174,16 +171,18 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    // Check authentication using the standard admin auth pattern
+    const currentAdmin = await getCurrentAdmin()
     
-    // Check authentication
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    if (!currentAdmin) {
       return NextResponse.json(
-        { error: "Unauthorized" },
+        { error: "Unauthorized - Please log in" },
         { status: 401 }
       )
     }
+
+    // Use service role client to bypass RLS for admin operations
+    const supabase = createServiceRoleClient()
 
     // Fetch all homepage settings
     const { data, error } = await supabase

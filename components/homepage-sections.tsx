@@ -332,6 +332,36 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     Users, Star, Award, Building2, Leaf, Shield
   }
 
+  // Helper function to parse color classes and convert to inline styles
+  const parseColorToStyle = (colorClass: string, type: 'gradient' | 'solid') => {
+    if (type === 'gradient') {
+      // Parse gradient: extract all hex colors
+      const colors = colorClass.match(/#[0-9A-Fa-f]{3,6}/g)
+      
+      if (colors && colors.length >= 2) {
+        return {
+          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`
+        }
+      } else if (colors && colors.length === 1) {
+        // Single color gradient (fallback)
+        return {
+          background: colors[0]
+        }
+      }
+    } else {
+      // Parse solid: extract first hex color
+      const match = colorClass.match(/#[0-9A-Fa-f]{3,6}/)
+      if (match) {
+        return {
+          backgroundColor: match[0]
+        }
+      }
+    }
+    
+    // Fallback: return empty object (will use Tailwind classes)
+    return {}
+  }
+
   // Default milestones if not provided from CMS
   const defaultMilestones = [
     {
@@ -395,17 +425,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
         }))
     : defaultMilestones
 
-  const title = timelineSettings?.title || "Together, We Are Changing Lives"
-  const subtitle = timelineSettings?.subtitle || "Every year added a new layer of impact. From local beginnings to national outreach, these milestones trace how hope turned into measurable change."
-
-  const desktopPositions = [
-    { top: "10%", left: "61%", width: "35%" },
-    { top: "27%", left: "64%", width: "33%" },
-    { top: "43%", left: "40%", width: "44%" },
-    { top: "61%", left: "8%", width: "43%" },
-    { top: "75%", left: "55%", width: "41%" },
-    { top: "88%", left: "8%", width: "43%" },
-  ]
+  const title = timelineSettings?.title || "Our Impact through the Years"
+  const subtitle = timelineSettings?.subtitle || "For over a decade and counting, we have been transforming lives, building stronger communities, and creating lasting change."
 
   return (
     <section className="py-20 md:py-24 relative overflow-hidden bg-[linear-gradient(180deg,#f6f3ed_0%,#fbfaf7_100%)]">
@@ -414,155 +435,122 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
         <ScrollReveal animation="fade-up">
-          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Journey</span>
-            <div className="w-full flex justify-center mb-8">
-              <BrushStroke
-                color="#6F3E96"
-                animate={true}
-                animationDuration={1.2}
-                style={{ width: "100%", maxWidth: "850px" }}
-              >
-                <div className="py-6 md:py-8 px-6 flex items-center justify-center relative z-10 w-full">
-                  <h2 className="text-2xl sm:text-3xl md:text-[3.2rem] font-black text-white leading-none tracking-tight text-center whitespace-nowrap">
-                    {title}
-                  </h2>
-                </div>
-              </BrushStroke>
-            </div>
-            <p className="text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+              Our <span className="text-primary">Impact through the Years</span>
+            </h2>
+            <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">
               {subtitle}
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="hidden lg:block mt-10 relative h-[1380px]">
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 1380" fill="none" preserveAspectRatio="none" aria-hidden="true">
-            <path
-              d="M705 185 C 860 180, 885 300, 730 365 C 610 415, 630 560, 458 610 C 300 655, 225 760, 74 845 C 130 945, 430 965, 614 1020 C 745 1065, 395 1135, 74 1225"
-              stroke="#3FABDE"
-              strokeWidth="4"
-              strokeDasharray="8 10"
-              strokeLinecap="round"
-            />
-            <circle cx="730" cy="365" r="7" fill="#3FABDE" />
-            <circle cx="458" cy="610" r="7" fill="#3FABDE" />
-            <circle cx="74" cy="845" r="7" fill="#3FABDE" />
-            <circle cx="614" cy="1020" r="7" fill="#3FABDE" />
-            <circle cx="74" cy="1225" r="7" fill="#3FABDE" />
-          </svg>
+        {/* Desktop Timeline */}
+        <div className="hidden lg:block relative max-w-5xl mx-auto">
+          {/* Center vertical line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/20 via-primary/40 to-primary/20 -translate-x-1/2" />
 
-          <ScrollReveal animation="fade-right" delay={80}>
-            <article className="absolute left-0 top-0 w-[57%] rounded-[2rem] overflow-hidden border border-white/70 shadow-[0_38px_72px_-48px_rgba(15,23,42,0.7)]">
-              <Image
-                src="/OurImpactThroughTheYear.png"
-                alt="Our Impact Through the Years"
-                width={760}
-                height={520}
-                className="h-[470px] w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="text-[2.35rem] leading-none font-black text-white mb-3">11 Years of Impact</p>
-                <div className="grid grid-cols-3 gap-2.5">
-                  <div
-                    className="rounded-2xl p-3 text-white"
-                    style={{ background: "linear-gradient(90deg, rgb(var(--brand-primary-dark) / 0.95) 0%, rgb(var(--brand-primary) / 0.95) 100%)" }}
-                  >
-                    <p className="text-[1.85rem] font-black font-comic-num leading-none">10,000+</p>
-                    <p className="text-xs mt-1 uppercase tracking-wide text-white/90">Lives Transformed</p>
-                  </div>
-                  <div
-                    className="rounded-2xl p-3 text-white"
-                    style={{ background: "linear-gradient(90deg, rgb(var(--accent-education) / 0.95) 0%, rgb(245 158 11 / 0.95) 100%)" }}
-                  >
-                    <p className="text-[1.85rem] font-black font-comic-num leading-none">50+</p>
-                    <p className="text-xs mt-1 uppercase tracking-wide text-white/90">Villages Reached</p>
-                  </div>
-                  <div
-                    className="rounded-2xl p-3 text-white"
-                    style={{ background: "linear-gradient(90deg, rgb(var(--accent-environment) / 0.95) 0%, rgb(132 204 22 / 0.95) 100%)" }}
-                  >
-                    <p className="text-[1.85rem] font-black font-comic-num leading-none">200+</p>
-                    <p className="text-xs mt-1 uppercase tracking-wide text-white/90">Students Supported</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </ScrollReveal>
+          {/* Timeline items */}
+          <div className="space-y-16">
+            {milestones.map((item, i) => {
+              const IconComp = item.icon
+              const isLeft = i % 2 === 0
 
-          {milestones.map((item, i) => {
-            const IconComp = item.icon
-
-            return (
-              <ScrollReveal key={item.year} animation={i % 2 === 0 ? "fade-left" : "fade-right"} delay={140 + i * 80}>
-                <article
-                  className="absolute rounded-[1.8rem] bg-white/95 backdrop-blur border border-white/90 p-4 shadow-[0_24px_46px_-34px_rgba(15,23,42,0.68)]"
-                  style={desktopPositions[i]}
+              return (
+                <ScrollReveal 
+                  key={item.year} 
+                  animation={isLeft ? "fade-right" : "fade-left"} 
+                  delay={i * 100}
                 >
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className={`size-14 rounded-full bg-gradient-to-br ${item.badgeClass} text-white shadow-lg ring-4 ring-white flex items-center justify-center`}>
-                      <IconComp className="size-6" />
+                  <div className={`relative flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-8`}>
+                    {/* Card */}
+                    <div className={`w-[calc(50%-2rem)] ${isLeft ? 'text-right' : 'text-left'}`}>
+                      <article className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                        <div className={`flex items-center gap-3 mb-4 ${isLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+                          <div 
+                            className="size-14 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
+                            style={parseColorToStyle(item.badgeClass, 'gradient')}
+                          >
+                            <IconComp className="size-7" />
+                          </div>
+                          <span 
+                            className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
+                            style={parseColorToStyle(item.yearClass, 'solid')}
+                          >
+                            {item.year}
+                          </span>
+                        </div>
+                        <h4 className="text-xl font-bold text-slate-800 mb-2">
+                          {item.milestone}
+                        </h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </article>
                     </div>
 
-                    <span className={`inline-flex items-center rounded-full ${item.yearClass} text-white text-sm font-black px-4 py-1.5 font-comic-num shadow-sm`}>
-                      {item.year}
-                    </span>
-                  </div>
+                    {/* Center dot */}
+                    <div className="absolute left-1/2 -translate-x-1/2 z-10">
+                      <div 
+                        className="size-4 rounded-full ring-4 ring-white shadow-md"
+                        style={parseColorToStyle(item.yearClass, 'solid')}
+                      />
+                    </div>
 
-                  <h4 className="text-[1.65rem] leading-[1.08] font-black text-slate-800 mb-1.5">
-                    {item.milestone}
-                  </h4>
-                  <p className="text-[1rem] leading-7 text-slate-600">
-                    {item.description}
-                  </p>
-                </article>
-              </ScrollReveal>
-            )
-          })}
+                    {/* Empty space on other side */}
+                    <div className="w-[calc(50%-2rem)]" />
+                  </div>
+                </ScrollReveal>
+              )
+            })}
+          </div>
         </div>
 
-        <div className="lg:hidden mt-10 relative pl-7 space-y-4">
-          <div className="absolute left-[9px] top-0 bottom-0 w-[3px] rounded-full bg-primary/20" />
-
-          <ScrollReveal animation="fade-up">
-            <article className="rounded-3xl overflow-hidden border border-primary/15 bg-white shadow-lg">
-              <div className="relative h-[260px]">
-                <Image
-                  src="/OurImpactThroughTheYear.png"
-                  alt="Our Impact Through the Years"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/55 via-black/20 to-transparent" />
-                <p className="absolute left-4 bottom-3 text-3xl font-black text-white">11 Years of Impact</p>
-              </div>
-            </article>
-          </ScrollReveal>
+        {/* Mobile Timeline */}
+        <div className="lg:hidden relative pl-8 space-y-8">
+          {/* Left vertical line */}
+          <div className="absolute left-[15px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/20 via-primary/40 to-primary/20" />
 
           {milestones.map((item, i) => {
             const IconComp = item.icon
 
             return (
-              <ScrollReveal key={item.year} animation="fade-up" delay={i * 80}>
-                <article className="relative rounded-2xl border border-primary/15 bg-white/95 p-4 shadow-[0_16px_32px_-26px_rgba(15,23,42,0.6)]">
-                  <span className={`absolute -left-9 top-6 size-7 rounded-full ${item.yearClass} ring-4 ring-white`} />
-                  <div className="flex items-center gap-2.5 mb-2">
-                    <div className={`size-9 rounded-full bg-gradient-to-br ${item.badgeClass} text-white flex items-center justify-center`}>
-                      <IconComp className="size-4" />
-                    </div>
-                    <span className={`inline-flex items-center rounded-full ${item.yearClass} text-white text-xs font-black px-3 py-1 font-comic-num`}>
-                      {item.year}
-                    </span>
+              <ScrollReveal key={item.year} animation="fade-left" delay={i * 100}>
+                <div className="relative">
+                  {/* Dot on the line */}
+                  <div className="absolute -left-8 top-6">
+                    <div 
+                      className="size-4 rounded-full ring-4 ring-white shadow-md"
+                      style={parseColorToStyle(item.yearClass, 'solid')}
+                    />
                   </div>
-                  <h4 className="font-black text-foreground text-lg leading-tight">
-                    {item.milestone}
-                  </h4>
-                  <p className="text-sm leading-relaxed text-foreground/70 mt-1.5">
-                    {item.description}
-                  </p>
-                </article>
+
+                  {/* Card */}
+                  <article className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div 
+                        className="size-12 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
+                        style={parseColorToStyle(item.badgeClass, 'gradient')}
+                      >
+                        <IconComp className="size-6" />
+                      </div>
+                      <span 
+                        className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
+                        style={parseColorToStyle(item.yearClass, 'solid')}
+                      >
+                        {item.year}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-bold text-slate-800 mb-2">
+                      {item.milestone}
+                    </h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </article>
+                </div>
               </ScrollReveal>
             )
           })}
