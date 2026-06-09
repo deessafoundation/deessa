@@ -540,7 +540,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
 
       .hero-h1    { font-size: clamp(52px, 7vw, 88px); }
       .program-h2 { font-size: clamp(32px, 4vw, 48px); }
-      .stat-number { font-size: clamp(48px, 6vw, 72px); }
+      .stat-number { font-size: clamp(36px, 6vw, 72px); }
       .stat-label  { font-size: 16px; }
       .stat-sublabel { font-size: 13px; }
 
