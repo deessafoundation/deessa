@@ -374,107 +374,220 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile/tablet drawer */}
+      {/* Mobile/tablet drawer - Redesigned */}
       <div
         className={cn(
           "fixed inset-0 z-40 lg:hidden transition-opacity duration-300",
           mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         )}
       >
+        {/* Dimmed dark overlay */}
         <div
-          className="absolute inset-0 bg-black/35"
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden
         />
 
+        {/* Sidebar */}
         <div
           className={cn(
-            "absolute right-0 top-0 h-full w-[40vw] bg-white shadow-2xl transition-transform duration-300 ease-out dark:bg-slate-950",
+            "absolute right-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 ease-out",
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           )}
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
         >
-          <nav className="flex h-full flex-col overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 dark:border-slate-800 sm:px-5">
-              <span className="text-base font-medium text-slate-900 dark:text-slate-100">Menu</span>
-              <button
-                type="button"
-                className="rounded-lg border border-slate-200 p-2 text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="Close menu"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <div className="grid gap-2 grid-cols-1">
-                {mobileNavLinks.map((link) => {
-                  const IconComponent = link.icon
-                  const active = isNavLinkActive(pathname, hash, link.href)
-                  return (
-                    <Link
-                      key={link.href + link.label}
-                      href={link.href}
-                      className={cn(
-                        "flex min-h-12 items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm transition-colors duration-200",
-                        active
-                          ? "border-primary/40 bg-primary/10 text-primary"
-                          : "border-transparent text-slate-700 hover:border-[#3FABDE]/40 hover:bg-[#3FABDE]/12 hover:text-[#0B5F8A] dark:text-slate-300 dark:hover:bg-slate-900"
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <span
-                        className={cn(
-                          "inline-flex size-8 shrink-0 items-center justify-center rounded-full",
-                          active ? "bg-primary/15 text-primary" : "bg-slate-100 text-slate-600"
-                        )}
-                      >
-                        <IconComponent className="size-4" />
-                      </span>
-                      <span className="text-[15px]">{link.label}</span>
-                    </Link>
-                  )
-                })}
+          <nav className="flex h-full flex-col">
+            {/* Header with BETA badge and close button */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+              {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700">
+                  <span className="relative flex size-1.5">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex size-1.5 rounded-full bg-amber-500" />
+                  </span>
+                  Beta
+                </div>
+              )}
+              <div className="ml-auto">
+                <button
+                  type="button"
+                  className="rounded-full p-1.5 text-slate-600 transition-colors hover:bg-slate-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X className="size-5" />
+                </button>
               </div>
             </div>
 
-            <div className="mt-auto grid gap-2 border-t border-slate-200 p-3 dark:border-slate-800 sm:p-4">
-              {supportEnabled && (
+            {/* Scrollable navigation content */}
+            <div className="flex-1 overflow-y-auto px-5 py-5">
+              {/* Explore Section */}
+              <div className="mb-6">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Explore
+                </h3>
+                <div className="space-y-1">
+                  {[
+                    { href: "/", label: "Home", icon: Home },
+                    { href: "/about", label: "Who We Are", icon: Users },
+                    { href: "/our-story", label: "Our Story", icon: FileText },
+                    { href: "/#what-we-do", label: "What We Do", icon: LayoutGrid },
+                    { href: "/programs", label: "Programs", icon: Briefcase },
+                  ].map((link) => {
+                    const IconComponent = link.icon
+                    const active = isNavLinkActive(pathname, hash, link.href)
+                    return (
+                      <Link
+                        key={link.href + link.label}
+                        href={link.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
+                          active
+                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
+                            : "text-slate-700 hover:bg-slate-50"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex size-[34px] shrink-0 items-center justify-center rounded-[9px] transition-colors",
+                            active
+                              ? "bg-[#2F9BCA] text-white"
+                              : "bg-[#f2f4f6] text-[#7a9aaa]"
+                          )}
+                        >
+                          <IconComponent className="size-4" strokeWidth={2} />
+                        </span>
+                        <span className="text-[15px]">{link.label}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Community Section */}
+              <div className="mb-6">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Community
+                </h3>
+                <div className="space-y-1">
+                  {[
+                    { href: "/impact", label: "Impact", icon: Award },
+                    { href: "/stories", label: "Stories", icon: FileText },
+                    { href: "/events", label: "Events", icon: Calendar },
+                    { href: "/podcasts", label: "Podcasts", icon: Headphones },
+                  ].map((link) => {
+                    const IconComponent = link.icon
+                    const active = isNavLinkActive(pathname, hash, link.href)
+                    return (
+                      <Link
+                        key={link.href + link.label}
+                        href={link.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
+                          active
+                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
+                            : "text-slate-700 hover:bg-slate-50"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex size-[34px] shrink-0 items-center justify-center rounded-[9px] transition-colors",
+                            active
+                              ? "bg-[#2F9BCA] text-white"
+                              : "bg-[#f2f4f6] text-[#7a9aaa]"
+                          )}
+                        >
+                          <IconComponent className="size-4" strokeWidth={2} />
+                        </span>
+                        <span className="text-[15px]">{link.label}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Connect Section */}
+              <div>
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Connect
+                </h3>
+                <div className="space-y-1">
+                  {[
+                    supportEnabled && { href: "/support", label: "Support", icon: LifeBuoy },
+                    { href: "/contact", label: "Contact", icon: Mail },
+                  ].filter(Boolean).map((link) => {
+                    const IconComponent = link.icon
+                    const active = isNavLinkActive(pathname, hash, link.href)
+                    return (
+                      <Link
+                        key={link.href + link.label}
+                        href={link.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
+                          active
+                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
+                            : "text-slate-700 hover:bg-slate-50"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex size-[34px] shrink-0 items-center justify-center rounded-[9px] transition-colors",
+                            active
+                              ? "bg-[#2F9BCA] text-white"
+                              : "bg-[#f2f4f6] text-[#7a9aaa]"
+                          )}
+                        >
+                          <IconComponent className="size-4" strokeWidth={2} />
+                        </span>
+                        <span className="text-[15px]">{link.label}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Sticky Footer with CTAs */}
+            <div className="border-t border-slate-200 bg-white px-5 py-4">
+              <div className="space-y-2.5">
+                {/* Primary solid blue button */}
+                {supportEnabled && (
+                  <Link
+                    href="/support"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]"
+                  >
+                    <LifeBuoy className="size-4" strokeWidth={2.5} />
+                    Support us
+                  </Link>
+                )}
+
+                {/* Outline blue border button */}
                 <Link
-                  href="/support"
+                  href="/conference/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 hover:text-amber-950"
+                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-[#2F9BCA] bg-white px-4 py-3 text-[15px] font-medium text-[#2F9BCA] transition-all hover:bg-[#f0f8fc] active:scale-[0.98]"
                 >
-                  <LifeBuoy className="size-4" />
-                  Support
+                  <ClipboardList className="size-4" strokeWidth={2.5} />
+                  Register for Conference
                 </Link>
-              )}
 
-              <Link
-                href="/conference/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-primary/50 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-[#3FABDE]/20 hover:text-[#0B5F8A]"
-              >
-                <ClipboardList className="size-4" />
-                Register for Conference
-              </Link>
-
-              <Button
-                asChild
-                className="h-11 w-full rounded-xl bg-gradient-to-r from-primary to-primary/85 font-semibold shadow-md"
-              >
+                {/* Soft ghost blue button */}
                 <Link
                   href="/donate"
-                  className="flex items-center justify-center gap-1.5"
                   onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#e8f5fb] px-4 py-3 text-[15px] font-medium text-[#1a6f96] transition-all hover:bg-[#d9eef8] active:scale-[0.98]"
                 >
-                  <Heart className="size-4 fill-current" />
+                  <Heart className="size-4 fill-current" strokeWidth={2.5} />
                   Donate
                 </Link>
-              </Button>
+              </div>
             </div>
           </nav>
         </div>
