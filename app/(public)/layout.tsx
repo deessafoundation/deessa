@@ -15,7 +15,7 @@ export default function PublicLayout({
 }) {
   return (
     <VideoModalProvider>
-      <div className="relative flex min-h-screen w-full flex-col">
+      <div className="website-layout relative flex min-h-screen w-full flex-col">
         <IntroVideo />
         <NavbarWrapper />
         <DevelopmentNoticeModal />

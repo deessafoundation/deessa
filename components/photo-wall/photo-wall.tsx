@@ -65,7 +65,7 @@ export default function PhotoWall({
                     </div>
                   )}
                   {headline && (
-                    <h1 className="mt-5 max-w-xl text-5xl font-semibold leading-[0.92] tracking-[-0.05em] sm:text-6xl lg:text-[5.2rem]" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+                    <h1 className="mt-5 max-w-xl text-5xl font-semibold leading-[0.92] tracking-[-0.05em] sm:text-6xl lg:text-[5.2rem]">
                       {headline}
                     </h1>
                   )}
@@ -203,7 +203,7 @@ export default function PhotoWall({
                 </div>
               )}
               {headline && (
-                <h1 className="mt-4 max-w-[18ch] text-[2.2rem] font-semibold leading-[0.95] tracking-[-0.04em] text-[#182433]" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+                <h1 className="mt-4 max-w-[18ch] text-[2.2rem] font-semibold leading-[0.95] tracking-[-0.04em] text-[#182433]">
                   {headline}
                 </h1>
               )}

@@ -275,7 +275,7 @@ export default function OurStoryPage() {
               return (
                 <div key={item.year} className="relative flex flex-col items-start md:flex-row md:items-center">
                   <div className={`hidden md:block md:w-1/2 ${isEven ? "pr-12 text-right" : "order-3 pl-12 text-left"}`}>
-                    <p className={`text-lg font-bold ${item.textColor}`}>{item.year}</p>
+                    <p className={`font-marissa text-lg font-bold ${item.textColor}`}>{item.year}</p>
                   </div>
 
                   <div className={`relative z-10 inline-flex size-12 items-center justify-center rounded-full text-white shadow-lg ${item.color} md:size-14`}>
@@ -283,7 +283,7 @@ export default function OurStoryPage() {
                   </div>
 
                   <div className={`mt-3 w-full md:mt-0 md:w-1/2 ${isEven ? "md:pl-12" : "md:order-1 md:pr-12"}`}>
-                    <p className={`mb-2 text-lg font-bold md:hidden ${item.textColor}`}>{item.year}</p>
+                    <p className={`font-marissa mb-2 text-lg font-bold md:hidden ${item.textColor}`}>{item.year}</p>
                     <div className={`bg-surface rounded-3xl p-6 ${isEven ? "text-left" : "text-left md:text-right"}`}>
                       <p className="text-foreground-muted">{item.text}</p>
                     </div>

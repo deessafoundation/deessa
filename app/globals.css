@@ -34,7 +34,7 @@
 
 /* Force Comic Neue on numbers and ampersands inside headings */
 .font-comic-num {
-  font-family: "Comic Neue", cursive, sans-serif !important;
+  font-family: "Comic Neue", sans-serif !important;
   font-weight: 700;
 }
 
@@ -159,7 +159,7 @@
 }
 
 @theme inline {
-  --font-sans: "Comic Neue", cursive, sans-serif;
+  --font-sans: "Comic Neue", sans-serif;
   --font-heading: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -222,6 +222,17 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Apply Marissa font to all headings in website pages only */
+  .website-layout h1,
+  .website-layout h2,
+  .website-layout h3,
+  .website-layout h4,
+  .website-layout h5,
+  .website-layout h6 {
+    font-family: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
+    font-weight: 700;
   }
 }
 
@@ -1196,7 +1207,7 @@ body.high-contrast img {
 
 /* Comic Neue font for numbers */
 .font-comic-num {
-  font-family: "Comic Neue", cursive, sans-serif;
+  font-family: "Comic Neue", sans-serif;
   font-weight: 700;
 }
 

@@ -896,7 +896,10 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
     const animationStyle: React.CSSProperties = {
       width: 'max-content',
-      animation: `marquee ${duration}s linear infinite`,
+      animationName: 'marquee',
+      animationDuration: `${duration}s`,
+      animationTimingFunction: 'linear',
+      animationIterationCount: 'infinite',
       animationPlayState: isPaused ? 'paused' : 'running',
     }
 
