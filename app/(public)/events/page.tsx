@@ -195,18 +195,12 @@ export default function EventsPage() {
                 date={{
                   day: new Date(event.event_date).getDate().toString(),
                   month: new Date(event.event_date).toLocaleString("en-US", { month: "short" }),
-                  full: new Date(event.event_date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }),
                 }}
                 time={event.event_time || ""}
                 location={event.location}
                 category={event.category}
                 href={`/events/${event.id}`}
                 variant="secondary"
-                isPast
               />
             ))}
           </div>
