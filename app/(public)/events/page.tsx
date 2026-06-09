@@ -106,6 +106,7 @@ export default function EventsPage() {
                       src={event.image || "/placeholder.svg"}
                       alt={event.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {event.verified && (
