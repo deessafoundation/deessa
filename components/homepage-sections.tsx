@@ -83,7 +83,7 @@ export function OurStorySection() {
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden md:block animate-badge-bounce">
                   <p className="text-4xl font-black font-comic-num">
-                    <CountUp end={2015} prefix="" duration={1500} />
+                    2015
                   </p>
                   <p className="text-sm font-bold opacity-90">Founded</p>
                 </div>
