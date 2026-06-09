@@ -284,6 +284,7 @@ export function IntroVideo() {
               width={900}
               height={900}
               className="object-contain drop-shadow-2xl"
+              style={{ width: 'auto', height: 'auto' }}
               priority
             />
           </div>

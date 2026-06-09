@@ -217,6 +217,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                       width={96}
                       height={96}
                       className="object-contain pt-1 pl-4 transition-transform duration-200 scale-[3] group-hover:scale-[3.25]"
+                      style={{ width: 'auto', height: 'auto' }}
                       priority
                     />
                   </div>

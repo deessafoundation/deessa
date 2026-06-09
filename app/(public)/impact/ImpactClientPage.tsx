@@ -535,7 +535,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       }
 
       .font-marissa { font-family: 'Marissa Font', 'Georgia', serif !important; }
-      .font-comic   { font-family: 'Comic Neue', 'Comic Sans MS', cursive !important; }
+      .font-comic   { font-family: 'Comic Neue', 'Comic Sans MS', sans-serif !important; }
       .font-dm      { font-family: 'DM Sans', system-ui, sans-serif !important; }
 
       .hero-h1    { font-size: clamp(52px, 7vw, 88px); }
@@ -586,7 +586,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
         backdrop-filter: blur(12px);
         border-radius: 999px;
         padding: 8px 18px;
-        font-family: 'Comic Neue', cursive;
+        font-family: 'Comic Neue', sans-serif;
         font-weight: 700;
         color: white;
         font-size: 13px;
@@ -1026,10 +1026,13 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
           >
             {/* Photo — 60% */}
             <div className="relative lg:w-3/5 aspect-video lg:aspect-auto min-h-[360px]">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200&auto=format&fit=crop"
                 alt="Featured story — Ramesh Karki"
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                unoptimized
               />
             </div>
             {/* Quote — 40% */}
