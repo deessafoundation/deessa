@@ -91,10 +91,6 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
   const filteredTabletQuickLinks = tabletQuickLinks.filter(link => 
     supportEnabled || link.href !== '/support'
   )
-  
-  const mobileNavLinks = Array.from(
-    new Map([...primaryNavLinks, ...filteredSecondaryNavLinks].map((link) => [link.href + link.label, link])).values()
-  )
 
   useEffect(() => {
     const handleLogoFlying = () => setHideNavbarLogo(true)
@@ -210,13 +206,13 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                 )}
               >
                 <div data-navbar-logo className="relative shrink-0">
-                  <div data-navbar-logo-target className="relative flex h-16 w-16 items-center p-1 justify-center sm:h-[72px] sm:w-[72px]">
+                  <div data-navbar-logo-target className="relative flex h-16 w-16 items-center justify-center p-1 sm:h-[72px] sm:w-[72px]">
                     <Image
                       src="/logo.png"
                       alt="Deesha Foundation"
                       width={96}
                       height={96}
-                      className="object-contain pt-1 pl-4 transition-transform duration-200 scale-[3] group-hover:scale-[3.25]"
+                      className="object-contain transition-transform duration-200 scale-[2] group-hover:scale-[2.2]"
                       style={{ width: 'auto', height: 'auto' }}
                       priority
                     />
@@ -399,7 +395,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
           aria-label="Site navigation"
         >
           <nav className="flex h-full flex-col">
-            {/* Header with BETA badge and close button */}
+            {/* Header with logo, BETA badge and close button */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
               {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700">
@@ -410,7 +406,22 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                   Beta
                 </div>
               )}
-              <div className="ml-auto">
+              
+              {/* Logo in center - Simple with padding */}
+              <div className="flex-1 flex items-center justify-center px-4">
+                <div className="relative h-14 w-14">
+                  <Image
+                    src="/logo.png"
+                    alt="Deessa Foundation"
+                    width={56}
+                    height={56}
+                    className="object-contain w-full h-full"
+                    priority
+                  />
+                </div>
+              </div>
+
+              <div>
                 <button
                   type="button"
                   className="rounded-full p-1.5 text-slate-600 transition-colors hover:bg-slate-100"
@@ -426,7 +437,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
             <div className="flex-1 overflow-y-auto px-5 py-5">
               {/* Explore Section */}
               <div className="mb-6">
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#111]">
                   Explore
                 </h3>
                 <div className="space-y-1">
@@ -470,7 +481,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
               {/* Community Section */}
               <div className="mb-6">
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#111]">
                   Community
                 </h3>
                 <div className="space-y-1">
@@ -513,14 +524,14 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
               {/* Connect Section */}
               <div>
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#111]">
                   Connect
                 </h3>
                 <div className="space-y-1">
                   {[
-                    supportEnabled && { href: "/support", label: "Support", icon: LifeBuoy },
+                    ...(supportEnabled ? [{ href: "/support", label: "Support", icon: LifeBuoy }] : []),
                     { href: "/contact", label: "Contact", icon: Mail },
-                  ].filter(Boolean).map((link) => {
+                  ].map((link) => {
                     const IconComponent = link.icon
                     const active = isNavLinkActive(pathname, hash, link.href)
                     return (
