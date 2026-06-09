@@ -32,7 +32,7 @@ const fadeUp = {
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as const },
   }),
 }
 
@@ -41,7 +41,7 @@ const fadeLeft = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
   },
 }
 
@@ -50,7 +50,7 @@ const fadeRight = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
   },
 }
 
@@ -104,8 +104,6 @@ export function StoriesSections({
         id="featured"
         className="relative overflow-hidden bg-[#faf9f6] py-24"
       >
-        {/* Subtle grain texture overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]" />
         {/* Decorative blobs */}
         <div className="pointer-events-none absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-violet-100/40 blur-[100px]" />
         <div className="pointer-events-none absolute -right-24 bottom-0 h-[400px] w-[400px] rounded-full bg-teal-100/40 blur-[100px]" />
@@ -206,7 +204,7 @@ export function StoriesSections({
                 </div>
 
                 <Link
-                  href={`/stories/${primaryStory.slug}`}
+                  href={`/stories/${primaryStory.slug || primaryStory.id}`}
                   className="group mt-8 inline-flex items-center gap-3 rounded-full bg-[#1a1a2e] px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(26,26,46,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-10px_rgba(26,26,46,0.5)]"
                 >
                   Read Full Story
