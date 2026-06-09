@@ -100,7 +100,6 @@
   "devDependencies": {
     "@jest/globals": "^30.4.1",
     "@tailwindcss/postcss": "^4.1.9",
-    "@types/dompurify": "^3.2.0",
     "@types/jest": "^30.0.0",
     "@types/jsdom": "^28.0.1",
     "@types/node": "^25",
