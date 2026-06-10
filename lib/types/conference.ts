@@ -74,6 +74,10 @@ export interface ConferenceRegistration {
   // Status timestamps
   confirmed_at: string | null
   cancelled_at: string | null
+
+  // Dynamic form fields (Phase 1)
+  custom_fields?: Record<string, unknown> | null
+  form_schema_version?: number | null
 }
 
 /** Minimal shape returned by public verify-registration endpoint (PII) */
