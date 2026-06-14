@@ -12,15 +12,26 @@ export interface DonationProviderData {
   payment_id?: string | null         // Legacy support
 }
 
+export interface SessionRefs {
+  stripeSessionId?: string | null
+  khaltiPidx?: string | null
+  esewaTransactionUuid?: string | null
+  paymentIntentId?: string | null
+  sessionId?: string | null
+  subscriptionId?: string | null
+  customerId?: string | null
+}
+
 /**
  * Get the dashboard URL for a payment provider
  * Returns null if the provider is not supported or required data is missing
  * 
- * Priority order for Stripe: payment_intent_id > session_id > payment_id (legacy)
+ * Priority order for Stripe: payment_intent_id > session_id > stripeSessionId > payment_id (legacy)
  */
 export function getProviderDashboardUrl(
   provider: string,
-  donation: DonationProviderData
+  donation: DonationProviderData,
+  sessionRefs?: SessionRefs
 ): string | null {
   const isTestMode = process.env.NEXT_PUBLIC_PAYMENT_MODE === "test"
   
@@ -30,12 +41,13 @@ export function getProviderDashboardUrl(
     isTestMode,
     envVar: process.env.NEXT_PUBLIC_PAYMENT_MODE,
     donation,
+    hasSessionRefs: !!sessionRefs,
   })
 
   switch (provider.toLowerCase()) {
     case "stripe": {
-      // Priority: payment_intent_id > session_id > payment_id (legacy)
-      const stripeId = donation.payment_intent_id || donation.session_id || donation.payment_id
+      // Priority: payment_intent_id > session_id > stripeSessionId (from registration table) > payment_id
+      const stripeId = donation.payment_intent_id || donation.session_id || sessionRefs?.stripeSessionId || donation.payment_id
       
       console.log('Stripe case:', { stripeId })
       
@@ -73,8 +85,8 @@ export function getProviderDashboardUrl(
     }
 
     case "khalti": {
-      // Use any available ID
-      const khaltiId = donation.payment_id || donation.session_id
+      // Use payment_id, session_id, or khaltiPidx from registration table
+      const khaltiId = donation.payment_id || donation.session_id || sessionRefs?.khaltiPidx
       if (!khaltiId) return null
       
       // Clean the ID (remove provider prefix like "khalti:" if present)
@@ -85,8 +97,8 @@ export function getProviderDashboardUrl(
     }
 
     case "esewa": {
-      // Use any available ID
-      const esewaId = donation.payment_id || donation.session_id
+      // Use payment_id, session_id, or esewaTransactionUuid from registration table
+      const esewaId = donation.payment_id || donation.session_id || sessionRefs?.esewaTransactionUuid
       if (!esewaId) return null
       
       // Clean the ID (remove provider prefix like "esewa:" if present)
@@ -127,8 +139,8 @@ export function getProviderDashboardLabel(provider: string): string {
 /**
  * Check if the provider dashboard URL is available
  */
-export function hasProviderDashboard(provider: string, donation: DonationProviderData): boolean {
-  return getProviderDashboardUrl(provider, donation) !== null
+export function hasProviderDashboard(provider: string, donation: DonationProviderData, sessionRefs?: SessionRefs): boolean {
+  return getProviderDashboardUrl(provider, donation, sessionRefs) !== null
 }
 
 /**
