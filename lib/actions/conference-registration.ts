@@ -35,6 +35,8 @@ import type {
 
 // ── Input types ───────────────────────────────────────────────────────────────
 
+import { CORE_FIELD_COLUMN_MAP, isCoreField } from "@/lib/types/conference-form-schema";
+
 export type ConferenceRegistrationData = {
   // Step 1
 
@@ -71,6 +73,13 @@ export type ConferenceRegistrationData = {
   consentTerms: boolean;
 
   consentNewsletter: boolean;
+
+  // Dynamic form fields (Phase 1)
+  customFields?: Record<string, unknown>
+  formSchemaVersion?: number
+  
+  // Multi-event support (Phase 4)
+  eventId?: string
 };
 
 export type ConferenceRegistrationResult = {
@@ -179,21 +188,28 @@ export async function registerForConference(
     const supabase = await createClient();
 
     // ── Duplicate email guard ────────────────────────────────────────────────
-    // Mirrors the partial unique index (uq_conf_reg_active_email) on the DB.
+    // Mirrors the partial unique index (uq_conf_reg_active_email_per_event) on the DB.
     // Gives a clear user-facing message instead of a raw constraint violation.
     const normalizedEmail = data.email.trim().toLowerCase();
-    const { data: existing } = await supabase
+    
+    // If event_id provided, check for duplicate within that event only
+    let existingQuery = supabase
       .from("conference_registrations")
       .select("id, status")
       .eq("email", normalizedEmail)
-      .not("status", "in", '("cancelled","expired")')
-      .maybeSingle();
+      .not("status", "in", '("cancelled","expired")');
+    
+    if (data.eventId) {
+      existingQuery = existingQuery.eq("event_id", data.eventId);
+    }
+    
+    const { data: existing } = await existingQuery.maybeSingle();
 
     if (existing) {
       return {
         success: false,
         message:
-          "An active registration already exists for this email address. " +
+          "An active registration already exists for this email address for this event. " +
           "Please check your inbox for a confirmation email, or contact support if you need assistance.",
       };
     }
@@ -210,6 +226,11 @@ export async function registerForConference(
     const expiresAt = paymentRequired
       ? new Date(Date.now() + expiryHours * 60 * 60 * 1000).toISOString()
       : null;
+
+    // Extract custom_fields from the submitted data
+    const customFields = data.customFields ?? {}
+    const schemaVersion = data.formSchemaVersion ?? null
+    const eventId = data.eventId || null
 
     const { data: registration, error } = await supabase
 
@@ -253,6 +274,10 @@ export async function registerForConference(
         payment_amount: paymentRequired ? fee.amount : null,
 
         payment_currency: fee.currency,
+
+        custom_fields: customFields,
+        form_schema_version: schemaVersion,
+        event_id: eventId,
 
         expires_at: expiresAt,
       })
