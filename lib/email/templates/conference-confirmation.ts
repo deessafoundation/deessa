@@ -4,6 +4,7 @@
  */
 
 import { getAppBaseUrl } from '@/lib/utils'
+import { escapeHtml } from '@/lib/utils/html'
 
 interface ConferenceConfirmationTemplateProps {
   fullName: string
@@ -15,10 +16,6 @@ interface ConferenceConfirmationTemplateProps {
 
 export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemplateProps): string {
   const { fullName, registrationId, attendanceMode, role, workshops } = props
-
-  // Escape all user-supplied values before interpolating into HTML
-  const escapeHtml = (str: string): string =>
-    str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 
   const shortId = `DEESSA-2026-${registrationId.slice(0, 6).toUpperCase()}`
   const firstName = escapeHtml(fullName.split(" ")[0])
@@ -52,14 +49,9 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
           <!-- Brand -->
           <tr>
             <td align="center" style="padding-bottom:24px;">
-              <table cellpadding="0" cellspacing="0">
-                <tr>
-                  <td style="background:#3FABDE;border-radius:12px;padding:10px 16px;">
-                    <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">DEESSA</span>
-                    <span style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Foundation</span>
-                  </td>
-                </tr>
-              </table>
+              <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
+                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+              </a>
             </td>
           </tr>
 
@@ -201,7 +193,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
             <td align="center" style="padding:28px 0;">
               <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
-                <a href="${siteUrl}" style="color:#3FABDE;">deessafoundation.org.np</a>
+                <a href="${siteUrl}" style="color:#3FABDE;">deessafoundation.com</a>
               </p>
             </td>
           </tr>
