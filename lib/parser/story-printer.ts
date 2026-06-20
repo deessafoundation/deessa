@@ -1,3 +1,4 @@
+import { escapeHtml } from "@/lib/utils/html"
 import type {
   DocumentNode,
   ContentNode,
@@ -311,17 +312,4 @@ function printInlineNode(node: InlineNode): string {
   }
 }
 
-/**
- * Escapes HTML special characters
- */
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }
-  
-  return text.replace(/[&<>"']/g, char => map[char] || char)
-}
+// escapeHtml imported from @/lib/utils/html
