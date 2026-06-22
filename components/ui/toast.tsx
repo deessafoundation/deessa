@@ -136,17 +136,18 @@ export const showToast = {
    * Show a success toast notification
    */
   success: (options: ToastOptions) => {
+    const { title, description, duration, ...rest } = options
     return toast.custom((t) => (
       <ToastMessage
         type="success"
-        title={options.title || 'Success'}
-        description={options.description}
-        duration={options.duration || 2500}
+        title={title || 'Success'}
+        description={description}
+        duration={duration || 2500}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
-      duration: options.duration || 2500,
-      ...options,
+      duration: duration || 2500,
+      ...rest,
     });
   },
 
@@ -154,17 +155,18 @@ export const showToast = {
    * Show an error toast notification
    */
   error: (options: ToastOptions) => {
+    const { title, description, duration, ...rest } = options
     return toast.custom((t) => (
       <ToastMessage
         type="error"
-        title={options.title || 'Error'}
-        description={options.description}
-        duration={options.duration || 2500}
+        title={title || 'Error'}
+        description={description}
+        duration={duration || 2500}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
-      duration: options.duration || 2500,
-      ...options,
+      duration: duration || 2500,
+      ...rest,
     });
   },
 
@@ -172,17 +174,18 @@ export const showToast = {
    * Show a warning toast notification
    */
   warning: (options: ToastOptions) => {
+    const { title, description, duration, ...rest } = options
     return toast.custom((t) => (
       <ToastMessage
         type="warning"
-        title={options.title || 'Warning'}
-        description={options.description}
-        duration={options.duration || 2500}
+        title={title || 'Warning'}
+        description={description}
+        duration={duration || 2500}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
-      duration: options.duration || 2500,
-      ...options,
+      duration: duration || 2500,
+      ...rest,
     });
   },
 
@@ -190,17 +193,18 @@ export const showToast = {
    * Show an info toast notification
    */
   info: (options: ToastOptions) => {
+    const { title, description, duration, ...rest } = options
     return toast.custom((t) => (
       <ToastMessage
         type="info"
-        title={options.title || 'Info'}
-        description={options.description}
-        duration={options.duration || 2500}
+        title={title || 'Info'}
+        description={description}
+        duration={duration || 2500}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
-      duration: options.duration || 2500,
-      ...options,
+      duration: duration || 2500,
+      ...rest,
     });
   },
 
