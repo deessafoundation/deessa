@@ -1,5 +1,7 @@
 "use client"
 
+import { FancySelect } from "@/components/ui/fancy-select"
+
 const DIETARY_OPTIONS = [
   { value: "none", label: "No Preferences" },
   { value: "vegetarian", label: "Vegetarian" },
@@ -62,19 +64,14 @@ export function Step3AdditionalInfo({ data, onChange, onNext, onBack }: Step3Pro
         <label htmlFor="dietary-preference-select" className="text-xs font-bold uppercase tracking-wider text-foreground">
           Dietary Preferences
         </label>
-        <select
-          id="dietary-preference-select"
-          value={data.dietaryPreference}
-          onChange={(e) => onChange({ dietaryPreference: e.target.value })}
-          className="h-14 w-full max-w-[540px] appearance-none rounded-xl border border-border bg-background px-4 text-base text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-        >
-          <option value="">Select preference…</option>
-          {DIETARY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+        <div className="max-w-[540px]">
+          <FancySelect
+            value={data.dietaryPreference}
+            onValueChange={(val) => onChange({ dietaryPreference: val })}
+            placeholder="Select preference…"
+            options={DIETARY_OPTIONS}
+          />
+        </div>
       </div>
 
       {/* T-Shirt Size */}
