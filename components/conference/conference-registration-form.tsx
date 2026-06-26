@@ -1,54 +1,78 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { StepProgressBar } from "./step-progress-bar"
-import { Step1PersonalDetails, type Step1Data } from "./step1-personal-details"
-import { Step2Participation, type Step2Data } from "./step2-participation"
-import { Step3AdditionalInfo, type Step3Data } from "./step3-additional-info"
+import { DynamicStep } from "./dynamic-step"
 import { Step4Review } from "./step4-review"
 import { registerForConference } from "@/lib/actions/conference-registration"
+import { validateFieldValue } from "@/lib/validation/form-schema"
+import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
 
-const STEP_LABELS = [
-  "Personal Details",
-  "Participation Details",
-  "Additional Info",
-  "Review & Submit",
-]
-
-const defaultStep1: Step1Data = {
-  fullName: "",
-  email: "",
-  phone: "",
-  organization: "",
+interface ConferenceRegistrationFormProps {
+  schema: FormSchema | null
 }
 
-const defaultStep2: Step2Data = {
-  role: "",
-  attendanceMode: "",
-  workshops: [],
-}
-
-const defaultStep3: Step3Data = {
-  dietaryPreference: "",
-  tshirtSize: "",
-  heardVia: [],
-  emergencyContactName: "",
-  emergencyContactPhone: "",
-}
-
-export function ConferenceRegistrationForm() {
+export function ConferenceRegistrationForm({ schema }: ConferenceRegistrationFormProps) {
   const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(1)
-  const [step1, setStep1] = useState<Step1Data>(defaultStep1)
-  const [step2, setStep2] = useState<Step2Data>(defaultStep2)
-  const [step3, setStep3] = useState<Step3Data>(defaultStep3)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [formData, setFormData] = useState<Record<string, unknown>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleNext = () => setCurrentStep((s) => Math.min(s + 1, 4))
-  const handleBack = () => setCurrentStep((s) => Math.max(s - 1, 1))
-  const handleEdit = (step: number) => setCurrentStep(step)
+  // If no schema, use an empty one (fallback — shouldn't happen after seed)
+  const steps: FormStep[] = schema?.steps ?? []
+  const totalSteps = steps.length + 1 // +1 for the review/consent step
+  const isFirst = currentStep === 0
+  const isLastFormStep = currentStep === steps.length - 1
+  const isReviewStep = currentStep === steps.length
+
+  const stepLabels = [
+    ...steps.map((s) => s.label),
+    "Review & Submit",
+  ]
+
+  const handleFieldChange = useCallback((fieldId: string, value: unknown) => {
+    setFormData((prev) => ({ ...prev, [fieldId]: value }))
+    // Clear error for this field when value changes
+    setErrors((prev) => {
+      const next = { ...prev }
+      delete next[fieldId]
+      return next
+    })
+  }, [])
+
+  const handleFieldBlur = useCallback((fieldId: string) => {
+    // Find the field definition and validate
+    for (const step of steps) {
+      const field = step.fields.find((f) => f.id === fieldId)
+      if (field) {
+        const value = formData[fieldId]
+        const error = validateFieldValue(field, value)
+        setErrors((prev) => {
+          if (error) return { ...prev, [fieldId]: error }
+          const next = { ...prev }
+          delete next[fieldId]
+          return next
+        })
+        return
+      }
+    }
+  }, [steps, formData])
+
+  const handleNext = useCallback(() => {
+    setCurrentStep((s) => Math.min(s + 1, totalSteps - 1))
+  }, [totalSteps])
+
+  const handleBack = useCallback(() => {
+    setCurrentStep((s) => Math.max(s - 1, 0))
+  }, [])
+
+  const handleEdit = useCallback((step: number) => {
+    // Convert 1-based step param to 0-based
+    setCurrentStep(step - 1)
+  }, [])
 
   const handleSubmit = async (consent: { consentTerms: boolean; consentNewsletter: boolean }) => {
     setIsSubmitting(true)
@@ -56,18 +80,30 @@ export function ConferenceRegistrationForm() {
 
     try {
       const result = await registerForConference({
-        ...step1,
-        ...step2,
-        ...step3,
+        fullName: String(formData.full_name ?? ""),
+        email: String(formData.email ?? ""),
+        phone: String(formData.phone ?? ""),
+        organization: String(formData.organization ?? ""),
+        role: String(formData.role ?? ""),
+        attendanceMode: String(formData.attendance_mode ?? ""),
+        workshops: Array.isArray(formData.workshops) ? formData.workshops : [],
+        dietaryPreference: String(formData.dietary_preference ?? ""),
+        tshirtSize: String(formData.tshirt_size ?? ""),
+        heardVia: Array.isArray(formData.heard_via) ? formData.heard_via : [],
+        emergencyContactName: String(formData.emergency_contact_name ?? ""),
+        emergencyContactPhone: String(formData.emergency_contact_phone ?? ""),
         ...consent,
+        // Dynamic fields — everything not in core goes into customFields
+        customFields: extractCustomFields(formData),
+        formSchemaVersion: schema?.version ?? 1,
       })
 
       if (result.success && result.registrationId) {
         if (result.paymentRequired) {
           const params = new URLSearchParams({
             rid: result.registrationId,
-            email: step1.email,
-            name: step1.fullName,
+            email: String(formData.email ?? ""),
+            name: String(formData.full_name ?? ""),
             amount: String(result.paymentAmount ?? ""),
             currency: result.paymentCurrency ?? "NPR",
             expiryHours: String(result.expiryHours ?? 24),
@@ -75,7 +111,7 @@ export function ConferenceRegistrationForm() {
           router.push(`/conference/register/payment-options?${params.toString()}`)
         } else {
           router.push(
-            `/conference/register/success?id=${result.registrationId}&name=${encodeURIComponent(step1.fullName)}&email=${encodeURIComponent(step1.email)}`
+            `/conference/register/success?id=${result.registrationId}&name=${encodeURIComponent(String(formData.full_name ?? ""))}&email=${encodeURIComponent(String(formData.email ?? ""))}`
           )
         }
       } else {
@@ -115,9 +151,9 @@ export function ConferenceRegistrationForm() {
 
         {/* Progress */}
         <StepProgressBar
-          step={currentStep}
-          total={4}
-          label={STEP_LABELS[currentStep - 1]}
+          step={currentStep + 1}
+          total={totalSteps}
+          label={stepLabels[currentStep] ?? ""}
         />
       </div>
 
@@ -128,32 +164,23 @@ export function ConferenceRegistrationForm() {
           <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/5 blur-3xl" />
 
           <div className="relative z-10 p-8 sm:p-10">
-            {currentStep === 1 && (
-              <Step1PersonalDetails
-                data={step1}
-                onChange={(d) => setStep1((p) => ({ ...p, ...d }))}
-                onNext={handleNext}
+            {steps.length > 0 && currentStep < steps.length && (
+              <DynamicStep
+                step={steps[currentStep]}
+                formData={formData}
+                errors={errors}
+                onFieldChange={handleFieldChange}
+                onFieldBlur={handleFieldBlur}
+                onNext={isLastFormStep ? () => handleNext() : handleNext}
+                onBack={currentStep > 0 ? handleBack : undefined}
+                isFirst={isFirst}
+                isLast={isLastFormStep}
               />
             )}
-            {currentStep === 2 && (
-              <Step2Participation
-                data={step2}
-                onChange={(d) => setStep2((p) => ({ ...p, ...d }))}
-                onNext={handleNext}
-                onBack={handleBack}
-              />
-            )}
-            {currentStep === 3 && (
-              <Step3AdditionalInfo
-                data={step3}
-                onChange={(d) => setStep3((p) => ({ ...p, ...d }))}
-                onNext={handleNext}
-                onBack={handleBack}
-              />
-            )}
-            {currentStep === 4 && (
+
+            {isReviewStep && (
               <Step4Review
-                data={{ step1, step2, step3 }}
+                data={buildReviewData(formData, steps)}
                 onEdit={handleEdit}
                 onSubmit={handleSubmit}
                 onBack={handleBack}
@@ -166,4 +193,54 @@ export function ConferenceRegistrationForm() {
       </div>
     </div>
   )
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function extractCustomFields(data: Record<string, unknown>): Record<string, unknown> {
+  const coreFieldIds = [
+    "full_name", "email", "phone", "organization",
+    "role", "attendance_mode", "workshops",
+    "dietary_preference", "tshirt_size", "heard_via",
+    "emergency_contact_name", "emergency_contact_phone",
+    "consent_terms", "consent_newsletter",
+  ] as const
+
+  const custom: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(data)) {
+    if (!(coreFieldIds as readonly string[]).includes(key)) {
+      custom[key] = value
+    }
+  }
+  return custom
+}
+
+function buildReviewData(
+  formData: Record<string, unknown>,
+  steps: FormStep[],
+): {
+  step1: { fullName: string; email: string; phone: string; organization: string }
+  step2: { role: string; attendanceMode: string; workshops: string[] }
+  step3: { dietaryPreference: string; tshirtSize: string; heardVia: string[]; emergencyContactName: string; emergencyContactPhone: string }
+} {
+  return {
+    step1: {
+      fullName: String(formData.full_name ?? ""),
+      email: String(formData.email ?? ""),
+      phone: String(formData.phone ?? ""),
+      organization: String(formData.organization ?? ""),
+    },
+    step2: {
+      role: String(formData.role ?? ""),
+      attendanceMode: String(formData.attendance_mode ?? ""),
+      workshops: Array.isArray(formData.workshops) ? formData.workshops : [],
+    },
+    step3: {
+      dietaryPreference: String(formData.dietary_preference ?? ""),
+      tshirtSize: String(formData.tshirt_size ?? ""),
+      heardVia: Array.isArray(formData.heard_via) ? formData.heard_via : [],
+      emergencyContactName: String(formData.emergency_contact_name ?? ""),
+      emergencyContactPhone: String(formData.emergency_contact_phone ?? ""),
+    },
+  }
 }
