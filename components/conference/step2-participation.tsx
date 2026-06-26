@@ -1,5 +1,7 @@
 "use client"
 
+import { FancySelect } from "@/components/ui/fancy-select"
+
 export type Step2Data = {
   role: string
   attendanceMode: string
@@ -57,22 +59,12 @@ export function Step2Participation({ data, onChange, onNext, onBack }: Step2Prop
         <label htmlFor="role-select" className="block text-sm font-medium text-foreground mb-2">
           Your Role (required)
         </label>
-        <select
-          id="role-select"
-          required
+        <FancySelect
           value={data.role}
-          onChange={(e) => onChange({ role: e.target.value })}
-          className="block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
-        >
-          <option value="" disabled>
-            Select your role
-          </option>
-          {ROLES.map((role) => (
-            <option key={role.value} value={role.value}>
-              {role.label}
-            </option>
-          ))}
-        </select>
+          onValueChange={(val) => onChange({ role: val })}
+          placeholder="Select your role"
+          options={ROLES}
+        />
       </div>
 
       {/* Attendance Mode */}
