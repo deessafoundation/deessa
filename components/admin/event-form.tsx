@@ -1,14 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
+import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createEvent, updateEvent } from "@/lib/actions/admin-events"
@@ -23,11 +24,26 @@ export function EventForm({ event }: EventFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(event?.image || "")
+  const [startDate, setStartDate] = useState<Date | null>(
+    event?.event_date ? new Date(event.event_date + "T00:00:00") : null
+  )
+  const [endDate, setEndDate] = useState<Date | null>(
+    event?.event_end_date ? new Date(event.event_end_date + "T00:00:00") : null
+  )
   const router = useRouter()
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true)
     setError(null)
+
+    // Append date values to FormData
+    if (startDate) {
+      formData.set("event_date", startDate.toISOString().split("T")[0])
+      formData.set("event_time", startDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }))
+    }
+    if (endDate) {
+      formData.set("event_end_date", endDate.toISOString().split("T")[0])
+    }
 
     const result = event ? await updateEvent(event.id, formData) : await createEvent(formData)
 
@@ -78,22 +94,19 @@ export function EventForm({ event }: EventFormProps) {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="eventDate">Date *</Label>
-                  <Input
-                    id="eventDate"
-                    name="eventDate"
-                    type="date"
-                    defaultValue={event?.event_date?.split("T")[0]}
-                    required
+                  <Label>Start Date & Time *</Label>
+                  <DateTimePicker
+                    value={startDate}
+                    onChange={setStartDate}
+                    placeholder="Pick start date & time"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="eventTime">Time</Label>
-                  <Input
-                    id="eventTime"
-                    name="eventTime"
-                    defaultValue={event?.event_time || ""}
-                    placeholder="10:00 AM - 4:00 PM"
+                  <Label>End Date & Time</Label>
+                  <DateTimePicker
+                    value={endDate}
+                    onChange={setEndDate}
+                    placeholder="Pick end date & time"
                   />
                 </div>
               </div>
@@ -137,15 +150,15 @@ export function EventForm({ event }: EventFormProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="type">Type *</Label>
-                <Select name="type" defaultValue={event?.type || "upcoming"}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="upcoming">Upcoming</SelectItem>
-                    <SelectItem value="past">Past</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FancySelect
+                  name="type"
+                  defaultValue={event?.type || "upcoming"}
+                  options={[
+                    { value: "upcoming", label: "Upcoming" },
+                    { value: "past", label: "Past" },
+                  ]}
+                  size="sm"
+                />
               </div>
 
               <div className="space-y-2">
