@@ -5,13 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import {
   Table,
   TableBody,
@@ -395,44 +389,47 @@ export function DonationsDashboard({
               <Filter className="h-4 w-4 text-muted-foreground hidden sm:block" />
 
               {/* Status filter */}
-              <Select value={filters.status} onValueChange={(v) => updateFilter("status", v)}>
-                <SelectTrigger className="w-[130px] h-9">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="failed">Failed</SelectItem>
-                </SelectContent>
-              </Select>
+              <FancySelect
+                value={filters.status}
+                onValueChange={(v) => updateFilter("status", v)}
+                options={[
+                  { value: "all", label: "All Status" },
+                  { value: "completed", label: "Completed" },
+                  { value: "pending", label: "Pending" },
+                  { value: "failed", label: "Failed" },
+                ]}
+                className="w-[130px]"
+                size="sm"
+              />
 
               {/* Type filter */}
-              <Select value={filters.type} onValueChange={(v) => updateFilter("type", v)}>
-                <SelectTrigger className="w-[130px] h-9">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="one-time">One-time</SelectItem>
-                </SelectContent>
-              </Select>
+              <FancySelect
+                value={filters.type}
+                onValueChange={(v) => updateFilter("type", v)}
+                options={[
+                  { value: "all", label: "All Types" },
+                  { value: "monthly", label: "Monthly" },
+                  { value: "one-time", label: "One-time" },
+                ]}
+                className="w-[130px]"
+                size="sm"
+              />
 
               {/* Currency filter */}
-              <Select value={filters.currency} onValueChange={(v) => updateFilter("currency", v)}>
-                <SelectTrigger className="w-[120px] h-9">
-                  <SelectValue placeholder="Currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Currencies</SelectItem>
-                  <SelectItem value="NPR">NPR</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                  <SelectItem value="GBP">GBP</SelectItem>
-                  <SelectItem value="INR">INR</SelectItem>
-                </SelectContent>
-              </Select>
+              <FancySelect
+                value={filters.currency}
+                onValueChange={(v) => updateFilter("currency", v)}
+                options={[
+                  { value: "all", label: "All Currencies" },
+                  { value: "NPR", label: "NPR" },
+                  { value: "USD", label: "USD" },
+                  { value: "EUR", label: "EUR" },
+                  { value: "GBP", label: "GBP" },
+                  { value: "INR", label: "INR" },
+                ]}
+                className="w-[120px]"
+                size="sm"
+              />
             </div>
           </div>
 
