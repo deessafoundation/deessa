@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import type { HomepageFlags } from "@/lib/types/homepage-settings"
 
@@ -44,20 +44,17 @@ export default function FlagsManager({ flags, onChange }: FlagsManagerProps) {
             {flags.showAccessibilityToolbar && (
               <div className="ml-4">
                 <Label>Toolbar Position</Label>
-                <Select
+                <FancySelect
                   value={flags.accessibilityToolbarPosition}
-                  onValueChange={(value: any) => updateFlag({ accessibilityToolbarPosition: value })}
-                >
-                  <SelectTrigger className="mt-1">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="top-left">Top Left</SelectItem>
-                    <SelectItem value="top-right">Top Right</SelectItem>
-                    <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                    <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                  </SelectContent>
-                </Select>
+                  onValueChange={(value) => updateFlag({ accessibilityToolbarPosition: value as any })}
+                  options={[
+                    { value: "top-left", label: "Top Left" },
+                    { value: "top-right", label: "Top Right" },
+                    { value: "bottom-left", label: "Bottom Left" },
+                    { value: "bottom-right", label: "Bottom Right" },
+                  ]}
+                  size="sm"
+                />
               </div>
             )}
 
@@ -124,19 +121,16 @@ export default function FlagsManager({ flags, onChange }: FlagsManagerProps) {
             <div className="p-3 bg-gray-50 rounded-lg">
               <Label className="font-medium">Featured Stories Mode</Label>
               <p className="text-xs text-gray-500 mt-1 mb-3">How to select featured stories</p>
-              <Select
+              <FancySelect
                 value={flags.featuredStoriesMode}
-                onValueChange={(value: any) => updateFlag({ featuredStoriesMode: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="manual">Manual Selection</SelectItem>
-                  <SelectItem value="auto-latest">Auto - Latest Stories</SelectItem>
-                  <SelectItem value="auto-popular">Auto - Popular Stories</SelectItem>
-                </SelectContent>
-              </Select>
+                onValueChange={(value) => updateFlag({ featuredStoriesMode: value as any })}
+                options={[
+                  { value: "manual", label: "Manual Selection" },
+                  { value: "auto-latest", label: "Auto - Latest Stories" },
+                  { value: "auto-popular", label: "Auto - Popular Stories" },
+                ]}
+                size="sm"
+              />
             </div>
           </div>
         </CardContent>
