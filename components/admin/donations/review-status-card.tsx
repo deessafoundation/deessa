@@ -3,24 +3,23 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { updateReviewStatus } from "@/lib/actions/admin-donation-actions"
+import { updateReviewStatusPolymorphic } from "@/lib/actions/admin-payment-actions"
 import { notifications } from "@/lib/notifications"
 
 interface ReviewStatusCardProps {
-  donationId: string
+  donationId?: string
+  entityId?: string
+  entityType?: "donation" | "event" | "conference"
   currentStatus: "unreviewed" | "verified" | "flagged" | "refunded"
   userRole: "ADMIN" | "SUPER_ADMIN" | "FINANCE" | "EDITOR"
 }
 
 export function ReviewStatusCard({
   donationId,
+  entityId,
+  entityType,
   currentStatus,
   userRole,
 }: ReviewStatusCardProps) {
@@ -28,6 +27,7 @@ export function ReviewStatusCard({
   const [isLoading, setIsLoading] = useState(false)
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(userRole)
+  const isPolymorphic = !!entityId && !!entityType
 
   const getStatusColor = (s: string) => {
     switch (s) {
@@ -47,10 +47,16 @@ export function ReviewStatusCard({
 
     setIsLoading(true)
     try {
-      const result = await updateReviewStatus({
-        donationId,
-        reviewStatus: newStatus as any,
-      })
+      const result = isPolymorphic
+        ? await updateReviewStatusPolymorphic({
+            entityId: entityId!,
+            entityType: entityType!,
+            reviewStatus: newStatus as any,
+          })
+        : await updateReviewStatus({
+            donationId: donationId!,
+            reviewStatus: newStatus as any,
+          })
 
       if (result.ok) {
         setStatus(newStatus as any)
@@ -59,35 +65,17 @@ export function ReviewStatusCard({
           description: result.message,
         })
       } else {
-        // Handle specific error cases
-        if (result.message.includes("network") || result.message.includes("Network")) {
-          notifications.showError({
-            title: "Network Error",
-            description: "Unable to connect to the server. Please check your internet connection and try again.",
-            duration: 5000,
-          })
-        } else {
-          notifications.showError({
-            title: "Error",
-            description: result.message,
-          })
-        }
+        notifications.showError({
+          title: "Error",
+          description: result.message,
+        })
       }
     } catch (error) {
       console.error("Update review status error:", error)
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        notifications.showError({
-          title: "Network Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          duration: 5000,
-        })
-      } else {
-        notifications.showError({
-          title: "Error",
-          description: "Failed to update review status. Please try again.",
-        })
-      }
+      notifications.showError({
+        title: "Error",
+        description: "Failed to update review status. Please try again.",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -109,17 +97,17 @@ export function ReviewStatusCard({
         {isAdmin && (
           <div>
             <div className="text-sm font-medium text-muted-foreground mb-2">Change Status</div>
-            <Select value={status} onValueChange={handleStatusChange} disabled={isLoading}>
-              <SelectTrigger className="touch-manipulation min-h-[44px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="unreviewed" className="touch-manipulation min-h-[44px]">Unreviewed</SelectItem>
-                <SelectItem value="verified" className="touch-manipulation min-h-[44px]">Verified</SelectItem>
-                <SelectItem value="flagged" className="touch-manipulation min-h-[44px]">Flagged</SelectItem>
-                <SelectItem value="refunded" className="touch-manipulation min-h-[44px]">Refunded</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={status}
+              onValueChange={handleStatusChange}
+              disabled={isLoading}
+              options={[
+                { value: "unreviewed", label: "Unreviewed" },
+                { value: "verified", label: "Verified" },
+                { value: "flagged", label: "Flagged" },
+                { value: "refunded", label: "Refunded" },
+              ]}
+            />
           </div>
         )}
       </CardContent>
