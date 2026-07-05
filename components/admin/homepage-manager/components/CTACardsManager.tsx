@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import { Plus, Trash2 } from "lucide-react"
 import type { HomepageCTACardsSettings, HomepageCTACard } from "@/lib/types/homepage-settings"
@@ -97,21 +97,18 @@ export default function CTACardsManager({ ctaCards, onChange }: CTACardsManagerP
                   </div>
                   <div>
                     <Label>Color</Label>
-                    <Select
+                    <FancySelect
                       value={card.color}
-                      onValueChange={(value: any) => updateCard(index, { color: value })}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="orange">Orange</SelectItem>
-                        <SelectItem value="teal">Teal</SelectItem>
-                        <SelectItem value="white">White</SelectItem>
-                        <SelectItem value="purple">Purple</SelectItem>
-                        <SelectItem value="blue">Blue</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => updateCard(index, { color: value as any })}
+                      options={[
+                        { value: "orange", label: "Orange" },
+                        { value: "teal", label: "Teal" },
+                        { value: "white", label: "White" },
+                        { value: "purple", label: "Purple" },
+                        { value: "blue", label: "Blue" },
+                      ]}
+                      size="sm"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
