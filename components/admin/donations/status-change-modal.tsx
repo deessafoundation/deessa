@@ -11,20 +11,17 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertTriangle } from "lucide-react"
 import { changePaymentStatus } from "@/lib/actions/admin-donation-actions"
+import { changePaymentStatusPolymorphic } from "@/lib/actions/admin-payment-actions"
 import { notifications } from "@/lib/notifications"
 
 interface StatusChangeModalProps {
-  donationId: string
+  donationId?: string
+  entityId?: string
+  entityType?: "donation" | "event" | "conference"
   currentStatus: string
   isOpen: boolean
   onClose: () => void
@@ -33,6 +30,8 @@ interface StatusChangeModalProps {
 
 export function StatusChangeModal({
   donationId,
+  entityId,
+  entityType,
   currentStatus,
   isOpen,
   onClose,
@@ -42,6 +41,23 @@ export function StatusChangeModal({
   const [reason, setReason] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
+
+  const isPolymorphic = !!entityId && !!entityType
+
+  const statusOptions = entityType === "donation"
+    ? [
+        { value: "pending", label: "Pending" },
+        { value: "completed", label: "Completed" },
+        { value: "failed", label: "Failed" },
+        { value: "review", label: "Review" },
+      ]
+    : [
+        { value: "paid", label: "Paid" },
+        { value: "unpaid", label: "Unpaid" },
+        { value: "review", label: "Review" },
+        { value: "failed", label: "Failed" },
+        { value: "refunded", label: "Refunded" },
+      ]
 
   const handleSubmit = async () => {
     if (reason.trim().length < 10) {
@@ -60,19 +76,26 @@ export function StatusChangeModal({
       return
     }
 
-    // Show confirmation if changing from completed
-    if (currentStatus === "completed" && !showConfirmation) {
+    // Show confirmation if changing from a finalized status
+    if (["completed", "paid"].includes(currentStatus) && !showConfirmation) {
       setShowConfirmation(true)
       return
     }
 
     setIsSubmitting(true)
     try {
-      const result = await changePaymentStatus({
-        donationId,
-        newStatus: newStatus as any,
-        reason: reason.trim(),
-      })
+      const result = isPolymorphic
+        ? await changePaymentStatusPolymorphic({
+            entityId: entityId!,
+            entityType: entityType!,
+            newStatus,
+            reason: reason.trim(),
+          })
+        : await changePaymentStatus({
+            donationId: donationId!,
+            newStatus: newStatus as any,
+            reason: reason.trim(),
+          })
 
       if (result.ok) {
         notifications.showSuccess({
@@ -84,35 +107,17 @@ export function StatusChangeModal({
         onSuccess()
         onClose()
       } else {
-        // Handle specific error cases
-        if (result.message.includes("network") || result.message.includes("Network")) {
-          notifications.showError({
-            title: "Network Error",
-            description: "Unable to connect to the server. Please check your internet connection and try again.",
-            duration: 5000,
-          })
-        } else {
-          notifications.showError({
-            title: "Error",
-            description: result.message,
-          })
-        }
+        notifications.showError({
+          title: "Error",
+          description: result.message,
+        })
       }
     } catch (error) {
       console.error("Change status error:", error)
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        notifications.showError({
-          title: "Network Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          duration: 5000,
-        })
-      } else {
-        notifications.showError({
-          title: "Error",
-          description: "Failed to change payment status. Please try again.",
-        })
-      }
+      notifications.showError({
+        title: "Error",
+        description: "Failed to change payment status. Please try again.",
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -143,17 +148,12 @@ export function StatusChangeModal({
 
           <div>
             <div className="text-sm font-medium mb-2">New Status</div>
-            <Select value={newStatus} onValueChange={setNewStatus} disabled={isSubmitting}>
-              <SelectTrigger className="touch-manipulation min-h-[44px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pending" className="touch-manipulation min-h-[44px]">Pending</SelectItem>
-                <SelectItem value="completed" className="touch-manipulation min-h-[44px]">Completed</SelectItem>
-                <SelectItem value="failed" className="touch-manipulation min-h-[44px]">Failed</SelectItem>
-                <SelectItem value="review" className="touch-manipulation min-h-[44px]">Review</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={newStatus}
+              onValueChange={setNewStatus}
+              disabled={isSubmitting}
+              options={statusOptions}
+            />
           </div>
 
           <div>
@@ -180,7 +180,7 @@ export function StatusChangeModal({
             </div>
           </div>
 
-          {currentStatus === "completed" && newStatus !== "completed" && (
+          {["completed", "paid"].includes(currentStatus) && newStatus !== currentStatus && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
