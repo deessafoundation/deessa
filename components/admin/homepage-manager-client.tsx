@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -145,28 +146,28 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
     stats: homeStats.stats || [
       {
         id: "students",
-        icon: "users",
+        icon: "Users",
         label: "Students Educated",
         value: "15,000+",
         isDeleted: false,
       },
       {
         id: "villages",
-        icon: "home",
+        icon: "Heart",
         label: "Villages Reached",
         value: "250+",
         isDeleted: false,
       },
       {
         id: "volunteers",
-        icon: "heart",
+        icon: "TrendingUp",
         label: "Active Volunteers",
         value: "500+",
         isDeleted: false,
       },
       {
         id: "projects",
-        icon: "trending-up",
+        icon: "BookOpen",
         label: "Completed Projects",
         value: "120+",
         isDeleted: false,
@@ -1126,23 +1127,24 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
                         </div>
                         <div className="space-y-2">
                           <Label>Icon</Label>
-                          <select
+                          <FancySelect
                             value={stat.icon}
-                            onChange={(e) =>
+                            onValueChange={(val) =>
                               setStatsSection((prev) => ({
                                 ...prev,
                                 stats: prev.stats.map((s: any) =>
-                                  s.id === stat.id ? { ...s, icon: e.target.value } : s
+                                  s.id === stat.id ? { ...s, icon: val } : s
                                 ),
                               }))
                             }
-                            className="w-full px-3 py-2 border rounded-md"
-                          >
-                            <option value="Users">Users (People)</option>
-                            <option value="Heart">Heart (Love/Support)</option>
-                            <option value="TrendingUp">TrendingUp (Growth)</option>
-                            <option value="BookOpen">BookOpen (Education)</option>
-                          </select>
+                            options={[
+                              { value: "Users", label: "Users (People)" },
+                              { value: "Heart", label: "Heart (Love/Support)" },
+                              { value: "TrendingUp", label: "TrendingUp (Growth)" },
+                              { value: "BookOpen", label: "BookOpen (Education)" },
+                            ]}
+                            size="sm"
+                          />
                         </div>
                       </CardContent>
                     </Card>
