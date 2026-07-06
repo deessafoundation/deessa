@@ -6,13 +6,7 @@ import { Bell, Check, CheckCheck, Trash2, Filter, Archive } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { notifications as toast } from "@/lib/notifications"
 
 interface Notification {
@@ -255,21 +249,23 @@ export default function NotificationCenterClient({
       {/* Filter */}
       <div className="flex items-center gap-2">
         <Filter className="h-4 w-4 text-muted-foreground" />
-        <Select value={filter} onValueChange={setFilter}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Filter notifications" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Notifications</SelectItem>
-            <SelectItem value="unread">Unread Only</SelectItem>
-            <SelectItem value="read">Read Only</SelectItem>
-            <SelectItem value="assignment">Assignments</SelectItem>
-            <SelectItem value="mention">Mentions</SelectItem>
-            <SelectItem value="reply">Replies</SelectItem>
-            <SelectItem value="status_change">Status Changes</SelectItem>
-            <SelectItem value="system">System</SelectItem>
-          </SelectContent>
-        </Select>
+        <FancySelect
+          value={filter}
+          onValueChange={setFilter}
+          placeholder="Filter notifications"
+          options={[
+            { value: "all", label: "All Notifications" },
+            { value: "unread", label: "Unread Only" },
+            { value: "read", label: "Read Only" },
+            { value: "assignment", label: "Assignments" },
+            { value: "mention", label: "Mentions" },
+            { value: "reply", label: "Replies" },
+            { value: "status_change", label: "Status Changes" },
+            { value: "system", label: "System" },
+          ]}
+          className="w-[200px]"
+          size="sm"
+        />
       </div>
 
       {/* Notifications List */}
