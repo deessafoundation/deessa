@@ -7,13 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -404,30 +398,28 @@ export function MediaLibraryClient() {
                 className="pl-9"
               />
             </div>
-            <Select value={selectedType} onValueChange={(v: any) => setSelectedType(v)}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="image">Images</SelectItem>
-                <SelectItem value="video">Videos</SelectItem>
-                <SelectItem value="document">Documents</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={selectedBucket} onValueChange={setSelectedBucket}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Bucket" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Buckets</SelectItem>
-                {buckets.map((bucket) => (
-                  <SelectItem key={bucket} value={bucket}>
-                    {bucket}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={selectedType}
+              onValueChange={(v) => setSelectedType(v)}
+              options={[
+                { value: "all", label: "All Types" },
+                { value: "image", label: "Images" },
+                { value: "video", label: "Videos" },
+                { value: "document", label: "Documents" },
+              ]}
+              className="w-[150px]"
+              size="sm"
+            />
+            <FancySelect
+              value={selectedBucket}
+              onValueChange={setSelectedBucket}
+              options={[
+                { value: "all", label: "All Buckets" },
+                ...buckets.map((bucket) => ({ value: bucket, label: bucket })),
+              ]}
+              className="w-[150px]"
+              size="sm"
+            />
             <div className="flex gap-2">
               <Button
                 variant={viewMode === "grid" ? "default" : "outline"}
