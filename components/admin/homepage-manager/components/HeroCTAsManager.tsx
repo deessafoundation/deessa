@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import { Plus, Trash2, GripVertical } from "lucide-react"
 import type { HomepageHeroCTAsSettings, HomepageHeroCTA } from "@/lib/types/homepage-settings"
@@ -113,19 +113,16 @@ export default function HeroCTAsManager({ heroCTAs, onChange }: HeroCTAsManagerP
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label>Variant</Label>
-                        <Select
+                        <FancySelect
                           value={cta.variant}
-                          onValueChange={(value: any) => updateCTA(index, { variant: value })}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="primary">Primary</SelectItem>
-                            <SelectItem value="secondary">Secondary</SelectItem>
-                            <SelectItem value="outline">Outline</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          onValueChange={(value) => updateCTA(index, { variant: value as any })}
+                          options={[
+                            { value: "primary", label: "Primary" },
+                            { value: "secondary", label: "Secondary" },
+                            { value: "outline", label: "Outline" },
+                          ]}
+                          size="sm"
+                        />
                       </div>
                       <div>
                         <Label>Icon</Label>
