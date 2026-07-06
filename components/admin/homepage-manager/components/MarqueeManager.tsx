@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import type { HomepageMarqueeSettings } from "@/lib/types/homepage-settings"
 
@@ -66,19 +66,16 @@ export default function MarqueeManager({ marquee, onChange }: MarqueeManagerProp
             </div>
             <div>
               <Label>Spacing</Label>
-              <Select
+              <FancySelect
                 value={marquee.spacing}
-                onValueChange={(value: any) => updateMarquee({ spacing: value })}
-              >
-                <SelectTrigger className="mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="compact">Compact ({marquee.spacingPresets.compact}px)</SelectItem>
-                  <SelectItem value="comfortable">Comfortable ({marquee.spacingPresets.comfortable}px)</SelectItem>
-                  <SelectItem value="spacious">Spacious ({marquee.spacingPresets.spacious}px)</SelectItem>
-                </SelectContent>
-              </Select>
+                onValueChange={(value) => updateMarquee({ spacing: value as any })}
+                options={[
+                  { value: "compact", label: `Compact (${marquee.spacingPresets.compact}px)` },
+                  { value: "comfortable", label: `Comfortable (${marquee.spacingPresets.comfortable}px)` },
+                  { value: "spacious", label: `Spacious (${marquee.spacingPresets.spacious}px)` },
+                ]}
+                size="sm"
+              />
             </div>
             <div className="flex items-center justify-between">
               <Label>Pause on Hover</Label>
