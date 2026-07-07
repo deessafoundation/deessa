@@ -4,13 +4,7 @@ import { useEffect, useState, type ReactNode } from "react"
 import type { Editor } from "@tiptap/react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import {
   Bold,
   Italic,
@@ -448,18 +442,20 @@ export function Toolbar({ editor }: ToolbarProps) {
         <div className="flex flex-wrap items-center gap-3">
           <div className="inline-flex items-center gap-2 rounded-lg border bg-card px-2 py-1.5 shadow-sm">
             <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Type</span>
-            <Select value={currentHeading} onValueChange={applyHeading}>
-              <SelectTrigger className="h-8 w-[150px] cursor-pointer border-none bg-transparent px-2 text-sm shadow-none focus:ring-0">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="paragraph">Paragraph</SelectItem>
-                <SelectItem value="h1">Heading 1</SelectItem>
-                <SelectItem value="h2">Heading 2</SelectItem>
-                <SelectItem value="h3">Heading 3</SelectItem>
-                <SelectItem value="h4">Heading 4</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={currentHeading}
+              onValueChange={applyHeading}
+              options={[
+                { value: "paragraph", label: "Paragraph" },
+                { value: "h1", label: "Heading 1" },
+                { value: "h2", label: "Heading 2" },
+                { value: "h3", label: "Heading 3" },
+                { value: "h4", label: "Heading 4" },
+              ]}
+              className="w-[150px]"
+              size="sm"
+              variant="toolbar"
+            />
           </div>
 
           <div className="inline-flex items-center gap-1 rounded-lg border bg-card px-2 py-1.5 shadow-sm">
@@ -544,21 +540,22 @@ export function Toolbar({ editor }: ToolbarProps) {
             </Button>
 
             <Separator orientation="vertical" className="mx-1 h-5" />
-            <Select value={selectedFontSize} onValueChange={applyFontSize}>
-              <SelectTrigger className="h-8 w-[100px] cursor-pointer border bg-background px-2 text-xs shadow-none">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="12px">12px</SelectItem>
-                <SelectItem value="14px">14px</SelectItem>
-                <SelectItem value="16px">16px</SelectItem>
-                <SelectItem value="18px">18px</SelectItem>
-                <SelectItem value="20px">20px</SelectItem>
-                <SelectItem value="24px">24px</SelectItem>
-                <SelectItem value="28px">28px</SelectItem>
-                <SelectItem value="32px">32px</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={selectedFontSize}
+              onValueChange={applyFontSize}
+              options={[
+                { value: "12px", label: "12px" },
+                { value: "14px", label: "14px" },
+                { value: "16px", label: "16px" },
+                { value: "18px", label: "18px" },
+                { value: "20px", label: "20px" },
+                { value: "24px", label: "24px" },
+                { value: "28px", label: "28px" },
+                { value: "32px", label: "32px" },
+              ]}
+              className="w-[100px]"
+              size="sm"
+            />
             <Button
               type="button"
               variant="outline"
