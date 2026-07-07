@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle } from "lucide-react"
@@ -141,32 +141,32 @@ export function ProjectForm({ project }: ProjectFormProps) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Category *</Label>
-                <Select name="category" defaultValue={project?.category || "education"}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="education">Education</SelectItem>
-                    <SelectItem value="health">Health</SelectItem>
-                    <SelectItem value="empowerment">Empowerment</SelectItem>
-                    <SelectItem value="relief">Relief</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FancySelect
+                  name="category"
+                  defaultValue={project?.category || "education"}
+                  options={[
+                    { value: "education", label: "Education" },
+                    { value: "health", label: "Health" },
+                    { value: "empowerment", label: "Empowerment" },
+                    { value: "relief", label: "Relief" },
+                  ]}
+                  size="sm"
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="status">Status *</Label>
-                <Select name="status" defaultValue={project?.status || "draft"}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="urgent">Urgent</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FancySelect
+                  name="status"
+                  defaultValue={project?.status || "draft"}
+                  options={[
+                    { value: "draft", label: "Draft" },
+                    { value: "active", label: "Active" },
+                    { value: "urgent", label: "Urgent" },
+                    { value: "completed", label: "Completed" },
+                  ]}
+                  size="sm"
+                />
               </div>
 
               <div className="space-y-2">
