@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createImpactStat, updateImpactStat } from "@/lib/actions/admin-stats"
 import type { ImpactStat } from "@/lib/types/admin"
@@ -107,15 +107,16 @@ export function StatForm({ stat }: StatFormProps) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="category">Display Category *</Label>
-                  <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="home">Homepage</SelectItem>
-                      <SelectItem value="impact">Impact Page</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FancySelect
+                    value={category}
+                    onValueChange={setCategory}
+                    placeholder="Select category"
+                    options={[
+                      { value: "home", label: "Homepage" },
+                      { value: "impact", label: "Impact Page" },
+                    ]}
+                    size="sm"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="progress">Progress Percentage (optional)</Label>
@@ -141,36 +142,23 @@ export function StatForm({ stat }: StatFormProps) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Icon</Label>
-                  <Select value={icon} onValueChange={setIcon}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select icon" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {iconOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FancySelect
+                    value={icon}
+                    onValueChange={setIcon}
+                    placeholder="Select icon"
+                    options={iconOptions}
+                    size="sm"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Color</Label>
-                  <Select value={color} onValueChange={setColor}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select color" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {colorOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 rounded" style={{ backgroundColor: opt.value }} />
-                            {opt.label}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FancySelect
+                    value={color}
+                    onValueChange={setColor}
+                    placeholder="Select color"
+                    options={colorOptions}
+                    size="sm"
+                  />
                 </div>
               </div>
             </CardContent>
