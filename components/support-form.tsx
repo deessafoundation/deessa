@@ -5,6 +5,7 @@ import type React from "react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Bug, CheckCircle, FileImage, Loader2, Sparkles, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { notifications } from "@/lib/notifications"
 
 interface SupportFormProps {
@@ -12,6 +13,7 @@ interface SupportFormProps {
 }
 
 const issueTypes = ["Bug Report", "Feature Request", "Content Issue", "Accessibility Issue", "Other"] as const
+const ISSUE_TYPE_OPTIONS = issueTypes.map((t) => ({ value: t, label: t }))
 const MAX_SCREENSHOT_SIZE = 2 * 1024 * 1024
 const ALLOWED_SCREENSHOT_TYPES = ["image/jpeg", "image/png", "image/webp"] as const
 
@@ -261,19 +263,11 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
             <label htmlFor="issueType" className="mb-2 block text-sm font-bold text-slate-900">
               What Best Describes It?
             </label>
-            <select
-              id="issueType"
-              name="issueType"
+            <FancySelect
               value={formData.issueType}
-              onChange={handleChange}
-              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
-            >
-              {issueTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              onValueChange={(val) => setFormData((prev) => ({ ...prev, issueType: val }))}
+              options={ISSUE_TYPE_OPTIONS}
+            />
           </div>
           <div>
             <label htmlFor="pageUrl" className="mb-2 block text-sm font-bold text-slate-900">
