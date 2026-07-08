@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import AllHighlightsCard from './all-highlights-card';
 import type { HighlightWithEpisode } from '@/lib/data/podcasts';
 import { Search, ArrowUpDown, Plus } from 'lucide-react';
+import { FancySelect } from '@/components/ui/fancy-select';
 
 interface HighlightsPageContentProps {
   highlights: HighlightWithEpisode[];
@@ -118,21 +119,20 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Filter by Episode
             </label>
-            <select
+            <FancySelect
               value={selectedEpisode}
-              onChange={(e) => {
-                setSelectedEpisode(e.target.value);
+              onValueChange={(val) => {
+                setSelectedEpisode(val);
                 handleFilterChange();
               }}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all bg-white shadow-sm cursor-pointer"
-            >
-              <option value="all">All Episodes ({highlights.length} highlights)</option>
-              {episodes.map((ep) => (
-                <option key={ep.id} value={ep.id}>
-                  {ep.number ? `Ep ${String(ep.number).padStart(2, '0')}` : 'Episode'} · {ep.title}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: 'all', label: `All Episodes (${highlights.length} highlights)` },
+                ...episodes.map((ep) => ({
+                  value: ep.id,
+                  label: `${ep.number ? `Ep ${String(ep.number).padStart(2, '0')}` : 'Episode'} · ${ep.title}`,
+                })),
+              ]}
+            />
           </div>
 
           {/* Sort By - Improved */}
@@ -141,19 +141,19 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
               <ArrowUpDown className="w-4 h-4 inline mr-1" />
               Sort By
             </label>
-            <select
+            <FancySelect
               value={sortBy}
-              onChange={(e) => {
-                setSortBy(e.target.value as SortOption);
+              onValueChange={(val) => {
+                setSortBy(val as SortOption);
                 handleFilterChange();
               }}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all bg-white shadow-sm cursor-pointer"
-            >
-              <option value="latest">🕐 Latest First</option>
-              <option value="oldest">📅 Oldest First</option>
-              <option value="episode-desc">📊 Episode (High → Low)</option>
-              <option value="episode-asc">📈 Episode (Low → High)</option>
-            </select>
+              options={[
+                { value: 'latest', label: 'Latest First' },
+                { value: 'oldest', label: 'Oldest First' },
+                { value: 'episode-desc', label: 'Episode (High → Low)' },
+                { value: 'episode-asc', label: 'Episode (Low → High)' },
+              ]}
+            />
           </div>
         </div>
 
