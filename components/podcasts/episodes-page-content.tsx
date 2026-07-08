@@ -8,6 +8,7 @@ import { Calendar, Search, Play, ArrowRight, Share2, Heart, Filter } from 'lucid
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { FancySelect } from '@/components/ui/fancy-select';
 
 interface EpisodesPageContentProps {
   episodes: Podcast[];
@@ -134,19 +135,20 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
               {/* Sort */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-text-main mb-2">SORT BY</label>
-                <select
+                <FancySelect
                   value={sortBy}
-                  onChange={(e) => {
-                    setSortBy(e.target.value as SortOption);
+                  onValueChange={(val) => {
+                    setSortBy(val as SortOption);
                     handleFilterChange();
                   }}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all cursor-pointer text-sm font-medium"
-                >
-                  <option value="latest">Latest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="episode-desc">Episode # (High to Low)</option>
-                  <option value="episode-asc">Episode # (Low to High)</option>
-                </select>
+                  options={[
+                    { value: 'latest', label: 'Latest First' },
+                    { value: 'oldest', label: 'Oldest First' },
+                    { value: 'episode-desc', label: 'Episode # (High to Low)' },
+                    { value: 'episode-asc', label: 'Episode # (Low to High)' },
+                  ]}
+                  size="sm"
+                />
               </div>
 
               {/* Format Filter */}
@@ -270,7 +272,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                     {/* Episode Badge - Always show */}
                     <div className="absolute top-3 left-3 z-10">
                       <span className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-xl">
-                        EP {episode.episodeNumber || (sortedEpisodes.findIndex(e => e.id === episode.id) + 1)}
+                        EP {episode.episodeNumber || (filteredEpisodes.findIndex(e => e.id === episode.id) + 1)}
                       </span>
                     </div>
                     
