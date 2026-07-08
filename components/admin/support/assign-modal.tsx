@@ -12,13 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { UserPlus, Loader2, X } from "lucide-react"
 import { notifications } from "@/lib/notifications"
 
@@ -181,26 +175,15 @@ export default function AssignModal({
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Admin</label>
-            <Select value={selectedAdmin} onValueChange={setSelectedAdmin}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose an admin..." />
-              </SelectTrigger>
-              <SelectContent>
-                {adminUsers.map((admin) => (
-                  <SelectItem key={admin.id} value={admin.email}>
-                    <div className="flex items-center gap-2">
-                      <div className="flex flex-col">
-                        <span className="font-medium">{admin.full_name}</span>
-                        <span className="text-xs text-muted-foreground">{admin.email}</span>
-                      </div>
-                      <span className={`text-xs font-semibold ${getRoleBadgeColor(admin.role)}`}>
-                        {admin.role ? admin.role.replace('_', ' ') : 'N/A'}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={selectedAdmin}
+              onValueChange={setSelectedAdmin}
+              placeholder="Choose an admin..."
+              options={adminUsers.map((admin) => ({
+                value: admin.email,
+                label: `${admin.full_name} (${admin.role ? admin.role.replace('_', ' ') : 'N/A'})`,
+              }))}
+            />
           </div>
 
           {adminUsers.length === 0 && (
