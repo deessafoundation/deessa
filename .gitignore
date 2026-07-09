@@ -69,3 +69,7 @@ public/websiteClip/*.MP3
 
 .vercel
 .env*.local
+
+/.mimocode
+
+/.commits-scripts
