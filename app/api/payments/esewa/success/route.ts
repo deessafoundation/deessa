@@ -10,6 +10,7 @@ import { createEsewaAdapter } from "@/lib/payments/adapters/EsewaAdapter"
 import { getPaymentService } from "@/lib/payments/core/PaymentService"
 import { generateReceiptForDonation } from "@/lib/actions/donation-receipt"
 import { handleConferenceVerification } from "./conference-handler"
+import { handleEventVerification } from "./event-handler"
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit"
 
 /**
@@ -164,6 +165,19 @@ export async function GET(request: Request) {
 
     if (conferenceResult) {
       return conferenceResult
+    }
+
+    // ── Event registration fallback branch ───────────────────────────────────
+    const eventResult = await handleEventVerification(
+      supabase,
+      transaction_uuid,
+      responseData,
+      url,
+      isMock,
+    )
+
+    if (eventResult) {
+      return eventResult
     }
 
     logPaymentEvent("eSewa success - donation not found", {
