@@ -7,7 +7,7 @@ export const metadata = {
   description: "Monitor system health and provider status",
 }
 
-async function getSystemHealth(supabase: ReturnType<typeof createClient>) {
+async function getSystemHealth(supabase: Awaited<ReturnType<typeof createClient>>) {
   // Check database connectivity
   const dbStart = Date.now()
   const { error: dbError } = await supabase.from("donations").select("id").limit(1)

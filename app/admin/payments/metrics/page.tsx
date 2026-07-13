@@ -7,7 +7,7 @@ export const metadata = {
   description: "View payment performance metrics and trends",
 }
 
-async function getMetricsData(supabase: ReturnType<typeof createClient>) {
+async function getMetricsData(supabase: Awaited<ReturnType<typeof createClient>>) {
   const now = new Date()
   const last30Days = Array.from({ length: 30 }, (_, i) => {
     const date = new Date(now)
