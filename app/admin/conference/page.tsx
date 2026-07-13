@@ -3,7 +3,8 @@ import { getConferenceRegistrations } from "@/lib/actions/conference-registratio
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Globe, UserCheck, TrendingUp, Settings, CreditCard } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Users, Globe, UserCheck, TrendingUp, Settings, CreditCard, FileJson } from "lucide-react"
 
 export const metadata = {
   title: "Conference Registrations | Admin",
@@ -59,7 +60,11 @@ function PaymentBadge({ status }: { status?: string | null }) {
 
 export default async function ConferenceAdminPage() {
   let registrations
+  let events: any[] = []
+  
   try {
+    const { getAllEvents } = await import("@/lib/actions/events")
+    events = await getAllEvents()
     registrations = await getConferenceRegistrations()
   } catch (err) {
     // Log full error for debugging (server-side)
@@ -199,17 +204,20 @@ export default async function ConferenceAdminPage() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Event</TableHead>
+                  <TableHead>Form</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Mode</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Payment</TableHead>
+                  <TableHead>Custom Data</TableHead>
                   <TableHead>Registered</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {registrations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="py-16 text-center text-muted-foreground">
+                    <TableCell colSpan={10} className="py-16 text-center text-muted-foreground">
                       <div className="flex flex-col items-center gap-2">
                         <Users className="size-10 text-muted-foreground/40" />
                         <p className="font-medium">No registrations yet</p>
@@ -218,61 +226,137 @@ export default async function ConferenceAdminPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  registrations.map((reg) => (
-                    <TableRow
-                      key={reg.id}
-                      className="relative hover:bg-primary/5 transition-colors cursor-pointer"
-                    >
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          {/* Invisible full-row overlay link — accessible & valid HTML */}
-                          <Link
-                            href={`/admin/conference/${reg.id}`}
-                            className="absolute inset-0 z-0"
-                            aria-label={`View ${reg.full_name}'s registration`}
-                          />
-                          <div
-                            className={`relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${avatarColor(reg.full_name)}`}
-                          >
-                            {getInitials(reg.full_name)}
+                  registrations.map((reg) => {
+                    const customFieldCount = reg.custom_fields
+                      ? Object.keys(reg.custom_fields as Record<string, unknown>).length
+                      : 0
+                    
+                    // Find event for this registration
+                    const event = events.find((e) => e.id === reg.event_id)
+                    
+                    return (
+                      <TableRow
+                        key={reg.id}
+                        className="relative hover:bg-primary/5 transition-colors cursor-pointer"
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            {/* Invisible full-row overlay link — accessible & valid HTML */}
+                            <Link
+                              href={`/admin/conference/${reg.id}`}
+                              className="absolute inset-0 z-0"
+                              aria-label={`View ${reg.full_name}'s registration`}
+                            />
+                            <div
+                              className={`relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${avatarColor(reg.full_name)}`}
+                            >
+                              {getInitials(reg.full_name)}
+                            </div>
+                            <span className="relative z-10 font-medium text-foreground">{reg.full_name}</span>
                           </div>
-                          <span className="relative z-10 font-medium text-foreground">{reg.full_name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
-                      <TableCell className="text-sm capitalize">
-                        {reg.role?.replace("-", " ") || "—"}
-                      </TableCell>
-                      <TableCell>
-                        {reg.attendance_mode ? (
-                          <span
-                            className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                              reg.attendance_mode === "in-person"
-                                ? "bg-primary/10 text-primary"
-                                : "bg-muted text-foreground-muted"
-                            }`}
-                          >
-                            {reg.attendance_mode === "in-person" ? "In-Person" : "Online"}
-                          </span>
-                        ) : (
-                          "—"
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <StatusBadge status={reg.status} />
-                      </TableCell>
-                      <TableCell>
-                        <PaymentBadge status={reg.payment_status} />
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {new Date(reg.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                        <TableCell>
+                          {event ? (
+                            <Badge 
+                              variant="outline" 
+                              className="font-normal whitespace-nowrap"
+                            >
+                              {event.title}
+                            </Badge>
+                          ) : reg.event_id ? (
+                            <Badge variant="secondary" className="text-xs">
+                              Event ID
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {reg.form_schema_version ? (
+                            <Badge variant="outline" className="font-mono text-xs">
+                              v{reg.form_schema_version}
+                            </Badge>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm capitalize">
+                          {reg.role?.replace("-", " ") || "—"}
+                        </TableCell>
+                        <TableCell>
+                          {reg.attendance_mode ? (
+                            <span
+                              className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                                reg.attendance_mode === "in-person"
+                                  ? "bg-primary/10 text-primary"
+                                  : "bg-muted text-foreground-muted"
+                              }`}
+                            >
+                              {reg.attendance_mode === "in-person" ? "In-Person" : "Online"}
+                            </span>
+                          ) : (
+                            "—"
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={reg.status} />
+                        </TableCell>
+                        <TableCell>
+                          <PaymentBadge status={reg.payment_status} />
+                        </TableCell>
+                        <TableCell>
+                          {customFieldCount > 0 ? (
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <button
+                                  className="relative z-10 flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <FileJson className="size-3" />
+                                  {customFieldCount} {customFieldCount === 1 ? "field" : "fields"}
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-64 p-3" align="end">
+                                <div className="space-y-2">
+                                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                                    Custom Fields
+                                  </p>
+                                  <div className="space-y-1.5">
+                                    {Object.entries(reg.custom_fields as Record<string, unknown>).map(([key, value]) => (
+                                      <div key={key} className="text-xs">
+                                        <span className="font-medium text-foreground">
+                                          {key.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}:
+                                        </span>{" "}
+                                        <span className="text-muted-foreground">
+                                          {Array.isArray(value)
+                                            ? value.join(", ")
+                                            : typeof value === "boolean"
+                                              ? value ? "Yes" : "No"
+                                              : String(value).length > 50
+                                                ? String(value).slice(0, 50) + "..."
+                                                : String(value)}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {new Date(reg.created_at).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
                 )}
               </TableBody>
             </Table>

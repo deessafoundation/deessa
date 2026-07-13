@@ -11,9 +11,12 @@ import {
   MapPin,
   Clock,
   StickyNote,
+  FileJson,
 } from "lucide-react"
 import { getConferenceRegistration } from "@/lib/actions/conference-registration"
 import { getConferenceSettings } from "@/lib/actions/conference-settings"
+import { getFormSchemaByVersion } from "@/lib/actions/conference-form-schema"
+import type { FormField } from "@/lib/types/conference-form-schema"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ConferenceStatusActions } from "@/components/admin/conference-status-actions"
@@ -98,6 +101,25 @@ export default async function ConferenceRegistrantDetailPage({ params }: Props) 
 
   const cfg = await getConferenceSettings()
   const conferenceDate = new Date(`${cfg.dateStart}T00:00:00+05:45`)
+
+  // ── Fetch event details ─────────────────────────────────────────────────────
+  let eventDetails = null
+  if (reg.event_id) {
+    const { getEventById } = await import("@/lib/actions/events")
+    eventDetails = await getEventById(reg.event_id)
+  }
+
+  // ── Phase 3: Fetch form schema to display custom fields with labels ─────────
+  let customFieldsSchema: FormField[] | null = null
+  if (reg.form_schema_version) {
+    const schema = await getFormSchemaByVersion(reg.form_schema_version)
+    if (schema) {
+      // Extract all custom fields from all steps
+      customFieldsSchema = schema.steps.flatMap((step) =>
+        step.fields.filter((field) => field.storage === "custom")
+      )
+    }
+  }
 
   const shortId = `DEESSA-2026-${reg.id.slice(0, 6).toUpperCase()}`
   const registeredAt = new Date(reg.created_at).toLocaleDateString("en-US", {
@@ -188,6 +210,8 @@ export default async function ConferenceRegistrantDetailPage({ params }: Props) 
     })
   }
 
+  timeline.reverse()
+
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
@@ -228,6 +252,66 @@ export default async function ConferenceRegistrantDetailPage({ params }: Props) 
           </div>
         </CardContent>
       </Card>
+
+      {/* ── Event & Form Context Card ── */}
+      {(eventDetails || reg.form_schema_version) && (
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardHeader className="border-b border-blue-200 px-6 py-4">
+            <CardTitle className="flex items-center gap-2 text-base text-blue-900">
+              <Calendar className="size-4" />
+              Registration Context
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Event Info */}
+              {eventDetails && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+                    Event
+                  </p>
+                  <div>
+                    <p className="font-medium text-blue-900">{eventDetails.title}</p>
+                    <p className="text-sm text-blue-700 mt-1">
+                      {new Date(eventDetails.event_date).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                    <p className="text-sm text-blue-700">{eventDetails.location}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Form Version Info */}
+              {reg.form_schema_version && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+                    Form Used
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-white border-blue-300 text-blue-900 font-mono">
+                      Version {reg.form_schema_version}
+                    </Badge>
+                    {/* View Form Schema Button - will be functional in next step */}
+                    <button
+                      className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                      disabled
+                      title="Form schema viewer (coming soon)"
+                    >
+                      View Form →
+                    </button>
+                  </div>
+                  <p className="text-xs text-blue-700">
+                    This user filled out the form that was active at the time of registration.
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* ── Left Column ── */}
@@ -294,6 +378,83 @@ export default async function ConferenceRegistrantDetailPage({ params }: Props) 
               <DetailRow label="Newsletter Consent" value={reg.consent_newsletter ? "Yes" : "No"} />
             </CardContent>
           </Card>
+
+          {/* ── Phase 3: Custom Fields ── */}
+          {reg.custom_fields && Object.keys(reg.custom_fields).length > 0 && (
+            <Card>
+              <CardHeader className="border-b border-border px-6 py-4">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <FileJson className="size-4 text-muted-foreground" />
+                  Custom Fields
+                  {reg.form_schema_version && (
+                    <span className="ml-auto text-xs font-normal text-muted-foreground">
+                      Schema v{reg.form_schema_version}
+                    </span>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-6 py-2">
+                {customFieldsSchema ? (
+                  // Display with schema labels
+                  <>
+                    {customFieldsSchema.map((field) => {
+                      const value = (reg.custom_fields as Record<string, unknown>)?.[field.id]
+                      if (value === undefined || value === null) return null
+                      
+                      // Format value based on field type
+                      let displayValue: string | string[] | null = null
+                      if (Array.isArray(value)) {
+                        displayValue = value.map(String)
+                      } else if (typeof value === "boolean") {
+                        displayValue = value ? "Yes" : "No"
+                      } else {
+                        displayValue = String(value)
+                      }
+
+                      return (
+                        <DetailRow
+                          key={field.id}
+                          label={field.label}
+                          value={displayValue}
+                        />
+                      )
+                    })}
+                  </>
+                ) : (
+                  // Fallback: display raw keys with title-cased labels
+                  <>
+                    {Object.entries(reg.custom_fields as Record<string, unknown>).map(([key, value]) => {
+                      if (value === undefined || value === null) return null
+                      
+                      // Title-case the key: "linkedin_profile" → "Linkedin Profile"
+                      const label = key
+                        .split("_")
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(" ")
+                      
+                      // Format value
+                      let displayValue: string | string[] | null = null
+                      if (Array.isArray(value)) {
+                        displayValue = value.map(String)
+                      } else if (typeof value === "boolean") {
+                        displayValue = value ? "Yes" : "No"
+                      } else {
+                        displayValue = String(value)
+                      }
+
+                      return (
+                        <DetailRow
+                          key={key}
+                          label={label}
+                          value={displayValue}
+                        />
+                      )
+                    })}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* ── Phase 3: Activity Timeline ── */}
           <Card>
