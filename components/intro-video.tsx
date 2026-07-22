@@ -9,21 +9,11 @@ export function IntroVideo() {
   const [animateLogo, setAnimateLogo] = useState(false)
   const [fadeBackground, setFadeBackground] = useState(false)
   const [logoStyle, setLogoStyle] = useState<React.CSSProperties>({})
-  const [isBrave, setIsBrave] = useState(false)
   const [userInteracted, setUserInteracted] = useState(false)
-  const [soundEnabled, setSoundEnabled] = useState(false)
+  const [isSkipping, setIsSkipping] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
-
-  // Detect Brave browser
-  useEffect(() => {
-    const checkBrave = async () => {
-      if ((navigator as any).brave && await (navigator as any).brave.isBrave()) {
-        setIsBrave(true)
-      }
-    }
-    checkBrave()
-  }, [])
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Check if intro has been shown (using localStorage to persist across sessions)
@@ -62,8 +52,16 @@ export function IntroVideo() {
             if (error.name === 'AbortError') {
               // Browser interrupted playback, try again
               setTimeout(() => {
-                video.play().catch(() => {})
+                if (videoRef.current && !userInteracted) {
+                  videoRef.current.play().catch(() => {
+                    // If still failing, wait for user interaction
+                    console.log('Video requires user interaction to play')
+                  })
+                }
               }, 100)
+            } else if (error.name === 'NotAllowedError' || error.name === 'NotSupportedError') {
+              // Browser requires user interaction - this is expected on mobile
+              console.log('Video autoplay blocked, waiting for user interaction')
             } else {
               console.error("Video autoplay failed:", error)
             }
@@ -72,49 +70,53 @@ export function IntroVideo() {
     }
   }, [showIntro, userInteracted])
 
-  // Handle user click to play video (for non-Brave browsers)
-  const handlePlayClick = () => {
-    if (videoRef.current && !userInteracted) {
-      const video = videoRef.current
-      video.muted = true // Keep muted for other browsers
-      video.play().then(() => {
-        setUserInteracted(true)
-        console.log('Video started after user interaction')
-      }).catch(err => console.error('Play failed:', err))
-    }
-  }
-
-  // Handle any click to start video or enable sound
-  const handleContainerClick = (e: React.MouseEvent) => {
+  // Handle any click/touch to start video or enable sound
+  const handleContainerClick = () => {
+    // Prevent if already skipping
+    if (isSkipping) return
+    
     if (!userInteracted && videoRef.current) {
-      // First click: restart the video with proper audio settings
+      // First interaction: enable sound and ensure video plays
       const video = videoRef.current
-      const currentTime = video.currentTime // Save current position
       
-      // Unmute the video - user interaction allows sound in all browsers
-      video.muted = false
+      // Check if video is paused or hasn't started
+      const needsRestart = video.paused || video.currentTime === 0
       
-      // Restart from current position with new audio settings
-      video.currentTime = currentTime
-      video.play().then(() => {
-        setUserInteracted(true)
-        setSoundEnabled(true)
-        console.log('Video playing with sound after user interaction')
-      }).catch(err => {
-        console.error('Play with audio failed:', err)
-        // Fallback: try muted
-        video.muted = true
+      if (needsRestart) {
+        // Video needs to start/restart - unmute and play from beginning
+        video.muted = false
+        video.currentTime = 0
         video.play().then(() => {
           setUserInteracted(true)
-          console.log('Video playing muted (audio failed)')
-        }).catch(err2 => console.error('Fallback play failed:', err2))
-      })
+          console.log('Video playing with sound after user interaction')
+        }).catch(err => {
+          console.error('Play with audio failed:', err)
+          // Fallback: try muted playback
+          video.muted = true
+          video.currentTime = 0
+          video.play().then(() => {
+            setUserInteracted(true)
+            console.log('Video playing muted (audio failed)')
+          }).catch(err2 => console.error('Fallback play failed:', err2))
+        })
+      } else {
+        // Video is already playing - just unmute it
+        video.muted = false
+        setUserInteracted(true)
+        console.log('Sound enabled on playing video')
+      }
     }
   }
 
-  // Handle skip button click
-  const handleSkip = (e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent container click
+  // Handle skip button click/touch - prevent event bubbling
+  const handleSkip = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // Prevent double-clicks
+    if (isSkipping) return
+    setIsSkipping(true)
+    
     if (videoRef.current) {
       videoRef.current.pause()
     }
@@ -218,10 +220,15 @@ export function IntroVideo() {
 
   return (
     <div 
+      ref={containerRef}
       className={`fixed inset-0 z-[100] transition-opacity duration-1000 ease-out cursor-pointer ${
         fadeBackground ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       onClick={handleContainerClick}
+      onTouchEnd={handleContainerClick}
+      role="button"
+      tabIndex={0}
+      aria-label="Click or tap to enable sound"
     >
       {/* Subtle text prompt - show before interaction */}
       {!userInteracted && !videoEnded && (
@@ -232,12 +239,15 @@ export function IntroVideo() {
         </div>
       )}
 
-      {/* Skip button - subtle in bottom right */}
+      {/* Skip button - subtle in bottom right with larger touch target */}
       {!videoEnded && (
         <button
           onClick={handleSkip}
+          onTouchEnd={handleSkip}
           className="absolute bottom-6 right-6 z-10 px-3 py-1.5 text-white/40 hover:text-white/80 text-xs font-light tracking-wide transition-all duration-300 hover:bg-white/5 rounded-md backdrop-blur-sm border border-white/10 hover:border-white/30"
+          style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           aria-label="Skip intro"
+          type="button"
         >
           Skip
         </button>
