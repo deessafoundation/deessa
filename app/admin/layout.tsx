@@ -9,6 +9,11 @@ export const dynamic = "force-dynamic"
 export const metadata = {
   title: "Admin Panel | deessa Foundation",
   description: "Manage deessa Foundation website content",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
 }
 
 export default async function AdminLayout({
