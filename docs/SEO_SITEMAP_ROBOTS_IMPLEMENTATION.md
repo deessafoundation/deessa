@@ -130,9 +130,6 @@ Added `robots: { index: false, follow: false }` metadata for defense-in-depth pr
 - `/conference/register/` - Conference registration (contains sensitive tokens)
 - `/conference/register/*`
 
-### Sitemap Display Page
-- `/sitemap/` - Human-readable sitemap page (the XML is at `/sitemap.xml`)
-
 ---
 
 ## Defense in Depth: Admin Protection
@@ -244,11 +241,6 @@ All routes under `/api/*` are not indexable by design.
 **Current Status:** NOT included in sitemap
 **Reason:** Need to confirm if this is a public support/help page or internal support ticket system
 **Action:** If public help page → Add to sitemap. If internal tickets → Leave excluded.
-
-### `/sitemap` Page (Human-Readable)
-**Current Status:** Disallowed in robots.txt
-**Reason:** This appears to be a human-readable sitemap display page, while the XML sitemap is at `/sitemap.xml`
-**Action:** Confirmed correct - XML sitemap is properly referenced in robots.txt
 
 ---
 

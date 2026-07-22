@@ -44,9 +44,6 @@ export default function robots(): MetadataRoute.Robots {
         '/verify/*',
         '/conference/register/',
         '/conference/register/*',
-        
-        // Sitemap display page (the actual sitemap.xml is referenced below)
-        '/sitemap/',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
