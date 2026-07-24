@@ -74,7 +74,7 @@ export function AboutHero() {
       {/* ─── LAYER 1 — Full-bleed background photo ─── */}
       <img
         src={HERO_BG_URL}
-        alt="Deessa Foundation team in Nepal"
+        alt="deessa Foundation team in Nepal"
         style={{
           position: "absolute",
           inset: 0,
@@ -171,9 +171,9 @@ export function AboutHero() {
             marginBottom: 32,
           }}
         >
-          We are a dedicated team rooted in Nepal&apos;s communities,
-          bridging the gap between potential and opportunity
-          across the country&apos;s most remote regions.
+          We are parents, educators, professionals, and advocates working
+          for and with children with disabilities — with a special focus on
+          autism — to build a society where every child belongs.
         </motion.p>
 
         {/* e) CTA Buttons */}
@@ -259,7 +259,7 @@ export function AboutHero() {
             flexWrap: "wrap",
           }}
         >
-          {["Est. 2015", "Govt Registered", "SWC Affiliated"].map((text) => (
+          {["Govt Registered", "SWC Affiliated"].map((text) => (
             <span key={text} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <span
                 style={{

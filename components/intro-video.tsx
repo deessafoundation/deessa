@@ -218,7 +218,7 @@ export function IntroVideo() {
 
   return (
     <div 
-      className={`fixed inset-0 z-[100] transition-opacity duration-1000 ease-out cursor-pointer ${
+      className={`fixed inset-0 z-30 transition-opacity duration-1000 ease-out cursor-pointer ${
         fadeBackground ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       onClick={handleContainerClick}

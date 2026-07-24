@@ -6,10 +6,10 @@ import { Podcast } from 'lucide-react';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'All Episodes - Deesha Foundation',
+  title: 'All Episodes - deessa Foundation',
   description: 'Browse our complete archive of podcast episodes featuring inspiring conversations about education, empowerment, and environmental conservation.',
   openGraph: {
-    title: 'All Episodes - Deesha Foundation',
+    title: 'All Episodes - deessa Foundation',
     description: 'Browse our complete archive of podcast episodes featuring inspiring conversations about education, empowerment, and environmental conservation.',
   },
 };

@@ -22,6 +22,10 @@ const config = {
         jsx: 'react',
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
+        // Explicit rootDir: jest's `roots` points at __tests__, so TS otherwise
+        // infers the common source dir as ./__tests__ and fails with TS5011
+        // once tests import from ../lib.
+        rootDir: '.',
       },
     }],
   },
@@ -46,7 +50,7 @@ const config = {
     '!lib/payments/**/*.md',
   ],
   
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 75,
@@ -71,9 +75,21 @@ const config = {
     '/dist/',
   ],
   
-  // Transform ignore patterns - allow jsdom to be transformed
+  // Transform ignore patterns.
+  //
+  // KNOWN GAP (story-parser tests only — payments/receipts/security suites pass):
+  // `import('jsdom')` fails with "Unexpected token 'export'" because
+  // jsdom -> html-encoding-sniffer -> @exodus/bytes/encoding-lite.js is ESM.
+  // Two things block it:
+  //   1. `transform` above only maps `^.+\.tsx?$`, so ESM .js files in
+  //      node_modules get no transformer at all.
+  //   2. This pattern isn't pnpm-aware — the real path is
+  //      node_modules/.pnpm/@exodus+bytes@x/node_modules/@exodus/bytes/...
+  //      so the exception below never matches.
+  // Fixing it needs babel-jest wired up for .js plus a pnpm-aware pattern.
+  // jsdom itself is CommonJS and deliberately not listed here.
   transformIgnorePatterns: [
-    'node_modules/(?!(jsdom|@exodus/bytes|html-encoding-sniffer)/)',
+    'node_modules/(?!(@exodus/bytes|html-encoding-sniffer)/)',
   ],
   
   // Module file extensions

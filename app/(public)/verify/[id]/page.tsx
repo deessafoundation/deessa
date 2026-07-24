@@ -150,7 +150,7 @@ function PageShell({ children, variant = "default" }: { children: React.ReactNod
       <footer className="relative border-t border-gray-200 bg-[rgb(248,249,250)] py-6">
         <div className="max-w-2xl mx-auto px-4 text-center space-y-3">
           <p className="text-xs text-[rgb(108,117,125)]">
-            &copy; {new Date().getFullYear()} Deessa Foundation Audit & Compliance Team
+            &copy; {new Date().getFullYear()} deessa Foundation Audit & Compliance Team
           </p>
           <div className="flex items-center justify-center gap-5 text-xs">
             <Link href="/privacy" className="text-[rgb(63,171,222)] hover:underline">Privacy Policy</Link>
@@ -404,7 +404,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01" />
                       </svg>
                     </span>
-                    <span className="text-sm text-gray-600">The document may not have been issued by Deessa Foundation</span>
+                    <span className="text-sm text-gray-600">The document may not have been issued by deessa Foundation</span>
                   </li>
                 </ul>
               </div>
@@ -491,7 +491,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
         Verified Authenticity
       </h1>
       <p className="text-[rgb(108,117,125)] text-center max-w-lg mb-10 leading-relaxed">
-        This receipt matches our official records and has been confirmed as a legitimate donation to the Deessa Foundation.
+        This receipt matches our official records and has been confirmed as a legitimate donation to the deessa Foundation.
       </p>
 
       {/* ── Receipt Details Card ── */}
@@ -576,7 +576,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p className="text-[11px] text-[rgb(108,117,125)] leading-relaxed italic">
-                This verification result is generated directly from the Deessa Foundation&apos;s secure audit records. Any modification to the physical or digital receipt that does not match this data should be treated as potentially fraudulent.
+                This verification result is generated directly from the deessa Foundation&apos;s secure audit records. Any modification to the physical or digital receipt that does not match this data should be treated as potentially fraudulent.
               </p>
             </div>
           </div>

@@ -73,7 +73,7 @@ export function OurStorySection() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
                 <Image
                   src="/ourStory.png"
-                  alt="How Deessa started - our origin story"
+                  alt="How deessa started - our origin story"
                   width={700}
                   height={500}
                   className="w-full h-auto object-cover"
@@ -108,19 +108,19 @@ export function OurStorySection() {
                 >
                   <div className="py-0 px-1.5">
                     <h2 className="font-marissa text-2xl md:text-[34px] text-white text-center" style={{ lineHeight: 1.15 }}>
-                      How Deesha Started
+                      How deessa Started
                     </h2>
                   </div>
                 </BrushStroke>
               </div>
               <p className="text-lg text-foreground/70 leading-relaxed mb-6">
-                Born from a deep passion for social justice and a belief in the power of community, Deesha Foundation
+                Born from a deep passion for social justice and a belief in the power of community, deessa Foundation
                 was established in 2015 in Kathmandu, Nepal. What began as a small group of dedicated individuals
                 has grown into a movement touching thousands of lives.
               </p>
               <p className="text-lg text-foreground/70 leading-relaxed mb-8">
                 Our founders saw the gaps in education, healthcare, and opportunity across rural Nepal and decided
-                to act. Today, Deesha stands as a beacon of hope, building bridges between communities and the
+                to act. Today, deessa stands as a beacon of hope, building bridges between communities and the
                 resources they need to thrive.
               </p>
               <Link
@@ -367,7 +367,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2015",
       milestone: "Founded in Kathmandu",
-      description: "Deesha Foundation began with a simple commitment: serve communities that are often left behind.",
+      description: "deessa Foundation began with a simple commitment: serve communities that are often left behind.",
       icon: MapPin,
       badgeClass: "from-[rgb(var(--brand-primary))] to-[rgb(var(--brand-primary-dark))]",
       yearClass: "bg-[rgb(var(--brand-primary))]",
@@ -576,7 +576,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Parent",
       location: "Kathmandu",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-      quote: "Deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
+      quote: "deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
       rating: 5,
     },
     {
@@ -584,7 +584,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Village Elder",
       location: "Gorkha",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      quote: "The health camp organized by Deesha brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
+      quote: "The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
       rating: 5,
     },
     {
@@ -592,7 +592,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Volunteer",
       location: "Pokhara",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-      quote: "Volunteering with Deesha has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
+      quote: "Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
       rating: 5,
     },
   ]
@@ -986,7 +986,7 @@ export function ContactSection() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Deessa Foundation Office Location — Dhobighat Nayabato, Sanepa, Lalitpur 44600"
+                title="deessa Foundation Office Location — Dhobighat Nayabato, Sanepa, Lalitpur 44600"
               />
             </div>
           </ScrollReveal>

@@ -1,15 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables.');
+  process.exit(1);
+}
+
 const supabase = createClient(
-  'https://tqljblbdfhjfqnegjobi.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxbGpibGJkZmhqZnFuZWdqb2JpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTk1MDIwNiwiZXhwIjoyMDgxNTI2MjA2fQ.X5xuvaBpCI0fqIERrWdoIRDxacDGhnrgxoUiVYHBGq4'
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const episodes = [
   {
     slug: 'living-with-autism-real-voices-real-stories-ep-4',
     title: 'Living with Autism: Real Voices, Real Stories || EP 4',
-    description: 'Episode 4 of the podcast series Living with Autism: Real Voices, Real Stories, produced by the Deessa Foundation with technical support from SDG Studio. This episode continues powerful conversations around autism awareness, inclusion, and community support in Nepal.',
+    description: 'Episode 4 of the podcast series Living with Autism: Real Voices, Real Stories, produced by the deessa Foundation with technical support from SDG Studio. This episode continues powerful conversations around autism awareness, inclusion, and community support in Nepal.',
     youtube_id: '5K2oqSIHVhs',
     thumbnail_url: 'https://img.youtube.com/vi/5K2oqSIHVhs/maxresdefault.jpg',
     duration: '',
@@ -35,7 +40,7 @@ const episodes = [
   {
     slug: 'living-with-autism-real-voices-real-stories-ep-5',
     title: 'Living with Autism: Real Voices, Real Stories || EP 5',
-    description: 'Episode 5 of the podcast series Living with Autism: Real Voices, Real Stories, produced by the Deessa Foundation. Another inspiring episode featuring stories, insights, and conversations about autism, inclusion, and family journeys in Nepal.',
+    description: 'Episode 5 of the podcast series Living with Autism: Real Voices, Real Stories, produced by the deessa Foundation. Another inspiring episode featuring stories, insights, and conversations about autism, inclusion, and family journeys in Nepal.',
     youtube_id: 'eQtORk0dGUc',
     thumbnail_url: 'https://img.youtube.com/vi/eQtORk0dGUc/maxresdefault.jpg',
     duration: '',

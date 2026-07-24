@@ -1,23 +1,30 @@
 import { NextResponse } from "next/server";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 
 /**
  * Webhook Diagnostic Endpoint
- * 
- * This endpoint helps administrators verify that all required environment
- * variables are configured correctly for Stripe webhook processing.
- * 
+ *
+ * Helps administrators verify that all required environment variables are
+ * configured correctly for Stripe webhook processing.
+ *
  * Usage:
  *   GET /api/webhooks/stripe/test
- * 
- * Returns:
- *   JSON object with configuration status for each required variable
- * 
+ *
  * Security:
- *   - Does not expose actual secret values
- *   - Only returns boolean flags indicating presence
- *   - Safe to use in production for diagnostics
+ *   - Admin authentication required. Although it returns only boolean flags,
+ *     the combination of which providers are configured plus PAYMENT_MODE and
+ *     NODE_ENV is useful reconnaissance and must not be public.
+ *   - Never returns actual secret values.
  */
 export async function GET() {
+  const currentAdmin = await getCurrentAdmin();
+  if (!currentAdmin || !currentAdmin.is_active) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!["SUPER_ADMIN", "ADMIN"].includes(currentAdmin.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const diagnostics = {
     stripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
     webhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,

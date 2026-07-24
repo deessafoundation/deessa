@@ -12,22 +12,22 @@ import { ScrollReveal } from "@/components/scroll-animations"
 
 const faqs = [
   {
-    question: "What is Deessa Foundation?",
+    question: "What is deessa Foundation?",
     answer:
-      "Deessa Foundation is a non-profit organization based in Kathmandu, Nepal, dedicated to empowering marginalized communities through education, healthcare, shelter, and freedom programs since 2014.",
+      "deessa Foundation is a non-profit organization based in Kathmandu, Nepal, dedicated to empowering marginalized communities through education, healthcare, shelter, and freedom programs since 2014.",
   },
   {
-    question: "How can I donate to Deessa Foundation?",
+    question: "How can I donate to deessa Foundation?",
     answer:
-      "You can donate through our website's Donate page using various payment methods including eSewa, Khalti, and international transfers. Every contribution directly supports our programs.",
+      "You can donate through our website's Donate page by card, by eSewa, or by direct bank transfer to our organisation account. Every contribution directly supports our programs.",
   },
   {
-    question: "Can I volunteer with Deessa Foundation?",
+    question: "Can I volunteer with deessa Foundation?",
     answer:
       "Yes! We welcome volunteers from Nepal and around the world. Visit our Get Involved page to learn about current volunteer opportunities and how you can make a difference.",
   },
   {
-    question: "Where does Deessa Foundation work?",
+    question: "Where does deessa Foundation work?",
     answer:
       "We operate across Nepal, with programs reaching 120+ villages in 25+ districts. Our main areas of focus include the Gandaki province, Kathmandu Valley, and underserved regions of the Terai.",
   },
@@ -37,12 +37,12 @@ const faqs = [
       "We ensure maximum impact with every donation. The majority of funds go directly to our programs — education, healthcare, shelter, and empowerment initiatives. We maintain full transparency through annual reports.",
   },
   {
-    question: "Does Deessa Foundation have partnerships?",
+    question: "Does deessa Foundation have partnerships?",
     answer:
       "Yes, we partner with numerous national and international organizations, local communities, and government bodies to maximize our reach and impact across Nepal.",
   },
   {
-    question: "How can I stay updated on Deessa's work?",
+    question: "How can I stay updated on deessa's work?",
     answer:
       "Follow us on social media, subscribe to our newsletter, or listen to our podcast for regular updates on our programs, impact stories, and upcoming events.",
   },
@@ -61,7 +61,7 @@ export function HomeFAQs() {
               Frequently Asked Questions
             </h2>
             <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
-              Find answers to common questions about Deessa Foundation and how you can get involved.
+              Find answers to common questions about deessa Foundation and how you can get involved.
             </p>
           </div>
         </ScrollReveal>

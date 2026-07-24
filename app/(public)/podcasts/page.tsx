@@ -9,10 +9,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Podcasts - Living With Autism | Deesha Foundation',
+  title: 'Podcasts - Living With Autism | deessa Foundation',
   description: 'Explore our podcast series featuring stories, insights, and conversations about autism, inclusion, and community impact.',
   openGraph: {
-    title: 'Podcasts - Living With Autism | Deesha Foundation',
+    title: 'Podcasts - Living With Autism | deessa Foundation',
     description: 'Explore our podcast series featuring stories, insights, and conversations about autism, inclusion, and community impact.',
     type: 'website',
   },

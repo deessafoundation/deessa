@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ProgramsClient } from "./programs-client"
 
 export const metadata: Metadata = {
-  title: "Programs - Deessa Foundation",
+  title: "Programs - deessa Foundation",
   description: "From classrooms in Karnali to clinics in the Terai — our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
 }
 

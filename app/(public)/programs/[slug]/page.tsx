@@ -23,11 +23,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = await getProjectBySlug(slug)
 
   if (!project) {
-    return { title: "Project Not Found - Dessa Foundation" }
+    return { title: "Project Not Found - deessa Foundation" }
   }
 
   return {
-    title: `${project.title} - Dessa Foundation`,
+    title: `${project.title} - deessa Foundation`,
     description: project.description,
   }
 }

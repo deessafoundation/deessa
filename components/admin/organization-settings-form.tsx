@@ -42,7 +42,7 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
 
   const [formData, setFormData] = useState<OrganizationDetails>(
     initialData || {
-      name: "Dessa Foundation",
+      name: "deessa Foundation",
       vat_registration_number: "",
       pan_number: "",
       swc_registration_number: "",
@@ -121,7 +121,7 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
           onChange={handleChange}
           required
           disabled={isSubmitting}
-          placeholder="Dessa Foundation"
+          placeholder="deessa Foundation"
         />
       </div>
 

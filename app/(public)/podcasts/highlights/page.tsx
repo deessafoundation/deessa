@@ -5,10 +5,10 @@ import HighlightsPageContent from '@/components/podcasts/highlights-page-content
 import { Sparkles } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Podcast Highlights - All Shorts | Deesha Foundation',
+  title: 'Podcast Highlights - All Shorts | deessa Foundation',
   description: 'Watch all YouTube Shorts highlights from our podcast episodes. Key moments, insights, and stories.',
   openGraph: {
-    title: 'Podcast Highlights - All Shorts | Deesha Foundation',
+    title: 'Podcast Highlights - All Shorts | deessa Foundation',
     description: 'Watch all YouTube Shorts highlights from our podcast episodes. Key moments, insights, and stories.',
     type: 'website',
   },

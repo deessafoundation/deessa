@@ -101,7 +101,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         id: "education",
         badge: "📚 Education",
         headline: "Building Classrooms, Building Futures",
-        body: "Since 2015, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+        body: "Since 2015, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
         bullets: [
           "50+ schools built & renovated from Humla to Dang",
           "500+ teachers trained in child-centered pedagogy",
@@ -332,8 +332,8 @@ export async function getHomepageMarqueeSettings(): Promise<HomepageMarqueeSetti
  */
 export async function getHomepageSEO(): Promise<HomepageSEOSettings> {
   const defaultSEO: HomepageSEOSettings = {
-    title: "Deesha Foundation - Empowering Communities Across Nepal",
-    description: "Since 2015, Deesha Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
+    title: "deessa Foundation - Empowering Communities Across Nepal",
+    description: "Since 2015, deessa Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
     ogImage: "/og-image-home.jpg",
     keywords: ["Nepal NGO", "education Nepal", "healthcare Nepal", "community development", "rural empowerment"],
   }

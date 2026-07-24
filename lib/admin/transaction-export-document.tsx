@@ -67,7 +67,7 @@ export interface TransactionExportData {
 }
 
 // ---------------------------------------------------------------------------
-// Brand Colors - Deesha Foundation Ocean Blue
+// Brand Colors - deessa Foundation Ocean Blue
 // ---------------------------------------------------------------------------
 
 const C = {
