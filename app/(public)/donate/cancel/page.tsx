@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Section } from "@/components/ui/section"
 
 export const metadata: Metadata = {
-  title: "Donation Cancelled | Dessa Foundation",
+  title: "Donation Cancelled | deessa Foundation",
   description: "Your donation was cancelled.",
 }
 

@@ -4,10 +4,12 @@ import { Heart, Shield, CreditCard, Repeat, CheckCircle, HelpCircle, Search } fr
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { DonationForm } from "@/components/donation/donation-form"
+import { BankTransferPanel } from "@/components/donation/bank-transfer-panel"
 import { getPaymentSettings, getSupportedProviders } from "@/lib/payments/config"
+import { getConfiguredBankAccounts } from "@/lib/payments/bank-details"
 
 export const metadata: Metadata = {
-  title: "Donate - Dessa Foundation",
+  title: "Donate - deessa Foundation",
   description:
     "Support our mission to empower communities in Nepal through education, healthcare, and sustainable development.",
 }
@@ -52,7 +54,7 @@ const faqs = [
   },
   {
     question: "Is my donation tax-deductible?",
-    answer: "Yes! Dessa Foundation is a registered 501(c)(3) nonprofit. You will receive a tax receipt via email.",
+    answer: "Yes! deessa Foundation is a registered 501(c)(3) nonprofit. You will receive a tax receipt via email.",
   },
   {
     question: "Can I donate to a specific program?",
@@ -67,6 +69,7 @@ const faqs = [
 export default async function DonatePage() {
   const settings = await getPaymentSettings()
   const enabledProviders = getSupportedProviders(settings)
+  const bankAccounts = getConfiguredBankAccounts()
 
   return (
     <>
@@ -103,6 +106,12 @@ export default async function DonatePage() {
                 primaryProvider={settings.primaryProvider}
                 defaultCurrency={settings.defaultCurrency}
               />
+
+              {bankAccounts.length > 0 && (
+                <div className="mt-8">
+                  <BankTransferPanel accounts={bankAccounts} />
+                </div>
+              )}
             </div>
             
             {/* Info Sidebar - Takes 1 column on large screens */}

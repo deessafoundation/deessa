@@ -5,8 +5,8 @@ import { SuccessContent } from "./success-content"
 import { Loader2 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Thank You - Donation Successful | Dessa Foundation",
-  description: "Thank you for your generous donation to Dessa Foundation.",
+  title: "Thank You - Donation Successful | deessa Foundation",
+  description: "Thank you for your generous donation to deessa Foundation.",
 }
 
 export default function DonationSuccessPage() {
