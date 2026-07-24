@@ -4,6 +4,8 @@ import type Stripe from "stripe"
 
 import { getAppBaseUrl } from "@/lib/utils"
 
+import { STRIPE_API_VERSION } from "./stripe-compat"
+
 
 
 export interface StripeCheckoutResult {
@@ -109,7 +111,7 @@ async function getStripeClient(): Promise<Stripe> {
 
   stripeClient = new Stripe(secretKey, {
 
-    apiVersion: "2024-06-20",
+    apiVersion: STRIPE_API_VERSION,
 
   })
 
@@ -289,7 +291,7 @@ export async function startStripeCheckout(
 
                 name: "Monthly Donation",
 
-                description: `Monthly donation to Deesha Foundation from ${donation.donorName}`,
+                description: `Monthly donation to deessa Foundation from ${donation.donorName}`,
 
               },
 
@@ -329,6 +331,15 @@ export async function startStripeCheckout(
 
           ...donation.metadata,
 
+        },
+
+        // Propagate the donation id onto the Subscription so recurring
+        // invoice.* events (and any refund/dispute) can map back to it.
+        subscription_data: {
+          metadata: {
+            donation_id: donation.id,
+            ...donation.metadata,
+          },
         },
 
       })
@@ -409,6 +420,15 @@ export async function startStripeCheckout(
 
         ...donation.metadata,
 
+      },
+
+      // Propagate the donation id onto the PaymentIntent (and thus the Charge)
+      // so charge.refunded / charge.dispute.created can map back to it.
+      payment_intent_data: {
+        metadata: {
+          donation_id: donation.id,
+          ...donation.metadata,
+        },
       },
 
     })

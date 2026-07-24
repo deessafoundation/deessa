@@ -9,8 +9,11 @@ export interface PaymentSettings {
   allowRecurring: boolean
 }
 
+// Khalti is intentionally absent: deessa takes local donations by direct bank
+// transfer instead (see lib/payments/bank-details.ts). The adapter and routes
+// remain in the tree but stay unreachable while KHALTI_SECRET_KEY is unset.
 const DEFAULT_PAYMENT_SETTINGS: PaymentSettings = {
-  enabledProviders: ["stripe", "khalti", "esewa"],
+  enabledProviders: ["stripe", "esewa"],
   primaryProvider: "stripe",
   defaultCurrency: "USD",
   allowRecurring: false,
