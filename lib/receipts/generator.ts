@@ -60,7 +60,7 @@ export async function getOrganizationDetails(): Promise<OrganizationDetails> {
 
   if (error || !data?.value) {
     return {
-      name: "Dessa Foundation",
+      name: "deessa Foundation",
       vat_registration_number: "",
       pan_number: "",
       swc_registration_number: "",

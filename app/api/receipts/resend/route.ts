@@ -66,46 +66,14 @@ async function verifyAuthentication(request: NextRequest): Promise<{
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Verify authentication
+    // 1. Verify authentication (admin session or API key). A third path —
+    // an unauthenticated caller who proves ownership by supplying the exact
+    // donor email on the receipt — is checked below once we have the
+    // donation record, since that's the only way a donor's own public
+    // /donate/success page can ever resend their own receipt.
     const auth = await verifyAuthentication(request)
-    
-    if (!auth.authenticated) {
-      return NextResponse.json(
-        { error: auth.error || "Authentication required" },
-        { status: 401 },
-      )
-    }
-    
-    // 2. Apply rate limiting
-    const clientIP = getClientIP(request)
-    const rateLimitIdentifier = auth.userId 
-      ? `receipt-resend:user:${auth.userId}`
-      : `receipt-resend:ip:${clientIP || "unknown"}`
-    
-    const rateLimit = await checkRateLimit({
-      identifier: rateLimitIdentifier,
-      maxAttempts: auth.isAdmin ? 100 : 10, // Higher limit for admins
-      windowMinutes: 60, // 1 hour window
-    })
-    
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { 
-          error: "Rate limit exceeded. Please try again later.",
-          retryAfter: rateLimit.resetAt?.toISOString()
-        },
-        { 
-          status: 429,
-          headers: {
-            "Retry-After": rateLimit.resetAt 
-              ? Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 1000).toString()
-              : "3600"
-          }
-        },
-      )
-    }
-    
-    // 3. Parse and validate request body
+
+    // 2. Parse and validate request body
     const body = await request.json()
     const { receiptNumber, email } = body
 
@@ -118,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = getServiceSupabase()
 
-    // 4. Get donation by receipt number
+    // 3. Get donation by receipt number
     const { data: donation, error } = await supabase
       .from("donations")
       .select("id, donor_email")
@@ -131,15 +99,45 @@ export async function POST(request: NextRequest) {
         { status: 404 },
       )
     }
-    
-    // 5. Verify email matches donation (unless admin)
-    if (!auth.isAdmin && email) {
-      if (email.toLowerCase() !== donation.donor_email.toLowerCase()) {
-        return NextResponse.json(
-          { error: "Email does not match donation record" },
-          { status: 403 },
-        )
-      }
+
+    // 4. Resolve access: admin session/API key, OR the caller supplies the
+    // exact donor email on file (proves ownership without requiring login).
+    const isOwner = Boolean(email) && email.toLowerCase() === donation.donor_email.toLowerCase()
+
+    if (!auth.authenticated && !isOwner) {
+      return NextResponse.json(
+        { error: auth.error || "Authentication required" },
+        { status: 401 },
+      )
+    }
+
+    // 5. Apply rate limiting
+    const clientIP = getClientIP(request)
+    const rateLimitIdentifier = auth.userId
+      ? `receipt-resend:user:${auth.userId}`
+      : `receipt-resend:ip:${clientIP || "unknown"}`
+
+    const rateLimit = await checkRateLimit({
+      identifier: rateLimitIdentifier,
+      maxAttempts: auth.isAdmin ? 100 : 10, // Higher limit for admins
+      windowMinutes: 60, // 1 hour window
+    })
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. Please try again later.",
+          retryAfter: rateLimit.resetAt?.toISOString()
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": rateLimit.resetAt
+              ? Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 1000).toString()
+              : "3600"
+          }
+        },
+      )
     }
 
     // 6. Resend email

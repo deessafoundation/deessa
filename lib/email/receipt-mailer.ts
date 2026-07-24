@@ -96,7 +96,11 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams): Promise<
       return { success: false, message: "Email service not configured" }
     }
 
-    return { success: false, message: "Failed to send receipt email" }
+    // Surface the real SMTP/nodemailer reason (e.g. Gmail auth or rate-limit
+    // errors) instead of a generic string — this was previously swallowed,
+    // visible only in server logs, making every failure look identical.
+    const detail = error instanceof Error ? error.message : String(error)
+    return { success: false, message: `Failed to send receipt email: ${detail}` }
   }
 }
 

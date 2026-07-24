@@ -143,13 +143,13 @@ export function ReceiptPreview({
       const response = await fetch("/api/receipts/resend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ receiptNumber }),
+        body: JSON.stringify({ receiptNumber, email: donorEmail }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to resend email")
+        throw new Error(data.error || "Failed to resend email")
       }
 
       notifications.showSuccess({
@@ -160,7 +160,7 @@ export function ReceiptPreview({
       console.error("Resend error:", error)
       notifications.showError({
         title: "Send Failed",
-        description: "Failed to resend receipt email. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to resend receipt email. Please try again.",
       })
     } finally {
       setIsSending(false)

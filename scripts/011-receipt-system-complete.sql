@@ -84,7 +84,7 @@ INSERT INTO site_settings (key, value)
 VALUES (
   'organization_details',
   jsonb_build_object(
-    'name', 'Dessa Foundation',
+    'name', 'deessa Foundation',
     'vat_registration_number', '',
     'pan_number', '',
     'swc_registration_number', '',
