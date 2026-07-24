@@ -8,7 +8,7 @@ import { isSupportEnabled } from "@/lib/support/settings"
 import { notFound } from "next/navigation"
 
 export const metadata: Metadata = {
-  title: "Support & Feedback - Deesha Foundation",
+  title: "Support & Feedback - deessa Foundation",
   description: "Report bugs, share suggestions, and help us improve the website before launch.",
 }
 

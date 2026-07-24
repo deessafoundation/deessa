@@ -1,36 +1,36 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, UserRoundX, Wallet } from "lucide-react"
+import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
 
 export const metadata: Metadata = {
-  title: "Our Story - deessa Foundation",
+  title: "Our Story — Why We Were Founded | deessa Foundation",
   description:
-    "From personal struggles to a mission of inclusion and hope. Discover the heart of the deessa Foundation journey.",
+    "Every movement begins with a story. Ours began with two little girls — Deetya and Marissa — whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
 }
 
 const challengeCards = [
   {
     icon: Lock,
-    title: "Limited Access",
+    title: "Limited & Distant Care",
     description:
-      "Specialized care and diagnostic tools were often hundreds of miles away or locked behind endless waiting lists.",
+      "Even in Kathmandu, support was limited, expensive, and hard to reach. At times, we travelled to India just to find the right therapy.",
     accent: "text-primary",
   },
   {
-    icon: Wallet,
-    title: "High Costs",
+    icon: UserRoundX,
+    title: "Stigma & Misunderstanding",
     description:
-      "The financial burden of consistent therapy and inclusive education puts quality support out of reach for many.",
+      "Some told us to seek spiritual healing instead of professional care. Others said, “she'll grow out of it.” Well-meaning as they were, these responses only delayed understanding and made the journey more isolating.",
     accent: "text-empowerment",
   },
   {
-    icon: UserRoundX,
-    title: "Social Misconceptions",
+    icon: School,
+    title: "A Search for Belonging",
     description:
-      "Dealing with stigma and lack of understanding from society was often harder than the diagnosis itself.",
+      "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her — we were looking for one that would understand her.",
     accent: "text-chart-4",
   },
 ]
@@ -115,23 +115,21 @@ export default function OurStoryPage() {
             className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider sm:text-sm"
             style={{ color: "#29b6c8", backgroundColor: "rgba(41, 182, 200, 0.12)" }}
           >
-            Our Origins
+            Our Story
           </span>
-          <h1 
+          <h1
             className="mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl md:text-7xl"
             style={{ color: "white" }}
           >
-            The Story Behind
-            <br />
-            deessa Foundation
+            Why We Were Founded
           </h1>
-          <p 
+          <p
             className="mx-auto mt-7 max-w-3xl text-lg leading-relaxed md:text-2xl"
             style={{ color: "rgba(255, 255, 255, 0.82)" }}
           >
-            From personal struggles to a mission of inclusion and hope.
+            Every movement begins with a story.
             <br className="hidden md:block" />
-            Discover the heart of our journey.
+            Ours began with two little girls.
           </p>
         </div>
 
@@ -202,11 +200,19 @@ export default function OurStoryPage() {
             <h2 className="text-3xl font-bold leading-tight sm:text-4xl">The Sisters who Sparked a Movement</h2>
             <div className="text-foreground-muted space-y-5 text-base leading-relaxed sm:text-lg">
               <p>
-                Our journey began in the most personal of ways through the lives of our daughters,
-                <span className="font-bold text-primary"> Deetya and Marissa</span>. Watching them navigate a world that was not always built for their unique needs opened our eyes to the gaps in support systems many families face.
+                Our twin daughters, <span className="font-bold text-primary">Deetya and Marissa</span>, were born on
+                the same day. Their journeys unfolded very differently.
               </p>
               <p>
-                They are the heartbeat of this foundation. Their resilience taught us that every child deserves a path forward that celebrates their potential rather than focusing on limitations.
+                Deetya was born with bilateral clubfoot. Since birth, she&apos;s gone through treatment and
+                physiotherapy, and still wears specialized shoes. She&apos;s made remarkable progress — though some
+                days are still hard. Her story reminds us that progress isn&apos;t about perfection. It&apos;s about
+                perseverance, support, and opportunity.
+              </p>
+              <p>
+                As the twins grew, we noticed Marissa was different. She struggled with eye contact, communication,
+                and connecting with the world around her. After months of consultations, we finally had an answer:
+                Marissa was diagnosed with autism.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -252,13 +258,24 @@ export default function OurStoryPage() {
       <section className="bg-surface px-6 py-28 text-center md:px-8">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-4xl font-extrabold leading-tight sm:text-5xl md:text-6xl">
-            “If this was difficult for us,
-            <br />
-            how much harder must it be
-            <br />
-            for families in rural Nepal?”
+            “If it was this hard for our family —
+            <br className="hidden md:block" />
+            with access to education, resources, and services —
+            <br className="hidden md:block" />
+            what must it be like for a family in rural Nepal?”
           </h2>
+          <div className="text-foreground-muted mt-10 space-y-2 text-lg md:text-xl">
+            <p>No specialist nearby.</p>
+            <p>No information.</p>
+            <p>No guidance.</p>
+            <p>No one to tell them they are not alone.</p>
+          </div>
           <div className="bg-chart-4 mx-auto mt-10 h-1 w-24 rounded-full" />
+          <p className="mx-auto mt-10 max-w-3xl text-lg leading-relaxed sm:text-xl">
+            That question became our purpose. We founded{" "}
+            <span className="font-bold text-primary">deessa Foundation</span> so that no parent has to walk this path
+            alone, and no child is left behind because of where they&apos;re born or how they learn.
+          </p>
         </div>
       </section>
 
@@ -300,8 +317,9 @@ export default function OurStoryPage() {
           <div className="flex-1 space-y-7">
             <h2 className="text-3xl font-bold sm:text-4xl">More Than a Name</h2>
             <p className="text-foreground-muted text-lg leading-relaxed">
-              The name <span className="font-bold text-primary">deessa</span> was born from the hearts of our daughters.
-              It merges their identities while pointing toward our shared goal.
+              The name <span className="font-bold text-primary">deessa</span> carries this story. “Dee” from Deetya.
+              “Ssa” from Marissa. And the Nepali word for “direction” — because every child and every family deserves
+              guidance, dignity, and a path forward.
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -406,6 +424,10 @@ export default function OurStoryPage() {
               <br />
               support.
             </h2>
+            <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-white/85">
+              What began as our family&apos;s journey has become a shared journey — with thousands of children,
+              families, and communities across Nepal. And this is only the beginning.
+            </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/get-involved"

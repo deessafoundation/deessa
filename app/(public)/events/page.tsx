@@ -211,7 +211,7 @@ export default function EventsPage() {
       <section className="bg-primary py-16">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Want to Host an Event With Us?</h2>
-          <p className="text-white/80 mb-8">Partner with Dessa Foundation to organize impactful community events.</p>
+          <p className="text-white/80 mb-8">Partner with deessa Foundation to organize impactful community events.</p>
           <Button asChild variant="secondary" size="lg" className="rounded-full h-12 px-8">
             <Link href="/contact">Contact Us</Link>
           </Button>

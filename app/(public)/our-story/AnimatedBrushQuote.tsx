@@ -49,7 +49,7 @@ export function AnimatedBrushQuote() {
               }}
               className="font-marissa"
             >
-              “Many told us we were overthinking…
+              “The diagnosis brought fear, uncertainty, and countless questions…
             </h3>
             <p
               style={{
@@ -64,7 +64,7 @@ export function AnimatedBrushQuote() {
               }}
               className="font-dm"
             >
-              but we knew deep down that our daughters and every child like them deserved better.”
+              We wanted to do everything for her — but didn't know where to start.”
             </p>
           </motion.div>
         </BrushStroke>
