@@ -269,6 +269,13 @@ export async function startStripeCheckout(
 
 
 
+    // Stripe idempotency key: makes THIS create call safe to retry (SDK/network
+    // retry, a double-invoked server action). A repeat with the same key returns
+    // the SAME session instead of creating a second one — no duplicate checkout,
+    // no risk of two charges for one donation row. Keyed on the donation id +
+    // mode so one-time and subscription attempts for the same row never collide.
+    const idempotencyKey = `checkout_${donation.id}_${donation.isMonthly ? "sub" : "once"}`
+
     // For monthly donations, use subscription mode
 
     if (donation.isMonthly) {
@@ -342,7 +349,7 @@ export async function startStripeCheckout(
           },
         },
 
-      })
+      }, { idempotencyKey })
 
 
 
@@ -431,7 +438,7 @@ export async function startStripeCheckout(
         },
       },
 
-    })
+    }, { idempotencyKey })
 
 
 

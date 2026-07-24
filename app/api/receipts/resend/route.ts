@@ -144,10 +144,14 @@ export async function POST(request: NextRequest) {
     const result = await resendReceiptEmail(donation.id)
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.message },
-        { status: 500 },
-      )
+      // Map the failure to a meaningful status instead of a bare 500:
+      //  - receipt not generated yet → 409 Conflict (state issue, not a server crash)
+      //  - anything else is an upstream email-provider failure (Gmail auth /
+      //    rate limit / SMTP) → 502 Bad Gateway. The real reason is in `message`.
+      const msg = result.message || "Failed to resend receipt email"
+      const status = /not yet generated|not found/i.test(msg) ? 409 : 502
+      console.error("[receipts/resend] send failed:", { receiptNumber, status, message: msg })
+      return NextResponse.json({ error: msg }, { status })
     }
 
     return NextResponse.json({

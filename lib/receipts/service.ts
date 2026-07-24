@@ -270,9 +270,12 @@ export async function sendReceiptToDonor(
 
     if (!emailResult.success) {
       console.error("Failed to send receipt email:", emailResult.message)
+      // Propagate the real reason (e.g. "Invalid login: 535-5.7.8 …" from Gmail)
+      // instead of flattening to a generic string — otherwise the route and the
+      // frontend toast can never show why it failed.
       return {
         success: false,
-        message: "Failed to send receipt email",
+        message: emailResult.message || "Failed to send receipt email",
       }
     }
 

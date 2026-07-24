@@ -57,19 +57,21 @@ function Test-EnvFormat {
     }
 }
 
-# Load .env file if it exists
-if (Test-Path ".env") {
-    Write-Host "Loading .env file..." -ForegroundColor Cyan
-    Get-Content ".env" | ForEach-Object {
-        $line = $_
-        if ($line -match '^([^#][^=]+)=(.*)$') {
-            $key = $matches[1].Trim()
-            $value = $matches[2].Trim()
-            [Environment]::SetEnvironmentVariable($key, $value, "Process")
+# Load env files in Next.js precedence order (.env.local overrides .env)
+foreach ($envFile in @(".env", ".env.local")) {
+    if (Test-Path $envFile) {
+        Write-Host "Loading $envFile..." -ForegroundColor Cyan
+        Get-Content $envFile | ForEach-Object {
+            $line = $_
+            if ($line -match '^([^#][^=]+)=(.*)$') {
+                $key = $matches[1].Trim()
+                $value = $matches[2].Trim()
+                [Environment]::SetEnvironmentVariable($key, $value, "Process")
+            }
         }
     }
-    Write-Host ""
 }
+Write-Host ""
 
 Write-Host "1. Testing Stripe Credentials" -ForegroundColor Cyan
 Write-Host "------------------------------"
@@ -77,10 +79,18 @@ Test-EnvFormat "STRIPE_SECRET_KEY" "sk_" | Out-Null
 Test-EnvFormat "STRIPE_WEBHOOK_SECRET" "whsec_" | Out-Null
 Write-Host ""
 
-Write-Host "2. Testing Khalti Credentials" -ForegroundColor Cyan
+Write-Host "2. Bank Transfer (replaces Khalti)" -ForegroundColor Cyan
 Write-Host "------------------------------"
-Test-EnvVar "KHALTI_SECRET_KEY" | Out-Null
-Test-EnvVar "KHALTI_BASE_URL" | Out-Null
+# Bank details are public config in lib/payments/bank-details.ts, not env vars.
+# Khalti is deliberately unconfigured; a set key would re-enable it on the form.
+if ([string]::IsNullOrEmpty([Environment]::GetEnvironmentVariable("KHALTI_SECRET_KEY"))) {
+    Write-Host "+ Khalti correctly disabled (KHALTI_SECRET_KEY unset)" -ForegroundColor Green
+    $script:TestsPassed++
+}
+else {
+    Write-Host "! KHALTI_SECRET_KEY is set - Khalti will reappear on the donate form" -ForegroundColor Yellow
+}
+Write-Host "  Bank details: check lib/payments/bank-details.ts for REPLACE_ME values" -ForegroundColor Gray
 Write-Host ""
 
 Write-Host "3. Testing eSewa Credentials" -ForegroundColor Cyan
