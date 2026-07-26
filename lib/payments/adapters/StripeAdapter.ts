@@ -28,6 +28,7 @@ import {
   VerificationError,
   ConfigurationError,
 } from '../core/errors'
+import { STRIPE_API_VERSION, getInvoiceSubscriptionId } from '../stripe-compat'
 
 /**
  * Stripe-specific configuration
@@ -35,7 +36,7 @@ import {
 interface StripeConfig {
   secretKey: string
   webhookSecret?: string
-  apiVersion: Stripe.LatestApiVersion
+  apiVersion: typeof STRIPE_API_VERSION
 }
 
 /**
@@ -63,7 +64,7 @@ export class StripeAdapter extends BaseProviderAdapter {
     this.config = {
       secretKey,
       webhookSecret,
-      apiVersion: '2024-06-20',
+      apiVersion: STRIPE_API_VERSION,
     }
 
     // Initialize Stripe SDK
@@ -267,7 +268,8 @@ export class StripeAdapter extends BaseProviderAdapter {
     const invoice = event.data.object as Stripe.Invoice
 
     // For subscription invoices, we need to fetch the subscription to get metadata
-    if (!invoice.subscription || typeof invoice.subscription !== 'string') {
+    const invoiceSubscriptionId = getInvoiceSubscriptionId(invoice)
+    if (!invoiceSubscriptionId) {
       throw VerificationError.invalidPayload(
         'stripe',
         'Invoice is not associated with a subscription'
@@ -277,7 +279,7 @@ export class StripeAdapter extends BaseProviderAdapter {
     // Fetch subscription to get donation ID from metadata
     let subscription: Stripe.Subscription
     try {
-      subscription = await this.stripe.subscriptions.retrieve(invoice.subscription)
+      subscription = await this.stripe.subscriptions.retrieve(invoiceSubscriptionId)
     } catch (error) {
       throw VerificationError.providerAPIError(
         'stripe',
@@ -301,7 +303,7 @@ export class StripeAdapter extends BaseProviderAdapter {
     // Build metadata
     const metadata: Record<string, unknown> = {
       invoiceId: invoice.id,
-      subscriptionId: invoice.subscription,
+      subscriptionId: invoiceSubscriptionId,
       customerId: invoice.customer || null,
       invoiceStatus: invoice.status,
       eventId: event.id,
@@ -310,7 +312,7 @@ export class StripeAdapter extends BaseProviderAdapter {
     return {
       success: invoice.status === 'paid',
       donationId,
-      transactionId: invoice.subscription,
+      transactionId: invoiceSubscriptionId,
       amount,
       currency,
       status: invoice.status === 'paid' ? 'paid' : 'failed',
@@ -437,7 +439,8 @@ export class StripeAdapter extends BaseProviderAdapter {
     const amount = invoice.amount_paid ? this.convertToMajorUnits(invoice.amount_paid) : 0
     const currency = (invoice.currency || 'usd').toUpperCase()
     const status = invoice.status === 'paid' ? 'paid' : 'failed'
-    const transactionId = typeof invoice.subscription === 'string' ? invoice.subscription : invoice.id
+    const invoiceSubscriptionId = getInvoiceSubscriptionId(invoice)
+    const transactionId = invoiceSubscriptionId ?? invoice.id
 
     return {
       donationId: '', // Will be populated from subscription metadata
@@ -448,7 +451,7 @@ export class StripeAdapter extends BaseProviderAdapter {
       eventId: event.id,
       metadata: {
         invoiceId: invoice.id,
-        subscriptionId: invoice.subscription || null,
+        subscriptionId: invoiceSubscriptionId,
         invoiceStatus: invoice.status,
       },
     }

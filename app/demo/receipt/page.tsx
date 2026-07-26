@@ -21,7 +21,7 @@ const MOCK_DATA: ReceiptPDFData = {
   isMonthly: false,
   providerRef: "TXN-ESW-2026030412345",
   organization: {
-    name: "Deesha Foundation",
+    name: "deessa Foundation",
     address: "Kathmandu, Nepal",
     phone: "+977-1-4XXXXXX",
     email: "deessa.social@gmail.com",

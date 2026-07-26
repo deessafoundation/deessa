@@ -139,7 +139,7 @@ function PaymentOptionsContent() {
             <div className="flex-1 min-w-0">
               <p className="font-extrabold text-foreground">Pay Now</p>
               <p className="text-sm text-muted-foreground">
-                Confirm your spot instantly. Choose from Stripe, Khalti, or eSewa.
+                Confirm your spot instantly. Choose from Stripe or eSewa.
               </p>
             </div>
             <ArrowRight className="size-5 shrink-0 text-primary transition-transform group-hover:translate-x-1" />

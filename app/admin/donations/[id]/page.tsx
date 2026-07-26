@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { TransactionDetailClient } from "../../../../components/admin/donations/transaction-detail-client"
 
 async function checkFinancePermission() {
@@ -51,7 +52,10 @@ async function getTransactionData(donationId: string) {
       donor_message,
       payment_id,
       verification_id,
-      is_monthly
+      is_monthly,
+      bank_account_id,
+      bank_transfer_date,
+      bank_proof_path
     `
     )
     .eq("id", donationId)
@@ -155,8 +159,18 @@ async function getTransactionData(donationId: string) {
     reviewedByName = reviewedBy?.full_name || null
   }
 
+  // Proof of transfer lives in a private bucket with no read policies, so the
+  // signed URL must be minted with the service role. Short-lived on purpose.
+  let bankProofUrl: string | null = null
+  if (donation.bank_proof_path) {
+    const { data: signed } = await createServiceRoleClient()
+      .storage.from("bank-transfer-proofs")
+      .createSignedUrl(donation.bank_proof_path, 60 * 60)
+    bankProofUrl = signed?.signedUrl ?? null
+  }
+
   return {
-    donation,
+    donation: { ...donation, bank_proof_url: bankProofUrl },
     reviewNotes: reviewNotesResult.data || [],
     statusChanges: statusChangesResult.data || [],
     paymentEvents: paymentEventsResult.data || [],

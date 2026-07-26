@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
+import { Comic_Neue } from "next/font/google"
 import {
   Heart,
   Menu,
@@ -23,6 +24,8 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const comicNeue = Comic_Neue({ subsets: ["latin"], weight: ["400", "700"] })
 
 interface NavbarProps {
   supportEnabled?: boolean
@@ -146,6 +149,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
         <Link
           href={link.href}
           className={cn(
+            comicNeue.className,
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
               ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"
@@ -209,7 +213,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                   <div data-navbar-logo-target className="relative flex h-16 w-16 items-center justify-center p-1 sm:h-[72px] sm:w-[72px]">
                     <Image
                       src="/logo.png"
-                      alt="Deesha Foundation"
+                      alt="deessa Foundation"
                       width={96}
                       height={96}
                       className="object-contain transition-transform duration-200 scale-[2] group-hover:scale-[2.2]"
@@ -260,7 +264,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
               <div className="hidden items-center gap-1.5 lg:flex">
                 <Link
                   href="/conference/register"
-                  className="flex items-center gap-2 rounded-xl border border-primary/50 px-6 py-2.5 text-[15px] font-medium text-primary transition-colors duration-200 hover:bg-[#3FABDE]/20 hover:text-[#0B5F8A]"
+                  className={cn(comicNeue.className, "flex items-center gap-2 rounded-xl border border-primary/50 px-6 py-2.5 text-[15px] font-medium text-primary transition-colors duration-200 hover:bg-[#3FABDE]/20 hover:text-[#0B5F8A]")}
                 >
                   <ClipboardList className="size-3.5" />
                   Register
@@ -270,7 +274,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                   asChild
                   className="h-11 rounded-xl bg-[#3FABDE] px-8 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f9bca] hover:shadow-md"
                 >
-                  <Link href="/donate" className="flex items-center gap-1.5">
+                  <Link href="/donate" className={cn(comicNeue.className, "flex items-center gap-1.5")}>
                     <Heart className="size-4 fill-current" />
                     Donate
                   </Link>
@@ -323,6 +327,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                     key={link.href + link.label}
                     href={link.href}
                     className={cn(
+                      comicNeue.className,
                       "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200",
                       active
                         ? "border-primary/40 bg-primary/10 text-primary"
@@ -337,7 +342,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
               <Link
                 href="/conference/register"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 px-3 py-1.5 text-sm text-primary transition-colors hover:bg-[#3FABDE]/15 hover:text-[#0B5F8A]"
+                className={cn(comicNeue.className, "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 px-3 py-1.5 text-sm text-primary transition-colors hover:bg-[#3FABDE]/15 hover:text-[#0B5F8A]")}
               >
                 <ClipboardList className="size-3.5" />
                 <span>Register</span>
@@ -345,7 +350,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
               <Link
                 href="/donate"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#3FABDE] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2f9bca]"
+                className={cn(comicNeue.className, "inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#3FABDE] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2f9bca]")}
               >
                 <Heart className="size-3.5 fill-current" />
                 <span>Donate</span>
@@ -409,12 +414,12 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
               
               {/* Logo in center - Simple with padding */}
               <div className="flex-1 flex items-center justify-center px-4">
-                <div className="relative h-14 w-14">
+                <div className="relative h-20 w-20">
                   <Image
                     src="/logo.png"
-                    alt="Deessa Foundation"
-                    width={56}
-                    height={56}
+                    alt="deessa Foundation"
+                    width={80}
+                    height={80}
                     className="object-contain w-full h-full"
                     priority
                   />
@@ -455,6 +460,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                         key={link.href + link.label}
                         href={link.href}
                         className={cn(
+                          comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
                             ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
@@ -498,6 +504,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                         key={link.href + link.label}
                         href={link.href}
                         className={cn(
+                          comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
                             ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
@@ -539,6 +546,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                         key={link.href + link.label}
                         href={link.href}
                         className={cn(
+                          comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
                             ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
@@ -572,7 +580,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                   <Link
                     href="/support"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]"
+                    className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]")}
                   >
                     <LifeBuoy className="size-4" strokeWidth={2.5} />
                     Support us
@@ -583,7 +591,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                 <Link
                   href="/conference/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-[#2F9BCA] bg-white px-4 py-3 text-[15px] font-medium text-[#2F9BCA] transition-all hover:bg-[#f0f8fc] active:scale-[0.98]"
+                  className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl border-2 border-[#2F9BCA] bg-white px-4 py-3 text-[15px] font-medium text-[#2F9BCA] transition-all hover:bg-[#f0f8fc] active:scale-[0.98]")}
                 >
                   <ClipboardList className="size-4" strokeWidth={2.5} />
                   Register for Conference
@@ -593,7 +601,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
                 <Link
                   href="/donate"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#e8f5fb] px-4 py-3 text-[15px] font-medium text-[#1a6f96] transition-all hover:bg-[#d9eef8] active:scale-[0.98]"
+                  className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#e8f5fb] px-4 py-3 text-[15px] font-medium text-[#1a6f96] transition-all hover:bg-[#d9eef8] active:scale-[0.98]")}
                 >
                   <Heart className="size-4 fill-current" strokeWidth={2.5} />
                   Donate

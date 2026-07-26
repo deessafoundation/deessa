@@ -202,7 +202,7 @@ export default function VerifyPage() {
           {/* Copyright */}
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
             <p className="text-xs text-[rgb(108,117,125)]">
-              &copy; {new Date().getFullYear()} Deessa Foundation. All rights reserved.
+              &copy; {new Date().getFullYear()} deessa Foundation. All rights reserved.
             </p>
           </div>
         </div>

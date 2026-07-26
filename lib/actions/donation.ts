@@ -1,6 +1,5 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { getPaymentSettings, getSupportedProviders, type PaymentProvider } from "@/lib/payments/config"
 import { startStripeCheckout } from "@/lib/payments/stripe"
@@ -62,12 +61,13 @@ export async function startDonation(input: StartDonationInput): Promise<StartDon
     // Determine currency: Stripe uses USD by default, local gateways use NPR
     const currency = input.provider === "stripe" ? settings.defaultCurrency || "USD" : ("NPR" as const)
 
-    const supabase = await createClient()
-
     // Ensure amount has exactly 2 decimal places to prevent floating-point precision issues
     const preciseAmount = Number(input.amount.toFixed(2))
 
-    const { data: donation, error } = await supabase
+    // Service role: the anon INSERT policy has no matching SELECT policy, so
+    // .select() after an anon insert fails RETURNING with 42501. This is a
+    // trusted server action (input already validated above), not browser code.
+    const { data: donation, error } = await getServiceSupabase()
       .from("donations")
       .insert({
         amount: preciseAmount,

@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
+
+// Service-role client: the donations SELECT RLS policy only permits admin/finance
+// roles, so an unauthenticated donor's own status poll must use the service role.
+// Access is gated by knowledge of the high-entropy Stripe session id (cs_...),
+// so PII exposure is scoped to the session owner.
+function createServiceRoleClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) throw new Error('Missing Supabase service role credentials')
+  return createServiceClient(url, key)
+}
 
 /**
  * GET /api/payments/stripe/status
@@ -19,8 +30,13 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Basic format check to reduce accidental logs / abuse
+    if (!sessionId.startsWith('cs_')) {
+      return NextResponse.json({ error: 'Invalid session_id' }, { status: 400 })
+    }
+
     // Query donation by Stripe session ID
-    const supabase = await createClient()
+    const supabase = createServiceRoleClient()
     const { data: donation, error } = await supabase
       .from('donations')
       .select('id, payment_status, provider, amount, currency, donor_name, donor_email, donor_phone, is_monthly, created_at, provider_ref, payment_id, stripe_session_id')

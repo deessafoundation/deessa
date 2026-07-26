@@ -30,7 +30,7 @@ const testimonials: Testimonial[] = [
     name: "Sarita Maharjan",
     role: "Parent",
     quote:
-      "Deessa has given my daughter the confidence to dream bigger. The support, love, and guidance she receives has transformed our entire family.",
+      "deessa has given my daughter the confidence to dream bigger. The support, love, and guidance she receives has transformed our entire family.",
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=85",
     backgroundImage:
@@ -52,7 +52,7 @@ const testimonials: Testimonial[] = [
     name: "Anita Gurung",
     role: "Volunteer",
     quote:
-      "Being part of Deessa's mission has been a life-changing experience. I have seen firsthand how dedicated the team is to every single community they serve.",
+      "Being part of deessa's mission has been a life-changing experience. I have seen firsthand how dedicated the team is to every single community they serve.",
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=85",
     backgroundImage:

@@ -12,6 +12,8 @@ import { getPaymentService } from "@/lib/payments/core/PaymentService";
 
 import { createStripeAdapter } from "@/lib/payments/adapters/StripeAdapter";
 
+import { STRIPE_API_VERSION, getInvoiceSubscriptionId } from "@/lib/payments/stripe-compat";
+
 import type Stripe from "stripe";
 
 // Create a service role client for webhooks (bypasses RLS)
@@ -643,7 +645,7 @@ export async function POST(request: Request) {
     }
 
     const stripe = new Stripe(secretKey, {
-      apiVersion: "2024-06-20",
+      apiVersion: STRIPE_API_VERSION,
     });
 
     try {
@@ -653,6 +655,18 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { error: "Invalid signature" },
+        { status: 400 }
+      );
+    }
+
+    // Defense-in-depth: in production, reject test-mode events. A correctly
+    // configured live webhook secret already rejects test events at
+    // constructEvent, but this guards against a prod deploy accidentally wired
+    // to test keys.
+    if (process.env.NODE_ENV === "production" && event.livemode === false) {
+      console.error("Stripe webhook: rejected test-mode event in production", event.id);
+      return NextResponse.json(
+        { error: "Test-mode event rejected in production" },
         { status: 400 }
       );
     }
@@ -963,7 +977,7 @@ export async function POST(request: Request) {
         const invoice = event.data.object as Stripe.Invoice;
 
         // For subscription invoices, confirm the recurring donation payment
-        if (invoice.subscription && typeof invoice.subscription === "string") {
+        if (getInvoiceSubscriptionId(invoice)) {
           try {
             // Use processVerifiedEvent() — the signature was already verified by
             // the outer handler; re-calling verify() with empty headers/body fails.
@@ -1008,7 +1022,7 @@ export async function POST(request: Request) {
           } catch (error) {
             console.error('Stripe webhook: Failed to process subscription invoice', {
               invoiceId: invoice.id,
-              subscriptionId: invoice.subscription,
+              subscriptionId: getInvoiceSubscriptionId(invoice),
               error: error instanceof Error ? error.message : 'Unknown error'
             });
           }
@@ -1022,7 +1036,25 @@ export async function POST(request: Request) {
 
         // For subscription invoices, mark donation as failed
 
-        if (invoice.subscription && typeof invoice.subscription === "string") {
+        const failedSubscriptionId = getInvoiceSubscriptionId(invoice);
+
+        if (failedSubscriptionId) {
+          // Resolve the donation first so the idempotency ledger row is linked
+          // to it (previously the event was recorded with donation_id = null).
+          const { data: donations } = await supabase
+
+            .from("donations")
+
+            .select("*")
+
+            .like("payment_id", `%subscription:${failedSubscriptionId}%`)
+
+            .order("created_at", { ascending: false })
+
+            .limit(1);
+
+          const donation = donations && donations.length > 0 ? donations[0] : null;
+
           // Idempotency check for V1
           const recordEventOnce = async (donationId: string | null | undefined) => {
             try {
@@ -1052,44 +1084,128 @@ export async function POST(request: Request) {
             }
           };
 
-          const recorded = await recordEventOnce(null);
+          const recorded = await recordEventOnce(donation?.id ?? null);
 
           if (recorded.alreadyProcessed) break;
 
-          const { data: donations } = await supabase
+          if (donation && donation.payment_status === "pending") {
+            await supabase
 
-            .from("donations")
+              .from("donations")
 
-            .select("*")
+              .update({
+                payment_status: "failed",
 
-            .like("payment_id", `%subscription:${invoice.subscription}%`)
+                provider: "stripe",
 
-            .order("created_at", { ascending: false })
+                provider_ref: failedSubscriptionId,
 
-            .limit(1);
+                stripe_subscription_id: failedSubscriptionId,
+              })
 
-          if (donations && donations.length > 0) {
-            const donation = donations[0];
-
-            if (donation.payment_status === "pending") {
-              await supabase
-
-                .from("donations")
-
-                .update({
-                  payment_status: "failed",
-
-                  provider: "stripe",
-
-                  provider_ref: invoice.subscription,
-
-                  stripe_subscription_id: invoice.subscription,
-                })
-
-                .eq("id", donation.id);
-            }
+              .eq("id", donation.id);
           }
         }
+
+        break;
+      }
+
+      // ── Refunds & disputes ────────────────────────────────────────────────
+      // Without these, a refunded or disputed donation stays 'completed'
+      // forever: totals are overstated and the receipt remains valid.
+
+      case "charge.refunded":
+      case "charge.dispute.created": {
+        // Resolve the donation and the associated PaymentIntent from the event.
+        let donationId: string | null | undefined;
+        let paymentIntentId: string | null = null;
+
+        if (event.type === "charge.refunded") {
+          const charge = event.data.object as Stripe.Charge;
+          donationId = charge.metadata?.donation_id;
+          paymentIntentId =
+            typeof charge.payment_intent === "string"
+              ? charge.payment_intent
+              : charge.payment_intent?.id ?? null;
+        } else {
+          const dispute = event.data.object as Stripe.Dispute;
+          donationId = (dispute.metadata as Record<string, string> | undefined)?.donation_id;
+          paymentIntentId =
+            typeof dispute.payment_intent === "string"
+              ? dispute.payment_intent
+              : (dispute.payment_intent as Stripe.PaymentIntent | null)?.id ?? null;
+        }
+
+        // If the event metadata didn't carry the donation id, resolve it from
+        // the PaymentIntent we stored at confirmation time
+        // (payment_id = 'stripe:<pi>', provider_ref = '<pi>').
+        if (!donationId && paymentIntentId) {
+          let { data: byPaymentId } = await supabase
+            .from("donations")
+            .select("id")
+            .eq("payment_id", `stripe:${paymentIntentId}`)
+            .maybeSingle();
+
+          if (!byPaymentId) {
+            const { data: byProviderRef } = await supabase
+              .from("donations")
+              .select("id")
+              .eq("provider_ref", paymentIntentId)
+              .maybeSingle();
+            byPaymentId = byProviderRef;
+          }
+
+          donationId = byPaymentId?.id;
+        }
+
+        if (!donationId) {
+          console.warn(
+            `Stripe webhook: could not resolve donation for ${event.type}`,
+            event.id
+          );
+          break;
+        }
+
+        // Downgrade first. This update is naturally idempotent: the conditional
+        // .in() guard only touches a currently-paid record, so retries (or a
+        // second partial-refund event) are safe no-ops and we never resurrect
+        // or mutate an already-failed record. Doing it before writing the
+        // idempotency row means a transient failure returns 500 and Stripe
+        // safely retries instead of being swallowed as "already processed".
+        const { error: refundUpdateError } = await supabase
+          .from("donations")
+          .update({
+            payment_status: "refunded",
+            review_status: "refunded",
+          })
+          .eq("id", donationId)
+          .in("payment_status", ["completed", "confirmed"]);
+
+        if (refundUpdateError) {
+          console.error(
+            `Stripe webhook: failed to mark donation ${donationId} refunded`,
+            refundUpdateError
+          );
+          // Surface as 500 so Stripe retries the refund/dispute event.
+          return NextResponse.json(
+            { error: "Failed to process refund/dispute" },
+            { status: 500 }
+          );
+        }
+
+        // Record the event for the audit ledger (best-effort; a duplicate on
+        // retry is expected and harmless).
+        await supabase
+          .from("payment_events")
+          .insert({
+            provider: "stripe",
+            event_id: event.id,
+            donation_id: donationId,
+          });
+
+        console.log(
+          `Stripe webhook: donation ${donationId} marked refunded via ${event.type}`
+        );
 
         break;
       }

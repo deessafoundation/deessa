@@ -27,7 +27,7 @@ interface DonationFormProps {
 
 export function DonationForm({
   tiers,
-  enabledProviders = ["stripe", "khalti", "esewa"],
+  enabledProviders = ["stripe", "esewa"],
   primaryProvider = "stripe",
   defaultCurrency = "USD",
 }: DonationFormProps) {
@@ -246,21 +246,6 @@ export function DonationForm({
               >
                 <CreditCard className="size-4" />
                 Stripe (USD)
-              </button>
-            )}
-            {enabledProviders.includes("khalti") && (
-              <button
-                type="button"
-                onClick={() => handleProviderChange("khalti")}
-                className={cn(
-                  "px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
-                  provider === "khalti"
-                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
-                    : "bg-surface text-foreground border-border hover:border-primary/50 hover:bg-muted/50",
-                )}
-              >
-                <CreditCard className="size-4" />
-                Khalti (NPR)
               </button>
             )}
             {enabledProviders.includes("esewa") && (

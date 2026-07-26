@@ -133,7 +133,7 @@ export async function startKhaltiPayment(
   const productDetails = [
     {
       identity: donation.id,
-      name: "Donation to Deesha Foundation",
+      name: "Donation to deessa Foundation",
       total_price: amountInPaisa,
       quantity: 1,
       unit_price: amountInPaisa,

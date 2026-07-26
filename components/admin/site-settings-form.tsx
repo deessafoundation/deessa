@@ -751,7 +751,7 @@ export function SiteSettingsForm({ settings }: SiteSettingsFormProps) {
                     id="metaTitle"
                     name="metaTitle"
                     defaultValue={seo.metaTitle || ""}
-                    placeholder="Deesha Foundation - Empowering Communities"
+                    placeholder="deessa Foundation - Empowering Communities"
                     className="h-10"
                   />
                   <p className="text-xs text-muted-foreground">Appears in browser tabs and search results (50-60 characters recommended)</p>

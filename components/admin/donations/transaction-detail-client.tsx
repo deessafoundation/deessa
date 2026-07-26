@@ -241,6 +241,9 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
               customer_id: paymentData?.customer_id,
               payment_id: donation.payment_id,
               verification_id: donation.verification_id,
+              bank_account_id: donation.bank_account_id,
+              bank_transfer_date: donation.bank_transfer_date,
+              bank_proof_url: donation.bank_proof_url,
             }}
             provider={donation.provider}
           />

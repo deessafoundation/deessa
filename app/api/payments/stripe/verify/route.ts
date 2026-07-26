@@ -1,11 +1,13 @@
 "use server"
 
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
 import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { verifyStripeSession } from "@/lib/payments/stripe"
 import { generateReceiptForDonation } from "@/lib/actions/donation-receipt"
+import { createStripeAdapter } from "@/lib/payments/adapters/StripeAdapter"
+import { getPaymentService } from "@/lib/payments/core/PaymentService"
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit"
+import type Stripe from "stripe"
 
 // Create a service role client for updates (bypasses RLS)
 function createServiceRoleClient() {
@@ -76,7 +78,6 @@ export async function GET(request: Request) {
     }
 
     // Fetch donation details from database
-    const supabase = await createClient()
     const donationId = verificationResult.session?.client_reference_id ||
       verificationResult.session?.metadata?.donation_id
 
@@ -90,16 +91,16 @@ export async function GET(request: Request) {
         .eq("id", donationId)
         .single()
 
-      // If donation exists and payment was successful, update status
-      // This is a fallback for development/mock mode where webhooks may not work
+      // If the donation is still pending, confirm it through the centralized
+      // PaymentService so this success-page fallback shares the SAME fail-closed
+      // amount/currency verification and idempotency ledger as the webhook.
+      // verifyStripeSession() already retrieved the session server-side from
+      // Stripe, so this is an authoritative confirmation, not client-trusted.
       if (donation && donation.payment_status === "pending") {
         const session = verificationResult.session
 
-        // Check if payment was completed
         // In Stripe, a session is considered complete when payment_status is "paid"
-        const isPaymentComplete = session?.payment_status === "paid"
-
-        if (isPaymentComplete) {
+        if (session && session.payment_status === "paid") {
           const storedSessionId = (donation as any).stripe_session_id as string | null
 
           // Validate: session ID must match what was stored at checkout creation.
@@ -107,45 +108,57 @@ export async function GET(request: Request) {
           const sessionIdMatch = !storedSessionId || storedSessionId === sessionId
 
           if (sessionIdMatch) {
-            // Use service role client to bypass RLS
-            const serviceSupabase = createServiceRoleClient()
+            try {
+              // Normalize the already-verified session into a VerificationResult.
+              const adapter = createStripeAdapter()
+              const stripeEvent = {
+                type: "checkout.session.completed",
+                data: { object: session },
+                id: session.id,
+              } as Stripe.Event
+              const vr = await adapter.processVerifiedEvent(stripeEvent)
 
-            const { data: updatedDonation, error: updateError } = await serviceSupabase
-              .from("donations")
-              .update({
-                payment_status: "completed",
-                payment_id: session?.subscription
-                  ? `stripe:subscription:${session.subscription}`
-                  : `stripe:${session?.id}`,
-                stripe_subscription_id:
-                  session?.subscription && typeof session.subscription === "string"
-                    ? session.subscription
-                    : null,
-                // Ensure session ID is persisted for future idempotency checks
-                stripe_session_id: sessionId,
+              // Use session.id as the idempotency key. If the webhook already
+              // confirmed with a payment_intent-based event id this path just
+              // returns already_processed; if this path runs first the webhook
+              // later short-circuits on the 'completed' status.
+              const confirmResult = await getPaymentService().confirmDonation({
+                donationId,
+                provider: "stripe",
+                verificationResult: vr,
+                eventId: session.id,
               })
-              .eq("id", donationId)
-              // Include donor PII so the receipt preview can render on success page
-              .select("id,amount,currency,donor_name,donor_email,donor_phone,is_monthly,payment_status,provider_ref,stripe_session_id")
-              .single()
 
-            if (!updateError && updatedDonation) {
-              // Fire-and-forget receipt generation.
-              // Non-blocking: never delays the API response.
-              // Idempotent: generateReceiptForDonation checks if receipt already exists.
-              generateReceiptForDonation({ donationId })
-                .then((r) => {
-                  if (!r.success) console.warn("Stripe verify - receipt generation failed (non-fatal):", r.message)
-                })
-                .catch((e) => console.error("Stripe verify - receipt generation error (non-fatal):", e))
+              // Only generate the receipt when THIS call actually confirmed the
+              // donation. On 'already_processed' another path (webhook) already
+              // confirmed and emailed, and sendReceiptToDonor has no
+              // receipt_sent_at guard — re-triggering here would duplicate the
+              // donor email.
+              if (confirmResult.success && confirmResult.status === "confirmed") {
+                // Fire-and-forget receipt generation (idempotent, non-blocking).
+                generateReceiptForDonation({ donationId })
+                  .then((r) => {
+                    if (!r.success) console.warn("Stripe verify - receipt generation failed (non-fatal):", r.message)
+                  })
+                  .catch((e) => console.error("Stripe verify - receipt generation error (non-fatal):", e))
+              }
+
+              // Re-read the latest donation state (service role; PII is scoped to
+              // the holder of this Stripe session id).
+              const { data: refreshed } = await supabase2
+                .from("donations")
+                .select("id,amount,currency,donor_name,donor_email,donor_phone,is_monthly,payment_status,provider_ref,stripe_session_id")
+                .eq("id", donationId)
+                .single()
 
               return NextResponse.json({
                 success: true,
                 session: verificationResult.session,
-                donation: updatedDonation,
+                donation: refreshed || donation,
               })
-            } else if (updateError) {
-              console.error("Failed to update donation status:", updateError)
+            } catch (confirmErr) {
+              console.error("Stripe verify - confirmation via PaymentService failed:", confirmErr)
+              // Fall through to return the current donation state below.
             }
           }
         }

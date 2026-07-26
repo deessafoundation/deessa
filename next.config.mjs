@@ -35,6 +35,49 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Icon and thumbnail sizes
     minimumCacheTTL: 60, // Cache images for at least 60 seconds
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            // Stripe needs its js.stripe.com script and a frame for 3-D Secure.
+            // 'unsafe-inline'/'unsafe-eval' remain for Next.js's inline runtime;
+            // tighten with a nonce if the app moves to a strict CSP.
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.youtube.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://*.supabase.co https://api.stripe.com",
+              // blob: is required because the app frames its own receipt PDF
+              // preview in a blob: iframe (components/receipt-preview.tsx,
+              // app/demo/receipt/page.tsx) — 'self' does NOT implicitly cover
+              // the blob: scheme for frame-src, it must be listed explicitly.
+              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'self'",
+            ].join('; '),
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

@@ -1,7 +1,7 @@
 /**
  * Donation Receipt PDF Document — v2
  *
- * Redesigned with Deesha Foundation Ocean Blue branding.
+ * Redesigned with deessa Foundation Ocean Blue branding.
  * Combines a clean professional layout with tax compliance.
  *
  * Uses @react-pdf/renderer for PDF generation.
@@ -788,7 +788,7 @@ export function ReceiptDocumentV2({ data }: { data: ReceiptPDFData }) {
       title={`Donation Receipt ${receiptNumber}`}
       author={org.name}
       subject="Official Donation Receipt"
-      creator="Deesha Foundation Receipt System"
+      creator="deessa Foundation Receipt System"
     >
       <Page size="A4" style={s.page}>
 

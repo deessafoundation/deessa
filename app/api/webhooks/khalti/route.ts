@@ -129,7 +129,7 @@ export async function POST(request: Request) {
       {
         ok: true,
         status: confirmationResult.status,
-        message: this.getStatusMessage(confirmationResult.status),
+        message: getStatusMessage(confirmationResult.status),
       },
       { status: 200 }
     )

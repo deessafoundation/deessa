@@ -606,7 +606,7 @@ export async function exportTransactionPDF(
     // Create a descriptive filename with receipt number or donation ID
     const fileIdentifier = donation.receipt_number || `DON-${donation.id.substring(0, 8)}`
     const dateStr = new Date().toISOString().split('T')[0] // YYYY-MM-DD
-    const fileName = `Deesha-Transaction-${fileIdentifier}-${dateStr}.pdf`
+    const fileName = `deessa-Transaction-${fileIdentifier}-${dateStr}.pdf`
     
     // Convert to base64 data URL for download
     const base64 = pdfBuffer.toString('base64')

@@ -227,7 +227,7 @@ export async function getOrganizationDetailsForReceipt() {
   } catch (error) {
     console.error("Get organization details error:", error)
     return {
-      name: "Dessa Foundation",
+      name: "deessa Foundation",
       vatNumber: "",
       panNumber: "",
       swcNumber: "",

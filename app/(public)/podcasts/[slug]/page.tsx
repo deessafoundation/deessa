@@ -30,12 +30,12 @@ export async function generateMetadata({ params }: PodcastDetailPageProps): Prom
 
   if (!podcast) {
     return {
-      title: 'Podcast Not Found | Deesha Foundation',
+      title: 'Podcast Not Found | deessa Foundation',
     };
   }
 
   return {
-    title: `${podcast.title} | Deesha Foundation Podcast`,
+    title: `${podcast.title} | deessa Foundation Podcast`,
     description: podcast.description,
     openGraph: {
       title: podcast.title,

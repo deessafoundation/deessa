@@ -263,21 +263,17 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
             <span className="shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 sm:text-xs">
               LATEST UPDATES
             </span>
-            <div className="min-w-0 flex-1 overflow-x-auto scrollbar-hide lg:overflow-hidden">
-              <div className="hidden gap-8 lg:flex lg:py-0.5 nav-news-marquee-track">
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div
+                className="flex w-max gap-8 py-0.5 nav-news-marquee-track animate-marquee"
+                style={{ animationDuration: "16s" }}
+              >
                 {[...NEWS_TICKER_ITEMS, ...NEWS_TICKER_ITEMS].map((text, idx) => (
                   <span key={`${text}-${idx}`} className="flex shrink-0 items-center gap-8 whitespace-nowrap text-sm text-white/90">
                     <span>{text}</span>
                     <span className="text-white/35" aria-hidden>
                       |
                     </span>
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-4 lg:hidden">
-                {NEWS_TICKER_ITEMS.map((text) => (
-                  <span key={text} className="shrink-0 whitespace-nowrap text-sm text-white/90">
-                    {text}
                   </span>
                 ))}
               </div>

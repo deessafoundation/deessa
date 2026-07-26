@@ -1,7 +1,12 @@
 import { createClient } from "@supabase/supabase-js"
 
-const SUPABASE_URL = "https://tqljblbdfhjfqnegjobi.supabase.co"
-const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxbGpibGJkZmhqZnFuZWdqb2JpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTk1MDIwNiwiZXhwIjoyMDgxNTI2MjA2fQ.X5xuvaBpCI0fqIERrWdoIRDxacDGhnrgxoUiVYHBGq4"
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables.")
+  process.exit(1)
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
@@ -9,16 +14,16 @@ const stories = [
   {
     title: "Finding Aryan's Voice: A Journey Through Speech Therapy",
     slug: "finding-aryans-voice",
-    excerpt: "At four years old, Aryan had not spoken a single word. His parents feared the silence would last forever — until a dedicated therapist at Deessa Foundation changed everything.",
-    content: `<p>When Priya and Rajesh first brought their son Aryan to Deessa Foundation, they carried with them eighteen months of unanswered questions. Aryan was four years old, bright-eyed, and almost entirely silent.</p>
+    excerpt: "At four years old, Aryan had not spoken a single word. His parents feared the silence would last forever — until a dedicated therapist at deessa Foundation changed everything.",
+    content: `<p>When Priya and Rajesh first brought their son Aryan to deessa Foundation, they carried with them eighteen months of unanswered questions. Aryan was four years old, bright-eyed, and almost entirely silent.</p>
 
 <p>"He would look at us like he had so much to say," Priya recalls, her hands folded in her lap. "But the words just wouldn't come."</p>
 
 <h2>The Diagnosis That Changed Everything</h2>
 
-<p>Aryan was diagnosed with Level 2 Autism Spectrum Disorder at the age of three — late by most clinical standards, but not uncommon in communities where early signs are often attributed to "boys maturing slowly" or "shyness." By the time his family reached Deessa Foundation, Aryan had already missed a crucial developmental window for spontaneous language acquisition.</p>
+<p>Aryan was diagnosed with Level 2 Autism Spectrum Disorder at the age of three — late by most clinical standards, but not uncommon in communities where early signs are often attributed to "boys maturing slowly" or "shyness." By the time his family reached deessa Foundation, Aryan had already missed a crucial developmental window for spontaneous language acquisition.</p>
 
-<p>But <strong>Meera Shrestha</strong>, Deessa's lead speech-language pathologist, saw something different. "Aryan made excellent eye contact during play. He could sequence objects and match colors perfectly. The issue wasn't comprehension — it was the bridge between thought and speech."</p>
+<p>But <strong>Meera Shrestha</strong>, deessa's lead speech-language pathologist, saw something different. "Aryan made excellent eye contact during play. He could sequence objects and match colors perfectly. The issue wasn't comprehension — it was the bridge between thought and speech."</p>
 
 <h2>Eight Months of Small Victories</h2>
 
@@ -32,11 +37,11 @@ const stories = [
 
 <h2>Where Aryan Is Today</h2>
 
-<p>Eighteen months after his first session at Deessa Foundation, Aryan uses three-to-four word phrases consistently, attends a mainstream kindergarten with an inclusion support aide, and recently told his father — unprompted — "I love you, Baba."</p>
+<p>Eighteen months after his first session at deessa Foundation, Aryan uses three-to-four word phrases consistently, attends a mainstream kindergarten with an inclusion support aide, and recently told his father — unprompted — "I love you, Baba."</p>
 
 <p>His parents want other families to know: the silence does not have to be permanent. With the right support, every child's voice finds its way.</p>
 
-<p><strong>Deessa Foundation's speech therapy programme currently serves 47 children. Your donation helps us expand capacity.</strong></p>`,
+<p><strong>deessa Foundation's speech therapy programme currently serves 47 children. Your donation helps us expand capacity.</strong></p>`,
     image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80&fit=crop",
     category: "Speech Therapy",
     is_featured: true,
@@ -50,11 +55,11 @@ const stories = [
     excerpt: "A neighbourhood school in Kathmandu's Baneshwor district transformed its fourth-grade classroom — and changed the way 28 children understand difference, belonging, and friendship.",
     content: `<p>Room 4B at Shree Janajagrit Secondary School was not designed to be inclusive. The desks were in fixed rows, the curriculum was rigid, and until eighteen months ago, children with developmental differences were quietly steered toward "special sections" — separate, underfunded, and largely invisible.</p>
 
-<p>That changed when Deessa Foundation partnered with the school to pilot an inclusive education model that kept neurodiverse learners in the main classroom, supported by trained inclusion aides and a restructured teaching approach.</p>
+<p>That changed when deessa Foundation partnered with the school to pilot an inclusive education model that kept neurodiverse learners in the main classroom, supported by trained inclusion aides and a restructured teaching approach.</p>
 
 <h2>Retraining the Room</h2>
 
-<p>The first step was the teachers. Deessa's education team ran a 40-hour professional development programme over two months, covering sensory accommodations, differentiated instruction, and communication strategies for non-verbal learners.</p>
+<p>The first step was the teachers. deessa's education team ran a 40-hour professional development programme over two months, covering sensory accommodations, differentiated instruction, and communication strategies for non-verbal learners.</p>
 
 <p>"We thought it would make the class harder to manage," admits teacher Binita Maharjan. "It actually made it better. When you design for the child who struggles most, you make it easier for everyone."</p>
 
@@ -70,7 +75,7 @@ const stories = [
 
 <p>End-of-year assessments showed that the four included children met or exceeded their Individual Education Plan goals. Neurotypical children in Room 4B scored 12% higher on empathy-related social-emotional learning markers than their peers in non-inclusive classrooms.</p>
 
-<p>The programme is now being replicated in three additional Kathmandu schools, with Deessa providing ongoing teacher coaching, curriculum materials, and quarterly reviews.</p>`,
+<p>The programme is now being replicated in three additional Kathmandu schools, with deessa providing ongoing teacher coaching, curriculum materials, and quarterly reviews.</p>`,
     image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&q=80&fit=crop",
     category: "Inclusive Education",
     is_featured: false,
@@ -82,7 +87,7 @@ const stories = [
     title: "A Mother's Shift: How Parent Training Transformed Their Home",
     slug: "parent-training-anita",
     excerpt: "Anita had tried everything she could think of. She just hadn't yet been taught the right things. A 12-week parent training programme gave her a new language for understanding her son — and herself.",
-    content: `<p>Anita sits across from us at the Deessa Foundation community room, calmly describing a version of her life from two years ago that sounds nothing like the composed woman in front of us.</p>
+    content: `<p>Anita sits across from us at the deessa Foundation community room, calmly describing a version of her life from two years ago that sounds nothing like the composed woman in front of us.</p>
 
 <p>"I used to cry in the bathroom every evening," she says matter-of-factly. "Not because I didn't love Rohan. I loved him more than anything. But I didn't know how to reach him, and no one had taught me."</p>
 
@@ -90,7 +95,7 @@ const stories = [
 
 <p>Rohan was diagnosed at age three with autism and co-occurring sensory processing disorder. He was hypersensitive to sound, resistant to transitions, and prone to meltdowns that could last forty-five minutes or more. Anita and her husband Deepak were exhausted, isolated, and largely self-taught through a patchwork of YouTube videos and Facebook groups.</p>
 
-<p>They enrolled in Deessa Foundation's <strong>Parent Empowerment Programme</strong> — a structured 12-week course that teaches evidence-based behavioural strategies, sensory regulation techniques, and emotional self-care for caregivers.</p>
+<p>They enrolled in deessa Foundation's <strong>Parent Empowerment Programme</strong> — a structured 12-week course that teaches evidence-based behavioural strategies, sensory regulation techniques, and emotional self-care for caregivers.</p>
 
 <h2>Week by Week</h2>
 
@@ -102,9 +107,9 @@ const stories = [
 
 <h2>Six Months Later</h2>
 
-<p>Rohan now attends a Deessa-supported playgroup three mornings a week. His meltdowns have reduced by roughly 80%. More importantly, Anita reports something she couldn't have imagined two years ago: "He comes to me when he's upset now. He presses his face against my shoulder. That's communication. That's connection."</p>
+<p>Rohan now attends a deessa-supported playgroup three mornings a week. His meltdowns have reduced by roughly 80%. More importantly, Anita reports something she couldn't have imagined two years ago: "He comes to me when he's upset now. He presses his face against my shoulder. That's communication. That's connection."</p>
 
-<p>Deessa Foundation's Parent Empowerment Programme runs quarterly. Subsidised spots are available for families in need.</p>`,
+<p>deessa Foundation's Parent Empowerment Programme runs quarterly. Subsidised spots are available for families in need.</p>`,
     image: "https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80&fit=crop",
     category: "Family Support",
     is_featured: false,
@@ -115,10 +120,10 @@ const stories = [
   {
     title: "From Diagnosis to Direction: Early Intervention That Works",
     slug: "early-intervention-that-works",
-    excerpt: "Research is clear: the earlier the intervention, the greater the impact. Meet the three families who reached Deessa Foundation before their children turned two — and see what early support made possible.",
+    excerpt: "Research is clear: the earlier the intervention, the greater the impact. Meet the three families who reached deessa Foundation before their children turned two — and see what early support made possible.",
     content: `<p>The window is narrow. Neuroscience tells us that the first two years of life represent an extraordinary period of neural plasticity — a time when targeted, consistent intervention can meaningfully alter developmental trajectories for children with autism.</p>
 
-<p>Deessa Foundation's Early Start Programme operates at exactly this threshold, identifying children as young as 14 months and beginning structured support before a formal diagnosis is even confirmed.</p>
+<p>deessa Foundation's Early Start Programme operates at exactly this threshold, identifying children as young as 14 months and beginning structured support before a formal diagnosis is even confirmed.</p>
 
 <h2>Three Families, Three Stories</h2>
 
@@ -152,16 +157,16 @@ const stories = [
   {
     title: "Life Skills for Life: Preparing Teenagers with Autism for Adulthood",
     slug: "life-skills-for-adulthood",
-    excerpt: "What does independence look like for a teenager with autism? At Deessa Foundation's Transition Programme, 16 young adults are answering that question — on their own terms.",
+    excerpt: "What does independence look like for a teenager with autism? At deessa Foundation's Transition Programme, 16 young adults are answering that question — on their own terms.",
     content: `<p>Rajan is seventeen. He can prepare four different meals from scratch, navigate his local bus route independently, and manage a personal budget with a spreadsheet he built himself. Two years ago, he had never cooked, taken public transport alone, or handled money without direct supervision.</p>
 
-<p>He is one of sixteen teenagers enrolled in Deessa Foundation's Adolescent Transition Programme — a structured two-year curriculum designed to build the practical and social skills that bridge autism support services and adult life.</p>
+<p>He is one of sixteen teenagers enrolled in deessa Foundation's Adolescent Transition Programme — a structured two-year curriculum designed to build the practical and social skills that bridge autism support services and adult life.</p>
 
 <h2>Why Transition Planning Is Underfunded</h2>
 
 <p>Most autism support infrastructure is concentrated in early childhood. Services thin dramatically as children age, creating what practitioners call "the cliff edge": the moment a young person with autism ages out of paediatric services and finds almost nothing waiting on the other side.</p>
 
-<p>Deessa Foundation's Transition Programme was built specifically to address this gap. It runs from age 15 to 18 and covers six domains: self-care and home management, financial literacy, community navigation, employment readiness, communication and self-advocacy, and leisure and social participation.</p>
+<p>deessa Foundation's Transition Programme was built specifically to address this gap. It runs from age 15 to 18 and covers six domains: self-care and home management, financial literacy, community navigation, employment readiness, communication and self-advocacy, and leisure and social participation.</p>
 
 <h2>Rajan's Bus Route</h2>
 
@@ -183,7 +188,7 @@ const stories = [
     title: "Sensory Sanctuary: How We Redesigned Space for Every Child",
     slug: "sensory-sanctuary-redesign",
     excerpt: "A sensory-friendly room doesn't look like a therapy room. It looks like a place where children breathe easier, engage longer, and leave calmer. Here's how ours was built — and why it matters.",
-    content: `<p>The first thing you notice about the Deessa Foundation sensory room is the light. It's soft, adjustable, and never fluorescent. The second thing you notice is the silence — not emptiness, but a careful acoustic calm that makes the room feel buffered from the world outside.</p>
+    content: `<p>The first thing you notice about the deessa Foundation sensory room is the light. It's soft, adjustable, and never fluorescent. The second thing you notice is the silence — not emptiness, but a careful acoustic calm that makes the room feel buffered from the world outside.</p>
 
 <p>The room was designed in consultation with three occupational therapists, two sensory integration specialists, and — crucially — eight children with autism whose feedback shaped every element of the space.</p>
 

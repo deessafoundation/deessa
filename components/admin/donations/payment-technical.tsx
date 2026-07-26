@@ -15,6 +15,9 @@ interface PaymentTechnicalProps {
     customer_id?: string | null
     payment_id?: string | null
     verification_id?: string | null
+    bank_account_id?: string | null
+    bank_transfer_date?: string | null
+    bank_proof_url?: string | null
   }
   provider: string
 }
@@ -133,6 +136,42 @@ export function PaymentTechnical({ payment, provider }: PaymentTechnicalProps) {
           value={payment.verification_id}
           tooltip="Public UUID for receipt verification"
         />
+
+        {/* Bank transfer — confirmed by hand against the bank statement, so the
+            admin needs the donor's stated reference, date, and deposit slip. */}
+        {provider === "bank" && (
+          <div className="space-y-4 border-t pt-4">
+            <TechnicalField
+              label="Bank Account Paid Into"
+              value={payment.bank_account_id}
+              tooltip="Which published account the donor selected"
+            />
+            <TechnicalField
+              label="Date of Transfer (stated)"
+              value={payment.bank_transfer_date}
+              tooltip="Donor's stated transfer date — match this against the bank statement"
+            />
+            <div>
+              <div className="text-sm font-medium text-muted-foreground">Proof of Transfer</div>
+              {payment.bank_proof_url ? (
+                <a
+                  href={payment.bank_proof_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary underline mt-1 inline-block"
+                >
+                  Open deposit slip (link expires in 1 hour)
+                </a>
+              ) : (
+                <div className="text-sm text-muted-foreground font-mono">— Not Provided —</div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Verify against the bank statement before marking this donation completed. Confirming it
+              generates and emails a receipt.
+            </p>
+          </div>
+        )}
 
         <div className="text-sm text-muted-foreground mt-4 p-3 bg-muted/50 rounded-lg">
           <p><span className="font-medium">Provider:</span> <span className="capitalize">{provider}</span></p>

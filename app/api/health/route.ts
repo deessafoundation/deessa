@@ -40,7 +40,7 @@ interface HealthCheck {
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
-  
+
   const health: HealthStatus = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -68,20 +68,50 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   // Return appropriate status code
   const statusCode = health.status === 'unhealthy' ? 503 : 200
 
+  const headers = {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  }
+
+  // The per-check messages carry raw DB errors and which payment providers are
+  // configured. Uptime monitors only need the overall status, so detail is
+  // limited to authenticated admins.
+  if (!(await isAdminRequest())) {
+    return NextResponse.json(
+      { status: health.status, timestamp: health.timestamp },
+      { status: statusCode, headers }
+    )
+  }
+
   return NextResponse.json(
     {
       ...health,
       responseTime: `${responseTime}ms`
     },
-    { 
-      status: statusCode,
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
-    }
+    { status: statusCode, headers }
   )
+}
+
+/**
+ * Whether the caller is an authenticated, active admin.
+ */
+async function isAdminRequest(): Promise<boolean> {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+
+    const { data: adminUser } = await supabase
+      .from('admin_users')
+      .select('is_active')
+      .eq('user_id', user.id)
+      .single()
+
+    return !!adminUser?.is_active
+  } catch {
+    return false
+  }
 }
 
 /**

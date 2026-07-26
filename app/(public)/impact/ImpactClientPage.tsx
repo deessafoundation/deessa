@@ -11,65 +11,6 @@ import type { HomepageStat, HomepageProgram } from "@/lib/types/homepage-setting
 
 // ─── BRUSH STROKE SVG COMPONENTS ─────────────────────────────────────────────
 
-function BrushDividerWhiteToBrush() {
-  return (
-    <div className="relative w-full overflow-hidden leading-none" style={{ height: 90, marginBottom: -1 }}>
-      <svg
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full brush-sway"
-      >
-        <path
-          d="M0,60 C80,20 200,80 360,55 C520,30 600,70 780,48 C960,26 1100,72 1280,50 C1360,40 1420,65 1440,58 L1440,90 L0,90 Z"
-          fill="#eef6ff"
-          opacity="1"
-        />
-        <path
-          d="M0,70 C120,40 300,85 480,60 C660,35 800,78 1000,55 C1200,32 1350,70 1440,62 L1440,90 L0,90 Z"
-          fill="#eef6ff"
-          opacity="0.6"
-        />
-        <path
-          d="M0,50 C60,30 160,75 320,52 C480,29 640,68 820,45 C1000,22 1200,68 1440,48 L1440,90 L0,90 Z"
-          fill="#eef6ff"
-          opacity="0.35"
-        />
-      </svg>
-    </div>
-  )
-}
-
-function BrushDividerBrushToWhite() {
-  return (
-    <div className="relative w-full overflow-hidden leading-none" style={{ height: 90, marginBottom: -1 }}>
-      <svg
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full brush-sway"
-        style={{ background: "#eef6ff" }}
-      >
-        <path
-          d="M0,28 C80,60 200,18 380,42 C560,66 700,22 880,45 C1060,68 1200,28 1380,38 C1410,40 1430,35 1440,30 L1440,90 L0,90 Z"
-          fill="white"
-          opacity="1"
-        />
-        <path
-          d="M0,38 C120,65 340,20 520,48 C700,76 880,24 1080,50 C1280,76 1380,32 1440,40 L1440,90 L0,90 Z"
-          fill="white"
-          opacity="0.55"
-        />
-        <path
-          d="M0,22 C100,52 280,14 460,36 C640,58 820,18 1040,42 C1260,66 1360,28 1440,36 L1440,90 L0,90 Z"
-          fill="white"
-          opacity="0.3"
-        />
-      </svg>
-    </div>
-  )
-}
-
 function BrushDividerWhiteToTeal() {
   return (
     <div className="relative w-full overflow-hidden leading-none" style={{ height: 90, marginBottom: -1 }}>
@@ -646,7 +587,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
     {
       badge: "📚 Education",
       headline: "Building Classrooms, Building Futures",
-      body: "Since 2014, Deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+      body: "Since 2014, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
       bullets: [
         "50+ schools built & renovated from Humla to Dang",
         "500+ teachers trained in child-centered pedagogy",
@@ -704,7 +645,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       name: "Sunita Tamang",
       location: "Sindhupalchok",
       program: "Education",
-      quote: "I used to walk two hours each way to reach a broken-down school. After Deessa Foundation built our new classroom, I never missed a single day.",
+      quote: "I used to walk two hours each way to reach a broken-down school. After deessa Foundation built our new classroom, I never missed a single day.",
     },
     {
       imageSrc: "/testimonials.png",
@@ -729,7 +670,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       {/* ═══════════════════════════════════════════
           SECTION 1 — HERO
       ═══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col overflow-hidden">
+      <section ref={heroRef} className="relative flex flex-col overflow-hidden">
         <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_36%,#dff1f8_100%)]" />
         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(111,62,150,0.18),transparent_24%),radial-gradient(circle_at_78%_84%,rgba(247,197,43,0.16),transparent_20%),radial-gradient(circle_at_center,rgba(255,255,255,0.42),transparent_58%)]" />
         <div className="absolute inset-0 z-0 opacity-[0.11] [background-image:linear-gradient(rgba(11,95,138,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.16)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:linear-gradient(to_bottom,black_18%,transparent_92%)]" />
@@ -750,7 +691,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                   size="compact"
                   eyebrow="Impact in motion"
                   headline="A wall of lived change across Nepal"
-                  description="✦ OUR IMPACT 2014–2024\n10,000+ Lives. One Mission.\nFrom Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
+                  description="✦ OUR IMPACT 2014–2024 · 10,000+ Lives. One Mission. From Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
                   badges={["Govt Registered", "SWC Affiliated", "10+ Years"]}
                   className="relative"
                 />
@@ -763,16 +704,12 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
           </div>
         </div>
 
-        {/* Brush stroke bleeding into stats section */}
-        <div className="relative z-10 -mb-px">
-          <BrushDividerWhiteToBrush />
-        </div>
       </section>
 
       {/* ═══════════════════════════════════════════
           SECTION 2 — STATS STRIP
       ═══════════════════════════════════════════ */}
-      <section className="bg-brush-bg pt-0 pb-20">
+      <section className="bg-white pt-0 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading className="text-center mb-12">
             <h2 className="font-marissa text-dark mb-4" style={{ fontSize: "clamp(36px,4vw,52px)" }}>
@@ -797,8 +734,6 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
           </div>
         </div>
       </section>
-
-      <BrushDividerBrushToWhite />
 
       {/* ═══════════════════════════════════════════
           SECTION 3 — PROGRAM IMPACTS
@@ -837,9 +772,9 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                     justifyContent: "center",
                   }}
                 >
-                  <BrushStroke 
-                    color="#8B8DD4" 
-                    animate={true} 
+                  <BrushStroke
+                    color="#8B8DD4"
+                    animate={true}
                     animationDuration={1.2}
                     style={{ width: '100%', maxWidth: 900 }}
                   >
@@ -919,7 +854,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                         </h2>
                         <p className="font-dm text-gray-600 text-lg leading-relaxed mb-6">
                           Nepal has one of the lowest rates of autism diagnosis and support infrastructure in
-                          South Asia. Deessa Foundation is changing that — running 12 therapy centers,
+                          South Asia. deessa Foundation is changing that — running 12 therapy centers,
                           training 200+ specialist educators, and fighting the stigma that silences
                           thousands of families across the country.
                         </p>
@@ -946,7 +881,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                         <blockquote className="border-l-4 border-orange pl-5 mb-8">
                           <p className="font-marissa italic text-dark" style={{ fontSize: 22, lineHeight: 1.5 }}>
                             "For the first time, my son has a place where he belongs.
-                            Deessa Foundation didn't just help him — they gave our whole
+                            deessa Foundation didn't just help him — they gave our whole
                             family hope we didn't know we'd lost."
                           </p>
                           <footer className="font-comic font-bold text-gray-500 mt-2 text-sm">
@@ -1000,12 +935,10 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
         </div>
       </section>
 
-      <BrushDividerWhiteToBrush />
-
       {/* ═══════════════════════════════════════════
           SECTION 4 — STORIES GRID
       ═══════════════════════════════════════════ */}
-      <section className="bg-brush-bg py-24">
+      <section className="bg-white py-24">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading className="text-center mb-16">
             <h2 className="font-marissa text-dark mb-4" style={{ fontSize: "clamp(36px,4vw,52px)" }}>
@@ -1039,7 +972,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
             <div className="lg:w-2/5 p-10 flex flex-col justify-center">
               <span className="font-marissa text-teal mb-4 block" style={{ fontSize: 72, lineHeight: 0.8, opacity: 0.3 }}>"</span>
               <blockquote className="font-marissa text-dark leading-snug mb-6" style={{ fontSize: "clamp(22px,2.5vw,30px)" }}>
-                Before Deessa Foundation came to our village, our children had no school,
+                Before deessa Foundation came to our village, our children had no school,
                 no clinic, and no future they could see. Now our son is studying engineering
                 in Kathmandu. That is what a single school can do.
               </blockquote>
@@ -1049,7 +982,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
               </footer>
               <p className="font-dm text-gray-600 text-sm mb-6 italic">
                 Ramesh walked 4 hours daily to the construction site, volunteering with
-                Deessa's team to help build the school that would change his children's lives.
+                deessa's team to help build the school that would change his children's lives.
               </p>
               <Link
                 href="/stories"

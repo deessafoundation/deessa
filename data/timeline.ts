@@ -8,7 +8,7 @@ export const timeline: TimelineItem[] = [
   {
     year: "2015",
     title: "Foundation Established",
-    description: "Following the devastating earthquake, a group of volunteers formalized Dessa to aid reconstruction.",
+    description: "Following the devastating earthquake, a group of volunteers formalized deessa to aid reconstruction.",
   },
   {
     year: "2017",

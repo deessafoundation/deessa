@@ -21,7 +21,7 @@ describe('Receipt Rendering with Stamps and Signatures', () => {
   beforeEach(() => {
     // Base organization data
     baseOrganization = {
-      name: 'Dessa Foundation',
+      name: 'deessa Foundation',
       address: '123 Test Street, Kathmandu, Nepal',
       phone: '+977-1-1234567',
       email: 'info@dessafoundation.org',
@@ -253,7 +253,7 @@ describe('Receipt Rendering with Stamps and Signatures', () => {
 
     it('should handle missing optional tax numbers', () => {
       const orgMinimal: ReceiptPDFOrganization = {
-        name: 'Dessa Foundation',
+        name: 'deessa Foundation',
       }
 
       expect(orgMinimal.pan_number).toBeUndefined()
@@ -337,7 +337,7 @@ describe('Receipt Rendering with Stamps and Signatures', () => {
         paymentMethod: 'Stripe',
         isMonthly: false,
         organization: {
-          name: 'Dessa Foundation',
+          name: 'deessa Foundation',
         },
       }
 
@@ -349,7 +349,7 @@ describe('Receipt Rendering with Stamps and Signatures', () => {
 
     it('should work with legacy organization data (minimal fields)', () => {
       const legacyOrg: ReceiptPDFOrganization = {
-        name: 'Dessa Foundation',
+        name: 'deessa Foundation',
         address: '123 Test Street',
         email: 'info@dessafoundation.org',
       }

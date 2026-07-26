@@ -17,6 +17,7 @@ import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { config } from 'dotenv'
 import { resolve } from 'path'
+import { STRIPE_API_VERSION, getInvoicePaymentIntentId } from '../lib/payments/stripe-compat'
 
 // Load environment variables from .env.local or .env
 config({ path: resolve(process.cwd(), '.env.local') })
@@ -30,7 +31,7 @@ if (!stripeKey) {
 }
 
 const stripe = new Stripe(stripeKey, {
-  apiVersion: '2024-06-20',
+  apiVersion: STRIPE_API_VERSION,
 })
 
 // Initialize Supabase
@@ -151,9 +152,7 @@ async function backfillPaymentIntents() {
         
         const invoice = subscription.latest_invoice
         const paymentIntentId = typeof invoice === 'object' && invoice !== null
-          ? (typeof invoice.payment_intent === 'string' 
-              ? invoice.payment_intent 
-              : invoice.payment_intent?.id)
+          ? getInvoicePaymentIntentId(invoice)
           : null
         
         const customerId = typeof subscription.customer === 'string'

@@ -71,7 +71,7 @@ export default function PodcastHeroSection({ featuredPodcast }: PodcastHeroSecti
             <div className="flex items-center gap-4">
               <span className="text-white/80 text-sm">Listen on:</span>
               <a
-                href="https://www.youtube.com/@DeeshaFoundation"
+                href="https://www.youtube.com/@deessaFoundation"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-accent-education transition-colors"

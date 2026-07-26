@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ResourceDownloads, brandResources, legalResources } from "@/components/resource-downloads"
 
 export const metadata: Metadata = {
-  title: "Press & Media Kit - Dessa Foundation",
+  title: "Press & Media Kit - deessa Foundation",
   description:
     "Media resources, brand guidelines, and press materials for deessa Foundation. Download logos, photos, and official documents.",
 }

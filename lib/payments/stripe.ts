@@ -4,6 +4,8 @@ import type Stripe from "stripe"
 
 import { getAppBaseUrl } from "@/lib/utils"
 
+import { STRIPE_API_VERSION } from "./stripe-compat"
+
 
 
 export interface StripeCheckoutResult {
@@ -109,7 +111,7 @@ async function getStripeClient(): Promise<Stripe> {
 
   stripeClient = new Stripe(secretKey, {
 
-    apiVersion: "2024-06-20",
+    apiVersion: STRIPE_API_VERSION,
 
   })
 
@@ -267,6 +269,13 @@ export async function startStripeCheckout(
 
 
 
+    // Stripe idempotency key: makes THIS create call safe to retry (SDK/network
+    // retry, a double-invoked server action). A repeat with the same key returns
+    // the SAME session instead of creating a second one — no duplicate checkout,
+    // no risk of two charges for one donation row. Keyed on the donation id +
+    // mode so one-time and subscription attempts for the same row never collide.
+    const idempotencyKey = `checkout_${donation.id}_${donation.isMonthly ? "sub" : "once"}`
+
     // For monthly donations, use subscription mode
 
     if (donation.isMonthly) {
@@ -289,7 +298,7 @@ export async function startStripeCheckout(
 
                 name: "Monthly Donation",
 
-                description: `Monthly donation to Deesha Foundation from ${donation.donorName}`,
+                description: `Monthly donation to deessa Foundation from ${donation.donorName}`,
 
               },
 
@@ -331,7 +340,16 @@ export async function startStripeCheckout(
 
         },
 
-      })
+        // Propagate the donation id onto the Subscription so recurring
+        // invoice.* events (and any refund/dispute) can map back to it.
+        subscription_data: {
+          metadata: {
+            donation_id: donation.id,
+            ...donation.metadata,
+          },
+        },
+
+      }, { idempotencyKey })
 
 
 
@@ -411,7 +429,16 @@ export async function startStripeCheckout(
 
       },
 
-    })
+      // Propagate the donation id onto the PaymentIntent (and thus the Charge)
+      // so charge.refunded / charge.dispute.created can map back to it.
+      payment_intent_data: {
+        metadata: {
+          donation_id: donation.id,
+          ...donation.metadata,
+        },
+      },
+
+    }, { idempotencyKey })
 
 
 

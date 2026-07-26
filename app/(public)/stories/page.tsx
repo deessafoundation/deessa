@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: "Stories - Deessa Foundation",
+  title: "Stories - deessa Foundation",
   description: "Read inspiring stories of impact and transformation from our community.",
 }
 

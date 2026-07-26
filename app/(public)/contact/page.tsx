@@ -8,8 +8,8 @@ import { isSupportEnabled } from "@/lib/support/settings"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Contact Us - Dessa Foundation",
-  description: "Get in touch with Dessa Foundation. We'd love to hear from you.",
+  title: "Contact Us - deessa Foundation",
+  description: "Get in touch with deessa Foundation. We'd love to hear from you.",
 }
 
 const contactInfo = [
