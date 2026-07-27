@@ -4,13 +4,14 @@
  * Handles eSewa payment verification for event registrations.
  * Security: HMAC-SHA256 signature verification with timing-safe comparison.
  * Mock mode is BLOCKED in production (H1 fix).
+ *
+ * Uses PaymentService.confirmRegistration() for centralized payment logic.
  */
 
 import crypto from "crypto";
 import { NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
-  verifyAmountMatch,
   logPaymentEvent,
   maskSensitiveData,
 } from "@/lib/payments/security";
@@ -58,6 +59,12 @@ function verifyEsewaSignature(
 /**
  * Handle eSewa payment verification for event registrations.
  *
+ * Flow:
+ * 1. HMAC signature verification (FIRST — reject before any state changes)
+ * 2. Status check (non-COMPLETE → failure redirect)
+ * 3. Idempotency (already paid → success redirect)
+ * 4. PaymentService.confirmRegistration() for centralized logic
+ *
  * @param supabase - Supabase service client
  * @param transaction_uuid - eSewa transaction UUID
  * @param responseData - Parsed eSewa callback data
@@ -81,7 +88,7 @@ export async function handleEventVerification(
     );
   }
 
-  const { status, total_amount, signed_field_names, signature } = responseData;
+  const { status, signed_field_names, signature } = responseData;
 
   // Check if this is an event registration payment
   const { data: reg } = await supabase
@@ -94,7 +101,17 @@ export async function handleEventVerification(
     return null; // Not an event registration
   }
 
-  // ── HMAC signature verification (FIRST — reject before any state changes) ──
+  // Helper: fetch event slug for redirects
+  const getEventSlug = async (): Promise<string> => {
+    const { data: event } = await supabase
+      .from("events")
+      .select("slug")
+      .eq("id", reg.event_id)
+      .single();
+    return (event as { slug: string } | null)?.slug ?? "";
+  };
+
+  // ── 1. HMAC signature verification (FIRST — reject before any state changes) ──
   if (!isMock) {
     const secretKey = process.env.ESEWA_SECRET_KEY;
     if (!secretKey) {
@@ -114,202 +131,95 @@ export async function handleEventVerification(
         transactionUuid: maskSensitiveData(transaction_uuid),
         reason: sigResult.reason,
       }, "error");
-      // Do NOT update payment_status — signature failed, ignore this callback entirely
-      // Fetch event slug for redirect
-      const { data: event } = await supabase
-        .from("events")
-        .select("slug")
-        .eq("id", reg.event_id)
-        .single();
-      const slug = (event as { slug: string } | null)?.slug ?? "";
+      const slug = await getEventSlug();
       return NextResponse.redirect(
         new URL(`/events/${slug}/register/failure?rid=${reg.id}&reason=invalid_signature`, url.origin),
       );
     }
   }
 
-  // ── Status check (after signature verified) ───────────────────────────────────
+  // ── 2. Status check (after signature verified) ───────────────────────────────
   if (status !== "COMPLETE") {
     logPaymentEvent("eSewa success - event payment not completed", {
       regId: reg.id,
       status,
       transactionUuid: maskSensitiveData(transaction_uuid),
     }, "warn");
-      await supabase
-        .from("event_registrations")
-        .update({
-          payment_status: "failed",
-          payment_failed_at: new Date().toISOString(),
-        })
-        .eq("id", reg.id);
-    // Fetch event slug for redirect
-    const { data: event } = await supabase
-      .from("events")
-      .select("slug")
-      .eq("id", reg.event_id)
-      .single();
-    const slug = (event as { slug: string } | null)?.slug ?? "";
-    return NextResponse.redirect(
-      new URL(
-        `/events/${slug}/register/payment-success?rid=${reg.id}&status=failed`,
-        url.origin,
-      ),
-    );
-  }
-
-  // ── Idempotency: already paid ───────────────────────────────────────────────
-  if (reg.payment_status === "paid") {
-    // Fetch event slug for redirect
-    const { data: event } = await supabase
-      .from("events")
-      .select("slug")
-      .eq("id", reg.event_id)
-      .single();
-    const slug = (event as { slug: string } | null)?.slug ?? "";
-    return NextResponse.redirect(
-      new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&paid=1`, url.origin),
-    );
-  }
-
-  // ── Amount verification (fail-closed, after signature verified) ──────────────
-  const expectedAmt = parseFloat((reg.payment_amount || 0).toString());
-  const actualAmt = parseFloat(total_amount.toString());
-  const av = verifyAmountMatch(expectedAmt, actualAmt, "NPR", 0.01);
-
-  if (!av.valid) {
-    logPaymentEvent("eSewa success - event amount mismatch", {
-      regId: reg.id,
-      expected: expectedAmt,
-      actual: actualAmt,
-    }, "warn");
-    await supabase
-      .from("event_registrations")
-      .update({
-        payment_status: "review",
-        esewa_transaction_uuid: transaction_uuid,
-        payment_review_at: new Date().toISOString(),
-      })
-      .eq("id", reg.id);
-    // Fetch event slug for redirect
-    const { data: event } = await supabase
-      .from("events")
-      .select("slug")
-      .eq("id", reg.event_id)
-      .single();
-    const slug = (event as { slug: string } | null)?.slug ?? "";
-    return NextResponse.redirect(
-      new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=review`, url.origin),
-    );
-  }
-
-  // ── Status checks (after signature + amount verified) ───────────────────────
-  const { error: regUpdateError } = await supabase
-    .from("event_registrations")
-    .update({
-      status: "confirmed",
-      payment_status: "paid",
-      payment_provider: "esewa",
-      payment_id: `esewa:${transaction_uuid}`,
-      provider_session_ref: transaction_uuid,
-      esewa_transaction_uuid: transaction_uuid,
-      payment_paid_at: new Date().toISOString(),
-      confirmed_at: new Date().toISOString(),
-    })
-    .eq("id", reg.id);
-
-  if (regUpdateError) {
-    logPaymentEvent("eSewa success - event registration update failed", {
-      regId: reg.id,
-      transactionUuid: maskSensitiveData(transaction_uuid),
-      error: regUpdateError,
-    }, "error");
-    // Fetch event slug for redirect
-    const { data: event } = await supabase
-      .from("events")
-      .select("slug")
-      .eq("id", reg.event_id)
-      .single();
-    const slug = (event as { slug: string } | null)?.slug ?? "";
+    const slug = await getEventSlug();
     return NextResponse.redirect(
       new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=failed`, url.origin),
     );
   }
 
-  // Increment sold_count on ticket type
-  try {
-    const { incrementTicketSoldCount } = await import("@/lib/utils/ticket-capacity");
-    await incrementTicketSoldCount(supabase, reg.ticket_type_id);
-  } catch (e) {
-    console.warn("eSewa event handler: failed to increment sold_count", e);
+  // ── 3. Idempotency: already paid ─────────────────────────────────────────────
+  if (reg.payment_status === "paid") {
+    const slug = await getEventSlug();
+    return NextResponse.redirect(
+      new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&paid=1`, url.origin),
+    );
   }
 
-  // Send confirmation email (non-blocking)
+  // ── 4. PaymentService confirmation ───────────────────────────────────────────
   try {
-    const { data: event } = await supabase
-      .from("events")
-      .select("title, event_date, location, slug")
-      .eq("id", reg.event_id)
-      .single();
+    const { createEsewaAdapter } = await import("@/lib/payments/adapters/EsewaAdapter");
+    const { getPaymentService } = await import("@/lib/payments/core/PaymentService");
 
-    if (event) {
-      const { data: template } = await supabase
-        .from("event_email_templates")
-        .select("subject, body_html")
-        .eq("event_id", reg.event_id)
-        .eq("template_type", "confirmation")
-        .eq("is_active", true)
-        .single();
+    const adapter = createEsewaAdapter();
+    const paymentService = getPaymentService();
 
-      if (template?.body_html) {
-        let ticketName: string | undefined;
-        if (reg.ticket_type_id) {
-          const { data: tt } = await supabase
-            .from("event_ticket_types")
-            .select("name")
-            .eq("id", reg.ticket_type_id)
-            .single();
-          ticketName = (tt as { name: string } | null)?.name;
-        }
+    const verificationResult = await adapter.verify(
+      responseData,
+      { query: { data: transaction_uuid } },
+    );
 
-        const eventTyped = event as {
-          title: string;
-          event_date: string;
-          location: string;
-          slug: string;
-        };
-
-        const { sendEventConfirmationEmail } = await import("@/lib/email/event-mailer");
-        await sendEventConfirmationEmail({
-          to: reg.email,
-          fullName: reg.full_name,
-          eventTitle: eventTyped.title,
-          eventDate: eventTyped.event_date,
-          eventLocation: eventTyped.location,
-          ticketName,
-          registrationId: reg.id,
-          templateHtml: template.body_html,
-          templateSubject: template.subject,
-        });
-
-        await supabase
-          .from("event_registrations")
-          .update({ last_confirmation_email_sent_at: new Date().toISOString() })
-          .eq("id", reg.id);
-      }
+    // Handle non-paid status BEFORE calling PaymentService
+    if (verificationResult.status !== "paid") {
+      logPaymentEvent("eSewa success - event payment not completed (adapter)", {
+        regId: reg.id,
+        status: verificationResult.status,
+      }, "warn");
+      const slug = await getEventSlug();
+      return NextResponse.redirect(
+        new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=failed`, url.origin),
+      );
     }
-  } catch (e) {
-    console.error("Non-fatal: eSewa event confirmation email:", e);
+
+    const result = await paymentService.confirmRegistration({
+      entityType: "event_registration",
+      entityId: reg.id,
+      provider: "esewa",
+      verificationResult,
+      eventId: transaction_uuid,
+    });
+
+    const slug = await getEventSlug();
+
+    if (!result.success || result.status === "failed") {
+      return NextResponse.redirect(
+        new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=failed`, url.origin),
+      );
+    }
+
+    if (result.status === "review") {
+      return NextResponse.redirect(
+        new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=review`, url.origin),
+      );
+    }
+
+    // Success: paid or already_processed
+    return NextResponse.redirect(
+      new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&paid=1`, url.origin),
+    );
+
+  } catch (error) {
+    logPaymentEvent("eSewa success - event registration confirmation error", {
+      regId: reg.id,
+      transactionUuid: maskSensitiveData(transaction_uuid),
+      error: error instanceof Error ? error.message : "Unknown error",
+    }, "error");
+    const slug = await getEventSlug();
+    return NextResponse.redirect(
+      new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&status=failed`, url.origin),
+    );
   }
-
-  // Fetch event slug for redirect
-  const { data: event } = await supabase
-    .from("events")
-    .select("slug")
-    .eq("id", reg.event_id)
-    .single();
-  const slug = (event as { slug: string } | null)?.slug ?? "";
-
-  return NextResponse.redirect(
-    new URL(`/events/${slug}/register/payment-success?rid=${reg.id}&paid=1`, url.origin),
-  );
 }
