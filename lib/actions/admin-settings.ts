@@ -87,3 +87,84 @@ export async function getAllSettingsAsObject() {
   })
   return obj
 }
+
+export interface RegisterButtonSaveInput {
+  enabled: boolean
+  label: string
+  href: string
+  eventId: string | null
+  eventTitle: string | null
+}
+
+export async function saveRegisterButtonConfig(config: RegisterButtonSaveInput) {
+  const admin = await getCurrentAdmin()
+  if (!admin) return { error: "Unauthorized" }
+  if (admin.role !== "SUPER_ADMIN" && admin.role !== "ADMIN") {
+    return { error: "Only admins can update register button config" }
+  }
+
+  const supabase = await createClient()
+
+  // If enabling, check if another event already has it enabled
+  if (config.enabled && config.eventId) {
+    const { data: existing } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "register_button")
+      .single()
+
+    if (existing?.value) {
+      const value = existing.value as Record<string, unknown>
+      const currentEventId = value.eventId as string | null
+      const currentEnabled = value.enabled as boolean
+
+      // If another event is already assigned and enabled, block
+      if (currentEnabled && currentEventId && currentEventId !== config.eventId) {
+        // Fetch the title of the currently assigned event
+        const { data: currentEvent } = await supabase
+          .from("events")
+          .select("title")
+          .eq("id", currentEventId)
+          .single()
+
+        return {
+          error: `Another event "${currentEvent?.title || currentEventId}" is already assigned as the register button target. Please disable it first before assigning this event.`,
+          conflictingEventId: currentEventId,
+          conflictingEventTitle: currentEvent?.title || null,
+        }
+      }
+    }
+  }
+
+  const value = {
+    enabled: config.enabled,
+    label: config.label || "Register",
+    href: config.href || "/events",
+    eventId: config.eventId,
+    eventTitle: config.eventTitle,
+  }
+
+  const { data: existing } = await supabase.from("site_settings").select("id").eq("key", "register_button").single()
+
+  let error
+  if (existing) {
+    const result = await supabase.from("site_settings").update({ value, updated_by: admin.id }).eq("key", "register_button")
+    error = result.error
+  } else {
+    const result = await supabase.from("site_settings").insert({ key: "register_button", value, updated_by: admin.id })
+    error = result.error
+  }
+
+  if (error) return { error: error.message }
+
+  await supabase.from("activity_logs").insert({
+    user_id: admin.id,
+    action: "UPDATE",
+    entity_type: "site_setting",
+    new_data: { key: "register_button", value },
+  })
+
+  revalidatePath("/admin/events")
+  revalidatePath("/")
+  return { success: true }
+}

@@ -31,6 +31,11 @@ import {
   Copy,
   ChevronRight,
   AlertTriangle,
+  Megaphone,
+  Link as LinkIcon,
+  ToggleLeft,
+  ToggleRight,
+  ClipboardList,
 } from "lucide-react"
 import {
   Dialog,
@@ -102,6 +107,7 @@ const tabs = [
   { label: "Tickets & Pricing", id: "pricing", icon: CreditCard },
   { label: "Registration Form", id: "form-builder", icon: FormInput },
   { label: "Email Templates", id: "email-templates", icon: Mail },
+  { label: "Promote", id: "promote", icon: Megaphone },
 ]
 
 interface EventSettingsClientProps {
@@ -125,6 +131,15 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
   const [formSchemaVersion, setFormSchemaVersion] = useState(0)
   const [fetchedTabs, setFetchedTabs] = useState<Set<string>>(new Set())
   const [formSchemaLoaded, setFormSchemaLoaded] = useState(false)
+  const [registerConfig, setRegisterConfig] = useState<{
+    enabled: boolean
+    label: string
+    href: string
+    eventId: string | null
+    eventTitle: string | null
+  } | null>(null)
+  const [registerConfigLoading, setRegisterConfigLoading] = useState(false)
+  const [registerConfigSaving, setRegisterConfigSaving] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -233,6 +248,20 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         .then((json) => setEmailTemplates(json.templates || []))
         .catch(() => {})
     }
+    if (activeTab === "promote" && !fetchedTabs.has("promote")) {
+      setRegisterConfigLoading(true)
+      fetch(`/api/admin/events/${eventId}/register-button`)
+        .then((r) => r.json())
+        .then((json) => {
+          setRegisterConfig(json.config || { enabled: false, label: "Register", href: `/events/${data?.event?.slug || ""}`, eventId: null, eventTitle: null })
+          setFetchedTabs((prev) => new Set(prev).add("promote"))
+        })
+        .catch(() => {
+          setRegisterConfig({ enabled: false, label: "Register", href: `/events/${data?.event?.slug || ""}`, eventId: null, eventTitle: null })
+          setFetchedTabs((prev) => new Set(prev).add("promote"))
+        })
+        .finally(() => setRegisterConfigLoading(false))
+    }
   }, [activeTab, data, eventId, emailTemplatesVersion, fetchedTabs])
 
   async function handleStatusChange(newStatus: EventStatus) {
@@ -272,6 +301,36 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
       router.push(`/admin/events/${result.data.id}/settings`)
     }
     setIsLoading(null)
+  }
+
+  async function handleSaveRegisterButton() {
+    if (!data || !registerConfig) return
+    setRegisterConfigSaving(true)
+    try {
+      const { saveRegisterButtonConfig } = await import("@/lib/actions/admin-settings")
+      const eventSlug = data.event.slug || data.event.id
+      const result = await saveRegisterButtonConfig({
+        enabled: registerConfig.enabled,
+        label: registerConfig.label,
+        href: registerConfig.enabled ? `/events/${eventSlug}` : registerConfig.href,
+        eventId: registerConfig.enabled ? data.event.id : null,
+        eventTitle: registerConfig.enabled ? data.event.title : null,
+      })
+      if (result.error) {
+        notifications.showError({ title: "Cannot assign register button", description: result.error })
+      } else {
+        notifications.showSuccess({ description: "Register button config saved." })
+        setFetchedTabs((prev) => {
+          const next = new Set(prev)
+          next.delete("promote")
+          return next
+        })
+      }
+    } catch {
+      notifications.showError({ description: "Failed to save register button config" })
+    } finally {
+      setRegisterConfigSaving(false)
+    }
   }
 
   if (loading) {
@@ -725,6 +784,122 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
             templates={emailTemplates}
             onTemplatesChanged={() => setEmailTemplatesVersion((v) => v + 1)}
           />
+        )}
+        {activeTab === "promote" && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Megaphone className="h-5 w-5" />
+                Promote Event — Navbar Register Button
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {registerConfigLoading ? (
+                <div className="space-y-4 animate-pulse">
+                  <div className="h-10 w-full rounded-lg bg-gray-100" />
+                  <div className="h-10 w-full rounded-lg bg-gray-100" />
+                  <div className="h-10 w-3/4 rounded-lg bg-gray-100" />
+                </div>
+              ) : registerConfig ? (
+                <>
+                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+                    <p className="font-semibold mb-1">How it works</p>
+                    <p>Enable this to set <strong>{event.title}</strong> as the target of the <strong>Register</strong> button in the website navbar. Only one event can be assigned at a time.</p>
+                  </div>
+
+                  {/* Enable/Disable Toggle */}
+                  {(() => {
+                    const isAssignedToOther = registerConfig.eventId !== null && registerConfig.eventId !== event.id
+                    return (
+                      <div className={cn("flex items-center justify-between rounded-xl border p-4", isAssignedToOther ? "border-amber-200 bg-amber-50" : "border-gray-200 bg-gray-50")}>
+                        <div className="flex items-center gap-3">
+                          {registerConfig.enabled && !isAssignedToOther ? (
+                            <ToggleRight className="h-8 w-8 text-green-600" />
+                          ) : (
+                            <ToggleLeft className="h-8 w-8 text-gray-400" />
+                          )}
+                          <div>
+                            <p className="font-semibold text-gray-900">Set as Navbar Register Button</p>
+                            <p className="text-sm text-gray-500">
+                              {isAssignedToOther
+                                ? `Assigned to "${registerConfig.eventTitle}" — disable that event first`
+                                : registerConfig.enabled
+                                  ? `Currently pointing to: ${event.title}`
+                                  : "Not active — navbar uses default link"}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            if (isAssignedToOther) return
+                            setRegisterConfig({ ...registerConfig, enabled: !registerConfig.enabled })
+                          }}
+                          disabled={isAssignedToOther}
+                          className={cn(
+                            "relative inline-flex h-7 w-12 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none",
+                            isAssignedToOther ? "cursor-not-allowed opacity-50" : "cursor-pointer",
+                            registerConfig.enabled && !isAssignedToOther ? "bg-green-600" : "bg-gray-300"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                              registerConfig.enabled && !isAssignedToOther ? "translate-x-5" : "translate-x-0"
+                            )}
+                          />
+                        </button>
+                      </div>
+                    )
+                  })()}
+
+                  {/* Label */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Button Label</label>
+                    <input
+                      type="text"
+                      value={registerConfig.label}
+                      onChange={(e) => setRegisterConfig({ ...registerConfig, label: e.target.value })}
+                      placeholder="Register"
+                      className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  {/* Preview */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Preview</label>
+                    <div className="rounded-xl border border-gray-200 bg-white p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 rounded-xl border border-primary/50 px-6 py-2.5 text-[15px] font-medium text-primary">
+                          <ClipboardList className="size-3.5" />
+                          {registerConfig.label || "Register"}
+                        </div>
+                        <span className="text-xs text-gray-400">→ {registerConfig.href}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex items-center justify-end gap-3">
+                    {registerConfig.eventId && registerConfig.eventId !== event.id && (
+                      <p className="text-xs text-amber-600">
+                        Disable &quot;{registerConfig.eventTitle}&quot; first
+                      </p>
+                    )}
+                    <Button
+                      onClick={handleSaveRegisterButton}
+                      disabled={registerConfigSaving || (registerConfig.eventId !== null && registerConfig.eventId !== event.id)}
+                      className="bg-[#3FABDE] hover:bg-[#2f9bca]"
+                    >
+                      {registerConfigSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Save Configuration
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">Failed to load register button configuration.</p>
+              )}
+            </CardContent>
+          </Card>
         )}
       </div>
 
