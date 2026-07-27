@@ -12,7 +12,8 @@
 export type DonationStatus = 
   | 'initiated'   // Donation record created, payment not yet started
   | 'pending'     // Payment initiated with provider, awaiting confirmation
-  | 'confirmed'   // Payment verified and confirmed
+  | 'confirmed'   // Payment verified and confirmed (V2 internal status)
+  | 'completed'   // Payment verified and confirmed (V1 DB canonical status)
   | 'review'      // Payment requires manual review (amount mismatch, etc.)
   | 'failed'      // Payment verification failed
   | 'refunded'    // Payment was refunded (admin action)
@@ -151,6 +152,86 @@ export interface ConfirmDonationResult {
     provider?: PaymentProvider
     provider_ref?: string
     confirmed_at?: Date
+  }
+  
+  /** Error message if confirmation failed */
+  error?: string
+  
+  /** Additional context about the result */
+  metadata?: {
+    /** Reason for REVIEW status */
+    reviewReason?: 'amount_mismatch' | 'currency_mismatch' | 'verification_uncertain'
+    
+    /** Expected vs actual values for mismatches */
+    mismatchDetails?: {
+      expectedAmount?: number
+      actualAmount?: number
+      expectedCurrency?: string
+      actualCurrency?: string
+    }
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Event Registration Payment Types
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Entity type discriminator for polymorphic payment operations
+ */
+export type EntityType = 'donation' | 'event_registration' | 'conference_registration'
+
+/**
+ * Event registration payment lifecycle states
+ * Mirrors the DB CHECK constraint on event_registrations.payment_status:
+ *   'unpaid' | 'paid' | 'refunded' | 'failed' | 'review'
+ */
+export type RegistrationPaymentStatus =
+  | 'unpaid'    // Initial state, payment not yet received
+  | 'paid'      // Payment confirmed and verified
+  | 'review'    // Requires manual review (amount mismatch, etc.)
+  | 'failed'    // Payment verification failed
+  | 'refunded'  // Payment was refunded (admin action)
+
+/**
+ * Input for PaymentService.confirmRegistration()
+ */
+export interface ConfirmRegistrationInput {
+  /** Entity type (must be 'event_registration' or 'conference_registration') */
+  entityType: 'event_registration' | 'conference_registration'
+  
+  /** The registration ID to confirm */
+  entityId: string
+  
+  /** The payment provider */
+  provider: PaymentProvider
+  
+  /** Verification result from provider adapter */
+  verificationResult: VerificationResult
+  
+  /** Event ID for idempotency (webhook event ID, pidx, or transaction UUID) */
+  eventId?: string
+}
+
+/**
+ * Result of PaymentService.confirmRegistration()
+ */
+export interface ConfirmRegistrationResult {
+  /** Whether the confirmation operation succeeded */
+  success: boolean
+  
+  /** Final status after confirmation */
+  status: 'paid' | 'review' | 'failed' | 'already_processed'
+  
+  /** Updated registration object (if available) */
+  registration?: {
+    id: string
+    payment_status: RegistrationPaymentStatus
+    status: string
+    payment_amount: number
+    payment_currency: string
+    provider?: PaymentProvider
+    confirmed_at?: string
   }
   
   /** Error message if confirmation failed */
