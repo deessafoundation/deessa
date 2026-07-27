@@ -152,7 +152,7 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
     </div>
     <div class="body">
       <p>Hi <strong>${escapeHtml(params.name)}</strong>,</p>
-      <p>Thanks for contacting DEESSA Foundation. We've received your message and will respond within <strong>1–2 business days</strong>. If your request is urgent, please email <a href="mailto:support@dessafoundation.org">support@dessafoundation.org</a> with the word <strong>URGENT</strong> in the subject line.</p>
+      <p>Thanks for contacting DEESSA Foundation. We've received your message and will respond within <strong>1–2 business days</strong>. If your request is urgent, please email <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a> with the word <strong>URGENT</strong> in the subject line.</p>
 
       <div class="summary">
         <div class="summary-row">
@@ -161,7 +161,7 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
         </div>
         <div class="summary-row">
           <div class="summary-label">Sent to</div>
-          <div class="summary-value">support@dessafoundation.org</div>
+          <div class="summary-value">support@deessafoundation.com</div>
         </div>
       </div>
 
@@ -174,7 +174,7 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
     </div>
     <div class="footer">
       DEESSA Foundation · Thamel, Kathmandu, Nepal 44600<br />
-      This is an automated confirmation. To follow up, reply to this message or contact <a href="mailto:support@dessafoundation.org">support@dessafoundation.org</a>.
+      This is an automated confirmation. To follow up, reply to this message or contact <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>.
     </div>
   </div>
 </body>
@@ -206,6 +206,10 @@ export async function sendContactEmails(params: ContactEmailParams): Promise<Ema
         replyTo: `"${params.name}" <${params.email}>`,
         subject: `[Contact Form] ${params.subject} — ${params.name}`,
         html: buildInternalEmail(params),
+        headers: {
+          'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
       }),
 
       // 2. Confirmation to the sender
@@ -214,6 +218,10 @@ export async function sendContactEmails(params: ContactEmailParams): Promise<Ema
         to: params.email,
         subject: `We received your message — DEESSA Foundation`,
         html: buildConfirmationEmail(params),
+        headers: {
+          'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
       }),
     ])
 

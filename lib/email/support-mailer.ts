@@ -162,7 +162,7 @@ function buildInternalSupportEmail(params: SupportEmailParams): string {
       </div>
     </div>
     <div class="footer">
-      DEESSA Foundation Support Team · <a href="mailto:support@deessafoundation.org">support@deessafoundation.org</a>
+      DEESSA Foundation Support Team · <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>
     </div>
   </div>
 </body>
@@ -255,13 +255,13 @@ function buildSupportConfirmationEmail(params: SupportEmailParams): string {
 
       <p style="font-size:14px; margin-bottom:8px;"><strong>Expected Response Time:</strong> We aim to respond within <strong>24-48 hours</strong> for most reports. Critical bugs affecting many users will be prioritized.</p>
       
-      <p style="font-size:14px; margin-bottom:8px;"><strong>Need Urgent Help?</strong> If this is a critical issue affecting your work, please email <a href="mailto:support@deessafoundation.org">support@deessafoundation.org</a> with <strong>URGENT</strong> in the subject line.</p>
+      <p style="font-size:14px; margin-bottom:8px;"><strong>Need Urgent Help?</strong> If this is a critical issue affecting your work, please email <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a> with <strong>URGENT</strong> in the subject line.</p>
 
       <p style="font-size:14px; margin-top:20px;">Thank you for helping us improve!<br /><strong>DEESSA Foundation Support Team</strong></p>
     </div>
     <div class="footer">
       DEESSA Foundation · Thamel, Kathmandu, Nepal 44600<br />
-      Questions? Reply to this email or contact <a href="mailto:support@deessafoundation.org">support@deessafoundation.org</a>
+      Questions? Reply to this email or contact <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>
     </div>
   </div>
 </body>
@@ -293,6 +293,10 @@ export async function sendSupportEmails(params: SupportEmailParams): Promise<Ema
         replyTo: `"${params.name}" <${params.email}>`,
         subject: `[Support] ${params.issueType}: ${params.summary}`,
         html: buildInternalSupportEmail(params),
+        headers: {
+          'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
       }),
 
       // 2. Confirmation to the reporter
@@ -301,6 +305,10 @@ export async function sendSupportEmails(params: SupportEmailParams): Promise<Ema
         to: params.email,
         subject: `Support Report Received — ${params.issueType}`,
         html: buildSupportConfirmationEmail(params),
+        headers: {
+          'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
       }),
     ])
 

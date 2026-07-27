@@ -30,7 +30,7 @@ const BRANDBadge = `
 const FOOTER = `
 <tr>
   <td align="center" style="padding:28px 0;">
-    <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal</p>
+    <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
     <p style="margin:0;font-size:11px;color:#CBD5E1;">
       You're receiving this because you registered at
       <a href="{{event_url}}" style="color:#3FABDE;">deessafoundation.com</a>
@@ -590,7 +590,7 @@ export function defaultCancellationTemplate(): DefaultTemplate {
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">DEESSA Foundation — Empowering Communities Across Nepal</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="{{event_url}}" style="color:#DC2626;">deessafoundation.com</a>
               </p>

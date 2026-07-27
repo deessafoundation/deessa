@@ -57,6 +57,10 @@ export async function sendConferenceRegistrationEmail(params: {
       to: params.email,
       subject: "We received your registration! — DEESSA National Conference 2026",
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
 
     console.log("Conference registration email sent:", info.messageId)
@@ -91,6 +95,10 @@ export async function sendConferenceConfirmationEmail(params: {
       to: params.email,
       subject: "🎉 Your Registration is Confirmed! — DEESSA National Conference 2026",
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
 
     console.log("Conference confirmation email sent:", info.messageId)
@@ -115,6 +123,10 @@ export async function sendConferenceCancellationEmail(params: {
       to: params.email,
       subject: "Your Registration Has Been Cancelled — DEESSA National Conference 2026",
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
     console.log("Conference cancellation email sent:", info.messageId)
     return { success: true, message: "Cancellation email sent", messageId: info.messageId }
@@ -164,6 +176,7 @@ export async function sendCustomEmail(params: {
                   <hr style="margin:32px 0;border:none;border-top:1px solid #E2E8F0;"/>
                   <p style="margin:0;font-size:12px;color:#94A3B8;">
                     DEESSA Foundation &mdash; DEESSA National Conference 2026<br/>
+                    Thamel, Kathmandu, Nepal 44600<br/>
                     <a href="mailto:deessa.social@gmail.com" style="color:#3FABDE;">deessa.social@gmail.com</a>
                   </p>
                 </td>
@@ -182,6 +195,10 @@ export async function sendCustomEmail(params: {
       to,
       subject,
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
     console.log("Custom conference email sent:", info.messageId)
     return { success: true, message: "Custom email sent", messageId: info.messageId }
@@ -267,6 +284,10 @@ export async function sendConferencePaymentLinkEmail(params: {
       to: params.email,
       subject: "⏳ Complete Your Payment — DEESSA National Conference 2026",
       html,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
     console.log("Payment link email sent:", info.messageId)
     return { success: true, message: "Payment link email sent", messageId: info.messageId }

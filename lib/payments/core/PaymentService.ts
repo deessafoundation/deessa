@@ -913,7 +913,7 @@ export class PaymentService {
               .maybeSingle()
             if (ticket) {
               ticketName = ticket.name
-              ticketPrice = `${ticket.currency} ${ticket.price}`
+              ticketPrice = ticket.price > 0 ? `${ticket.currency} ${ticket.price}` : 'Free'
             }
           }
 

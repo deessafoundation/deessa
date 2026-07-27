@@ -69,6 +69,10 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams): Promise<
       to: params.donorEmail,
       subject: `Your Donation Receipt — ${escapeHtml(params.receiptNumber)}`,
       html: emailHtml,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
 
     console.log("Receipt email sent:", info.messageId)

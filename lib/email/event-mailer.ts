@@ -50,6 +50,10 @@ async function sendEmail(
       subject: params.subject,
       html: params.html,
       text: params.text,
+      headers: {
+        'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     })
 
     console.log("Event email sent:", info.messageId)
