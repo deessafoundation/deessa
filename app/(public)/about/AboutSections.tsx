@@ -264,41 +264,6 @@ export function AboutSections() {
         </div>
       </section>
 
-      {/* ─── SECTION 3 — WHAT WE DO ─── */}
-      <section className="bg-white py-20 lg:py-[90px]">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <SectionHeader
-            label="What We Do"
-            title="We turn understanding into action — for children, families, and communities."
-          />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {whatWeDo.map((card, i) => {
-              const Icon = card.icon
-              return (
-                <motion.article
-                  key={card.title}
-                  {...reveal}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="group rounded-2xl bg-[#f8f6f1] p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"
-                  style={{ borderTop: `3px solid ${card.color}` }}
-                >
-                  <div
-                    className="mb-6 flex size-14 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: card.iconBg, color: card.color }}
-                  >
-                    <Icon className="size-6" />
-                  </div>
-                  <h3 className="font-marissa mb-3 text-[22px] font-medium" style={{ color: DARK }}>
-                    {card.title}
-                  </h3>
-                  <p className="font-dm-sans text-[15px] leading-relaxed text-[#6b7280]">{card.body}</p>
-                </motion.article>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* ─── SECTION 4 — HOW WE DO IT ─── */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto max-w-7xl px-4 md:px-8">

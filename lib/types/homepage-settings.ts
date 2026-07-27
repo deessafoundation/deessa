@@ -116,6 +116,46 @@ export interface HomepageTimelineSettings {
 }
 
 // ============================================================================
+// HOMEPAGE STORY SECTION ("How deessa Started")
+// ============================================================================
+
+export interface HomepageStorySettings {
+  eyebrow: string
+  badgeText: string
+  paragraphs: string[]
+  linkText: string
+  linkUrl: string
+  founded: string
+  foundedLabel: string
+  image: string
+  imageAlt: string
+}
+
+// ============================================================================
+// HOMEPAGE WHAT WE DO / CORE PILLARS SECTION
+// ============================================================================
+
+export interface WhatWeDoPillar {
+  id: string
+  icon: string
+  title: string
+  description: string
+  color: string
+  glowClass: string
+  statLabel: string
+  statEnd: number
+  order: number
+  visible: boolean
+}
+
+export interface HomepageWhatWeDoSettings {
+  eyebrow: string
+  title: string
+  subtitle: string
+  pillars: WhatWeDoPillar[]
+}
+
+// ============================================================================
 // HOMEPAGE HERO CTAs
 // ============================================================================
 
@@ -320,6 +360,8 @@ export interface HomepageSettings {
 export const HOMEPAGE_SETTINGS_KEYS = {
   HERO_CAROUSEL: 'homepage_hero_carousel',
   STATS: 'homepage_stats',
+  STORY: 'homepage_story',
+  WHAT_WE_DO: 'homepage_what_we_do',
   PROGRAMS: 'homepage_programs',
   HERO_CTAS: 'homepage_hero_ctas',
   CTA_CARDS: 'homepage_cta_cards',
@@ -347,6 +389,77 @@ export const DEFAULT_HOMEPAGE_STATS: HomepageStatsSettings = {
     { value: 3000, suffix: '+', label: 'Scholarships Awarded', sublabel: 'Since 2015', order: 6 },
     { value: 847, suffix: '+', label: 'Autism Children', sublabel: 'Supported', order: 7 },
     { value: 200, suffix: '+', label: 'Health Camps Run', sublabel: 'Free of cost', order: 8 },
+  ],
+}
+
+export const DEFAULT_HOMEPAGE_STORY: HomepageStorySettings = {
+  eyebrow: 'Our Story',
+  badgeText: 'How deessa Started',
+  paragraphs: [
+    'deessa began with two little girls — our twin daughters, Deetya and Marissa. Deetya was born with bilateral clubfoot and has gone through years of treatment and physiotherapy. Marissa was later diagnosed with autism. Their journeys, so different yet intertwined, showed us the invisible walls that children with disabilities and their families face every day.',
+    'From that personal experience came a mission: to ensure every child in Nepal has access to the support, resources, and opportunity they deserve. The name deessa carries their story — "Dee" from Deetya, "essa" from Marissa.',
+  ],
+  linkText: 'Read Our Full Story',
+  linkUrl: '/our-story',
+  founded: '2015',
+  foundedLabel: 'Founded',
+  image: '/ourStory.png',
+  imageAlt: 'How deessa started - our origin story',
+}
+
+export const DEFAULT_WHAT_WE_DO: HomepageWhatWeDoSettings = {
+  eyebrow: 'What We Do',
+  title: 'We turn understanding into action — for children, families, and communities.',
+  subtitle: 'Our work supports children with disabilities, their families, educators, and communities through four areas.',
+  pillars: [
+    {
+      id: 'awareness',
+      icon: 'Megaphone',
+      title: 'Awareness & Community Engagement',
+      description: 'We break the silence. Through community campaigns, social media, podcasts, and public conversations, we challenge myths and replace stigma with understanding.',
+      color: 'bg-blue-500',
+      glowClass: 'hover-glow-blue',
+      statLabel: 'Communities',
+      statEnd: 50,
+      order: 1,
+      visible: true,
+    },
+    {
+      id: 'training',
+      icon: 'BookOpen',
+      title: 'Training',
+      description: 'We equip parents, teachers, health workers, and caregivers with the skills to spot autism early and support every child, the right way.',
+      color: 'bg-green-500',
+      glowClass: 'hover-glow-green',
+      statLabel: 'Trained',
+      statEnd: 200,
+      order: 2,
+      visible: true,
+    },
+    {
+      id: 'resources',
+      icon: 'FileText',
+      title: 'Resources',
+      description: 'No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.',
+      color: 'bg-orange-500',
+      glowClass: 'hover-glow-orange',
+      statLabel: 'Resources',
+      statEnd: 1000,
+      order: 3,
+      visible: true,
+    },
+    {
+      id: 'advocacy',
+      icon: 'Scale',
+      title: 'Advocacy',
+      description: "We push for inclusive schools and stronger policies that protect every child's rights — so inclusion becomes a right, not a privilege.",
+      color: 'bg-purple-500',
+      glowClass: 'hover-glow-purple',
+      statLabel: 'Policies',
+      statEnd: 5000,
+      order: 4,
+      visible: true,
+    },
   ],
 }
 

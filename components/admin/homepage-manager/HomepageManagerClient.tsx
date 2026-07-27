@@ -25,12 +25,16 @@ import {
 } from "lucide-react"
 import type { HomepageSettings } from "@/lib/types/homepage-settings"
 import type { HomeHeroSettings } from "@/lib/data/site-settings"
-import type { 
-  HomepageHeroCarouselSettings, 
-  HomepageTestimonialsSettings, 
-  HomepageTimelineSettings 
+import type {
+  HomepageHeroCarouselSettings,
+  HomepageTestimonialsSettings,
+  HomepageTimelineSettings,
+  HomepageStorySettings,
+  HomepageWhatWeDoSettings,
 } from "@/lib/types/homepage-settings"
 import StatsManager from "./components/StatsManager"
+import StoryManager from "./components/StoryManager"
+import WhatWeDoManager from "./components/WhatWeDoManager"
 import ProgramsManager from "./components/ProgramsManager"
 import HeroManager from "./components/HeroManager"
 import HeroCarouselManager from "./components/HeroCarouselManager"
@@ -51,22 +55,28 @@ interface HomepageManagerClientProps {
   initialHeroCarousel: HomepageHeroCarouselSettings
   initialTestimonials: HomepageTestimonialsSettings
   initialTimeline: HomepageTimelineSettings
+  initialStory: HomepageStorySettings
+  initialWhatWeDo: HomepageWhatWeDoSettings
   userId: string
 }
 
-export default function HomepageManagerClient({ 
+export default function HomepageManagerClient({
   initialSettings,
   initialHero,
   initialHeroCarousel,
   initialTestimonials,
   initialTimeline,
-  userId 
+  initialStory,
+  initialWhatWeDo,
+  userId
 }: HomepageManagerClientProps) {
   const [settings, setSettings] = useState<HomepageSettings>(initialSettings)
   const [hero, setHero] = useState<HomeHeroSettings>(initialHero)
   const [heroCarousel, setHeroCarousel] = useState<HomepageHeroCarouselSettings>(initialHeroCarousel)
   const [testimonials, setTestimonials] = useState<HomepageTestimonialsSettings>(initialTestimonials)
   const [timeline, setTimeline] = useState<HomepageTimelineSettings>(initialTimeline)
+  const [story, setStory] = useState<HomepageStorySettings>(initialStory)
+  const [whatWeDo, setWhatWeDo] = useState<HomepageWhatWeDoSettings>(initialWhatWeDo)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
 
@@ -84,13 +94,15 @@ export default function HomepageManagerClient({
       const response = await fetch("/api/admin/homepage-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          settings, 
-          hero, 
+        body: JSON.stringify({
+          settings,
+          hero,
           heroCarousel,
           testimonials,
           timeline,
-          userId 
+          story,
+          whatWeDo,
+          userId
         }),
       })
 
@@ -132,6 +144,8 @@ export default function HomepageManagerClient({
     setHeroCarousel(initialHeroCarousel)
     setTestimonials(initialTestimonials)
     setTimeline(initialTimeline)
+    setStory(initialStory)
+    setWhatWeDo(initialWhatWeDo)
     setHasChanges(false)
     
     notifications.showInfo({
@@ -166,6 +180,16 @@ export default function HomepageManagerClient({
 
   const updateTimeline = (newTimeline: HomepageTimelineSettings) => {
     setTimeline(newTimeline)
+    setHasChanges(true)
+  }
+
+  const updateStory = (newStory: HomepageStorySettings) => {
+    setStory(newStory)
+    setHasChanges(true)
+  }
+
+  const updateWhatWeDo = (newWhatWeDo: HomepageWhatWeDoSettings) => {
+    setWhatWeDo(newWhatWeDo)
     setHasChanges(true)
   }
 
@@ -231,7 +255,7 @@ export default function HomepageManagerClient({
         <Tabs defaultValue="hero-carousel" className="space-y-8">
           {/* Organized Tab Groups */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-2">
-            <TabsList className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 bg-transparent h-auto p-0">
+            <TabsList className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 gap-2 bg-transparent h-auto p-0">
               <TabsTrigger value="hero-carousel" className="flex items-center gap-2">
                 <ImageIcon className="w-4 h-4" />
                 <span className="hidden sm:inline">Carousel</span>
@@ -243,6 +267,14 @@ export default function HomepageManagerClient({
               <TabsTrigger value="stats" className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
                 <span className="hidden sm:inline">Stats</span>
+              </TabsTrigger>
+              <TabsTrigger value="story" className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">Our Story</span>
+              </TabsTrigger>
+              <TabsTrigger value="what-we-do" className="flex items-center gap-2">
+                <Target className="w-4 h-4" />
+                <span className="hidden sm:inline">What We Do</span>
               </TabsTrigger>
               <TabsTrigger value="programs" className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4" />
@@ -311,6 +343,20 @@ export default function HomepageManagerClient({
               <StatsManager
                 stats={settings.stats}
                 onChange={(stats) => updateSettings("stats", stats)}
+              />
+            </TabsContent>
+
+            <TabsContent value="story" className="mt-0">
+              <StoryManager
+                story={story}
+                onChange={updateStory}
+              />
+            </TabsContent>
+
+            <TabsContent value="what-we-do" className="mt-0">
+              <WhatWeDoManager
+                whatWeDo={whatWeDo}
+                onChange={updateWhatWeDo}
               />
             </TabsContent>
 

@@ -7,7 +7,7 @@ import {
   Heart, ArrowRight, GraduationCap, MapPin, Stethoscope,
   BookOpen, ChevronRight, Phone, Clock, Mail, Shield, Home as HomeIcon,
   Target, Eye, Flag, Users, Leaf, ArrowUpRight, Star, Play,
-  Quote, Award, Building2, Globe
+  Quote, Award, Building2, Globe, Megaphone, FileText, Scale
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -16,7 +16,8 @@ import {
   BackToTop,
 } from "@/components/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
-import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings } from "@/lib/types/homepage-settings"
+import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings, HomepageStorySettings, HomepageWhatWeDoSettings } from "@/lib/types/homepage-settings"
+import { DEFAULT_HOMEPAGE_STORY, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
 
@@ -61,7 +62,13 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
 
 /* ──────────────────  OUR STORY SECTION  ────────────────── */
 
-export function OurStorySection() {
+interface OurStorySectionProps {
+  story?: HomepageStorySettings
+}
+
+export function OurStorySection({ story }: OurStorySectionProps) {
+  const s = story || DEFAULT_HOMEPAGE_STORY
+
   return (
     <section className="py-20 md:py-28 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -72,8 +79,8 @@ export function OurStorySection() {
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/ourStory.png"
-                  alt="How deessa started - our origin story"
+                  src={s.image}
+                  alt={s.imageAlt}
                   width={700}
                   height={500}
                   className="w-full h-auto object-cover"
@@ -83,9 +90,9 @@ export function OurStorySection() {
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden md:block animate-badge-bounce">
                   <p className="text-4xl font-black font-comic-num">
-                    2015
+                    {s.founded}
                   </p>
-                  <p className="text-sm font-bold opacity-90">Founded</p>
+                  <p className="text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
               </ScrollReveal>
             </div>
@@ -93,7 +100,7 @@ export function OurStorySection() {
 
           <ScrollReveal animation="fade-left" delay={200}>
             <div>
-              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Story</span>
+              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{s.eyebrow}</span>
               <div className="mx-auto w-fit max-w-[92vw] mb-5 md:mb-6">
                 <BrushStroke
                   variant="calligraphy"
@@ -108,26 +115,24 @@ export function OurStorySection() {
                 >
                   <div className="py-0 px-1.5">
                     <h2 className="font-marissa text-2xl md:text-[34px] text-white text-center" style={{ lineHeight: 1.15 }}>
-                      How deessa Started
+                      {s.badgeText}
                     </h2>
                   </div>
                 </BrushStroke>
               </div>
-              <p className="text-lg text-foreground/70 leading-relaxed mb-6">
-                Born from a deep passion for social justice and a belief in the power of community, deessa Foundation
-                was established in 2015 in Kathmandu, Nepal. What began as a small group of dedicated individuals
-                has grown into a movement touching thousands of lives.
-              </p>
-              <p className="text-lg text-foreground/70 leading-relaxed mb-8">
-                Our founders saw the gaps in education, healthcare, and opportunity across rural Nepal and decided
-                to act. Today, deessa stands as a beacon of hope, building bridges between communities and the
-                resources they need to thrive.
-              </p>
+              {s.paragraphs.map((p, i) => (
+                <p
+                  key={i}
+                  className={`text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-8" : "mb-6"}`}
+                >
+                  {p}
+                </p>
+              ))}
               <Link
-                href="/about"
+                href={s.linkUrl}
                 className="group inline-flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors text-lg"
               >
-                Read Our Full Story
+                {s.linkText}
                 <ArrowRight className="size-5 transition-transform group-hover:translate-x-2 duration-300" />
               </Link>
             </div>
@@ -224,49 +229,20 @@ export function MissionVisionSection() {
 
 /* ──────────────────  PROGRAMS SECTION  ────────────────── */
 
-export function ProgramsSection() {
-  const corePillars = [
-    {
-      icon: GraduationCap,
-      title: "Education",
-      description: "Building schools, training teachers, and providing scholarships to ensure every child has access to quality education.",
-      color: "bg-blue-500",
-      glowClass: "hover-glow-blue",
-      stat: "50+",
-      statLabel: "Schools",
-      statEnd: 50,
-    },
-    {
-      icon: Stethoscope,
-      title: "Health",
-      description: "Running health camps, providing medical supplies, and building health posts in underserved communities.",
-      color: "bg-green-500",
-      glowClass: "hover-glow-green",
-      stat: "200+",
-      statLabel: "Health Camps",
-      statEnd: 200,
-    },
-    {
-      icon: HomeIcon,
-      title: "Shelter",
-      description: "Constructing safe housing and rebuilding communities affected by natural disasters across Nepal.",
-      color: "bg-orange-500",
-      glowClass: "hover-glow-orange",
-      stat: "1000+",
-      statLabel: "Homes Built",
-      statEnd: 1000,
-    },
-    {
-      icon: Shield,
-      title: "Freedom",
-      description: "Empowering individuals with skills, resources, and opportunities for self-determination and independence.",
-      color: "bg-purple-500",
-      glowClass: "hover-glow-purple",
-      stat: "5000+",
-      statLabel: "Empowered",
-      statEnd: 5000,
-    },
-  ]
+const pillarIconMap: Record<string, any> = {
+  Megaphone, BookOpen, FileText, Scale, GraduationCap, Stethoscope,
+  Shield, HomeIcon, Heart, Globe, Users, Award, Building2, Star,
+}
+
+interface ProgramsSectionProps {
+  whatWeDo?: HomepageWhatWeDoSettings
+}
+
+export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
+  const w = whatWeDo || DEFAULT_WHAT_WE_DO
+  const corePillars = [...w.pillars]
+    .filter((p) => p.visible)
+    .sort((a, b) => a.order - b.order)
 
   return (
     <section id="what-we-do" className="py-20 md:py-28 bg-foreground text-white relative overflow-hidden scroll-mt-24">
@@ -280,25 +256,26 @@ export function ProgramsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">What We Do</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">Core Pillars</h2>
+            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{w.title}</h2>
             <p className="text-lg text-white/60 max-w-2xl mx-auto">
-              Our work is guided by four fundamental pillars that drive lasting change.
+              {w.subtitle}
             </p>
           </div>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {corePillars.map((pillar, idx) => {
-            const IconComp = pillar.icon
+            const IconComp = pillarIconMap[pillar.icon] || Megaphone
             return (
               <ScrollReveal
-                key={pillar.title}
+                key={pillar.id}
                 animation={idx % 2 === 0 ? "fade-right" : "fade-left"}
                 delay={idx * 150}
+                className="h-full"
               >
-                <div className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 ${pillar.glowClass}`}>
-                  <div className="p-8 text-center">
+                <div className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}>
+                  <div className="p-8 text-center flex flex-col flex-1">
                     <div className="text-2xl font-black text-primary mb-2 font-comic-num">
                       <CountUp end={pillar.statEnd} suffix="+" />
                     </div>

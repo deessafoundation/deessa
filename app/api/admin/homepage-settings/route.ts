@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const supabase = createServiceRoleClient()
 
     // Parse request body
-    const { settings, hero, heroCarousel, testimonials, timeline } = await request.json()
+    const { settings, hero, heroCarousel, testimonials, timeline, story, whatWeDo } = await request.json()
 
     if (!settings) {
       return NextResponse.json(
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update each setting in the database
-    const updates = [
+    const updates: { key: string; value: unknown }[] = [
       {
         key: HOMEPAGE_SETTINGS_KEYS.STATS,
         value: settings.stats,
@@ -106,6 +106,20 @@ export async function POST(request: NextRequest) {
       updates.push({
         key: HOMEPAGE_SETTINGS_KEYS.TIMELINE,
         value: timeline,
+      })
+    }
+
+    if (story) {
+      updates.push({
+        key: HOMEPAGE_SETTINGS_KEYS.STORY,
+        value: story,
+      })
+    }
+
+    if (whatWeDo) {
+      updates.push({
+        key: HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO,
+        value: whatWeDo,
       })
     }
 

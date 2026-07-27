@@ -13,9 +13,10 @@ import {
   ContactSection,
   GlobalEnhancements,
 } from "@/components/homepage-sections"
-import { 
-  getHomepageStats, 
-  getHomepagePrograms,
+import {
+  getHomepageStats,
+  getHomepageStory,
+  getHomepageWhatWeDo,
   getHomepageMarqueeSettings,
   getHomepageHeroCarousel,
   getHomepageTestimonials,
@@ -27,7 +28,8 @@ import {
 export default async function HomePage() {
   // Fetch CMS data for homepage
   const statsSettings = await getHomepageStats()
-  const programsSettings = await getHomepagePrograms()
+  const storySettings = await getHomepageStory()
+  const whatWeDoSettings = await getHomepageWhatWeDo()
   const marqueeSettings = await getHomepageMarqueeSettings()
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
@@ -60,14 +62,14 @@ export default async function HomePage() {
       {/* 2. IMPACT STATS BAR - CMS POWERED */}
       <ImpactStatsBar stats={statsSettings.stats} />
 
-      {/* 3. OUR STORY */}
-      <OurStorySection />
+      {/* 3. OUR STORY - CMS POWERED */}
+      <OurStorySection story={storySettings} />
 
       {/* 4. MISSION, VISION, OBJECTIVES */}
       <MissionVisionSection />
 
-      {/* 5. PROGRAMS - CMS POWERED */}
-      <ProgramsSection programs={programsSettings.programs} />
+      {/* 5. WHAT WE DO - CMS POWERED */}
+      <ProgramsSection whatWeDo={whatWeDoSettings} />
 
       {/* 6. TIMELINE - CMS POWERED */}
       <TimelineSection timeline={timelineSettings} />

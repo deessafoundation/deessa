@@ -12,10 +12,12 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { getAllHomepageSettings } from "@/lib/data/homepage-settings"
 import { getHomeHeroSettings } from "@/lib/data/site-settings"
-import { 
-  getHomepageHeroCarousel, 
-  getHomepageTestimonials, 
-  getHomepageTimeline 
+import {
+  getHomepageHeroCarousel,
+  getHomepageTestimonials,
+  getHomepageTimeline,
+  getHomepageStory,
+  getHomepageWhatWeDo,
 } from "@/lib/data/homepage-settings"
 import HomepageManagerClient from "@/components/admin/homepage-manager/HomepageManagerClient"
 
@@ -39,16 +41,20 @@ export default async function HomepageManagerPage() {
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
   const timelineSettings = await getHomepageTimeline()
+  const storySettings = await getHomepageStory()
+  const whatWeDoSettings = await getHomepageWhatWeDo()
 
   return (
     <div className="space-y-6">
       <Suspense fallback={<LoadingState />}>
-        <HomepageManagerClient 
+        <HomepageManagerClient
           initialSettings={settings}
           initialHero={heroSettings}
           initialHeroCarousel={heroCarouselSettings}
           initialTestimonials={testimonialsSettings}
           initialTimeline={timelineSettings}
+          initialStory={storySettings}
+          initialWhatWeDo={whatWeDoSettings}
           userId={admin.user_id}
         />
       </Suspense>

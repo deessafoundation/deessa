@@ -14,6 +14,8 @@
 import { createClient } from "@/lib/supabase/server"
 import type {
   HomepageStatsSettings,
+  HomepageStorySettings,
+  HomepageWhatWeDoSettings,
   HomepageProgramsSettings,
   HomepageHeroCTAsSettings,
   HomepageCTACardsSettings,
@@ -30,6 +32,8 @@ import type {
 import {
   HOMEPAGE_SETTINGS_KEYS,
   DEFAULT_HOMEPAGE_STATS,
+  DEFAULT_HOMEPAGE_STORY,
+  DEFAULT_WHAT_WE_DO,
   DEFAULT_HOMEPAGE_FLAGS,
   DEFAULT_TRUST_INDICATORS,
   DEFAULT_FEATURED_STORIES_RULES,
@@ -83,6 +87,34 @@ export async function getHomepageStats(): Promise<HomepageStatsSettings> {
   return getHomepageSetting<HomepageStatsSettings>(
     HOMEPAGE_SETTINGS_KEYS.STATS,
     DEFAULT_HOMEPAGE_STATS
+  )
+}
+
+// ============================================================================
+// HOMEPAGE STORY SECTION
+// ============================================================================
+
+/**
+ * Get homepage "How deessa Started" story section with fallback
+ */
+export async function getHomepageStory(): Promise<HomepageStorySettings> {
+  return getHomepageSetting<HomepageStorySettings>(
+    HOMEPAGE_SETTINGS_KEYS.STORY,
+    DEFAULT_HOMEPAGE_STORY
+  )
+}
+
+// ============================================================================
+// HOMEPAGE WHAT WE DO / CORE PILLARS
+// ============================================================================
+
+/**
+ * Get homepage "What We Do" core pillars section with fallback
+ */
+export async function getHomepageWhatWeDo(): Promise<HomepageWhatWeDoSettings> {
+  return getHomepageSetting<HomepageWhatWeDoSettings>(
+    HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO,
+    DEFAULT_WHAT_WE_DO
   )
 }
 
@@ -440,6 +472,8 @@ export async function getAllHomepageSettings() {
   const [
     heroCarousel,
     stats,
+    story,
+    whatWeDo,
     programs,
     heroCTAs,
     ctaCards,
@@ -454,6 +488,8 @@ export async function getAllHomepageSettings() {
   ] = await Promise.all([
     getHomepageHeroCarousel(),
     getHomepageStats(),
+    getHomepageStory(),
+    getHomepageWhatWeDo(),
     getHomepagePrograms(),
     getHomepageHeroCTAs(),
     getHomepageCTACards(),
@@ -470,6 +506,8 @@ export async function getAllHomepageSettings() {
   return {
     heroCarousel,
     stats,
+    story,
+    whatWeDo,
     programs,
     heroCTAs,
     ctaCards,
