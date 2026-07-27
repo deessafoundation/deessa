@@ -296,13 +296,17 @@ export function EventRegistrationForm({
                       if (t.sales_start && new Date(t.sales_start) > now) return false
                       return true
                     })
-                    .map((ticket) => (
+                    .map((ticket) => {
+                      const isSoldOut = ticket.capacity != null && ticket.capacity - (ticket.sold_count || 0) <= 0
+                      return (
                       <label
                         key={ticket.id}
-                        className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${
-                          selectedTicketId === ticket.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/50"
+                        className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                          isSoldOut
+                            ? "border-border bg-muted/50 opacity-60 cursor-not-allowed"
+                            : selectedTicketId === ticket.id
+                            ? "border-primary bg-primary/5 cursor-pointer"
+                            : "border-border hover:border-primary/50 cursor-pointer"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -311,6 +315,7 @@ export function EventRegistrationForm({
                             name="ticket"
                             value={ticket.id}
                             checked={selectedTicketId === ticket.id}
+                            disabled={isSoldOut}
                             onChange={() => setSelectedTicketId(ticket.id)}
                             className="h-4 w-4 text-primary"
                             aria-label={`${ticket.name} - ${ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
@@ -319,7 +324,9 @@ export function EventRegistrationForm({
                             <p className="font-medium">{ticket.name}</p>
                             {ticket.capacity && (
                               <p className="text-xs text-muted-foreground">
-                                {ticket.capacity} spots available
+                                {ticket.capacity - (ticket.sold_count || 0) <= 0
+                                  ? "Sold out"
+                                  : `${ticket.capacity - (ticket.sold_count || 0)} spots available`}
                               </p>
                             )}
                           </div>
@@ -330,7 +337,8 @@ export function EventRegistrationForm({
                             : `${ticket.currency} ${ticket.price}`}
                         </p>
                       </label>
-                    ))}
+                      )
+                    })}
                   {ticketTypes.filter((t) => {
                     if (!t.is_active) return false
                     const now = new Date()

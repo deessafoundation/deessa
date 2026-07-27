@@ -750,6 +750,7 @@ export async function confirmEventRegistration(
       };
     }
 
+    // CAS UPDATE: guards status to prevent TOCTOU race with webhooks
     const { error: updateError } = await supabase
       .from("event_registrations")
       .update({
@@ -757,14 +758,19 @@ export async function confirmEventRegistration(
         confirmed_at: new Date().toISOString(),
         confirmed_by: admin.email || admin.id,
       })
-      .eq("id", id);
+      .eq("id", id)
+      .in("status", ["pending", "failed"])  // Don't confirm cancelled/expired
+      .neq("status", "confirmed");           // Don't double-confirm
 
     if (updateError) {
       return { success: false, error: updateError.message };
     }
 
-    // Increment sold_count on the ticket type
-    await incrementTicketSoldCount(supabase, reg.ticket_type_id);
+    // Only increment sold_count if payment_status was NOT already 'paid'
+    // Webhook already incremented when it set payment_status='paid'
+    if (reg.payment_status !== "paid") {
+      await incrementTicketSoldCount(supabase, reg.ticket_type_id);
+    }
 
     return { success: true };
   } catch (err) {
@@ -1275,8 +1281,13 @@ export async function bulkConfirmEventRegistrations(
       return { success: false, count: 0, error: "No registrations selected." };
     }
 
+    if (ids.length > 100) {
+      return { success: false, count: 0, error: "Batch too large. Maximum 100 registrations per batch." };
+    }
+
     const { supabase, admin } = await requireAdmin();
 
+    // CAS: only confirm paid registrations that aren't already confirmed/cancelled/expired
     const { data, error } = await supabase
       .from("event_registrations")
       .update({
@@ -1286,11 +1297,24 @@ export async function bulkConfirmEventRegistrations(
       })
       .in("id", ids)
       .eq("payment_status", "paid")
-      .not("status", "in", '("cancelled","expired")')
-      .select("id");
+      .not("status", "in", '("cancelled","expired","confirmed")')
+      .select("id, ticket_type_id");
 
     if (error) {
       return { success: false, count: 0, error: error.message };
+    }
+
+    // Increment sold_count for each confirmed registration
+    // Only for registrations that weren't already confirmed (all in this batch are new confirms)
+    if (data && data.length > 0) {
+      try {
+        const { incrementTicketSoldCount } = await import("@/lib/utils/ticket-capacity");
+        for (const reg of data) {
+          await incrementTicketSoldCount(supabase, reg.ticket_type_id);
+        }
+      } catch (e) {
+        console.warn("bulkConfirm: sold_count increment failed (non-fatal):", e);
+      }
     }
 
     return { success: true, count: data?.length || 0 };
