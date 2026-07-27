@@ -58,6 +58,14 @@ export interface TeamMember {
   image?: string
   email?: string
   phone?: string
+  social_links?: {
+    facebook?: string
+    twitter?: string
+    linkedin?: string
+    instagram?: string
+    tiktok?: string
+    whatsapp?: string
+  }
   is_published: boolean
   sort_order: number
   created_at: string

@@ -36,6 +36,16 @@ export async function createTeamMember(formData: FormData) {
   const phone = formData.get("phone") as string
   const isPublished = formData.get("isPublished") === "true"
 
+  const socialLinks = {
+    facebook: (formData.get("facebook") as string) || null,
+    twitter: (formData.get("twitter") as string) || null,
+    linkedin: (formData.get("linkedin") as string) || null,
+    instagram: (formData.get("instagram") as string) || null,
+    tiktok: (formData.get("tiktok") as string) || null,
+    whatsapp: (formData.get("whatsapp") as string) || null,
+  }
+  const hasSocialLinks = Object.values(socialLinks).some((v) => v !== null)
+
   // Get max sort order
   const { data: maxOrder } = await supabase
     .from("team_members")
@@ -46,22 +56,43 @@ export async function createTeamMember(formData: FormData) {
 
   const sortOrder = (maxOrder?.sort_order || 0) + 1
 
+  const insertData: Record<string, unknown> = {
+    name,
+    role,
+    bio: bio || null,
+    image: image || null,
+    email: email || null,
+    phone: phone || null,
+    is_published: isPublished,
+    sort_order: sortOrder,
+  }
+
+  // Only include social_links if the column exists (migration 060)
+  if (hasSocialLinks) {
+    insertData.social_links = socialLinks
+  }
+
   const { data, error } = await supabase
     .from("team_members")
-    .insert({
-      name,
-      role,
-      bio: bio || null,
-      image: image || null,
-      email: email || null,
-      phone: phone || null,
-      is_published: isPublished,
-      sort_order: sortOrder,
-    })
+    .insert(insertData)
     .select()
     .single()
 
   if (error) {
+    // If social_links column doesn't exist, retry without it
+    if (error.message.includes("social_links")) {
+      delete insertData.social_links
+      const { data: retryData, error: retryError } = await supabase
+        .from("team_members")
+        .insert(insertData)
+        .select()
+        .single()
+
+      if (retryError) {
+        return { error: retryError.message }
+      }
+      return { success: true, data: retryData }
+    }
     return { error: error.message }
   }
 
@@ -92,21 +123,52 @@ export async function updateTeamMember(id: string, formData: FormData) {
   const phone = formData.get("phone") as string
   const isPublished = formData.get("isPublished") === "true"
 
+  const socialLinks = {
+    facebook: (formData.get("facebook") as string) || null,
+    twitter: (formData.get("twitter") as string) || null,
+    linkedin: (formData.get("linkedin") as string) || null,
+    instagram: (formData.get("instagram") as string) || null,
+    tiktok: (formData.get("tiktok") as string) || null,
+    whatsapp: (formData.get("whatsapp") as string) || null,
+  }
+  const hasSocialLinks = Object.values(socialLinks).some((v) => v !== null)
+
+  const updateData: Record<string, unknown> = {
+    name,
+    role,
+    bio: bio || null,
+    image: image || null,
+    email: email || null,
+    phone: phone || null,
+    is_published: isPublished,
+  }
+
+  if (hasSocialLinks) {
+    updateData.social_links = socialLinks
+  } else {
+    updateData.social_links = null
+  }
+
   const { error } = await supabase
     .from("team_members")
-    .update({
-      name,
-      role,
-      bio: bio || null,
-      image: image || null,
-      email: email || null,
-      phone: phone || null,
-      is_published: isPublished,
-    })
+    .update(updateData)
     .eq("id", id)
 
   if (error) {
-    return { error: error.message }
+    // If social_links column doesn't exist, retry without it
+    if (error.message.includes("social_links")) {
+      delete updateData.social_links
+      const { error: retryError } = await supabase
+        .from("team_members")
+        .update(updateData)
+        .eq("id", id)
+
+      if (retryError) {
+        return { error: retryError.message }
+      }
+    } else {
+      return { error: error.message }
+    }
   }
 
   await supabase.from("activity_logs").insert({

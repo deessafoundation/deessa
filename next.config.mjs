@@ -67,7 +67,7 @@ const nextConfig = {
               // preview in a blob: iframe (components/receipt-preview.tsx,
               // app/demo/receipt/page.tsx) — 'self' does NOT implicitly cover
               // the blob: scheme for frame-src, it must be listed explicitly.
-              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com",
+              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
