@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createPartner, updatePartner } from "@/lib/actions/admin-partners"
 import { FileUpload } from "@/components/admin/file-upload"
@@ -65,16 +65,17 @@ export function PartnerForm({ partner }: PartnerFormProps) {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="type">Type *</Label>
-                  <Select value={type} onValueChange={setType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="partner">Partner</SelectItem>
-                      <SelectItem value="donor">Donor</SelectItem>
-                      <SelectItem value="sponsor">Sponsor</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FancySelect
+                    value={type}
+                    onValueChange={setType}
+                    placeholder="Select type"
+                    options={[
+                      { value: "partner", label: "Partner" },
+                      { value: "donor", label: "Donor" },
+                      { value: "sponsor", label: "Sponsor" },
+                    ]}
+                    size="sm"
+                  />
                 </div>
               </div>
 

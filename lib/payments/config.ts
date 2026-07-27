@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 export type PaymentProvider = "stripe" | "khalti" | "esewa"
 
@@ -41,8 +42,8 @@ export function isProviderEnvConfigured(provider: PaymentProvider): boolean {
  * - Uses the existing `site_settings` table with key = "payments"
  *   instead of introducing a new physical `payment_settings` table.
  */
-export async function getPaymentSettings(): Promise<PaymentSettings> {
-  const supabase = await createClient()
+export async function getPaymentSettings(supabaseClient?: SupabaseClient): Promise<PaymentSettings> {
+  const supabase = supabaseClient ?? await createClient()
 
   const { data, error } = await supabase
     .from("site_settings")

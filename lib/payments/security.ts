@@ -172,6 +172,7 @@ export function logPaymentEvent(
 
 /**
  * Validates that two amounts match (with tolerance for rounding)
+ * @param tolerance - Maximum allowed difference in the same units as expected/actual (e.g., 0.01 = 1 paisa for NPR)
  */
 export function verifyAmountMatch(
   expected: number,
@@ -181,23 +182,10 @@ export function verifyAmountMatch(
 ): ValidationResult {
   const difference = Math.abs(expected - actual)
 
-  if (currency === "NPR") {
-    // For NPR, tolerance is in paisa (1 paisa = 0.01 NPR)
-    const toleranceInPaisa = tolerance * 100
-    if (difference > toleranceInPaisa) {
-      return {
-        valid: false,
-        error: `Amount mismatch: expected ${expected}, got ${actual} (difference: ${difference})`,
-      }
-    }
-  } else {
-    // For USD, tolerance is in cents
-    const toleranceInCents = tolerance * 100
-    if (difference > toleranceInCents) {
-      return {
-        valid: false,
-        error: `Amount mismatch: expected ${expected}, got ${actual} (difference: ${difference})`,
-      }
+  if (difference > tolerance) {
+    return {
+      valid: false,
+      error: `Amount mismatch: expected ${expected}, got ${actual} (difference: ${difference}, tolerance: ${tolerance})`,
     }
   }
 

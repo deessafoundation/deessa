@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, Loader2 } from "lucide-react"
 import { FileUpload } from "@/components/admin/file-upload"
@@ -149,30 +149,30 @@ export function ImageDialog({ editor, isOpen, onClose }: ImageDialogProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="align">Alignment</Label>
-                <Select value={align} onValueChange={(value) => setAlign(value as ImageAttributes["align"])}>
-                  <SelectTrigger id="align">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="left">Left</SelectItem>
-                    <SelectItem value="center">Center</SelectItem>
-                    <SelectItem value="right">Right</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FancySelect
+                  value={align}
+                  onValueChange={(value) => setAlign(value as ImageAttributes["align"])}
+                  options={[
+                    { value: "left", label: "Left" },
+                    { value: "center", label: "Center" },
+                    { value: "right", label: "Right" },
+                  ]}
+                  size="sm"
+                />
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="width">Width</Label>
-                <Select value={width} onValueChange={(value) => setWidth(value as ImageAttributes["width"])}>
-                  <SelectTrigger id="width">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="small">Small (33%)</SelectItem>
-                    <SelectItem value="medium">Medium (66%)</SelectItem>
-                    <SelectItem value="full">Full Width</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FancySelect
+                  value={width}
+                  onValueChange={(value) => setWidth(value as ImageAttributes["width"])}
+                  options={[
+                    { value: "small", label: "Small (33%)" },
+                    { value: "medium", label: "Medium (66%)" },
+                    { value: "full", label: "Full Width" },
+                  ]}
+                  size="sm"
+                />
               </div>
             </div>
           </div>

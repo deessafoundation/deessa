@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import type { HomepageFeaturedStoriesRules } from "@/lib/types/homepage-settings"
@@ -44,16 +44,16 @@ export default function FeaturedStoriesManager({ featuredStoriesRules, onChange 
           {/* Selection Mode */}
           <div>
             <Label>Selection Mode</Label>
-            <Select value={featuredStoriesRules.mode} onValueChange={updateMode}>
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="manual">Manual Selection</SelectItem>
-                <SelectItem value="auto-latest">Auto - Latest Stories</SelectItem>
-                <SelectItem value="auto-popular">Auto - Popular Stories</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              value={featuredStoriesRules.mode}
+              onValueChange={(value) => updateMode(value as any)}
+              options={[
+                { value: "manual", label: "Manual Selection" },
+                { value: "auto-latest", label: "Auto - Latest Stories" },
+                { value: "auto-popular", label: "Auto - Popular Stories" },
+              ]}
+              size="sm"
+            />
           </div>
 
           {/* Auto Latest Settings */}

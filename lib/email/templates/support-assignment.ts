@@ -4,15 +4,7 @@
  */
 
 import { getAppBaseUrl } from '@/lib/utils'
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
+import { escapeHtml } from '@/lib/utils/html'
 
 export interface SupportAssignmentTemplateProps {
   assigneeName: string
@@ -64,14 +56,9 @@ export function SupportAssignmentTemplate({
           <!-- Logo -->
           <tr>
             <td align="center" style="padding-bottom:24px;">
-              <table cellpadding="0" cellspacing="0">
-                <tr>
-                  <td style="background:#3FABDE;border-radius:12px;padding:10px 16px;">
-                    <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">DEESSA</span>
-                    <span style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Foundation</span>
-                  </td>
-                </tr>
-              </table>
+              <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
+                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+              </a>
             </td>
           </tr>
 

@@ -11,6 +11,7 @@
 "use server"
 
 import nodemailer from "nodemailer"
+import { escapeHtml as baseEscapeHtml } from "@/lib/utils/html"
 
 // ── Shared transporter ────────────────────────────────────────────────────────
 
@@ -29,13 +30,7 @@ function createGmailTransporter() {
 }
 
 function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-    .replace(/\n/g, "<br>")
+  return baseEscapeHtml(str).replace(/\n/g, "<br>")
 }
 
 // ── Types ─────────────────────────────────────────────────────────────────────

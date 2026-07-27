@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
 import { updatePaymentSettings } from "@/lib/actions/admin-payments"
 
@@ -144,36 +144,27 @@ export function PaymentSettingsForm({ settings, envConfigured }: PaymentSettings
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label>Primary provider</Label>
-              <Select value={primaryProvider} onValueChange={(value) => setPrimaryProvider(value as PaymentProvider)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {enabledProviders.map((provider) => (
-                    <SelectItem key={provider} value={provider}>
-                      {providerLabel[provider]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FancySelect
+                value={primaryProvider}
+                onValueChange={(value) => setPrimaryProvider(value as PaymentProvider)}
+                options={enabledProviders.map((provider) => ({ value: provider, label: providerLabel[provider] }))}
+                size="sm"
+              />
               <p className="text-xs text-muted-foreground">
                 This provider will be preselected on the public donation form.
               </p>
             </div>
             <div className="space-y-2">
               <Label>Default currency (Stripe)</Label>
-              <Select
+              <FancySelect
                 value={defaultCurrency}
                 onValueChange={(value) => setDefaultCurrency(value as "USD" | "NPR")}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="NPR">NPR</SelectItem>
-                </SelectContent>
-              </Select>
+                options={[
+                  { value: "USD", label: "USD" },
+                  { value: "NPR", label: "NPR" },
+                ]}
+                size="sm"
+              />
               <p className="text-xs text-muted-foreground">
                 Local gateways (Khalti, eSewa) always use NPR; this only affects Stripe.
               </p>

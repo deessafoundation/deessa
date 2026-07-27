@@ -34,6 +34,18 @@ export interface Donation {
   donor_email: string
 }
 
+export interface Registration {
+  id: string
+  created_at: string
+  confirmed_at?: string | null
+  payment_paid_at?: string | null
+  payment_failed_at?: string | null
+  amount: number
+  currency: string
+  provider: string
+  email: string
+}
+
 export interface ReviewNote {
   id: string
   note_text: string
@@ -64,7 +76,8 @@ export interface PaymentEvent {
 }
 
 export interface TimelineData {
-  donation: Donation
+  donation?: Donation
+  registration?: Registration
   reviewNotes: ReviewNote[]
   statusChanges: StatusChange[]
   paymentEvents: PaymentEvent[]
@@ -72,26 +85,111 @@ export interface TimelineData {
 
 /**
  * Build a unified activity timeline from multiple data sources
+ * Supports donations, event registrations, and conference registrations.
  * Returns events sorted chronologically (newest first)
  */
 export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
   const events: TimelineEvent[] = []
 
-  // Add donation creation event
-  events.push({
-    id: `created-${data.donation.id}`,
-    type: "system",
-    actor: "System",
-    timestamp: data.donation.created_at,
-    description: "Donation created",
-    metadata: {
-      amount: data.donation.amount,
-      currency: data.donation.currency,
-      provider: data.donation.provider,
-    },
-  })
+  if (data.donation) {
+    // Donation-specific events
+    events.push({
+      id: `created-${data.donation.id}`,
+      type: "system",
+      actor: "System",
+      timestamp: data.donation.created_at,
+      description: "Donation created",
+      metadata: {
+        amount: data.donation.amount,
+        currency: data.donation.currency,
+        provider: data.donation.provider,
+      },
+    })
 
-  // Add payment events (webhooks)
+    if (data.donation.receipt_generated_at) {
+      events.push({
+        id: `receipt-${data.donation.id}`,
+        type: "receipt",
+        actor: "System",
+        timestamp: data.donation.receipt_generated_at,
+        description: `Receipt generated: ${data.donation.receipt_number}`,
+        metadata: { receiptNumber: data.donation.receipt_number },
+      })
+    }
+
+    if (data.donation.receipt_sent_at) {
+      events.push({
+        id: `email-${data.donation.id}`,
+        type: "email",
+        actor: "System",
+        timestamp: data.donation.receipt_sent_at,
+        description: "Receipt email sent",
+        metadata: { recipient: data.donation.donor_email },
+      })
+    }
+
+    if (data.donation.confirmed_at) {
+      events.push({
+        id: `confirmed-${data.donation.id}`,
+        type: "system",
+        actor: "System",
+        timestamp: data.donation.confirmed_at,
+        description: "Payment confirmed",
+        metadata: { amount: data.donation.amount, currency: data.donation.currency },
+      })
+    }
+  }
+
+  if (data.registration) {
+    // Registration-specific events (events/conferences)
+    events.push({
+      id: `created-${data.registration.id}`,
+      type: "system",
+      actor: "System",
+      timestamp: data.registration.created_at,
+      description: "Registration created",
+      metadata: {
+        amount: data.registration.amount,
+        currency: data.registration.currency,
+        provider: data.registration.provider,
+      },
+    })
+
+    if (data.registration.payment_paid_at) {
+      events.push({
+        id: `paid-${data.registration.id}`,
+        type: "system",
+        actor: "System",
+        timestamp: data.registration.payment_paid_at,
+        description: "Payment confirmed",
+        metadata: { amount: data.registration.amount, currency: data.registration.currency },
+      })
+    }
+
+    if (data.registration.payment_failed_at) {
+      events.push({
+        id: `failed-${data.registration.id}`,
+        type: "system",
+        actor: "System",
+        timestamp: data.registration.payment_failed_at,
+        description: "Payment failed",
+        metadata: {},
+      })
+    }
+
+    if (data.registration.confirmed_at) {
+      events.push({
+        id: `confirmed-${data.registration.id}`,
+        type: "system",
+        actor: "System",
+        timestamp: data.registration.confirmed_at,
+        description: "Registration confirmed",
+        metadata: {},
+      })
+    }
+  }
+
+  // Add payment events (webhooks) — shared across all types
   data.paymentEvents.forEach((event) => {
     events.push({
       id: event.id,
@@ -103,7 +201,7 @@ export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
     })
   })
 
-  // Add status changes
+  // Add status changes — shared across all types
   data.statusChanges.forEach((change) => {
     events.push({
       id: change.id,
@@ -119,7 +217,7 @@ export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
     })
   })
 
-  // Add review notes
+  // Add review notes — shared across all types
   data.reviewNotes.forEach((note) => {
     events.push({
       id: note.id,
@@ -133,49 +231,6 @@ export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
       },
     })
   })
-
-  // Add receipt generation event
-  if (data.donation.receipt_generated_at) {
-    events.push({
-      id: `receipt-${data.donation.id}`,
-      type: "receipt",
-      actor: "System",
-      timestamp: data.donation.receipt_generated_at,
-      description: `Receipt generated: ${data.donation.receipt_number}`,
-      metadata: {
-        receiptNumber: data.donation.receipt_number,
-      },
-    })
-  }
-
-  // Add receipt email sent event
-  if (data.donation.receipt_sent_at) {
-    events.push({
-      id: `email-${data.donation.id}`,
-      type: "email",
-      actor: "System",
-      timestamp: data.donation.receipt_sent_at,
-      description: "Receipt email sent",
-      metadata: {
-        recipient: data.donation.donor_email,
-      },
-    })
-  }
-
-  // Add payment confirmation event
-  if (data.donation.confirmed_at) {
-    events.push({
-      id: `confirmed-${data.donation.id}`,
-      type: "system",
-      actor: "System",
-      timestamp: data.donation.confirmed_at,
-      description: "Payment confirmed",
-      metadata: {
-        amount: data.donation.amount,
-        currency: data.donation.currency,
-      },
-    })
-  }
 
   // Sort by timestamp (newest first)
   return events.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())

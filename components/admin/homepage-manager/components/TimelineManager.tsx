@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
 import type { HomepageTimelineSettings, TimelineMilestone } from "@/lib/types/homepage-settings"
 import { ColorPicker } from "./ColorPicker"
@@ -236,15 +237,12 @@ export default function TimelineManager({ timeline, onChange }: TimelineManagerP
                   {/* Icon */}
                   <div>
                     <Label>Icon</Label>
-                    <select
+                    <FancySelect
                       value={milestone.icon}
-                      onChange={(e) => updateMilestone(index, { icon: e.target.value })}
-                      className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
-                    >
-                      {iconOptions.map((icon) => (
-                        <option key={icon} value={icon}>{icon}</option>
-                      ))}
-                    </select>
+                      onValueChange={(val) => updateMilestone(index, { icon: val })}
+                      options={iconOptions.map((icon) => ({ value: icon, label: icon }))}
+                      size="sm"
+                    />
                     <p className="text-xs text-gray-500 mt-1">Icon displayed with the milestone</p>
                   </div>
 

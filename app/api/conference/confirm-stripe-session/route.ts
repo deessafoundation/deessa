@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { verifyStripeSession } from "@/lib/payments/stripe"
-import { sendConferenceConfirmationEmail } from "@/lib/email/conference-mailer"
-import { getConferenceSettings } from "@/lib/actions/conference-settings"
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit"
 
 /**
  * POST /api/conference/confirm-stripe-session
@@ -11,6 +10,8 @@ import { getConferenceSettings } from "@/lib/actions/conference-settings"
  * Verifies the Stripe session directly and confirms the registration without
  * waiting for a webhook — essential for local development and as a fallback
  * in production if the webhook is delayed.
+ *
+ * Uses PaymentService.confirmConferenceRegistration() for centralized logic.
  *
  * Body: { rid: string, sessionId: string }
  *
@@ -29,6 +30,20 @@ function createServiceRoleClient() {
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 5 requests per minute per IP
+    const clientIP = getClientIP(request)
+    const rateLimitResult = await checkRateLimit({
+      identifier: `confirm-stripe-session:${clientIP}`,
+      maxAttempts: 5,
+      windowMinutes: 1,
+    })
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { ok: false, error: "Too many requests. Please try again later." },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const rid = (body.rid as string)?.trim()
     const sessionId = (body.sessionId as string)?.trim()
@@ -56,7 +71,6 @@ export async function POST(request: Request) {
     }
 
     // Early check: if session already stored, it must match
-    // (Full ownership verification happens after fetching Stripe session)
     if (reg.stripe_session_id && reg.stripe_session_id !== sessionId) {
       return NextResponse.json({ ok: false, error: "Session ID mismatch" }, { status: 403 })
     }
@@ -94,100 +108,44 @@ export async function POST(request: Request) {
       })
     }
 
-    // ── 3. Amount / currency verification (fail-closed) ───────────────────────
-    if (reg.payment_amount !== null && session.mode === "payment") {
-      const expectedMinor = Math.round(Number(reg.payment_amount) * 100)
-      const actualMinor = session.amount_total ?? null
-      const sessionCurrency = String(session.currency || "").toLowerCase()
-      const regCurrency = String(reg.payment_currency || "npr").toLowerCase()
+    // ── 3. Use PaymentService for centralized confirmation ────────────────────
+    const { createStripeAdapter } = await import("@/lib/payments/adapters/StripeAdapter")
+    const { getPaymentService } = await import("@/lib/payments/core/PaymentService")
 
-      if (actualMinor === null) {
-        return NextResponse.json({ ok: false, error: "Invalid session amount" }, { status: 400 })
-      }
+    const adapter = createStripeAdapter()
+    const paymentService = getPaymentService()
 
-      if (expectedMinor !== actualMinor) {
-        // Amount mismatch — flag for admin review
-        const { error: reviewErr } = await supabase
-          .from("conference_registrations")
-          .update({ payment_status: "review", payment_review_at: new Date().toISOString(), stripe_session_id: sessionId })
-          .eq("id", rid)
+    // Build a synthetic Stripe.Event from the verified session
+    const stripeEvent = {
+      type: "checkout.session.completed",
+      data: { object: session },
+      id: `fallback_${sessionId}`,
+    } as import("stripe").default.Event
 
-        if (reviewErr) {
-          console.error("confirm-stripe-session: Failed to flag for review", {
-            rid,
-            sessionId,
-            error: reviewErr,
-          })
-          return NextResponse.json(
-            { ok: false, error: "Failed to flag payment for review" },
-            { status: 500 },
-          )
-        }
+    const verificationResult = await adapter.processVerifiedEvent(stripeEvent)
 
-        return NextResponse.json({ ok: true, status: "review" })
-      }
-
-      // Currency mismatch is non-fatal — sync DB to Stripe (from previous bug fix)
-      if (regCurrency !== sessionCurrency) {
-        const { error: currencyErr } = await supabase
-          .from("conference_registrations")
-          .update({ payment_currency: sessionCurrency.toUpperCase() })
-          .eq("id", rid)
-
-        if (currencyErr) {
-          console.error("confirm-stripe-session: Failed to sync payment_currency", {
-            rid,
-            sessionId,
-            sessionCurrency,
-            error: currencyErr,
-          })
-          return NextResponse.json(
-            { ok: false, error: "Failed to update payment currency" },
-            { status: 500 },
-          )
-        }
-      }
-    }
-
-    // ── 4. Confirm registration ───────────────────────────────────────────────
-    const { error: updateErr } = await supabase
-      .from("conference_registrations")
-      .update({
-        status: "confirmed",
-        payment_status: "paid",
-        payment_provider: "stripe",
-        payment_id: `stripe:${sessionId}`,
-        provider_ref: sessionId,
-        stripe_session_id: sessionId,
-        payment_paid_at: new Date().toISOString(),
-        confirmed_at: new Date().toISOString(),
-      })
-      .eq("id", rid)
-
-    if (updateErr) {
-      console.error("confirm-stripe-session: DB update failed", updateErr)
-      return NextResponse.json({ ok: false, error: "Failed to confirm registration" }, { status: 500 })
-    }
-
-    // ── 5. Send confirmation email (non-blocking) ─────────────────────────────
-    sendConferenceConfirmationEmail({
-      fullName: reg.full_name,
-      email: reg.email,
-      registrationId: reg.id,
-      attendanceMode: reg.attendance_mode || "",
-      role: reg.role || undefined,
-      workshops: reg.workshops || undefined,
+    const result = await paymentService.confirmConferenceRegistration({
+      entityType: "conference_registration",
+      entityId: rid,
+      provider: "stripe",
+      verificationResult,
+      eventId: `fallback_${sessionId}`,
     })
-      .then((r) => {
-        if (r.success)
-          supabase.from("conference_registrations")
-            .update({ last_confirmation_email_sent_at: new Date().toISOString() })
-            .eq("id", rid).then(() => {})
+
+    if (!result.success) {
+      console.error("confirm-stripe-session: PaymentService confirmation failed", {
+        rid,
+        sessionId,
+        error: result.error,
       })
-      .catch((err) => console.error("Non-fatal: confirmation email failed:", err))
+      return NextResponse.json(
+        { ok: false, error: result.error || "Failed to confirm registration" },
+        { status: 500 },
+      )
+    }
 
     console.log("confirm-stripe-session: confirmed registration", rid)
-    return NextResponse.json({ ok: true, status: "confirmed" })
+    return NextResponse.json({ ok: true, status: result.status })
   } catch (err) {
     console.error("confirm-stripe-session error:", err)
     return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 })

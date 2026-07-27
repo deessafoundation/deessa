@@ -201,7 +201,7 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
             <div className="relative flex h-16 items-center gap-1 px-3 sm:px-4 lg:px-6">
             <Link
               href="/"
-              className="group absolute left-[49%] flex shrink-0 -translate-x-1/2 items-center gap-3 lg:relative lg:left-auto lg:w-[220px] lg:translate-x-0"
+              className="group absolute left-[49%] flex shrink-0 -translate-x-1/2 items-center gap-3 lg:relative lg:left-auto lg:w-[220px] lg:translate-x-0 lg:ml-4"
             >
               <div
                 className={cn(

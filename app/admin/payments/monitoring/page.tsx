@@ -7,7 +7,7 @@ export const metadata = {
   description: "Monitor receipt generation and email sending success rates",
 }
 
-async function getMonitoringStats(supabase: ReturnType<typeof createClient>) {
+async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClient>>) {
   // Get confirmed donations for different time periods
   const now = new Date()
   const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)

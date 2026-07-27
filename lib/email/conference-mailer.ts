@@ -30,15 +30,7 @@ function createGmailTransporter() {
 }
 
 import { getAppBaseUrl } from '@/lib/utils'
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-}
+import { escapeHtml } from '@/lib/utils/html'
 
 export interface ConferenceEmailResult {
   success: boolean

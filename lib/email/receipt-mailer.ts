@@ -13,6 +13,7 @@
 
 import { ReceiptEmailTemplate } from "./templates/receipt"
 import nodemailer from "nodemailer"
+import { escapeHtml } from "@/lib/utils/html"
 
 // ── Shared helpers (same pattern as conference-mailer.ts) ────────────────────
 
@@ -28,15 +29,6 @@ function createGmailTransporter() {
     service: "gmail",
     auth: { user, pass },
   })
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
 }
 
 // ── Types ────────────────────────────────────────────────────────────────────

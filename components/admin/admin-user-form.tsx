@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
 import { createAdminUser } from "@/lib/actions/admin-auth"
@@ -86,17 +86,18 @@ export function AdminUserForm() {
 
           <div className="space-y-2">
             <Label htmlFor="role">Role *</Label>
-            <Select name="role" defaultValue="EDITOR" disabled={isLoading || success}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="EDITOR">Editor</SelectItem>
-                <SelectItem value="FINANCE">Finance</SelectItem>
-              </SelectContent>
-            </Select>
+            <FancySelect
+              name="role"
+              defaultValue="EDITOR"
+              disabled={isLoading || success}
+              options={[
+                { value: "SUPER_ADMIN", label: "Super Admin" },
+                { value: "ADMIN", label: "Admin" },
+                { value: "EDITOR", label: "Editor" },
+                { value: "FINANCE", label: "Finance" },
+              ]}
+              size="sm"
+            />
             <p className="text-xs text-muted-foreground">
               Super Admin: Full access | Admin: Content + Users | Editor: Content only | Finance: Donations & Reports
             </p>

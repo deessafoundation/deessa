@@ -35,7 +35,17 @@ export async function GET() {
       return new NextResponse("Failed to fetch registrations", { status: 500 })
     }
 
-    // Build CSV
+    // ── Phase 3: Compute union of all custom field keys across all registrations ──
+    const customFieldKeys = new Set<string>()
+    for (const reg of registrations || []) {
+      const customFields = (reg.custom_fields ?? {}) as Record<string, unknown>
+      for (const key of Object.keys(customFields)) {
+        customFieldKeys.add(key)
+      }
+    }
+    const sortedCustomKeys = Array.from(customFieldKeys).sort()
+
+    // Build CSV headers: core columns + custom field columns
     const headers = [
       "ID",
       "Full Name",
@@ -54,6 +64,13 @@ export async function GET() {
       "Consent Newsletter",
       "Status",
       "Registered At",
+      // Add custom field headers with title-cased labels
+      ...sortedCustomKeys.map((key) =>
+        key
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")
+      ),
     ]
 
     const escape = (val: string | null | undefined) => {
@@ -70,8 +87,12 @@ export async function GET() {
       }
       return str
     }
-    const rows = (registrations || []).map((r) =>
-      [
+    
+    const rows = (registrations || []).map((r) => {
+      const customFields = (r.custom_fields ?? {}) as Record<string, unknown>
+      
+      // Core columns
+      const coreRow = [
         r.id,
         r.full_name,
         r.email,
@@ -90,9 +111,18 @@ export async function GET() {
         r.status || "pending",
         r.created_at ? new Date(r.created_at).toISOString() : "",
       ]
-        .map(escape)
-        .join(",")
-    )
+
+      // Custom field columns (in the same order as headers)
+      const customRow = sortedCustomKeys.map((key) => {
+        const value = customFields[key]
+        if (value === undefined || value === null) return ""
+        if (Array.isArray(value)) return value.join("; ")
+        if (typeof value === "boolean") return value ? "Yes" : "No"
+        return String(value)
+      })
+
+      return [...coreRow, ...customRow].map(escape).join(",")
+    })
 
     const csv = [headers.join(","), ...rows].join("\n")
 

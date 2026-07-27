@@ -68,7 +68,10 @@ export interface Alert {
  * REVIEW status alert payload
  */
 export interface ReviewAlert {
-  donationId: string
+  /** Entity ID (donation, event registration, or conference registration) */
+  entityId: string
+  /** Entity type for polymorphic alerting */
+  entityType: 'donation' | 'event_registration' | 'conference_registration'
   amount: number
   currency: string
   provider: PaymentProvider
@@ -77,6 +80,8 @@ export interface ReviewAlert {
   actualAmount?: number
   expectedCurrency?: string
   actualCurrency?: string
+  /** @deprecated Use entityId instead */
+  donationId?: string
 }
 
 /**
@@ -179,13 +184,20 @@ export async function sendAdminAlert(alert: Alert): Promise<void> {
  * @param reviewAlert - REVIEW alert details
  */
 export async function sendReviewAlert(reviewAlert: ReviewAlert): Promise<void> {
+  const entityLabel = reviewAlert.entityType === 'donation'
+    ? 'Donation'
+    : reviewAlert.entityType === 'event_registration'
+    ? 'Event Registration'
+    : 'Conference Registration'
+
   const alert: Alert = {
     type: 'review_status',
     severity: 'warning',
-    title: 'Donation Requires Manual Review',
-    message: `Donation ${reviewAlert.donationId} has been flagged for manual review.`,
+    title: `${entityLabel} Requires Manual Review`,
+    message: `${entityLabel} ${reviewAlert.entityId} has been flagged for manual review.`,
     metadata: {
-      donationId: reviewAlert.donationId,
+      entityType: reviewAlert.entityType,
+      entityId: reviewAlert.entityId,
       amount: reviewAlert.amount,
       currency: reviewAlert.currency,
       provider: reviewAlert.provider,
@@ -466,7 +478,6 @@ async function checkStuckDonations(metrics: PaymentMetrics): Promise<void> {
     pendingDonations.oldestAgeMinutes !== null &&
     pendingDonations.oldestAgeMinutes > ALERT_THRESHOLDS.pendingDonationAge
   ) {
-    // Fetch donation IDs for pending donations older than threshold
     const thresholdDate = new Date(
       Date.now() - ALERT_THRESHOLDS.pendingDonationAge * 60 * 1000
     )
@@ -476,7 +487,7 @@ async function checkStuckDonations(metrics: PaymentMetrics): Promise<void> {
       .select('id')
       .eq('payment_status', 'pending')
       .lt('created_at', thresholdDate.toISOString())
-      .limit(10) // Limit to 10 IDs for alert
+      .limit(10)
     
     const donationIds = pendingDonationsData?.map(d => d.id) || []
     
@@ -496,7 +507,6 @@ async function checkStuckDonations(metrics: PaymentMetrics): Promise<void> {
     reviewDonations.oldestAgeMinutes !== null &&
     reviewDonations.oldestAgeMinutes > ALERT_THRESHOLDS.reviewDonationAge
   ) {
-    // Fetch donation IDs for review donations older than threshold
     const thresholdDate = new Date(
       Date.now() - ALERT_THRESHOLDS.reviewDonationAge * 60 * 1000
     )
@@ -506,7 +516,7 @@ async function checkStuckDonations(metrics: PaymentMetrics): Promise<void> {
       .select('id')
       .eq('payment_status', 'review')
       .lt('created_at', thresholdDate.toISOString())
-      .limit(10) // Limit to 10 IDs for alert
+      .limit(10)
     
     const donationIds = reviewDonationsData?.map(d => d.id) || []
     
@@ -515,6 +525,92 @@ async function checkStuckDonations(metrics: PaymentMetrics): Promise<void> {
       count: reviewDonations.count,
       oldestAgeMinutes: reviewDonations.oldestAgeMinutes,
       status: 'review',
+    })
+  }
+
+  // ── Check stuck event registrations ─────────────────────────────────────────
+  const { pendingEventRegistrations, reviewEventRegistrations } = metrics.state
+
+  if (
+    pendingEventRegistrations.count > 0 &&
+    pendingEventRegistrations.oldestAgeMinutes !== null &&
+    pendingEventRegistrations.oldestAgeMinutes > ALERT_THRESHOLDS.pendingDonationAge
+  ) {
+    await sendAdminAlert({
+      type: 'stuck_pending',
+      severity: 'warning',
+      title: 'Stuck Event Registrations',
+      message: `${pendingEventRegistrations.count} event registration(s) pending for over ${ALERT_THRESHOLDS.pendingDonationAge} minutes`,
+      metadata: {
+        entityType: 'event_registration',
+        count: pendingEventRegistrations.count,
+        oldestAgeMinutes: pendingEventRegistrations.oldestAgeMinutes,
+        status: 'pending',
+      },
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  if (
+    reviewEventRegistrations.count > 0 &&
+    reviewEventRegistrations.oldestAgeMinutes !== null &&
+    reviewEventRegistrations.oldestAgeMinutes > ALERT_THRESHOLDS.reviewDonationAge
+  ) {
+    await sendAdminAlert({
+      type: 'stuck_review',
+      severity: 'critical',
+      title: 'Stuck Event Registrations in Review',
+      message: `${reviewEventRegistrations.count} event registration(s) in review for over ${ALERT_THRESHOLDS.reviewDonationAge / 60} hours`,
+      metadata: {
+        entityType: 'event_registration',
+        count: reviewEventRegistrations.count,
+        oldestAgeMinutes: reviewEventRegistrations.oldestAgeMinutes,
+        status: 'review',
+      },
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  // ── Check stuck conference registrations ────────────────────────────────────
+  const { pendingConferenceRegistrations, reviewConferenceRegistrations } = metrics.state
+
+  if (
+    pendingConferenceRegistrations.count > 0 &&
+    pendingConferenceRegistrations.oldestAgeMinutes !== null &&
+    pendingConferenceRegistrations.oldestAgeMinutes > ALERT_THRESHOLDS.pendingDonationAge
+  ) {
+    await sendAdminAlert({
+      type: 'stuck_pending',
+      severity: 'warning',
+      title: 'Stuck Conference Registrations',
+      message: `${pendingConferenceRegistrations.count} conference registration(s) pending for over ${ALERT_THRESHOLDS.pendingDonationAge} minutes`,
+      metadata: {
+        entityType: 'conference_registration',
+        count: pendingConferenceRegistrations.count,
+        oldestAgeMinutes: pendingConferenceRegistrations.oldestAgeMinutes,
+        status: 'pending',
+      },
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  if (
+    reviewConferenceRegistrations.count > 0 &&
+    reviewConferenceRegistrations.oldestAgeMinutes !== null &&
+    reviewConferenceRegistrations.oldestAgeMinutes > ALERT_THRESHOLDS.reviewDonationAge
+  ) {
+    await sendAdminAlert({
+      type: 'stuck_review',
+      severity: 'critical',
+      title: 'Stuck Conference Registrations in Review',
+      message: `${reviewConferenceRegistrations.count} conference registration(s) in review for over ${ALERT_THRESHOLDS.reviewDonationAge / 60} hours`,
+      metadata: {
+        entityType: 'conference_registration',
+        count: reviewConferenceRegistrations.count,
+        oldestAgeMinutes: reviewConferenceRegistrations.oldestAgeMinutes,
+        status: 'review',
+      },
+      timestamp: new Date().toISOString(),
     })
   }
 }

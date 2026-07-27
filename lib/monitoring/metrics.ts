@@ -59,6 +59,24 @@ export interface PaymentMetrics {
       oldestAgeMinutes: number | null
       averageAgeMinutes: number | null
     }
+    // Event registration state
+    pendingEventRegistrations: {
+      count: number
+      oldestAgeMinutes: number | null
+    }
+    reviewEventRegistrations: {
+      count: number
+      oldestAgeMinutes: number | null
+    }
+    // Conference registration state
+    pendingConferenceRegistrations: {
+      count: number
+      oldestAgeMinutes: number | null
+    }
+    reviewConferenceRegistrations: {
+      count: number
+      oldestAgeMinutes: number | null
+    }
   }
   
   // Metadata
@@ -384,10 +402,94 @@ async function collectStateMetrics(
       : null,
   }
 
+  // ── Event registration metrics ──────────────────────────────────────────────
+  const { data: pendingEventRegs, error: pendingEventError } = await supabase
+    .from('event_registrations')
+    .select('created_at')
+    .eq('payment_status', 'unpaid')
+    .eq('status', 'pending')
+
+  if (pendingEventError) {
+    console.error('[Metrics] Error collecting pending event registrations:', pendingEventError)
+  }
+
+  const pendingEventAges = pendingEventRegs?.map(d => {
+    const ageMs = Date.now() - new Date(d.created_at).getTime()
+    return ageMs / (60 * 1000)
+  }) || []
+
+  const pendingEventRegistrations = {
+    count: pendingEventAges.length,
+    oldestAgeMinutes: pendingEventAges.length > 0 ? Math.round(Math.max(...pendingEventAges)) : null,
+  }
+
+  const { data: reviewEventRegs, error: reviewEventError } = await supabase
+    .from('event_registrations')
+    .select('created_at')
+    .eq('payment_status', 'review')
+
+  if (reviewEventError) {
+    console.error('[Metrics] Error collecting review event registrations:', reviewEventError)
+  }
+
+  const reviewEventAges = reviewEventRegs?.map(d => {
+    const ageMs = Date.now() - new Date(d.created_at).getTime()
+    return ageMs / (60 * 1000)
+  }) || []
+
+  const reviewEventRegistrations = {
+    count: reviewEventAges.length,
+    oldestAgeMinutes: reviewEventAges.length > 0 ? Math.round(Math.max(...reviewEventAges)) : null,
+  }
+
+  // ── Conference registration metrics ─────────────────────────────────────────
+  const { data: pendingConfRegs, error: pendingConfError } = await supabase
+    .from('conference_registrations')
+    .select('created_at')
+    .eq('payment_status', 'unpaid')
+    .eq('status', 'pending')
+
+  if (pendingConfError) {
+    console.error('[Metrics] Error collecting pending conference registrations:', pendingConfError)
+  }
+
+  const pendingConfAges = pendingConfRegs?.map(d => {
+    const ageMs = Date.now() - new Date(d.created_at).getTime()
+    return ageMs / (60 * 1000)
+  }) || []
+
+  const pendingConferenceRegistrations = {
+    count: pendingConfAges.length,
+    oldestAgeMinutes: pendingConfAges.length > 0 ? Math.round(Math.max(...pendingConfAges)) : null,
+  }
+
+  const { data: reviewConfRegs, error: reviewConfError } = await supabase
+    .from('conference_registrations')
+    .select('created_at')
+    .eq('payment_status', 'review')
+
+  if (reviewConfError) {
+    console.error('[Metrics] Error collecting review conference registrations:', reviewConfError)
+  }
+
+  const reviewConfAges = reviewConfRegs?.map(d => {
+    const ageMs = Date.now() - new Date(d.created_at).getTime()
+    return ageMs / (60 * 1000)
+  }) || []
+
+  const reviewConferenceRegistrations = {
+    count: reviewConfAges.length,
+    oldestAgeMinutes: reviewConfAges.length > 0 ? Math.round(Math.max(...reviewConfAges)) : null,
+  }
+
   return {
     donationsByStatus,
     pendingDonations: pendingMetrics,
     reviewDonations: reviewMetrics,
+    pendingEventRegistrations,
+    reviewEventRegistrations,
+    pendingConferenceRegistrations,
+    reviewConferenceRegistrations,
   }
 }
 
@@ -448,6 +550,22 @@ function getEmptyStateMetrics() {
       count: 0,
       oldestAgeMinutes: null,
       averageAgeMinutes: null,
+    },
+    pendingEventRegistrations: {
+      count: 0,
+      oldestAgeMinutes: null,
+    },
+    reviewEventRegistrations: {
+      count: 0,
+      oldestAgeMinutes: null,
+    },
+    pendingConferenceRegistrations: {
+      count: 0,
+      oldestAgeMinutes: null,
+    },
+    reviewConferenceRegistrations: {
+      count: 0,
+      oldestAgeMinutes: null,
     },
   }
 }

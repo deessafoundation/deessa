@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, Loader2, Save, Trash2 } from "lucide-react"
@@ -98,17 +98,19 @@ export function AdminUserEditForm({ user, currentAdminId }: AdminUserEditFormPro
 
         <div className="space-y-2">
           <Label htmlFor="role">Role</Label>
-          <Select value={role} onValueChange={setRole} disabled={isSelf}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
-              <SelectItem value="EDITOR">Editor</SelectItem>
-              <SelectItem value="FINANCE">Finance</SelectItem>
-            </SelectContent>
-          </Select>
+          <FancySelect
+            value={role}
+            onValueChange={setRole}
+            placeholder="Select role"
+            disabled={isSelf}
+            options={[
+              { value: "SUPER_ADMIN", label: "Super Admin" },
+              { value: "ADMIN", label: "Admin" },
+              { value: "EDITOR", label: "Editor" },
+              { value: "FINANCE", label: "Finance" },
+            ]}
+            size="sm"
+          />
           {isSelf && <p className="text-xs text-muted-foreground">You cannot change your own role</p>}
         </div>
 

@@ -7,7 +7,6 @@ import {
   logPaymentEvent,
   maskSensitiveData,
 } from "@/lib/payments/security"
-import { sendConferenceConfirmationEmail } from "@/lib/email/conference-mailer"
 import { generateReceiptForDonation } from "@/lib/actions/donation-receipt"
 import { createKhaltiAdapter } from "@/lib/payments/adapters/KhaltiAdapter"
 import { getPaymentService } from "@/lib/payments/core/PaymentService"
@@ -112,23 +111,33 @@ export async function POST(request: Request) {
 
     // If donation not found, check conference_registrations
     if (!donation) {
-      const { data: reg } = await supabase
+      const { data: confReg } = await supabase
         .from("conference_registrations")
         .select("*")
         .eq("khalti_pidx", pidx)
         .single()
 
-      if (reg) {
-        // TODO: Task 8.2 - Extract to shared verification logic
-        return await handleConferenceVerification(supabase, reg, pidx)
+      if (confReg) {
+        return await handleConferenceVerification(supabase, paymentService, khaltiAdapter, confReg, pidx)
       }
 
-      // Neither donation nor conference registration found
+      // If conference not found, check event_registrations
+      const { data: eventReg } = await supabase
+        .from("event_registrations")
+        .select("*")
+        .eq("khalti_pidx", pidx)
+        .single()
+
+      if (eventReg) {
+        return await handleEventRegistrationVerification(supabase, paymentService, khaltiAdapter, eventReg, pidx)
+      }
+
+      // Neither donation, conference, nor event registration found
       return NextResponse.json(
         { 
           ok: false, 
           error: "Payment record not found", 
-          message: "Could not find donation or conference registration record. Please contact support with your payment ID." 
+          message: "Could not find donation, conference, or event registration record. Please contact support with your payment ID." 
         },
         { status: 404 },
       )
@@ -246,7 +255,7 @@ export async function POST(request: Request) {
         {
           ok: true,
           status: responseStatus,
-          khaltiStatus: verificationResult.metadata.khaltiStatus,
+          khaltiStatus: (verificationResult.metadata as Record<string, unknown>)?.khaltiStatus,
           transactionId: verificationResult.transactionId,
           amount: verificationResult.amount,
         },
@@ -311,30 +320,20 @@ export async function POST(request: Request) {
 }
 
 /**
- * Handle conference registration verification
- * 
- * NOTE: This function contains duplicate logic from the donation verification flow.
- * The duplication exists because conference registrations use a separate database table
- * and have different business logic requirements.
- * 
- * FUTURE REFACTORING (Task 8.2):
- * - Create a unified PaymentService method that can handle both donations and conference registrations
- * - Extract common verification logic (Khalti API lookup, status mapping, amount verification)
- * - Use a strategy pattern or adapter to handle table-specific operations
- * - Consider migrating conference registrations to use the same payment architecture as donations
- * 
- * For now, this function is kept separate to maintain the existing conference registration
- * functionality while the donation flow is being migrated to V2 architecture.
- * 
- * TODO: Task 8.3 - Standardize response format to match donation flow
+ * Handle conference registration verification via Khalti.
+ *
+ * Uses PaymentService.confirmConferenceRegistration() for centralized payment logic.
+ * Khalti adapter handles the Khalti API lookup and amount verification.
  */
 async function handleConferenceVerification(
   supabase: any,
+  paymentService: any,
+  khaltiAdapter: any,
   reg: any,
-  pidx: string
+  pidx: string,
 ) {
-  // Idempotency check
-  if (reg.payment_status === "paid") {
+  // Idempotency checks
+  if (reg.payment_status === "paid" || reg.status === "confirmed") {
     return NextResponse.json({ ok: true, status: "paid", message: "Already confirmed" }, { status: 200 })
   }
   if (reg.payment_status === "failed") {
@@ -344,205 +343,208 @@ async function handleConferenceVerification(
     return NextResponse.json({ ok: true, status: "review", message: "Payment under review" }, { status: 200 })
   }
 
-  // Call Khalti lookup API
-  logPaymentEvent("Khalti verify (conference) - live lookup", { regId: reg.id, pidx: maskSensitiveData(pidx) })
-
-  const secretKey = process.env.KHALTI_SECRET_KEY
-  const baseUrl = process.env.KHALTI_BASE_URL || "https://khalti.com/api/v2"
-  if (!secretKey) {
-    return NextResponse.json({ ok: false, error: "Khalti not configured" }, { status: 500 })
-  }
-
-  let lookupRes: Response
   try {
-    lookupRes = await fetchWithTimeout(
-      `${baseUrl}/epayment/lookup/`,
-      { 
-        method: "POST", 
-        headers: { 
-          "Content-Type": "application/json", 
-          Authorization: `Key ${secretKey}` 
-        }, 
-        body: JSON.stringify({ pidx }) 
-      },
-      30000,
+    const verificationResult = await khaltiAdapter.verify(
+      { pidx, donation_id: reg.id, amount: reg.payment_amount },
+      {}
     )
-  } catch (netErr) {
-    return NextResponse.json({ ok: false, error: "Failed to connect to Khalti" }, { status: 502 })
-  }
 
-  const lookupText = await lookupRes.text()
-  let lookupData: { 
-    pidx: string
-    total_amount: number
-    status: string
-    transaction_id: string | null
-    detail?: string
-    error_key?: string 
-  }
-  try { 
-    lookupData = JSON.parse(lookupText) 
-  } catch {
-    return NextResponse.json({ ok: false, error: "Invalid response from Khalti" }, { status: 502 })
-  }
-
-  if (!lookupRes.ok) {
-    return NextResponse.json({ ok: false, error: lookupData.detail || "Khalti lookup failed" }, { status: 400 })
-  }
-
-  // Handle different status codes
-  switch (lookupData.status) {
-    case "Completed":
-      // Fall through to amount verification + confirmation
-      break
-
-    case "Pending":
-    case "Initiated":
-      logPaymentEvent("Khalti verify (conference) - pending status", {
-        regId: reg.id,
-        pidx: maskSensitiveData(pidx),
-        khaltiStatus: lookupData.status,
-      }, "warn")
-      return NextResponse.json({ ok: true, status: "processing", khaltiStatus: lookupData.status }, { status: 200 })
-
-    case "Refunded":
-    case "Partially Refunded": {
-      const { error: refundErr } = await supabase
-        .from("conference_registrations")
-        .update({ 
-          payment_status: "failed", 
-          payment_failed_at: new Date().toISOString(), 
-          payment_provider: "khalti", 
-          provider_ref: pidx 
-        })
-        .eq("id", reg.id)
-      if (refundErr) {
-        logPaymentEvent("Khalti verify (conference) - refund update failed", {
-          regId: reg.id,
-          pidx: maskSensitiveData(pidx),
-          error: refundErr,
-        }, "error")
-      }
-      logPaymentEvent("Khalti verify (conference) - refunded", {
-        regId: reg.id,
-        pidx: maskSensitiveData(pidx),
-        khaltiStatus: lookupData.status,
-      }, "warn")
-      return NextResponse.json({ 
-        ok: false, 
-        status: "failed", 
-        khaltiStatus: lookupData.status, 
-        error: "Payment was refunded" 
+    // Handle "Pending" status (don't update DB, return processing)
+    if (verificationResult.status === "pending") {
+      return NextResponse.json({
+        ok: true,
+        status: "processing",
+        message: "Payment is still pending",
       }, { status: 200 })
     }
 
-    case "Expired":
-    case "User canceled": {
-      const { error: cancelErr } = await supabase
-        .from("conference_registrations")
-        .update({ 
-          payment_status: "failed", 
-          payment_failed_at: new Date().toISOString(), 
-          payment_provider: "khalti", 
-          provider_ref: pidx 
-        })
-        .eq("id", reg.id)
-      if (cancelErr) {
-        logPaymentEvent("Khalti verify (conference) - cancel/expire update failed", {
-          regId: reg.id,
-          pidx: maskSensitiveData(pidx),
-          error: cancelErr,
-        }, "error")
-      }
-      logPaymentEvent("Khalti verify (conference) - expired/cancelled", {
-        regId: reg.id,
-        pidx: maskSensitiveData(pidx),
-        khaltiStatus: lookupData.status,
-      }, "warn")
-      return NextResponse.json({ 
-        ok: false, 
-        status: "failed", 
-        khaltiStatus: lookupData.status, 
-        error: "Payment expired or was cancelled" 
-      }, { status: 200 })
-    }
-
-    default:
-      logPaymentEvent("Khalti verify (conference) - unknown status", {
-        regId: reg.id,
-        pidx: maskSensitiveData(pidx),
-        khaltiStatus: lookupData.status,
-      }, "warn")
-      return NextResponse.json({ ok: true, status: "processing", khaltiStatus: lookupData.status }, { status: 200 })
-  }
-
-  // Amount verification (fail-closed)
-  const expectedPaisa = Math.round(Number(reg.payment_amount) * 100)
-  const amountCheck = verifyAmountMatch(expectedPaisa, lookupData.total_amount, "NPR", 1)
-  if (!amountCheck.valid) {
-    const { error: reviewErr } = await supabase.from("conference_registrations")
-      .update({ 
-        payment_status: "review", 
-        payment_review_at: new Date().toISOString(), 
-        payment_provider: "khalti", 
-        provider_ref: pidx 
-      })
-      .eq("id", reg.id)
-    
-    if (reviewErr) {
-      logPaymentEvent("Khalti verify (conference) - amount mismatch update failed", {
-        regId: reg.id,
-        pidx: maskSensitiveData(pidx),
-        error: reviewErr,
-      }, "error")
-      return NextResponse.json({ ok: false, error: "Failed to update registration" }, { status: 500 })
-    }
-
-    // Consistent response format: ok: true for review status (not a failure, requires manual review)
-    return NextResponse.json({ 
-      ok: true, 
-      status: "review", 
-      message: "Amount mismatch — flagged for review" 
-    }, { status: 200 })
-  }
-
-  // Confirm the registration
-  const { error: updateError } = await supabase.from("conference_registrations").update({
-    status: "confirmed",
-    payment_status: "paid",
-    payment_provider: "khalti",
-    payment_id: `khalti:${pidx}`,
-    provider_ref: pidx,
-    payment_paid_at: new Date().toISOString(),
-    confirmed_at: new Date().toISOString(),
-  }).eq("id", reg.id)
-
-  if (updateError) {
-    logPaymentEvent("Khalti verify (conference) - update failed", {
-      regId: reg.id,
-      pidx: maskSensitiveData(pidx),
-      sessionId: lookupData.transaction_id,
-      error: updateError,
-    }, "error")
-    return NextResponse.json({ ok: false, error: "Failed to update registration" }, { status: 500 })
-  }
-
-  sendConferenceConfirmationEmail({
-    fullName: reg.full_name,
-    email: reg.email,
-    registrationId: reg.id,
-    attendanceMode: reg.attendance_mode || "",
-    role: reg.role || undefined,
-    workshops: reg.workshops || undefined,
-  })
-    .then((r) => {
-      if (r.success)
-        supabase.from("conference_registrations")
-          .update({ last_confirmation_email_sent_at: new Date().toISOString() })
-          .eq("id", reg.id).then(() => {})
+    const result = await paymentService.confirmConferenceRegistration({
+      entityType: "conference_registration",
+      entityId: reg.id,
+      provider: "khalti",
+      verificationResult,
+      eventId: pidx,
     })
-    .catch((e) => console.error("Non-fatal: Khalti conference confirmation email:", e))
 
-  logPaymentEvent("Khalti verify (conference) - confirmed", { regId: reg.id })
-  return NextResponse.json({ ok: true, status: "paid", khaltiStatus: lookupData.status }, { status: 200 })
+    if (!result.success) {
+      logPaymentEvent("Khalti verify (conference): confirmation failed", {
+        confRegId: reg.id,
+        error: result.error,
+        pidx: maskSensitiveData(pidx),
+      }, "error")
+      return NextResponse.json({
+        ok: false,
+        status: "failed",
+        error: result.error || "Payment confirmation failed",
+      }, { status: 400 })
+    }
+
+    const responseStatus = result.status === "paid" ? "paid" : result.status
+
+    logPaymentEvent("Khalti verify (conference): success", {
+      confRegId: reg.id,
+      status: result.status,
+      pidx: maskSensitiveData(pidx),
+    })
+
+    return NextResponse.json({
+      ok: true,
+      status: responseStatus,
+      khaltiStatus: (verificationResult.metadata as Record<string, unknown>)?.khaltiStatus,
+      transactionId: verificationResult.transactionId,
+      amount: verificationResult.amount,
+    }, { status: 200 })
+
+  } catch (error) {
+    if (error instanceof VerificationError) {
+      logPaymentEvent("Khalti verify (conference): verification error", {
+        confRegId: reg.id,
+        error: error.message,
+        pidx: maskSensitiveData(pidx),
+      }, "error")
+
+      if (error.message.includes("pending") || error.message.includes("Pending")) {
+        return NextResponse.json({
+          ok: true,
+          status: "processing",
+          message: "Payment is still pending",
+        }, { status: 200 })
+      }
+
+      return NextResponse.json({
+        ok: false,
+        status: "failed",
+        error: error.message,
+      }, { status: 400 })
+    }
+
+    if (error instanceof ConfigurationError) {
+      logPaymentEvent("Khalti verify (conference): configuration error", {
+        confRegId: reg.id,
+        error: error.message,
+      }, "error")
+      return NextResponse.json({
+        ok: false,
+        error: "Khalti not configured",
+        message: error.message,
+      }, { status: 500 })
+    }
+
+    throw error
+  }
+}
+
+/**
+ * Handle event registration verification via Khalti.
+ *
+ * Uses PaymentService.confirmRegistration() for centralized payment logic.
+ * Khalti adapter handles the Khalti API lookup and amount verification.
+ */
+async function handleEventRegistrationVerification(
+  supabase: any,
+  paymentService: any,
+  khaltiAdapter: any,
+  reg: any,
+  pidx: string,
+) {
+  // Idempotency checks
+  if (reg.payment_status === "paid" || reg.status === "confirmed") {
+    return NextResponse.json({ ok: true, status: "paid", message: "Already confirmed" }, { status: 200 })
+  }
+  if (reg.payment_status === "failed") {
+    return NextResponse.json({ ok: false, status: "failed", message: "Payment previously failed" }, { status: 200 })
+  }
+  if (reg.payment_status === "review") {
+    return NextResponse.json({ ok: true, status: "review", message: "Payment under review" }, { status: 200 })
+  }
+
+  try {
+    const verificationResult = await khaltiAdapter.verify(
+      { pidx, donation_id: reg.id, amount: reg.payment_amount },
+      {}
+    )
+
+    // Handle "Pending" status (don't update DB, return processing)
+    if (verificationResult.status === "pending") {
+      return NextResponse.json({
+        ok: true,
+        status: "processing",
+        message: "Payment is still pending",
+      }, { status: 200 })
+    }
+
+    const result = await paymentService.confirmRegistration({
+      entityType: "event_registration",
+      entityId: reg.id,
+      provider: "khalti",
+      verificationResult,
+      eventId: pidx,
+    })
+
+    if (!result.success) {
+      logPaymentEvent("Khalti verify (event): confirmation failed", {
+        eventRegId: reg.id,
+        error: result.error,
+        pidx: maskSensitiveData(pidx),
+      }, "error")
+      return NextResponse.json({
+        ok: false,
+        status: "failed",
+        error: result.error || "Payment confirmation failed",
+      }, { status: 400 })
+    }
+
+    const responseStatus = result.status === "paid" ? "paid" : result.status
+
+    logPaymentEvent("Khalti verify (event): success", {
+      eventRegId: reg.id,
+      status: result.status,
+      pidx: maskSensitiveData(pidx),
+    })
+
+    return NextResponse.json({
+      ok: true,
+      status: responseStatus,
+      khaltiStatus: (verificationResult.metadata as Record<string, unknown>)?.khaltiStatus,
+      transactionId: verificationResult.transactionId,
+      amount: verificationResult.amount,
+    }, { status: 200 })
+
+  } catch (error) {
+    if (error instanceof VerificationError) {
+      logPaymentEvent("Khalti verify (event): verification error", {
+        eventRegId: reg.id,
+        error: error.message,
+        pidx: maskSensitiveData(pidx),
+      }, "error")
+
+      if (error.message.includes("pending") || error.message.includes("Pending")) {
+        return NextResponse.json({
+          ok: true,
+          status: "processing",
+          message: "Payment is still pending",
+        }, { status: 200 })
+      }
+
+      return NextResponse.json({
+        ok: false,
+        status: "failed",
+        error: error.message,
+      }, { status: 400 })
+    }
+
+    if (error instanceof ConfigurationError) {
+      logPaymentEvent("Khalti verify (event): configuration error", {
+        eventRegId: reg.id,
+        error: error.message,
+      }, "error")
+      return NextResponse.json({
+        ok: false,
+        error: "Khalti not configured",
+        message: error.message,
+      }, { status: 500 })
+    }
+
+    throw error
+  }
 }

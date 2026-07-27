@@ -7,6 +7,7 @@ import { updateConferenceSettings } from "@/lib/actions/conference-settings"
 import type { ConferenceSettings, AgendaItem } from "@/lib/conference-settings-defaults"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { FancySelect } from "@/components/ui/fancy-select"
 
 interface ConferenceSettingsFormProps {
   settings: ConferenceSettings
@@ -355,27 +356,30 @@ export function ConferenceSettingsForm({ settings }: ConferenceSettingsFormProps
           <div className="mb-5">
             <label className="mb-1.5 block text-sm font-semibold text-foreground">Currency</label>
             <p className="mb-2 text-xs text-muted-foreground">All fees are charged in this currency.</p>
-            <select
-              value={payment.registrationFeeCurrency}
-              onChange={(e) =>
-                setPayment((p) => ({
-                  ...p,
-                  registrationFeeCurrency: e.target.value as
-                    | "NPR"
-                    | "USD"
-                    | "EUR"
-                    | "GBP"
-                    | "INR",
-                }))
-              }
-              className="w-44 rounded-xl border border-border bg-muted/30 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-            >
-              <option value="NPR">NPR — Nepali Rupee</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
-              <option value="GBP">GBP — British Pound</option>
-              <option value="INR">INR — Indian Rupee</option>
-            </select>
+            <div className="w-44">
+              <FancySelect
+                value={payment.registrationFeeCurrency}
+                onValueChange={(val) =>
+                  setPayment((p) => ({
+                    ...p,
+                    registrationFeeCurrency: val as
+                      | "NPR"
+                      | "USD"
+                      | "EUR"
+                      | "GBP"
+                      | "INR",
+                  }))
+                }
+                options={[
+                  { value: "NPR", label: "NPR — Nepali Rupee" },
+                  { value: "USD", label: "USD — US Dollar" },
+                  { value: "EUR", label: "EUR — Euro" },
+                  { value: "GBP", label: "GBP — British Pound" },
+                  { value: "INR", label: "INR — Indian Rupee" },
+                ]}
+                size="sm"
+              />
+            </div>
           </div>
 
           <div

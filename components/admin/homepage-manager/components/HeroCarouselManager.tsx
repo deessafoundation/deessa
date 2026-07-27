@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FancySelect } from "@/components/ui/fancy-select"
 import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
 import type { HomepageHeroCarouselSettings, HeroCarouselSlide } from "@/lib/types/homepage-settings"
 
@@ -235,18 +235,15 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
                   {/* CTA Variant */}
                   <div>
                     <Label>CTA Button Style</Label>
-                    <Select
+                    <FancySelect
                       value={slide.ctaVariant || 'primary'}
-                      onValueChange={(value: 'primary' | 'secondary') => updateSlide(index, { ctaVariant: value })}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="primary">Primary (Filled)</SelectItem>
-                        <SelectItem value="secondary">Secondary (Outline)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => updateSlide(index, { ctaVariant: value as 'primary' | 'secondary' })}
+                      options={[
+                        { value: "primary", label: "Primary (Filled)" },
+                        { value: "secondary", label: "Secondary (Outline)" },
+                      ]}
+                      size="sm"
+                    />
                   </div>
 
                   {/* Preview */}

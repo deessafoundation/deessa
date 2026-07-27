@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus } from "lucide-react"
 import { addReviewNote } from "@/lib/actions/admin-donation-actions"
+import { addReviewNotePolymorphic } from "@/lib/actions/admin-payment-actions"
 import { notifications } from "@/lib/notifications"
 import { formatRelativeTime, formatAbsoluteTime } from "@/lib/utils/date-formatting"
 import {
@@ -28,18 +29,21 @@ interface ReviewNote {
 }
 
 interface ReviewNotesSectionProps {
-  donationId: string
+  donationId?: string
+  entityId?: string
+  entityType?: "donation" | "event" | "conference"
   notes: ReviewNote[]
   userRole: "ADMIN" | "SUPER_ADMIN" | "FINANCE" | "EDITOR"
 }
 
-export const ReviewNotesSection = memo(function ReviewNotesSection({ donationId, notes, userRole }: ReviewNotesSectionProps) {
+export const ReviewNotesSection = memo(function ReviewNotesSection({ donationId, entityId, entityType, notes, userRole }: ReviewNotesSectionProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [noteText, setNoteText] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [displayCount, setDisplayCount] = useState(10)
 
   const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(userRole)
+  const isPolymorphic = !!entityId && !!entityType
 
   const handleSubmit = async () => {
     if (noteText.trim().length < 10) {
@@ -52,10 +56,16 @@ export const ReviewNotesSection = memo(function ReviewNotesSection({ donationId,
 
     setIsSubmitting(true)
     try {
-      const result = await addReviewNote({
-        donationId,
-        noteText: noteText.trim(),
-      })
+      const result = isPolymorphic
+        ? await addReviewNotePolymorphic({
+            entityId: entityId!,
+            entityType: entityType!,
+            noteText: noteText.trim(),
+          })
+        : await addReviewNote({
+            donationId: donationId!,
+            noteText: noteText.trim(),
+          })
 
       if (result.ok) {
         notifications.showSuccess({
@@ -64,37 +74,18 @@ export const ReviewNotesSection = memo(function ReviewNotesSection({ donationId,
         })
         setNoteText("")
         setIsDialogOpen(false)
-        // Page will revalidate automatically
-      } else {
-        // Handle specific error cases
-        if (result.message.includes("network") || result.message.includes("Network")) {
-          notifications.showError({
-            title: "Network Error",
-            description: "Unable to connect to the server. Please check your internet connection and try again.",
-            duration: 5000,
-          })
-        } else {
-          notifications.showError({
-            title: "Error",
-            description: result.message,
-          })
-        }
-      }
-    } catch (error) {
-      console.error("Add review note error:", error)
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        notifications.showError({
-          title: "Network Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          duration: 5000,
-        })
       } else {
         notifications.showError({
           title: "Error",
-          description: "Failed to add review note. Please try again.",
+          description: result.message,
         })
       }
+    } catch (error) {
+      console.error("Add review note error:", error)
+      notifications.showError({
+        title: "Error",
+        description: "Failed to add review note. Please try again.",
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -201,4 +192,3 @@ export const ReviewNotesSection = memo(function ReviewNotesSection({ donationId,
     </Card>
   )
 })
-

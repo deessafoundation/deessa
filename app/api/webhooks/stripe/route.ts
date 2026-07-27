@@ -6,8 +6,6 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 import { generateReceiptForDonation } from "@/lib/actions/donation-receipt";
 
-import { sendConferenceConfirmationEmail } from "@/lib/email/conference-mailer";
-
 import { getPaymentService } from "@/lib/payments/core/PaymentService";
 
 import { createStripeAdapter } from "@/lib/payments/adapters/StripeAdapter";
@@ -144,224 +142,139 @@ async function confirmDonation(
 // ══════════════════════════════════════════════════════════════════════════════
 
 /**
- * Confirm conference registration payment
- * 
- * Note: Conference payments use a separate flow from donations and have not yet
- * been migrated to use PaymentService. This is intentional to avoid scope creep.
- * 
- * Future work: Refactor conference payments to use PaymentService for consistency.
- * 
+ * Confirm conference registration payment using centralized PaymentService.
+ *
  * @param supabase - Supabase service role client
  * @param registrationId - Conference registration ID
  * @param session - Stripe checkout session
  * @param eventId - Stripe event ID for idempotency
  */
-
 async function confirmConferenceRegistrationFromWebhook(
   supabase: ReturnType<typeof createServiceRoleClient>,
-
   registrationId: string,
-
   session: Stripe.Checkout.Session,
-
   eventId: string
-): Promise<void> {
-  // Idempotency check via payment_events
-
+): Promise<boolean> {
   try {
-    const { error: eventErr } = await supabase
+    const { createStripeAdapter } = await import("@/lib/payments/adapters/StripeAdapter")
+    const { getPaymentService } = await import("@/lib/payments/core/PaymentService")
 
-      .from("payment_events")
+    const adapter = createStripeAdapter()
+    const paymentService = getPaymentService()
 
-      .insert({
-        provider: "stripe",
+    // Build a synthetic Stripe.Event from the already-verified session
+    const stripeEvent = {
+      type: "checkout.session.completed",
+      data: { object: session },
+      id: eventId,
+    } as Stripe.Event
 
-        event_id: eventId,
+    const verificationResult = await adapter.processVerifiedEvent(stripeEvent)
 
-        conference_registration_id: registrationId,
-      });
+    const result = await paymentService.confirmConferenceRegistration({
+      entityType: "conference_registration",
+      entityId: registrationId,
+      provider: "stripe",
+      verificationResult,
+      eventId,
+    })
 
-    if (eventErr) {
-      if ((eventErr as any).code === "23505" || String(eventErr.message).includes("duplicate")) {
-        // Already processed - skip silently
-        return;
-      }
-      // Log unexpected errors for observability, but continue processing
-      console.warn("Stripe webhook (conference): payment_events insert failed", {
-        eventId,
-        error: eventErr.message,
-      });
-    }
-  } catch {
-    // Table may not have column yet — continue processing
-    console.warn("Stripe webhook (conference): payment_events table error");
-  }
-  const { data: reg, error: fetchErr } = await supabase
-
-    .from("conference_registrations")
-
-    .select("*")
-
-    .eq("id", registrationId)
-
-    .single();
-
-  if (fetchErr || !reg) {
-    console.error("Stripe webhook (conference): registration not found", registrationId);
-    return;
-  }
-
-  // Idempotency: already confirmed or cancelled — skip
-
-  if (
-    reg.payment_status === "paid" ||
-    reg.status === "confirmed" ||
-    reg.status === "cancelled"
-  ) {
-    return;
-  }
-
-  // Fail-closed: only proceed when Stripe confirms the session is paid
-
-  if (session.payment_status !== "paid") {
-    console.warn("Stripe webhook (conference): session not paid", {
-      registrationId,
-      sessionId: session.id,
-    });
-
-    return;
-  }
-
-  // Amount verification (fail-closed)
-
-  // Note: Stripe always returns amounts in the session currency. We compare
-
-  // against the DB payment_amount * 100. If the DB currency was stored as "NPR"
-
-  // but Stripe charged "USD" (due to a previous bug), the check would fail.
-
-  // We now trust Stripe's session currency and update the DB currency if needed.
-
-  if (reg.payment_amount !== null && session.mode === "payment") {
-    const expectedMinor = Math.round(Number(reg.payment_amount) * 100);
-
-    const actualMinor = session.amount_total ?? null;
-
-    const sessionCurrency = String(session.currency || "").toLowerCase();
-
-    const regCurrency = String(reg.payment_currency || "NPR").toLowerCase();
-
-    // If currencies differ but amounts match numerically, sync the DB currency to Stripe's
-
-    // (this handles cases where registration was saved with NPR but Stripe charged USD)
-
-    if (actualMinor === null) {
-      console.error("Stripe webhook (conference): no amount_total in session", {
+    if (!result.success) {
+      console.error("Stripe webhook (conference): Payment confirmation failed", {
         registrationId,
         sessionId: session.id,
-      });
-
-      await supabase
-        .from("conference_registrations")
-        .update({ 
-          payment_status: "review", 
-          payment_review_at: new Date().toISOString(), 
-          stripe_session_id: session.id 
-        })
-        .eq("id", registrationId);
-
-      return;
+        error: result.error,
+      })
+      return false
     }
 
-    if (expectedMinor !== actualMinor) {
-      console.error("Stripe webhook (conference): amount mismatch", {
+    console.log("Stripe webhook (conference): Payment confirmed", {
+      registrationId,
+      sessionId: session.id,
+      status: result.status,
+    })
+
+    return true
+  } catch (error) {
+    console.error("Stripe webhook (conference): Unexpected error", {
+      registrationId,
+      sessionId: session.id,
+      error: error instanceof Error ? error.message : "Unknown error",
+    })
+    return false
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Event Registration Payment Confirmation
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Confirm event registration payment from Stripe webhook.
+ *
+ * Uses PaymentService.confirmRegistration() — replaces 200 lines of V1
+ * inline logic (idempotency, fetch, amount check, update, sold_count, email).
+ * The webhook signature was already verified by the outer POST handler.
+ *
+ * @param supabase - Supabase service role client
+ * @param registrationId - Event registration ID
+ * @param session - Stripe checkout session
+ * @param eventId - Stripe event ID for idempotency
+ */
+async function confirmEventRegistrationFromWebhook(
+  supabase: ReturnType<typeof createServiceRoleClient>,
+  registrationId: string,
+  session: Stripe.Checkout.Session,
+  eventId: string
+): Promise<boolean> {
+  try {
+    const { createStripeAdapter } = await import("@/lib/payments/adapters/StripeAdapter")
+    const { getPaymentService } = await import("@/lib/payments/core/PaymentService")
+
+    const adapter = createStripeAdapter()
+    const paymentService = getPaymentService()
+
+    // Build a synthetic Stripe.Event from the already-verified session
+    const stripeEvent = {
+      type: "checkout.session.completed",
+      data: { object: session },
+      id: eventId,
+    } as Stripe.Event
+
+    const verificationResult = await adapter.processVerifiedEvent(stripeEvent)
+
+    const result = await paymentService.confirmRegistration({
+      entityType: "event_registration",
+      entityId: registrationId,
+      provider: "stripe",
+      verificationResult,
+      eventId,
+    })
+
+    if (!result.success) {
+      console.error("Stripe webhook (event): Payment confirmation failed", {
         registrationId,
-        expected: expectedMinor,
-        actual: actualMinor,
-      });
-
-      await supabase
-        .from("conference_registrations")
-        .update({ 
-          payment_status: "review", 
-          payment_review_at: new Date().toISOString(), 
-          stripe_session_id: session.id 
-        })
-        .eq("id", registrationId);
-
-      return;
+        sessionId: session.id,
+        error: result.error,
+      })
+      return false
     }
 
-    // Currency mismatch is non-fatal — sync DB to Stripe's currency and continue
-    if (regCurrency !== sessionCurrency) {
-      const { error: currencyUpdateError } = await supabase
-        .from("conference_registrations")
-        .update({ payment_currency: sessionCurrency.toUpperCase() })
-        .eq("id", registrationId);
-      
-      if (currencyUpdateError) {
-        console.error("Stripe webhook (conference): failed to sync currency", {
-          registrationId,
-          error: currencyUpdateError.message,
-        });
-        throw new Error(`Failed to update registration currency: ${currencyUpdateError.message}`);
-      }
-    }
-  }
-
-  // Confirm the registration
-
-  const { error: updateErr } = await supabase
-
-    .from("conference_registrations")
-
-    .update({
-      status: "confirmed",
-
-      payment_status: "paid",
-
-      payment_provider: "stripe",
-
-      payment_id: `stripe:${session.id}`,
-
-      provider_ref: session.id,
-
-      stripe_session_id: session.id,
-
-      payment_paid_at: new Date().toISOString(),
-
-      confirmed_at: new Date().toISOString(),
+    console.log("Stripe webhook (event): Payment confirmed", {
+      registrationId,
+      sessionId: session.id,
+      status: result.status,
     })
 
-    .eq("id", registrationId);
-
-  if (updateErr) {
-    console.error("Stripe webhook (conference): failed to confirm", updateErr);
-
-    throw new Error("Failed to update conference registration");
-  }
-
-  // Send confirmation email (non-blocking — failure must not fail the webhook)
-  sendConferenceConfirmationEmail({
-    fullName: reg.full_name,
-    email: reg.email,
-    registrationId: reg.id,
-    attendanceMode: reg.attendance_mode || "",
-    role: reg.role || undefined,
-    workshops: reg.workshops || undefined,
-  })
-    .then((r) => {
-      if (r.success) {
-        supabase
-          .from("conference_registrations")
-          .update({ last_confirmation_email_sent_at: new Date().toISOString() })
-          .eq("id", registrationId)
-          .then(() => {});
-      }
+    return true
+  } catch (error) {
+    console.error("Stripe webhook (event): Unexpected error", {
+      registrationId,
+      sessionId: session.id,
+      error: error instanceof Error ? error.message : "Unknown error",
     })
-    .catch((err) => console.error("Conference confirmation email failed:", err));
-
-  console.log("Stripe webhook (conference): confirmed", registrationId);
+    return false
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -374,6 +287,7 @@ async function confirmConferenceRegistrationFromWebhook(
  * Processes Stripe webhook events for:
  * - Donation payments (one-time and subscriptions)
  * - Conference registration payments
+ * - Event registration payments
  * 
  * Security:
  * - Verifies webhook signature using STRIPE_WEBHOOK_SECRET
@@ -472,13 +386,39 @@ export async function POST(request: Request) {
           session.metadata?.conference_registration_id;
 
         if (conferenceRegistrationId) {
-          await confirmConferenceRegistrationFromWebhook(
+          const confirmed = await confirmConferenceRegistrationFromWebhook(
             supabase,
             conferenceRegistrationId,
             session,
             event.id
           );
+          if (!confirmed) {
+            return NextResponse.json(
+              { error: "Failed to confirm conference registration" },
+              { status: 500 }
+            );
+          }
+          break;
+        }
 
+        // ── Event registration branch ─────────────────────────────────────────
+
+        const eventRegistrationId =
+          session.metadata?.event_registration_id;
+
+        if (eventRegistrationId) {
+          const confirmed = await confirmEventRegistrationFromWebhook(
+            supabase,
+            eventRegistrationId,
+            session,
+            event.id
+          );
+          if (!confirmed) {
+            return NextResponse.json(
+              { error: "Failed to confirm event registration" },
+              { status: 500 }
+            );
+          }
           break;
         }
 
@@ -505,6 +445,16 @@ export async function POST(request: Request) {
           session.metadata?.conference_registration_id;
 
         if (conferenceRegistrationId) {
+          // Don't change the registration status — session expired but the
+          // registration itself may still be within its 24h window.
+          break;
+        }
+
+        // ── Event registration branch — keep payment_status = 'unpaid' ────────
+        const eventRegistrationId =
+          session.metadata?.event_registration_id;
+
+        if (eventRegistrationId) {
           // Don't change the registration status — session expired but the
           // registration itself may still be within its 24h window.
           break;

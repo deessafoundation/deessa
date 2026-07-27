@@ -5,15 +5,7 @@
  */
 
 import { getAppBaseUrl } from '@/lib/utils'
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-}
+import { escapeHtml } from '@/lib/utils/html'
 
 interface ConferenceCancellationTemplateProps {
   fullName: string
@@ -44,14 +36,9 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
           <!-- Brand -->
           <tr>
             <td align="center" style="padding-bottom:24px;">
-              <table cellpadding="0" cellspacing="0">
-                <tr>
-                  <td style="background:linear-gradient(135deg,#DC2626,#B91C1C);border-radius:12px;padding:10px 16px;">
-                    <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">DEESSA</span>
-                    <span style="color:rgba(255,255,255,0.85);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Foundation</span>
-                  </td>
-                </tr>
-              </table>
+              <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
+                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+              </a>
             </td>
           </tr>
 
@@ -168,7 +155,7 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
             <td align="center" style="padding:28px 0;">
               <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">DEESSA Foundation — Empowering Communities Across Nepal</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
-                <a href="${siteUrl}" style="color:#DC2626;">deessafoundation.org.np</a>
+                <a href="${siteUrl}" style="color:#DC2626;">deessafoundation.com</a>
               </p>
             </td>
           </tr>
