@@ -11,7 +11,7 @@
   [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat&logo=github-actions)](https://github.com/features/actions)
   [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat&logo=vercel)](https://vercel.com/)
   
-  **Website:** [deessa.org](https://deessa.org) | **Since:** 2015 | **Location:** Kathmandu, Nepal
+  **Website:** [deessafoundation.com](https://deessafoundation.com) | **Since:** 2015 | **Location:** Kathmandu, Nepal
   
   ---
   
