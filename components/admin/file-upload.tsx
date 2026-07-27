@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Upload, X, Loader2, Image as ImageIcon, ExternalLink } from "lucide-react"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { notifications } from "@/lib/notifications"
 
@@ -32,7 +31,7 @@ export function FileUpload({
   className,
 }: FileUploadProps) {
   const [uploading, setUploading] = useState(false)
-  const [preview, setPreview] = useState<string | null>(currentUrl || null)
+  const [preview, setPreview] = useState(currentUrl || "")
   const [error, setError] = useState<string | null>(null)
   const [useUrl, setUseUrl] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -108,7 +107,7 @@ export function FileUpload({
   const handleRemove = async () => {
     const currentPreview = preview
 
-    setPreview(null)
+    setPreview("")
     onUpload("")
     setError(null)
     if (fileInputRef.current) {
@@ -139,7 +138,7 @@ export function FileUpload({
   }
 
   const handleUrlChange = (url: string) => {
-    setPreview(url)
+    setPreview(url || "")
     onUpload(url)
     setError(null)
   }
@@ -173,13 +172,13 @@ export function FileUpload({
           <Input
             type="url"
             placeholder="https://example.com/image.jpg"
-            value={preview || ""}
+            value={preview}
             onChange={(e) => handleUrlChange(e.target.value)}
             className="w-full"
           />
           {preview && isImage && (
             <div className="relative border rounded-lg overflow-hidden">
-              <Image src={preview} alt="Preview" width={300} height={200} className="w-full h-48 object-cover" />
+              <img src={preview} alt="Preview" className="w-full h-48 object-cover" />
               <Button
                 type="button"
                 variant="destructive"
@@ -196,7 +195,7 @@ export function FileUpload({
         // Preview Mode
         <div className="relative border rounded-lg overflow-hidden bg-muted">
           {isImage && (
-            <Image src={preview} alt="Preview" width={400} height={300} className="w-full h-48 object-cover" />
+            <img src={preview} alt="Preview" className="w-full h-48 object-cover" />
           )}
           {isVideo && (
             <video src={preview} controls className="w-full h-48 object-cover">

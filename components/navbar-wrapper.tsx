@@ -1,8 +1,11 @@
-import { isSupportEnabled } from "@/lib/support/settings"
+import { isSupportEnabled, getRegisterButtonConfig } from "@/lib/support/settings"
 import { Navbar } from "./navbar"
 
 export async function NavbarWrapper() {
-  const supportEnabled = await isSupportEnabled()
+  const [supportEnabled, registerConfig] = await Promise.all([
+    isSupportEnabled(),
+    getRegisterButtonConfig(),
+  ])
   
-  return <Navbar supportEnabled={supportEnabled} />
+  return <Navbar supportEnabled={supportEnabled} registerConfig={registerConfig} />
 }

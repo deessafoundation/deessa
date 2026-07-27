@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
+import type { RegisterButtonConfig } from "@/lib/support/settings"
 import { Comic_Neue } from "next/font/google"
 import {
   Heart,
@@ -29,6 +30,7 @@ const comicNeue = Comic_Neue({ subsets: ["latin"], weight: ["400", "700"] })
 
 interface NavbarProps {
   supportEnabled?: boolean
+  registerConfig?: RegisterButtonConfig
 }
 
 const primaryNavLinks = [
@@ -78,7 +80,9 @@ function isNavLinkActive(pathname: string, hash: string, href: string) {
   return pathname === href
 }
 
-export function Navbar({ supportEnabled = true }: NavbarProps) {
+export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
+  const registerHref = registerConfig?.enabled ? (registerConfig.href || "/conference/register") : "/events"
+  const registerLabel = registerConfig?.label || "Register"
   const pathname = usePathname()
   const hash = useHash()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -263,11 +267,11 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
               <div className="ml-auto flex shrink-0 items-center gap-1.5">
               <div className="hidden items-center gap-1.5 lg:flex">
                 <Link
-                  href="/conference/register"
+                  href={registerHref}
                   className={cn(comicNeue.className, "flex items-center gap-2 rounded-xl border border-primary/50 px-6 py-2.5 text-[15px] font-medium text-primary transition-colors duration-200 hover:bg-[#3FABDE]/20 hover:text-[#0B5F8A]")}
                 >
                   <ClipboardList className="size-3.5" />
-                  Register
+                  {registerLabel}
                 </Link>
 
                 <Button
@@ -341,11 +345,11 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
               })}
 
               <Link
-                href="/conference/register"
+                href={registerHref}
                 className={cn(comicNeue.className, "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 px-3 py-1.5 text-sm text-primary transition-colors hover:bg-[#3FABDE]/15 hover:text-[#0B5F8A]")}
               >
                 <ClipboardList className="size-3.5" />
-                <span>Register</span>
+                <span>{registerLabel}</span>
               </Link>
 
               <Link
@@ -589,12 +593,12 @@ export function Navbar({ supportEnabled = true }: NavbarProps) {
 
                 {/* Outline blue border button */}
                 <Link
-                  href="/conference/register"
+                  href={registerHref}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl border-2 border-[#2F9BCA] bg-white px-4 py-3 text-[15px] font-medium text-[#2F9BCA] transition-all hover:bg-[#f0f8fc] active:scale-[0.98]")}
                 >
                   <ClipboardList className="size-4" strokeWidth={2.5} />
-                  Register for Conference
+                  {registerLabel}
                 </Link>
 
                 {/* Soft ghost blue button */}
