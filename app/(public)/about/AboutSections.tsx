@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import {
@@ -131,6 +131,7 @@ function SectionHeader({ label, title, sub }: { label: string; title: string; su
 
 export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[] }) {
   const timelineRef = useRef<HTMLDivElement>(null)
+  const [activeCard, setActiveCard] = useState<number | null>(null)
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ["start 75%", "end 60%"],
@@ -387,19 +388,24 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                 <p className="font-dm-sans text-[#6b7280]">Team members coming soon.</p>
               </div>
             ) : (
-              teamMembers.map((member, i) => (
+              teamMembers.map((member, i) => {
+                const isActive = activeCard === i
+                return (
                 <motion.article
                   key={member.name}
                   {...reveal}
                   transition={{ duration: 0.5, delay: i * 0.12 }}
-                  className="group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
+                  className="team-card group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg cursor-pointer"
+                  onMouseEnter={() => setActiveCard(i)}
+                  onMouseLeave={() => setActiveCard(null)}
+                  onClick={() => setActiveCard(isActive ? null : i)}
                 >
                   <div className="relative aspect-[4/5.5] overflow-hidden rounded-t-2xl">
                     {member.image ? (
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105 saturate-0 group-hover:saturate-100"
+                        className={`h-full w-full object-cover transition-all duration-700 ${isActive ? "scale-105 saturate-100" : "scale-100 saturate-0"}`}
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#29b6c8]/10 to-[#29b6c8]/5">
@@ -409,9 +415,9 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                       </div>
                     )}
 
-                    {/* Bottom overlay — name & role + bio + social all appear on hover */}
+                    {/* Bottom overlay — name & role + bio + social */}
                     <div
-                      className="absolute inset-x-0 bottom-0 translate-y-full transition-all duration-500 ease-out group-hover:translate-y-0"
+                      className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"}`}
                       style={{ background: "linear-gradient(to top, rgba(10,15,35,0.92) 0%, rgba(10,15,35,0.7) 70%, transparent 100%)" }}
                     >
                       <div className="p-4 pt-6">
@@ -462,7 +468,7 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                     </div>
                   </div>
                 </motion.article>
-              ))
+              )})
             )}
           </div>
 
