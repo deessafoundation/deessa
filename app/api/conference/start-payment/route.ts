@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { getConferenceRegistrationByToken, startConferencePayment } from "@/lib/actions/conference-registration"
-import type { PaymentProvider } from "@/lib/payments/config"
+import { getPaymentSettings, getSupportedProviders, type PaymentProvider } from "@/lib/payments/config"
 
 // In-memory rate limiter (best-effort on serverless)
 const ipHits = new Map<string, { count: number; resetAt: number }>()
@@ -98,6 +98,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "Valid email is required" }, { status: 400 })
     }    if (!provider || !["stripe", "khalti", "esewa"].includes(provider)) {
       return NextResponse.json({ ok: false, error: "Invalid payment provider" }, { status: 400 })
+    }
+
+    // Validate provider is enabled in settings
+    const settings = await getPaymentSettings()
+    const availableProviders = getSupportedProviders(settings)
+    if (!availableProviders.includes(provider)) {
+      return NextResponse.json(
+        { ok: false, error: "This payment method is not currently available. Please choose another option." },
+        { status: 400 },
+      )
     }
 
     // Verify registration exists and belongs to this email BEFORE starting payment
