@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef, Suspense } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter, useParams } from "next/navigation"
 import Link from "next/link"
 import {
@@ -26,7 +26,16 @@ interface RegistrationInfo {
   ticketName: string | null
 }
 
-const PROVIDERS: { id: PaymentProvider; label: string; logo: string; desc: string }[] = [
+interface ProviderInfo {
+  id: PaymentProvider
+  label: string
+  logo: string
+  desc: string
+  available: boolean
+  enabled: boolean
+}
+
+const ALL_PROVIDERS: { id: PaymentProvider; label: string; logo: string; desc: string }[] = [
   { id: "stripe", label: "Card / International", logo: "💳", desc: "Visa, Mastercard, AMEX" },
   { id: "khalti", label: "Khalti", logo: "🟣", desc: "Nepal digital wallet" },
   { id: "esewa", label: "eSewa", logo: "🟢", desc: "Nepal digital wallet" },
@@ -56,6 +65,36 @@ function PendingPaymentContent() {
   const [paying, setPaying] = useState(false)
   const [payError, setPayError] = useState<string | null>(null)
   const [countdown, setCountdown] = useState("")
+  const [providers, setProviders] = useState<ProviderInfo[]>([])
+
+  // Fetch payment settings on mount
+  useEffect(() => {
+    fetch("/api/public/payment-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok) {
+          const enriched = ALL_PROVIDERS.map((p) => ({
+            ...p,
+            available: data.providerStatus[p.id]?.available ?? false,
+            enabled: data.providerStatus[p.id]?.enabled ?? false,
+          }))
+          setProviders(enriched)
+
+          // Auto-select first available provider
+          const firstAvailable = enriched.find((p) => p.available)
+          if (firstAvailable) {
+            setSelectedProvider(firstAvailable.id)
+          }
+        } else {
+          // Fallback: show all providers as unavailable
+          setProviders(ALL_PROVIDERS.map((p) => ({ ...p, available: false, enabled: false })))
+        }
+      })
+      .catch(() => {
+        // Fallback on error: show all providers as available (existing behavior)
+        setProviders(ALL_PROVIDERS.map((p) => ({ ...p, available: true, enabled: true })))
+      })
+  }, [])
 
   // Countdown timer
   useEffect(() => {
@@ -305,34 +344,64 @@ function PendingPaymentContent() {
               </p>
 
               <div className="flex flex-col gap-3 mb-6">
-                {PROVIDERS.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => setSelectedProvider(p.id)}
-                    className={`flex items-center gap-4 rounded-xl border-2 px-5 py-4 text-left transition-all ${
-                      selectedProvider === p.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-background hover:border-primary/40"
-                    }`}
-                  >
-                    <span className="text-2xl">{p.logo}</span>
-                    <div className="flex-1">
-                      <p className="font-bold text-foreground">{p.label}</p>
-                      <p className="text-xs text-muted-foreground">{p.desc}</p>
-                    </div>
-                    <div
-                      className={`size-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                        selectedProvider === p.id
-                          ? "border-primary bg-primary"
-                          : "border-border"
-                      }`}
-                    >
-                      {selectedProvider === p.id && (
-                        <div className="size-2 rounded-full bg-white" />
+                {providers.map((p) => {
+                  const isSelected = selectedProvider === p.id && p.available
+                  const isDisabled = !p.available
+
+                  return (
+                    <div key={p.id} className="relative group">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!isDisabled) {
+                            setSelectedProvider(p.id)
+                          }
+                        }}
+                        disabled={isDisabled}
+                        className={`flex w-full items-center gap-4 rounded-xl border-2 px-5 py-4 text-left transition-all ${
+                          isDisabled
+                            ? "opacity-50 cursor-not-allowed border-border bg-muted/30"
+                            : isSelected
+                              ? "border-primary bg-primary/5 shadow-sm"
+                              : "border-border bg-background hover:border-primary/40"
+                        }`}
+                      >
+                        <span className={`text-2xl ${isDisabled ? "grayscale" : ""}`}>{p.logo}</span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className={`font-bold ${isDisabled ? "text-muted-foreground" : "text-foreground"}`}>
+                              {p.label}
+                            </p>
+                            {isDisabled && (
+                              <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                                Unavailable
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{p.desc}</p>
+                        </div>
+                        <div
+                          className={`size-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                            isSelected
+                              ? "border-primary bg-primary"
+                              : "border-border"
+                          }`}
+                        >
+                          {isSelected && (
+                            <div className="size-2 rounded-full bg-white" />
+                          )}
+                        </div>
+                      </button>
+                      {isDisabled && (
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <div className="rounded-lg bg-foreground/90 px-3 py-1.5 text-xs font-medium text-background shadow-lg">
+                            {!p.enabled ? "Disabled in settings" : "API keys not configured"}
+                          </div>
+                        </div>
                       )}
                     </div>
-                  </button>
-                ))}
+                  )
+                })}
               </div>
 
               {payError && (
@@ -344,7 +413,7 @@ function PendingPaymentContent() {
 
               <button
                 onClick={handlePay}
-                disabled={paying}
+                disabled={paying || !providers.some((p) => p.available)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 text-base font-bold text-white shadow-lg transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {paying ? (
