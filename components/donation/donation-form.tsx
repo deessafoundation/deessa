@@ -233,36 +233,41 @@ export function DonationForm({
             Secure Payment Method
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {enabledProviders.includes("stripe") && (
-              <button
-                type="button"
-                onClick={() => handleProviderChange("stripe")}
-                className={cn(
-                  "px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
-                  provider === "stripe"
-                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
-                    : "bg-surface text-foreground border-border hover:border-primary/50 hover:bg-muted/50",
-                )}
-              >
-                <CreditCard className="size-4" />
-                Stripe (USD)
-              </button>
-            )}
-            {enabledProviders.includes("esewa") && (
-              <button
-                type="button"
-                onClick={() => handleProviderChange("esewa")}
-                className={cn(
-                  "px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
-                  provider === "esewa"
-                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
-                    : "bg-surface text-foreground border-border hover:border-primary/50 hover:bg-muted/50",
-                )}
-              >
-                <CreditCard className="size-4" />
-                eSewa (NPR)
-              </button>
-            )}
+            {[
+              { id: "stripe" as PaymentProvider, label: "Stripe (USD)" },
+              { id: "khalti" as PaymentProvider, label: "Khalti (NPR)" },
+              { id: "esewa" as PaymentProvider, label: "eSewa (NPR)" },
+            ].map((p) => {
+              const isAvailable = enabledProviders.includes(p.id)
+              const isSelected = provider === p.id && isAvailable
+              return (
+                <div key={p.id} className="relative group">
+                  <button
+                    type="button"
+                    onClick={() => handleProviderChange(p.id)}
+                    disabled={!isAvailable}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
+                      !isAvailable
+                        ? "opacity-50 cursor-not-allowed bg-muted text-muted-foreground border-border"
+                        : isSelected
+                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
+                          : "bg-surface text-foreground border-border hover:border-primary/50 hover:bg-muted/50",
+                    )}
+                  >
+                    <CreditCard className={cn("size-4", !isAvailable && "text-muted-foreground")} />
+                    {p.label}
+                  </button>
+                  {!isAvailable && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                      <div className="rounded-lg bg-foreground/90 px-3 py-1.5 text-xs font-medium text-background shadow-lg whitespace-nowrap">
+                        Currently unavailable
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
           {enabledProviders.length === 0 && (
             <p className="mt-4 text-center text-sm text-amber-600 font-medium">
