@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback, useRef, useEffect } from "react"
+import { useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft, Loader2 } from "lucide-react"
+import { ChevronLeft, Loader2, Upload, X, QrCode, CheckCircle, AlertCircle } from "lucide-react"
 import { StepProgressBar } from "@/components/conference/step-progress-bar"
 import { DynamicStep } from "@/components/conference/dynamic-step"
 import { validateFieldValue } from "@/lib/validation/form-schema"
+import { filterVisibleSteps } from "@/lib/validation/conditional-engine"
 import { registerForEvent } from "@/lib/actions/events-module/event-registration"
 import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
 import type { EventModuleEvent, EventTicketType } from "@/lib/types/events-module"
@@ -32,18 +33,59 @@ export function EventRegistrationForm({
   const [consentTerms, setConsentTerms] = useState(false)
   const [consentNewsletter, setConsentNewsletter] = useState(false)
 
-  const steps: FormStep[] = schema?.steps ?? []
-  // +1 for ticket selection (if paid), +1 for review/consent
-  const hasTicketStep = !event.is_free && ticketTypes.length > 0
-  const totalSteps = steps.length + (hasTicketStep ? 1 : 0) + 1
+  // Payment state
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "qr" | "venue" | null>(null)
+  const [paymentScreenshotUrl, setPaymentScreenshotUrl] = useState<string | null>(null)
+  const [uploadingScreenshot, setUploadingScreenshot] = useState(false)
+  const [screenshotError, setScreenshotError] = useState<string | null>(null)
+  const screenshotInputRef = useRef<HTMLInputElement>(null)
+
+  const allSteps: FormStep[] = schema?.steps ?? []
+  // Filter steps based on conditional logic
+  const steps = useMemo(() => filterVisibleSteps(allSteps, formData), [allSteps, formData])
+
+  // Check if registration is closed (client-side guard)
+  const now = new Date()
+  const eventDate = new Date(event.event_date)
+  eventDate.setHours(23, 59, 59, 999)
+  const isPastEvent = eventDate < now
+  const isRegistrationClosedByDate = !!(
+    event.registration_close_at && new Date(event.registration_close_at) < now
+  )
+  const isRegistrationClosed = isPastEvent || isRegistrationClosedByDate || !event.registration_enabled
+
+  const hasTicketStep = !event.is_free
+  // Count enabled payment methods for paid events
+  const enabledPaymentMethods: string[] = []
+  if (!event.is_free) {
+    if (event.allow_online_payment !== false) enabledPaymentMethods.push("online")
+    if (event.allow_qr_payment && event.payment_qr_image_url) enabledPaymentMethods.push("qr")
+    if (event.allow_pay_at_venue) enabledPaymentMethods.push("venue")
+  }
+  // Show payment method step only when 2+ methods are available
+  const hasPaymentMethodStep = enabledPaymentMethods.length >= 2
+  // Auto-assign when exactly 1 method is available
+  const autoPaymentMethod = enabledPaymentMethods.length === 1 ? enabledPaymentMethods[0] as "online" | "qr" | "venue" : null
+  // Screenshot step only when user chose QR payment
+  const hasScreenshotStep = (hasPaymentMethodStep ? paymentMethod : autoPaymentMethod) === "qr"
+  const totalSteps =
+    steps.length +
+    (hasTicketStep ? 1 : 0) +
+    (hasPaymentMethodStep ? 1 : 0) +
+    (hasScreenshotStep ? 1 : 0) +
+    1
   const isFirst = currentStep === 0
   const ticketStepIndex = hasTicketStep ? steps.length : -1
+  const paymentMethodStepIndex = hasPaymentMethodStep ? steps.length + (hasTicketStep ? 1 : 0) : -1
+  const screenshotStepIndex = hasScreenshotStep ? steps.length + (hasTicketStep ? 1 : 0) + (hasPaymentMethodStep ? 1 : 0) : -1
   const reviewStepIndex = totalSteps - 1
   const isReviewStep = currentStep === reviewStepIndex
 
   const stepLabels = [
     ...steps.map((s) => s.label),
     ...(hasTicketStep ? ["Select Ticket"] : []),
+    ...(hasPaymentMethodStep ? ["Payment Method"] : []),
+    ...(hasScreenshotStep ? ["Payment Screenshot"] : []),
     "Review & Submit",
   ]
 
@@ -81,12 +123,85 @@ export function EventRegistrationForm({
   }, [totalSteps])
 
   const handleBack = useCallback(() => {
-    setCurrentStep((s) => Math.max(s - 1, 0))
+    setCurrentStep((s) => {
+      const prev = Math.max(s - 1, 0)
+      // If going back from screenshot step to payment method step, allow it
+      return prev
+    })
   }, [])
 
   const handleEdit = useCallback((step: number) => {
     setCurrentStep(step - 1)
   }, [])
+
+  // Payment screenshot upload handler
+  const handleScreenshotUpload = useCallback(async (file: File) => {
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
+    if (!allowedTypes.includes(file.type)) {
+      setScreenshotError("Invalid file type. Accepted: JPEG, PNG, WEBP, GIF")
+      return
+    }
+
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      setScreenshotError("File too large. Maximum size is 5MB")
+      return
+    }
+
+    setScreenshotError(null)
+    setUploadingScreenshot(true)
+
+    try {
+      const formDataUpload = new FormData()
+      formDataUpload.append("file", file)
+
+      const response = await fetch("/api/events/upload-payment-screenshot", {
+        method: "POST",
+        body: formDataUpload,
+      })
+
+      const result = await response.json()
+
+      if (!result.ok) {
+        setScreenshotError(result.error || "Upload failed. Please try again.")
+        return
+      }
+
+      setPaymentScreenshotUrl(result.path)
+    } catch (err) {
+      setScreenshotError("Upload failed. Please try again.")
+    } finally {
+      setUploadingScreenshot(false)
+    }
+  }, [])
+
+  const handleScreenshotFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleScreenshotUpload(file)
+    if (e.target) e.target.value = ""
+  }
+
+  const handleScreenshotDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const file = e.dataTransfer.files?.[0]
+    if (file) {
+      // Validate file type on drop too
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
+      if (!allowedTypes.includes(file.type)) {
+        setScreenshotError("Invalid file type. Accepted: JPEG, PNG, WEBP, GIF")
+        return
+      }
+      handleScreenshotUpload(file)
+    }
+  }
+
+  const handleRemoveScreenshot = () => {
+    setPaymentScreenshotUrl(null)
+    setScreenshotError(null)
+  }
 
   const handleSubmit = async (consent: {
     consentTerms: boolean
@@ -107,25 +222,39 @@ export function EventRegistrationForm({
           form_schema_version: schema?.version,
           ticket_type_id: selectedTicketId || undefined,
         },
-        formData
+        {
+          ...formData,
+          payment_screenshot_url: paymentScreenshotUrl || undefined,
+          payment_method: paymentMethod || autoPaymentMethod || undefined,
+        }
       )
 
-      if (result.success && result.registrationId) {
-        if (result.paymentRequired) {
-          const params = new URLSearchParams({
-            rid: result.registrationId,
-            email: String(formData.email ?? ""),
-            name: String(formData.full_name ?? ""),
-            amount: String(result.paymentAmount ?? ""),
-            currency: result.paymentCurrency ?? "NPR",
-            expiryHours: String(result.expiryHours ?? 24),
-            slug: event.slug,
-            eventName: event.title,
-          })
+        const effectiveMethod = paymentMethod || autoPaymentMethod
+        if (result.success && result.registrationId) {
+          if (result.paymentRequired) {
+            // Online payment → redirect to payment options
+            const params = new URLSearchParams({
+              rid: result.registrationId,
+              email: String(formData.email ?? ""),
+              name: String(formData.full_name ?? ""),
+              amount: String(result.paymentAmount ?? ""),
+              currency: result.paymentCurrency ?? "NPR",
+              expiryHours: String(result.expiryHours ?? 24),
+              slug: event.slug,
+              eventName: event.title,
+            })
+            router.push(
+              `/events/${event.slug}/register/payment-options?${params.toString()}`
+            )
+          } else if (effectiveMethod === "qr") {
+          // QR payment → redirect to pending verification
           router.push(
-            `/events/${event.slug}/register/payment-options?${params.toString()}`
+            `/events/${event.slug}/register/pending-verification?id=${result.registrationId}&name=${encodeURIComponent(
+              String(formData.full_name ?? "")
+            )}&email=${encodeURIComponent(String(formData.email ?? ""))}`
           )
         } else {
+          // Free event, pay at venue, or no payment needed → success page
           router.push(
             `/events/${event.slug}/register/success?id=${result.registrationId}&name=${encodeURIComponent(
               String(formData.full_name ?? "")
@@ -194,6 +323,32 @@ export function EventRegistrationForm({
       }
     }
 
+    // Add payment method info if applicable
+    const effectiveMethod = paymentMethod || autoPaymentMethod
+    if (effectiveMethod) {
+      sections.push({
+        title: "Payment Method",
+        stepIndex: paymentMethodStepIndex,
+        rows: [
+          {
+            label: "Method",
+            value: effectiveMethod === "qr" ? "QR Code Payment" : effectiveMethod === "venue" ? "Pay at Venue" : "Online Payment",
+          },
+        ],
+      })
+    }
+
+    // Add payment screenshot info if QR payment
+    if (hasScreenshotStep && paymentScreenshotUrl) {
+      sections.push({
+        title: "Payment Screenshot",
+        stepIndex: screenshotStepIndex,
+        rows: [
+          { label: "Screenshot", value: "Uploaded" },
+        ],
+      })
+    }
+
     return sections
   }
 
@@ -232,18 +387,40 @@ export function EventRegistrationForm({
         </div>
 
         {/* Event Context */}
-        <div className="mb-4 rounded-xl border bg-surface p-4">
-          <p className="text-sm text-muted-foreground">Registering for</p>
-          <p className="font-bold">{event.title}</p>
-          <p className="text-sm text-muted-foreground">
-            {new Date(event.event_date).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-            {event.event_time && ` • ${event.event_time}`}
-            {` • ${event.location}`}
-          </p>
+        <div className="mb-4 rounded-xl border border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 via-primary-light/30 to-brand-purple/5 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Registering for</p>
+          <p className="mt-1 text-lg font-bold text-foreground">{event.title}</p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-foreground-muted">
+            <span className="inline-flex items-center gap-1">
+              <svg className="size-3.5 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
+              {new Date(event.event_date).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+            {event.event_time && (
+              <>
+                <span className="text-black/20">·</span>
+                <span className="inline-flex items-center gap-1">
+                  <svg className="size-3.5 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {event.event_time}
+                </span>
+              </>
+            )}
+            <span className="text-black/20">·</span>
+            <span className="inline-flex items-center gap-1">
+              <svg className="size-3.5 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              {event.location}
+            </span>
+          </div>
         </div>
 
         {/* Progress */}
@@ -256,10 +433,35 @@ export function EventRegistrationForm({
 
       {/* Form Card */}
       <div className="mx-auto w-full max-w-3xl flex-1 px-4 pb-16 sm:px-6">
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="relative min-h-[50vh] overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/5 blur-3xl" />
 
           <div className="relative z-10 p-8 sm:p-10">
+            {/* Registration closed guard */}
+            {isRegistrationClosed ? (
+              <div className="flex flex-col items-center gap-6 py-12 text-center">
+                <div className="flex size-16 items-center justify-center rounded-full bg-muted">
+                  <AlertCircle className="size-8 text-muted-foreground" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {isPastEvent ? "Event Has Ended" : "Registration Closed"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground max-w-md">
+                    {isPastEvent
+                      ? "This event has already taken place. Registration is no longer available."
+                      : "Registration for this event is no longer available."}
+                  </p>
+                </div>
+                <Link
+                  href={`/events/${event.slug}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
+                >
+                  Back to Event
+                </Link>
+              </div>
+            ) : (
+            <>
             {/* Form Steps */}
             {currentStep < steps.length && steps.length > 0 && (
               <DynamicStep
@@ -271,7 +473,7 @@ export function EventRegistrationForm({
                 onNext={handleNext}
                 onBack={currentStep > 0 ? handleBack : undefined}
                 isFirst={isFirst}
-                isLast={currentStep === steps.length - 1 && !hasTicketStep}
+                isLast={currentStep === steps.length - 1 && !hasTicketStep && !hasPaymentMethodStep}
               />
             )}
 
@@ -289,20 +491,30 @@ export function EventRegistrationForm({
 
                 <div className="space-y-3" role="radiogroup" aria-label="Select ticket type">
                   {ticketTypes
-                    .filter((t) => {
-                      if (!t.is_active) return false
-                      const now = new Date()
-                      if (t.sales_end && new Date(t.sales_end) < now) return false
-                      if (t.sales_start && new Date(t.sales_start) > now) return false
-                      return true
-                    })
                     .map((ticket) => {
+                      const now = new Date()
+                      const salesStart = ticket.sales_start ? new Date(ticket.sales_start) : null
+                      const salesEnd = ticket.sales_end ? new Date(ticket.sales_end) : null
                       const isSoldOut = ticket.capacity != null && ticket.capacity - (ticket.sold_count || 0) <= 0
+                      const isNotYetOnSale = salesStart !== null && salesStart > now
+                      const isSalesEnded = salesEnd !== null && salesEnd < now
+                      const isDisabled = isSoldOut || isNotYetOnSale || isSalesEnded
+
+                      const getBadge = () => {
+                        if (isSoldOut) return { text: "Sold out", className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" }
+                        if (isNotYetOnSale) return { text: `Sales open ${salesStart!.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`, className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" }
+                        if (isSalesEnded) return { text: "Sales ended", className: "bg-black/10 text-black/50" }
+                        return null
+                      }
+
+                      const badge = getBadge()
+                      const spotsLeft = ticket.capacity != null ? ticket.capacity - (ticket.sold_count || 0) : null
+
                       return (
                       <label
                         key={ticket.id}
                         className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                          isSoldOut
+                          isDisabled
                             ? "border-border bg-muted/50 opacity-60 cursor-not-allowed"
                             : selectedTicketId === ticket.id
                             ? "border-primary bg-primary/5 cursor-pointer"
@@ -315,20 +527,41 @@ export function EventRegistrationForm({
                             name="ticket"
                             value={ticket.id}
                             checked={selectedTicketId === ticket.id}
-                            disabled={isSoldOut}
+                            disabled={isDisabled}
                             onChange={() => setSelectedTicketId(ticket.id)}
                             className="h-4 w-4 text-primary"
                             aria-label={`${ticket.name} - ${ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
                           />
                           <div>
-                            <p className="font-medium">{ticket.name}</p>
-                            {ticket.capacity && (
-                              <p className="text-xs text-muted-foreground">
-                                {ticket.capacity - (ticket.sold_count || 0) <= 0
-                                  ? "Sold out"
-                                  : `${ticket.capacity - (ticket.sold_count || 0)} spots available`}
-                              </p>
-                            )}
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{ticket.name}</p>
+                              {badge && (
+                                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge.className}`}>
+                                  {badge.text}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              {ticket.capacity ? (
+                                <p className="text-xs text-muted-foreground">
+                                  {isSoldOut
+                                    ? "Sold out"
+                                    : `${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} available`}
+                                </p>
+                              ) : (
+                                <p className="text-xs text-muted-foreground">Unlimited</p>
+                              )}
+                              {isNotYetOnSale && salesStart && (
+                                <p className="text-xs text-muted-foreground">
+                                  · Opens {salesStart.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                </p>
+                              )}
+                              {isSalesEnded && salesEnd && (
+                                <p className="text-xs text-muted-foreground">
+                                  · Ended {salesEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <p className="font-bold">
@@ -339,13 +572,7 @@ export function EventRegistrationForm({
                       </label>
                       )
                     })}
-                  {ticketTypes.filter((t) => {
-                    if (!t.is_active) return false
-                    const now = new Date()
-                    if (t.sales_end && new Date(t.sales_end) < now) return false
-                    if (t.sales_start && new Date(t.sales_start) > now) return false
-                    return true
-                  }).length === 0 && (
+                  {ticketTypes.length === 0 && (
                     <p className="text-sm text-muted-foreground text-center py-4">
                       No tickets are currently available for this event.
                     </p>
@@ -365,6 +592,303 @@ export function EventRegistrationForm({
                     type="button"
                     onClick={handleNext}
                     disabled={!selectedTicketId}
+                    className="flex items-center gap-2 rounded-xl bg-primary px-8 py-3 text-base font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 active:translate-y-0 active:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    Continue
+                    <svg
+                      className="size-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Payment Method Choice Step */}
+            {hasPaymentMethodStep && currentStep === paymentMethodStepIndex && (
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-1">
+                  <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                    Payment Method
+                  </h1>
+                  <p className="text-sm text-foreground-muted">
+                    Choose how you&apos;d like to pay for this event.
+                  </p>
+                </div>
+
+                <div className="space-y-3" role="radiogroup" aria-label="Select payment method">
+                  {/* Online Payment Option */}
+                  {enabledPaymentMethods.includes("online") && (
+                    <label
+                      className={`flex items-center gap-4 p-5 rounded-xl border transition-all cursor-pointer ${
+                        paymentMethod === "online"
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment-method"
+                        value="online"
+                        checked={paymentMethod === "online"}
+                        onChange={() => {
+                          setPaymentMethod("online")
+                          setPaymentScreenshotUrl(null)
+                          setScreenshotError(null)
+                        }}
+                        className="h-4 w-4 text-primary"
+                      />
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                        <svg className="size-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-foreground">Pay Online</p>
+                        <p className="text-sm text-foreground-muted">
+                          Complete payment securely via eSewa, Khalti, or Stripe
+                        </p>
+                      </div>
+                      <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
+                        paymentMethod === "online" ? "border-primary" : "border-muted-foreground/30"
+                      }`}>
+                        {paymentMethod === "online" && (
+                          <div className="size-2.5 rounded-full bg-primary" />
+                        )}
+                      </div>
+                    </label>
+                  )}
+
+                  {/* QR Code Payment Option */}
+                  {enabledPaymentMethods.includes("qr") && (
+                    <label
+                      className={`flex items-center gap-4 p-5 rounded-xl border transition-all cursor-pointer ${
+                        paymentMethod === "qr"
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment-method"
+                        value="qr"
+                        checked={paymentMethod === "qr"}
+                        onChange={() => setPaymentMethod("qr")}
+                        className="h-4 w-4 text-primary"
+                      />
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                        <QrCode className="size-6 text-amber-600 dark:text-amber-400" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-foreground">Pay via QR Code</p>
+                        <p className="text-sm text-foreground-muted">
+                          Scan QR code and upload payment screenshot for verification
+                        </p>
+                      </div>
+                      <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
+                        paymentMethod === "qr" ? "border-primary" : "border-muted-foreground/30"
+                      }`}>
+                        {paymentMethod === "qr" && (
+                          <div className="size-2.5 rounded-full bg-primary" />
+                        )}
+                      </div>
+                    </label>
+                  )}
+
+                  {/* Pay at Venue Option */}
+                  {enabledPaymentMethods.includes("venue") && (
+                    <label
+                      className={`flex items-center gap-4 p-5 rounded-xl border transition-all cursor-pointer ${
+                        paymentMethod === "venue"
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment-method"
+                        value="venue"
+                        checked={paymentMethod === "venue"}
+                        onChange={() => {
+                          setPaymentMethod("venue")
+                          setPaymentScreenshotUrl(null)
+                          setScreenshotError(null)
+                        }}
+                        className="h-4 w-4 text-primary"
+                      />
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/30">
+                        <svg className="size-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-foreground">Pay at Venue</p>
+                        <p className="text-sm text-foreground-muted">
+                          Complete registration now, pay at the check-in desk
+                        </p>
+                      </div>
+                      <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
+                        paymentMethod === "venue" ? "border-primary" : "border-muted-foreground/30"
+                      }`}>
+                        {paymentMethod === "venue" && (
+                          <div className="size-2.5 rounded-full bg-primary" />
+                        )}
+                      </div>
+                    </label>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border pt-6">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-bold text-foreground transition-colors hover:bg-muted"
+                  >
+                    <ChevronLeft className="size-4" />
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={!paymentMethod}
+                    className="flex items-center gap-2 rounded-xl bg-primary px-8 py-3 text-base font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 active:translate-y-0 active:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    Continue
+                    <svg
+                      className="size-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Payment Screenshot Step */}
+            {hasScreenshotStep && currentStep === screenshotStepIndex && (
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-1">
+                  <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                    Payment Screenshot
+                  </h1>
+                  <p className="text-sm text-foreground-muted">
+                    Upload proof of your payment to complete registration.
+                  </p>
+                </div>
+
+                {/* QR Code Display */}
+                <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <QrCode className="size-4 text-primary" />
+                    <p className="text-sm font-bold text-primary">Scan to Pay</p>
+                  </div>
+                  <div className="flex justify-center mb-3">
+                    <img
+                      src={event.payment_qr_image_url!}
+                      alt="Payment QR Code"
+                      className="h-48 w-48 object-contain rounded-lg bg-white p-2 shadow-sm"
+                    />
+                  </div>
+                  {event.payment_instructions && (
+                    <p className="text-xs text-black/60 text-center leading-relaxed">
+                      {event.payment_instructions}
+                    </p>
+                  )}
+                </div>
+
+                {/* Upload Area */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-foreground">
+                    Upload Payment Screenshot <span className="text-destructive">*</span>
+                  </label>
+
+                  {paymentScreenshotUrl ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 border rounded-lg bg-green-50 border-green-200">
+                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-green-800">Screenshot uploaded</p>
+                          <p className="text-xs text-green-600 truncate">{paymentScreenshotUrl.split("/").pop()}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleRemoveScreenshot}
+                          className="p-1.5 rounded-lg hover:bg-green-100 transition-colors"
+                        >
+                          <X className="h-4 w-4 text-green-600" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className="border-2 border-dashed rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
+                      onDrop={handleScreenshotDrop}
+                      onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
+                      onClick={() => screenshotInputRef.current?.click()}
+                    >
+                      <input
+                        ref={screenshotInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleScreenshotFileChange}
+                        className="hidden"
+                      />
+                      {uploadingScreenshot ? (
+                        <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary mb-3" />
+                      ) : (
+                        <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                      )}
+                      <p className="text-sm font-medium text-foreground">
+                        {uploadingScreenshot ? "Uploading..." : "Click to upload or drag & drop"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        PNG, JPG, WEBP, GIF up to 5MB
+                      </p>
+                    </div>
+                  )}
+
+                  {screenshotError && (
+                    <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                      <AlertCircle className="mt-0.5 size-4 shrink-0" />
+                      <span>{screenshotError}</span>
+                    </div>
+                  )}
+
+                  <p className="text-xs text-muted-foreground">
+                    Please ensure the screenshot clearly shows the transaction ID, amount, and date.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border pt-6">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-bold text-foreground transition-colors hover:bg-muted"
+                  >
+                    <ChevronLeft className="size-4" />
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={!paymentScreenshotUrl}
                     className="flex items-center gap-2 rounded-xl bg-primary px-8 py-3 text-base font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 active:translate-y-0 active:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     Continue
@@ -513,6 +1037,8 @@ export function EventRegistrationForm({
                   </button>
                 </div>
               </div>
+            )}
+            </>
             )}
           </div>
         </div>
