@@ -2,8 +2,9 @@
 
 import { Plus, ChevronUp, ChevronDown, Trash2, Edit2, Check, X } from "lucide-react"
 import { useState } from "react"
-import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormStep, FieldConditional } from "@/lib/types/conference-form-schema"
 import { Button } from "@/components/ui/button"
+import { EnhancedConditionalEditor } from "./conference-form-builder/EnhancedConditionalEditor"
 
 interface FormStepEditorProps {
   schema: FormSchema
@@ -14,6 +15,7 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
   const [editingStepId, setEditingStepId] = useState<string | null>(null)
   const [editLabel, setEditLabel] = useState("")
   const [editDescription, setEditDescription] = useState("")
+  const [editConditional, setEditConditional] = useState<FieldConditional | undefined>(undefined)
 
   const addStep = () => {
     const newStep: FormStep = {
@@ -36,6 +38,7 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
     setEditingStepId(step.id)
     setEditLabel(step.label)
     setEditDescription(step.description || "")
+    setEditConditional(step.conditional)
   }
 
   const saveEdit = () => {
@@ -49,6 +52,7 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
         ...updatedSchema.steps[stepIndex],
         label: editLabel,
         description: editDescription,
+        conditional: editConditional,
       }
       onSchemaChange(updatedSchema)
     }
@@ -60,6 +64,7 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
     setEditingStepId(null)
     setEditLabel("")
     setEditDescription("")
+    setEditConditional(undefined)
   }
 
   const moveStep = (stepId: string, direction: "up" | "down") => {
@@ -163,6 +168,25 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
                         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                       />
                     </div>
+
+                    {/* Step Conditional Logic */}
+                    <EnhancedConditionalEditor
+                      key={`step-${step.id}`}
+                      field={{
+                        id: step.id,
+                        type: "heading" as const,
+                        label: step.label,
+                        order: 0,
+                        storage: "custom" as const,
+                        required: false,
+                        conditional: editConditional,
+                      }}
+                      allFields={schema.steps.flatMap((s) => s.fields)}
+                      onChange={(conditional) => {
+                        setEditConditional(conditional)
+                      }}
+                    />
+
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={cancelEdit}
@@ -193,6 +217,11 @@ export function FormStepEditor({ schema, onSchemaChange }: FormStepEditorProps) 
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold text-foreground">
                           {step.label}
+                          {step.conditional && (
+                            <span className="ml-2 inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                              Conditional
+                            </span>
+                          )}
                         </div>
                         {step.description && (
                           <div className="text-xs text-muted-foreground mt-0.5">
