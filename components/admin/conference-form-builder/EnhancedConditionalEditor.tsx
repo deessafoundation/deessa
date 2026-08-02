@@ -4,7 +4,7 @@
 // Phase 4: Supports AND/OR operators, advanced comparison operators
 // (contains, greaterThan, lessThan), and nested conditions.
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { FancySelect } from "@/components/ui/fancy-select"
@@ -88,6 +88,19 @@ export function EnhancedConditionalEditor({
     field.conditional?.conditions || []
   )
 
+  // Sync state when field changes
+  useEffect(() => {
+    setEnabled(!!field.conditional)
+    setUseAdvancedLogic(
+      !!(field.conditional?.conditions && field.conditional.conditions.length > 0)
+    )
+    setDependsOn(field.conditional?.dependsOn || "")
+    setOperator(field.conditional?.operator || "equals")
+    setValue(field.conditional?.value || "")
+    setLogic(field.conditional?.logic || "and")
+    setConditions(field.conditional?.conditions || [])
+  }, [field.id, field.conditional])
+
   const handleEnabledChange = (checked: boolean) => {
     setEnabled(checked)
     if (!checked) {
@@ -100,28 +113,6 @@ export function EnhancedConditionalEditor({
         value: "",
       })
     }
-  }
-
-  const handleSimpleConditionChange = () => {
-    if (!enabled) return
-
-    onChange({
-      dependsOn,
-      operator,
-      value,
-    })
-  }
-
-  const handleAdvancedConditionChange = () => {
-    if (!enabled) return
-
-    onChange({
-      dependsOn: "", // Not used in advanced mode
-      operator: "equals", // Not used in advanced mode
-      value: "", // Not used in advanced mode
-      logic,
-      conditions,
-    })
   }
 
   const handleAddCondition = () => {
@@ -182,6 +173,7 @@ export function EnhancedConditionalEditor({
 
   const handleSwitchToAdvanced = () => {
     setUseAdvancedLogic(true)
+    setLogic("and")
     // Convert current simple condition to advanced
     const firstCondition: FieldConditional = {
       dependsOn,
@@ -288,7 +280,11 @@ export function EnhancedConditionalEditor({
                   value={dependsOn}
                   onValueChange={(val) => {
                     setDependsOn(val)
-                    setTimeout(handleSimpleConditionChange, 0)
+                    onChange({
+                      dependsOn: val,
+                      operator,
+                      value,
+                    })
                   }}
                   placeholder="Select field"
                   options={availableFields.map((f) => ({ value: f.id, label: f.label }))}
@@ -301,8 +297,13 @@ export function EnhancedConditionalEditor({
                 <FancySelect
                   value={operator}
                   onValueChange={(val) => {
-                    setOperator(val as ConditionalOperator)
-                    setTimeout(handleSimpleConditionChange, 0)
+                    const newOp = val as ConditionalOperator
+                    setOperator(newOp)
+                    onChange({
+                      dependsOn,
+                      operator: newOp,
+                      value,
+                    })
                   }}
                   options={Object.entries(OPERATOR_LABELS).map(([op, label]) => ({ value: op, label }))}
                   size="sm"
@@ -317,7 +318,11 @@ export function EnhancedConditionalEditor({
                       value={value}
                       onValueChange={(val) => {
                         setValue(val)
-                        setTimeout(handleSimpleConditionChange, 0)
+                        onChange({
+                          dependsOn,
+                          operator,
+                          value: val,
+                        })
                       }}
                       placeholder="Select value"
                       options={getFieldOptions(dependsOn).map((opt) => ({ value: opt, label: opt }))}
@@ -327,8 +332,13 @@ export function EnhancedConditionalEditor({
                     <Input
                       value={value}
                       onChange={(e) => {
-                        setValue(e.target.value)
-                        setTimeout(handleSimpleConditionChange, 0)
+                        const newVal = e.target.value
+                        setValue(newVal)
+                        onChange({
+                          dependsOn,
+                          operator,
+                          value: newVal,
+                        })
                       }}
                       placeholder="Enter value"
                     />
@@ -364,8 +374,15 @@ export function EnhancedConditionalEditor({
                 <FancySelect
                   value={logic}
                   onValueChange={(val) => {
-                    setLogic(val as "and" | "or")
-                    setTimeout(handleAdvancedConditionChange, 0)
+                    const newLogic = val as "and" | "or"
+                    setLogic(newLogic)
+                    onChange({
+                      dependsOn: "",
+                      operator: "equals",
+                      value: "",
+                      logic: newLogic,
+                      conditions,
+                    })
                   }}
                   options={[
                     { value: "and", label: "AND" },
