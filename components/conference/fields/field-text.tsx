@@ -4,6 +4,16 @@ import type { FieldProps } from "./index"
 
 export function FieldText({ field, value, error, onChange, onBlur }: FieldProps) {
   const strVal = typeof value === "string" ? value : String(value ?? "")
+  const charCount = strVal.length
+  const minLength = field.validation?.minLength
+  const maxLength = field.validation?.maxLength
+
+  const getCharCountColor = () => {
+    if (maxLength && charCount > maxLength) return "text-red-500"
+    if (minLength && charCount < minLength) return "text-amber-500"
+    return "text-black/30"
+  }
+
   return (
     <div className="flex flex-col gap-1.5">
       {field.label && (
@@ -22,12 +32,23 @@ export function FieldText({ field, value, error, onChange, onBlur }: FieldProps)
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         placeholder={field.placeholder}
+        maxLength={maxLength}
         className={`h-14 w-full rounded-xl border bg-background px-4 text-base text-foreground placeholder:text-foreground-muted focus:outline-none focus:ring-2 transition-all ${
           error
             ? "border-destructive focus:border-destructive focus:ring-destructive/20"
             : "border-border focus:border-primary focus:ring-primary/20"
         }`}
       />
+      {(minLength !== undefined || maxLength !== undefined) && (
+        <div className="flex items-center justify-end gap-1">
+          <span className={`text-xs tabular-nums ${getCharCountColor()}`}>
+            {charCount}
+          </span>
+          {maxLength !== undefined && (
+            <span className="text-xs text-black/30">/ {maxLength}</span>
+          )}
+        </div>
+      )}
       {error && <p className="text-xs text-destructive font-medium">{error}</p>}
     </div>
   )
