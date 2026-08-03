@@ -168,6 +168,7 @@ export interface FormStep {
   description?: string  // e.g. "Please provide your contact information"
   order: number
   fields: FormField[]
+  conditional?: FieldConditional  // Show/hide entire step based on conditions
 }
 
 export interface FormSchemaMeta {
