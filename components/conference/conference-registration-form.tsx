@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { StepProgressBar } from "./step-progress-bar"
 import { DynamicStep } from "./dynamic-step"
 import { Step4Review } from "./step4-review"
 import { registerForConference } from "@/lib/actions/conference-registration"
 import { validateFieldValue } from "@/lib/validation/form-schema"
+import { filterVisibleSteps } from "@/lib/validation/conditional-engine"
 import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
 
 interface ConferenceRegistrationFormProps {
@@ -22,7 +23,9 @@ export function ConferenceRegistrationForm({ schema }: ConferenceRegistrationFor
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   // If no schema, use an empty one (fallback — shouldn't happen after seed)
-  const steps: FormStep[] = schema?.steps ?? []
+  const allSteps: FormStep[] = schema?.steps ?? []
+  // Filter steps based on conditional logic
+  const steps = useMemo(() => filterVisibleSteps(allSteps, formData), [allSteps, formData])
   const totalSteps = steps.length + 1 // +1 for the review/consent step
   const isFirst = currentStep === 0
   const isLastFormStep = currentStep === steps.length - 1
