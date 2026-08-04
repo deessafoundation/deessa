@@ -190,6 +190,39 @@ export async function sendEventReminderEmail(params: {
 }
 
 /**
+ * Send a payment reminder email for pay-at-venue registrations.
+ */
+export async function sendEventPaymentReminderEmail(params: {
+  to: string
+  fullName: string
+  eventTitle: string
+  eventDate: string
+  eventLocation: string
+  ticketName?: string
+  ticketPrice?: string
+  contactEmail?: string
+  templateHtml: string
+  templateSubject: string
+}): Promise<EventEmailResult> {
+  const vars = {
+    full_name: params.fullName,
+    email: params.to,
+    event_title: params.eventTitle,
+    event_date: params.eventDate,
+    event_location: params.eventLocation,
+    ticket_name: params.ticketName || "",
+    ticket_price: params.ticketPrice || "",
+    contact_email: params.contactEmail || "",
+    site_url: getAppBaseUrl(),
+  }
+
+  const subject = interpolateTemplate(params.templateSubject, vars)
+  const html = buildEmailHtml(params.templateHtml, vars)
+
+  return sendEmail({ to: params.to, subject, html })
+}
+
+/**
  * Send a custom email with admin-provided subject and body.
  */
 export async function sendEventCustomEmail(params: {
