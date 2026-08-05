@@ -28,13 +28,29 @@ const CORE_FIELD_IDS = [
   "phone",
 ] as const;
 
+// Fields that should not be stored in custom_fields (handled separately)
+const RESERVED_FIELDS = [
+  "payment_screenshot_url",
+  "payment_method",
+] as const;
+
 function extractCustomFields(
   data: Record<string, unknown>
 ): Record<string, unknown> {
   const custom: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(data)) {
-    if (!(CORE_FIELD_IDS as readonly string[]).includes(key)) {
-      custom[key] = value;
+    if (
+      !(CORE_FIELD_IDS as readonly string[]).includes(key) &&
+      !(RESERVED_FIELDS as readonly string[]).includes(key)
+    ) {
+      // Sanitize string values in custom fields
+      if (typeof value === "string") {
+        custom[key] = sanitizeString(value);
+      } else if (Array.isArray(value)) {
+        custom[key] = value.map((v) => (typeof v === "string" ? sanitizeString(v) : v));
+      } else {
+        custom[key] = value;
+      }
     }
   }
   return custom;
@@ -59,8 +75,14 @@ export async function registerForEvent(
     if (!input.full_name?.trim()) {
       return { success: false, message: "Full name is required." };
     }
+    if (input.full_name.trim().length > 100) {
+      return { success: false, message: "Full name must be 100 characters or less." };
+    }
     if (!input.email?.trim()) {
       return { success: false, message: "Email address is required." };
+    }
+    if (input.phone && input.phone.length > 20) {
+      return { success: false, message: "Phone number must be 20 characters or less." };
     }
     if (!input.consent_terms) {
       return {
@@ -90,7 +112,7 @@ export async function registerForEvent(
     // Check event exists and is published
     const { data: event, error: eventError } = await supabase
       .from("events")
-      .select("id, status, is_free, registration_enabled, registration_close_at, title")
+      .select("id, status, is_free, registration_enabled, registration_close_at, event_date, title, payment_qr_image_url, allow_online_payment, allow_qr_payment, allow_pay_at_venue, payment_bank_name, payment_account_name, payment_account_number")
       .eq("id", input.event_id)
       .single();
 
@@ -109,9 +131,21 @@ export async function registerForEvent(
       };
     }
 
+    // Check if event date has passed
+    const now = new Date()
+    const eventDate = new Date(event.event_date)
+    eventDate.setHours(23, 59, 59, 999) // End of event day
+    if (eventDate < now) {
+      return {
+        success: false,
+        message: "This event has already ended. Registration is no longer available.",
+      };
+    }
+
+    // Check registration close deadline
     if (
       event.registration_close_at &&
-      new Date(event.registration_close_at) < new Date()
+      new Date(event.registration_close_at) < now
     ) {
       return {
         success: false,
@@ -120,7 +154,7 @@ export async function registerForEvent(
     }
 
     // Duplicate email guard
-    const normalizedEmail = input.email.trim().toLowerCase();
+    const normalizedEmail = sanitizeEmail(input.email);
     const { data: existing } = await supabase
       .from("event_registrations")
       .select("id, status")
@@ -142,13 +176,36 @@ export async function registerForEvent(
 
     // Determine payment requirements
     const isFree = event.is_free;
-    const paymentRequired = !isFree;
+    // Validate payment method against allowlist
+    const validMethods = ["online", "qr", "venue"] as const;
+    const rawMethod = formData.payment_method;
+    const paymentMethod = !isFree && typeof rawMethod === "string" && validMethods.includes(rawMethod as typeof validMethods[number])
+      ? (rawMethod as "online" | "qr" | "venue")
+      : null;
 
-    // For paid events, get the selected ticket type price and check capacity
+    // Server-side: validate event allows the chosen payment method
+    if (paymentMethod === "qr" && (!event.allow_qr_payment || !event.payment_qr_image_url)) {
+      return { success: false, message: "QR code payment is not available for this event." };
+    }
+    if (paymentMethod === "venue" && !event.allow_pay_at_venue) {
+      return { success: false, message: "Pay at venue is not available for this event." };
+    }
+    if (paymentMethod === "online" && event.allow_online_payment === false) {
+      return { success: false, message: "Online payment is not available for this event." };
+    }
+
+    // QR payment: user chose QR and uploaded screenshot
+    const isQrPayment = paymentMethod === "qr";
+    // Venue payment: user chose to pay at venue
+    const isVenuePayment = paymentMethod === "venue";
+    // Payment required: not free AND user chose online (or no method valid)
+    const paymentRequired = !isFree && !isQrPayment && !isVenuePayment;
+
+    // For paid events (including venue), get the selected ticket type price and check capacity
     let paymentAmount = 0;
     let paymentCurrency = "NPR";
 
-    if (paymentRequired && input.ticket_type_id) {
+    if ((paymentRequired || isVenuePayment) && input.ticket_type_id) {
       const { data: ticketType, error: ttError } = await supabase
         .from("event_ticket_types")
         .select("id, name, price, currency, capacity, sales_start, sales_end")
@@ -198,7 +255,7 @@ export async function registerForEvent(
 
       paymentAmount = ticketType.price;
       paymentCurrency = ticketType.currency;
-    } else if (paymentRequired && !input.ticket_type_id) {
+    } else if ((paymentRequired || isVenuePayment) && !input.ticket_type_id) {
       // Paid event but no ticket type selected — this should not happen if the form is working correctly
       return {
         success: false,
@@ -206,9 +263,23 @@ export async function registerForEvent(
       };
     }
 
+    // Extract payment screenshot URL from form data (QR payment only)
+    const paymentScreenshotUrl = isQrPayment
+      ? (formData.payment_screenshot_url as string) || null
+      : null;
+
+    // Validate QR screenshot is provided when QR payment is selected
+    if (isQrPayment && !paymentScreenshotUrl) {
+      return {
+        success: false,
+        message: "Payment screenshot is required for QR code payments.",
+      };
+    }
+
     // Set expiry for paid registrations (24 hours)
+    // For QR payments, no expiry needed (admin reviews manually)
     const expiryHours = 24;
-    const expiresAt = paymentRequired
+    const expiresAt = paymentRequired && !isQrPayment
       ? new Date(Date.now() + expiryHours * 60 * 60 * 1000).toISOString()
       : null;
 
@@ -223,10 +294,16 @@ export async function registerForEvent(
         custom_fields: customFields,
         form_schema_version: input.form_schema_version || null,
         ticket_type_id: input.ticket_type_id || null,
+        // For QR payments: status is confirmed, payment_status is 'review' (needs admin verification)
+        // For venue payments: status is confirmed, payment_status is 'unpaid' (pay at venue)
+        // For online paid: status is pending, payment_status is 'unpaid' (awaiting gateway)
+        // For free: status is confirmed, payment_status is 'unpaid'
         status: paymentRequired ? "pending" : "confirmed",
-        payment_status: "unpaid",
-        payment_amount: paymentRequired ? paymentAmount : null,
+        payment_status: isQrPayment ? "review" : "unpaid",
+        payment_method: paymentMethod || null,
+        payment_amount: paymentRequired || isVenuePayment ? paymentAmount : null,
         payment_currency: paymentCurrency,
+        payment_screenshot_url: paymentScreenshotUrl,
         consent_terms: input.consent_terms,
         consent_marketing: input.consent_marketing || false,
         expires_at: expiresAt,
@@ -294,10 +371,14 @@ export async function registerForEvent(
       success: true,
       message: `You have successfully registered for ${event.title}!`,
       registrationId: registration.id,
-      paymentRequired,
-      paymentAmount: paymentRequired ? paymentAmount : undefined,
-      paymentCurrency: paymentCurrency,
-      expiryHours: expiryHours,
+      // For QR payments: no payment redirect needed (screenshot already uploaded)
+      // For venue payments: no payment redirect needed (pay at venue)
+      // For online paid: redirect to payment-options page
+      // For free: redirect to success page
+      paymentRequired: paymentRequired && !isQrPayment && !isVenuePayment,
+      paymentAmount: (paymentRequired || isVenuePayment) && paymentAmount > 0 ? paymentAmount : undefined,
+      paymentCurrency: (paymentRequired || isVenuePayment) && paymentAmount > 0 ? paymentCurrency : undefined,
+      expiryHours: paymentRequired && !isQrPayment ? expiryHours : undefined,
     };
   } catch (err) {
     console.error("Event registration error:", err);
@@ -1133,6 +1214,10 @@ export async function sendEventRegistrationEmail(
     }
 
     const event = reg.event as any;
+
+    if (!event || !event.title) {
+      return { success: false, error: "Event data not found. Check the event exists and has a title." };
+    }
 
     // Fetch template (except for custom)
     let templateHtml = ""
