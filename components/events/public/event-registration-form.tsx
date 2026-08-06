@@ -298,11 +298,12 @@ export function EventRegistrationForm({
                     })
                     .map((ticket) => {
                       const isSoldOut = ticket.capacity != null && ticket.capacity - (ticket.sold_count || 0) <= 0
+                      const isUnavailable = isSoldOut || ticket.price_tbd
                       return (
                       <label
                         key={ticket.id}
                         className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                          isSoldOut
+                          isUnavailable
                             ? "border-border bg-muted/50 opacity-60 cursor-not-allowed"
                             : selectedTicketId === ticket.id
                             ? "border-primary bg-primary/5 cursor-pointer"
@@ -315,14 +316,16 @@ export function EventRegistrationForm({
                             name="ticket"
                             value={ticket.id}
                             checked={selectedTicketId === ticket.id}
-                            disabled={isSoldOut}
+                            disabled={isUnavailable}
                             onChange={() => setSelectedTicketId(ticket.id)}
                             className="h-4 w-4 text-primary"
-                            aria-label={`${ticket.name} - ${ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
+                            aria-label={`${ticket.name} - ${ticket.price_tbd ? "Pricing TBD" : ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
                           />
                           <div>
                             <p className="font-medium">{ticket.name}</p>
-                            {ticket.capacity && (
+                            {ticket.price_tbd ? (
+                              <p className="text-xs text-muted-foreground">Registration opens once pricing is finalized</p>
+                            ) : ticket.capacity && (
                               <p className="text-xs text-muted-foreground">
                                 {ticket.capacity - (ticket.sold_count || 0) <= 0
                                   ? "Sold out"
@@ -332,7 +335,9 @@ export function EventRegistrationForm({
                           </div>
                         </div>
                         <p className="font-bold">
-                          {ticket.price === 0
+                          {ticket.price_tbd
+                            ? "TBD"
+                            : ticket.price === 0
                             ? "Free"
                             : `${ticket.currency} ${ticket.price}`}
                         </p>
