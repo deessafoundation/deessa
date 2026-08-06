@@ -51,6 +51,9 @@ interface EmailTemplateEditorProps {
   eventId: string
   templates: EventEmailTemplate[]
   onTemplatesChanged?: () => void
+  eventTitle?: string
+  eventDate?: string
+  eventLocation?: string
 }
 
 const STANDARD_TEMPLATE_TYPES: {
@@ -84,16 +87,16 @@ const AVAILABLE_VARIABLES = [
 const SAMPLE_DATA: Record<string, string> = {
   full_name: "John Doe",
   email: "john.doe@example.com",
-  event_title: "DEESSA Annual Conference 2026",
-  event_date: "October 15-17, 2026",
+  event_title: "Sample Event", // Overridden by actual event title in preview
+  event_date: "October 15, 2026", // Overridden by actual event date in preview
   event_end_date: "October 17, 2026",
-  event_location: "Kathmandu, Nepal",
+  event_location: "Kathmandu, Nepal", // Overridden by actual event location in preview
   venue_name: "Hyatt Regency Kathmandu",
   contact_email: "events@deessa.org.np",
   ticket_name: "Early Bird",
   ticket_price: "NPR 5,000",
   registration_id: "DEESSA-2026-ABC123",
-  event_url: "https://deessafoundation.com/events/annual-conference-2026",
+  event_url: "https://deessafoundation.com/events/sample-event",
   site_url: "https://deessafoundation.com",
 }
 
@@ -123,10 +126,16 @@ function VariablesCard() {
   )
 }
 
-function InlinePreview({ subject, bodyHtml }: { subject: string; bodyHtml: string }) {
+function InlinePreview({ subject, bodyHtml, eventTitle, eventDate, eventLocation }: { subject: string; bodyHtml: string; eventTitle?: string; eventDate?: string; eventLocation?: string }) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const interpolatedSubject = interpolateTemplate(subject, SAMPLE_DATA)
-  const interpolatedHtml = interpolateTemplate(bodyHtml, SAMPLE_DATA)
+  const previewData = {
+    ...SAMPLE_DATA,
+    ...(eventTitle && { event_title: eventTitle }),
+    ...(eventDate && { event_date: new Date(eventDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) }),
+    ...(eventLocation && { event_location: eventLocation }),
+  }
+  const interpolatedSubject = interpolateTemplate(subject, previewData)
+  const interpolatedHtml = interpolateTemplate(bodyHtml, previewData)
 
   const setIframeRef = useCallback(
     (node: HTMLIFrameElement | null) => {
@@ -148,13 +157,13 @@ function InlinePreview({ subject, bodyHtml }: { subject: string; bodyHtml: strin
         <iframe ref={setIframeRef} title="Email Preview" className="w-full h-[550px]" sandbox="allow-same-origin" />
       </div>
       <p className="text-xs text-muted-foreground">
-        Preview uses sample data. Actual emails will contain real registrant information.
+        Preview uses your actual event title, date, and location. Other fields use sample data.
       </p>
     </div>
   )
 }
 
-export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged }: EmailTemplateEditorProps) {
+export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, eventTitle, eventDate, eventLocation }: EmailTemplateEditorProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isResetting, setIsResetting] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
@@ -374,9 +383,12 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged }: 
                     <InlinePreview
                       subject={currentTemplate?.subject || ""}
                       bodyHtml={currentTemplate?.body_html || ""}
+                      eventTitle={eventTitle}
+                      eventDate={eventDate}
+                      eventLocation={eventLocation}
                     />
                   ) : (
-                    <form action={handleSaveStandard} className="space-y-4">
+                    <form action={handleSaveStandard} className="space-y-4" key={currentTemplate?.id || `new-${activeTab}`}>
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject Line *</Label>
                         <Input id="subject" name="subject" defaultValue={currentTemplate?.subject || ""} placeholder="e.g. Registration Confirmed - {{event_title}}" required />
@@ -437,9 +449,9 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged }: 
                 </CardHeader>
                 <CardContent>
                   {customPreview ? (
-                    <InlinePreview subject={customPreviewSubject} bodyHtml={customPreviewHtml} />
+                    <InlinePreview subject={customPreviewSubject} bodyHtml={customPreviewHtml} eventTitle={eventTitle} eventDate={eventDate} eventLocation={eventLocation} />
                   ) : (
-                    <form action={handleSaveCustom} className="space-y-4">
+                    <form action={handleSaveCustom} className="space-y-4" key={editingCustomTemplate?.id || "new-custom"}>
                       <div className="space-y-2">
                         <Label htmlFor="label">Template Name *</Label>
                         <Input id="label" name="label" defaultValue={editingCustomTemplate?.label || ""} placeholder="e.g. Welcome Email, Follow-up, Thank You" required />
@@ -563,6 +575,9 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged }: 
                   <InlinePreview
                     subject={customTemplates.find((t) => t.id === previewingCustomId)?.subject || ""}
                     bodyHtml={customTemplates.find((t) => t.id === previewingCustomId)?.body_html || ""}
+                    eventTitle={eventTitle}
+                    eventDate={eventDate}
+                    eventLocation={eventLocation}
                   />
                 </CardContent>
               </Card>
