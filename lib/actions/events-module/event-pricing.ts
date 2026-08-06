@@ -83,6 +83,7 @@ export async function createTicketType(
         event_id: input.event_id,
         name: input.name,
         price: input.price || 0,
+        price_tbd: input.price_tbd ?? false,
         currency: input.currency || "NPR",
         capacity: input.capacity || null,
         sales_start: input.sales_start || null,
@@ -117,6 +118,7 @@ export async function updateTicketType(
     const updateData: Record<string, unknown> = {};
     if (input.name !== undefined) updateData.name = input.name;
     if (input.price !== undefined) updateData.price = input.price;
+    if (input.price_tbd !== undefined) updateData.price_tbd = input.price_tbd;
     if (input.currency !== undefined) updateData.currency = input.currency;
     if (input.capacity !== undefined) updateData.capacity = input.capacity;
     if (input.sales_start !== undefined) updateData.sales_start = input.sales_start;

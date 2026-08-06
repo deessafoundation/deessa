@@ -544,7 +544,7 @@ export function EventRegistrationForm({
                             disabled={isDisabled}
                             onChange={() => setSelectedTicketId(ticket.id)}
                             className="h-4 w-4 text-primary"
-                            aria-label={`${ticket.name} - ${ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
+                            aria-label={`${ticket.name} - ${ticket.price_tbd ? "Pricing TBD" : ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price}`}`}
                           />
                           <div>
                             <div className="flex items-center gap-2">
@@ -579,7 +579,9 @@ export function EventRegistrationForm({
                           </div>
                         </div>
                         <p className="font-bold">
-                          {ticket.price === 0
+                          {ticket.price_tbd
+                            ? "TBD"
+                            : ticket.price === 0
                             ? "Free"
                             : `${ticket.currency} ${ticket.price}`}
                         </p>

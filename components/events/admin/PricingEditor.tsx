@@ -65,6 +65,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
   // Add form state
   const [addName, setAddName] = useState("")
   const [addPrice, setAddPrice] = useState("")
+  const [addPriceTbd, setAddPriceTbd] = useState(false)
   const [addCurrency, setAddCurrency] = useState("NPR")
   const [addCapacity, setAddCapacity] = useState("")
   const [addSalesStart, setAddSalesStart] = useState<Date | null>(null)
@@ -74,6 +75,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState("")
   const [editPrice, setEditPrice] = useState("")
+  const [editPriceTbd, setEditPriceTbd] = useState(false)
   const [editCurrency, setEditCurrency] = useState("NPR")
   const [editCapacity, setEditCapacity] = useState("")
   const [editSalesStart, setEditSalesStart] = useState<Date | null>(null)
@@ -82,6 +84,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
   function resetAddForm() {
     setAddName("")
     setAddPrice("")
+    setAddPriceTbd(false)
     setAddCurrency("NPR")
     setAddCapacity("")
     setAddSalesStart(null)
@@ -93,6 +96,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
     setEditingId(ticket.id)
     setEditName(ticket.name)
     setEditPrice(String(ticket.price))
+    setEditPriceTbd(ticket.price_tbd)
     setEditCurrency(ticket.currency)
     setEditCapacity(ticket.capacity ? String(ticket.capacity) : "")
     setEditSalesStart(stringToDate(ticket.sales_start))
@@ -109,6 +113,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
       event_id: eventId,
       name: addName.trim(),
       price: Number(addPrice) || 0,
+      price_tbd: addPriceTbd,
       currency: addCurrency,
       capacity: addCapacity ? Number(addCapacity) : undefined,
       sales_start: dateToString(addSalesStart) || undefined,
@@ -134,6 +139,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
       event_id: eventId,
       name: editName.trim(),
       price: Number(editPrice) || 0,
+      price_tbd: editPriceTbd,
       currency: editCurrency,
       capacity: editCapacity ? Number(editCapacity) : undefined,
       sales_start: dateToString(editSalesStart) || undefined,
@@ -244,9 +250,14 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
                     value={addPrice}
                     onChange={(e) => setAddPrice(e.target.value)}
                     placeholder="0"
-                    className="h-9 rounded-lg rounded-l-none text-sm font-mono"
+                    disabled={addPriceTbd}
+                    className="h-9 rounded-lg rounded-l-none text-sm font-mono disabled:opacity-50"
                   />
                 </div>
+                <label className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
+                  <Switch checked={addPriceTbd} onCheckedChange={setAddPriceTbd} className="scale-75 -ml-1" />
+                  Price not finalized yet (show &quot;TBD&quot;)
+                </label>
               </div>
             </div>
 
@@ -348,9 +359,14 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
                           step="1"
                           value={editPrice}
                           onChange={(e) => setEditPrice(e.target.value)}
-                          className="h-9 rounded-lg rounded-l-none text-sm font-mono"
+                          disabled={editPriceTbd}
+                          className="h-9 rounded-lg rounded-l-none text-sm font-mono disabled:opacity-50"
                         />
                       </div>
+                      <label className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
+                        <Switch checked={editPriceTbd} onCheckedChange={setEditPriceTbd} className="scale-75 -ml-1" />
+                        Price not finalized yet (show &quot;TBD&quot;)
+                      </label>
                     </div>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-3">
@@ -405,10 +421,10 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
                 <div className="flex items-center gap-4">
                   {/* Price badge */}
                   <div className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${
-                    ticket.price > 0 ? "bg-primary/10 text-primary" : "bg-emerald-50 text-emerald-600"
+                    ticket.price_tbd ? "bg-amber-50 text-amber-600" : ticket.price > 0 ? "bg-primary/10 text-primary" : "bg-emerald-50 text-emerald-600"
                   }`}>
                     <span className="text-xs font-black">
-                      {ticket.price > 0 ? ticket.currency : "FREE"}
+                      {ticket.price_tbd ? "TBD" : ticket.price > 0 ? ticket.currency : "FREE"}
                     </span>
                   </div>
 
@@ -422,7 +438,7 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
                     </div>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
                       <span className="font-semibold text-foreground">
-                        {ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price.toLocaleString()}`}
+                        {ticket.price_tbd ? "Pricing TBD" : ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price.toLocaleString()}`}
                       </span>
                       {ticket.capacity ? (
                         <span className={ticket.sold_count >= ticket.capacity ? "text-red-500 font-semibold" : ""}>

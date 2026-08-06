@@ -264,6 +264,7 @@ export interface EventTicketType {
 
   name: string;
   price: number;
+  price_tbd: boolean; // true = price not finalized yet, display "TBD"
   currency: string;
   capacity: number | null; // NULL = unlimited
   sold_count: number;
@@ -361,6 +362,7 @@ export interface CreateTicketTypeInput {
   event_id: string;
   name: string;
   price?: number;
+  price_tbd?: boolean;
   currency?: string;
   capacity?: number;
   sales_start?: string;

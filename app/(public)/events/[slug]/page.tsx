@@ -111,8 +111,9 @@ export default async function EventDetailPage({
   const agenda = await getAgenda(event.id)
   const ticketTypes = await getTicketTypes(event.id)
 
-  const lowestPrice = ticketTypes.length > 0 ? Math.min(...ticketTypes.map((t) => t.price)) : null
-  const highestPrice = ticketTypes.length > 0 ? Math.max(...ticketTypes.map((t) => t.price)) : null
+  const pricedTickets = ticketTypes.filter((t) => !t.price_tbd)
+  const lowestPrice = pricedTickets.length > 0 ? Math.min(...pricedTickets.map((t) => t.price)) : null
+  const highestPrice = pricedTickets.length > 0 ? Math.max(...pricedTickets.map((t) => t.price)) : null
   const hasPriceRange = lowestPrice !== null && highestPrice !== null && lowestPrice !== highestPrice
 
   const groupedAgenda = agenda.reduce(
@@ -408,7 +409,9 @@ export default async function EventDetailPage({
                       {ticketTypes.slice(0, 4).map((t) => (
                         <div key={t.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm">
                           <span className="font-medium text-black">{t.name}</span>
-                          <span className="font-bold text-primary">NPR {t.price.toLocaleString()}</span>
+                          <span className={`font-bold ${t.price_tbd ? "text-black/40" : "text-primary"}`}>
+                            {t.price_tbd ? "TBD" : `NPR ${t.price.toLocaleString()}`}
+                          </span>
                         </div>
                       ))}
                       {ticketTypes.length > 4 && (

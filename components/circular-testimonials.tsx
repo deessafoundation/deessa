@@ -228,7 +228,7 @@ export const CircularTestimonials = ({
             
             return (
               <img
-                key={testimonial.src}
+                key={index}
                 src={testimonial.src}
                 alt={testimonial.name}
                 className="testimonial-image"
