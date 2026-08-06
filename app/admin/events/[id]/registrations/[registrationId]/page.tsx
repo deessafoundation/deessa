@@ -26,6 +26,7 @@ import { EventRegistrationEmailActions } from "@/components/events/admin/EventRe
 import { EventDeleteRegistrationButton } from "@/components/events/admin/EventDeleteRegistrationButton"
 import { EventCommunicationLog } from "@/components/events/admin/EventCommunicationLog"
 import { EventPaymentInfo } from "@/components/events/admin/EventPaymentInfo"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import type { FormSchema } from "@/lib/types/conference-form-schema"
 
 function getInitials(name: string | null | undefined) {
@@ -153,6 +154,20 @@ export default async function RegistrationDetailPage({
   // Fetch payment events for timeline
   const paymentEvents = await getEventPaymentEvents(registrationId)
 
+  // Generate signed URL for payment screenshot (private bucket)
+  let paymentScreenshotSignedUrl: string | null = null
+  const regAny = reg as Record<string, unknown>
+  if (regAny.payment_screenshot_url) {
+    try {
+      const { data: signed } = await createServiceRoleClient()
+        .storage.from("event-payment-screenshots")
+        .createSignedUrl(regAny.payment_screenshot_url as string, 60 * 60) // 1 hour expiry
+      paymentScreenshotSignedUrl = signed?.signedUrl ?? null
+    } catch (err) {
+      console.error("Failed to generate signed URL for payment screenshot:", err)
+    }
+  }
+
   // Build timeline
   const timeline: { icon: string; label: string; ts: string; color: string }[] = [
     {
@@ -169,6 +184,16 @@ export default async function RegistrationDetailPage({
       label: "Registration email sent",
       ts: formatTs(reg.last_registration_email_sent_at),
       color: "text-primary",
+    })
+  }
+
+  // QR payment screenshot uploaded
+  if (regAny.payment_screenshot_url) {
+    timeline.push({
+      icon: "📸",
+      label: "Payment screenshot uploaded",
+      ts: formatTs(reg.created_at),
+      color: "text-blue-600",
     })
   }
 
@@ -657,6 +682,7 @@ export default async function RegistrationDetailPage({
             email={reg.email}
             fullName={reg.full_name}
             paymentEvents={paymentEvents}
+            paymentScreenshotUrl={paymentScreenshotSignedUrl}
           />
 
           {/* Event Info + Quick Actions — combined like conference */}
