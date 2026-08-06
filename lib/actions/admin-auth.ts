@@ -1,7 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
-import { getAppBaseUrl } from "@/lib/utils"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -100,6 +100,7 @@ export async function createAdminUser(formData: FormData) {
   }
 
   const supabase = await createClient()
+  const supabaseAdmin = createServiceRoleClient()
 
   // Check if current user is super admin
   const currentAdmin = await getCurrentAdmin()
@@ -107,54 +108,27 @@ export async function createAdminUser(formData: FormData) {
     return { error: "Only super admins can create new admin users" }
   }
 
-  // Create auth user
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+  // Create auth user (service role key required for admin API)
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
   })
 
   if (authError) {
-    // Fallback: use regular signup if admin API not available
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${getAppBaseUrl()}/admin/login`,
-      },
-    })
+    return { error: authError.message }
+  }
 
-    if (signUpError) {
-      return { error: signUpError.message }
-    }
+  // Create admin user record
+  const { error: adminError } = await supabase.from("admin_users").insert({
+    user_id: authData.user.id,
+    email,
+    full_name: fullName,
+    role,
+  })
 
-    if (!signUpData.user) {
-      return { error: "Failed to create user" }
-    }
-
-    // Create admin user record
-    const { error: adminError } = await supabase.from("admin_users").insert({
-      user_id: signUpData.user.id,
-      email,
-      full_name: fullName,
-      role,
-    })
-
-    if (adminError) {
-      return { error: adminError.message }
-    }
-  } else {
-    // Create admin user record with admin-created user
-    const { error: adminError } = await supabase.from("admin_users").insert({
-      user_id: authData.user.id,
-      email,
-      full_name: fullName,
-      role,
-    })
-
-    if (adminError) {
-      return { error: adminError.message }
-    }
+  if (adminError) {
+    return { error: adminError.message }
   }
 
   // Log activity

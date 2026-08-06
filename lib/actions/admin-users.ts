@@ -1,7 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
-import { getAppBaseUrl } from "@/lib/utils"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
 import { revalidatePath } from "next/cache"
 
@@ -81,47 +81,17 @@ export async function createAdminUser(data: {
   }
 
   const supabase = await createClient()
+  const supabaseAdmin = createServiceRoleClient()
 
-  // Create auth user
-  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+  // Create auth user (service role key required for admin API)
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email: data.email,
     password: data.password,
     email_confirm: true,
   })
 
   if (authError) {
-    // Fallback: use signUp if admin API is not available
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        emailRedirectTo: `${getAppBaseUrl()}/admin/login`,
-      },
-    })
-
-    if (signUpError) {
-      return { error: signUpError.message }
-    }
-
-    if (!signUpData.user) {
-      return { error: "Failed to create user" }
-    }
-
-    // Create admin user record
-    const { error: insertError } = await supabase.from("admin_users").insert({
-      user_id: signUpData.user.id,
-      email: data.email,
-      full_name: data.full_name,
-      role: data.role,
-      is_active: true,
-    })
-
-    if (insertError) {
-      return { error: insertError.message }
-    }
-
-    revalidatePath("/admin/users")
-    return { success: true, needsConfirmation: true }
+    return { error: authError.message }
   }
 
   if (!authData.user) {
