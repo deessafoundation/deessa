@@ -13,8 +13,6 @@
  * - Table-based layout (Outlook/Gmail/Apple Mail compatible)
  */
 
-import { escapeHtml } from "@/lib/utils/html"
-
 interface DefaultTemplate {
   subject: string
   body_html: string
@@ -606,6 +604,129 @@ export function defaultCancellationTemplate(): DefaultTemplate {
   }
 }
 
+// ── 5. Payment Reminder Template (for Pay at Venue registrations) ─────────────
+
+export function defaultPaymentReminderTemplate(): DefaultTemplate {
+  return {
+    subject: "Payment Reminder — {{event_title}}",
+    body_html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Reminder — {{event_title}}</title>
+</head>
+<body style="margin:0;padding:0;background:#FFFBEB;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBEB;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+          <!-- Brand -->
+          <tr>
+            <td align="center" style="padding-bottom:24px;">
+              ${BRANDBadge}
+            </td>
+          </tr>
+
+          <!-- Main Card -->
+          <tr>
+            <td style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+
+              <!-- Header -->
+              <tr>
+                <td style="background:linear-gradient(135deg,#D97706 0%,#F59E0B 50%,#D97706 100%);padding:48px 40px;text-align:center;">
+                  <div style="font-size:48px;margin-bottom:16px;">&#128179;</div>
+                  <h1 style="margin:0 0 8px;color:#fff;font-size:30px;font-weight:800;line-height:1.2;">
+                    Payment Reminder
+                  </h1>
+                  <p style="margin:0;color:rgba(255,255,255,0.9);font-size:16px;line-height:1.5;">
+                    Hi <strong>{{full_name}}</strong>,<br />don't forget to bring payment for <strong>{{event_title}}</strong>.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Event Details -->
+              <tr>
+                <td style="padding:36px 40px 24px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:8px 0;font-size:14px;color:#1E6FA8;vertical-align:top;"><strong>Event:</strong></td>
+                      <td style="padding:8px 0;font-size:14px;color:#0F172A;">{{event_title}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px 0;font-size:14px;color:#1E6FA8;vertical-align:top;"><strong>Date:</strong></td>
+                      <td style="padding:8px 0;font-size:14px;color:#0F172A;">{{event_date}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px 0;font-size:14px;color:#1E6FA8;vertical-align:top;"><strong>Venue:</strong></td>
+                      <td style="padding:8px 0;font-size:14px;color:#0F172A;">{{event_location}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- Payment Info -->
+              <tr>
+                <td style="padding:0 40px 32px;">
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:12px;">
+                    <tr>
+                      <td style="padding:24px;text-align:center;">
+                        <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#92400E;">&#128176; &nbsp;Amount to Pay</p>
+                        <p style="margin:0;font-size:32px;font-weight:800;color:#B45309;">{{ticket_price}}</p>
+                        <p style="margin:12px 0 0;font-size:13px;color:#A16207;">Bring this amount to the check-in desk</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- What to Bring -->
+              <tr>
+                <td style="padding:0 40px 32px;">
+                  <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#0F172A;">&#128221; &nbsp;What to Bring</p>
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:4px 8px 4px 0;font-size:13px;color:#475569;">&#10003;</td>
+                      <td style="padding:4px 0;font-size:13px;color:#475569;line-height:1.5;">This email or a screenshot of your registration</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:4px 8px 4px 0;font-size:13px;color:#475569;">&#10003;</td>
+                      <td style="padding:4px 0;font-size:13px;color:#475569;line-height:1.5;">Valid photo ID</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:4px 8px 4px 0;font-size:13px;color:#475569;">&#10003;</td>
+                      <td style="padding:4px 0;font-size:13px;color:#475569;line-height:1.5;">Payment amount (cash or card accepted)</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- CTA -->
+              <tr>
+                <td align="center" style="padding:0 40px 32px;">
+                  <a href="{{site_url}}/events/{{event_location}}"
+                     style="display:inline-block;background:#3FABDE;color:#fff;font-size:15px;font-weight:700;text-decoration:none;border-radius:12px;padding:14px 36px;letter-spacing:0.3px;">
+                    View Event Details
+                  </a>
+                </td>
+              </tr>
+
+              <p style="margin:0;font-size:13px;color:#94A3B8;line-height:1.6;text-align:center;">
+                Questions? <a href="mailto:{{contact_email}}" style="color:#3FABDE;">{{contact_email}}</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+  }
+}
+
 // ── Export all defaults ──────────────────────────────────────────────────────
 
 export const DEFAULT_TEMPLATES = {
@@ -613,6 +734,7 @@ export const DEFAULT_TEMPLATES = {
   payment_receipt: defaultPaymentReceiptTemplate,
   reminder: defaultReminderTemplate,
   cancellation: defaultCancellationTemplate,
+  payment_reminder: defaultPaymentReminderTemplate,
 } as const
 
 export function getDefaultTemplateHtml(type: keyof typeof DEFAULT_TEMPLATES): DefaultTemplate {

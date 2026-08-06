@@ -33,14 +33,11 @@ async function getActiveFormSchema(
 
 async function getTicketTypes(eventId: string): Promise<EventTicketType[]> {
   const supabase = await createClient()
-  const now = new Date().toISOString()
   const { data } = await supabase
     .from("event_ticket_types")
     .select("*")
     .eq("event_id", eventId)
     .eq("is_active", true)
-    .or(`sales_end.is.null,sales_end.gt.${now}`)
-    .or(`sales_start.is.null,sales_start.lte.${now}`)
     .order("sort_order")
   return (data || []) as EventTicketType[]
 }

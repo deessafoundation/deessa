@@ -17,7 +17,7 @@ interface ConferenceConfirmationTemplateProps {
 export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemplateProps): string {
   const { fullName, registrationId, attendanceMode, role, workshops } = props
 
-  const shortId = `DEESSA-2026-${registrationId.slice(0, 6).toUpperCase()}`
+  const shortId = `deessa-2026-${registrationId.slice(0, 6).toUpperCase()}`
   const firstName = escapeHtml(fullName.split(" ")[0])
   const safeFullName = escapeHtml(fullName)
   const safeRole = escapeHtml(role ?? "")

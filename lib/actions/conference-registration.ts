@@ -1255,7 +1255,7 @@ export async function sendTemplateConferenceEmail(
 
   if (!reg) return { success: false, error: "Registration not found" };
 
-  const shortId = `DEESSA-2026-${id.slice(0, 6).toUpperCase()}`;
+  const shortId = `deessa-2026-${id.slice(0, 6).toUpperCase()}`;
 
   const cfg = await getConferenceSettings();
 

@@ -3,7 +3,7 @@
 import { X, Lock, Plus, Trash2, GripVertical } from "lucide-react"
 import type { FormSchema, FormField, FieldOption } from "@/lib/types/conference-form-schema"
 import { Button } from "@/components/ui/button"
-import { FormConditionalEditor } from "./form-conditional-editor"
+import { EnhancedConditionalEditor } from "./conference-form-builder/EnhancedConditionalEditor"
 
 interface FormFieldEditorProps {
   field: FormField
@@ -351,10 +351,11 @@ export function FormFieldEditor({
 
         {/* Conditional Logic */}
         {!["heading", "paragraph"].includes(field.type) && (
-          <FormConditionalEditor
+          <EnhancedConditionalEditor
+            key={field.id}
             field={field}
-            schema={schema}
-            onUpdate={updateField}
+            allFields={schema.steps.flatMap((s) => s.fields)}
+            onChange={(conditional) => updateField({ conditional })}
           />
         )}
 

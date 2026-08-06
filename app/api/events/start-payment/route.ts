@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import {
   startEventPayment,
 } from "@/lib/actions/events-module/event-registration";
-import type { PaymentProvider } from "@/lib/payments/config";
+import { getPaymentSettings, getSupportedProviders, type PaymentProvider } from "@/lib/payments/config";
 
 /**
  * POST /api/events/start-payment
@@ -99,6 +99,16 @@ export async function POST(request: Request) {
     if (!provider || !["stripe", "khalti", "esewa"].includes(provider)) {
       return NextResponse.json(
         { ok: false, error: "Invalid payment provider" },
+        { status: 400 },
+      );
+    }
+
+    // ── Validate provider is enabled in settings ─────────────────────────────
+    const settings = await getPaymentSettings();
+    const availableProviders = getSupportedProviders(settings);
+    if (!availableProviders.includes(provider)) {
+      return NextResponse.json(
+        { ok: false, error: "This payment method is not currently available. Please choose another option." },
         { status: 400 },
       );
     }

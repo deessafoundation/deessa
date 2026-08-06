@@ -144,7 +144,7 @@ function CompletePaymentContent() {
     }
   }
 
-  const shortId = rid ? `DEESSA-2026-${rid.slice(0, 6).toUpperCase()}` : ""
+  const shortId = rid ? `deessa-2026-${rid.slice(0, 6).toUpperCase()}` : ""
 
   // ── Stage: Email Entry ─────────────────────────────────────────────────────
   if (stage === "email-entry") {

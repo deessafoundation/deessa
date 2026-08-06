@@ -230,15 +230,42 @@ function validateConditionalLogic(schema: FormSchema): ValidationError[] {
         })
       }
 
-      // Check value is provided for equals/notEquals operators
+      // Check value is provided for operators that require one
+      const OPERATORS_NEEDING_VALUE = [
+        "equals", "notEquals", "contains", "notContains",
+        "greaterThan", "lessThan", "greaterThanOrEqual", "lessThanOrEqual",
+      ]
       if (
-        ["equals", "notEquals"].includes(field.conditional.operator) &&
+        OPERATORS_NEEDING_VALUE.includes(field.conditional.operator) &&
         (!field.conditional.value || field.conditional.value.trim() === "")
       ) {
         errors.push({
           path: `${basePath}.value`,
           message: `Field "${field.label}" conditional logic requires a comparison value`,
           severity: "error",
+        })
+      }
+
+      // Validate nested conditions if present
+      if (field.conditional.conditions && field.conditional.conditions.length > 0) {
+        field.conditional.conditions.forEach((nestedCond, nestedIndex) => {
+          if (!fieldMap.has(nestedCond.dependsOn)) {
+            errors.push({
+              path: `${basePath}.conditions[${nestedIndex}].dependsOn`,
+              message: `Field "${field.label}" nested condition references non-existent field "${nestedCond.dependsOn}"`,
+              severity: "error",
+            })
+          }
+          if (
+            OPERATORS_NEEDING_VALUE.includes(nestedCond.operator) &&
+            (!nestedCond.value || nestedCond.value.trim() === "")
+          ) {
+            errors.push({
+              path: `${basePath}.conditions[${nestedIndex}].value`,
+              message: `Field "${field.label}" nested condition requires a comparison value`,
+              severity: "error",
+            })
+          }
         })
       }
     })
@@ -265,7 +292,21 @@ function hasCircularDependency(
   const field = schema.steps[position.stepIndex].fields[position.fieldIndex]
   if (!field.conditional) return false
 
-  return hasCircularDependency(field.conditional.dependsOn, schema, fieldMap, visited)
+  // Check direct dependency
+  if (hasCircularDependency(field.conditional.dependsOn, schema, fieldMap, new Set(visited))) {
+    return true
+  }
+
+  // Check nested conditions
+  if (field.conditional.conditions) {
+    for (const nestedCond of field.conditional.conditions) {
+      if (hasCircularDependency(nestedCond.dependsOn, schema, fieldMap, new Set(visited))) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 /**

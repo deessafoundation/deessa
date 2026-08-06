@@ -783,6 +783,9 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
             eventId={eventId}
             templates={emailTemplates}
             onTemplatesChanged={() => setEmailTemplatesVersion((v) => v + 1)}
+            eventTitle={data?.event?.title}
+            eventDate={data?.event?.event_date}
+            eventLocation={data?.event?.location}
           />
         )}
         {activeTab === "promote" && (

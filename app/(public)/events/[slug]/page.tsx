@@ -18,6 +18,7 @@ import {
   CalendarDays,
   ImageOff,
   MapPinned,
+  QrCode,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import type { EventModuleEvent, EventAgendaItem } from "@/lib/types/events-module"
@@ -131,6 +132,16 @@ export default async function EventDetailPage({
   const cat = categoryConfig[event.category] ?? categoryConfig.general
   const bannerImage = event.banner_url || event.image
 
+  // Check if registration should be closed
+  const now = new Date()
+  const eventDate = new Date(event.event_date)
+  eventDate.setHours(23, 59, 59, 999) // End of event day
+  const isPastEvent = eventDate < now
+  const isRegistrationClosedByDate = !!(
+    event.registration_close_at && new Date(event.registration_close_at) < now
+  )
+  const isRegistrationClosed = isPastEvent || isRegistrationClosedByDate || !event.registration_enabled
+
   return (
     <div className="flex flex-col">
       {/* ═══════════════════════════════════════════
@@ -140,8 +151,8 @@ export default async function EventDetailPage({
         <div className="relative h-[480px] w-full md:h-[560px]">
           {bannerImage ? (
             <>
-              <Image src={bannerImage} alt={event.title} fill priority quality={90} sizes="100vw" style={{ objectFit: "cover", objectPosition: "center" }} className="absolute inset-0" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+              <Image src={bannerImage} alt={event.title} fill priority quality={90} sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} className="absolute inset-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/40" />
             </>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#0B5F8A] via-[#29b6c8] to-[#6F3E96]" />
@@ -409,7 +420,72 @@ export default async function EventDetailPage({
                     </div>
                   )}
 
-                  {event.registration_enabled ? (
+                  {/* QR Code Payment */}
+                  {!event.is_free && (event.payment_qr_image_url || event.payment_bank_name) && (
+                    <div className="mb-5 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <QrCode className="size-4 text-primary" />
+                        <p className="text-sm font-bold text-primary">Scan to Pay</p>
+                      </div>
+                      {event.payment_qr_image_url && (
+                        <div className="flex justify-center mb-3">
+                          <img
+                            src={event.payment_qr_image_url}
+                            alt="Payment QR Code"
+                            className="h-48 w-48 object-contain rounded-lg bg-white p-2 shadow-sm"
+                          />
+                        </div>
+                      )}
+                      {event.payment_instructions && (
+                        <p className="text-xs text-black/60 text-center leading-relaxed">
+                          {event.payment_instructions}
+                        </p>
+                      )}
+
+                      {/* Bank Transfer Details */}
+                      {(event.payment_bank_name || event.payment_account_name || event.payment_account_number) && (
+                        <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50/50 p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <svg className="size-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                            </svg>
+                            <p className="text-xs font-bold text-blue-700">Or Transfer to Bank</p>
+                          </div>
+                          <div className="grid gap-1 text-xs">
+                            {event.payment_bank_name && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">Bank:</span>
+                                <span>{event.payment_bank_name}</span>
+                              </div>
+                            )}
+                            {event.payment_account_name && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">Name:</span>
+                                <span>{event.payment_account_name}</span>
+                              </div>
+                            )}
+                            {event.payment_account_number && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">A/C:</span>
+                                <span className="font-mono">{event.payment_account_number}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      <p className="mt-2 text-[11px] text-primary/70 text-center font-medium">
+                        Upload your payment screenshot during registration
+                      </p>
+                    </div>
+                  )}
+
+                  {isRegistrationClosed ? (
+                    <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm font-bold text-black/25">
+                      <CheckCircle2 className="size-4" />
+                      {isPastEvent ? "Event Has Ended" : "Registration Closed"}
+                    </div>
+                  ) : (
                     <Link
                       href={`/events/${event.slug}/register`}
                       className="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
@@ -417,11 +493,6 @@ export default async function EventDetailPage({
                       Register Now
                       <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                     </Link>
-                  ) : (
-                    <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 py-3.5 text-sm font-bold text-black/25">
-                      <CheckCircle2 className="size-4" />
-                      Registration Closed
-                    </div>
                   )}
 
                   <div className="mt-4">

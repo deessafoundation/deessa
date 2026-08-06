@@ -5,6 +5,7 @@
 
 import {
   FormField,
+  FormStep,
   FieldConditional,
   ConditionalOperator,
 } from "@/lib/types/conference-form-schema"
@@ -62,7 +63,7 @@ export function evaluateCondition(
 
     default:
       console.warn(`Unknown conditional operator: ${operator}`)
-      return true // Show field by default if operator is unknown
+      return false // Hide field by default if operator is unknown (fail-closed)
   }
 }
 
@@ -158,9 +159,9 @@ export function evaluateConditionalWithLogic(
     return evaluateCondition(conditional, formData)
   }
 
-  // Evaluate nested conditions
+  // Evaluate nested conditions (recursively support nested logic)
   const results = conditional.conditions.map((cond) =>
-    evaluateCondition(cond, formData)
+    evaluateConditionalWithLogic(cond, formData)
   )
 
   // Apply logic operator
@@ -190,6 +191,25 @@ export function filterVisibleFields(
 
     // Evaluate conditional with nested logic support
     return evaluateConditionalWithLogic(field.conditional, formData)
+  })
+}
+
+/**
+ * Filters steps based on conditional visibility rules.
+ * Returns only steps that should be visible given the current form data.
+ */
+export function filterVisibleSteps(
+  steps: FormStep[],
+  formData: FormData
+): FormStep[] {
+  return steps.filter((step) => {
+    // No conditional rule = always visible
+    if (!step.conditional) {
+      return true
+    }
+
+    // Evaluate conditional with nested logic support
+    return evaluateConditionalWithLogic(step.conditional, formData)
   })
 }
 

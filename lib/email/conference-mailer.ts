@@ -219,7 +219,7 @@ export async function sendConferencePaymentLinkEmail(params: {
     const transporter = createGmailTransporter()
     const siteUrl = getAppBaseUrl()
     const paymentUrl = `${siteUrl}/complete-payment?rid=${encodeURIComponent(params.registrationId)}`
-    const shortId = `DEESSA-2026-${params.registrationId.slice(0, 6).toUpperCase()}`
+    const shortId = `deessa-2026-${params.registrationId.slice(0, 6).toUpperCase()}`
     const safeFullName = escapeHtml(params.fullName)
 
     let expiryNote = ""

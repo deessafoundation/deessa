@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { notifications } from "@/lib/notifications"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
 import { useRouter } from "next/navigation"
@@ -37,8 +36,6 @@ interface OrganizationSettingsFormProps {
 export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
 
   const [formData, setFormData] = useState<OrganizationDetails>(
     initialData || {
@@ -71,25 +68,15 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
-    setSuccess(null)
     setIsSubmitting(true)
 
     try {
       await updateSiteSetting("organization_details", formData as unknown as Record<string, unknown>)
-      setSuccess("Organization details updated successfully!")
+      notifications.showSuccess({ description: "Organization details updated successfully!" })
       router.refresh()
-
-      setTimeout(() => {
-        setSuccess(null)
-      }, 3000)
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to update settings"
-      setError(message)
-      notifications.showError({
-        title: "Error",
-        description: message,
-      })
+      notifications.showError({ description: message })
     } finally {
       setIsSubmitting(false)
     }
@@ -97,20 +84,6 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <Alert className="border-red-200 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-800">{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {success && (
-        <Alert className="border-green-200 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">{success}</AlertDescription>
-        </Alert>
-      )}
-
       {/* Organization Name */}
       <div>
         <Label htmlFor="name">Organization Name *</Label>

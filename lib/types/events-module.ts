@@ -62,6 +62,20 @@ export interface EventModuleEvent {
   // Pricing (DEC-005)
   is_free: boolean;
 
+  // Payment method toggles
+  allow_online_payment: boolean;
+  allow_qr_payment: boolean;
+  allow_pay_at_venue: boolean;
+
+  // QR Payment
+  payment_qr_image_url: string | null; // Admin-uploaded QR code image
+  payment_instructions: string | null; // Payment instructions text
+
+  // Bank Transfer (manual alternative to QR)
+  payment_bank_name: string | null; // e.g. "Nabil Bank"
+  payment_account_name: string | null; // e.g. "deessa Foundation"
+  payment_account_number: string | null; // e.g. "1234567890"
+
   // Contact
   contact_email: string | null;
 
@@ -176,6 +190,12 @@ export interface EventRegistration {
   payment_id: string | null;
   provider_session_ref: string | null;
 
+  // QR Payment screenshot
+  payment_screenshot_url: string | null; // Storage path in private bucket
+
+  // Payment method chosen during registration
+  payment_method: "online" | "qr" | "venue" | null;
+
   // Payment timestamps
   payment_initiated_at: string | null;
   payment_paid_at: string | null;
@@ -265,6 +285,7 @@ export type EmailTemplateType =
   | "payment_receipt"
   | "reminder"
   | "cancellation"
+  | "payment_reminder"
   | "custom";
 
 export interface EventEmailTemplate {
@@ -307,6 +328,14 @@ export interface CreateEventInput {
   registration_close_at?: string;
   max_capacity?: number;
   is_free?: boolean;
+  allow_online_payment?: boolean;
+  allow_qr_payment?: boolean;
+  allow_pay_at_venue?: boolean;
+  payment_qr_image_url?: string;
+  payment_instructions?: string;
+  payment_bank_name?: string;
+  payment_account_name?: string;
+  payment_account_number?: string;
   contact_email?: string;
 }
 
@@ -381,6 +410,7 @@ export interface RegistrationFilters {
   event_id: string;
   status?: RegistrationStatus;
   payment_status?: PaymentStatus;
+  payment_method?: string;
   search?: string;
   page?: number;
   limit?: number;
@@ -443,6 +473,7 @@ export const EMAIL_TEMPLATE_TYPE_LABELS: Record<EmailTemplateType, string> = {
   payment_receipt: "Payment Receipt",
   reminder: "Reminder",
   cancellation: "Cancellation",
+  payment_reminder: "Payment Reminder",
   custom: "Custom",
 };
 

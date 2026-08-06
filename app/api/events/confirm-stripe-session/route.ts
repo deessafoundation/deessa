@@ -3,6 +3,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { verifyStripeSession } from "@/lib/payments/stripe";
 import { sendEventConfirmationEmail } from "@/lib/email/event-mailer";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getAppBaseUrl } from "@/lib/utils";
 
 /**
  * POST /api/events/confirm-stripe-session
@@ -262,7 +263,7 @@ export async function POST(request: Request) {
       try {
         const { data: event } = await supabase
           .from("events")
-          .select("title, event_date, location")
+          .select("title, event_date, location, venue_name, contact_email, slug")
           .eq("id", reg.event_id)
           .single();
 
@@ -290,7 +291,7 @@ export async function POST(request: Request) {
           ticketName = (tt as { name: string } | null)?.name;
         }
 
-        const eventTyped = event as { title: string; event_date: string; location: string };
+        const eventTyped = event as { title: string; event_date: string; location: string; venue_name?: string; contact_email?: string; slug?: string };
 
         await sendEventConfirmationEmail({
           to: reg.email,
@@ -298,6 +299,9 @@ export async function POST(request: Request) {
           eventTitle: eventTyped.title,
           eventDate: eventTyped.event_date,
           eventLocation: eventTyped.location,
+          venueName: eventTyped.venue_name || "",
+          eventUrl: eventTyped.slug ? `${getAppBaseUrl()}/events/${eventTyped.slug}` : "",
+          contactEmail: eventTyped.contact_email || "",
           ticketName,
           registrationId: reg.id,
           templateHtml: template.body_html,

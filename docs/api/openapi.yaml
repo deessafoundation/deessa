@@ -1,0 +1,731 @@
+openapi: 3.1.0
+info:
+  title: Deesha Foundation API
+  version: 1.0.0
+  description: |
+    API for Deesha Foundation - donation management, event registration, and payment processing.
+    
+    ## Authentication
+    Most endpoints require authentication via Supabase Auth JWT tokens.
+    
+    ## Rate Limiting
+    Public endpoints are rate-limited. See individual endpoint documentation for limits.
+  contact:
+    name: Deesha Foundation
+    url: https://deesha.org
+  license:
+    name: Proprietary
+    url: https://deesha.org
+
+servers:
+  - url: https://deesha.org/api
+    description: Production
+  - url: https://staging.deesha.org/api
+    description: Staging
+  - url: http://localhost:3000/api
+    description: Development
+
+tags:
+  - name: Health
+    description: System health checks
+  - name: Donations
+    description: Payment verification and status
+  - name: Receipts
+    description: Receipt download and management
+  - name: Events
+    description: Event registration and payment
+  - name: Conference
+    description: Conference registration
+  - name: Webhooks
+    description: Payment provider webhooks
+  - name: Admin - Donations
+    description: Admin donation management
+  - name: Admin - Events
+    description: Admin event management
+  - name: Admin - Notifications
+    description: Admin notification system
+  - name: Admin - Support
+    description: Admin support ticket management
+  - name: Support
+    description: Public support submission
+  - name: Cron
+    description: Scheduled background jobs
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: System health check
+      description: Returns health status of database, payment config, and providers
+      operationId: getHealth
+      responses:
+        '200':
+          description: System healthy or degraded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '503':
+          description: System unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /payments/stripe/verify:
+    get:
+      tags: [Donations]
+      summary: Verify Stripe payment
+      description: Verifies a Stripe payment and confirms the donation
+      operationId: verifyStripePayment
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Stripe checkout session ID
+      responses:
+        '200':
+          description: Payment verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentVerification'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /payments/stripe/status:
+    get:
+      tags: [Donations]
+      summary: Check Stripe payment status
+      operationId: getStripeStatus
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatus'
+
+  /payments/khalti/verify:
+    get:
+      tags: [Donations]
+      summary: Verify Khalti payment
+      operationId: verifyKhaltiPayment
+      parameters:
+        - name: pidx
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentVerification'
+
+  /payments/khalti/status:
+    get:
+      tags: [Donations]
+      summary: Check Khalti payment status
+      operationId: getKhaltiStatus
+      parameters:
+        - name: pidx
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatus'
+
+  /payments/esewa/success:
+    get:
+      tags: [Donations]
+      summary: eSewa success callback
+      description: Handles eSewa payment success and redirects
+      operationId: esewaSuccess
+      parameters:
+        - name: data
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Base64-encoded callback data
+      responses:
+        '302':
+          description: Redirect to success page
+
+  /payments/esewa/status:
+    get:
+      tags: [Donations]
+      summary: Check eSewa payment status
+      operationId: getEsewaStatus
+      parameters:
+        - name: transaction_uuid
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatus'
+
+  /receipts/download:
+    get:
+      tags: [Receipts]
+      summary: Download receipt
+      description: Downloads receipt as PDF or HTML
+      operationId: downloadReceipt
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+          description: JWT authentication token
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [pdf, html]
+            default: pdf
+      responses:
+        '200':
+          description: Receipt file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/html:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /receipts/resend:
+    post:
+      tags: [Receipts]
+      summary: Resend receipt email
+      operationId: resendReceipt
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [donationId, email]
+              properties:
+                donationId:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Receipt resent
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /events/start-payment:
+    post:
+      tags: [Events]
+      summary: Start event payment
+      description: Creates a payment session for event registration
+      operationId: startEventPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registrationId, email, provider]
+              properties:
+                registrationId:
+                  type: string
+                  format: uuid
+                email:
+                  type: string
+                  format: email
+                provider:
+                  type: string
+                  enum: [stripe, khalti, esewa]
+      responses:
+        '200':
+          description: Payment session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      paymentUrl:
+                        type: string
+                        format: uri
+                      provider:
+                        type: string
+                      sessionId:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /events/status:
+    get:
+      tags: [Events]
+      summary: Check event registration status
+      operationId: getEventStatus
+      parameters:
+        - name: registrationId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Registration status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationStatus'
+
+  /webhooks/stripe:
+    post:
+      tags: [Webhooks]
+      summary: Stripe webhook handler
+      description: Receives and processes Stripe webhook events
+      operationId: stripeWebhook
+      parameters:
+        - name: Stripe-Signature
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook received
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received:
+                    type: boolean
+        '400':
+          description: Invalid signature
+
+  /webhooks/khalti:
+    post:
+      tags: [Webhooks]
+      summary: Khalti webhook handler
+      operationId: khaltiWebhook
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook received
+
+  /admin/donations:
+    get:
+      tags: [Admin - Donations]
+      summary: List donations
+      operationId: listDonations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 25
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [completed, pending, failed]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Donation list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDonations'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/events:
+    get:
+      tags: [Admin - Events]
+      summary: List events
+      operationId: listEvents
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Event list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+
+  /admin/notifications:
+    get:
+      tags: [Admin - Notifications]
+      summary: List notifications
+      operationId: listNotifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: unreadOnly
+          in: query
+          schema:
+            type: string
+            enum: ['true', 'false']
+      responses:
+        '200':
+          description: Notification list
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /support/submit:
+    post:
+      tags: [Support]
+      summary: Submit support ticket
+      operationId: submitSupport
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [subject, email, category, message]
+              properties:
+                subject:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                category:
+                  type: string
+                  enum: [payment, registration, general, other]
+                priority:
+                  type: string
+                  enum: [low, medium, high]
+                  default: medium
+                message:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  maxItems: 3
+      responses:
+        '200':
+          description: Ticket submitted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          properties:
+            database:
+              $ref: '#/components/schemas/HealthCheck'
+            paymentConfig:
+              $ref: '#/components/schemas/HealthCheck'
+            providers:
+              $ref: '#/components/schemas/HealthCheck'
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pass, warn, fail]
+        message:
+          type: string
+        responseTime:
+          type: integer
+
+    PaymentVerification:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: string
+          enum: [confirmed, review, failed, already_processed]
+        donation:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            amount:
+              type: number
+            currency:
+              type: string
+            payment_status:
+              type: string
+            receipt_number:
+              type: string
+
+    PaymentStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [confirmed, pending, failed]
+        donation:
+          type: object
+          properties:
+            id:
+              type: string
+            amount:
+              type: number
+            currency:
+              type: string
+            payment_status:
+              type: string
+            receipt_number:
+              type: string
+
+    RegistrationStatus:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: string
+        registration:
+          type: object
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+            paymentStatus:
+              type: string
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        event_date:
+          type: string
+          format: date
+        location:
+          type: string
+        status:
+          type: string
+          enum: [draft, published, disabled, archived]
+        category:
+          type: string
+        is_free:
+          type: boolean
+
+    Donation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        donor_name:
+          type: string
+        donor_email:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        payment_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    PaginatedDonations:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Donation'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

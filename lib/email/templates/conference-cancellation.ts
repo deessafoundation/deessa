@@ -14,7 +14,7 @@ interface ConferenceCancellationTemplateProps {
 
 export function ConferenceCancellationTemplate(props: ConferenceCancellationTemplateProps): string {
   const { fullName, registrationId } = props
-  const shortId = escapeHtml(`DEESSA-2026-${registrationId.slice(0, 6).toUpperCase()}`)
+  const shortId = escapeHtml(`deessa-2026-${registrationId.slice(0, 6).toUpperCase()}`)
   const firstName = fullName.split(" ")[0]
   const safeFullName = escapeHtml(fullName)
   const safeFirstName = escapeHtml(firstName)

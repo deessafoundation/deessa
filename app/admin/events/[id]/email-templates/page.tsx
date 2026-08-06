@@ -7,7 +7,7 @@ async function getEvent(id: string) {
   const supabase = await createClient()
   const { data } = await supabase
     .from("events")
-    .select("id, title")
+    .select("id, title, event_date, location, slug")
     .eq("id", id)
     .single()
   return data
@@ -40,5 +40,5 @@ export default async function EventEmailTemplatesPage({
     notFound()
   }
 
-  return <EmailTemplateEditor eventId={id} templates={templates} />
+  return <EmailTemplateEditor eventId={id} templates={templates} eventTitle={event.title} eventDate={event.event_date} eventLocation={event.location} />
 }

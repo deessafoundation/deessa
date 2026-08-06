@@ -94,6 +94,7 @@ export async function getAllEvents(
     if (filters?.search) {
       // Sanitize search input for PostgREST
       const sanitizedSearch = filters.search
+        .replace(/'/g, "''")
         .replace(/%/g, "\\%")
         .replace(/_/g, "\\_")
         .replace(/\(/g, "\\(")
@@ -247,8 +248,8 @@ export async function createEvent(
         location: input.location,
         venue_name: input.venue_name || null,
         address: input.address || null,
-        latitude: input.latitude || null,
-        longitude: input.longitude || null,
+        latitude: input.latitude ?? null,
+        longitude: input.longitude ?? null,
         image: input.image || null,
         banner_url: input.banner_url || null,
         gallery: input.gallery || [],
@@ -257,8 +258,16 @@ export async function createEvent(
         registration_enabled: input.registration_enabled ?? true,
         registration_open_at: input.registration_open_at || null,
         registration_close_at: input.registration_close_at || null,
-        max_capacity: input.max_capacity || null,
+        max_capacity: input.max_capacity ?? null,
         is_free: input.is_free ?? false,
+        allow_online_payment: input.allow_online_payment ?? true,
+        allow_qr_payment: input.allow_qr_payment ?? false,
+        allow_pay_at_venue: input.allow_pay_at_venue ?? false,
+        payment_qr_image_url: input.payment_qr_image_url || null,
+        payment_instructions: input.payment_instructions || null,
+        payment_bank_name: input.payment_bank_name || null,
+        payment_account_name: input.payment_account_name || null,
+        payment_account_number: input.payment_account_number || null,
         contact_email: input.contact_email || null,
         created_by: admin.id,
       })
@@ -271,7 +280,7 @@ export async function createEvent(
     }
 
     // Create default email templates directly (reuse authenticated client)
-    const defaultTemplateTypes = ["confirmation", "payment_receipt", "reminder", "cancellation"] as const;
+    const defaultTemplateTypes = ["confirmation", "payment_receipt", "reminder", "cancellation", "payment_reminder"] as const;
     const { getDefaultTemplateHtml } = await import(
       "@/lib/email/templates/default-event-templates"
     );
@@ -359,6 +368,19 @@ export async function updateEvent(
     if (input.max_capacity !== undefined)
       updateData.max_capacity = input.max_capacity;
     if (input.is_free !== undefined) updateData.is_free = input.is_free;
+    if (input.allow_online_payment !== undefined) updateData.allow_online_payment = input.allow_online_payment;
+    if (input.allow_qr_payment !== undefined) updateData.allow_qr_payment = input.allow_qr_payment;
+    if (input.allow_pay_at_venue !== undefined) updateData.allow_pay_at_venue = input.allow_pay_at_venue;
+    if (input.payment_qr_image_url !== undefined)
+      updateData.payment_qr_image_url = input.payment_qr_image_url;
+    if (input.payment_instructions !== undefined)
+      updateData.payment_instructions = input.payment_instructions;
+    if (input.payment_bank_name !== undefined)
+      updateData.payment_bank_name = input.payment_bank_name;
+    if (input.payment_account_name !== undefined)
+      updateData.payment_account_name = input.payment_account_name;
+    if (input.payment_account_number !== undefined)
+      updateData.payment_account_number = input.payment_account_number;
     if (input.contact_email !== undefined)
       updateData.contact_email = input.contact_email;
     if (input.status !== undefined) updateData.status = input.status;
@@ -503,6 +525,14 @@ export async function duplicateEvent(
         registration_close_at: original.registration_close_at,
         max_capacity: original.max_capacity,
         is_free: original.is_free,
+        allow_online_payment: original.allow_online_payment,
+        allow_qr_payment: original.allow_qr_payment,
+        allow_pay_at_venue: original.allow_pay_at_venue,
+        payment_qr_image_url: original.payment_qr_image_url,
+        payment_instructions: original.payment_instructions,
+        payment_bank_name: original.payment_bank_name,
+        payment_account_name: original.payment_account_name,
+        payment_account_number: original.payment_account_number,
         contact_email: original.contact_email,
         created_by: original.created_by,
       })
@@ -532,6 +562,7 @@ export async function duplicateEvent(
         speaker_name: item.speaker_name,
         speaker_title: item.speaker_title,
         track_or_room: item.track_or_room,
+        highlighted: item.highlighted,
         sort_order: item.sort_order,
       }));
 

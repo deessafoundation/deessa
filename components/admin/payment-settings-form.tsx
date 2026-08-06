@@ -2,15 +2,15 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { AlertCircle, Check, CreditCard, Globe } from "lucide-react"
+import { CreditCard, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { FancySelect } from "@/components/ui/fancy-select"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
 import { updatePaymentSettings } from "@/lib/actions/admin-payments"
+import { notifications } from "@/lib/notifications"
 
 interface PaymentSettingsFormProps {
   settings: PaymentSettings
@@ -24,8 +24,6 @@ export function PaymentSettingsForm({ settings, envConfigured }: PaymentSettings
   const [primaryProvider, setPrimaryProvider] = useState<PaymentProvider>(settings.primaryProvider)
   const [defaultCurrency, setDefaultCurrency] = useState<"USD" | "NPR">(settings.defaultCurrency)
   const [allowRecurring, setAllowRecurring] = useState(settings.allowRecurring)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const toggleProvider = (provider: PaymentProvider) => {
@@ -36,11 +34,9 @@ export function PaymentSettingsForm({ settings, envConfigured }: PaymentSettings
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
-    setError(null)
-    setSuccess(null)
 
     if (!enabledProviders.includes(primaryProvider)) {
-      setError("Primary provider must be enabled.")
+      notifications.showError({ description: "Primary provider must be enabled." })
       setIsSubmitting(false)
       return
     }
@@ -53,9 +49,9 @@ export function PaymentSettingsForm({ settings, envConfigured }: PaymentSettings
     })
 
     if (result.error) {
-      setError(result.error)
+      notifications.showError({ description: result.error })
     } else {
-      setSuccess("Payment settings updated successfully.")
+      notifications.showSuccess({ description: "Payment settings updated successfully." })
       router.refresh()
     }
 
@@ -70,19 +66,6 @@ export function PaymentSettingsForm({ settings, envConfigured }: PaymentSettings
 
   return (
     <div className="space-y-4">
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-      {success && (
-        <Alert className="border-green-600 bg-green-50 text-green-800">
-          <Check className="h-4 w-4" />
-          <AlertDescription>{success}</AlertDescription>
-        </Alert>
-      )}
-
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

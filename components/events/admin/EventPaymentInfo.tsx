@@ -16,6 +16,8 @@ import {
   History,
   Copy,
   Check,
+  Eye,
+  X,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -57,6 +59,7 @@ interface EventPaymentInfoProps {
   email: string
   fullName: string
   paymentEvents: PaymentEvent[]
+  paymentScreenshotUrl: string | null
 }
 
 function formatTs(iso: string | null) {
@@ -108,6 +111,9 @@ function ProviderIcon({ provider }: { provider: string | null }) {
       return <span className="text-sm">🟣</span>
     case "esewa":
       return <span className="text-sm">🟢</span>
+    case "qr":
+    case "manual":
+      return <span className="text-sm">📱</span>
     default:
       return <CreditCard className="size-4 text-muted-foreground" />
   }
@@ -132,11 +138,13 @@ export function EventPaymentInfo({
   email,
   fullName,
   paymentEvents,
+  paymentScreenshotUrl,
 }: EventPaymentInfoProps) {
   const router = useRouter()
   const [loading, setLoading] = useState<"resend" | "markPaid" | "extend" | null>(null)
   const [showMarkPaidModal, setShowMarkPaidModal] = useState(false)
   const [showExtendModal, setShowExtendModal] = useState(false)
+  const [showScreenshotModal, setShowScreenshotModal] = useState(false)
   const [inlineMessage, setInlineMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   const isPaid = paymentStatus === "paid"
@@ -367,6 +375,60 @@ export function EventPaymentInfo({
           </div>
         )}
 
+        {/* Payment Screenshot (QR payments) */}
+        {paymentScreenshotUrl && (
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm">📸</span>
+              <p className="text-xs font-semibold text-blue-700">Payment Screenshot</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowScreenshotModal(true)}
+              className="group relative w-full rounded-lg overflow-hidden border border-blue-200 bg-white cursor-pointer"
+            >
+              <img
+                src={paymentScreenshotUrl}
+                alt="Payment screenshot"
+                className="w-full h-auto max-h-64 object-contain transition-all duration-200 group-hover:opacity-80"
+              />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
+                <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 shadow-lg">
+                  <Eye className="size-4 text-foreground" />
+                  <span className="text-sm font-medium text-foreground">View Full Image</span>
+                </div>
+              </div>
+            </button>
+            <p className="mt-2 text-[11px] text-blue-600">
+              Uploaded by attendee — verify payment details above
+            </p>
+          </div>
+        )}
+
+        {/* Screenshot Full View Modal */}
+        <Dialog open={showScreenshotModal} onOpenChange={setShowScreenshotModal}>
+          <DialogContent className="max-w-4xl p-0 overflow-hidden">
+            <DialogHeader className="px-6 pt-6 pb-4">
+              <DialogTitle className="flex items-center justify-between">
+                <span>Payment Screenshot</span>
+                <button
+                  onClick={() => setShowScreenshotModal(false)}
+                  className="rounded-full p-1 hover:bg-muted transition-colors"
+                >
+                  <X className="size-5" />
+                </button>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="px-6 pb-6">
+              <img
+                src={paymentScreenshotUrl!}
+                alt="Payment screenshot - full view"
+                className="w-full h-auto rounded-lg border border-border"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* Admin actions */}
         <div className="border-t border-border pt-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
@@ -440,9 +502,9 @@ export function EventPaymentInfo({
             <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-800 leading-relaxed">
               ⚠ This will <strong>bypass the payment gateway</strong>. Use only when you&apos;ve confirmed payment was received through another channel (e.g. bank transfer). This action is logged.
             </div>
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="outline" onClick={() => setShowMarkPaidModal(false)}>Cancel</Button>
-              <Button onClick={handleMarkPaid} disabled={loading === "markPaid"} className="bg-amber-600 hover:bg-amber-700 text-white">
+            <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setShowMarkPaidModal(false)} className="w-full sm:w-auto">Cancel</Button>
+              <Button onClick={handleMarkPaid} disabled={loading === "markPaid"} className="bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto">
                 {loading === "markPaid" && <Loader2 className="mr-2 size-4 animate-spin" />}
                 Yes, Mark as Paid
               </Button>
@@ -467,9 +529,9 @@ export function EventPaymentInfo({
             <div className="rounded-xl border border-purple-100 bg-purple-50 p-4 text-sm text-purple-700 leading-relaxed">
               The current expiry deadline will be pushed forward by <strong>24 hours</strong>.
             </div>
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="outline" onClick={() => setShowExtendModal(false)}>Cancel</Button>
-              <Button onClick={handleExtendExpiry} disabled={loading === "extend"} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setShowExtendModal(false)} className="w-full sm:w-auto">Cancel</Button>
+              <Button onClick={handleExtendExpiry} disabled={loading === "extend"} className="bg-purple-600 hover:bg-purple-700 text-white w-full sm:w-auto">
                 {loading === "extend" && <Loader2 className="mr-2 size-4 animate-spin" />}
                 Yes, Extend +24h
               </Button>
