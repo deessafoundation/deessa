@@ -59,7 +59,7 @@ export function EventRegistrationForm({
   const enabledPaymentMethods: string[] = []
   if (!event.is_free) {
     if (event.allow_online_payment !== false) enabledPaymentMethods.push("online")
-    if (event.allow_qr_payment && event.payment_qr_image_url) enabledPaymentMethods.push("qr")
+    if (event.allow_qr_payment && (event.payment_qr_image_url || event.payment_bank_name)) enabledPaymentMethods.push("qr")
     if (event.allow_pay_at_venue) enabledPaymentMethods.push("venue")
   }
   // Show payment method step only when 2+ methods are available
@@ -119,8 +119,22 @@ export function EventRegistrationForm({
   )
 
   const handleNext = useCallback(() => {
+    // Validate all fields in the current step before advancing
+    const currentStepData = steps[currentStep]
+    if (currentStepData?.fields) {
+      const newErrors: Record<string, string> = {}
+      for (const field of currentStepData.fields) {
+        const value = formData[field.id]
+        const error = validateFieldValue(field, value)
+        if (error) newErrors[field.id] = error
+      }
+      if (Object.keys(newErrors).length > 0) {
+        setErrors((prev) => ({ ...prev, ...newErrors }))
+        return
+      }
+    }
     setCurrentStep((s) => Math.min(s + 1, totalSteps - 1))
-  }, [totalSteps])
+  }, [currentStep, steps, formData, totalSteps])
 
   const handleBack = useCallback(() => {
     setCurrentStep((s) => {
@@ -647,15 +661,20 @@ export function EventRegistrationForm({
                         }}
                         className="h-4 w-4 text-primary"
                       />
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-                        <svg className="size-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30">
+                        <svg className="size-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground">Pay Online</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-foreground">Pay Online</p>
+                          <span className="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                            International
+                          </span>
+                        </div>
                         <p className="text-sm text-foreground-muted">
-                          Complete payment securely via eSewa, Khalti, or Stripe
+                          eSewa, Khalti, Stripe — instant verification
                         </p>
                       </div>
                       <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
@@ -689,9 +708,14 @@ export function EventRegistrationForm({
                         <QrCode className="size-6 text-amber-600 dark:text-amber-400" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground">Pay via QR Code</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-foreground">QR / Bank Transfer</p>
+                          <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                            Nepal Only
+                          </span>
+                        </div>
                         <p className="text-sm text-foreground-muted">
-                          Scan QR code and upload payment screenshot for verification
+                          Scan QR or transfer to bank — upload screenshot for verification
                         </p>
                       </div>
                       <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
@@ -731,9 +755,14 @@ export function EventRegistrationForm({
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground">Pay at Venue</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-foreground">Pay at Venue</p>
+                          <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:text-green-300 uppercase tracking-wider">
+                            On Arrival
+                          </span>
+                        </div>
                         <p className="text-sm text-foreground-muted">
-                          Complete registration now, pay at the check-in desk
+                          Complete registration now, pay cash or card at the check-in desk
                         </p>
                       </div>
                       <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
@@ -812,6 +841,38 @@ export function EventRegistrationForm({
                     </p>
                   )}
                 </div>
+
+                {/* Bank Transfer Details (if provided) */}
+                {(event.payment_bank_name || event.payment_account_name || event.payment_account_number) && (
+                  <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="size-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                      </svg>
+                      <p className="text-sm font-bold text-blue-700">Or Transfer to Bank Account</p>
+                    </div>
+                    <div className="grid gap-2 text-sm">
+                      {event.payment_bank_name && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-blue-600 font-medium">Bank:</span>
+                          <span className="text-foreground">{event.payment_bank_name}</span>
+                        </div>
+                      )}
+                      {event.payment_account_name && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-blue-600 font-medium">Account Name:</span>
+                          <span className="text-foreground">{event.payment_account_name}</span>
+                        </div>
+                      )}
+                      {event.payment_account_number && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-blue-600 font-medium">Account No:</span>
+                          <span className="text-foreground font-mono">{event.payment_account_number}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Upload Area */}
                 <div className="space-y-3">

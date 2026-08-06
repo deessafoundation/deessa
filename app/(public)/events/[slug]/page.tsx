@@ -418,24 +418,59 @@ export default async function EventDetailPage({
                   )}
 
                   {/* QR Code Payment */}
-                  {!event.is_free && event.payment_qr_image_url && (
+                  {!event.is_free && (event.payment_qr_image_url || event.payment_bank_name) && (
                     <div className="mb-5 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4">
                       <div className="flex items-center gap-2 mb-3">
                         <QrCode className="size-4 text-primary" />
                         <p className="text-sm font-bold text-primary">Scan to Pay</p>
                       </div>
-                      <div className="flex justify-center mb-3">
-                        <img
-                          src={event.payment_qr_image_url}
-                          alt="Payment QR Code"
-                          className="h-48 w-48 object-contain rounded-lg bg-white p-2 shadow-sm"
-                        />
-                      </div>
+                      {event.payment_qr_image_url && (
+                        <div className="flex justify-center mb-3">
+                          <img
+                            src={event.payment_qr_image_url}
+                            alt="Payment QR Code"
+                            className="h-48 w-48 object-contain rounded-lg bg-white p-2 shadow-sm"
+                          />
+                        </div>
+                      )}
                       {event.payment_instructions && (
                         <p className="text-xs text-black/60 text-center leading-relaxed">
                           {event.payment_instructions}
                         </p>
                       )}
+
+                      {/* Bank Transfer Details */}
+                      {(event.payment_bank_name || event.payment_account_name || event.payment_account_number) && (
+                        <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50/50 p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <svg className="size-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                            </svg>
+                            <p className="text-xs font-bold text-blue-700">Or Transfer to Bank</p>
+                          </div>
+                          <div className="grid gap-1 text-xs">
+                            {event.payment_bank_name && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">Bank:</span>
+                                <span>{event.payment_bank_name}</span>
+                              </div>
+                            )}
+                            {event.payment_account_name && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">Name:</span>
+                                <span>{event.payment_account_name}</span>
+                              </div>
+                            )}
+                            {event.payment_account_number && (
+                              <div className="flex gap-2">
+                                <span className="text-blue-600 font-medium">A/C:</span>
+                                <span className="font-mono">{event.payment_account_number}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       <p className="mt-2 text-[11px] text-primary/70 text-center font-medium">
                         Upload your payment screenshot during registration
                       </p>
