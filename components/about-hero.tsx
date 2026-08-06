@@ -3,9 +3,8 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 
-/* ───────── Original team photo ───────── */
-const HERO_BG_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuC5xzHfv2hii0hZm5knPtqnBhBXuF43kiNX-3L6bPoaNWoNJhuaBEp0UnvkJbxD_8jxmQHLjE0b1j-TMOJq_VOIrW9983EZgYM46P8MAwn7PzfzaLz2HsWKlKvt5lKXcXf_b6vms2V8NcnXaz9-_X8SNQsr6s7_GyimSfmkpcQ4Oh5YRcHnl1A7tisgSR5H6pZkE2H_RJ7Ed4vN8OmKIZ2WhCp5LlGraRVM17Ryo2wWWdRDFec31aYUj8Kv479a7Hlv2NIwScl7Eek"
+/* ───────── Team photo (placeholder until an authentic photo is ready) ───────── */
+const HERO_BG_URL = "/image_coming_soon.png"
 
 /* ───────── Staggered word-by-word H1 ───────── */
 function AnimatedHeadline() {

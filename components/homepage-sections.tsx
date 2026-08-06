@@ -68,6 +68,7 @@ interface OurStorySectionProps {
 
 export function OurStorySection({ story }: OurStorySectionProps) {
   const s = story || DEFAULT_HOMEPAGE_STORY
+  const imageSrc = s.image || "/image_coming_soon.png"
 
   return (
     <section className="py-20 md:py-28 bg-white relative overflow-hidden">
@@ -79,7 +80,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src={s.image}
+                  src={imageSrc}
                   alt={s.imageAlt}
                   width={700}
                   height={500}
@@ -584,7 +585,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
     name: t.name,
     designation: `${t.role}, ${t.location}`,
     quote: t.quote,
-    src: t.image,
+    src: t.image || "/image_coming_soon.png",
   }))
 
   return (
