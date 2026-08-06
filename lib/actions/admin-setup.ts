@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { getAppBaseUrl } from "@/lib/utils"
 import { redirect } from "next/navigation"
 
 export async function checkSetupRequired() {
@@ -52,9 +53,7 @@ export async function setupFirstAdmin(formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo:
-        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-        `${typeof window !== "undefined" ? window.location.origin : ""}/admin`,
+      emailRedirectTo: `${getAppBaseUrl()}/admin/login`,
       data: {
         full_name: fullName,
       },
