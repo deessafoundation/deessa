@@ -32,8 +32,8 @@ export default async function EventRegistrationSuccessPage({
   const email = safeDecode(sp.email, "")
   const firstName = name.split(" ")[0]
   const shortId = registrationId
-    ? `DESSA-${registrationId.slice(0, 6).toUpperCase()}`
-    : "DESSA-??????"
+    ? `deessa-${registrationId.slice(0, 6).toUpperCase()}`
+    : "deessa-??????"
 
   // Get event info
   const supabase = await createClient()

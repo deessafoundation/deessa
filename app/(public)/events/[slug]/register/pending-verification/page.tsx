@@ -36,8 +36,8 @@ export default async function PendingVerificationPage({
   const email = safeDecode(sp.email, "")
   const firstName = name.split(" ")[0]
   const shortId = registrationId
-    ? `DESSA-${registrationId.slice(0, 6).toUpperCase()}`
-    : "DESSA-??????"
+    ? `deessa-${registrationId.slice(0, 6).toUpperCase()}`
+    : "deessa-??????"
 
   const supabase = await createClient()
   const { data: event } = await supabase
