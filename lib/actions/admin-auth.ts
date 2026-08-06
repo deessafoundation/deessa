@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { getAppBaseUrl } from "@/lib/utils"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -119,8 +120,7 @@ export async function createAdminUser(formData: FormData) {
       email,
       password,
       options: {
-        emailRedirectTo:
-          process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${process.env.NEXT_PUBLIC_SUPABASE_URL}/admin`,
+        emailRedirectTo: `${getAppBaseUrl()}/admin/login`,
       },
     })
 

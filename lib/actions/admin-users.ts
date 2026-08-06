@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { getAppBaseUrl } from "@/lib/utils"
 import { getCurrentAdmin } from "./admin-auth"
 import { revalidatePath } from "next/cache"
 
@@ -93,6 +94,9 @@ export async function createAdminUser(data: {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
+      options: {
+        emailRedirectTo: `${getAppBaseUrl()}/admin/login`,
+      },
     })
 
     if (signUpError) {
