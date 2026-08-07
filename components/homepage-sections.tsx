@@ -89,11 +89,11 @@ export function OurStorySection({ story }: OurStorySectionProps) {
                 <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
-                <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden md:block animate-badge-bounce">
-                  <p className="text-4xl font-black font-comic-num">
+                <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
+                  <p className="text-2xl md:text-4xl font-black font-comic-num">
                     {s.founded}
                   </p>
-                  <p className="text-sm font-bold opacity-90">{s.foundedLabel}</p>
+                  <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
               </ScrollReveal>
             </div>

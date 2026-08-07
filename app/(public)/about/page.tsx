@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { createClient } from "@/lib/supabase/server"
 import { AboutHero } from "@/components/about-hero"
 import { AboutSections } from "./AboutSections"
+import { getAboutPageSettings } from "@/lib/data/about-settings"
 
 export const metadata: Metadata = {
   title: "Who We Are - deessa Foundation",
@@ -20,12 +21,19 @@ async function getTeamMembers() {
 }
 
 export default async function AboutPage() {
-  const teamMembers = await getTeamMembers()
+  const [teamMembers, aboutSettings] = await Promise.all([
+    getTeamMembers(),
+    getAboutPageSettings(),
+  ])
 
   return (
     <>
-      <AboutHero />
-      <AboutSections teamMembers={teamMembers} />
+      <AboutHero settings={aboutSettings.hero} />
+      <AboutSections
+        teamMembers={teamMembers}
+        intro={aboutSettings.intro}
+        howWeDoIt={aboutSettings.howWeDoIt}
+      />
     </>
   )
 }

@@ -355,7 +355,7 @@ export default function OurStoryPage() {
             </div>
           </div>
 
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 w-full flex justify-center">
             <CircularTestimonials
               testimonials={storyPhotos}
               autoplay

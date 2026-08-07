@@ -20,6 +20,7 @@ import {
   Image,
   Podcast,
   Bell,
+  Info,
 } from "lucide-react"
 import { type AdminRole, hasPermission, canViewFinance, canManageUsers } from "@/lib/types/admin"
 
@@ -51,6 +52,7 @@ export const adminNavSections: AdminNavSection[] = [
     label: "Content",
     items: [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
+      { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },
       { name: "Projects", href: "/admin/projects", icon: FolderKanban, permission: "projects" },
       { name: "Events", href: "/admin/events", icon: Calendar, permission: "events" },

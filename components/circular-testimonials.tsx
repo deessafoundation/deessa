@@ -470,6 +470,14 @@ export const CircularTestimonials = ({
         .testimonial-grid.photo-only {
           grid-template-columns: 1fr;
         }
+        @media (max-width: 640px) {
+          .testimonial-container {
+            padding: 1rem;
+          }
+          .image-container {
+            height: 16rem !important;
+          }
+        }
       `}</style>
     </div>
   )
