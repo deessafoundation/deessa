@@ -116,7 +116,7 @@ function PaymentSuccessContent() {
     return () => clearTimeout(t)
   }, [status, pollCount, fetchStatus])
 
-  const shortId = rid ? `DEESSA-2026-${rid.slice(0, 6).toUpperCase()}` : ""
+  const shortId = rid ? `deessa-2026-${rid.slice(0, 6).toUpperCase()}` : ""
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (status === "loading") {

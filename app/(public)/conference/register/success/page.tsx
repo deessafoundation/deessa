@@ -28,7 +28,7 @@ export default async function RegistrationSuccessPage({ searchParams }: SuccessP
   const email = safeDecode(params.email, "")
   const firstName = name.split(" ")[0]
   const shortId = registrationId
-    ? `DEESSA-2026-${registrationId.slice(0, 6).toUpperCase()}`
+    ? `deessa-2026-${registrationId.slice(0, 6).toUpperCase()}`
     : "DEESSA-2026-??????"
   // Calendar links — built server-side (no client JS needed)
   const cfg = await getConferenceSettings()
