@@ -52,7 +52,7 @@ function PaymentOptionsContent() {
     )
   }
 
-  const shortId = `DEESSA-2026-${rid.slice(0, 6).toUpperCase()}`
+  const shortId = `deessa-2026-${rid.slice(0, 6).toUpperCase()}`
   const pendingPaymentUrl = `/conference/register/pending-payment?rid=${rid}&email=${encodeURIComponent(email)}`
 
   const handlePayLater = async () => {

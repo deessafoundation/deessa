@@ -214,7 +214,7 @@ function PendingPaymentContent() {
 
   if (!reg) return null
 
-  const shortId = `DEESSA-2026-${reg.id.slice(0, 6).toUpperCase()}`
+  const shortId = `deessa-2026-${reg.id.slice(0, 6).toUpperCase()}`
   const amount = reg.paymentAmount
   const currency = reg.paymentCurrency || "NPR"
   const isExpired = reg.expiresAt && countdown === "Expired"
