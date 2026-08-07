@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
+import { CircularTestimonials } from "@/components/circular-testimonials"
 
 export const metadata: Metadata = {
   title: "Our Story — Why We Were Founded | deessa Foundation",
@@ -59,6 +60,16 @@ const timelineItems = [
   },
 ]
 
+const storyPhotos = [
+  { src: "/twins-newborn.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-together.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-dino.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-cheer.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-curious.jpg", name: "", designation: "", quote: "" },
+  { src: "/twin-solo-1.jpg", name: "", designation: "", quote: "" },
+  { src: "/twin-solo-2.jpg", name: "", designation: "", quote: "" },
+]
+
 const impact = [
   {
     icon: Brain,
@@ -94,24 +105,24 @@ export default function OurStoryPage() {
             alt="Our Story hero background"
             fill
             className="object-cover"
-            style={{ 
+            style={{
               objectPosition: "center center",
               filter: "brightness(0.65) saturate(1.1)",
             }}
             priority
           />
           {/* DARK GRADIENT SCRIM OVERLAY */}
-          <div 
+          <div
             className="absolute inset-0"
             style={{
               background: "linear-gradient(to bottom, rgba(10, 15, 35, 0.55) 0%, rgba(10, 15, 35, 0.35) 50%, rgba(10, 15, 35, 0.70) 100%)"
-            }} 
+            }}
           />
         </div>
 
         {/* TEXT CONTENT */}
         <div className="relative z-10 mx-auto max-w-5xl text-center">
-          <span 
+          <span
             className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider sm:text-sm"
             style={{ color: "#29b6c8", backgroundColor: "rgba(41, 182, 200, 0.12)" }}
           >
@@ -187,8 +198,8 @@ export default function OurStoryPage() {
             <div className="relative">
               <div className="absolute -inset-3 -rotate-2 rounded-3xl bg-chart-4/20" aria-hidden />
               <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJXx8c8UwNt7LMcnZjeUcX3fiHF3kwS7Gq7zT-1FsnaGctC36Qn5Dd9I6mZpE41cWf_SdvBD_Y21oFEi0_RWaXcA4jaguOrWviJaCITse3FNl6Cbtie7hVxRoJZEE8U0nqWoMbrdKdVaDD-Dvf6o2NGZSIunDnP2C78pKPQX9Kqs248JnyI8pYI6lvh2BhE793AmHE0hPMMlimCcX4gbJt9zSJE2zrx3QRMDVZyiNfHzd_R5kDKeps-f8pp_BIEG38lDZEcZCoZSM"
-                alt="Two sisters smiling in a garden"
+                src="/twins-hug.jpg"
+                alt="Deetya and Marissa embracing"
                 width={800}
                 height={1000}
                 className="relative w-full rounded-3xl object-cover shadow-xl"
@@ -344,13 +355,17 @@ export default function OurStoryPage() {
             </div>
           </div>
 
-          <div className="flex-1">
-            <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuASbw9oLQ6Bh5rUk63XQrLHVkV_YsJruNHh9vUHngNQPfPynL33cPYYmE1khtQzPyDPaL40kuW3zuZ1lFda-uHADLefB3FKfwE4uUKHUCmoQJAm4qzWhABmQ3Xd2FlwepeIBkuV3JNEvFD5E6INwLJRdOyrhMM1JU1vtpV2yUrKwuspz-dvvpNkXn82WJhmis8zMQsnvKJ5SsGHOaIKQONsM1N91RSkPKZULy9LZnXB1GPEPLVPVG5XBKsOhcI7F1Nb5yCCkbPiZwY"
-              alt="A winding path through a green valley"
-              width={900}
-              height={900}
-              className="w-full rounded-3xl object-cover shadow-2xl"
+          <div className="flex-1 flex justify-center">
+            <CircularTestimonials
+              testimonials={storyPhotos}
+              autoplay
+              showContent={false}
+              imageHeight="26rem"
+              colors={{
+                arrowBackground: "rgb(var(--brand-primary))",
+                arrowForeground: "#ffffff",
+                arrowHoverBackground: "rgb(var(--brand-primary-dark))",
+              }}
             />
           </div>
         </div>
