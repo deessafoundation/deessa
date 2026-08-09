@@ -135,7 +135,7 @@ export default async function RegistrationDetailPage({
     }
   }
 
-  const shortId = `EVT-${reg.id.slice(0, 6).toUpperCase()}`
+  const shortId = `deessa-${reg.id.slice(0, 6).toUpperCase()}`
   const registeredAt = new Date(reg.created_at).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
