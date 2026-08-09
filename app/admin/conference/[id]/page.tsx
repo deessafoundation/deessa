@@ -121,7 +121,7 @@ export default async function ConferenceRegistrantDetailPage({ params }: Props) 
     }
   }
 
-  const shortId = `DEESSA-2026-${reg.id.slice(0, 6).toUpperCase()}`
+  const shortId = `deessa-2026-${reg.id.slice(0, 6).toUpperCase()}`
   const registeredAt = new Date(reg.created_at).toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   })
