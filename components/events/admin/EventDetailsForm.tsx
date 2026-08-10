@@ -47,6 +47,11 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
   const [showQrUrl, setShowQrUrl] = useState(false)
   const qrInputRef = useRef<HTMLInputElement>(null)
 
+  // Bank transfer state
+  const [bankName, setBankName] = useState(event.payment_bank_name || "")
+  const [accountName, setAccountName] = useState(event.payment_account_name || "")
+  const [accountNumber, setAccountNumber] = useState(event.payment_account_number || "")
+
   // Payment method toggles
   const [allowOnlinePayment, setAllowOnlinePayment] = useState(event.allow_online_payment ?? true)
   const [allowQrPayment, setAllowQrPayment] = useState(event.allow_qr_payment ?? false)
@@ -159,6 +164,9 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
     // Clear QR data when QR is disabled
     const effectiveQrUrl = allowQrPayment ? qrImageUrl : ""
     const effectiveInstructions = allowQrPayment ? paymentInstructions : ""
+    const effectiveBankName = allowQrPayment ? bankName : ""
+    const effectiveAccountName = allowQrPayment ? accountName : ""
+    const effectiveAccountNumber = allowQrPayment ? accountNumber : ""
 
     const result = await updateEvent(event.id, {
       title: formData.get("title") as string,
@@ -183,6 +191,9 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
       contact_email: (formData.get("contact_email") as string) || undefined,
       payment_qr_image_url: effectiveQrUrl || undefined,
       payment_instructions: effectiveInstructions || undefined,
+      payment_bank_name: effectiveBankName || undefined,
+      payment_account_name: effectiveAccountName || undefined,
+      payment_account_number: effectiveAccountNumber || undefined,
       registration_close_at: registrationCloseAt
         ? registrationCloseAt.toISOString()
         : undefined,
@@ -209,6 +220,9 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
         contact_email: (formData.get("contact_email") as string) || undefined,
         payment_qr_image_url: effectiveQrUrl || undefined,
         payment_instructions: effectiveInstructions || undefined,
+        payment_bank_name: effectiveBankName || undefined,
+        payment_account_name: effectiveAccountName || undefined,
+        payment_account_number: effectiveAccountNumber || undefined,
         registration_close_at: registrationCloseAt
           ? registrationCloseAt.toISOString()
           : undefined,
@@ -594,6 +608,52 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                   <p className="text-xs text-muted-foreground">
                     {paymentInstructions.length}/500 characters — Displayed alongside the QR code on the event page
                   </p>
+                </div>
+
+                {/* Bank Transfer Details */}
+                <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+                  <div className="flex items-center gap-2">
+                    <svg className="size-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                    </svg>
+                    <p className="text-xs font-semibold text-blue-800 uppercase tracking-wider">Bank Transfer Details (Optional)</p>
+                  </div>
+                  <p className="text-xs text-blue-600">
+                    Provide bank account details as an alternative to QR code payment
+                  </p>
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="payment_bank_name" className="text-xs">Bank Name</Label>
+                      <Input
+                        id="payment_bank_name"
+                        value={bankName}
+                        onChange={(e) => setBankName(e.target.value)}
+                        placeholder="e.g. Nabil Bank"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="payment_account_name" className="text-xs">Account Name</Label>
+                      <Input
+                        id="payment_account_name"
+                        value={accountName}
+                        onChange={(e) => setAccountName(e.target.value)}
+                        placeholder="e.g. deessa Foundation"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="payment_account_number" className="text-xs">Account Number</Label>
+                      <Input
+                        id="payment_account_number"
+                        value={accountNumber}
+                        onChange={(e) => setAccountNumber(e.target.value)}
+                        placeholder="e.g. 1234567890"
+                        maxLength={50}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
