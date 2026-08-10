@@ -94,6 +94,7 @@ export async function getAllEvents(
     if (filters?.search) {
       // Sanitize search input for PostgREST
       const sanitizedSearch = filters.search
+        .replace(/'/g, "''")
         .replace(/%/g, "\\%")
         .replace(/_/g, "\\_")
         .replace(/\(/g, "\\(")
@@ -264,6 +265,9 @@ export async function createEvent(
         allow_pay_at_venue: input.allow_pay_at_venue ?? false,
         payment_qr_image_url: input.payment_qr_image_url || null,
         payment_instructions: input.payment_instructions || null,
+        payment_bank_name: input.payment_bank_name || null,
+        payment_account_name: input.payment_account_name || null,
+        payment_account_number: input.payment_account_number || null,
         contact_email: input.contact_email || null,
         created_by: admin.id,
       })
@@ -371,6 +375,12 @@ export async function updateEvent(
       updateData.payment_qr_image_url = input.payment_qr_image_url;
     if (input.payment_instructions !== undefined)
       updateData.payment_instructions = input.payment_instructions;
+    if (input.payment_bank_name !== undefined)
+      updateData.payment_bank_name = input.payment_bank_name;
+    if (input.payment_account_name !== undefined)
+      updateData.payment_account_name = input.payment_account_name;
+    if (input.payment_account_number !== undefined)
+      updateData.payment_account_number = input.payment_account_number;
     if (input.contact_email !== undefined)
       updateData.contact_email = input.contact_email;
     if (input.status !== undefined) updateData.status = input.status;
@@ -520,6 +530,9 @@ export async function duplicateEvent(
         allow_pay_at_venue: original.allow_pay_at_venue,
         payment_qr_image_url: original.payment_qr_image_url,
         payment_instructions: original.payment_instructions,
+        payment_bank_name: original.payment_bank_name,
+        payment_account_name: original.payment_account_name,
+        payment_account_number: original.payment_account_number,
         contact_email: original.contact_email,
         created_by: original.created_by,
       })
