@@ -138,6 +138,7 @@ function buildExportRows(
   return registrations.map((reg) => {
     const custom = (reg.custom_fields || {}) as Record<string, unknown>
     const row: Record<string, string> = {
+      "Registration ID": `deessa-${reg.id.slice(0, 6).toUpperCase()}`,
       Name: reg.full_name || "",
       Email: reg.email || "",
       Phone: reg.phone || "",
@@ -345,8 +346,10 @@ export function RegistrationsTable({
         const custom = (r.custom_fields || {}) as Record<string, unknown>
         const role = formatCustomValue(custom.role)
         const mode = formatCustomValue(custom.attendance_mode || custom.mode)
+        const shortId = `deessa-${r.id.slice(0, 6).toLowerCase()}`
 
         const matchesSearch =
+          shortId.includes(q) ||
           r.full_name?.toLowerCase().includes(q) ||
           r.email?.toLowerCase().includes(q) ||
           r.phone?.toLowerCase().includes(q) ||
@@ -428,7 +431,7 @@ export function RegistrationsTable({
     [filtered, hasRoleField, hasModeField]
   )
 
-  const totalCols = 6 + (hasRoleField ? 1 : 0) + (hasModeField ? 1 : 0) + 2 // name, email, phone, method, status, payment + role? + mode? + amount, registered
+  const totalCols = 7 + (hasRoleField ? 1 : 0) + (hasModeField ? 1 : 0) + 2 // id, name, email, phone, method, status, payment + role? + mode? + amount, registered
 
   return (
     <Card>
@@ -457,7 +460,7 @@ export function RegistrationsTable({
             <div className="relative w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by name, email, phone..."
+                placeholder="Search by ID, name, email, phone..."
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10 h-9"
@@ -553,6 +556,7 @@ export function RegistrationsTable({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[120px]">ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Phone</TableHead>
@@ -619,6 +623,11 @@ export function RegistrationsTable({
                       role="link"
                       aria-label={`View ${reg.full_name}'s registration`}
                     >
+                      <TableCell>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          deessa-{reg.id.slice(0, 6).toUpperCase()}
+                        </span>
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div
