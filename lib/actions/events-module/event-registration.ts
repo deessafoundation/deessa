@@ -184,7 +184,7 @@ export async function registerForEvent(
       : null;
 
     // Server-side: validate event allows the chosen payment method
-    if (paymentMethod === "qr" && (!event.allow_qr_payment || !event.payment_qr_image_url)) {
+    if (paymentMethod === "qr" && (!event.allow_qr_payment || (!event.payment_qr_image_url && !event.payment_bank_name))) {
       return { success: false, message: "QR code payment is not available for this event." };
     }
     if (paymentMethod === "venue" && !event.allow_pay_at_venue) {
@@ -1129,7 +1129,7 @@ export async function getEventRegistrationNotes(
   registrationId: string
 ): Promise<{ id: string; note: string; created_by: string | null; created_at: string }[]> {
   try {
-    const supabase = await createClient();
+    const { supabase } = await requireAdmin();
 
     const { data, error } = await supabase
       .from("event_registration_notes")
@@ -1204,7 +1204,7 @@ export async function sendEventRegistrationEmail(
       .from("event_registrations")
       .select(`
         *,
-        event:events(id, title, event_date, location, is_free)
+        event:events(id, title, event_date, location, is_free, venue_name, contact_email, slug)
       `)
       .eq("id", registrationId)
       .single();
@@ -1280,6 +1280,9 @@ export async function sendEventRegistrationEmail(
         eventTitle: event.title,
         eventDate: dateStr,
         eventLocation: event.location,
+        venueName: event.venue_name || "",
+        eventUrl: `${getAppBaseUrl()}/events/${event.slug}`,
+        contactEmail: event.contact_email || "",
         ticketName,
         ticketPrice,
         registrationId: reg.id,
@@ -1292,6 +1295,10 @@ export async function sendEventRegistrationEmail(
         fullName: reg.full_name,
         eventTitle: event.title,
         eventDate: dateStr,
+        eventLocation: event.location,
+        venueName: event.venue_name || "",
+        eventUrl: `${getAppBaseUrl()}/events/${event.slug}`,
+        contactEmail: event.contact_email || "",
         registrationId: reg.id,
         templateHtml,
         templateSubject,
@@ -1303,6 +1310,9 @@ export async function sendEventRegistrationEmail(
         eventTitle: event.title,
         eventDate: dateStr,
         eventLocation: event.location,
+        venueName: event.venue_name || "",
+        eventUrl: `${getAppBaseUrl()}/events/${event.slug}`,
+        contactEmail: event.contact_email || "",
         templateHtml,
         templateSubject,
       })
@@ -1462,7 +1472,7 @@ export async function getRegistrationEmailLog(
   registrationId: string
 ): Promise<any[]> {
   try {
-    const supabase = await createClient();
+    const { supabase } = await requireAdmin();
 
     const { data, error } = await supabase
       .from("event_registration_emails")
@@ -1483,7 +1493,7 @@ export async function getEventRegistrationDetail(
   registrationId: string
 ): Promise<any> {
   try {
-    const supabase = await createClient();
+    const { supabase } = await requireAdmin();
 
     const { data, error } = await supabase
       .from("event_registrations")
