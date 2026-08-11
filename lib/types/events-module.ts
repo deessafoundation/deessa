@@ -73,7 +73,7 @@ export interface EventModuleEvent {
 
   // Bank Transfer (manual alternative to QR)
   payment_bank_name: string | null; // e.g. "Nabil Bank"
-  payment_account_name: string | null; // e.g. "Deessha Foundation"
+  payment_account_name: string | null; // e.g. "deessa Foundation"
   payment_account_number: string | null; // e.g. "1234567890"
 
   // Contact
