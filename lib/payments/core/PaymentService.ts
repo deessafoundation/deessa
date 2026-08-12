@@ -14,6 +14,7 @@
  */
 
 import { createClient as createServiceClient } from '@supabase/supabase-js'
+import { getAppBaseUrl } from '@/lib/utils'
 import type {
   ConfirmDonationInput,
   ConfirmDonationResult,
@@ -898,7 +899,7 @@ export class PaymentService {
           // Fetch event details
           const { data: event } = await this.supabase
             .from('events')
-            .select('title, event_date, location')
+            .select('title, event_date, location, venue_name, contact_email, slug')
             .eq('id', reg.event_id)
             .single()
 
@@ -939,6 +940,9 @@ export class PaymentService {
               eventTitle: event.title,
               eventDate: dateStr,
               eventLocation: event.location || '',
+              venueName: event.venue_name || '',
+              eventUrl: `${getAppBaseUrl()}/events/${event.slug}`,
+              contactEmail: event.contact_email || '',
               ticketName,
               ticketPrice,
               registrationId: reg.id,
