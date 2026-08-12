@@ -111,6 +111,9 @@ export async function sendEventConfirmationEmail(params: {
   eventTitle: string
   eventDate: string
   eventLocation: string
+  venueName?: string
+  eventUrl?: string
+  contactEmail?: string
   ticketName?: string
   ticketPrice?: string
   registrationId: string
@@ -123,6 +126,9 @@ export async function sendEventConfirmationEmail(params: {
     event_title: params.eventTitle,
     event_date: params.eventDate,
     event_location: params.eventLocation,
+    venue_name: params.venueName || "",
+    event_url: params.eventUrl || `${getAppBaseUrl()}/events/${params.eventTitle}`,
+    contact_email: params.contactEmail || "",
     ticket_name: params.ticketName || "",
     ticket_price: params.ticketPrice || "Free",
     registration_id: params.registrationId,
@@ -143,6 +149,10 @@ export async function sendEventCancellationEmail(params: {
   fullName: string
   eventTitle: string
   eventDate: string
+  eventLocation?: string
+  venueName?: string
+  eventUrl?: string
+  contactEmail?: string
   registrationId: string
   templateHtml: string
   templateSubject: string
@@ -152,6 +162,10 @@ export async function sendEventCancellationEmail(params: {
     email: params.to,
     event_title: params.eventTitle,
     event_date: params.eventDate,
+    event_location: params.eventLocation || "",
+    venue_name: params.venueName || "",
+    event_url: params.eventUrl || `${getAppBaseUrl()}/events/${params.eventTitle}`,
+    contact_email: params.contactEmail || "",
     registration_id: params.registrationId,
     site_url: getAppBaseUrl(),
   }
@@ -171,6 +185,9 @@ export async function sendEventReminderEmail(params: {
   eventTitle: string
   eventDate: string
   eventLocation: string
+  venueName?: string
+  eventUrl?: string
+  contactEmail?: string
   templateHtml: string
   templateSubject: string
 }): Promise<EventEmailResult> {
@@ -180,6 +197,9 @@ export async function sendEventReminderEmail(params: {
     event_title: params.eventTitle,
     event_date: params.eventDate,
     event_location: params.eventLocation,
+    venue_name: params.venueName || "",
+    event_url: params.eventUrl || `${getAppBaseUrl()}/events/${params.eventTitle}`,
+    contact_email: params.contactEmail || "",
     site_url: getAppBaseUrl(),
   }
 
