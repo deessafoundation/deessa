@@ -63,7 +63,7 @@ export function evaluateCondition(
 
     default:
       console.warn(`Unknown conditional operator: ${operator}`)
-      return true // Show field by default if operator is unknown
+      return false // Hide field by default if operator is unknown (fail-closed)
   }
 }
 

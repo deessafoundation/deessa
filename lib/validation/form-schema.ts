@@ -77,17 +77,20 @@ export function validateFieldValue(
         const validValues = (field.options ?? []).map((o) => o.value)
         if (field.required) {
           if (!strVal || strVal.length === 0) return `Please select a ${field.label}.`
-          if (!validValues.includes(strVal)) return `Invalid selection for ${field.label}.`
         }
+        // Always validate that value is in options list when non-empty
+        if (strVal && !validValues.includes(strVal)) return `Invalid selection for ${field.label}.`
         return null
       }
 
       case "radio": {
         const strVal = String(value ?? "")
         const validValues = (field.options ?? []).map((o) => o.value)
-        if (field.required && (!strVal || !validValues.includes(strVal))) {
+        if (field.required && !strVal) {
           return `Please select a ${field.label}.`
         }
+        // Always validate that value is in options list when non-empty
+        if (strVal && !validValues.includes(strVal)) return `Invalid selection for ${field.label}.`
         return null
       }
 
