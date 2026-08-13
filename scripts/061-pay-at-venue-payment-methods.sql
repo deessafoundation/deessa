@@ -13,3 +13,7 @@ ALTER TABLE events ADD COLUMN IF NOT EXISTS allow_pay_at_venue BOOLEAN NOT NULL 
 -- 'online' | 'qr' | 'venue' | null (free events)
 ALTER TABLE event_registrations ADD COLUMN IF NOT EXISTS payment_method TEXT
   CHECK (payment_method IS NULL OR payment_method IN ('online', 'qr', 'venue'));
+
+-- Index for filtering registrations by payment method
+CREATE INDEX IF NOT EXISTS idx_event_reg_payment_method
+  ON event_registrations(payment_method);
