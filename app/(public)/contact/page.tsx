@@ -6,11 +6,21 @@ import { Button } from "@/components/ui/button"
 import { ContactFormPrefilled } from "@/components/contact-form-prefilled"
 import { isSupportEnabled } from "@/lib/support/settings"
 import Link from "next/link"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
-export const metadata: Metadata = {
-  title: "Contact Us - deessa Foundation",
-  description: "Get in touch with deessa Foundation. We'd love to hear from you.",
-}
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Contact Us - Get in Touch with Deesha Foundation",
+  description: "Get in touch with Deesha Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
+  path: "/contact",
+  keywords: [
+    "contact Deesha Foundation",
+    "Nepal NGO contact",
+    "volunteer Nepal",
+    "donate to Nepal",
+    "partnership opportunities",
+    "get involved",
+  ],
+})
 
 const contactInfo = [
   {
