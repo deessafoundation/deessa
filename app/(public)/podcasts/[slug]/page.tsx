@@ -12,6 +12,9 @@ import { Input } from '@/components/ui/input';
 import ShareButton from '@/components/share-button';
 import { getPodcastBySlug, getRelatedPodcasts, getPodcastSlugs, incrementPodcastViews } from '@/lib/data/podcasts';
 import { format } from 'date-fns';
+import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from '@/lib/seo/metadata-utils';
+import { StructuredData } from '@/components/seo/structured-data';
+import { getBreadcrumbStructuredData } from '@/lib/seo/structured-data';
 
 interface PodcastDetailPageProps {
   params: Promise<{
@@ -30,20 +33,26 @@ export async function generateMetadata({ params }: PodcastDetailPageProps): Prom
 
   if (!podcast) {
     return {
-      title: 'Podcast Not Found | deessa Foundation',
+      title: 'Podcast Not Found',
     };
   }
 
-  return {
-    title: `${podcast.title} | deessa Foundation Podcast`,
-    description: podcast.description,
-    openGraph: {
-      title: podcast.title,
-      description: podcast.description,
-      type: 'video.episode',
-      images: [{ url: podcast.thumbnailUrl }],
-    },
-  };
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com';
+  const podcastUrl = `${SITE_URL}/podcasts/${slug}`;
+  const imageUrl = getOGImageUrl(podcast.thumbnailUrl);
+  const description = extractExcerpt(podcast.description, 155);
+
+  return generateSEOMetadata({
+    title: podcast.title,
+    description,
+    path: `/podcasts/${slug}`,
+    image: imageUrl,
+    imageAlt: `${podcast.title} - Living With Autism Podcast`,
+    keywords: ['autism podcast', 'Nepal autism', podcast.guestName || '', 'disability awareness', 'inclusion'],
+    type: 'article',
+    publishedTime: podcast.publishedAt,
+    section: 'Podcasts',
+  });
 }
 
 export default async function PodcastDetailPage({ params }: PodcastDetailPageProps) {
@@ -53,6 +62,8 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
   if (!podcast) {
     notFound();
   }
+
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com';
 
   // Increment view count (fire and forget)
   incrementPodcastViews(podcast.id).catch(console.error);
@@ -65,6 +76,13 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
   const hasGuest = podcast.guestName && podcast.guestBio;
   const publishedDate = new Date(podcast.publishedAt);
 
+  // Generate breadcrumb structured data
+  const breadcrumbStructuredData = getBreadcrumbStructuredData([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Podcasts', url: `${SITE_URL}/podcasts` },
+    { name: podcast.title, url: `${SITE_URL}/podcasts/${slug}` },
+  ]);
+
   // Helper function to limit bio to 35 words
   const limitWords = (text: string, wordLimit: number) => {
     const words = text.split(/\s+/).filter(Boolean);
@@ -74,6 +92,8 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
 
   return (
     <main className="min-h-screen bg-gray-50">
+      <StructuredData data={breadcrumbStructuredData} />
+      
       {/* Sticky Player - Initially hidden, shows on scroll */}
       <PodcastStickyPlayer podcast={podcast} />
 
