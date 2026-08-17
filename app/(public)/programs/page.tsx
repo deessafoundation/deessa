@@ -1,11 +1,23 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ProgramsClient } from "./programs-client"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
-export const metadata: Metadata = {
-  title: "Programs - deessa Foundation",
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Our Programs - Education, Healthcare & Community Development in Nepal",
   description: "From classrooms in Karnali to clinics in the Terai — our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
-}
+  path: "/programs",
+  keywords: [
+    "Nepal education programs",
+    "healthcare Nepal",
+    "community development",
+    "rural development Nepal",
+    "education initiatives",
+    "health programs",
+    "empowerment programs",
+    "sustainable development",
+  ],
+})
 
 // Hardcoded programs data
 const programs = [

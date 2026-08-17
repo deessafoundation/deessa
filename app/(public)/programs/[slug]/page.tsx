@@ -6,6 +6,9 @@ import { ArrowLeft, MapPin, Heart, CheckCircle, Clock, Circle } from "lucide-rea
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { getProjectBySlug, getPublishedProjectsStatic } from "@/lib/data/projects"
+import { generateSEOMetadata, extractExcerpt, getOGImageUrl, generateKeywords } from "@/lib/seo/metadata-utils"
+import { StructuredData } from "@/components/seo/structured-data"
+import { getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -23,13 +26,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = await getProjectBySlug(slug)
 
   if (!project) {
-    return { title: "Project Not Found - deessa Foundation" }
+    return { title: "Project Not Found" }
   }
 
-  return {
-    title: `${project.title} - deessa Foundation`,
-    description: project.description,
-  }
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
+  const imageUrl = getOGImageUrl(project.image)
+  const description = extractExcerpt(project.description, 155)
+  const keywords = generateKeywords(project.category, [project.title, 'Nepal program'])
+
+  return generateSEOMetadata({
+    title: project.title,
+    description,
+    path: `/programs/${slug}`,
+    image: imageUrl,
+    imageAlt: project.title,
+    keywords,
+    type: 'article',
+    section: 'Programs',
+  })
 }
 
 export default async function ProgramDetailPage({ params }: PageProps) {
@@ -40,10 +54,20 @@ export default async function ProgramDetailPage({ params }: PageProps) {
     notFound()
   }
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
   const progress = project.raised && project.goal ? Math.round((project.raised / project.goal) * 100) : 0
+
+  // Generate breadcrumb structured data
+  const breadcrumbStructuredData = getBreadcrumbStructuredData([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Programs', url: `${SITE_URL}/programs` },
+    { name: project.title, url: `${SITE_URL}/programs/${slug}` },
+  ])
 
   return (
     <>
+      <StructuredData data={breadcrumbStructuredData} />
+      
       {/* Hero Section */}
       <section className="relative">
         <div className="w-full h-[500px] relative overflow-hidden">
