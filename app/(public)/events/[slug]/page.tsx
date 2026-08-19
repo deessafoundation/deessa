@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -23,6 +24,9 @@ import {
 import { createClient } from "@/lib/supabase/server"
 import type { EventModuleEvent, EventAgendaItem } from "@/lib/types/events-module"
 import { ShareEventButton } from "@/components/events/share-event-button"
+import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from "@/lib/seo/metadata-utils"
+import { StructuredData } from "@/components/seo/structured-data"
+import { getEventStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
 
 export const revalidate = 300
 
@@ -30,14 +34,26 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>
-}) {
+}): Promise<Metadata> {
   const { slug } = await params
   const event = await getEvent(slug)
+  
   if (!event) return { title: "Event Not Found" }
-  return {
-    title: `${event.title} | Deessa Foundation`,
-    description: event.short_description || event.description?.slice(0, 160),
-  }
+
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
+  const imageUrl = getOGImageUrl(event.banner_image_url)
+  const description = extractExcerpt(event.short_description || event.description || event.title, 155)
+
+  return generateSEOMetadata({
+    title: event.title,
+    description,
+    path: `/events/${slug}`,
+    image: imageUrl,
+    imageAlt: event.title,
+    keywords: [event.category, 'Nepal event', 'community event', event.is_online ? 'online event' : 'in-person event'],
+    type: 'article',
+    section: 'Events',
+  })
 }
 
 async function getEvent(slug: string): Promise<EventModuleEvent | null> {
@@ -142,8 +158,34 @@ export default async function EventDetailPage({
   )
   const isRegistrationClosed = isPastEvent || isRegistrationClosedByDate || !event.registration_enabled
 
+  // Generate structured data for SEO
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
+  
+  const eventStructuredData = getEventStructuredData({
+    title: event.title,
+    description: event.short_description || event.description || event.title,
+    slug: event.slug,
+    startDate: event.event_date,
+    endDate: event.event_end_date || event.event_date,
+    location: event.location ? {
+      name: event.location,
+      address: event.location,
+    } : undefined,
+    image: event.banner_image_url,
+    isOnline: event.is_online,
+    registrationUrl: event.registration_enabled ? `${SITE_URL}/events/${event.slug}/register` : undefined,
+  })
+
+  const breadcrumbStructuredData = getBreadcrumbStructuredData([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Events', url: `${SITE_URL}/events` },
+    { name: event.title, url: `${SITE_URL}/events/${event.slug}` },
+  ])
+
   return (
     <div className="flex flex-col">
+      <StructuredData data={[eventStructuredData, breadcrumbStructuredData]} />
+      
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
