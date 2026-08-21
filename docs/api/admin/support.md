@@ -1,3 +1,12 @@
+﻿---
+title: "Admin - Support API"
+description: "| Method | Endpoint | Description |"
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Admin - Support API
 
 ## Endpoints

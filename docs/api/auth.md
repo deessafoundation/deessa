@@ -1,3 +1,12 @@
+﻿---
+title: "Authentication"
+description: "Deesha Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authen..."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Authentication
 
 ## Overview
@@ -112,7 +121,7 @@ Admin endpoints require additional role verification:
 ### Role Check Flow
 
 ```
-Request → Validate JWT → Check admin_users → Verify role → Allow/Deny
+Request â†’ Validate JWT â†’ Check admin_users â†’ Verify role â†’ Allow/Deny
 ```
 
 ## Endpoint Auth Requirements
