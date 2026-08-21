@@ -1,3 +1,12 @@
+﻿---
+title: "Conference API"
+description: "The Conference API handles conference registration, payment, and status checking. This is separate from the Events mo..."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: developer
+last_updated: 2026-09-12
+---
 # Conference API
 
 ## Overview

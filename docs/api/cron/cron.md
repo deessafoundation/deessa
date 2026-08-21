@@ -1,3 +1,12 @@
+﻿---
+title: "Cron Jobs API"
+description: "Cron endpoints are internal API routes that run scheduled background jobs. These should only be called by your applic..."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: developer
+last_updated: 2026-09-12
+---
 # Cron Jobs API
 
 ## Overview

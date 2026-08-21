@@ -1,3 +1,12 @@
+﻿---
+title: "Receipts API"
+description: "The Receipts API handles receipt downloading and resending for confirmed donations."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Receipts API
 
 ## Overview

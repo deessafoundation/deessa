@@ -1,3 +1,12 @@
+﻿---
+title: "Support API"
+description: "The Support API handles public support ticket submissions from the website's contact/support page."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Support API
 
 ## Overview
@@ -129,10 +138,10 @@ Files are stored in Supabase Storage with the following structure:
 
 ```
 support-attachments/
-└── {ticket-id}/
-    ├── file1.pdf
-    ├── screenshot.png
-    └── document.docx
+â””â”€â”€ {ticket-id}/
+    â”œâ”€â”€ file1.pdf
+    â”œâ”€â”€ screenshot.png
+    â””â”€â”€ document.docx
 ```
 
 ---
