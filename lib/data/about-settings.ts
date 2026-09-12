@@ -11,7 +11,11 @@ import {
   type AboutPageSettings,
 } from "@/lib/types/about-settings"
 
-const LEGACY_INTRO_HEADLINE = "Every child deserves to be understood, accepted, and valued, just as they are."
+const LEGACY_INTRO_HEADLINES = new Set([
+  "Every child deserves to be understood, accepted, and valued, just as they are.",
+  "Every child deserves to be understood, accepted, and valued — just as they are.",
+])
+const UPDATED_INTRO_HEADLINE = "Every child deserves to be understood, accepted, and valued just as they are."
 
 async function getAboutSetting<T>(key: string, defaultValue: T): Promise<T> {
   try {
@@ -41,12 +45,14 @@ async function getAboutSetting<T>(key: string, defaultValue: T): Promise<T> {
  */
 export async function getAboutPageSettings(): Promise<AboutPageSettings> {
   const settings = await getAboutSetting<AboutPageSettings>(ABOUT_PAGE_SETTINGS_KEY, DEFAULT_ABOUT_PAGE_SETTINGS)
-  const usesLegacyIntro = settings.intro.headline === LEGACY_INTRO_HEADLINE
+  const usesLegacyIntro = LEGACY_INTRO_HEADLINES.has(settings.intro.headline)
 
   return {
     ...settings,
     intro: {
-      ...(usesLegacyIntro ? DEFAULT_ABOUT_PAGE_SETTINGS.intro : settings.intro),
+      ...(usesLegacyIntro
+        ? { ...DEFAULT_ABOUT_PAGE_SETTINGS.intro, headline: UPDATED_INTRO_HEADLINE }
+        : settings.intro),
       sinceBadge: settings.intro.sinceBadge.replace(/\b2015\b/g, "2022"),
     },
   }
