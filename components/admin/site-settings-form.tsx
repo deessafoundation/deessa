@@ -919,7 +919,7 @@ export function SiteSettingsForm({ settings }: SiteSettingsFormProps) {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="badge">Hero Badge Text</Label>
-                      <Input id="badge" name="badge" defaultValue={homeHero.badge || "Est. 2015 • Kathmandu"} />
+                      <Input id="badge" name="badge" defaultValue={homeHero.badge || "Est. 2022 • Kathmandu"} />
                     </div>
                   </div>
                 </CardContent>

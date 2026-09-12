@@ -5,8 +5,8 @@ import { motion } from "framer-motion"
 import type { AboutHeroSettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 
-/* ───────── Team photo (placeholder until an authentic photo is ready) ───────── */
-const HERO_BG_URL = "/image_coming_soon.png"
+/* ───────── Branded neurodiversity campaign image ───────── */
+const HERO_BG_URL = "/deessa_img.jpg"
 
 /* ───────── Staggered word-by-word H1 ───────── */
 function AnimatedHeadline({ line1, line2 }: { line1: string; line2: string }) {
@@ -81,7 +81,7 @@ export function AboutHero({ settings }: AboutHeroProps) {
       {/* ─── LAYER 1 — Full-bleed background photo ─── */}
       <img
         src={HERO_BG_URL}
-        alt="deessa Foundation team in Nepal"
+        alt="deessa Foundation: Unlocking Potential, Embracing Neurodiversity"
         style={{
           position: "absolute",
           inset: 0,

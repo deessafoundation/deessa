@@ -331,7 +331,7 @@ export function EventRegistrationForm({
           title: "Ticket Selection",
           stepIndex: ticketStepIndex,
           rows: [
-            { label: "Ticket Type", value: `${ticket.name} — ${ticket.currency} ${ticket.price}` },
+            { label: "Ticket Type", value: `${ticket.name}, ${ticket.currency} ${ticket.price}` },
           ],
         })
       }
@@ -676,7 +676,7 @@ export function EventRegistrationForm({
                           </span>
                         </div>
                         <p className="text-sm text-foreground-muted">
-                          eSewa, Khalti, Stripe — instant verification
+                          eSewa, Khalti, Stripe; instant verification
                         </p>
                       </div>
                       <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${
@@ -717,7 +717,7 @@ export function EventRegistrationForm({
                           </span>
                         </div>
                         <p className="text-sm text-foreground-muted">
-                          Scan QR or transfer to bank — upload screenshot for verification
+                          Scan QR or transfer to bank; upload a screenshot for verification
                         </p>
                       </div>
                       <div className={`size-5 shrink-0 rounded-full border-2 flex items-center justify-center ${

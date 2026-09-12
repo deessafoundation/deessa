@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
@@ -100,7 +100,7 @@ export default async function StoriesPage(props: StoriesPageProps) {
   return (
     <>
       {/* ═══════════════════════════════════════════
-          SECTION 1 — HERO (Original Design - UNCHANGED)
+          SECTION 1, HERO (Original Design - UNCHANGED)
       ═══════════════════════════════════════════ */}
       <section className="relative isolate flex min-h-[100svh] overflow-hidden bg-[linear-gradient(180deg,#fbf8f2_0%,#f4efe5_100%)]">
         <div
@@ -123,7 +123,7 @@ export default async function StoriesPage(props: StoriesPageProps) {
             </h1>
 
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700 sm:text-xl">
-              These stories capture the small victories, careful routines, and steady hope that shape autism care — one family, one breakthrough, one milestone at a time.
+              These stories capture the small victories, careful routines, and steady hope that shape autism care , one family, one breakthrough, one milestone at a time.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -151,7 +151,7 @@ export default async function StoriesPage(props: StoriesPageProps) {
                 Explore the latest journeys and milestones.
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Real accounts of growth, resilience, and community — from children, families, and therapists across our programmes.
+                Real accounts of growth, resilience, and community , from children, families, and therapists across our programmes.
               </p>
 
               <div className="mt-5 grid grid-cols-3 gap-3">
@@ -226,3 +226,6 @@ export default async function StoriesPage(props: StoriesPageProps) {
     </>
   )
 }
+
+
+

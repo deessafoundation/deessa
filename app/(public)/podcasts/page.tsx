@@ -50,7 +50,7 @@ export default async function PodcastsPage() {
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center py-20">
             <h1 className="text-4xl font-heading font-bold text-text-main mb-4">
-              DEESSA Voices – Stories of Resilience
+              DEESSA Voices: Stories of Resilience
             </h1>
             <p className="text-lg text-text-muted mb-8">
               Our podcast series is coming soon! Check back later for inspiring stories and conversations.

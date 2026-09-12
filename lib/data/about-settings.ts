@@ -11,6 +11,8 @@ import {
   type AboutPageSettings,
 } from "@/lib/types/about-settings"
 
+const LEGACY_INTRO_HEADLINE = "Every child deserves to be understood, accepted, and valued, just as they are."
+
 async function getAboutSetting<T>(key: string, defaultValue: T): Promise<T> {
   try {
     const supabase = await createClient()
@@ -38,5 +40,14 @@ async function getAboutSetting<T>(key: string, defaultValue: T): Promise<T> {
  * Get the full About page CMS content with fallback to defaults.
  */
 export async function getAboutPageSettings(): Promise<AboutPageSettings> {
-  return getAboutSetting<AboutPageSettings>(ABOUT_PAGE_SETTINGS_KEY, DEFAULT_ABOUT_PAGE_SETTINGS)
+  const settings = await getAboutSetting<AboutPageSettings>(ABOUT_PAGE_SETTINGS_KEY, DEFAULT_ABOUT_PAGE_SETTINGS)
+  const usesLegacyIntro = settings.intro.headline === LEGACY_INTRO_HEADLINE
+
+  return {
+    ...settings,
+    intro: {
+      ...(usesLegacyIntro ? DEFAULT_ABOUT_PAGE_SETTINGS.intro : settings.intro),
+      sinceBadge: settings.intro.sinceBadge.replace(/\b2015\b/g, "2022"),
+    },
+  }
 }

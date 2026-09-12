@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
@@ -7,9 +7,9 @@ import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
 import { CircularTestimonials } from "@/components/circular-testimonials"
 
 export const metadata: Metadata = {
-  title: "Our Story — Why We Were Founded | deessa Foundation",
+  title: "Our Story: Why We Were Founded | deessa Foundation",
   description:
-    "Every movement begins with a story. Ours began with two little girls — Deetya and Marissa — whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
+    "Every movement begins with a story. Ours began with two little girls, Deetya and Marissa, whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
 }
 
 const challengeCards = [
@@ -31,7 +31,7 @@ const challengeCards = [
     icon: School,
     title: "A Search for Belonging",
     description:
-      "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her — we were looking for one that would understand her.",
+      "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her, we were looking for one that would understand her.",
     accent: "text-chart-4",
   },
 ]
@@ -216,7 +216,7 @@ export default function OurStoryPage() {
               </p>
               <p>
                 Deetya was born with bilateral clubfoot. Since birth, she&apos;s gone through treatment and
-                physiotherapy, and still wears specialized shoes. She&apos;s made remarkable progress — though some
+                physiotherapy, and still wears specialized shoes. She&apos;s made remarkable progress, though some
                 days are still hard. Her story reminds us that progress isn&apos;t about perfection. It&apos;s about
                 perseverance, support, and opportunity.
               </p>
@@ -269,9 +269,9 @@ export default function OurStoryPage() {
       <section className="bg-surface px-6 py-28 text-center md:px-8">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-4xl font-extrabold leading-tight sm:text-5xl md:text-6xl">
-            “If it was this hard for our family —
+            “If it was this hard for our family ;
             <br className="hidden md:block" />
-            with access to education, resources, and services —
+            with access to education, resources, and services ;
             <br className="hidden md:block" />
             what must it be like for a family in rural Nepal?”
           </h2>
@@ -329,7 +329,7 @@ export default function OurStoryPage() {
             <h2 className="text-3xl font-bold sm:text-4xl">More Than a Name</h2>
             <p className="text-foreground-muted text-lg leading-relaxed">
               The name <span className="font-bold text-primary">deessa</span> carries this story. “Dee” from Deetya.
-              “Ssa” from Marissa. And the Nepali word for “direction” — because every child and every family deserves
+              “Ssa” from Marissa. And the Nepali word for “direction” , because every child and every family deserves
               guidance, dignity, and a path forward.
             </p>
 
@@ -440,7 +440,7 @@ export default function OurStoryPage() {
               support.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-white/85">
-              What began as our family&apos;s journey has become a shared journey — with thousands of children,
+              What began as our family&apos;s journey has become a shared journey with thousands of children,
               families, and communities across Nepal. And this is only the beginning.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -464,3 +464,6 @@ export default function OurStoryPage() {
     </main>
   )
 }
+
+
+

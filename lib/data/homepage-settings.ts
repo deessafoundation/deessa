@@ -53,10 +53,11 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       .from("site_settings")
       .select("value")
       .eq("key", key)
-      .single()
+      // Homepage CMS entries are optional during setup. `maybeSingle()` returns
+      // null for a missing row, allowing the default content below to render.
+      .maybeSingle()
 
     if (error) {
-      console.error(`Error fetching ${key}:`, error)
       return defaultValue
     }
 
@@ -69,8 +70,7 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       ...defaultValue,
       ...data.value,
     } as T
-  } catch (error) {
-    console.error(`Exception fetching ${key}:`, error)
+  } catch {
     return defaultValue
   }
 }
@@ -133,7 +133,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         id: "education",
         badge: "📚 Education",
         headline: "Building Classrooms, Building Futures",
-        body: "Since 2015, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+        body: "Since 2015, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities, ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
         bullets: [
           "50+ schools built & renovated from Humla to Dang",
           "500+ teachers trained in child-centered pedagogy",
@@ -143,7 +143,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         statLabel: "students supported",
         imageSrc: "/StoriesSectionImage.png",
         imageAlt: "Education in Nepal",
-        link: "/programs?category=education",
+        link: "/whatwedo?category=education",
         linkText: "Read Education Stories →",
         order: 1,
         reversed: false,
@@ -153,7 +153,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         id: "healthcare",
         badge: "🏥 Healthcare",
         headline: "Bringing Medicine to the Mountains",
-        body: "200+ free health camps have reached villages where the nearest hospital is a full day's walk away. Our mobile health units carry everything from basic diagnostics to maternal care — meeting communities where they are, not where is convenient.",
+        body: "200+ free health camps have reached villages where the nearest hospital is a full day's walk away. Our mobile health units carry everything from basic diagnostics to maternal care, meeting communities where they are, not where is convenient.",
         bullets: [
           "200+ free health camps across 25 districts",
           "Maternal & child health care for 5,000+ women",
@@ -163,7 +163,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         statLabel: "health camps conducted",
         imageSrc: "/missionVisionObjectives.png",
         imageAlt: "Healthcare for mountain communities",
-        link: "/programs?category=health",
+        link: "/whatwedo?category=health",
         linkText: "See Health Impact Stories →",
         order: 2,
         reversed: true,
@@ -173,7 +173,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         id: "empowerment",
         badge: "👩 Women Empowerment",
         headline: "Women Who Lead",
-        body: "When women rise, communities transform. Our women's empowerment programs provide vocational training, microfinance access, and leadership workshops — creating 500+ self-sufficient entrepreneurs and community advocates across Nepal's remotest corners.",
+        body: "When women rise, communities transform. Our women's empowerment programs provide vocational training, microfinance access, and leadership workshops, creating 500+ self-sufficient entrepreneurs and community advocates across Nepal's remotest corners.",
         bullets: [
           "500+ women trained in vocational skills",
           "Microfinance access for rural women entrepreneurs",
@@ -183,7 +183,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         statLabel: "women empowered",
         imageSrc: "/JoinTheMovement.png",
         imageAlt: "Women leadership in Nepal",
-        link: "/programs?category=empowerment",
+        link: "/whatwedo?category=empowerment",
         linkText: "See Women's Stories →",
         order: 3,
         reversed: false,
@@ -302,7 +302,7 @@ export async function getHomepageBanners(): Promise<HomepageBannersSettings> {
         type: "brush-quote",
         color: "#8B8DD4",
         headline: "Education is not preparation for life; education is life itself.",
-        body: "Every classroom we build, every teacher we train, every scholarship we award — these are not just programs. They are promises kept.",
+        body: "Every classroom we build, every teacher we train, every scholarship we award; these are not just programs. They are promises kept.",
         ctaLabel: null,
         ctaUrl: null,
         order: 1,

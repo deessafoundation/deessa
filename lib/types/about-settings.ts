@@ -59,7 +59,7 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
     headlineLine1: "The People",
     headlineLine2: "Behind Nepal's Change.",
     subtitle:
-      "We are parents, educators, professionals, and advocates working for and with children with disabilities — with a special focus on autism — to build a society where every child belongs.",
+      "We are parents, educators, professionals, and advocates working for and with children with disabilities, with a special focus on autism, to build a society where every child belongs.",
     primaryCtaLabel: "Read Our Story",
     primaryCtaUrl: "#journey",
     secondaryCtaLabel: "View Annual Reports",
@@ -67,16 +67,16 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
     trustBadges: ["Govt Registered", "SWC Affiliated"],
   },
   intro: {
-    sinceBadge: "✦ Since 2015",
+    sinceBadge: "✦ Since 2022",
     label: "Who We Are",
-    headline: "Every child deserves to be understood, accepted, and valued — just as they are.",
+    headline: "Every child has potential. Every child belongs.",
     paragraphs: [
-      "deessa Foundation is a non-profit working for and with children with disabilities, with a special focus on autism. Born from one family's story, we've grown into a community of parents, educators, professionals, advocates, and changemakers who share one purpose: to build a society where every child belongs.",
-      "We believe lasting inclusion begins with understanding. When children are understood, they are accepted. When they are accepted, they are valued. And when they are valued, they are given the chance to learn, grow, and thrive.",
-      "Our vision is a Nepal where disability is never seen as a limit — where every child is known for their strengths, abilities, and potential. Where being different is never seen as being less.",
+      "At deessa Foundation, we celebrate neurodiversity and work alongside children with disabilities, their families, educators, and communities. We see each child for their strengths, abilities, and unique potential.",
+      "Inclusion begins when children are seen, heard, and supported. Through awareness, family support, training, and advocacy, we help create spaces where every child can learn, grow, and thrive.",
+      "Our vision is a Nepal where being different is valued and every child has the opportunity to participate fully in family life, school, and community.",
     ],
-    quote: "At deessa Foundation, we stand for a world where every child is seen, heard, and included.",
-    flowSteps: ["Understood", "Accepted", "Valued", "Thrive"],
+    quote: "When we embrace neurodiversity, we unlock potential in every child.",
+    flowSteps: ["Seen", "Heard", "Supported", "Thrive"],
   },
   howWeDoIt: {
     title: "Change doesn't start with programmes. It starts with people.",
@@ -86,7 +86,7 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
       {
         id: "listen",
         title: "We Listen First",
-        body: "Every family's journey is different. We listen first — to their needs, their challenges, their hopes — before we design any solution.",
+        body: "Every family's journey is different. We listen first, to their needs, their challenges, and their hopes, before we design any solution.",
         color: TEAL,
       },
       {

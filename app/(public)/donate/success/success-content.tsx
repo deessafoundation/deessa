@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import {
@@ -139,7 +139,7 @@ function getSupportRef(donation: DonationData): string | null {
 
 // ── Format date ───────────────────────────────────────────────────────────────
 function formatDate(iso?: string): string {
-  if (!iso) return "—"
+  if (!iso) return ";"
   return new Date(iso).toLocaleString(undefined, {
     year: "numeric",
     month: "long",
@@ -323,7 +323,7 @@ export function SuccessContent() {
                     } else if (attempts >= maxAttempts) {
                       clearInterval(pollForUpdate)
                       setIsPolling(false)
-                      // Self-healing fallback — call verify directly
+                      // Self-healing fallback, call verify directly
                       try {
                         const verifyResponse = await fetch(`/api/payments/stripe/verify?session_id=${sessionId}`)
                         const verifyData = await verifyResponse.json()
@@ -542,7 +542,7 @@ export function SuccessContent() {
           </div>
           <div className="px-6 py-5 space-y-3.5">
 
-            {/* Amount — prominent */}
+            {/* Amount, prominent */}
             <div className="flex items-center justify-between">
               <span className="text-foreground-muted text-sm">Amount</span>
               <span className="text-2xl font-black text-foreground">
@@ -594,7 +594,7 @@ export function SuccessContent() {
         </div>
       )}
 
-      {/* ── Reference IDs card — for support contact ════════════════════════════ */}
+      {/* ── Reference IDs card, for support contact ════════════════════════════ */}
       {donation && (
         <div className="bg-surface border border-border rounded-2xl overflow-hidden">
           <div className="px-6 py-4 border-b border-border bg-muted/40 flex items-center justify-between">
@@ -636,7 +636,7 @@ export function SuccessContent() {
             <div className="mt-3 pt-3 border-t border-border">
               <p className="text-xs text-foreground-muted leading-relaxed">
                 If you need to contact our support team about this donation, please share your{" "}
-                <span className="font-semibold text-foreground">Donation ID</span> — it helps us locate your record instantly.
+                <span className="font-semibold text-foreground">Donation ID</span> ; it helps us locate your record instantly.
               </p>
               <Link
                 href={`/contact?ref=${supportRef || donation.id}&subject=Donation+Support`}
@@ -656,7 +656,7 @@ export function SuccessContent() {
           {isFetchingReceipt && !receipt && (
             <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
               <Loader2 className="size-4 text-blue-600 animate-spin flex-shrink-0" />
-              <p className="text-sm text-blue-800">Generating your tax receipt — this takes a few seconds…</p>
+              <p className="text-sm text-blue-800">Generating your tax receipt, this takes a few seconds…</p>
             </div>
           )}
 
@@ -683,7 +683,7 @@ export function SuccessContent() {
               )}
               {ensureEmailStatus === "error" && (
                 <p className="text-sm text-red-700 pl-7">
-                  Couldn't send automatically — contact{" "}
+                  Couldn't send automatically, contact{" "}
                   <Link href="/contact" className="font-semibold underline">support</Link>{" "}
                   if you don't receive your receipt within an hour.
                 </p>

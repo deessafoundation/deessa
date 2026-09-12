@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useRef, useState } from "react"
 import Link from "next/link"
@@ -6,7 +6,6 @@ import { motion, useScroll } from "framer-motion"
 import {
   ArrowRight,
   Download,
-  FileText,
   Globe,
   GraduationCap,
   Handshake,
@@ -54,12 +53,6 @@ const partnerCategories = [
   { icon: Trees, label: "Environment", bg: "bg-emerald-50", iconColor: "text-emerald-500" },
 ]
 
-const reports = [
-  { title: "Annual Report 2023", size: "2.4 MB" },
-  { title: "Financial Statement 2023", size: "1.1 MB" },
-  { title: "Impact Assessment Q4 2023", size: "890 KB" },
-]
-
 function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
@@ -92,10 +85,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
 
   return (
     <>
-      {/* ─── SECTION 2 — WHO WE ARE ─── */}
+      {/* SECTION 2: WHO WE ARE */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:px-8 lg:grid-cols-[35fr_65fr] lg:gap-16">
-          {/* Left — sticky visual anchor */}
+          {/* Left, sticky visual anchor */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -104,22 +97,22 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
             className="lg:sticky lg:top-28"
           >
             <div className="relative -rotate-2">
-              <img
-                src="/StoriesSectionImage.png"
-                alt="A family and caregivers gathered in warm conversation, supporting a child"
-                className="aspect-[4/5] w-full rounded-2xl object-cover shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
-                style={{ objectPosition: "78% 45%" }}
-              />
-              <span
-                className="font-comic absolute bottom-4 left-4 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md"
-                style={{ backgroundColor: TEAL }}
+              <video
+                autoPlay
+                controls
+                muted
+                playsInline
+                preload="metadata"
+                aria-label="Every child has potential"
+                className="h-auto w-full rounded-2xl shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
               >
-                {introContent.sinceBadge}
-              </span>
+                <source src="/every_child.mp4" type="video/mp4" />
+                Your browser does not support embedded videos.
+              </video>
             </div>
           </motion.div>
 
-          {/* Right — text content, left-aligned */}
+          {/* Right, text content, left-aligned */}
           <div>
             <motion.div {...reveal} transition={{ duration: 0.5 }}>
               <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
@@ -183,7 +176,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
-      {/* ─── SECTION 4 — HOW WE DO IT ─── */}
+      {/* SECTION 4: HOW WE DO IT */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
@@ -193,7 +186,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
           />
 
           <div className="relative">
-            {/* Connecting dashed line — draws left to right */}
+            {/* Connecting dashed line, draws left to right */}
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
@@ -242,7 +235,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
-      {/* ─── SECTION 5 — OUR JOURNEY TIMELINE ─── */}
+      {/* SECTION 5: OUR JOURNEY TIMELINE */}
       <section className="bg-white py-20 lg:py-[90px]" id="journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader label="Our Journey" title="Milestones that defined our path." />
@@ -314,7 +307,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
-      {/* ─── SECTION 6 — MEET THE CHANGEMAKERS ─── */}
+      {/* SECTION 6: MEET THE CHANGEMAKERS */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
@@ -355,7 +348,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                       </div>
                     )}
 
-                    {/* Bottom overlay — name & role + bio + social */}
+                    {/* Bottom overlay, name & role + bio + social */}
                     <div
                       className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"}`}
                       style={{ background: "linear-gradient(to top, rgba(10,15,35,0.92) 0%, rgba(10,15,35,0.7) 70%, transparent 100%)" }}
@@ -415,18 +408,16 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
-      {/* ─── SECTION 7 — PARTNERS & TRANSPARENCY ─── */}
+      {/* SECTION 7: PARTNERS & SUPPORTERS */}
       <section className="bg-white py-20 lg:py-[90px]" id="partners">
-        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4 md:px-8 lg:flex-row lg:gap-16">
-          {/* Partners / focus areas */}
+        <div className="mx-auto max-w-5xl px-4 md:px-8">
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
           >
-            <div className="mb-8">
+            <div className="mx-auto mb-10 max-w-2xl text-center">
               <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
                 Collaboration
               </span>
@@ -437,13 +428,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                 Working across sectors with organizations who share our vision.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
               {partnerCategories.map((partner) => {
                 const Icon = partner.icon
                 return (
                   <div
                     key={partner.label}
-                    className="group flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
+                    className="group flex min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
                   >
                     <div
                       className={`flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
@@ -458,55 +449,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
               })}
             </div>
           </motion.div>
-
-          {/* Transparency & Reports */}
-          <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
-            id="reports"
-          >
-            <div className="mb-8">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
-                Transparency
-              </span>
-              <h2 className="font-marissa text-2xl font-medium md:text-3xl" style={{ color: DARK }}>
-                Transparency <span className="font-comic-num">&</span> Reports
-              </h2>
-            </div>
-            <div className="flex flex-col gap-3">
-              {reports.map((report) => (
-                <div
-                  key={report.title}
-                  className="group flex items-center justify-between rounded-xl border border-[#eee] bg-white px-5 py-4 transition-all duration-300 hover:border-[#29b6c8]/40 hover:shadow-md"
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex size-10 items-center justify-center rounded-lg"
-                      style={{ backgroundColor: "rgba(41,182,200,0.1)", color: TEAL }}
-                    >
-                      <FileText className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-comic text-sm font-bold" style={{ color: DARK }}>
-                        {report.title}
-                      </h3>
-                      <p className="font-dm-sans text-xs text-[#6b7280]">PDF • {report.size}</p>
-                    </div>
-                  </div>
-                  <span className="flex size-8 items-center justify-center rounded-full bg-[#f8f6f1] text-[#6b7280] transition-colors group-hover:bg-[#29b6c8] group-hover:text-white">
-                    <Download className="size-4 group-hover:animate-bounce" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* ─── SECTION 8 — OFFICIAL DOCUMENTS & MATERIALS ─── */}
+      {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto max-w-4xl px-4 md:px-8">
           <SectionHeader
@@ -553,7 +499,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
-      {/* ─── SECTION 9 — FINAL CTA ─── */}
+      {/* SECTION 9: FINAL CTA */}
       <section className="relative overflow-hidden pb-20 pt-32" style={{ backgroundColor: DARK }}>
         {/* Brush stroke transition from previous section */}
         <div className="pointer-events-none absolute left-0 top-0 w-full rotate-180" style={{ lineHeight: 0 }} aria-hidden>

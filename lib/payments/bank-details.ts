@@ -1,6 +1,6 @@
 /**
  * deessa Foundation bank accounts shown on the donate page.
- *
+ *   
  * These are public details, deliberately committed rather than kept in env vars —
  * they are printed on the website and change roughly never.
  *

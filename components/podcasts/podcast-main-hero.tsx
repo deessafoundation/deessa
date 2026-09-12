@@ -56,7 +56,7 @@ export default function PodcastMainHero({ episodes }: PodcastMainHeroProps) {
           {/* Left Column - Text Content */}
           <div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-main mb-6">
-              DEESSA Voices – <span className="text-brand-primary">Stories of Resilience</span>
+              DEESSA Voices: <span className="text-brand-primary">Stories of Resilience</span>
             </h1>
             
             <p className="text-lg text-text-muted leading-relaxed mb-8">

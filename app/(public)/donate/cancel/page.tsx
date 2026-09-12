@@ -56,7 +56,7 @@ export default function DonationCancelPage() {
               <Link href="/get-involved">Volunteer with Us</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/programs">Learn About Our Programs</Link>
+              <Link href="/whatwedo">Learn About Our Programs</Link>
             </Button>
           </div>
         </div>

@@ -86,7 +86,7 @@ Check a few entries in the sitemap:
 ```xml
 <!-- Each entry should follow this format: -->
 <url>
-  <loc>https://deessafoundation.com/programs/education-initiative</loc>
+  <loc>https://deessafoundation.com/whatwedo/education-initiative</loc>
   <lastmod>2024-01-15T10:30:00.000Z</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.7</priority>

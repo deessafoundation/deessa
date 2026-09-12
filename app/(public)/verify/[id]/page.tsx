@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Public Receipt Verification Page
  * 
  * Allows anyone to verify the authenticity of a donation receipt
@@ -268,7 +268,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
                       </svg>
                     </span>
-                    <span className="text-sm text-gray-600">Limit resets automatically — no action needed from you</span>
+                    <span className="text-sm text-gray-600">Limit resets automatically, no action needed from you</span>
                   </li>
                 </ul>
               </div>
@@ -418,7 +418,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
                   <div>
                     <p className="text-xs font-semibold text-red-600 mb-1">What should you do?</p>
                     <p className="text-xs text-gray-500 leading-relaxed">
-                      Carefully re-check the verification ID on your receipt — it is typically printed below the QR code or at the bottom of the document. If you believe this is an error, contact our support team with a copy of your receipt for manual verification.
+                      Carefully re-check the verification ID on your receipt, it is typically printed below the QR code or at the bottom of the document. If you believe this is an error, contact our support team with a copy of your receipt for manual verification.
                     </p>
                   </div>
                 </div>
@@ -479,7 +479,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
 
   return (
     <PageShell>
-      {/* Hero Icon — animated pop + ring pulse */}
+      {/* Hero Icon, animated pop + ring pulse */}
       <div className="mx-auto mb-6 flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[rgb(63,171,222)] to-[rgb(11,95,138)] shadow-lg shadow-[rgb(63,171,222)]/30 ring-4 ring-[rgb(232,246,252)] animate-verified-pop">
         <svg className="w-9 h-9 sm:w-10 sm:h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -590,7 +590,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
           <span className="uppercase tracking-widest font-semibold">End-to-End Encrypted Verification Portal</span>
         </div>
 
-        {/* Verify another — styled button */}
+        {/* Verify another, styled button */}
         <div className="text-center mt-6">
           <Link
             href="/verify"
@@ -606,3 +606,6 @@ export default async function VerificationPage({ params }: VerificationPageProps
     </PageShell>
   )
 }
+
+
+

@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Mic } from "lucide-react"
 import { getConferenceSettings } from "@/lib/actions/conference-settings"
 
@@ -30,7 +30,7 @@ export default async function RegistrationSuccessPage({ searchParams }: SuccessP
   const shortId = registrationId
     ? `deessa-2026-${registrationId.slice(0, 6).toUpperCase()}`
     : "DEESSA-2026-??????"
-  // Calendar links — built server-side (no client JS needed)
+  // Calendar links, built server-side (no client JS needed)
   const cfg = await getConferenceSettings()
   const gcalTitle = encodeURIComponent(cfg.name)
   // Format ISO dates to YYYYMMDD for Google Calendar (end date = day after)

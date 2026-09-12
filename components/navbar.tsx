@@ -13,13 +13,10 @@ import {
   Home,
   Users,
   Briefcase,
-  Award,
   FileText,
   Calendar,
   Mail,
   ClipboardList,
-  LayoutGrid,
-  Star,
   Headphones,
   LifeBuoy,
 } from "lucide-react"
@@ -37,46 +34,28 @@ const primaryNavLinks = [
   { href: "/", label: "Home", icon: Home },
   { href: "/about", label: "Who We Are", icon: Users },
   { href: "/our-story", label: "Our Story", icon: FileText },
-  { href: "/#what-we-do", label: "What We Do", icon: LayoutGrid },
-  { href: "/programs", label: "Programs", icon: Briefcase },
-  { href: "/impact", label: "Impact", icon: Award },
+  { href: "/whatwedo", label: "What We Do", icon: Briefcase },
+  // { href: "/impact", label: "Impact", icon: Award },
   { href: "/stories", label: "Stories", icon: FileText },
   { href: "/events", label: "Events", icon: Calendar },
 ] as const
 
 const secondaryNavLinks = [
-  { href: "/impact", label: "Impact", icon: Award },
+  // { href: "/impact", label: "Impact", icon: Award },
   { href: "/podcasts", label: "Podcasts", icon: Headphones },
   { href: "/support", label: "Support", icon: LifeBuoy },
   { href: "/contact", label: "Contact", icon: Mail },
 ] as const
 
 const tabletQuickLinks = [
-  { href: "/programs", label: "Programs", icon: Briefcase },
+  { href: "/whatwedo", label: "What We Do", icon: Briefcase },
   { href: "/events", label: "Events", icon: Calendar },
   { href: "/stories", label: "Stories", icon: FileText },
   { href: "/contact", label: "Contact", icon: Mail },
   { href: "/support", label: "Support", icon: LifeBuoy },
 ] as const
 
-function useHash() {
-  const [hash, setHash] = useState("")
-  useEffect(() => {
-    const sync = () => setHash(typeof window !== "undefined" ? window.location.hash : "")
-    sync()
-    window.addEventListener("hashchange", sync)
-    return () => window.removeEventListener("hashchange", sync)
-  }, [])
-  return hash
-}
-
-function isNavLinkActive(pathname: string, hash: string, href: string) {
-  if (href === "/") {
-    return pathname === "/" && hash !== "#what-we-do"
-  }
-  if (href === "/#what-we-do") {
-    return pathname === "/" && hash === "#what-we-do"
-  }
+function isNavLinkActive(pathname: string, href: string) {
   return pathname === href
 }
 
@@ -84,7 +63,6 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
   const registerHref = registerConfig?.enabled ? (registerConfig.href || "/conference/register") : "/events"
   const registerLabel = registerConfig?.label || "Register"
   const pathname = usePathname()
-  const hash = useHash()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hideNavbarLogo, setHideNavbarLogo] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -137,10 +115,9 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
     opts: { variant: "primary" | "secondary"; showDivider: boolean }
   ) => {
     const IconComponent = link.icon
-    const active = isNavLinkActive(pathname, hash, link.href)
+    const active = isNavLinkActive(pathname, link.href)
     const isSecondary = opts.variant === "secondary"
     const isPrimary = opts.variant === "primary"
-    const isImpactLink = isSecondary && link.label === "Impact"
 
     return (
       <div key={link.href + link.label} className="flex items-center gap-0">
@@ -163,13 +140,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
               : "text-slate-600 dark:text-slate-400 hover:text-[#3FABDE]"
           )}
         >
-          {isImpactLink && active ? (
-            <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-primary">
-              <Star className="size-2.5 fill-current text-white" />
-            </span>
-          ) : (
-            <IconComponent className={cn(isSecondary ? "size-3.5" : "size-4", "shrink-0 opacity-80")} />
-          )}
+          <IconComponent className={cn(isSecondary ? "size-3.5" : "size-4", "shrink-0 opacity-80")} />
           <span>{link.label}</span>
           {isPrimary && (
             <span
@@ -325,7 +296,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
             <div className="flex items-center gap-2 overflow-x-auto">
               {filteredTabletQuickLinks.map((link) => {
                 const IconComponent = link.icon
-                const active = isNavLinkActive(pathname, hash, link.href)
+                const active = isNavLinkActive(pathname, link.href)
                 return (
                   <Link
                     key={link.href + link.label}
@@ -454,11 +425,10 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                     { href: "/", label: "Home", icon: Home },
                     { href: "/about", label: "Who We Are", icon: Users },
                     { href: "/our-story", label: "Our Story", icon: FileText },
-                    { href: "/#what-we-do", label: "What We Do", icon: LayoutGrid },
-                    { href: "/programs", label: "Programs", icon: Briefcase },
+                    { href: "/whatwedo", label: "What We Do", icon: Briefcase },
                   ].map((link) => {
                     const IconComponent = link.icon
-                    const active = isNavLinkActive(pathname, hash, link.href)
+                    const active = isNavLinkActive(pathname, link.href)
                     return (
                       <Link
                         key={link.href + link.label}
@@ -496,13 +466,13 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                 </h3>
                 <div className="space-y-1">
                   {[
-                    { href: "/impact", label: "Impact", icon: Award },
+                    // { href: "/impact", label: "Impact", icon: Award },
                     { href: "/stories", label: "Stories", icon: FileText },
                     { href: "/events", label: "Events", icon: Calendar },
                     { href: "/podcasts", label: "Podcasts", icon: Headphones },
                   ].map((link) => {
                     const IconComponent = link.icon
-                    const active = isNavLinkActive(pathname, hash, link.href)
+                    const active = isNavLinkActive(pathname, link.href)
                     return (
                       <Link
                         key={link.href + link.label}
@@ -544,7 +514,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                     { href: "/contact", label: "Contact", icon: Mail },
                   ].map((link) => {
                     const IconComponent = link.icon
-                    const active = isNavLinkActive(pathname, hash, link.href)
+                    const active = isNavLinkActive(pathname, link.href)
                     return (
                       <Link
                         key={link.href + link.label}

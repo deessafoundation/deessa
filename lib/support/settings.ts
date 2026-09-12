@@ -11,14 +11,12 @@ export async function isSupportEnabled(): Promise<boolean> {
       .single()
 
     if (error && error.code !== "PGRST116") {
-      console.error("Error fetching support status:", error)
       return true // Default to enabled on error
     }
 
     // Default to true if not set
     return data?.value === true || data?.value === "true" || !data
-  } catch (error) {
-    console.error("Error checking support status:", error)
+  } catch {
     return true // Default to enabled on error
   }
 }
@@ -50,7 +48,6 @@ export async function getRegisterButtonConfig(): Promise<RegisterButtonConfig> {
       .single()
 
     if (error && error.code !== "PGRST116") {
-      console.error("Error fetching register button config:", error)
       return defaultConfig
     }
 
@@ -83,8 +80,7 @@ export async function getRegisterButtonConfig(): Promise<RegisterButtonConfig> {
     }
 
     return config
-  } catch (error) {
-    console.error("Error fetching register button config:", error)
+  } catch {
     return defaultConfig
   }
 }

@@ -17,6 +17,12 @@ function AdminLoginContent() {
   const searchParams = useSearchParams()
   const urlError = searchParams.get("error")
   const setupSuccess = searchParams.get("setup") === "success"
+  const displayError =
+    urlError === "authentication_unavailable"
+      ? "Sign-in is temporarily unavailable. Please try again in a few minutes."
+      : urlError === "unauthorized"
+        ? "You do not have admin access"
+        : urlError
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true)
@@ -51,11 +57,11 @@ function AdminLoginContent() {
             </Alert>
           )}
 
-          {(error || urlError) && (
+          {(error || displayError) && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                {error || (urlError === "unauthorized" ? "You do not have admin access" : urlError)}
+                {error || displayError}
               </AlertDescription>
             </Alert>
           )}
