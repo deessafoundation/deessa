@@ -14,9 +14,8 @@ import {
   Droplet,
   Trees,
 } from "lucide-react"
-import { timeline } from "@/data/timeline"
 import { allResources } from "@/components/resource-downloads"
-import type { AboutIntroSettings, AboutHowWeDoItSettings } from "@/lib/types/about-settings"
+import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 
 const TEAL = "#29b6c8"
@@ -71,11 +70,13 @@ interface AboutSectionsProps {
   teamMembers?: TeamMember[]
   intro?: AboutIntroSettings
   howWeDoIt?: AboutHowWeDoItSettings
+  journey?: AboutJourneySettings
 }
 
-export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSectionsProps) {
+export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: AboutSectionsProps) {
   const introContent = intro || DEFAULT_ABOUT_PAGE_SETTINGS.intro
   const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
+  const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
   const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
   const { scrollYProgress } = useScroll({
@@ -238,7 +239,11 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       {/* SECTION 5: OUR JOURNEY TIMELINE */}
       <section className="bg-white py-20 lg:py-[90px]" id="journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
-          <SectionHeader label="Our Journey" title="Milestones that defined our path." />
+          <SectionHeader
+            label={journeyContent.label}
+            title={journeyContent.title}
+            sub={journeyContent.subtitle}
+          />
 
           <div ref={timelineRef} className="relative">
             {/* Track + scroll-drawn line */}
@@ -257,10 +262,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
             />
 
             <div className="space-y-12 md:space-y-20">
-              {timeline.map((item, index) => {
+              {journeyContent.milestones.map((item, index) => {
                 const onLeft = index % 2 === 0
                 return (
-                  <div key={item.year} className="relative md:grid md:grid-cols-2 md:items-center md:gap-x-16">
+                  <div key={item.id} className="relative md:grid md:grid-cols-2 md:items-center md:gap-x-16">
                     {/* Circle marker */}
                     <motion.div
                       initial={{ scale: 0 }}

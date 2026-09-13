@@ -56,6 +56,7 @@ export default async function AboutPage() {
         teamMembers={teamMembers}
         intro={aboutSettings.intro}
         howWeDoIt={aboutSettings.howWeDoIt}
+        journey={aboutSettings.journey}
       />
     </>
   )
