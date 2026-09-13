@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Settings, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, TrendingUp, Newspaper, Music, Video, Briefcase, Camera, Archive, UserPlus, Handshake } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Settings, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Newspaper, Music, Video, Briefcase, Camera, Archive, UserPlus, Handshake } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter-form"
 import { Facebook, Twitter, Instagram, Youtube } from "@/components/social-icons"
 
@@ -15,16 +15,16 @@ const footerLinks = {
     { label: "Partners", href: "/about#partners", icon: HeartHandshake },
     { label: "Press & Media", href: "/press", icon: FileText },
     { label: "Annual Reports", href: "/impact#reports", icon: Award },
-    { label: "Autism Programs", href: "/programs?category=autism", icon: Heart },
+    { label: "Autism Programs", href: "/whatwedo?category=autism", icon: Heart },
     { label: "Careers", href: "/about#careers", icon: Briefcase },
   ],
   programs: [
-    { label: "Education", href: "/programs?category=education", icon: GraduationCap },
-    { label: "Healthcare", href: "/programs?category=health", icon: Heart },
-    { label: "Women Empowerment", href: "/programs?category=empowerment", icon: Users },
-    { label: "Disaster Relief", href: "/programs?category=relief", icon: Shield },
-    { label: "Art Workshop", href: "/programs?category=art", icon: Camera },
-    { label: "Training Programs", href: "/programs?category=training", icon: GraduationCap },
+    { label: "Education", href: "/whatwedo?category=education", icon: GraduationCap },
+    { label: "Healthcare", href: "/whatwedo?category=health", icon: Heart },
+    { label: "Women Empowerment", href: "/whatwedo?category=empowerment", icon: Users },
+    { label: "Disaster Relief", href: "/whatwedo?category=relief", icon: Shield },
+    { label: "Art Workshop", href: "/whatwedo?category=art", icon: Camera },
+    { label: "Training Programs", href: "/whatwedo?category=training", icon: GraduationCap },
   ],
   getInvolved: [
     { label: "Donate", href: "/donate", icon: Heart },
@@ -225,7 +225,7 @@ export function Footer() {
             <h4 className="text-xl font-semibold text-white mb-4">Our Mission</h4>
             <p className="text-gray-400 leading-relaxed mb-6 text-base">
               Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
-              initiatives since 2015.
+              initiatives since 2022.
             </p>
             <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 rounded-lg border border-primary/20 mb-6">
               <p className="text-primary text-sm font-medium">Making a difference, one community at a time.</p>
@@ -235,15 +235,11 @@ export function Footer() {
             <div className="flex flex-wrap gap-3 mb-6">
               <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
                 <Award className="size-3.5 text-primary" />
-                <span className="text-gray-300">Govt Registered NGO since 2015</span>
+                <span className="text-gray-300">Govt Registered NGO since 2022</span>
               </div>
               <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
                 <CheckCircle className="size-3.5 text-primary" />
                 <span className="text-gray-300">SWC Affiliated</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
-                <TrendingUp className="size-3.5 text-primary" />
-                <span className="text-gray-300">10,000+ Lives Impacted</span>
               </div>
             </div>
 

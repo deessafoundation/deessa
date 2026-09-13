@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { Calendar, MapPin, Mail, Users, Mic, BookOpen, Heart, Clock } from "lucide-react"
 import { getConferenceSettings } from "@/lib/actions/conference-settings"
 
@@ -270,7 +270,7 @@ export default async function ConferencePage() {
             href="/conference/register"
             className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-white px-10 text-base font-bold text-primary shadow-lg transition hover:bg-gray-50 active:scale-95"
           >
-            Register Now — Free
+            Register Now, Free
           </Link>
         </div>
       </section>

@@ -34,7 +34,7 @@ const faqs = [
   {
     question: "How is my donation used?",
     answer:
-      "We ensure maximum impact with every donation. The majority of funds go directly to our programs — education, healthcare, shelter, and empowerment initiatives. We maintain full transparency through annual reports.",
+      "We ensure maximum impact with every donation. The majority of funds go directly to our programs: education, healthcare, shelter, and empowerment initiatives. We maintain full transparency through annual reports.",
   },
   {
     question: "Does deessa Foundation have partnerships?",

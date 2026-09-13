@@ -19,7 +19,7 @@ const testimonials: Testimonial[] = [
     name: "Dipak Tharu",
     role: "Parent",
     quote:
-      "I am excited about the youthful voice that is here — the young professionals who are coming at this with real zeal and passion and information.",
+      "I am excited about the youthful voice that is here, the young professionals who are coming at this with real zeal, passion, and information.",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=85",
     backgroundImage:

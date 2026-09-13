@@ -176,7 +176,7 @@ export default function StoryManager({ story, onChange }: StoryManagerProps) {
               <Input
                 value={story.founded}
                 onChange={(e) => update({ founded: e.target.value })}
-                placeholder="2015"
+                placeholder="2022"
                 className="mt-1"
               />
             </div>

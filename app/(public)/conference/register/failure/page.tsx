@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 
 function safeDecodeURIComponent(value: string): string {
   try {
@@ -90,7 +90,7 @@ export default async function RegistrationFailurePage({ searchParams }: FailureP
                   <span className="font-semibold text-foreground">
                     DEESSA National Conference 2026.
                   </span>
-                  {" "}Don&apos;t worry — no data was saved.
+                  {" "}Don&apos;t worry, no data was saved.
                 </p>
               </div>
             </div>

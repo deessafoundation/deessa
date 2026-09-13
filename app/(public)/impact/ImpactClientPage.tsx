@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
@@ -597,7 +597,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       statLabel: "students supported",
       imageSrc: "/StoriesSectionImage.png",
       imageAlt: "Education in Nepal",
-      link: "/programs?category=education",
+      link: "/whatwedo?category=education",
       linkText: "Read Education Stories →",
     },
     {
@@ -613,7 +613,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       statLabel: "health camps conducted",
       imageSrc: "/missionVisionObjectives.png",
       imageAlt: "Healthcare for mountain communities",
-      link: "/programs?category=health",
+      link: "/whatwedo?category=health",
       linkText: "See Health Impact Stories →",
     },
     {
@@ -629,7 +629,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
       statLabel: "women empowered",
       imageSrc: "/JoinTheMovement.png",
       imageAlt: "Women leadership in Nepal",
-      link: "/programs?category=empowerment",
+      link: "/whatwedo?category=empowerment",
       linkText: "See Women's Stories →",
     },
   ]
@@ -1124,3 +1124,6 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
     </>
   )
 }
+
+
+

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter, useParams } from "next/navigation"
@@ -325,7 +325,7 @@ function PendingPaymentContent() {
                 <p className="text-sm font-bold text-primary">
                   {amount !== null
                     ? `${currency} ${amount.toLocaleString()}`
-                    : "—"}
+                    : ";"}
                 </p>
               </div>
             </div>

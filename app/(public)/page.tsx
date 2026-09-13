@@ -6,19 +6,16 @@ import { HomeAccessibilityButton } from "@/components/home-accessibility-button"
 import {
   OurStorySection,
   MissionVisionSection,
-  ImpactStatsBar,
   ProgramsSection,
   TimelineSection,
+  PodcastSection,
   TestimonialsSection,
-  PartnersSection,
   ContactSection,
   GlobalEnhancements,
 } from "@/components/homepage-sections"
 import {
-  getHomepageStats,
   getHomepageStory,
   getHomepageWhatWeDo,
-  getHomepageMarqueeSettings,
   getHomepageHeroCarousel,
   getHomepageTestimonials,
   getHomepageTimeline,
@@ -49,10 +46,8 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default async function HomePage() {
   // Fetch CMS data for homepage
-  const statsSettings = await getHomepageStats()
   const storySettings = await getHomepageStory()
   const whatWeDoSettings = await getHomepageWhatWeDo()
-  const marqueeSettings = await getHomepageMarqueeSettings()
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
   const timelineSettings = await getHomepageTimeline()
@@ -81,9 +76,6 @@ export default async function HomePage() {
         interval={heroCarouselSettings.interval}
       />
 
-      {/* 2. IMPACT STATS BAR - CMS POWERED */}
-      <ImpactStatsBar stats={statsSettings.stats} />
-
       {/* 3. OUR STORY - CMS POWERED */}
       <OurStorySection story={storySettings} />
 
@@ -96,11 +88,11 @@ export default async function HomePage() {
       {/* 6. TIMELINE - CMS POWERED */}
       <TimelineSection timeline={timelineSettings} />
 
-      {/* 7. TESTIMONIALS - CMS POWERED */}
-      <TestimonialsSection testimonials={testimonialsSettings} />
+      {/* 7. PODCAST FEATURE */}
+      <PodcastSection />
 
-      {/* 8. PARTNERS & SPONSORS - CMS POWERED */}
-      <PartnersSection settings={marqueeSettings} />
+      {/* 8. TESTIMONIALS - CMS POWERED */}
+      <TestimonialsSection testimonials={testimonialsSettings} />
 
       {/* 9. CONTACT / VISIT OFFICE */}
       <ContactSection />

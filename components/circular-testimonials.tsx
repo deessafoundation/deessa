@@ -31,6 +31,10 @@ interface CircularTestimonialsProps {
   autoplay?: boolean
   colors?: Colors
   fontSizes?: FontSizes
+  /** When false, hides the name/quote column and shows just the photo carousel. Defaults to true. */
+  showContent?: boolean
+  /** Height of the image stack. Defaults to "24rem". */
+  imageHeight?: string
 }
 
 function calculateGap(width: number) {
@@ -49,6 +53,8 @@ export const CircularTestimonials = ({
   autoplay = true,
   colors = {},
   fontSizes = {},
+  showContent = true,
+  imageHeight = "24rem",
 }: CircularTestimonialsProps) => {
   // Color & font config
   const colorName = colors.name ?? "#000"
@@ -218,9 +224,9 @@ export const CircularTestimonials = ({
 
   return (
     <div className="testimonial-container">
-      <div className="testimonial-grid">
+      <div className={"testimonial-grid" + (showContent ? "" : " photo-only")}>
         {/* Images */}
-        <div className="image-container" ref={imageContainerRef}>
+        <div className="image-container" ref={imageContainerRef} style={{ height: imageHeight }}>
           {testimonials.map((testimonial, index) => {
             const isActive = index === activeIndex
             const isLeft = (activeIndex - 1 + testimonialsLength) % testimonialsLength === index
@@ -278,6 +284,7 @@ export const CircularTestimonials = ({
         </div>
 
         {/* Content */}
+        {showContent && (
         <div className="testimonial-content">
           <AnimatePresence mode="wait">
             <motion.div
@@ -358,6 +365,7 @@ export const CircularTestimonials = ({
             </button>
           </div>
         </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -457,6 +465,17 @@ export const CircularTestimonials = ({
           }
           .arrow-buttons {
             padding-top: 0;
+          }
+        }
+        .testimonial-grid.photo-only {
+          grid-template-columns: 1fr;
+        }
+        @media (max-width: 640px) {
+          .testimonial-container {
+            padding: 1rem;
+          }
+          .image-container {
+            height: 16rem !important;
           }
         }
       `}</style>

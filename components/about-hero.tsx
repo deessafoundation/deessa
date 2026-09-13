@@ -2,15 +2,17 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
+import type { AboutHeroSettings } from "@/lib/types/about-settings"
+import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 
-/* ───────── Team photo (placeholder until an authentic photo is ready) ───────── */
-const HERO_BG_URL = "/image_coming_soon.png"
+/* ───────── Branded neurodiversity campaign image ───────── */
+const HERO_BG_URL = "/deessa_img.jpg"
 
 /* ───────── Staggered word-by-word H1 ───────── */
-function AnimatedHeadline() {
-  const line1 = ["The", "People", "Behind"]
-  const line2 = ["Nepal's", "Change."]
-  const all = [...line1, ...line2]
+function AnimatedHeadline({ line1, line2 }: { line1: string; line2: string }) {
+  const line1Words = line1.split(" ")
+  const line2Words = line2.split(" ")
+  const all = [...line1Words, ...line2Words]
 
   return (
     <h1
@@ -35,7 +37,7 @@ function AnimatedHeadline() {
           style={{ display: "inline-block", marginRight: "0.28em" }}
         >
           {word}
-          {i === line1.length - 1 && <br />}
+          {i === line1Words.length - 1 && <br />}
         </motion.span>
       ))}
     </h1>
@@ -43,7 +45,13 @@ function AnimatedHeadline() {
 }
 
 /* ───────── Main Hero ───────── */
-export function AboutHero() {
+interface AboutHeroProps {
+  settings?: AboutHeroSettings
+}
+
+export function AboutHero({ settings }: AboutHeroProps) {
+  const s = settings || DEFAULT_ABOUT_PAGE_SETTINGS.hero
+
   return (
     <section
       className="about-hero-section"
@@ -73,7 +81,7 @@ export function AboutHero() {
       {/* ─── LAYER 1 — Full-bleed background photo ─── */}
       <img
         src={HERO_BG_URL}
-        alt="deessa Foundation team in Nepal"
+        alt="deessa Foundation: Unlocking Potential, Embracing Neurodiversity"
         style={{
           position: "absolute",
           inset: 0,
@@ -147,13 +155,13 @@ export function AboutHero() {
               textTransform: "uppercase",
             }}
           >
-            ✦ OUR TEAM &amp; MISSION
+            {s.badge}
           </span>
         </motion.div>
 
         {/* c) H1 */}
         <div className="about-hero-h1">
-          <AnimatedHeadline />
+          <AnimatedHeadline line1={s.headlineLine1} line2={s.headlineLine2} />
         </div>
 
         {/* d) Subtitle */}
@@ -170,9 +178,7 @@ export function AboutHero() {
             marginBottom: 32,
           }}
         >
-          We are parents, educators, professionals, and advocates working
-          for and with children with disabilities — with a special focus on
-          autism — to build a society where every child belongs.
+          {s.subtitle}
         </motion.p>
 
         {/* e) CTA Buttons */}
@@ -184,7 +190,7 @@ export function AboutHero() {
           style={{ display: "flex", gap: 14 }}
         >
           <Link
-            href="#journey"
+            href={s.primaryCtaUrl}
             className="font-comic"
             style={{
               display: "inline-flex",
@@ -210,10 +216,10 @@ export function AboutHero() {
               e.currentTarget.style.boxShadow = "none"
             }}
           >
-            Read Our Story
+            {s.primaryCtaLabel}
           </Link>
           <Link
-            href="/impact#reports"
+            href={s.secondaryCtaUrl}
             className="font-comic"
             style={{
               display: "inline-flex",
@@ -238,7 +244,7 @@ export function AboutHero() {
               e.currentTarget.style.backgroundColor = "transparent"
             }}
           >
-            View Annual Reports
+            {s.secondaryCtaLabel}
           </Link>
         </motion.div>
 
@@ -258,7 +264,7 @@ export function AboutHero() {
             flexWrap: "wrap",
           }}
         >
-          {["Govt Registered", "SWC Affiliated"].map((text) => (
+          {s.trustBadges.map((text) => (
             <span key={text} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <span
                 style={{

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState, useCallback, useRef, Suspense } from "react"
 import { useSearchParams, useParams } from "next/navigation"
@@ -6,7 +6,7 @@ import Link from "next/link"
 import { CheckCircle, Clock, AlertTriangle, Loader2, Calendar } from "lucide-react"
 
 /**
- * Payment Success Page — Event Registration
+ * Payment Success Page, Event Registration
  *
  * Dual-path verification:
  * 1. Direct verify via provider API (fast feedback)
@@ -80,7 +80,7 @@ function PaymentSuccessContent() {
           // else polling will handle it
         } catch (parseErr) {
           console.warn("Stripe response JSON parse error:", parseErr)
-          // Non-JSON response — fall through to polling
+          // Non-JSON response, fall through to polling
         }
       } else if (pidx) {
         // ── Khalti ──────────────────────────────────────────────────────────
@@ -97,12 +97,12 @@ function PaymentSuccessContent() {
           // else polling will handle it
         } catch (parseErr) {
           console.warn("Khalti response JSON parse error:", parseErr)
-          // Non-JSON response — fall through to polling
+          // Non-JSON response, fall through to polling
         }
       }
     } catch (err) {
       console.warn("payment verify error:", err)
-      // Non-fatal — fall through to polling
+      // Non-fatal, fall through to polling
     }
   }, [rid, sessionId, pidx, paid, statusParam]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -327,7 +327,7 @@ function PaymentSuccessContent() {
           Payment Failed
         </h1>
         <p className="mb-6 text-sm text-muted-foreground">
-          Your payment could not be processed. Your registration is still saved —
+          Your payment could not be processed. Your registration is still saved ;
           you can try again using your payment link.
         </p>
         <Link

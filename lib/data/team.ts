@@ -9,7 +9,6 @@ export async function getPublishedTeamMembers() {
     .order("sort_order", { ascending: true })
 
   if (error) {
-    console.error("Error fetching team members:", error)
     return []
   }
   return data || []

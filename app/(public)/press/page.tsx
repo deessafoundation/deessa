@@ -25,7 +25,7 @@ const pressContacts = [
 ]
 
 const quickFacts = [
-  { label: "Founded", value: "2015" },
+  { label: "Founded", value: "2022" },
   { label: "Location", value: "Kathmandu, Nepal" },
   { label: "Communities Served", value: "50+" },
   { label: "Beneficiaries", value: "10,000+" },

@@ -194,36 +194,8 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     size="lg"
                     className="h-12 w-full px-6 text-base font-semibold rounded-lg border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
                   >
-                    <Link href="/programs">Explore Programs</Link>
+                    <Link href="/whatwedo">Explore Programs</Link>
                   </Button>
-                </div>
-
-                {/* Trust indicators */}
-                <div
-                  className={cn(
-                    "mt-8 hidden flex-wrap items-center gap-4 text-sm text-white/70 sm:flex sm:gap-6",
-                    "transition-all duration-500 delay-500",
-                    i === current ? "opacity-100" : "opacity-0"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    10+ Years Experience
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    Government Registered
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    50,000+ Lives Changed
-                  </span>
                 </div>
               </div>
             </div>

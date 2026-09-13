@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -98,7 +98,7 @@ export function StoriesSections({
   return (
     <>
       {/* ═══════════════════════════════════════════
-          SECTION 2 — FEATURED STORY  (premium editorial)
+          SECTION 2, FEATURED STORY  (premium editorial)
       ═══════════════════════════════════════════ */}
       <section
         id="featured"
@@ -224,7 +224,7 @@ export function StoriesSections({
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 3 — WRITTEN STORIES GRID
+          SECTION 3, WRITTEN STORIES GRID
       ═══════════════════════════════════════════ */}
       <section id="stories" className="relative bg-white py-24">
         {/* Thin top rule */}
@@ -348,7 +348,7 @@ export function StoriesSections({
                 </Link>
               </motion.div>
 
-              {/* SMALL CARDS — right column */}
+              {/* SMALL CARDS, right column */}
               <motion.div variants={fadeUp} custom={1} className="flex flex-col gap-4">
                 {spotlightSideStories.map((story, i) => (
                   <Link key={story.id} href={`/stories/${story.slug}`} className="group flex-1">
@@ -396,7 +396,7 @@ export function StoriesSections({
                             )}
                           </div>
                           <span className="text-[11px] font-bold text-teal opacity-0 transition-all duration-300 group-hover:opacity-100">
-                            READ ↗
+                            READ �,
                           </span>
                         </div>
                       </div>
@@ -414,7 +414,7 @@ export function StoriesSections({
             </div>
           )}
 
-          {/* ── Remaining stories — 2-col grid ── */}
+          {/* ── Remaining stories ; 2-col grid ── */}
           {remainingStories.length > 0 && (
             <motion.div
               variants={stagger}
@@ -482,7 +482,7 @@ export function StoriesSections({
             </motion.div>
           )}
 
-          {/* ── Extra stories — 3-col grid ── */}
+          {/* ── Extra stories ; 3-col grid ── */}
           {remainingStories.length > 2 && (
             <motion.div
               variants={stagger}
@@ -543,3 +543,6 @@ export function StoriesSections({
     </>
   )
 }
+
+
+

@@ -28,7 +28,7 @@ interface ImpactStatsBarProps {
 export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
   // Fallback to default stats if not provided
   const defaultStats: HomepageStat[] = [
-    { value: 10000, suffix: "+", label: "Children Supported", sublabel: "Since 2015", order: 1 },
+    { value: 10000, suffix: "+", label: "Children Supported", sublabel: "Since 2022", order: 1 },
     { value: 50, suffix: "+", label: "Schools Built", sublabel: "& Renovated", order: 2 },
     { value: 25, suffix: "+", label: "Districts Reached", sublabel: "Out of 77", order: 3 },
     { value: 500, suffix: "+", label: "Trained Teachers", sublabel: "In 10 Years", order: 4 },
@@ -89,11 +89,11 @@ export function OurStorySection({ story }: OurStorySectionProps) {
                 <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
-                <div className="absolute -bottom-6 -right-6 bg-primary text-white rounded-2xl p-6 shadow-xl hidden md:block animate-badge-bounce">
-                  <p className="text-4xl font-black font-comic-num">
+                <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
+                  <p className="text-2xl md:text-4xl font-black font-comic-num">
                     {s.founded}
                   </p>
-                  <p className="text-sm font-bold opacity-90">{s.foundedLabel}</p>
+                  <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
               </ScrollReveal>
             </div>
@@ -151,7 +151,7 @@ export function MissionVisionSection() {
     {
       icon: Target,
       title: "Our Mission",
-      description: "To empower marginalized communities in Nepal through education, healthcare, and sustainable development, ensuring every individual has the opportunity to live with dignity and purpose.",
+      description: "Integrated development of the social sector in Nepal.",
       color: "border-l-4 border-l-primary",
       iconBg: "bg-primary/10",
       iconColor: "text-primary"
@@ -159,7 +159,7 @@ export function MissionVisionSection() {
     {
       icon: Eye,
       title: "Our Vision",
-      description: "A Nepal where every community thrives — where children dream freely, families are healthy, and opportunities are within everyone's reach.",
+      description: "Work for social sector development through the combined effort of national and international community stakeholders.",
       color: "border-l-4 border-l-blue-500",
       iconBg: "bg-blue-500/10",
       iconColor: "text-blue-500"
@@ -167,7 +167,7 @@ export function MissionVisionSection() {
     {
       icon: Flag,
       title: "Our Objectives",
-      description: "Build 100+ schools, reach 50,000+ lives through healthcare, empower 10,000+ women through skill development, and create lasting change in every district we serve.",
+      description: "To focus on the social and economic problems at the grassroots level of poor people in Nepal.",
       color: "border-l-4 border-l-green-500",
       iconBg: "bg-green-500/10",
       iconColor: "text-green-500"
@@ -277,9 +277,6 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
               >
                 <div className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}>
                   <div className="p-8 text-center flex flex-col flex-1">
-                    <div className="text-2xl font-black text-primary mb-2 font-comic-num">
-                      <CountUp end={pillar.statEnd} suffix="+" />
-                    </div>
                     <p className="text-xs text-white/50 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
                     <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
@@ -343,7 +340,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
   // Default milestones if not provided from CMS
   const defaultMilestones = [
     {
-      year: "2015",
+      year: "2022",
       milestone: "Founded in Kathmandu",
       description: "deessa Foundation began with a simple commitment: serve communities that are often left behind.",
       icon: MapPin,
@@ -533,6 +530,58 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
             )
           })}
         </div>
+      </div>
+    </section>
+  )
+}
+
+/* ──────────────────  PODCAST FEATURE  ────────────────── */
+
+export function PodcastSection() {
+  return (
+    <section className="relative overflow-hidden bg-white py-20 md:py-28">
+      <div className="absolute -left-28 top-12 size-80 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -right-24 bottom-0 size-96 rounded-full bg-[#F7C52B]/15 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <ScrollReveal animation="fade-up">
+          <Link
+            href="/podcasts"
+            className="group block overflow-hidden rounded-3xl border border-primary/15 bg-slate-950 shadow-2xl transition-transform duration-500 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+            aria-label="Explore the Living With Autism podcast"
+          >
+            <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
+              <div className="relative min-h-72 overflow-hidden sm:min-h-96 lg:min-h-full">
+                <Image
+                  src="/podcast_banner.png"
+                  alt="Living With Autism podcast with Sarita and Merina"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 58vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110">
+                    <Play className="ml-1 size-7 fill-current" aria-hidden="true" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center p-8 text-white sm:p-12 lg:p-14">
+                <h2 className="mb-5 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
+                  Living With Autism
+                </h2>
+                <p className="mb-8 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
+                  Real voices and real stories. Listen to honest conversations about autism, inclusion, and the experiences that shape our communities.
+                </p>
+                <span className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors group-hover:text-white">
+                  Explore the podcast
+                  <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-2" />
+                </span>
+              </div>
+            </div>
+          </Link>
+        </ScrollReveal>
       </div>
     </section>
   )
@@ -964,7 +1013,7 @@ export function ContactSection() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="deessa Foundation Office Location — Dhobighat Nayabato, Sanepa, Lalitpur 44600"
+                title="deessa Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
               />
             </div>
           </ScrollReveal>

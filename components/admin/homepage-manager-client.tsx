@@ -73,7 +73,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
     subtitle:
       homeHero.subtitle ||
       "We are rewriting the future of rural Nepal through education, healthcare, and community empowerment.",
-    badge: homeHero.badge || "Est. 2015 • Kathmandu",
+    badge: homeHero.badge || "Est. 2022 • Kathmandu",
   })
   const [heroButtons, setHeroButtons] = useState({
     primaryText: homeHero.ctaButton?.text || "Start Making Impact",
@@ -90,7 +90,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
         homeInitiatives.education?.description ||
         "Providing quality education, teacher training, and infrastructure to rural schools.",
       image: homeInitiatives.education?.image || "",
-      link: homeInitiatives.education?.link || "/programs",
+      link: homeInitiatives.education?.link || "/whatwedo",
       stats: homeInitiatives.education?.stats || { label: "Students Reached", value: "10,000+" },
       isDeleted: homeInitiatives.education?.isDeleted || false,
     },
@@ -100,7 +100,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
         homeInitiatives.empowerment?.description ||
         "Creating sustainable livelihoods through vocational training and microfinance.",
       image: homeInitiatives.empowerment?.image || "",
-      link: homeInitiatives.empowerment?.link || "/programs",
+      link: homeInitiatives.empowerment?.link || "/whatwedo",
       stats: homeInitiatives.empowerment?.stats || {
         label: "Women Trained",
         value: "5,000+",
@@ -113,7 +113,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
         homeInitiatives.health?.description ||
         "Delivering essential medical supplies, hygiene kits, and health camps to remote areas.",
       image: homeInitiatives.health?.image || "",
-      link: homeInitiatives.health?.link || "/programs",
+      link: homeInitiatives.health?.link || "/whatwedo",
       stats: homeInitiatives.health?.stats || {
         label: "Health Camps Conducted",
         value: "200+",
@@ -580,7 +580,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
                   onChange={(e) =>
                     setHeroContent((prev) => ({ ...prev, badge: e.target.value }))
                   }
-                  placeholder="Est. 2015 • Kathmandu"
+                  placeholder="Est. 2022 • Kathmandu"
                 />
                 <p className="text-xs text-muted-foreground">
                   Small badge or tagline (optional)
@@ -776,7 +776,7 @@ export function HomepageManagerClient({ settings }: HomepageManagerClientProps) 
                           [key]: { ...prev[key as keyof typeof prev], link: e.target.value },
                         }))
                       }
-                      placeholder="/programs"
+                      placeholder="/whatwedo"
                     />
                   </div>
 

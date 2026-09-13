@@ -154,7 +154,7 @@ export default async function ProjectsPage() {
                         </Button>
                         {project.is_published && (
                           <Button variant="ghost" size="icon" asChild>
-                            <Link href={`/programs/${project.slug}`} target="_blank">
+                            <Link href={`/whatwedo/${project.slug}`} target="_blank">
                               <ExternalLink className="h-4 w-4" />
                             </Link>
                           </Button>

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Suspense, useEffect, useState } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
@@ -14,7 +14,7 @@ import {
 } from "lucide-react"
 
 /**
- * Payment Options Page — Event Registration
+ * Payment Options Page, Event Registration
  *
  * Shown immediately after a successful paid registration.
  * Gives the user a clear "Pay Now" vs "Pay Later" choice.
@@ -59,7 +59,7 @@ function PaymentOptionsContent() {
     if (countdown === 0) router.push(`/events/${slug}`)
   }, [countdown, router, slug])
 
-  // Safety — if there's no rid just send to register
+  // Safety, if there's no rid just send to register
   if (!rid || !email) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
@@ -92,7 +92,7 @@ function PaymentOptionsContent() {
         setEmailSent(true)
       }
     } catch {
-      // Non-critical — email was already sent on registration
+      // Non-critical, email was already sent on registration
     } finally {
       setSendingEmail(false)
     }
@@ -153,7 +153,7 @@ function PaymentOptionsContent() {
               <p className="text-sm font-bold text-primary">
                 {amount !== null
                   ? `${currency} ${amount.toLocaleString()}`
-                  : "—"}
+                  : ";"}
               </p>
             </div>
             <div>
@@ -238,7 +238,7 @@ function PaymentOptionsContent() {
           <span className="font-mono font-semibold text-foreground">
             {shortId}
           </span>
-          . Keep it safe — you&apos;ll need it along with your email to access
+          . Keep it safe, you&apos;ll need it along with your email to access
           your payment link.{" "}
           <Link href={`/events/${slug}`} className="text-primary hover:underline">
             Back to Event →

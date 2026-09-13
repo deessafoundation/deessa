@@ -146,7 +146,7 @@ export default async function EventsPage() {
   return (
     <>
       {/* ═══════════════════════════════════════════
-          HERO — warm brand light (Stories / Impact language)
+          HERO, warm brand light (Stories / Impact language)
           ═══════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_45%,#f7f4ef_100%)]" />
@@ -167,7 +167,7 @@ export default async function EventsPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700 sm:text-xl">
-              Workshops, conferences, and community gatherings across Nepal —
+              Workshops, conferences, and community gatherings across Nepal ;
               spaces where learning turns into action and people into community.
             </p>
 
@@ -189,7 +189,7 @@ export default async function EventsPage() {
             </div>
           </div>
 
-          {/* Overview card — Stories-style */}
+          {/* Overview card, Stories-style */}
           <div className="lg:col-span-5">
             <div className="rounded-[2.1rem] bg-white/85 p-5 shadow-[0_28px_80px_-40px_rgba(15,23,42,0.42)] backdrop-blur md:p-6">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
@@ -199,7 +199,7 @@ export default async function EventsPage() {
                 Find your next moment of connection.
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                From hands-on workshops to large community conferences — every
+                From hands-on workshops to large community conferences, every
                 gathering is built to create lasting impact.
               </p>
 
@@ -287,7 +287,7 @@ export default async function EventsPage() {
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
               {upcomingEvents.length > 0
-                ? "Save your seat — these gatherings are where ideas turn into action."
+                ? "Save your seat, these gatherings are where ideas turn into action."
                 : "We are preparing the next chapter. Check past events or get involved while you wait."}
             </p>
           </div>
@@ -341,7 +341,7 @@ export default async function EventsPage() {
                 Moments we shared
               </h2>
               <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-                Relive the gatherings that shaped our community — and the people
+                Relive the gatherings that shaped our community, and the people
                 who made them matter.
               </p>
             </div>
@@ -356,7 +356,7 @@ export default async function EventsPage() {
       )}
 
       {/* ═══════════════════════════════════════════
-          CTA — solid primary like Stories
+          CTA, solid primary like Stories
           ═══════════════════════════════════════════ */}
       <section className="bg-[linear-gradient(180deg,#f7f4ef_0%,#fbf8f4_100%)] py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -369,7 +369,7 @@ export default async function EventsPage() {
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">
               Host a workshop, volunteer at the next conference, or simply show
-              up — there&apos;s a place for you in this community.
+              up, there&apos;s a place for you in this community.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Link
@@ -425,13 +425,13 @@ function EventMedia({
     >
       {src ? (
         <>
-          {/* Blurred color wash backdrop — CSS only, no second image request */}
+          {/* Blurred color wash backdrop, CSS only, no second image request */}
           <div
             aria-hidden="true"
             className="absolute inset-0 scale-110 bg-cover bg-center opacity-50 blur-2xl"
             style={{ backgroundImage: `url(${src})` }}
           />
-          {/* Main photo — optimized with Next.js Image, stretched to fill container */}
+          {/* Main photo, optimized with Next.js Image, stretched to fill container */}
           <Image
             src={src}
             alt={alt}
@@ -484,7 +484,7 @@ function FeaturedEventCard({ event }: { event: EventModuleEvent }) {
       className="group relative block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
     >
       <div className="grid overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_70px_-36px_rgba(15,23,42,0.35)] transition-shadow duration-300 group-hover:shadow-[0_32px_80px_-32px_rgba(11,95,138,0.35)] lg:grid-cols-12 lg:items-stretch">
-        {/* Image — full height of card on desktop */}
+        {/* Image, full height of card on desktop */}
         <div className="relative aspect-[16/10] w-full overflow-hidden lg:col-span-6 lg:aspect-auto lg:min-h-[400px]">
           <EventMedia
             src={imageSrc}
@@ -615,7 +615,7 @@ function EventCard({
       href={`/events/${event.slug}`}
       className="group flex h-full min-h-0 cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_-20px_rgba(11,95,138,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
     >
-      {/* Fixed aspect media — image always fills the frame */}
+      {/* Fixed aspect media, image always fills the frame */}
       <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden">
         <EventMedia
           src={imageSrc}
@@ -650,7 +650,7 @@ function EventCard({
         </div>
       </div>
 
-      {/* Body — flex so cards equalize height in the grid */}
+      {/* Body, flex so cards equalize height in the grid */}
       <div className="flex min-h-0 flex-1 flex-col p-5 sm:p-6">
         <div className="mb-2.5 flex flex-wrap items-center gap-2">
           {event.is_free && !past && (

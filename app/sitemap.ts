@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/programs`,
+      url: `${baseUrl}/whatwedo`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
@@ -180,7 +180,7 @@ async function getDynamicRoutes(baseUrl: string): Promise<MetadataRoute.Sitemap>
     if (projects) {
       projects.forEach((project) => {
         routes.push({
-          url: `${baseUrl}/programs/${project.slug}`,
+          url: `${baseUrl}/whatwedo/${project.slug}`,
           lastModified: new Date(project.updated_at || project.created_at),
           changeFrequency: 'monthly',
           priority: 0.7,

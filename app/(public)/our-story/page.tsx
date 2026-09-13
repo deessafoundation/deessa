@@ -1,14 +1,15 @@
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
+import { CircularTestimonials } from "@/components/circular-testimonials"
 
 export const metadata: Metadata = {
-  title: "Our Story — Why We Were Founded | deessa Foundation",
+  title: "Our Story: Why We Were Founded | deessa Foundation",
   description:
-    "Every movement begins with a story. Ours began with two little girls — Deetya and Marissa — whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
+    "Every movement begins with a story. Ours began with two little girls, Deetya and Marissa, whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
 }
 
 const challengeCards = [
@@ -30,7 +31,7 @@ const challengeCards = [
     icon: School,
     title: "A Search for Belonging",
     description:
-      "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her — we were looking for one that would understand her.",
+      "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her, we were looking for one that would understand her.",
     accent: "text-chart-4",
   },
 ]
@@ -57,6 +58,16 @@ const timelineItems = [
     color: "bg-chart-4",
     textColor: "text-chart-4",
   },
+]
+
+const storyPhotos = [
+  { src: "/twins-newborn.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-together.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-dino.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-cheer.jpg", name: "", designation: "", quote: "" },
+  { src: "/twins-curious.jpg", name: "", designation: "", quote: "" },
+  { src: "/twin-solo-1.jpg", name: "", designation: "", quote: "" },
+  { src: "/twin-solo-2.jpg", name: "", designation: "", quote: "" },
 ]
 
 const impact = [
@@ -94,24 +105,24 @@ export default function OurStoryPage() {
             alt="Our Story hero background"
             fill
             className="object-cover"
-            style={{ 
+            style={{
               objectPosition: "center center",
               filter: "brightness(0.65) saturate(1.1)",
             }}
             priority
           />
           {/* DARK GRADIENT SCRIM OVERLAY */}
-          <div 
+          <div
             className="absolute inset-0"
             style={{
               background: "linear-gradient(to bottom, rgba(10, 15, 35, 0.55) 0%, rgba(10, 15, 35, 0.35) 50%, rgba(10, 15, 35, 0.70) 100%)"
-            }} 
+            }}
           />
         </div>
 
         {/* TEXT CONTENT */}
         <div className="relative z-10 mx-auto max-w-5xl text-center">
-          <span 
+          <span
             className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider sm:text-sm"
             style={{ color: "#29b6c8", backgroundColor: "rgba(41, 182, 200, 0.12)" }}
           >
@@ -187,8 +198,8 @@ export default function OurStoryPage() {
             <div className="relative">
               <div className="absolute -inset-3 -rotate-2 rounded-3xl bg-chart-4/20" aria-hidden />
               <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJXx8c8UwNt7LMcnZjeUcX3fiHF3kwS7Gq7zT-1FsnaGctC36Qn5Dd9I6mZpE41cWf_SdvBD_Y21oFEi0_RWaXcA4jaguOrWviJaCITse3FNl6Cbtie7hVxRoJZEE8U0nqWoMbrdKdVaDD-Dvf6o2NGZSIunDnP2C78pKPQX9Kqs248JnyI8pYI6lvh2BhE793AmHE0hPMMlimCcX4gbJt9zSJE2zrx3QRMDVZyiNfHzd_R5kDKeps-f8pp_BIEG38lDZEcZCoZSM"
-                alt="Two sisters smiling in a garden"
+                src="/twins-hug.jpg"
+                alt="Deetya and Marissa embracing"
                 width={800}
                 height={1000}
                 className="relative w-full rounded-3xl object-cover shadow-xl"
@@ -205,7 +216,7 @@ export default function OurStoryPage() {
               </p>
               <p>
                 Deetya was born with bilateral clubfoot. Since birth, she&apos;s gone through treatment and
-                physiotherapy, and still wears specialized shoes. She&apos;s made remarkable progress — though some
+                physiotherapy, and still wears specialized shoes. She&apos;s made remarkable progress, though some
                 days are still hard. Her story reminds us that progress isn&apos;t about perfection. It&apos;s about
                 perseverance, support, and opportunity.
               </p>
@@ -258,9 +269,9 @@ export default function OurStoryPage() {
       <section className="bg-surface px-6 py-28 text-center md:px-8">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-4xl font-extrabold leading-tight sm:text-5xl md:text-6xl">
-            “If it was this hard for our family —
+            “If it was this hard for our family ;
             <br className="hidden md:block" />
-            with access to education, resources, and services —
+            with access to education, resources, and services ;
             <br className="hidden md:block" />
             what must it be like for a family in rural Nepal?”
           </h2>
@@ -318,7 +329,7 @@ export default function OurStoryPage() {
             <h2 className="text-3xl font-bold sm:text-4xl">More Than a Name</h2>
             <p className="text-foreground-muted text-lg leading-relaxed">
               The name <span className="font-bold text-primary">deessa</span> carries this story. “Dee” from Deetya.
-              “Ssa” from Marissa. And the Nepali word for “direction” — because every child and every family deserves
+              “Ssa” from Marissa. And the Nepali word for “direction” , because every child and every family deserves
               guidance, dignity, and a path forward.
             </p>
 
@@ -344,13 +355,17 @@ export default function OurStoryPage() {
             </div>
           </div>
 
-          <div className="flex-1">
-            <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuASbw9oLQ6Bh5rUk63XQrLHVkV_YsJruNHh9vUHngNQPfPynL33cPYYmE1khtQzPyDPaL40kuW3zuZ1lFda-uHADLefB3FKfwE4uUKHUCmoQJAm4qzWhABmQ3Xd2FlwepeIBkuV3JNEvFD5E6INwLJRdOyrhMM1JU1vtpV2yUrKwuspz-dvvpNkXn82WJhmis8zMQsnvKJ5SsGHOaIKQONsM1N91RSkPKZULy9LZnXB1GPEPLVPVG5XBKsOhcI7F1Nb5yCCkbPiZwY"
-              alt="A winding path through a green valley"
-              width={900}
-              height={900}
-              className="w-full rounded-3xl object-cover shadow-2xl"
+          <div className="flex-1 w-full flex justify-center">
+            <CircularTestimonials
+              testimonials={storyPhotos}
+              autoplay
+              showContent={false}
+              imageHeight="26rem"
+              colors={{
+                arrowBackground: "rgb(var(--brand-primary))",
+                arrowForeground: "#ffffff",
+                arrowHoverBackground: "rgb(var(--brand-primary-dark))",
+              }}
             />
           </div>
         </div>
@@ -425,7 +440,7 @@ export default function OurStoryPage() {
               support.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-white/85">
-              What began as our family&apos;s journey has become a shared journey — with thousands of children,
+              What began as our family&apos;s journey has become a shared journey with thousands of children,
               families, and communities across Nepal. And this is only the beginning.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -449,3 +464,6 @@ export default function OurStoryPage() {
     </main>
   )
 }
+
+
+

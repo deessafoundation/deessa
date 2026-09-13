@@ -35,6 +35,20 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Icon and thumbnail sizes
     minimumCacheTTL: 60, // Cache images for at least 60 seconds
   },
+  async redirects() {
+    return [
+      {
+        source: '/programs',
+        destination: '/whatwedo',
+        permanent: true,
+      },
+      {
+        source: '/programs/:path*',
+        destination: '/whatwedo/:path*',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {

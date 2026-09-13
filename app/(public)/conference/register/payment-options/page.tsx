@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -37,7 +37,7 @@ function PaymentOptionsContent() {
     if (countdown === 0) router.push("/conference")
   }, [countdown, router])
 
-  // Safety — if there's no rid just send to register
+  // Safety, if there's no rid just send to register
   if (!rid || !email) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
@@ -69,7 +69,7 @@ function PaymentOptionsContent() {
         setEmailSent(true)
       }
     } catch {
-      // Non-critical — email was already sent on registration
+      // Non-critical, email was already sent on registration
     } finally {
       setSendingEmail(false)
     }
@@ -113,7 +113,7 @@ function PaymentOptionsContent() {
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Amount Due</p>
               <p className="text-sm font-bold text-primary">
-                {amount !== null ? `${currency} ${amount.toLocaleString()}` : "—"}
+                {amount !== null ? `${currency} ${amount.toLocaleString()}` : ";"}
               </p>
             </div>
             <div>
@@ -186,7 +186,7 @@ function PaymentOptionsContent() {
         {/* Fine print */}
         <p className="mt-6 text-center text-xs text-muted-foreground leading-relaxed">
           Your registration ID is <span className="font-mono font-semibold text-foreground">{shortId}</span>.
-          Keep it safe — you&apos;ll need it along with your email to access your payment link.{" "}
+          Keep it safe, you&apos;ll need it along with your email to access your payment link.{" "}
           <Link href="/conference" className="text-primary hover:underline">
             Back to Conference →
           </Link>

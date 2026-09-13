@@ -12,25 +12,21 @@ interface Program {
   image: string
   title: string
   description: string
-  stat: string
   slug: string
 }
 
-interface ProgramsClientProps {
+interface WhatWeDoClientProps {
   programs: Program[]
 }
 
 const categories = [
   { id: "all", label: "All Programs" },
-  { id: "education", label: "Education" },
-  { id: "healthcare", label: "Healthcare" },
-  { id: "empowerment", label: "Empowerment" },
-  { id: "relief", label: "Relief" },
   { id: "autism", label: "Autism Support" },
+  { id: "empowerment", label: "Empowerment" },
   { id: "training", label: "Training" },
 ]
 
-export function ProgramsClient({ programs }: ProgramsClientProps) {
+export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
   const [activeCategory, setActiveCategory] = useState("all")
 
   const filteredPrograms =
@@ -46,7 +42,7 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-5 py-2.5 rounded-full font-['Comic_Neue'] font-bold text-[14px] transition-all duration-300 ${
+            className={`px-5 py-2.5 rounded-full font-comic font-bold text-[14px] transition-all duration-300 ${
               activeCategory === cat.id
                 ? "bg-[#29b6c8] text-white shadow-lg"
                 : "bg-white text-[#1a1a2e] border-[1.5px] border-[#1a1a2e] hover:border-[#29b6c8]"
@@ -86,7 +82,7 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
                   />
                   {/* Category Badge */}
                   <div
-                    className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-['Comic_Neue'] font-bold tracking-wide shadow-lg`}
+                    className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-comic font-bold tracking-wide shadow-lg`}
                   >
                     {program.categoryLabel}
                   </div>
@@ -94,22 +90,17 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-[22px] font-['Marissa'] text-[#1a1a2e] mb-3 leading-tight">
+                  <h3 className="text-[22px] font-marissa text-[#1a1a2e] mb-3 leading-tight">
                     {program.title}
                   </h3>
-                  <p className="text-[15px] font-['DM_Sans'] text-[#1a1a2e]/70 mb-4 leading-relaxed line-clamp-2">
+                  <p className="text-[15px] font-dm-sans text-[#1a1a2e]/70 mb-4 leading-relaxed line-clamp-2">
                     {program.description}
                   </p>
                   
-                  {/* Stat */}
-                  <div className="mb-4 text-[13px] font-['DM_Sans'] font-semibold text-[#29b6c8]">
-                    {program.stat}
-                  </div>
-
                   {/* Learn More Link */}
                   <Link
-                    href={`/programs/${program.slug}`}
-                    className="inline-flex items-center text-[14px] font-['Comic_Neue'] font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-colors"
+                    href={`/whatwedo/${program.slug}`}
+                    className="inline-flex items-center text-[14px] font-comic font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-colors"
                   >
                     Learn More →
                   </Link>
@@ -127,15 +118,15 @@ export function ProgramsClient({ programs }: ProgramsClientProps) {
             className="text-center py-16"
           >
             <div className="text-6xl mb-6">🔍</div>
-            <h3 className="text-[28px] font-['Marissa'] text-[#1a1a2e] mb-3">
+            <h3 className="text-[28px] font-marissa text-[#1a1a2e] mb-3">
               No programs in this category yet.
             </h3>
-            <p className="text-[16px] font-['DM_Sans'] text-[#1a1a2e]/60 mb-6">
+            <p className="text-[16px] font-dm-sans text-[#1a1a2e]/60 mb-6">
               Check back soon or explore all programs.
             </p>
             <button
               onClick={() => setActiveCategory("all")}
-              className="px-6 py-3 rounded-full bg-[#29b6c8] text-white font-['Comic_Neue'] font-bold text-[14px] hover:bg-[#1a8fa0] transition-colors"
+              className="px-6 py-3 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[14px] hover:bg-[#1a8fa0] transition-colors"
             >
               View All Programs
             </button>

@@ -76,7 +76,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
             <div className="max-w-[1400px] mx-auto">
               <Link
-                href="/programs"
+                href="/whatwedo"
                 className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
               >
                 <ArrowLeft className="size-4" />

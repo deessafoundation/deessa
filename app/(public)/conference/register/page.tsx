@@ -1,4 +1,4 @@
-import { ConferenceRegistrationForm } from "@/components/conference/conference-registration-form"
+﻿import { ConferenceRegistrationForm } from "@/components/conference/conference-registration-form"
 import { getActiveFormSchema } from "@/lib/actions/conference-form-schema"
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 }
 
 export default async function ConferenceRegisterPage() {
-  // Fetch the active form schema — falls back gracefully if no schema exists yet
+  // Fetch the active form schema, falls back gracefully if no schema exists yet
   const schema = await getActiveFormSchema()
 
   return <ConferenceRegistrationForm schema={schema} />

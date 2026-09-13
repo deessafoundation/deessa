@@ -33,7 +33,7 @@ Added `robots: { index: false, follow: false }` metadata for defense-in-depth pr
 **High Priority (0.9-1.0):**
 - `/` - Homepage (priority: 1.0, daily updates)
 - `/about` - About page (priority: 0.9, monthly)
-- `/programs` - Programs listing (priority: 0.9, weekly)
+- `/whatwedo` - Programs listing (priority: 0.9, weekly)
 - `/get-involved` - Get Involved page (priority: 0.9, monthly)
 - `/donate` - Donation page (priority: 0.9, monthly)
 
@@ -62,7 +62,7 @@ Added `robots: { index: false, follow: false }` metadata for defense-in-depth pr
 - Last modified date from `updated_at` or `published_at`
 
 **Programs/Projects (priority: 0.7, monthly):**
-- `/programs/[slug]` - Individual program pages
+- `/whatwedo/[slug]` - Individual program pages
 - Only published programs (`is_published = true`)
 - Last modified date from `updated_at` or `created_at`
 

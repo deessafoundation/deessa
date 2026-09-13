@@ -234,7 +234,7 @@ export default async function EventDetailPage({
                     <Calendar className="size-4 text-white/60" />
                     {formatDate(event.event_date)}
                     {event.event_end_date && event.event_end_date !== event.event_date && (
-                      <span className="text-white/60">— {formatShortDate(event.event_end_date)}</span>
+                      <span className="text-white/60">; {formatShortDate(event.event_end_date)}</span>
                     )}
                   </span>
                   {event.event_time && (
@@ -255,7 +255,7 @@ export default async function EventDetailPage({
       </section>
 
       {/* ═══════════════════════════════════════════
-          INFO STRIP — quick facts on a white bar
+          INFO STRIP, quick facts on a white bar
           ═══════════════════════════════════════════ */}
       <section className="relative z-10 -mt-6">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -308,7 +308,7 @@ export default async function EventDetailPage({
       </section>
 
       {/* ═══════════════════════════════════════════
-          MAIN — full-width flowing sections
+          MAIN, full-width flowing sections
           ═══════════════════════════════════════════ */}
       <section className="pt-12 md:pt-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -577,7 +577,7 @@ export default async function EventDetailPage({
       </section>
 
       {/* ═══════════════════════════════════════════
-          GALLERY — full width
+          GALLERY, full width
           ═══════════════════════════════════════════ */}
       <section className="mt-12 md:mt-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -614,7 +614,7 @@ export default async function EventDetailPage({
       </section>
 
       {/* ═══════════════════════════════════════════
-          VENUE — full width
+          VENUE, full width
           ═══════════════════════════════════════════ */}
       <section className="mt-12 md:mt-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">

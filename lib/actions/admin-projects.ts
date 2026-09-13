@@ -107,7 +107,7 @@ export async function createProject(formData: FormData) {
   })
 
   revalidatePath("/admin/projects")
-  revalidatePath("/programs")
+  revalidatePath("/whatwedo")
   redirect(`/admin/projects/${data.id}`)
 }
 
@@ -163,7 +163,7 @@ export async function updateProject(id: string, formData: FormData) {
 
   revalidatePath("/admin/projects")
   revalidatePath(`/admin/projects/${id}`)
-  revalidatePath("/programs")
+  revalidatePath("/whatwedo")
   return { success: true }
 }
 
@@ -192,7 +192,7 @@ export async function deleteProject(id: string) {
   })
 
   revalidatePath("/admin/projects")
-  revalidatePath("/programs")
+  revalidatePath("/whatwedo")
   redirect("/admin/projects")
 }
 
@@ -216,6 +216,6 @@ export async function toggleProjectPublished(id: string, published: boolean) {
   })
 
   revalidatePath("/admin/projects")
-  revalidatePath("/programs")
+  revalidatePath("/whatwedo")
   return { success: true }
 }

@@ -1,25 +1,23 @@
-"use client"
+﻿"use client"
 
 import { useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import {
   ArrowRight,
-  BookOpen,
   Download,
-  FileText,
   Globe,
   GraduationCap,
   Handshake,
   Heart,
   HeartPulse,
   Droplet,
-  Megaphone,
-  Scale,
   Trees,
 } from "lucide-react"
 import { timeline } from "@/data/timeline"
 import { allResources } from "@/components/resource-downloads"
+import type { AboutIntroSettings, AboutHowWeDoItSettings } from "@/lib/types/about-settings"
+import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 
 const TEAL = "#29b6c8"
 const DARK = "#1a1a2e"
@@ -30,60 +28,6 @@ const reveal = {
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
 } as const
-
-const whatWeDo = [
-  {
-    icon: Megaphone,
-    title: "Awareness & Community Engagement",
-    body: "We break the silence. Through community campaigns, social media, podcasts, and public conversations, we challenge myths and replace stigma with understanding.",
-    iconBg: "#e0f2fe",
-    color: "#0284c7",
-  },
-  {
-    icon: GraduationCap,
-    title: "Training",
-    body: "We equip parents, teachers, health workers, and caregivers with the skills to spot autism early and support every child, the right way.",
-    iconBg: "#fce7f3",
-    color: "#db2777",
-  },
-  {
-    icon: BookOpen,
-    title: "Resources",
-    body: "No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.",
-    iconBg: "#fef3c7",
-    color: "#d97706",
-  },
-  {
-    icon: Scale,
-    title: "Advocacy",
-    body: "We push for inclusive schools and stronger policies that protect every child's rights — so inclusion becomes a right, not a privilege.",
-    iconBg: "#dcfce7",
-    color: "#16a34a",
-  },
-]
-
-const howWeDoIt = [
-  {
-    title: "We Listen First",
-    body: "Every family's journey is different. We listen first — to their needs, their challenges, their hopes — before we design any solution.",
-    color: TEAL,
-  },
-  {
-    title: "We Train the People Who Show Up",
-    body: "Children thrive when the people around them know how to help. We train parents, teachers, health workers, and local leaders to build places where every child can succeed.",
-    color: "#d97706",
-  },
-  {
-    title: "We Work Through Partnership",
-    body: "Inclusion takes a village. We bring together families, schools, health workers, and government to build one network of support for every child.",
-    color: "#db2777",
-  },
-  {
-    title: "We Build Change That Lasts",
-    body: "We focus on what outlasts us. By growing local leaders and shaping better policy, we help create change that improves children's lives across Nepal.",
-    color: TEAL,
-  },
-]
 
 interface TeamMember {
   name: string
@@ -109,12 +53,6 @@ const partnerCategories = [
   { icon: Trees, label: "Environment", bg: "bg-emerald-50", iconColor: "text-emerald-500" },
 ]
 
-const reports = [
-  { title: "Annual Report 2023", size: "2.4 MB" },
-  { title: "Financial Statement 2023", size: "1.1 MB" },
-  { title: "Impact Assessment Q4 2023", size: "890 KB" },
-]
-
 function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
@@ -129,7 +67,15 @@ function SectionHeader({ label, title, sub }: { label: string; title: string; su
   )
 }
 
-export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[] }) {
+interface AboutSectionsProps {
+  teamMembers?: TeamMember[]
+  intro?: AboutIntroSettings
+  howWeDoIt?: AboutHowWeDoItSettings
+}
+
+export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSectionsProps) {
+  const introContent = intro || DEFAULT_ABOUT_PAGE_SETTINGS.intro
+  const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
   const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
   const { scrollYProgress } = useScroll({
@@ -139,10 +85,10 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
 
   return (
     <>
-      {/* ─── SECTION 2 — WHO WE ARE ─── */}
+      {/* SECTION 2: WHO WE ARE */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:px-8 lg:grid-cols-[35fr_65fr] lg:gap-16">
-          {/* Left — sticky visual anchor */}
+          {/* Left, sticky visual anchor */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -151,32 +97,32 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
             className="lg:sticky lg:top-28"
           >
             <div className="relative -rotate-2">
-              <img
-                src="/StoriesSectionImage.png"
-                alt="A family and caregivers gathered in warm conversation, supporting a child"
-                className="aspect-[4/5] w-full rounded-2xl object-cover shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
-                style={{ objectPosition: "78% 45%" }}
-              />
-              <span
-                className="font-comic absolute bottom-4 left-4 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md"
-                style={{ backgroundColor: TEAL }}
+              <video
+                autoPlay
+                controls
+                muted
+                playsInline
+                preload="metadata"
+                aria-label="Every child has potential"
+                className="h-auto w-full rounded-2xl shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
               >
-                ✦ Since 2015
-              </span>
+                <source src="/every_child.mp4" type="video/mp4" />
+                Your browser does not support embedded videos.
+              </video>
             </div>
           </motion.div>
 
-          {/* Right — text content, left-aligned */}
+          {/* Right, text content, left-aligned */}
           <div>
             <motion.div {...reveal} transition={{ duration: 0.5 }}>
               <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
-                Who We Are
+                {introContent.label}
               </span>
               <h2
                 className="font-marissa mb-8 text-3xl font-medium leading-[1.25] md:text-[44px]"
                 style={{ color: DARK }}
               >
-                Every child deserves to be understood, accepted, and valued — just as they are.
+                {introContent.headline}
               </h2>
             </motion.div>
 
@@ -185,21 +131,9 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
               transition={{ duration: 0.5, delay: 0.1 }}
               className="font-dm-sans space-y-5 text-[17px] leading-[1.8] text-[#4a4a4a]"
             >
-              <p>
-                deessa Foundation is a non-profit working for and with children with disabilities, with a special focus
-                on autism. Born from one family&apos;s story, we&apos;ve grown into a community of parents, educators,
-                professionals, advocates, and changemakers who share one purpose: to build a society where every child
-                belongs.
-              </p>
-              <p>
-                We believe lasting inclusion begins with understanding. When children are understood, they are
-                accepted. When they are accepted, they are valued. And when they are valued, they are given the chance
-                to learn, grow, and thrive.
-              </p>
-              <p>
-                Our vision is a Nepal where disability is never seen as a limit — where every child is known for their
-                strengths, abilities, and potential. Where being different is never seen as being less.
-              </p>
+              {introContent.paragraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
               <p
                 className="rounded-r-xl py-4 pl-5 pr-6 font-semibold"
                 style={{
@@ -208,13 +142,13 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                   color: DARK,
                 }}
               >
-                At deessa Foundation, we stand for a world where every child is seen, heard, and included.
+                {introContent.quote}
               </p>
             </motion.div>
 
             {/* Understood → Accepted → Valued → Thrive flow */}
             <div className="mt-10 flex flex-wrap items-center gap-2">
-              {["Understood", "Accepted", "Valued", "Thrive"].map((step, i) => (
+              {introContent.flowSteps.map((step, i) => (
                 <div key={step} className="flex items-center gap-2">
                   <motion.span
                     initial={{ opacity: 0, y: 12 }}
@@ -226,7 +160,7 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                   >
                     {step}
                   </motion.span>
-                  {i < 3 && (
+                  {i < introContent.flowSteps.length - 1 && (
                     <motion.span
                       animate={{ x: [0, 5, 0] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -242,17 +176,17 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
         </div>
       </section>
 
-      {/* ─── SECTION 4 — HOW WE DO IT ─── */}
+      {/* SECTION 4: HOW WE DO IT */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
-            title="Change doesn't start with programmes. It starts with people."
-            sub="Every child, every family, and every community has a different journey. Our role is to walk alongside them, with understanding and hope."
+            title={howWeDoItContent.title}
+            sub={howWeDoItContent.subtitle}
           />
 
           <div className="relative">
-            {/* Connecting dashed line — draws left to right */}
+            {/* Connecting dashed line, draws left to right */}
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
@@ -263,9 +197,9 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
               aria-hidden
             />
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
-              {howWeDoIt.map((step, i) => (
+              {howWeDoItContent.steps.map((step, i) => (
                 <motion.div
-                  key={step.title}
+                  key={step.id}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: "-60px" }}
@@ -296,13 +230,12 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
             className="font-marissa mx-auto mt-16 max-w-[700px] text-center text-2xl italic leading-snug"
             style={{ color: DARK }}
           >
-            Because lasting inclusion isn&apos;t built by one organization. It&apos;s built by people, together, one
-            step at a time.
+            {howWeDoItContent.closingLine}
           </motion.p>
         </div>
       </section>
 
-      {/* ─── SECTION 5 — OUR JOURNEY TIMELINE ─── */}
+      {/* SECTION 5: OUR JOURNEY TIMELINE */}
       <section className="bg-white py-20 lg:py-[90px]" id="journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader label="Our Journey" title="Milestones that defined our path." />
@@ -374,7 +307,7 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
         </div>
       </section>
 
-      {/* ─── SECTION 6 — MEET THE CHANGEMAKERS ─── */}
+      {/* SECTION 6: MEET THE CHANGEMAKERS */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
@@ -415,7 +348,7 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                       </div>
                     )}
 
-                    {/* Bottom overlay — name & role + bio + social */}
+                    {/* Bottom overlay, name & role + bio + social */}
                     <div
                       className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"}`}
                       style={{ background: "linear-gradient(to top, rgba(10,15,35,0.92) 0%, rgba(10,15,35,0.7) 70%, transparent 100%)" }}
@@ -475,18 +408,16 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
         </div>
       </section>
 
-      {/* ─── SECTION 7 — PARTNERS & TRANSPARENCY ─── */}
+      {/* SECTION 7: PARTNERS & SUPPORTERS */}
       <section className="bg-white py-20 lg:py-[90px]" id="partners">
-        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4 md:px-8 lg:flex-row lg:gap-16">
-          {/* Partners / focus areas */}
+        <div className="mx-auto max-w-5xl px-4 md:px-8">
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
           >
-            <div className="mb-8">
+            <div className="mx-auto mb-10 max-w-2xl text-center">
               <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
                 Collaboration
               </span>
@@ -497,13 +428,13 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
                 Working across sectors with organizations who share our vision.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
               {partnerCategories.map((partner) => {
                 const Icon = partner.icon
                 return (
                   <div
                     key={partner.label}
-                    className="group flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
+                    className="group flex min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
                   >
                     <div
                       className={`flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
@@ -518,55 +449,10 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
               })}
             </div>
           </motion.div>
-
-          {/* Transparency & Reports */}
-          <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
-            id="reports"
-          >
-            <div className="mb-8">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
-                Transparency
-              </span>
-              <h2 className="font-marissa text-2xl font-medium md:text-3xl" style={{ color: DARK }}>
-                Transparency <span className="font-comic-num">&</span> Reports
-              </h2>
-            </div>
-            <div className="flex flex-col gap-3">
-              {reports.map((report) => (
-                <div
-                  key={report.title}
-                  className="group flex items-center justify-between rounded-xl border border-[#eee] bg-white px-5 py-4 transition-all duration-300 hover:border-[#29b6c8]/40 hover:shadow-md"
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex size-10 items-center justify-center rounded-lg"
-                      style={{ backgroundColor: "rgba(41,182,200,0.1)", color: TEAL }}
-                    >
-                      <FileText className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-comic text-sm font-bold" style={{ color: DARK }}>
-                        {report.title}
-                      </h3>
-                      <p className="font-dm-sans text-xs text-[#6b7280]">PDF • {report.size}</p>
-                    </div>
-                  </div>
-                  <span className="flex size-8 items-center justify-center rounded-full bg-[#f8f6f1] text-[#6b7280] transition-colors group-hover:bg-[#29b6c8] group-hover:text-white">
-                    <Download className="size-4 group-hover:animate-bounce" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* ─── SECTION 8 — OFFICIAL DOCUMENTS & MATERIALS ─── */}
+      {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
         <div className="mx-auto max-w-4xl px-4 md:px-8">
           <SectionHeader
@@ -613,7 +499,7 @@ export function AboutSections({ teamMembers = [] }: { teamMembers?: TeamMember[]
         </div>
       </section>
 
-      {/* ─── SECTION 9 — FINAL CTA ─── */}
+      {/* SECTION 9: FINAL CTA */}
       <section className="relative overflow-hidden pb-20 pt-32" style={{ backgroundColor: DARK }}>
         {/* Brush stroke transition from previous section */}
         <div className="pointer-events-none absolute left-0 top-0 w-full rotate-180" style={{ lineHeight: 0 }} aria-hidden>

@@ -202,7 +202,7 @@ app/(public)/about/page.tsx                  # About page hero
 app/(public)/contact/page.tsx                # Contact page hero
 app/(public)/impact/page.tsx                 # Impact page hero
 app/(public)/press/page.tsx                  # Press page hero & gallery
-app/(public)/programs/page.tsx               # Programs page hero
+app/(public)/whatwedo/page.tsx               # Programs page hero
 app/(public)/stories/page.tsx                # Stories page hero
 app/(public)/events/page.tsx                 # Events page hero
 app/(public)/get-involved/page.tsx           # Get Involved page hero

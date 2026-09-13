@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
@@ -64,7 +64,7 @@ export function AnimatedBrushQuote() {
               }}
               className="font-dm"
             >
-              We wanted to do everything for her — but didn't know where to start.”
+              We wanted to do everything for her , but didn't know where to start.”
             </p>
           </motion.div>
         </BrushStroke>
@@ -72,3 +72,6 @@ export function AnimatedBrushQuote() {
     </div>
   )
 }
+
+
+

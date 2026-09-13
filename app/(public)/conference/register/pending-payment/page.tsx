@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
@@ -265,12 +265,12 @@ function PendingPaymentContent() {
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-foreground-muted">Mode</p>
-                <p className="text-sm font-semibold text-foreground capitalize">{reg.attendanceMode || "—"}</p>
+                <p className="text-sm font-semibold text-foreground capitalize">{reg.attendanceMode || ";"}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-foreground-muted">Amount Due</p>
                 <p className="text-sm font-bold text-primary">
-                  {amount !== null ? `${currency} ${amount.toLocaleString()}` : "—"}
+                  {amount !== null ? `${currency} ${amount.toLocaleString()}` : ";"}
                 </p>
               </div>
             </div>

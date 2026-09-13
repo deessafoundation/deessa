@@ -25,9 +25,24 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // A DNS outage or a paused/deleted Supabase project makes `getUser()` throw
+  // instead of returning an auth error. Let public requests continue, but
+  // never allow an admin route through when we cannot verify its session.
+  let user: Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]
+  try {
+    ;({
+      data: { user },
+    } = await supabase.auth.getUser())
+  } catch {
+    if (!request.nextUrl.pathname.startsWith("/admin") || request.nextUrl.pathname === "/admin/login") {
+      return supabaseResponse
+    }
+
+    const url = request.nextUrl.clone()
+    url.pathname = "/admin/login"
+    url.searchParams.set("error", "authentication_unavailable")
+    return NextResponse.redirect(url)
+  }
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
