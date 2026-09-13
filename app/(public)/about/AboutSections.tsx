@@ -14,7 +14,6 @@ import {
   Droplet,
   Trees,
 } from "lucide-react"
-import { allResources } from "@/components/resource-downloads"
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 
@@ -454,53 +453,6 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
               })}
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
-        <div className="mx-auto max-w-4xl px-4 md:px-8">
-          <SectionHeader
-            label="Resources"
-            title="Official Documents & Materials"
-            sub="Access our organizational documents, brand guidelines, and registration certificates."
-          />
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {allResources.map((resource, i) => {
-              const Icon = resource.icon
-              return (
-                <motion.article
-                  key={resource.title}
-                  {...reveal}
-                  transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="flex flex-col rounded-2xl bg-white p-7 shadow-sm"
-                >
-                  <div className="mb-4 flex items-start gap-4">
-                    <div
-                      className="flex size-11 shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: "rgba(41,182,200,0.1)", color: TEAL }}
-                    >
-                      <Icon className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-comic mb-1 text-base font-bold" style={{ color: DARK }}>
-                        {resource.title}
-                      </h3>
-                      <p className="font-dm-sans text-sm leading-relaxed text-[#6b7280]">{resource.description}</p>
-                    </div>
-                  </div>
-                  <a
-                    href={resource.file}
-                    download
-                    className="font-comic group mt-auto flex w-full items-center justify-center gap-2 rounded-xl border border-[#eee] bg-[#f8f6f1] px-4 py-2.5 text-sm font-bold text-[#4a4a4a] transition-colors hover:border-[#29b6c8] hover:bg-[#29b6c8]/10 hover:text-[#1a8fa0]"
-                  >
-                    <Download className="size-4 transition-colors group-hover:text-[#29b6c8]" />
-                    Download {resource.type?.toUpperCase()}
-                  </a>
-                </motion.article>
-              )
-            })}
-          </div>
         </div>
       </section>
 
