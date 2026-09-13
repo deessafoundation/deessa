@@ -205,8 +205,22 @@ async function getDynamicRoutes(baseUrl: string): Promise<MetadataRoute.Sitemap>
       })
     }
 
-    // Note: Events are listed on /events page but don't have individual pages,
-    // so we don't need to add dynamic event routes
+    // Fetch published events with individual detail pages
+    const { data: events } = await supabase
+      .from('events')
+      .select('slug, updated_at, event_date')
+      .eq('status', 'published')
+
+    if (events) {
+      events.forEach((event) => {
+        routes.push({
+          url: `${baseUrl}/events/${event.slug}`,
+          lastModified: new Date(event.updated_at || event.event_date),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+        })
+      })
+    }
 
     return routes
   } catch (error) {

@@ -30,6 +30,20 @@ import { getEventStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/s
 
 export const revalidate = 300
 
+// Generate static params for published events at build time
+export async function generateStaticParams() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('events')
+    .select('slug')
+    .eq('status', 'published')
+    .limit(50) // Limit for build performance
+  
+  return (data || []).map((event) => ({
+    slug: event.slug,
+  }))
+}
+
 export async function generateMetadata({
   params,
 }: {

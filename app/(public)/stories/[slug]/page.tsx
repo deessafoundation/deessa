@@ -14,12 +14,24 @@ import { StructuredData } from "@/components/seo/structured-data"
 import { getArticleStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
 import "@/app/print-styles.css"
 
-// Story content changes frequently in CMS workflows; keep this route runtime-rendered
-// so new/updated slugs always resolve on Vercel without waiting for rebuilds.
-export const dynamic = "force-dynamic"
+// Use ISR (Incremental Static Regeneration) for better SEO and performance
+// Pages are generated at build time and revalidated periodically
+export const revalidate = 3600 // Revalidate every hour (3600 seconds)
 
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+// Generate static params for all published stories at build time
+// This ensures stories are pre-rendered and included in sitemap
+export async function generateStaticParams() {
+  const stories = await getPublishedStories()
+  
+  // Pre-generate the first 50 stories at build time
+  // Remaining stories will be generated on-demand and cached
+  return stories.slice(0, 50).map((story) => ({
+    slug: story.slug,
+  }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
