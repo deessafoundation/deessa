@@ -46,14 +46,32 @@ async function getAboutSetting<T>(key: string, defaultValue: T): Promise<T> {
 export async function getAboutPageSettings(): Promise<AboutPageSettings> {
   const settings = await getAboutSetting<AboutPageSettings>(ABOUT_PAGE_SETTINGS_KEY, DEFAULT_ABOUT_PAGE_SETTINGS)
   const usesLegacyIntro = LEGACY_INTRO_HEADLINES.has(settings.intro.headline)
+  const journey = settings.journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
+  const milestones = Array.isArray(journey.milestones)
+    ? journey.milestones.map((milestone, index) => ({
+        ...(DEFAULT_ABOUT_PAGE_SETTINGS.journey.milestones[index] || {}),
+        ...milestone,
+        // The original CMS record predates the verified Facebook image set and
+        // used 2023 for this milestone. Keep the displayed year aligned with
+        // the source event until that record is saved from the admin editor.
+        ...(milestone.id === "building-understanding" && !milestone.image
+          ? { year: DEFAULT_ABOUT_PAGE_SETTINGS.journey.milestones[index]?.year || milestone.year }
+          : {}),
+      }))
+    : DEFAULT_ABOUT_PAGE_SETTINGS.journey.milestones
 
   return {
     ...settings,
     intro: {
       ...(usesLegacyIntro
         ? { ...DEFAULT_ABOUT_PAGE_SETTINGS.intro, headline: UPDATED_INTRO_HEADLINE }
-        : settings.intro),
+      : settings.intro),
       sinceBadge: settings.intro.sinceBadge.replace(/\b2015\b/g, "2022"),
+    },
+    journey: {
+      ...DEFAULT_ABOUT_PAGE_SETTINGS.journey,
+      ...journey,
+      milestones,
     },
   }
 }

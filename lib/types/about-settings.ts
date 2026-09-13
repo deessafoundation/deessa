@@ -48,6 +48,9 @@ export interface AboutJourneyMilestone {
   year: string
   title: string
   description: string
+  image?: string
+  imageAlt?: string
+  sourceUrl?: string
 }
 
 export interface AboutJourneySettings {
@@ -138,13 +141,19 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
         title: "deessa Foundation begins",
         description:
           "deessa began with a commitment to help every child be understood, accepted, and valued.",
+        image: "/about/journey/2022-foundation-begins.jpg",
+        imageAlt: "deessa Foundation story graphic about the experiences that led to the foundation",
+        sourceUrl: "https://www.facebook.com/photo.php?fbid=920685784073967&set=pb.100083976611660.-2207520000&type=3",
       },
       {
         id: "building-understanding",
-        year: "2023",
+        year: "2024",
         title: "Building understanding",
         description:
           "We brought autism and neurodiversity into conversations with families, educators, and communities.",
+        image: "/about/journey/2024-building-understanding.jpg",
+        imageAlt: "deessa Foundation speaker sharing an inclusion message at a community event",
+        sourceUrl: "https://www.facebook.com/photo.php?fbid=438651608944056&set=pb.100083976611660.-2207520000&type=3",
       },
       {
         id: "belonging-through-participation",
@@ -152,6 +161,9 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
         title: "Belonging through participation",
         description:
           "Sport and youth-centred activities celebrated confidence, teamwork, and the belief that every child belongs.",
+        image: "/about/journey/2025-belonging-participation.jpg",
+        imageAlt: "Girls celebrating together with a trophy at an inter-school football tournament",
+        sourceUrl: "https://www.facebook.com/photo.php?fbid=831062599702953&set=pb.100083976611660.-2207520000&type=3",
       },
       {
         id: "advocacy-for-inclusion",
@@ -159,6 +171,9 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
         title: "Advocacy for inclusive support",
         description:
           "We called for accessible services, inclusive education, and disability-inclusive support during crises.",
+        image: "/about/journey/2026-inclusive-advocacy.jpg",
+        imageAlt: "Policy graphic outlining targeted programs for autistic and neurodivergent children",
+        sourceUrl: "https://www.facebook.com/photo.php?fbid=952035330939012&set=pb.100083976611660.-2207520000&type=3",
       },
     ],
   },

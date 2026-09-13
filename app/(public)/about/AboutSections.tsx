@@ -289,19 +289,31 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5 }}
-                      className={`ml-12 min-h-[140px] rounded-2xl border border-black/[0.04] bg-[#f8f6f1] px-7 py-6 shadow-sm md:ml-0 ${
+                      className={`ml-12 min-h-[140px] overflow-hidden rounded-2xl border border-black/[0.04] bg-[#f8f6f1] shadow-sm md:ml-0 ${
                         onLeft ? "md:col-start-1 md:mr-6" : "md:col-start-2 md:ml-6"
                       }`}
                     >
-                      <p className="font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
-                        {item.year}
-                      </p>
-                      <h3 className="font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
-                        {item.title}
-                      </h3>
-                      <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
-                        {item.description}
-                      </p>
+                      {item.image && (
+                        <div className="relative aspect-[16/9] overflow-hidden bg-[#eaf5f6]">
+                          <img
+                            src={item.image}
+                            alt={item.imageAlt || item.title}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <div className="px-7 py-6">
+                        <p className="font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
+                          {item.year}
+                        </p>
+                        <h3 className="font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
+                          {item.title}
+                        </h3>
+                        <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
+                          {item.description}
+                        </p>
+                      </div>
                     </motion.article>
                   </div>
                 )

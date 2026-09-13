@@ -515,6 +515,47 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
                             className="mt-1"
                           />
                         </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Image URL</Label>
+                            <Input
+                              value={milestone.image || ""}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], image: e.target.value }
+                                return { ...p, journey: { ...p.journey, milestones } }
+                              })}
+                              placeholder="/about/journey/milestone.jpg"
+                              className="mt-1"
+                            />
+                          </div>
+                          <div>
+                            <Label>Image Alt Text</Label>
+                            <Input
+                              value={milestone.imageAlt || ""}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], imageAlt: e.target.value }
+                                return { ...p, journey: { ...p.journey, milestones } }
+                              })}
+                              placeholder="Describe the image for accessibility"
+                              className="mt-1"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Source URL</Label>
+                          <Input
+                            value={milestone.sourceUrl || ""}
+                            onChange={(e) => update((p) => {
+                              const milestones = [...p.journey.milestones]
+                              milestones[index] = { ...milestones[index], sourceUrl: e.target.value }
+                              return { ...p, journey: { ...p.journey, milestones } }
+                            })}
+                            placeholder="https://www.facebook.com/..."
+                            className="mt-1"
+                          />
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -533,6 +574,9 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
                           year: new Date().getFullYear().toString(),
                           title: "New milestone",
                           description: "Describe this milestone.",
+                          image: "",
+                          imageAlt: "",
+                          sourceUrl: "",
                         },
                       ],
                     },
