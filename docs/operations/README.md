@@ -1,8 +1,17 @@
+﻿---
+title: "Operations Documentation"
+description: "This directory contains operational documentation for the Deessa Foundation platform."
+owner: "Deesha Team"
+status: operational
+category: operations
+audience: developer
+last_updated: 2026-09-12
+---
 # Operations Documentation
 
 This directory contains operational documentation for the Deessa Foundation platform.
 
-## 📚 Documentation Index
+## ðŸ“š Documentation Index
 
 ### Security & Credential Management
 
@@ -60,7 +69,7 @@ Validates all payment credentials are properly configured:
 ./scripts/test-credentials.sh
 ```
 
-## 🔄 Routine Operations
+## ðŸ”„ Routine Operations
 
 ### Quarterly Credential Rotation
 
@@ -105,7 +114,7 @@ Before deploying to production:
    - Verify no mock bypasses in production code
    - Test webhook signature verification
 
-## 🚨 Emergency Procedures
+## ðŸš¨ Emergency Procedures
 
 ### Credential Compromise
 
@@ -147,7 +156,7 @@ If issues occur after credential rotation:
 
 See detailed rollback procedures in [Credential Rotation Guide](./CREDENTIAL_ROTATION_GUIDE.md).
 
-## 📞 Support Contacts
+## ðŸ“ž Support Contacts
 
 ### Provider Support
 
@@ -161,7 +170,7 @@ See detailed rollback procedures in [Credential Rotation Guide](./CREDENTIAL_ROT
 - **Security Team:** [Your security contact]
 - **On-Call Engineer:** [Your on-call contact]
 
-## 📋 Compliance & Audit
+## ðŸ“‹ Compliance & Audit
 
 ### Data Retention
 
@@ -180,7 +189,7 @@ All credential rotations must be documented:
 
 Use [Rotation Checklist](./CREDENTIAL_ROTATION_CHECKLIST.md) to maintain audit trail.
 
-## 🔗 Related Documentation
+## ðŸ”— Related Documentation
 
 ### Payment System
 - [Payment Architecture V2 Design](../payments-v2/DESIGN.md)
@@ -195,7 +204,7 @@ Use [Rotation Checklist](./CREDENTIAL_ROTATION_CHECKLIST.md) to maintain audit t
 - [Getting Started](../../README.md#getting-started)
 - [Contributing Guidelines](../../CONTRIBUTING.md)
 
-## 📝 Changelog
+## ðŸ“ Changelog
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|

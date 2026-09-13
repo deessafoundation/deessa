@@ -1,3 +1,12 @@
+﻿---
+title: "Deesha Foundation API Reference"
+description: "The Deesha Foundation API provides programmatic access to the donation management, event registration, payment proces..."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Deesha Foundation API Reference
 
 ## Overview

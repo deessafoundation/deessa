@@ -1,4 +1,5 @@
-﻿import type { ReactNode } from "react"
+import type { ReactNode } from "react"
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -18,14 +19,24 @@ import {
 import { createClient } from "@/lib/supabase/server"
 import type { EventModuleEvent, EventCategory } from "@/lib/types/events-module"
 import type { LucideIcon } from "lucide-react"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 export const revalidate = 300
 
-export const metadata = {
-  title: "Events | Deessa Foundation",
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Events - Workshops & Community Gatherings",
   description:
-    "Browse upcoming events, workshops, and community gatherings organized by Deessa Foundation. Join us in making a difference.",
-}
+    "Browse upcoming events, workshops, and community gatherings organized by Deesha Foundation. Join us in making a difference in Nepal's communities.",
+  path: "/events",
+  keywords: [
+    "Nepal events",
+    "community events Nepal",
+    "workshops Nepal",
+    "autism events",
+    "NGO events",
+    "volunteer events",
+  ],
+})
 
 async function getPublishedEvents(): Promise<EventModuleEvent[]> {
   const supabase = await createClient()

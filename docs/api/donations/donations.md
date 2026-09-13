@@ -1,3 +1,12 @@
+﻿---
+title: "Donations API"
+description: "The Donations API handles payment verification, status checking, and receipt generation for donations."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: developer
+last_updated: 2026-09-12
+---
 # Donations API
 
 ## Overview

@@ -4,15 +4,26 @@ import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
 import { getPublishedStories, getFeaturedStory } from "@/lib/data/stories"
 import { StoriesSections } from "./StoriesSections"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export const metadata: Metadata = {
-  title: "Stories - deessa Foundation",
-  description: "Read inspiring stories of impact and transformation from our community.",
-}
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Impact Stories - Real Stories of Change in Nepal",
+  description: "Read inspiring stories of impact and transformation from our community. Discover how Deesha Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
+  path: "/stories",
+  keywords: [
+    "Nepal impact stories",
+    "success stories",
+    "community transformation",
+    "education impact",
+    "autism stories Nepal",
+    "social change Nepal",
+    "real impact",
+  ],
+})
 
 function formatStoryDate(story: { published_at?: string | null; created_at?: string | null }) {
   const rawDate = story.published_at || story.created_at

@@ -1,3 +1,12 @@
+﻿---
+title: "API Conventions"
+description: "This document defines the standard patterns used across all Deesha Foundation API endpoints."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # API Conventions
 
 This document defines the standard patterns used across all Deesha Foundation API endpoints.

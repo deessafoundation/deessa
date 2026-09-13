@@ -1,3 +1,12 @@
+﻿---
+title: "Health API"
+description: "The Health API provides system health status including database connectivity, payment configuration, and provider ava..."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Health API
 
 ## Overview

@@ -1,3 +1,12 @@
+﻿---
+title: "GitHub Actions Roadmap"
+description: " Purpose: document the current workflows, the gaps we want to close, and the rollout plan before we make the workflow..."
+owner: "Deesha Team"
+status: operational
+category: operations
+audience: operator
+last_updated: 2026-09-12
+---
 # GitHub Actions Roadmap
 
 > Purpose: document the current workflows, the gaps we want to close, and the rollout plan before we make the workflows stricter or add new actions.

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { SecretKeyListener } from "@/components/secret-key-listener"
 import { HeroCarousel } from "@/components/hero-carousel"
 import type { HeroSlide } from "@/components/hero-carousel"
@@ -19,6 +20,27 @@ import {
   getHomepageTestimonials,
   getHomepageTimeline,
 } from "@/lib/data/homepage-settings"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+
+/* ──────────────────  METADATA  ────────────────── */
+
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Deesha Foundation - Empowering Nepal Through Education & Social Development",
+  description: "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for vulnerable communities in Nepal. Focused on autism support and disability rights.",
+  path: "/",
+  keywords: [
+    "Nepal NGO",
+    "autism support Nepal",
+    "education Nepal",
+    "disability rights",
+    "child development",
+    "sustainable development Nepal",
+    "social welfare",
+    "special education",
+    "inclusive education",
+    "community empowerment Nepal",
+  ],
+})
 
 /* ──────────────────  PAGE  ────────────────── */
 

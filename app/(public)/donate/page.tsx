@@ -7,12 +7,23 @@ import { DonationForm } from "@/components/donation/donation-form"
 import { BankTransferPanel } from "@/components/donation/bank-transfer-panel"
 import { getPaymentSettings, getSupportedProviders } from "@/lib/payments/config"
 import { getConfiguredBankAccounts } from "@/lib/payments/bank-details"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
-export const metadata: Metadata = {
-  title: "Donate - deessa Foundation",
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Donate - Support Our Mission in Nepal",
   description:
-    "Support our mission to empower communities in Nepal through education, healthcare, and sustainable development.",
-}
+    "Support our mission to empower communities in Nepal through education, healthcare, and sustainable development. Every donation makes a real difference in children's lives.",
+  path: "/donate",
+  keywords: [
+    "donate to Nepal",
+    "support Nepal NGO",
+    "charity donation",
+    "help Nepal children",
+    "education donation",
+    "autism support donation",
+    "make a difference Nepal",
+  ],
+})
 
 const donationTiers = [
   {

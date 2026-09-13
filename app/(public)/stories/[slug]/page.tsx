@@ -10,6 +10,8 @@ import { PrintButton } from "@/components/ui/print-button"
 import { getPublishedStories, getStoryBySlug } from "@/lib/data/stories"
 import { sanitizeStoryContent } from "@/lib/sanitize/story-content"
 import { processStoryContent } from "@/lib/utils/legacy-story"
+import { StructuredData } from "@/components/seo/structured-data"
+import { getArticleStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
 import "@/app/print-styles.css"
 
 // Story content changes frequently in CMS workflows; keep this route runtime-rendered
@@ -28,9 +30,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Story Not Found - deessa Foundation" }
   }
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
+  const storyUrl = `${SITE_URL}/stories/${slug}`
+  const imageUrl = story.image || `${SITE_URL}/og-image.png`
+
   return {
-    title: `${story.title} - deessa Foundation`,
-    description: story.excerpt,
+    title: `${story.title}`,
+    description: story.excerpt || story.title,
+    keywords: story.category ? [story.category, 'impact story', 'Nepal', 'social development'] : undefined,
+    openGraph: {
+      type: 'article',
+      url: storyUrl,
+      title: story.title,
+      description: story.excerpt || story.title,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: story.title,
+        },
+      ],
+      publishedTime: story.published_at || story.created_at,
+      modifiedTime: story.updated_at,
+      authors: ['Deesha Foundation'],
+      section: story.category || 'Stories',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: story.title,
+      description: story.excerpt || story.title,
+      images: [imageUrl],
+    },
+    alternates: {
+      canonical: storyUrl,
+    },
   }
 }
 
@@ -41,6 +75,8 @@ export default async function StoryDetailPage({ params }: PageProps) {
   if (!story) {
     notFound()
   }
+
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
 
   // Smart related stories: prioritize same category, then any other stories
   const otherStories = allStories.filter((item) => item.slug !== story.slug)
@@ -70,8 +106,27 @@ export default async function StoryDetailPage({ params }: PageProps) {
         day: "numeric",
       })
 
+  // Generate structured data for SEO
+  const articleStructuredData = getArticleStructuredData({
+    title: story.title,
+    description: story.excerpt || story.title,
+    slug: story.slug,
+    image: story.image,
+    publishedAt: story.published_at || story.created_at,
+    updatedAt: story.updated_at,
+    category: story.category,
+  })
+
+  const breadcrumbStructuredData = getBreadcrumbStructuredData([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Stories', url: `${SITE_URL}/stories` },
+    { name: story.title, url: `${SITE_URL}/stories/${story.slug}` },
+  ])
+
   return (
     <>
+      <StructuredData data={[articleStructuredData, breadcrumbStructuredData]} />
+      
       {/* Print-only header */}
       <div className="print-header hidden">
         <div className="logo">DEESSA Foundation</div>

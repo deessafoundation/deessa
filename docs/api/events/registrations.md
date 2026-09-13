@@ -1,3 +1,12 @@
+﻿---
+title: "Events - Registrations API"
+description: "The Events Registrations API handles event registration, payment initiation, and status checking."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Events - Registrations API
 
 ## Overview

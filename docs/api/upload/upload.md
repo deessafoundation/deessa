@@ -1,3 +1,12 @@
+﻿---
+title: "Upload API"
+description: "The Upload API handles file uploads to Supabase Storage for testimonials, support screenshots, and media assets."
+owner: "Deesha Team"
+status: reference
+category: reference
+audience: admin
+last_updated: 2026-09-12
+---
 # Upload API
 
 ## Overview
