@@ -111,6 +111,8 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
     >
       {/* Slides */}
       {slides.map((slide, i) => (
+        // Keep the young speaker's face in the desktop crop. Mobile retains its existing centered crop.
+        // eslint-disable-next-line react/jsx-no-comment-textnodes
         <div
           key={i}
           role="group"
@@ -130,6 +132,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
               fill
               className={cn(
                 "object-cover",
+                slide.image === "/home/hero/real-voices-young-speaker.jpg" && "md:object-[50%_23%]",
                 !prefersReducedMotion && i === current && "animate-kenburns"
               )}
               priority={i === 0}
