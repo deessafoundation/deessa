@@ -77,6 +77,7 @@ export const CircularTestimonials = ({
   const [containerWidth, setContainerWidth] = useState(1200)
   const [isReady, setIsReady] = useState(false)
   const imageContainerRef = useRef<HTMLDivElement>(null)
+  const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
   const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const resumeAutoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -142,6 +143,16 @@ export const CircularTestimonials = ({
       if (resumeAutoplayTimeoutRef.current) clearTimeout(resumeAutoplayTimeoutRef.current)
     }
   }, [startAutoplay])
+
+  // Keep testimonial videos mutually exclusive. This also stops a video when
+  // carousel autoplay moves to the next speaker.
+  useEffect(() => {
+    Object.entries(videoRefs.current).forEach(([index, video]) => {
+      if (video && Number(index) !== activeIndex && !video.paused) {
+        video.pause()
+      }
+    })
+  }, [activeIndex])
 
   // Keyboard navigation
   useEffect(() => {
@@ -244,6 +255,9 @@ export const CircularTestimonials = ({
                   aria-label={`${testimonial.name}'s video message`}
                   className="testimonial-media"
                   data-index={index}
+                  ref={(video) => {
+                    videoRefs.current[index] = video
+                  }}
                   controls={isActive}
                   playsInline
                   preload="metadata"
@@ -254,6 +268,14 @@ export const CircularTestimonials = ({
                   onClick={() => {
                     if (isLeft) handlePrev()
                     if (isRight) handleNext()
+                  }}
+                  onPlay={() => {
+                    setActiveIndex(index)
+                    Object.entries(videoRefs.current).forEach(([otherIndex, otherVideo]) => {
+                      if (otherVideo && Number(otherIndex) !== index && !otherVideo.paused) {
+                        otherVideo.pause()
+                      }
+                    })
                   }}
                 />
               ) : (
