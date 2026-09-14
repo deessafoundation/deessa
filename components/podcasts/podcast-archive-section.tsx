@@ -15,7 +15,6 @@ interface PodcastArchiveSectionProps {
 }
 
 export default function PodcastArchiveSection({ episodes, totalCount }: PodcastArchiveSectionProps) {
-  const [selectedFormat, setSelectedFormat] = useState<'all' | 'video' | 'audio'>('all');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [displayCount, setDisplayCount] = useState(12);
 
@@ -26,12 +25,6 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
 
   // Filter episodes
   const filteredEpisodes = episodes.filter((episode) => {
-    // Format filter
-    if (selectedFormat !== 'all') {
-      if (selectedFormat === 'video' && episode.format !== 'video') return false;
-      if (selectedFormat === 'audio' && episode.format !== 'audio') return false;
-    }
-
     // Topics filter
     if (selectedTopics.length > 0) {
       if (!episode.topics.some((topic) => selectedTopics.includes(topic))) {
@@ -74,28 +67,6 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
               <h3 className="text-sm font-bold text-text-main uppercase tracking-wider mb-4">
                 Filter Library
               </h3>
-
-            {/* Format Filter */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-text-main mb-3">FORMAT</h4>
-              <div className="space-y-2">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <Checkbox
-                    checked={selectedFormat === 'video'}
-                    onCheckedChange={() => setSelectedFormat(selectedFormat === 'video' ? 'all' : 'video')}
-                  />
-                  <span className="text-sm text-text-muted">Video</span>
-                </label>
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <Checkbox
-                    checked={selectedFormat === 'audio'}
-                    onCheckedChange={() => setSelectedFormat(selectedFormat === 'audio' ? 'all' : 'audio')}
-                  />
-                  <span className="text-sm text-text-muted">Audio</span>
-                </label>
-              </div>
-            </div>
-
             {/* Topics Filter */}
             <div>
               <h4 className="text-sm font-semibold text-text-main mb-3">TOPICS</h4>

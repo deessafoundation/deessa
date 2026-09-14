@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
 import PodcastMainHero from '@/components/podcasts/podcast-main-hero';
+import PodcastSeriesIntro from '@/components/podcasts/podcast-series-intro';
 import PodcastLatestEpisode from '@/components/podcasts/podcast-latest-episode';
 import PodcastArchiveSection from '@/components/podcasts/podcast-archive-section';
 import AllHighlightsSection from '@/components/podcasts/all-highlights-section';
-import { getPublishedPodcasts, getLatestPodcasts, getFeaturedPodcast, getFeaturedPodcasts, getAllPodcastHighlights } from '@/lib/data/podcasts';
+import { getPublishedPodcasts, getFeaturedPodcasts, getAllPodcastHighlights } from '@/lib/data/podcasts';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { generateSEOMetadata } from '@/lib/seo/metadata-utils';
@@ -34,17 +34,8 @@ export default async function PodcastsPage() {
     getAllPodcastHighlights(10), // Limit to 10 latest highlights for main page
   ]);
 
-  // Use featured podcasts or first episode for hero
-  const heroEpisodes = featuredPodcasts.length > 0 ? featuredPodcasts : (allPodcasts[0] ? [allPodcasts[0]] : []);
-  
-  // Latest episode for the large featured card
-  // If there are featured podcasts, show the most recent non-featured one
-  // If no featured and we have at least 2 podcasts, show the second one
-  // If only 1 podcast, don't show latest episode section
-  const featuredIds = heroEpisodes.map(ep => ep.id);
-  const latestEpisode = featuredPodcasts.length > 0
-    ? allPodcasts.find(ep => !featuredIds.includes(ep.id))
-    : (allPodcasts.length >= 2 ? allPodcasts[1] : null);
+  const latestEpisode = allPodcasts[0];
+  const heroEpisodes = [latestEpisode, ...featuredPodcasts].filter((episode, index, list) => episode && list.findIndex(item => item?.id === episode.id) === index).slice(0, 5);
 
   // Archive includes all podcasts
   const archiveEpisodes = allPodcasts;
@@ -56,7 +47,7 @@ export default async function PodcastsPage() {
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center py-20">
             <h1 className="text-4xl font-heading font-bold text-text-main mb-4">
-              DEESSA Voices: Stories of Resilience
+              Living with Autism: Real Voices. Real Stories.
             </h1>
             <p className="text-lg text-text-muted mb-8">
               Our podcast series is coming soon! Check back later for inspiring stories and conversations.
@@ -72,8 +63,10 @@ export default async function PodcastsPage() {
 
   return (
     <div className="min-h-screen bg-bg-main">
-      <main className="container mx-auto px-4 py-8 space-y-12">
-        {/* Hero Section */}
+      <main className="container max-w-7xl mx-auto px-4 py-8 space-y-12">
+        <PodcastSeriesIntro />
+
+        {/* Featured episodes */}
         {heroEpisodes.length > 0 && <PodcastMainHero episodes={heroEpisodes} />}
 
         {/* All Highlights Section - Show highlights from all episodes */}

@@ -27,7 +27,6 @@ export function PodcastCard({
   const [imageLoaded, setImageLoaded] = useState(false)
 
   const isPrimary = variant === "primary"
-  const formatIcon = podcast.format === 'video' ? Video : Music
 
   const openYouTube = (event: React.MouseEvent | React.KeyboardEvent) => {
     event.preventDefault()
