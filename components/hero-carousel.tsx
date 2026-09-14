@@ -22,8 +22,8 @@ interface HeroCarouselProps {
 }
 
 const NEWS_TICKER_ITEMS = [
-  "New sustainability initiative launched",
-  "Grant awarded for community project",
+  "Inclusion Begins at Home: real voices, real stories",
+  "Girls' leadership and participation through sport",
 ]
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
@@ -152,7 +152,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                   )}
                 >
                   <span className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm">
-                    Supporting Children with Autism in Nepal
+                    A society where everyone is understood, celebrated, and empowered
                   </span>
                 </div>
 
