@@ -440,10 +440,20 @@ export async function getHomepageHeroCarousel(): Promise<HomepageHeroCarouselSet
  * Get homepage testimonials
  */
 export async function getHomepageTestimonials(): Promise<HomepageTestimonialsSettings> {
-  return getHomepageSetting<HomepageTestimonialsSettings>(
+  const settings = await getHomepageSetting<HomepageTestimonialsSettings>(
     HOMEPAGE_SETTINGS_KEYS.TESTIMONIALS,
     DEFAULT_TESTIMONIALS
   )
+
+  // Replace only the original three placeholder testimonials. This makes the
+  // new Global Voices section available in production without overwriting
+  // administrators' real CMS entries.
+  const legacyNames = new Set(['Sita Sharma', 'Ram Bahadur Thapa', 'Maya Gurung'])
+  const isLegacyPlaceholder =
+    settings.testimonials.length === legacyNames.size &&
+    settings.testimonials.every((testimonial) => legacyNames.has(testimonial.name))
+
+  return isLegacyPlaceholder ? DEFAULT_TESTIMONIALS : settings
 }
 
 // ============================================================================

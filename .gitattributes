@@ -3,3 +3,7 @@ public/Deesa-Intro*.mp4 -filter
 # Public website videos must be regular Git files so Vercel can serve them
 # directly during a deployment rather than receiving an LFS pointer file.
 public/every_child.mp4 -filter -diff -merge -text
+"public/Soyun Kim.mp4" -filter -diff -merge -text
+"public/Marcus Brand.mp4" -filter -diff -merge -text
+"public/Blair Chen.mp4" -filter -diff -merge -text
+"public/Chris Liu.mp4" -filter -diff -merge -text

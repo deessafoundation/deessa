@@ -9,6 +9,9 @@ interface Testimonial {
   name: string
   designation: string
   src: string
+  video?: string
+  topic?: string
+  caption?: string
 }
 
 interface Colors {
@@ -233,24 +236,46 @@ export const CircularTestimonials = ({
             const isRight = (activeIndex + 1) % testimonialsLength === index
             
             return (
-              <img
-                key={index}
-                src={testimonial.src}
-                alt={testimonial.name}
-                className="testimonial-image"
-                data-index={index}
-                style={{
-                  ...getImageStyle(index),
-                  cursor: (isLeft || isRight) ? 'pointer' : 'default',
-                }}
-                loading="eager"
-                width={400}
-                height={400}
-                onClick={() => {
-                  if (isLeft) handlePrev()
-                  if (isRight) handleNext()
-                }}
-              />
+              testimonial.video ? (
+                <video
+                  key={index}
+                  src={testimonial.video}
+                  poster={testimonial.src || undefined}
+                  aria-label={`${testimonial.name}'s video message`}
+                  className="testimonial-media"
+                  data-index={index}
+                  controls={isActive}
+                  playsInline
+                  preload="metadata"
+                  style={{
+                    ...getImageStyle(index),
+                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
+                  }}
+                  onClick={() => {
+                    if (isLeft) handlePrev()
+                    if (isRight) handleNext()
+                  }}
+                />
+              ) : (
+                <img
+                  key={index}
+                  src={testimonial.src}
+                  alt={testimonial.name}
+                  className="testimonial-media"
+                  data-index={index}
+                  style={{
+                    ...getImageStyle(index),
+                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
+                  }}
+                  loading="eager"
+                  width={400}
+                  height={400}
+                  onClick={() => {
+                    if (isLeft) handlePrev()
+                    if (isRight) handleNext()
+                  }}
+                />
+              )
             )
           })}
           
@@ -295,6 +320,11 @@ export const CircularTestimonials = ({
               exit="exit"
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
+              {activeTestimonial.topic && (
+                <p className="topic" style={{ color: colorDesignation }}>
+                  {activeTestimonial.topic}
+                </p>
+              )}
               <h3
                 className="name"
                 style={{ color: colorName, fontSize: fontSizeName }}
@@ -311,7 +341,7 @@ export const CircularTestimonials = ({
                 className="quote"
                 style={{ color: colorTestimony, fontSize: fontSizeQuote }}
               >
-                {activeTestimonial.quote.split(" ").map((word, i) => (
+                {(activeTestimonial.caption || activeTestimonial.quote).split(" ").map((word, i) => (
                   <motion.span
                     key={i}
                     initial={{
@@ -415,7 +445,7 @@ export const CircularTestimonials = ({
         .image-arrow-button:active {
           transform: scale(0.95);
         }
-        .testimonial-image {
+        .testimonial-media {
           position: absolute;
           width: 100%;
           height: 100%;
@@ -424,6 +454,15 @@ export const CircularTestimonials = ({
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           will-change: transform, opacity;
           backface-visibility: hidden;
+          object-fit: cover;
+          background: #0f172a;
+        }
+        .topic {
+          margin: 0 0 0.5rem;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
         .testimonial-content {
           display: flex;

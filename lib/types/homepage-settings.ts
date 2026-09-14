@@ -82,6 +82,12 @@ export interface HomepageTestimonial {
   role: string
   location: string
   image: string
+  /** Direct MP4 or hosted video URL for a speaker message. */
+  video?: string
+  /** Short theme shown above the speaker's name. */
+  topic?: string
+  /** The speaker's key message or video caption. */
+  caption?: string
   quote: string
   rating: number
   order: number
@@ -557,38 +563,62 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
 export const DEFAULT_TESTIMONIALS: HomepageTestimonialsSettings = {
   testimonials: [
     {
-      id: 'testimonial-1',
-      name: 'Sita Sharma',
-      role: 'Parent',
-      location: 'Kathmandu',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
-      quote: 'deessa Foundation changed my daughter\'s life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.',
+      id: 'global-voice-soyun-kim',
+      name: 'Soyun Kim',
+      role: 'Korea Nazarene University',
+      location: 'South Korea',
+      image: '',
+      video: '/Soyun%20Kim.mp4',
+      topic: 'Autism Awareness',
+      caption: 'Understanding autism begins with listening, learning, and accepting every child as they are.',
+      quote: 'Understanding autism begins with listening, learning, and accepting every child as they are.',
       rating: 5,
       order: 1,
       visible: true,
       featured: true,
     },
     {
-      id: 'testimonial-2',
-      name: 'Ram Bahadur Thapa',
-      role: 'Village Elder',
-      location: 'Gorkha',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-      quote: 'The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.',
+      id: 'global-voice-chris-liu',
+      name: 'Chris Liu',
+      role: 'Education Advocate',
+      location: 'International Voice',
+      image: '',
+      video: '/Chris%20Liu.mp4',
+      topic: 'Education for Every Learner',
+      caption: 'Inclusive education creates classrooms where every child can learn, participate, and thrive.',
+      quote: 'Inclusive education creates classrooms where every child can learn, participate, and thrive.',
       rating: 5,
       order: 2,
       visible: true,
       featured: true,
     },
     {
-      id: 'testimonial-3',
-      name: 'Maya Gurung',
-      role: 'Volunteer',
-      location: 'Pokhara',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80',
-      quote: 'Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children\'s faces when they receive books and supplies is priceless.',
+      id: 'global-voice-blair-chen',
+      name: 'Blair Chen',
+      role: 'Westminster Foundation for Democracy',
+      location: 'Taiwan',
+      image: '',
+      video: '/Blair%20Chen.mp4',
+      topic: 'Equal Opportunities',
+      caption: 'Equal opportunity begins when communities remove barriers and make participation possible for everyone.',
+      quote: 'Equal opportunity begins when communities remove barriers and make participation possible for everyone.',
       rating: 5,
       order: 3,
+      visible: true,
+      featured: true,
+    },
+    {
+      id: 'global-voice-marcus-brand',
+      name: 'Marcus Brand',
+      role: 'Fiji Truth and Reconciliation Commission',
+      location: 'Fiji',
+      image: '',
+      video: '/Marcus%20Brand.mp4',
+      topic: 'Inclusion Starts with Acceptance',
+      caption: 'Lasting inclusion begins with acceptance; every person deserves to belong, be heard, and be valued.',
+      quote: 'Lasting inclusion begins with acceptance; every person deserves to belong, be heard, and be valued.',
+      rating: 5,
+      order: 4,
       visible: true,
       featured: true,
     },

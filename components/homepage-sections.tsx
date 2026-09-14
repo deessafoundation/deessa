@@ -17,7 +17,7 @@ import {
 } from "@/components/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings, HomepageStorySettings, HomepageWhatWeDoSettings } from "@/lib/types/homepage-settings"
-import { DEFAULT_HOMEPAGE_STORY, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
+import { DEFAULT_HOMEPAGE_STORY, DEFAULT_TESTIMONIALS, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
 
@@ -596,45 +596,20 @@ interface TestimonialsSectionProps {
 }
 
 export function TestimonialsSection({ testimonials: testimonialsSettings }: TestimonialsSectionProps) {
-  // Default testimonials if not provided from CMS
-  const defaultTestimonials = [
-    {
-      name: "Sita Sharma",
-      role: "Parent",
-      location: "Kathmandu",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-      quote: "deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
-      rating: 5,
-    },
-    {
-      name: "Ram Bahadur Thapa",
-      role: "Village Elder",
-      location: "Gorkha",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      quote: "The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
-      rating: 5,
-    },
-    {
-      name: "Maya Gurung",
-      role: "Volunteer",
-      location: "Pokhara",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-      quote: "Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
-      rating: 5,
-    },
-  ]
-
   // Use CMS testimonials if provided, otherwise use defaults
   const testimonials = testimonialsSettings?.testimonials
     ?.filter(t => t.visible)
-    .sort((a, b) => a.order - b.order) || defaultTestimonials
+    .sort((a, b) => a.order - b.order) || DEFAULT_TESTIMONIALS.testimonials
 
   // Transform testimonials to match CircularTestimonials format
   const circularTestimonials = testimonials.map(t => ({
     name: t.name,
     designation: `${t.role}, ${t.location}`,
     quote: t.quote,
-    src: t.image || "/image_coming_soon.png",
+    src: t.image || "",
+    video: t.video,
+    topic: t.topic,
+    caption: t.caption,
   }))
 
   return (
@@ -642,12 +617,12 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-12">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Testimonials</span>
+            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Global Voices</span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">
-              Voices of Impact
+              Inclusion Begins with Acceptance
             </h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Hear from the people whose lives have been touched by our work
+              Four international voices on autism, education, equal opportunity, and the power of belonging.
             </p>
           </div>
         </ScrollReveal>
@@ -655,7 +630,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
         <div className="flex justify-center">
           <CircularTestimonials
             testimonials={circularTestimonials}
-            autoplay={true}
+            autoplay={false}
             colors={{
               name: "hsl(var(--foreground))",
               designation: "hsl(var(--muted-foreground))",
