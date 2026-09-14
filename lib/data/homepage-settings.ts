@@ -445,13 +445,16 @@ export async function getHomepageTestimonials(): Promise<HomepageTestimonialsSet
     DEFAULT_TESTIMONIALS
   )
 
-  // Replace only the original three placeholder testimonials. This makes the
-  // new Global Voices section available in production without overwriting
-  // administrators' real CMS entries.
+  // Replace only the original placeholder testimonials (including the User 1,
+  // User 2 style records). This makes the new Global Voices section available
+  // in production without overwriting administrators' real CMS entries.
   const legacyNames = new Set(['Sita Sharma', 'Ram Bahadur Thapa', 'Maya Gurung'])
+  const isPlaceholderName = (name: string) =>
+    legacyNames.has(name.trim()) || /^User\s+\d+$/i.test(name.trim())
   const isLegacyPlaceholder =
-    settings.testimonials.length === legacyNames.size &&
-    settings.testimonials.every((testimonial) => legacyNames.has(testimonial.name))
+    settings.testimonials.length > 0 &&
+    settings.testimonials.length <= DEFAULT_TESTIMONIALS.testimonials.length &&
+    settings.testimonials.every((testimonial) => isPlaceholderName(testimonial.name))
 
   return isLegacyPlaceholder ? DEFAULT_TESTIMONIALS : settings
 }
