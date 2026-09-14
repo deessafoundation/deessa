@@ -38,6 +38,8 @@ interface CircularTestimonialsProps {
   showContent?: boolean
   /** Height of the image stack. Defaults to "24rem". */
   imageHeight?: string
+  /** Automatically start the active video. Audible autoplay may be blocked by the browser. */
+  videoAutoplay?: boolean
 }
 
 function calculateGap(width: number) {
@@ -58,6 +60,7 @@ export const CircularTestimonials = ({
   fontSizes = {},
   showContent = true,
   imageHeight = "24rem",
+  videoAutoplay = true,
 }: CircularTestimonialsProps) => {
   // Color & font config
   const colorName = colors.name ?? "#000"
@@ -153,6 +156,22 @@ export const CircularTestimonials = ({
       }
     })
   }, [activeIndex])
+
+  // Start the active speaker video. Browsers may reject autoplay with sound;
+  // in that case, fall back to muted playback so the video still starts.
+  useEffect(() => {
+    if (!videoAutoplay) return
+
+    const activeVideo = videoRefs.current[activeIndex]
+    if (!activeVideo) return
+
+    activeVideo.muted = false
+    const playPromise = activeVideo.play()
+    playPromise?.catch(() => {
+      activeVideo.muted = true
+      activeVideo.play().catch(() => undefined)
+    })
+  }, [activeIndex, videoAutoplay])
 
   // Keyboard navigation
   useEffect(() => {
@@ -259,6 +278,8 @@ export const CircularTestimonials = ({
                     videoRefs.current[index] = video
                   }}
                   controls={isActive}
+                  autoPlay={videoAutoplay && isActive}
+                  muted={false}
                   playsInline
                   preload="metadata"
                   style={{

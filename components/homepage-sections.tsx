@@ -630,7 +630,8 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
         <div className="flex justify-center">
           <CircularTestimonials
             testimonials={circularTestimonials}
-            autoplay={true}
+            autoplay={false}
+            videoAutoplay={true}
             colors={{
               name: "hsl(var(--foreground))",
               designation: "hsl(var(--muted-foreground))",
