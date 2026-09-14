@@ -38,7 +38,7 @@ interface CircularTestimonialsProps {
   showContent?: boolean
   /** Height of the image stack. Defaults to "24rem". */
   imageHeight?: string
-  /** Automatically start the active video. Audible autoplay may be blocked by the browser. */
+  /** Automatically start the active video once the section enters the viewport. */
   videoAutoplay?: boolean
 }
 
@@ -79,6 +79,8 @@ export const CircularTestimonials = ({
   const [hoverNext, setHoverNext] = useState(false)
   const [containerWidth, setContainerWidth] = useState(1200)
   const [isReady, setIsReady] = useState(false)
+  const [isInViewport, setIsInViewport] = useState(false)
+  const testimonialContainerRef = useRef<HTMLDivElement>(null)
   const imageContainerRef = useRef<HTMLDivElement>(null)
   const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
   const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -97,10 +99,29 @@ export const CircularTestimonials = ({
         setContainerWidth(imageContainerRef.current.offsetWidth)
       }
     }
-    handleResize()
-    setIsReady(true)
+    const animationFrame = window.requestAnimationFrame(() => {
+      handleResize()
+      setIsReady(true)
+    })
     window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  // Wait to start the active video until this section is actually visible.
+  useEffect(() => {
+    const container = testimonialContainerRef.current
+    if (!container) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInViewport(entry.isIntersecting),
+      { threshold: 0.45 }
+    )
+
+    observer.observe(container)
+    return () => observer.disconnect()
   }, [])
 
   // Autoplay
@@ -157,9 +178,14 @@ export const CircularTestimonials = ({
     })
   }, [activeIndex])
 
-  // Start the active speaker video. Browsers may reject autoplay with sound;
-  // in that case, fall back to muted playback so the video still starts.
+  // Start the active speaker video only when this section is in view. Audio is
+  // explicitly enabled, and every other video remains paused.
   useEffect(() => {
+    if (!isInViewport) {
+      Object.values(videoRefs.current).forEach((video) => video?.pause())
+      return
+    }
+
     if (!videoAutoplay) return
 
     const activeVideo = videoRefs.current[activeIndex]
@@ -167,22 +193,8 @@ export const CircularTestimonials = ({
 
     activeVideo.muted = false
     const playPromise = activeVideo.play()
-    playPromise?.catch(() => {
-      activeVideo.muted = true
-      activeVideo.play().catch(() => undefined)
-    })
-  }, [activeIndex, videoAutoplay])
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") handlePrev()
-      if (e.key === "ArrowRight") handleNext()
-    }
-    window.addEventListener("keydown", handleKey)
-    return () => window.removeEventListener("keydown", handleKey)
-    // eslint-disable-next-line
-  }, [activeIndex, testimonialsLength])
+    playPromise?.catch(() => undefined)
+  }, [activeIndex, isInViewport, videoAutoplay])
 
   // Navigation handlers
   const handleNext = useCallback(() => {
@@ -194,6 +206,16 @@ export const CircularTestimonials = ({
     setActiveIndex((prev) => (prev - 1 + testimonialsLength) % testimonialsLength)
     pauseAutoplayTemporarily()
   }, [testimonialsLength, pauseAutoplayTemporarily])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") handlePrev()
+      if (e.key === "ArrowRight") handleNext()
+    }
+    window.addEventListener("keydown", handleKey)
+    return () => window.removeEventListener("keydown", handleKey)
+  }, [handleNext, handlePrev])
 
   // Compute transforms for each image (always show 3: left, center, right)
   function getImageStyle(index: number): React.CSSProperties {
@@ -256,7 +278,7 @@ export const CircularTestimonials = ({
   }
 
   return (
-    <div className="testimonial-container">
+    <div className="testimonial-container" ref={testimonialContainerRef}>
       <div className={"testimonial-grid" + (showContent ? "" : " photo-only")}>
         {/* Images */}
         <div className="image-container" ref={imageContainerRef} style={{ height: imageHeight }}>
@@ -278,8 +300,6 @@ export const CircularTestimonials = ({
                     videoRefs.current[index] = video
                   }}
                   controls={isActive}
-                  autoPlay={videoAutoplay && isActive}
-                  muted={false}
                   playsInline
                   preload="metadata"
                   style={{
@@ -497,8 +517,18 @@ export const CircularTestimonials = ({
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           will-change: transform, opacity;
           backface-visibility: hidden;
-          object-fit: cover;
           background: #0f172a;
+        }
+        @media (min-width: 768px) {
+          video.testimonial-media:fullscreen,
+          video.testimonial-media:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            border-radius: 0;
+            box-shadow: none;
+            background: #000;
+          }
         }
         .topic {
           margin: 0 0 0.5rem;
