@@ -1,0 +1,73 @@
+/* Pair foregrounds and surfaces explicitly; never infer contrast from utilities. */
+/* Use one shade instead of stacking two 85% black overlays over the photo. */
+:global(body.high-contrast) :global(#home-hero).hero img {
+  filter: grayscale(1);
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+  background: linear-gradient(to right, rgb(0 0 0 / 68%), rgb(0 0 0 / 60%) 60%, rgb(0 0 0 / 25%)) !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="vertical"] {
+  background: transparent !important;
+}
+
+@media (max-width: 767px) {
+  :global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+    background: rgb(0 0 0 / 60%) !important;
+  }
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control],
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  opacity: 1;
+}
+
+:global(body.high-contrast) section.hero button[data-hero-control]:hover,
+:global(body.high-contrast) section.hero a[data-hero-control]:hover {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+:global(body.high-contrast) section.hero [data-hero-control]:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 4px !important;
+}
+
+.storyOverlay {
+  background: linear-gradient(to top, rgb(0 0 0 / 30%), transparent);
+}
+
+:global(body.high-contrast) .storyOverlay {
+  background: transparent;
+}
+
+:global(body.high-contrast) .podcastPlay.podcastPlay,
+:global(body.high-contrast) .podcastPlay.podcastPlay * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(#what-we-do) .darkLabel {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .podcastPlay {
+  background-color: #fff !important;
+}
+
+:global(body.high-contrast) .testimonials button {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .testimonials button svg,
+:global(body.high-contrast) .testimonials button svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
