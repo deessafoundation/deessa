@@ -565,7 +565,7 @@ export const DEFAULT_TESTIMONIALS: HomepageTestimonialsSettings = {
     {
       id: 'global-voice-soyun-kim',
       name: 'Soyun Kim',
-      role: 'Korea Nazarene University',
+      role: 'Seoul National University',
       location: 'South Korea',
       image: '',
       video: '/Soyun%20Kim.mp4',

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { RegisterButtonConfig } from "@/lib/support/settings"
 import { Comic_Neue } from "next/font/google"
 import {
@@ -66,6 +66,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hideNavbarLogo, setHideNavbarLogo] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const scrolledRef = useRef(false)
   const LOGO_ZONE_WIDTH = 220
 
   // Filter nav links based on support status
@@ -92,9 +93,20 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      // Collapsing the secondary row changes the document height. A single
+      // threshold can therefore bounce between states near the top of a page.
+      // Keep a small buffer between entering and leaving the compact state.
+      const nextScrolled = scrolledRef.current
+        ? window.scrollY > 8
+        : window.scrollY > 48
+
+      if (nextScrolled !== scrolledRef.current) {
+        scrolledRef.current = nextScrolled
+        setScrolled(nextScrolled)
+      }
     }
-    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 

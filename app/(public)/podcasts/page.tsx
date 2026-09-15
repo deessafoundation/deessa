@@ -1,12 +1,8 @@
 import { Metadata } from 'next';
-import PodcastMainHero from '@/components/podcasts/podcast-main-hero';
 import PodcastSeriesIntro from '@/components/podcasts/podcast-series-intro';
-import PodcastLatestEpisode from '@/components/podcasts/podcast-latest-episode';
 import PodcastArchiveSection from '@/components/podcasts/podcast-archive-section';
 import AllHighlightsSection from '@/components/podcasts/all-highlights-section';
-import { getPublishedPodcasts, getFeaturedPodcasts, getAllPodcastHighlights } from '@/lib/data/podcasts';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { getPublishedPodcasts, getAllPodcastHighlights } from '@/lib/data/podcasts';
 import { generateSEOMetadata } from '@/lib/seo/metadata-utils';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -28,64 +24,35 @@ export const revalidate = 3600; // Revalidate every hour
 
 export default async function PodcastsPage() {
   // Fetch all data in parallel
-  const [allPodcasts, featuredPodcasts, allHighlights] = await Promise.all([
+  const [allPodcasts, allHighlights] = await Promise.all([
     getPublishedPodcasts(),
-    getFeaturedPodcasts(),
     getAllPodcastHighlights(10), // Limit to 10 latest highlights for main page
   ]);
 
   const latestEpisode = allPodcasts[0];
-  const heroEpisodes = [latestEpisode, ...featuredPodcasts].filter((episode, index, list) => episode && list.findIndex(item => item?.id === episode.id) === index).slice(0, 5);
 
   // Archive includes all podcasts
   const archiveEpisodes = allPodcasts;
 
-  // Check if there are no podcasts at all
-  if (!allPodcasts || allPodcasts.length === 0) {
-    return (
-      <div className="min-h-screen bg-bg-main">
-        <main className="container mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto text-center py-20">
-            <h1 className="text-4xl font-heading font-bold text-text-main mb-4">
-              Living with Autism: Real Voices. Real Stories.
-            </h1>
-            <p className="text-lg text-text-muted mb-8">
-              Our podcast series is coming soon! Check back later for inspiring stories and conversations.
-            </p>
-            <Button asChild className="bg-brand-primary hover:bg-brand-primary-dark">
-              <Link href="/">Return Home</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-bg-main">
-      <main className="container max-w-7xl mx-auto px-4 py-8 space-y-12">
-        <PodcastSeriesIntro />
-
-        {/* Featured episodes */}
-        {heroEpisodes.length > 0 && <PodcastMainHero episodes={heroEpisodes} />}
-
-        {/* All Highlights Section - Show highlights from all episodes */}
-        {allHighlights.length > 0 && (
-          <AllHighlightsSection highlights={allHighlights} />
-        )}
-
-        {/* Latest Episode Section - Only show if we have a separate latest episode */}
-        {latestEpisode && (
-          <section>
-            <h2 className="text-3xl font-heading font-bold text-text-main mb-6">Latest Episode</h2>
-            <PodcastLatestEpisode episode={latestEpisode} />
-          </section>
-        )}
+      <main className="container max-w-7xl mx-auto px-4 py-6 space-y-12 sm:py-8 sm:space-y-16">
+        <PodcastSeriesIntro latestEpisode={latestEpisode} />
 
         {/* Archive Section with Filters - Show only if we have archive episodes */}
         {archiveEpisodes.length > 0 && (
-          <section>
+          <section id="episodes" className="scroll-mt-40">
             <PodcastArchiveSection episodes={archiveEpisodes} totalCount={allPodcasts.length} />
+          </section>
+        )}
+
+        {allHighlights.length > 0 && <AllHighlightsSection highlights={allHighlights} />}
+
+        {archiveEpisodes.length === 0 && (
+          <section id="episodes" className="scroll-mt-40 rounded-2xl border border-brand-primary/15 bg-white px-6 py-10 text-center">
+            <h2 className="font-heading text-3xl text-text-main">Explore the conversations</h2>
+            <p className="mt-3 text-text-muted">The episode library is unavailable right now. You can still watch the series on YouTube.</p>
+            <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex min-h-12 items-center rounded-full bg-brand-primary px-6 py-3 font-bold text-white hover:bg-brand-primary-dark">Watch on YouTube<span className="sr-only"> (opens in a new tab)</span></a>
           </section>
         )}
 
