@@ -151,7 +151,7 @@ export function MissionVisionSection() {
     {
       icon: Target,
       title: "Our Mission",
-      description: "Integrated development of the social sector in Nepal.",
+      description: "To empower marginalized communities in Nepal through education, healthcare, and sustainable development, ensuring every individual has the opportunity to live with dignity and purpose.",
       color: "border-l-4 border-l-primary",
       iconBg: "bg-primary/10",
       iconColor: "text-primary"
@@ -159,7 +159,7 @@ export function MissionVisionSection() {
     {
       icon: Eye,
       title: "Our Vision",
-      description: "Work for social sector development through the combined effort of national and international community stakeholders.",
+      description: "A Nepal where every community thrives — where children dream freely, families are healthy, and opportunities are within everyone's reach.",
       color: "border-l-4 border-l-blue-500",
       iconBg: "bg-blue-500/10",
       iconColor: "text-blue-500"
@@ -167,7 +167,7 @@ export function MissionVisionSection() {
     {
       icon: Flag,
       title: "Our Objectives",
-      description: "To focus on the social and economic problems at the grassroots level of poor people in Nepal.",
+      description: "Build 100+ schools, reach 50,000+ lives through healthcare, empower 10,000+ women through skill development, and create lasting change in every district we serve.",
       color: "border-l-4 border-l-green-500",
       iconBg: "bg-green-500/10",
       iconColor: "text-green-500"

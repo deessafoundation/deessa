@@ -610,7 +610,7 @@ export const DEFAULT_TESTIMONIALS: HomepageTestimonialsSettings = {
     {
       id: 'global-voice-marcus-brand',
       name: 'Marcus Brand',
-      role: 'Fiji Truth and Reconciliation Commission',
+      role: 'ChairPerson, Fiji Truth and Reconciliation Commission',
       location: 'Fiji',
       image: '',
       video: '/Marcus%20Brand.mp4',

@@ -7,7 +7,6 @@ import {
   OurStorySection,
   MissionVisionSection,
   ProgramsSection,
-  TimelineSection,
   PodcastSection,
   TestimonialsSection,
   ContactSection,
@@ -18,7 +17,6 @@ import {
   getHomepageWhatWeDo,
   getHomepageHeroCarousel,
   getHomepageTestimonials,
-  getHomepageTimeline,
 } from "@/lib/data/homepage-settings"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
@@ -50,7 +48,6 @@ export default async function HomePage() {
   const whatWeDoSettings = await getHomepageWhatWeDo()
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
-  const timelineSettings = await getHomepageTimeline()
 
   // Convert hero carousel settings to slides format
   const heroSlides: HeroSlide[] = heroCarouselSettings.slides
@@ -84,9 +81,6 @@ export default async function HomePage() {
 
       {/* 5. WHAT WE DO - CMS POWERED */}
       <ProgramsSection whatWeDo={whatWeDoSettings} />
-
-      {/* 6. TIMELINE - CMS POWERED */}
-      <TimelineSection timeline={timelineSettings} />
 
       {/* 7. PODCAST FEATURE */}
       <PodcastSection />
