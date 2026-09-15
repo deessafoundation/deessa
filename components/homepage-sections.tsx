@@ -621,9 +621,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">
               Inclusion Begins with Acceptance
             </h2>
-            <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Four international voices on autism, education, equal opportunity, and the power of belonging.
-            </p>
+
           </div>
         </ScrollReveal>
 
