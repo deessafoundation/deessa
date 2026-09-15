@@ -1,0 +1,448 @@
+/**
+ * Accessibility System Type Definitions - Version 2
+ * 
+ * TypeScript interfaces and types for the unified accessibility system.
+ * All accessibility preferences are stored in a single object for easy
+ * persistence and state management.
+ * 
+ * Version History:
+ * - V1: Initial implementation (string version "1.0", boolean dyslexiaFont, fixed spacing)
+ * - V2: WCAG-aligned ranges, enum fontFamily, null spacing support
+ */
+
+/**
+ * Font family options for accessibility
+ */
+export type AccessibilityFontFamily = 'default' | 'system' | 'opendyslexic'
+
+/**
+ * Core accessibility preferences (Version 2)
+ * All values have sensible defaults that work for most users
+ */
+export interface AccessibilityPreferences {
+  // ============================================================================
+  // TEXT CONTROLS
+  // ============================================================================
+  
+  /**
+   * Font size scaling factor
+   * Range: 1.0 (100%) to 2.0 (200%) - WCAG 2.2 AA compliant
+   * Default: 1.0 (100%)
+   * 
+   * Note: V1 used 0.8-1.4 range, migrated values are clamped to 1.0 minimum
+   */
+  textScale: number
+  
+  /**
+   * Font family selection
+   * - 'default': Site's designed typography
+   * - 'system': System font stack (faster, familiar)
+   * - 'opendyslexic': OpenDyslexic font (designed for dyslexia)
+   * 
+   * Default: 'default'
+   * 
+   * Note: V1 used boolean dyslexiaFont, migrated as:
+   *   false → 'default'
+   *   true → 'opendyslexic'
+   */
+  fontFamily: AccessibilityFontFamily
+  
+  // ============================================================================
+  // VISUAL MODES
+  // ============================================================================
+  
+  /**
+   * High contrast mode (black/white, bold borders)
+   * Default: false
+   */
+  highContrast: boolean
+  
+  /**
+   * Reduce motion (disable animations/transitions)
+   * Default: false (or true if user's OS prefers reduced motion)
+   */
+  reduceMotion: boolean
+  
+  /**
+   * Sensory-friendly mode (comprehensive: animations, density, colors)
+   * When enabled, automatically enables reduceMotion
+   * Default: false
+   */
+  sensoryFriendly: boolean
+  
+  /**
+   * Highlight all links (underline/emphasize)
+   * Default: false
+   */
+  linkHighlight: boolean
+  
+  // ============================================================================
+  // TYPOGRAPHY CONTROLS
+  // ============================================================================
+  
+  /**
+   * Line spacing (line-height)
+   * Range: 1.5 to 2.5
+   * Special: null means "use site default" (no override)
+   * Default: null (site default)
+   * 
+   * Note: V1 always had a value (default 1.5), V2 allows null for site default
+   */
+  lineSpacing: number | null
+  
+  /**
+   * Letter spacing
+   * Range: 0 to 0.12em
+   * Special: null means "use site default" (no override)
+   * Default: null (site default)
+   * 
+   * Note: V1 always had a value (default 0), V2 allows null for site default
+   */
+  letterSpacing: number | null
+  
+  // ============================================================================
+  // CONTENT MODES
+  // ============================================================================
+  
+  /**
+   * Reading mode (distraction-free layout for content pages)
+   * Default: false
+   */
+  readingMode: boolean
+}
+
+/**
+ * Default preferences (V2 - sensible defaults for all users)
+ */
+export const DEFAULT_ACCESSIBILITY_PREFERENCES: AccessibilityPreferences = {
+  textScale: 1.0,
+  fontFamily: 'default',
+  highContrast: false,
+  reduceMotion: false,
+  sensoryFriendly: false,
+  linkHighlight: false,
+  lineSpacing: null, // null = use site default
+  letterSpacing: null, // null = use site default
+  readingMode: false,
+}
+
+/**
+ * localStorage schema for persisted preferences (Version 2)
+ * Includes versioning for future migrations
+ */
+export interface StoredAccessibilityData {
+  /**
+   * Schema version for migrations
+   * Current: 2 (integer)
+   * Previous: "1" or "1.0" (string) - auto-migrated
+   */
+  version: number
+  
+  /**
+   * User preferences (V2 schema)
+   */
+  preferences: AccessibilityPreferences
+  
+  /**
+   * Last update timestamp (ISO 8601)
+   */
+  lastUpdated: string
+  
+  /**
+   * Optional: User ID (for syncing across devices in future)
+   */
+  userId?: string
+}
+
+/**
+ * Legacy V1 schema for migration
+ * @deprecated Use StoredAccessibilityData (V2) instead
+ */
+export interface StoredAccessibilityDataV1 {
+  version: "1" | "1.0" | 1
+  preferences: {
+    textScale: number // 0.8-1.4
+    dyslexiaFont: boolean
+    highContrast: boolean
+    reduceMotion: boolean
+    sensoryFriendly: boolean
+    linkHighlight: boolean
+    lineSpacing: number // always valued
+    letterSpacing: number // always valued
+    readingMode: boolean
+  }
+  lastUpdated: string
+  userId?: string
+}
+
+/**
+ * Context value provided by AccessibilityProvider
+ */
+export interface AccessibilityContextValue {
+  /**
+   * Current accessibility preferences
+   */
+  preferences: AccessibilityPreferences
+  
+  /**
+   * Update a single preference
+   */
+  updatePreference: <K extends keyof AccessibilityPreferences>(
+    key: K,
+    value: AccessibilityPreferences[K]
+  ) => void
+  
+  /**
+   * Update multiple preferences at once
+   */
+  updatePreferences: (updates: Partial<AccessibilityPreferences>) => void
+  
+  /**
+   * Reset all preferences to defaults
+   */
+  resetAll: () => void
+  
+  /**
+   * Reset a single preference to default
+   */
+  resetPreference: (key: keyof AccessibilityPreferences) => void
+  
+  /**
+   * Check if preferences have been modified from defaults
+   */
+  isModified: boolean
+  
+  /**
+   * Loading state (true during initial load from localStorage)
+   */
+  isLoading: boolean
+}
+
+/**
+ * localStorage configuration
+ */
+export const STORAGE_CONFIG = {
+  /**
+   * localStorage key for accessibility preferences
+   */
+  KEY: 'deesha-a11y-preferences',
+  
+  /**
+   * Current schema version (V2 - integer)
+   */
+  VERSION: 2,
+  
+  /**
+   * Maximum storage size (approximate, in characters)
+   * localStorage typically has 5-10MB limit
+   */
+  MAX_SIZE: 5000,
+} as const
+
+/**
+ * Preset configurations for common use cases
+ * Users can quickly apply these instead of configuring manually
+ */
+export const ACCESSIBILITY_PRESETS = {
+  /**
+   * Default - standard settings
+   */
+  default: DEFAULT_ACCESSIBILITY_PREFERENCES,
+  
+  /**
+   * Low vision - larger text, high contrast
+   */
+  lowVision: {
+    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+    textScale: 1.5,
+    highContrast: true,
+    lineSpacing: 1.8,
+    letterSpacing: 0.05,
+  },
+  
+  /**
+   * Dyslexia - specialized font, increased spacing
+   */
+  dyslexia: {
+    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+    fontFamily: 'opendyslexic' as AccessibilityFontFamily,
+    lineSpacing: 1.7,
+    letterSpacing: 0.08,
+    textScale: 1.2,
+  },
+  
+  /**
+   * Autism/Sensory - reduced stimulation, calm colors
+   */
+  sensory: {
+    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+    sensoryFriendly: true,
+    reduceMotion: true,
+    lineSpacing: 1.7,
+  },
+  
+  /**
+   * Motor disability - larger targets, reduced motion
+   */
+  motor: {
+    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+    textScale: 1.3,
+    reduceMotion: true,
+    linkHighlight: true,
+  },
+} as const
+
+/**
+ * Type guard to check if stored data is valid V2
+ */
+export function isValidStoredData(
+  data: unknown
+): data is StoredAccessibilityData {
+  if (typeof data !== 'object' || data === null) return false
+  
+  const d = data as Record<string, unknown>
+  
+  return (
+    typeof d.version === 'number' &&
+    d.version === 2 &&
+    typeof d.preferences === 'object' &&
+    d.preferences !== null &&
+    typeof d.lastUpdated === 'string'
+  )
+}
+
+/**
+ * Type guard to check if stored data is legacy V1
+ */
+export function isValidStoredDataV1(
+  data: unknown
+): data is StoredAccessibilityDataV1 {
+  if (typeof data !== 'object' || data === null) return false
+  
+  const d = data as Record<string, unknown>
+  
+  return (
+    (d.version === "1" || d.version === "1.0" || d.version === 1) &&
+    typeof d.preferences === 'object' &&
+    d.preferences !== null &&
+    typeof d.lastUpdated === 'string'
+  )
+}
+
+/**
+ * Type guard to check if preferences object is valid V2
+ */
+export function isValidPreferences(
+  prefs: unknown
+): prefs is AccessibilityPreferences {
+  if (typeof prefs !== 'object' || prefs === null) return false
+  
+  const p = prefs as Record<string, unknown>
+  
+  const validFontFamily = 
+    p.fontFamily === 'default' || 
+    p.fontFamily === 'system' || 
+    p.fontFamily === 'opendyslexic'
+  
+  return (
+    typeof p.textScale === 'number' &&
+    validFontFamily &&
+    typeof p.highContrast === 'boolean' &&
+    typeof p.reduceMotion === 'boolean' &&
+    typeof p.sensoryFriendly === 'boolean' &&
+    typeof p.linkHighlight === 'boolean' &&
+    (typeof p.lineSpacing === 'number' || p.lineSpacing === null) &&
+    (typeof p.letterSpacing === 'number' || p.letterSpacing === null) &&
+    typeof p.readingMode === 'boolean'
+  )
+}
+
+/**
+ * Validates and clamps numeric values to safe ranges (V2)
+ */
+export function validatePreferences(
+  prefs: Partial<AccessibilityPreferences>
+): AccessibilityPreferences {
+  // Validate fontFamily
+  let fontFamily: AccessibilityFontFamily = 'default'
+  if (
+    prefs.fontFamily === 'default' ||
+    prefs.fontFamily === 'system' ||
+    prefs.fontFamily === 'opendyslexic'
+  ) {
+    fontFamily = prefs.fontFamily
+  }
+  
+  return {
+    textScale: clamp(prefs.textScale ?? 1.0, 1.0, 2.0), // V2: 1.0-2.0 range
+    fontFamily,
+    highContrast: Boolean(prefs.highContrast),
+    reduceMotion: Boolean(prefs.reduceMotion),
+    sensoryFriendly: Boolean(prefs.sensoryFriendly),
+    linkHighlight: Boolean(prefs.linkHighlight),
+    lineSpacing: prefs.lineSpacing === null ? null : clamp(prefs.lineSpacing ?? 1.5, 1.5, 2.5),
+    letterSpacing: prefs.letterSpacing === null ? null : clamp(prefs.letterSpacing ?? 0, 0, 0.12),
+    readingMode: Boolean(prefs.readingMode),
+  }
+}
+
+/**
+ * Migrate V1 preferences to V2
+ */
+export function migrateV1toV2(v1Prefs: StoredAccessibilityDataV1['preferences']): AccessibilityPreferences {
+  console.log('🔄 Migrating accessibility preferences from V1 to V2...')
+  
+  // Text scale: Clamp 0.8-1.4 to new 1.0-2.0 range
+  const textScale = Math.max(1.0, Math.min(2.0, v1Prefs.textScale))
+  
+  // Font family: Map boolean to enum
+  const fontFamily: AccessibilityFontFamily = v1Prefs.dyslexiaFont ? 'opendyslexic' : 'default'
+  
+  // Spacing: Keep existing values (they're in valid range)
+  // User explicitly set these, so preserve them
+  const lineSpacing = v1Prefs.lineSpacing
+  const letterSpacing = v1Prefs.letterSpacing
+  
+  const migrated: AccessibilityPreferences = {
+    textScale,
+    fontFamily,
+    highContrast: v1Prefs.highContrast,
+    reduceMotion: v1Prefs.reduceMotion,
+    sensoryFriendly: v1Prefs.sensoryFriendly,
+    linkHighlight: v1Prefs.linkHighlight,
+    lineSpacing,
+    letterSpacing,
+    readingMode: v1Prefs.readingMode,
+  }
+  
+  console.log('✅ Migration complete:', { from: 'V1', to: 'V2', textScaleAdjusted: textScale !== v1Prefs.textScale })
+  
+  return migrated
+}
+
+/**
+ * Clamp a number between min and max
+ */
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}
+
+/**
+ * Check if two preference objects are equal (V2)
+ */
+export function preferencesEqual(
+  a: AccessibilityPreferences,
+  b: AccessibilityPreferences
+): boolean {
+  return (
+    a.textScale === b.textScale &&
+    a.fontFamily === b.fontFamily &&
+    a.highContrast === b.highContrast &&
+    a.reduceMotion === b.reduceMotion &&
+    a.sensoryFriendly === b.sensoryFriendly &&
+    a.linkHighlight === b.linkHighlight &&
+    a.lineSpacing === b.lineSpacing &&
+    a.letterSpacing === b.letterSpacing &&
+    a.readingMode === b.readingMode
+  )
+}
