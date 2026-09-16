@@ -14,7 +14,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 const BUCKET_CONFIG: Record<string, string> = {
   testimonials: 'testimonials',
   'support-screenshots': 'support-screenshots',
-  'homepage-hero': 'media', // Hero carousel images go to media bucket
+  'homepage-hero': 'hero-images', // Public bucket with a 10 MB image limit
   media: 'media',
 }
 
