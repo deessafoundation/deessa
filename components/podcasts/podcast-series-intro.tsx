@@ -6,10 +6,20 @@ import { ArrowDown, ArrowUpRight, Heart, Mic2, Play, Quote } from 'lucide-react'
 import { useVideoModal } from '@/contexts/VideoModalContext';
 import type { Podcast } from '@/lib/types/podcast';
 
-// Replace these temporary Unsplash portraits with approved host photographs.
+// Host information with actual photographs
 const hosts = [
-  { name: 'Ms. Merina Panthi', role: 'President, deessa Foundation', description: 'Mother of children with autism · Podcast Host', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=480&h=560&q=85' },
-  { name: 'Ms. Sarita Sapkota', role: 'Podcast Host', description: 'Mother of children with autism', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=480&h=560&q=85' },
+  { 
+    name: 'Merina Panthii', 
+    role: 'President, deessa Foundation', 
+    description: 'Parent & host — sharing real stories of raising children with autism', 
+    image: '/Merina Panthii.jpg' 
+  },
+  { 
+    name: 'Sarita Sapkota', 
+    role: 'Parent & Host', 
+    description: 'Mother — bringing lived experiences to every conversation', 
+    image: '/Sarita Sapkota.jpg' 
+  },
 ];
 
 export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: Podcast }) {
@@ -62,12 +72,22 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
         <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#756091]">Meet the hosts</p><h2 id="hosts-title" className="mt-3 font-heading text-3xl font-bold text-text-main sm:text-4xl">Parents leading the conversation</h2></div><Heart className="hidden h-9 w-9 text-[#9b83b4] lg:block" strokeWidth={1.3} aria-hidden="true" /></div>
         <div className="grid gap-5 md:grid-cols-2">
           {hosts.map((host) => (
-            <article key={host.name} className="flex flex-col overflow-hidden rounded-2xl border border-white bg-white/90 sm:flex-row md:flex-col xl:flex-row">
+            <article key={host.name} className="flex flex-col overflow-hidden rounded-2xl border border-white bg-white/90 shadow-md hover:shadow-xl transition-all duration-300 sm:flex-row md:flex-col xl:flex-row">
               <div className="relative h-56 shrink-0 sm:h-auto sm:w-40 md:h-56 md:w-auto xl:h-auto xl:w-40">
-                <Image src={host.image} alt="Temporary stock portrait; not a photograph of the host" fill unoptimized sizes="(min-width: 1280px) 160px, (min-width: 768px) 40vw, 90vw" className="object-cover object-[center_30%]" />
-                <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-slate-600">Temporary portrait</span>
+                <Image 
+                  src={host.image} 
+                  alt={`${host.name}, ${host.role}`} 
+                  fill 
+                  sizes="(min-width: 1280px) 160px, (min-width: 768px) 40vw, 90vw" 
+                  className="object-cover object-center" 
+                />
               </div>
-              <div className="flex flex-col justify-center p-6 lg:py-8"><span className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#756091]">Your host</span><h3 className="text-xl font-bold text-text-main">{host.name}</h3><p className="mt-2 text-sm font-semibold text-[#756091]">{host.role}</p><p className="mt-2 text-sm leading-6 text-text-muted">{host.description}</p></div>
+              <div className="flex flex-col justify-center p-6 lg:py-8">
+                <span className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#756091]">Your host</span>
+                <h3 className="text-xl font-bold text-text-main">{host.name}</h3>
+                <p className="mt-2 text-sm font-semibold text-[#756091]">{host.role}</p>
+                <p className="mt-2 text-sm leading-6 text-text-muted">{host.description}</p>
+              </div>
             </article>
           ))}
         </div>

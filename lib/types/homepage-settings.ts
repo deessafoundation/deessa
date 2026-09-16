@@ -535,7 +535,7 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
     },
     {
       id: 'slide-2',
-      image: '/home/hero/inclusion-begins-at-home.jpg',
+      image: '/home/hero/inclusion-begins-at-home-v2.jpg',
       title: 'Parents Turning Experience into Support',
       subtitle: 'deessa\'s parent leaders bring families, educators, and communities into honest conversations about autism, acceptance, and belonging.',
       cta: 'Explore Autism Support',

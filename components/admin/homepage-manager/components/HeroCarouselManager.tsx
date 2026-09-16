@@ -8,8 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { FancySelect } from "@/components/ui/fancy-select"
-import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Plus, Trash2, GripVertical, Eye, EyeOff, Upload, Link as LinkIcon, X } from "lucide-react"
 import type { HomepageHeroCarouselSettings, HeroCarouselSlide } from "@/lib/types/homepage-settings"
+import { notifications } from "@/lib/notifications"
 
 interface HeroCarouselManagerProps {
   heroCarousel: HomepageHeroCarouselSettings
@@ -18,6 +20,7 @@ interface HeroCarouselManagerProps {
 
 export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCarouselManagerProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
 
   const updateSettings = (updates: Partial<HomepageHeroCarouselSettings>) => {
     onChange({ ...heroCarousel, ...updates })
@@ -51,6 +54,60 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
 
   const toggleVisibility = (index: number) => {
     updateSlide(index, { visible: !heroCarousel.slides[index].visible })
+  }
+
+  const handleImageUpload = async (index: number, file: File) => {
+    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+    if (!validTypes.includes(file.type)) {
+      notifications.showError({
+        title: "Invalid file type",
+        description: "Please upload a JPG, PNG, or WebP image.",
+      })
+      return
+    }
+
+    const maxSize = 2 * 1024 * 1024 // 2MB
+    if (file.size > maxSize) {
+      notifications.showError({
+        title: "File too large",
+        description: "Please upload an image smaller than 2MB.",
+      })
+      return
+    }
+
+    setUploadingIndex(index)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      formData.append("folder", "homepage-hero")
+      formData.append("customName", `hero-slide-${index + 1}`)
+
+      const currentImage = heroCarousel.slides[index].image
+      if (currentImage?.includes("/storage/v1/object/public/")) {
+        const urlParts = currentImage.split("/storage/v1/object/public/")[1]
+        if (urlParts) {
+          formData.append("oldFilePath", urlParts.split("/").slice(1).join("/"))
+        }
+      }
+
+      const response = await fetch("/api/upload", { method: "POST", body: formData })
+      if (!response.ok) throw new Error("Upload failed")
+
+      const data = await response.json()
+      updateSlide(index, { image: data.url })
+
+      notifications.showSuccess({
+        title: "Image uploaded",
+        description: `Slide ${index + 1} image has been uploaded successfully.`,
+      })
+    } catch {
+      notifications.showError({
+        title: "Upload failed",
+        description: "Could not upload image. Please try again.",
+      })
+    } finally {
+      setUploadingIndex(null)
+    }
   }
 
   const handleDragStart = (index: number) => {

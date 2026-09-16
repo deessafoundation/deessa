@@ -26,6 +26,23 @@ const NEWS_TICKER_ITEMS = [
   "Girls' leadership and participation through sport",
 ]
 
+// Safety net: normalize any CMS-provided image path so a value like
+// "home\hero\img.jpg" can never crash next/image and take down the page.
+function normalizeHeroImage(src: string) {
+  if (!src || typeof src !== "string") return "/home/hero/real-voices-young-speaker.jpg"
+  const trimmed = src.trim()
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) return trimmed
+  const forward = trimmed.replace(/\\/g, "/")
+  let withSlash = forward.startsWith("/") ? forward : `/${forward}`
+  // Point the old slide-2 filename at the refreshed photo. The file was
+  // replaced under the same name, so this rename busts browser + Next
+  // image caches (query strings are rejected on local images).
+  if (withSlash.split("?")[0].endsWith("home/hero/inclusion-begins-at-home.jpg")) {
+    withSlash = "/home/hero/inclusion-begins-at-home-v2.jpg"
+  }
+  return withSlash
+}
+
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -127,12 +144,13 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
           {/* Background image with subtle zoom */}
           <div className="absolute inset-0">
             <Image
-              src={slide.image}
+              src={normalizeHeroImage(slide.image)}
               alt=""
               fill
               className={cn(
                 "object-cover",
-                slide.image === "/home/hero/real-voices-young-speaker.jpg" && "md:object-[50%_23%]",
+                normalizeHeroImage(slide.image) === "/home/hero/real-voices-young-speaker.jpg" && "md:object-[50%_23%]",
+                normalizeHeroImage(slide.image) === "/home/hero/inclusion-begins-at-home-v2.jpg" && "object-[62%_18%]",
                 !prefersReducedMotion && i === current && "animate-kenburns"
               )}
               priority={i === 0}

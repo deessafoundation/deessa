@@ -6,7 +6,7 @@ import Link from "next/link"
 import {
   Heart, ArrowRight, GraduationCap, MapPin, Stethoscope,
   BookOpen, ChevronRight, Phone, Clock, Mail, Shield, Home as HomeIcon,
-  Target, Eye, Flag, Users, Leaf, ArrowUpRight, Star, Play,
+  Target, Eye, Flag, Users, Leaf, ArrowUpRight, Star,
   Quote, Award, Building2, Globe, Megaphone, FileText, Scale
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -557,14 +557,9 @@ export function PodcastSection() {
                   alt="Living With Autism podcast with Sarita and Merina"
                   fill
                   sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover object-[72%_10%] transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110">
-                    <Play className="ml-1 size-7 fill-current" aria-hidden="true" />
-                  </span>
-                </div>
               </div>
 
               <div className="flex flex-col justify-center p-8 text-white sm:p-12 lg:p-14">
@@ -574,6 +569,45 @@ export function PodcastSection() {
                 <p className="mb-8 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
                   Real voices and real stories. Listen to honest conversations about autism, inclusion, and the experiences that shape our communities.
                 </p>
+
+                {/* Hosts Section */}
+                <div className="mb-8">
+                  <p className="text-xs font-bold uppercase tracking-wider text-primary mb-4">Hosted By</p>
+                  <div className="flex flex-wrap gap-4">
+                    {/* Host 1: Merina Panthii */}
+                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full pl-1 pr-4 py-1 border border-white/10 hover:border-primary/40 transition-all duration-300">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
+                        <Image
+                          src="/Merina Panthii.jpg"
+                          alt="Merina Panthii"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-white">Merina Panthii</span>
+                        <span className="text-xs text-white/60">President & Host</span>
+                      </div>
+                    </div>
+
+                    {/* Host 2: Sarita Sapkota */}
+                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full pl-1 pr-4 py-1 border border-white/10 hover:border-primary/40 transition-all duration-300">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
+                        <Image
+                          src="/Sarita Sapkota.jpg"
+                          alt="Sarita Sapkota"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-white">Sarita Sapkota</span>
+                        <span className="text-xs text-white/60">Parent & Host</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <span className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors group-hover:text-white">
                   Explore the podcast
                   <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-2" />

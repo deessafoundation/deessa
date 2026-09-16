@@ -50,11 +50,29 @@ export default async function HomePage() {
   const testimonialsSettings = await getHomepageTestimonials()
 
   // Convert hero carousel settings to slides format
+  // Normalize CMS image paths: fix Windows backslashes and ensure leading
+  // slash so next/image never crashes on values like "home\hero\img.jpg".
+  const normalizeSlideImage = (src: string, fallback: string) => {
+    if (!src || typeof src !== "string") return fallback
+    const trimmed = src.trim()
+    if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) return trimmed
+    const forward = trimmed.replace(/\\/g, "/")
+    let withSlash = forward.startsWith("/") ? forward : `/${forward}`
+    // Point the old slide-2 filename at the refreshed photo. The file was
+    // replaced under the same name, so this rename busts browser + Next
+    // image caches (query strings are rejected on local images).
+    // Matches both the CMS backslash variant and the clean default path.
+    if (withSlash.split("?")[0].endsWith("home/hero/inclusion-begins-at-home.jpg")) {
+      withSlash = "/home/hero/inclusion-begins-at-home-v2.jpg"
+    }
+    return withSlash
+  }
+
   const heroSlides: HeroSlide[] = heroCarouselSettings.slides
     .filter(slide => slide.visible)
     .sort((a, b) => a.order - b.order)
-    .map(slide => ({
-      image: slide.image,
+    .map((slide) => ({
+      image: normalizeSlideImage(slide.image, "/home/hero/real-voices-young-speaker.jpg"),
       title: slide.title,
       subtitle: slide.subtitle,
       cta: slide.cta,
