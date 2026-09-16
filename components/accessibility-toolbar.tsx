@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Type, Contrast, FileText, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAccessibility } from '@/lib/hooks/use-accessibility';
 
 interface AccessibilityToolbarProps {
   showTranscriptToggle?: boolean;
@@ -15,25 +16,16 @@ export default function AccessibilityToolbar({
   onTranscriptToggle,
 }: AccessibilityToolbarProps) {
   const [isVisible, setIsVisible] = useState(true);
-  const [textSize, setTextSize] = useState<'normal' | 'large' | 'xlarge'>('normal');
-  const [highContrast, setHighContrast] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const { preferences, updatePreference } = useAccessibility();
 
-  // Apply text size to body
-  useEffect(() => {
-    const body = document.body;
-    body.classList.remove('text-normal', 'text-large', 'text-xlarge');
-    body.classList.add(`text-${textSize}`);
-  }, [textSize]);
-
-  // Apply high contrast
-  useEffect(() => {
-    if (highContrast) {
-      document.body.classList.add('high-contrast');
-    } else {
-      document.body.classList.remove('high-contrast');
-    }
-  }, [highContrast]);
+  // Cycle through text size presets: 100%, 120%, 140%
+  const cycleTextSize = () => {
+    const sizes = [1.0, 1.2, 1.4];
+    const currentIndex = sizes.indexOf(preferences.textScale);
+    const nextIndex = (currentIndex + 1) % sizes.length;
+    updatePreference('textScale', sizes[nextIndex]);
+  };
 
   // Handle transcript toggle
   const handleTranscriptToggle = () => {
@@ -42,11 +34,12 @@ export default function AccessibilityToolbar({
     onTranscriptToggle?.(newValue);
   };
 
-  const cycleTextSize = () => {
-    const sizes: Array<'normal' | 'large' | 'xlarge'> = ['normal', 'large', 'xlarge'];
-    const currentIndex = sizes.indexOf(textSize);
-    const nextIndex = (currentIndex + 1) % sizes.length;
-    setTextSize(sizes[nextIndex]);
+  // Get text size label
+  const getTextSizeLabel = () => {
+    if (preferences.textScale === 1.0) return 'Normal';
+    if (preferences.textScale === 1.2) return 'Large';
+    if (preferences.textScale === 1.4) return 'X-Large';
+    return `${Math.round(preferences.textScale * 100)}%`;
   };
 
   if (!isVisible) {
@@ -82,15 +75,14 @@ export default function AccessibilityToolbar({
               onClick={cycleTextSize}
               className={cn(
                 "flex items-center gap-2 transition-all duration-300",
-                textSize !== 'normal' && "bg-brand-primary/10 border-brand-primary text-brand-primary"
+                preferences.textScale !== 1.0 && "bg-brand-primary/10 border-brand-primary text-brand-primary"
               )}
-              aria-label={`Text size: ${textSize}`}
+              aria-label={`Text size: ${getTextSizeLabel()}`}
+              aria-pressed={preferences.textScale !== 1.0}
             >
               <Type className="w-4 h-4" />
               <span className="hidden sm:inline text-xs">
-                {textSize === 'normal' && 'Normal'}
-                {textSize === 'large' && 'Large'}
-                {textSize === 'xlarge' && 'X-Large'}
+                {getTextSizeLabel()}
               </span>
             </Button>
 
@@ -98,17 +90,17 @@ export default function AccessibilityToolbar({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setHighContrast(!highContrast)}
+              onClick={() => updatePreference('highContrast', !preferences.highContrast)}
               className={cn(
                 "flex items-center gap-2 transition-all duration-300",
-                highContrast && "bg-brand-primary/10 border-brand-primary text-brand-primary"
+                preferences.highContrast && "bg-brand-primary/10 border-brand-primary text-brand-primary"
               )}
-              aria-label={`High contrast: ${highContrast ? 'on' : 'off'}`}
-              aria-pressed={highContrast}
+              aria-label={`High contrast: ${preferences.highContrast ? 'on' : 'off'}`}
+              aria-pressed={preferences.highContrast}
             >
               <Contrast className="w-4 h-4" />
               <span className="hidden sm:inline text-xs">
-                {highContrast ? 'High Contrast' : 'Normal'}
+                {preferences.highContrast ? 'High Contrast' : 'Normal'}
               </span>
             </Button>
 
@@ -149,26 +141,7 @@ export default function AccessibilityToolbar({
         </div>
       </div>
 
-      {/* Instructions (appears on first use) */}
-      {typeof window !== 'undefined' && !localStorage.getItem('accessibility-seen') && (
-        <div className="bg-brand-primary/5 border-t border-brand-primary/20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-xs text-text-muted">
-                Use these tools to customize your reading experience. Changes persist across pages.
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => localStorage.setItem('accessibility-seen', 'true')}
-                className="text-xs hover:bg-transparent hover:text-brand-primary"
-              >
-                Got it
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Instructions (removed localStorage check - now handled by Provider) */}
     </div>
   );
 }
