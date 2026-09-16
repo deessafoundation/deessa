@@ -14,6 +14,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 const BUCKET_CONFIG: Record<string, string> = {
   testimonials: 'testimonials',
   'support-screenshots': 'support-screenshots',
+  'homepage-hero': 'media', // Hero carousel images go to media bucket
   media: 'media',
 }
 
@@ -99,8 +100,9 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Upload error:', uploadError)
+      console.error('Upload details:', { bucketName, filePath, fileType: file.type, fileSize: file.size })
       return NextResponse.json(
-        { error: 'Failed to upload file. Please try again.' },
+        { error: `Failed to upload file: ${uploadError.message || 'Unknown error'}` },
         { status: 500 }
       )
     }

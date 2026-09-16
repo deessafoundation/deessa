@@ -91,7 +91,10 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
       }
 
       const response = await fetch("/api/upload", { method: "POST", body: formData })
-      if (!response.ok) throw new Error("Upload failed")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Upload failed")
+      }
 
       const data = await response.json()
       updateSlide(index, { image: data.url })
@@ -100,10 +103,11 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
         title: "Image uploaded",
         description: `Slide ${index + 1} image has been uploaded successfully.`,
       })
-    } catch {
+    } catch (error) {
+      console.error("Upload error:", error)
       notifications.showError({
         title: "Upload failed",
-        description: "Could not upload image. Please try again.",
+        description: error instanceof Error ? error.message : "Could not upload image. Please try again.",
       })
     } finally {
       setUploadingIndex(null)
