@@ -11,7 +11,7 @@
 
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import type {
   HomepageStatsSettings,
   HomepageStorySettings,
@@ -48,7 +48,11 @@ import {
 
 async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
   try {
-    const supabase = await createClient()
+    // Homepage settings are public content, but the site_settings table may be
+    // protected by RLS for anonymous visitors. Read it on the server with the
+    // service client so a logged-out homepage never falls back to stale
+    // hard-coded content while the admin correctly shows the database value.
+    const supabase = createServiceRoleClient()
     const { data, error } = await supabase
       .from("site_settings")
       .select("value")

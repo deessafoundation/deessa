@@ -20,6 +20,10 @@ import {
 } from "@/lib/data/homepage-settings"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
+// Homepage content comes from the shared CMS. Always render it from the
+// current database value so admin updates appear on both localhost and live.
+export const dynamic = "force-dynamic"
+
 /* ──────────────────  METADATA  ────────────────── */
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -87,7 +91,7 @@ export default async function HomePage() {
 
       {/* 1. HERO BANNER CAROUSEL - CMS POWERED */}
       <HeroCarousel 
-        slides={heroSlides.length > 0 ? heroSlides : heroSlides} 
+        slides={heroSlides}
         interval={heroCarouselSettings.interval}
       />
 
