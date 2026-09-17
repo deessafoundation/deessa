@@ -10,12 +10,14 @@ const MAX_FILE_SIZE_BY_FOLDER: Record<string, number> = {
 }
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
-// Bucket configuration for different upload types
+// Bucket configuration for different upload types.
+// Homepage images need a public bucket because their saved URL is rendered on
+// the public site. Do not send them to the private, 2 MB support bucket.
 const BUCKET_CONFIG: Record<string, string> = {
   testimonials: 'testimonials',
   'support-screenshots': 'support-screenshots',
-  'homepage-hero': 'hero-images', // Public bucket with a 10 MB image limit
-  media: 'media',
+  'homepage-hero': 'hero-images',
+  media: 'support-screenshots', // Temporarily using support-screenshots bucket
 }
 
 export async function POST(request: NextRequest) {

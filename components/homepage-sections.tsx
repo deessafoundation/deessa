@@ -246,11 +246,13 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
     .sort((a, b) => a.order - b.order)
 
   return (
-    <section id="what-we-do" className="py-20 md:py-28 bg-foreground text-white relative overflow-hidden scroll-mt-24">
+    <section id="what-we-do" className="py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div
-        className="absolute inset-0 opacity-[0.07]"
+        className="absolute inset-0 opacity-[0.5]"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(41,182,200,0.12) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
         }}
       />
@@ -258,8 +260,8 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
             <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{w.title}</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-[#1a1a2e]">{w.title}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               {w.subtitle}
             </p>
           </div>
@@ -275,14 +277,25 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 delay={idx * 150}
                 className="h-full"
               >
-                <div className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}>
+                <div className="group relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-primary/30 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col">
                   <div className="p-8 text-center flex flex-col flex-1">
-                    <p className="text-xs text-white/50 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
+                    <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
-                    <h3 className="text-xl font-black mb-3">{pillar.title}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">{pillar.description}</p>
+                    <h3 className="text-xl font-black mb-3 text-[#1a1a2e]">
+                      {pillar.title.split("&").map((part, i, arr) =>
+                        i === arr.length - 1 ? (
+                          <span key={i}>{part}</span>
+                        ) : (
+                          <span key={i}>
+                            {part}
+                            <span className="font-normal">&</span>
+                          </span>
+                        )
+                      )}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">{pillar.description}</p>
                   </div>
                 </div>
               </ScrollReveal>

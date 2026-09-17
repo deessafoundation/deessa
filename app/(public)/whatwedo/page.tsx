@@ -282,18 +282,6 @@ export default function ProgramsPage() {
             </div>
           </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center mt-12 md:mt-16">
-            <Link
-              href="/impact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[15px] hover:bg-[#1a8fa0] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
-            >
-              See Our Full Impact
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
         </div>
       </section>
 
