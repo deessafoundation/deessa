@@ -62,10 +62,16 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       .maybeSingle()
 
     if (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[homepage settings] Falling back for ${key}:`, error)
+      }
       return defaultValue
     }
 
     if (!data || !data.value) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[homepage settings] Falling back for ${key}: no data`)
+      }
       return defaultValue
     }
 
@@ -74,7 +80,10 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       ...defaultValue,
       ...data.value,
     } as T
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[homepage settings] Falling back for ${key}:`, error)
+    }
     return defaultValue
   }
 }
