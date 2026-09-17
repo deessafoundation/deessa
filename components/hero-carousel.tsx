@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export interface HeroSlide {
+  id?: string
   image: string
   title: string
   subtitle: string
@@ -41,6 +42,27 @@ function normalizeHeroImage(src: string) {
     withSlash = "/home/hero/inclusion-begins-at-home-v2.jpg"
   }
   return withSlash
+}
+
+function getHeroImagePositionClass(slide: HeroSlide) {
+  const image = normalizeHeroImage(slide.image)
+
+  if (image === "/home/hero/real-voices-young-speaker.jpg") {
+    return "md:object-[50%_23%]"
+  }
+
+  // This slide can use either the bundled image or an uploaded Supabase URL.
+  // Match its stable CMS id as well as both URL shapes so localhost and the
+  // deployed site keep the speaker's face in the same crop.
+  if (
+    slide.id === "slide-2" ||
+    image === "/home/hero/inclusion-begins-at-home-v2.jpg" ||
+    /\/hero-slide-2(?:_|\.)/i.test(image)
+  ) {
+    return "object-[62%_18%]"
+  }
+
+  return undefined
 }
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
@@ -149,8 +171,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
               fill
               className={cn(
                 "object-cover",
-                normalizeHeroImage(slide.image) === "/home/hero/real-voices-young-speaker.jpg" && "md:object-[50%_23%]",
-                normalizeHeroImage(slide.image) === "/home/hero/inclusion-begins-at-home-v2.jpg" && "object-[62%_18%]",
+                getHeroImagePositionClass(slide),
                 !prefersReducedMotion && i === current && "animate-kenburns"
               )}
               priority={i === 0}

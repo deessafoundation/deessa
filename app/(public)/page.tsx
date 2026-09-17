@@ -76,6 +76,7 @@ export default async function HomePage() {
     .filter(slide => slide.visible)
     .sort((a, b) => a.order - b.order)
     .map((slide) => ({
+      id: slide.id,
       image: normalizeSlideImage(slide.image, "/home/hero/real-voices-young-speaker.jpg"),
       title: slide.title,
       subtitle: slide.subtitle,
