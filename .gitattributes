@@ -7,3 +7,7 @@ public/every_child.mp4 -filter -diff -merge -text
 "public/Marcus Brand.mp4" -filter -diff -merge -text
 "public/Blair Chen.mp4" -filter -diff -merge -text
 "public/Chris Liu.mp4" -filter -diff -merge -text
+"public/Awareness and community engagement.mp4" -filter -diff -merge -text
+"public/Training.mp4" -filter -diff -merge -text
+"public/Resources.mp4" -filter -diff -merge -text
+"public/Advocacy (2).mp4" -filter -diff -merge -text
