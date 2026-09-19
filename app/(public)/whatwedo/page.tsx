@@ -1,51 +1,50 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Suspense } from "react"
 import { WhatWeDoClient } from "./whatwedo-client"
+import { getPublishedProgramCards } from "@/lib/programs/data"
+import styles from "@/components/page-hero-contrast.module.css"
 
 export const metadata: Metadata = {
   title: "What We Do - deessa Foundation",
   description: "From classrooms in Karnali to clinics in the Terai — our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
 }
 
-// Hardcoded programs data
-const programs = [
-  {
-    id: "autism",
-    category: "autism",
-    categoryLabel: "🧩 AUTISM SUPPORT",
-    categoryColor: "bg-orange-500",
-    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80",
-    title: "Every Mind Is a Gift",
-    description: "Therapy, family counseling, and inclusive education programs for children with autism across Nepal.",
-    slug: "autism-support",
-  },
-  {
-    id: "empowerment",
-    category: "empowerment",
-    categoryLabel: "👩 EMPOWERMENT",
-    categoryColor: "bg-purple-500",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80",
-    title: "Women Who Lead, Communities That Thrive",
-    description: "Skill development, microfinance access, and leadership training for women across 25 districts.",
-    slug: "women-empowerment",
-  },
-  {
-    id: "training",
-    category: "training",
-    categoryLabel: "🎨 TRAINING",
-    categoryColor: "bg-teal-500",
-    image: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=600&q=80",
-    title: "Creative Expression, Lasting Skills",
-    description: "Art workshops and vocational training programs that equip youth with tools for sustainable livelihoods.",
-    slug: "art-training",
-  },
-]
+const categoryMeta: Record<string, { label: string; color: string }> = {
+  service: { label: "SERVICE", color: "bg-blue-500" },
+  campaign: { label: "CAMPAIGN", color: "bg-purple-500" },
+  outreach: { label: "OUTREACH", color: "bg-orange-500" },
+  research: { label: "RESEARCH", color: "bg-teal-500" },
+}
 
-export default function ProgramsPage() {
+async function getPrograms() {
+  try {
+    const cards = await getPublishedProgramCards()
+    return cards.map((card) => {
+      const meta = categoryMeta[card.category] || { label: card.category.toUpperCase(), color: "bg-gray-500" }
+      const cardData = card.card as Record<string, unknown> | null
+      return {
+        id: card.id,
+        category: card.category,
+        categoryLabel: meta.label,
+        categoryColor: meta.color,
+        image: (cardData?.image as string) || "",
+        title: card.title,
+        description: card.short_description,
+        slug: card.slug,
+      }
+    })
+  } catch {
+    return []
+  }
+}
+
+export default async function ProgramsPage() {
+  const programs = await getPrograms()
   return (
     <>
       {/* Hero Section - Immersive Photo Collage */}
-      <section className="relative w-full overflow-hidden h-[100svh] md:h-[88vh]">
+      <section id="whatwedo-hero" className={`${styles.hero} relative w-full overflow-hidden h-[100svh] md:h-[88vh]`}>
         {/* LAYER 1 - Photo Mosaic Background */}
         <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-[2px] bg-[#1a1a2e]">
           {/* Photo 1 - Large classroom (spans col 1-2, row 1) */}
@@ -91,6 +90,7 @@ export default function ProgramsPage() {
 
         {/* LAYER 2 - Gradient Scrim */}
         <div
+          data-hero-shade
           className="absolute inset-0 z-[5]"
           style={{
             background:
@@ -99,10 +99,10 @@ export default function ProgramsPage() {
         />
 
         {/* Mobile darker overlay */}
-        <div className="absolute inset-0 z-[5] bg-[rgba(10,15,35,0.88)] md:hidden" />
+        <div data-mobile-shade className="absolute inset-0 z-[5] bg-[rgba(10,15,35,0.88)] md:hidden" />
 
         {/* LAYER 3 - Content */}
-        <div className="absolute left-[6%] top-1/2 -translate-y-1/2 z-10 max-w-[600px] px-4 md:px-0">
+        <div data-hero-copy className="absolute left-[6%] top-1/2 -translate-y-1/2 z-10 max-w-[600px] px-4 md:px-0">
           {/* Breadcrumb */}
           <div className="mb-5 text-[13px] font-dm-sans text-white/45">Home › Programs</div>
 
@@ -330,7 +330,9 @@ export default function ProgramsPage() {
             </p>
           </div>
           
-          <WhatWeDoClient programs={programs} />
+          <Suspense fallback={<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="bg-gray-100 rounded-2xl h-[380px] animate-pulse" />)}</div>}>
+            <WhatWeDoClient programs={programs} />
+          </Suspense>
         </div>
       </section>
 
