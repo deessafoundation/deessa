@@ -392,7 +392,7 @@ export const DEFAULT_HOMEPAGE_STATS: HomepageStatsSettings = {
     { value: 25, suffix: '+', label: 'Districts Reached', sublabel: 'Out of 77', order: 3 },
     { value: 500, suffix: '+', label: 'Teachers Trained', sublabel: 'In 10 Years', order: 4 },
     { value: 120, suffix: '+', label: 'Villages Served', sublabel: 'Rural Nepal', order: 5 },
-    { value: 3000, suffix: '+', label: 'Scholarships Awarded', sublabel: 'Since 2015', order: 6 },
+    { value: 3000, suffix: '+', label: 'Scholarships Awarded', sublabel: 'Since 2022', order: 6 },
     { value: 847, suffix: '+', label: 'Autism Children', sublabel: 'Supported', order: 7 },
     { value: 200, suffix: '+', label: 'Health Camps Run', sublabel: 'Free of cost', order: 8 },
   ],
@@ -484,7 +484,7 @@ export const DEFAULT_TRUST_INDICATORS: HomepageTrustIndicators = {
   enabled: true,
   indicators: [
     { id: 'transparency', icon: 'shield-check', text: '100% Transparent', subtext: 'Every rupee tracked', order: 1, visible: true },
-    { id: 'registered', icon: 'verified', text: 'Registered NGO', subtext: 'Est. 2015', order: 2, visible: true },
+    { id: 'registered', icon: 'verified', text: 'Registered NGO', subtext: 'Est. 2022', order: 2, visible: true },
     { id: 'impact', icon: 'heart', text: '10,000+ Lives', subtext: 'Directly impacted', order: 3, visible: true },
     { id: 'secure', icon: 'lock', text: 'Secure Donations', subtext: 'SSL encrypted', order: 4, visible: true },
   ],
@@ -631,7 +631,7 @@ export const DEFAULT_TIMELINE: HomepageTimelineSettings = {
   milestones: [
     {
       id: 'milestone-1',
-      year: '2015',
+      year: '2022',
       milestone: 'Founded in Kathmandu',
       description: 'deessa Foundation began with a simple commitment: serve communities that are often left behind.',
       icon: 'MapPin',

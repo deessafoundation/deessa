@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Management Module - Architecture Specification"
 description: "Version: 1.0"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

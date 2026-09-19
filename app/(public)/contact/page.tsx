@@ -9,11 +9,11 @@ import Link from "next/link"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Contact Us - Get in Touch with Deesha Foundation",
-  description: "Get in touch with Deesha Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
+  title: "Contact Us - Get in Touch with Deessa Foundation",
+  description: "Get in touch with Deessa Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
   path: "/contact",
   keywords: [
-    "contact Deesha Foundation",
+    "contact Deessa Foundation",
     "Nepal NGO contact",
     "volunteer Nepal",
     "donate to Nepal",

@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Homepage Settings API - Authentication Fix âœ…"
 description: "The /api/admin/homepage-settings endpoint was returning:"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

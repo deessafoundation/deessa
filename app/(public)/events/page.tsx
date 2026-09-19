@@ -26,7 +26,7 @@ export const revalidate = 300
 export const metadata: Metadata = generateSEOMetadata({
   title: "Events - Workshops & Community Gatherings",
   description:
-    "Browse upcoming events, workshops, and community gatherings organized by Deesha Foundation. Join us in making a difference in Nepal's communities.",
+    "Browse upcoming events, workshops, and community gatherings organized by Deessa Foundation. Join us in making a difference in Nepal's communities.",
   path: "/events",
   keywords: [
     "Nepal events",

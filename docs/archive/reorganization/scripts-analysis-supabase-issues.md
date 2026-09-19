@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Scripts Analysis & Supabase Issues Report"
 description: "Generated: August 5, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

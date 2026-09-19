@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Smoke Test Guide - Payment Architecture V2"
 description: "This guide provides detailed instructions for running smoke tests in the staging environment after deploying Payment ..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

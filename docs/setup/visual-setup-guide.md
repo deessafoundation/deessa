@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Receipt System - Google Email Setup - Visual Guide"
 description: "Documentation for receipt system - google email setup - visual guide"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: setup
 audience: admin

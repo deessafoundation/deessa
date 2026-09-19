@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Vercel Receipt Generation Deployment Checklist"
 description: "This checklist ensures that receipt generation works correctly in your Vercel production deployment. Follow each step..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: developer

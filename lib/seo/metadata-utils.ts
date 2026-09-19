@@ -8,7 +8,7 @@
 import type { Metadata } from 'next'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-const SITE_NAME = 'Deesha Foundation'
+const SITE_NAME = 'Deessa Foundation'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`
 
 export interface SEOMetadataParams {
@@ -93,7 +93,7 @@ export function generateSEOMetadata({
       type: 'article',
       publishedTime,
       modifiedTime,
-      authors: author ? [author] : ['Deesha Foundation'],
+      authors: author ? [author] : ['Deessa Foundation'],
       section,
     }
   }

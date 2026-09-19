@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Accessibility Toolbar - Quick Start Guide"
 description: "The accessibility toolbar appears at the top of podcast pages can be added to any page."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

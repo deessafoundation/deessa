@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Story Editor Modernization Plan"
 description: "Build and roll out a production-grade admin story editor with rich text, images, layout blocks, embeds, safe renderin..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: planning
 category: planning
 audience: admin

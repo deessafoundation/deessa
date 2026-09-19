@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { SecretKeyListener } from "@/components/secret-key-listener"
 import { HeroCarousel } from "@/components/hero-carousel"
 import type { HeroSlide } from "@/components/hero-carousel"
-import { HomeAccessibilityButton } from "@/components/home-accessibility-button"
 import {
   OurStorySection,
   MissionVisionSection,
@@ -27,7 +26,7 @@ export const dynamic = "force-dynamic"
 /* ──────────────────  METADATA  ────────────────── */
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Deesha Foundation - Empowering Nepal Through Education & Social Development",
+  title: "Deessa Foundation - Empowering Nepal Through Education & Social Development",
   description: "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for vulnerable communities in Nepal. Focused on autism support and disability rights.",
   path: "/",
   keywords: [
@@ -87,8 +86,8 @@ export default async function HomePage() {
 
   return (
     <SecretKeyListener>
-      {/* Accessibility Button - fixed on right side */}
-      <HomeAccessibilityButton />
+      {/* The accessibility launcher is mounted once for every public page in
+          app/(public)/layout.tsx — see components/accessibility. */}
 
       {/* 1. HERO BANNER CAROUSEL - CMS POWERED */}
       <HeroCarousel 

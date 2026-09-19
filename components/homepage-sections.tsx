@@ -277,7 +277,11 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 delay={idx * 150}
                 className="h-full"
               >
-                <div className="group relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-primary/30 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col">
+                <Link
+                  href={`/whatwedo/${pillar.id}`}
+                  aria-label={`Explore ${pillar.title}`}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                >
                   <div className="p-8 text-center flex flex-col flex-1">
                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
                     <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
@@ -296,8 +300,12 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                       )}
                     </h3>
                     <p className="text-slate-600 text-sm leading-relaxed">{pillar.description}</p>
+                    <span className="mt-auto inline-flex items-center justify-center gap-2 pt-6 text-sm font-bold text-sky-600">
+                      Explore this area
+                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
                   </div>
-                </div>
+                </Link>
               </ScrollReveal>
             )
           })}
@@ -552,7 +560,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
 
 export function PodcastSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
+    <section className="relative overflow-hidden bg-white py-14 sm:py-20 md:py-28">
       <div className="absolute -left-28 top-12 size-80 rounded-full bg-primary/10 blur-3xl" />
       <div className="absolute -right-24 bottom-0 size-96 rounded-full bg-[#F7C52B]/15 blur-3xl" />
 
@@ -564,32 +572,32 @@ export function PodcastSection() {
             aria-label="Explore the Living With Autism podcast"
           >
             <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="relative min-h-72 overflow-hidden sm:min-h-96 lg:min-h-full">
+              <div className="relative aspect-[16/9] overflow-hidden lg:aspect-auto lg:min-h-full">
                 <Image
                   src="/podcast_banner.png"
                   alt="Living With Autism podcast with Sarita and Merina"
                   fill
                   sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover object-[72%_10%] transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105 lg:object-[72%_10%]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
               </div>
 
-              <div className="flex flex-col justify-center p-8 text-white sm:p-12 lg:p-14">
-                <h2 className="mb-5 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
+              <div className="flex flex-col justify-center p-6 text-white sm:p-12 lg:p-14">
+                <h2 className="mb-3 text-[26px] font-black tracking-tight sm:mb-5 sm:text-4xl lg:text-5xl">
                   Living With Autism
                 </h2>
-                <p className="mb-8 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
+                <p className="mb-5 max-w-lg text-[15px] leading-relaxed text-white/70 sm:mb-8 sm:text-lg">
                   Real voices and real stories. Listen to honest conversations about autism, inclusion, and the experiences that shape our communities.
                 </p>
 
                 {/* Hosts Section */}
-                <div className="mb-8">
-                  <p className="text-xs font-bold uppercase tracking-wider text-primary mb-4">Hosted By</p>
-                  <div className="flex flex-wrap gap-4">
+                <div className="mb-5 sm:mb-8">
+                  <p className="text-xs font-bold uppercase tracking-wider text-primary mb-3 sm:mb-4">Hosted By</p>
+                  <div className="flex flex-row flex-wrap gap-2.5 sm:gap-4">
                     {/* Host 1: Merina Panthii */}
-                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full pl-1 pr-4 py-1 border border-white/10 hover:border-primary/40 transition-all duration-300">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
+                    <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 sm:flex-none sm:gap-3 sm:pr-4">
+                      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/30 sm:h-10 sm:w-10">
                         <Image
                           src="/Merina Panthii.jpg"
                           alt="Merina Panthii"
@@ -597,15 +605,15 @@ export function PodcastSection() {
                           className="object-cover"
                         />
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-white">Merina Panthii</span>
-                        <span className="text-xs text-white/60">President & Host</span>
+                      <div className="flex min-w-0 flex-col">
+                        <span className="truncate text-[13px] font-bold text-white sm:text-sm">Merina Panthii</span>
+                        <span className="truncate text-[11px] text-white/60 sm:text-xs">President &amp; Host</span>
                       </div>
                     </div>
 
                     {/* Host 2: Sarita Sapkota */}
-                    <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full pl-1 pr-4 py-1 border border-white/10 hover:border-primary/40 transition-all duration-300">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
+                    <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 sm:flex-none sm:gap-3 sm:pr-4">
+                      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/30 sm:h-10 sm:w-10">
                         <Image
                           src="/Sarita Sapkota.jpg"
                           alt="Sarita Sapkota"
@@ -613,9 +621,9 @@ export function PodcastSection() {
                           className="object-cover"
                         />
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-white">Sarita Sapkota</span>
-                        <span className="text-xs text-white/60">Parent & Host</span>
+                      <div className="flex min-w-0 flex-col">
+                        <span className="truncate text-[13px] font-bold text-white sm:text-sm">Sarita Sapkota</span>
+                        <span className="truncate text-[11px] text-white/60 sm:text-xs">Parent &amp; Host</span>
                       </div>
                     </div>
                   </div>

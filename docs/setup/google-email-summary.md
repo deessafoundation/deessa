@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Receipt System - Google Email Configuration Complete"
 description: "File: scripts/011-receipt-system-complete.sql"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: setup
 audience: admin

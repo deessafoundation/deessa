@@ -1,7 +1,7 @@
-﻿---
+---
 title: "PLAN.md Revision Notes â€” Post-Review Update"
 description: "Based on code review feedback, the plan has been updated to reflect that migration 056 already implemented critical s..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: operator

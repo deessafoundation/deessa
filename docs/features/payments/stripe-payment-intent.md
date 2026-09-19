@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Stripe Payment Intent ID Issue - Analysis & Implementation Plan"
 description: "Current Issue: Our system stores Stripe checkoutsessionid e.g., cstestxxx as the transaction reference in the payment..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

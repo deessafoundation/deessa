@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * Dynamic sitemap generation for Deesha Foundation
+ * Dynamic sitemap generation for Deessa Foundation
  * 
  * Includes:
  * - Static public pages (home, about, contact, etc.)

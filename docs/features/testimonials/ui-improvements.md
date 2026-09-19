@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Testimonials UI Improvements"
 description: "Location: components/admin/homepage-manager/components/TestimonialsManager.tsx"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

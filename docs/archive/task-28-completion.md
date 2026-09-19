@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Task 28: Deployment - Completion Summary"
 description: "Task 28 Deployment has been completed with comprehensive documentation, scripts, and checklists to support the full d..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: operator

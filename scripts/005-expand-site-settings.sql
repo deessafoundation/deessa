@@ -21,7 +21,7 @@ VALUES (
     "donorImage2": "https://lh3.googleusercontent.com/aida-public/AB6AXuAQzzIOZUDnI5i7x-Rnn2k4ELK3S1FCIb1F3EuSFxtUqWmskQ7-5WPPojjO-T1yebP4Zhgg-uFd3t4Hk6CSc5nT8xIoOsyxdpIQ5Zdyxboo1c4wL5UnBVoj1rY4vRO86yiTlhaheV6-PfvhGGWJWJVIHXp1jIfy84HkXDw5ZCKpkYujNgDoTCeJwKQNjZ9iLg_m-F0RkpFyF8pqHdtB7ydd2rNkidpGit3y_RPVuumO4GIzMhRneQ5STuJRSxMxhAG6TYvZBSVKoz4",
     "title": "Hope for Every Child.",
     "subtitle": "We are rewriting the future of rural Nepal through education, healthcare, and community empowerment.",
-    "badge": "Est. 2015 • Kathmandu"
+    "badge": "Est. 2022 • Kathmandu"
   }'::jsonb
 )
 ON CONFLICT (key) DO NOTHING;
@@ -60,7 +60,7 @@ VALUES (
     "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5xzHfv2hii0hZm5knPtqnBhBXuF43kiNX-3L6bPoaNWoNJhuaBEp0UnvkJbxD_8jxmQHLjE0b1j-TMOJq_VOIrW9983EZgYM46P8MAwn7PzfzaLz2HsWKlKvt5lKXcXf_b6vms2V8NcnXaz9-_X8SNQsr6s7_GyimSfmkpcQ4Oh5YRcHnl1A7tisgSR5H6pZkE2H_RJ7Ed4vN8OmKIZ2WhCp5LlGraRVM17Ryo2wWWdRDFec31aYUj8Kv479a7Hlv2NIwScl7Eek",
     "title": "Our Story, Your Impact.",
     "subtitle": "We are dedicated to bridging the gap between potential and opportunity in Nepal''s most remote communities.",
-    "badge": "Since 2015",
+    "badge": "Since 2022",
     "overlayOpacity": 0.6
   }'::jsonb
 )

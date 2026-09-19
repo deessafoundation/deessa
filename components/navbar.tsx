@@ -92,22 +92,39 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Collapsing the secondary row changes the document height. A single
-      // threshold can therefore bounce between states near the top of a page.
-      // Keep a small buffer between entering and leaving the compact state.
+    let animationFrame: number | null = null
+
+    const updateScrollState = () => {
+      animationFrame = null
+      const scrollPosition = Math.max(0, window.scrollY)
+
+      // The secondary row is about 50px tall, so collapsing it can reduce the
+      // reported scroll position by the same amount. Keep the hide and reveal
+      // thresholds farther apart than that layout shift to prevent flickering.
       const nextScrolled = scrolledRef.current
-        ? window.scrollY > 8
-        : window.scrollY > 48
+        ? scrollPosition > 16
+        : scrollPosition > 120
 
       if (nextScrolled !== scrolledRef.current) {
         scrolledRef.current = nextScrolled
         setScrolled(nextScrolled)
       }
     }
-    handleScroll()
+
+    const handleScroll = () => {
+      if (animationFrame === null) {
+        animationFrame = window.requestAnimationFrame(updateScrollState)
+      }
+    }
+
+    updateScrollState()
     window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame)
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -347,6 +364,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
 
           {/* Layer 2 (middle): Sub-nav tucked under the curve */}
           <div
+            data-secondary-nav
             className={cn(
               "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 dark:bg-slate-900 lg:block",
               scrolled ? "max-h-0 translate-y-[-8px] py-0 pt-0 pb-0 opacity-0" : "max-h-24 translate-y-0 opacity-100"

@@ -1,7 +1,7 @@
-﻿---
+---
 title: "ðŸš€ Event Management Module - Get Started"
 description: "Welcome This is your starting point for the Event Management Module project."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

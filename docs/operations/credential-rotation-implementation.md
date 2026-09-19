@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Credential Rotation Implementation Summary"
 description: "This document summarizes the implementation of Task 16 Credential Rotation from the Payment Architecture V2 specifica..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: developer

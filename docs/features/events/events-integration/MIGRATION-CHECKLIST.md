@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Migration 057 Pre-Flight Checklist"
 description: "Run these queries in Supabase SQL Editor to verify prerequisites:"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

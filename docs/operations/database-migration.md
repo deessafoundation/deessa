@@ -1,7 +1,7 @@
-﻿---
+---
 title: "ðŸ—„ï¸ Database Migration Guide"
 description: "Before using the new Homepage Content Management System, you MUST run this database migration."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin
@@ -21,7 +21,7 @@ Before using the new Homepage Content Management System, you **MUST** run this d
 
 1. **Open Supabase Dashboard**
    - Go to: <https://supabase.com/dashboard>
-   - Select your project: "Deesha Foundation"
+   - Select your project: "Deessa Foundation"
 
 2. **Open SQL Editor**
    - Click "SQL Editor" in the left sidebar
@@ -58,7 +58,7 @@ supabase login
 
 ```bash
 # From project root directory
-cd "d:\Web Codes\Projects\Deesha Foundation"
+cd "d:\Web Codes\Projects\Deessa Foundation"
 
 # Link to your project (first time only)
 supabase link --project-ref YOUR_PROJECT_REF
@@ -78,7 +78,7 @@ If running locally for testing:
 
 ```bash
 # Connect to your local database
-psql -U postgres -d deesha_foundation
+psql -U postgres -d deessa_foundation
 
 # Run the migration
 \i scripts/006-media-assets.sql

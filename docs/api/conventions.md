@@ -1,7 +1,7 @@
-﻿---
+---
 title: "API Conventions"
-description: "This document defines the standard patterns used across all Deesha Foundation API endpoints."
-owner: "Deesha Team"
+description: "This document defines the standard patterns used across all Deessa Foundation API endpoints."
+owner: "Deessa Team"
 status: reference
 category: reference
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # API Conventions
 
-This document defines the standard patterns used across all Deesha Foundation API endpoints.
+This document defines the standard patterns used across all Deessa Foundation API endpoints.
 
 ## Response Format
 
@@ -234,8 +234,8 @@ Duplicate event IDs are detected and return `200 OK` without reprocessing.
 
 Cross-origin requests are allowed for:
 
-- `https://deesha.org`
-- `https://*.deesha.org`
+- `https://deessa.org`
+- `https://*.deessa.org`
 - `http://localhost:3000` (development)
 
 ## Content Types

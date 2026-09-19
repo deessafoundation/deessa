@@ -1,7 +1,7 @@
-﻿---
+---
 title: "âœ… Pre-Deployment Verification Report"
 description: "Date: March 6, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: operator

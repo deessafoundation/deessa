@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Upload API"
 description: "The Upload API handles file uploads to Supabase Storage for testimonials, support screenshots, and media assets."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: reference
 category: reference
 audience: admin

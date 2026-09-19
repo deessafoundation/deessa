@@ -1,7 +1,7 @@
-﻿---
+---
 title: "V2 PaymentService Integration for Event Registrations"
 description: "Revision History:"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

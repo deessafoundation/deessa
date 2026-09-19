@@ -1,7 +1,7 @@
-﻿---
+---
 title: "ðŸš€ Homepage CMS Deployment Checklist"
 description: "- x SQL migration file created scripts/037-homepage-cms-schema.sql"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

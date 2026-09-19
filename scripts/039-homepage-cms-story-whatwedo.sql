@@ -17,7 +17,7 @@ VALUES (
     ],
     "linkText": "Read Our Full Story",
     "linkUrl": "/our-story",
-    "founded": "2015",
+    "founded": "2022",
     "foundedLabel": "Founded",
     "image": "/ourStory.png",
     "imageAlt": "How deessa started - our origin story"

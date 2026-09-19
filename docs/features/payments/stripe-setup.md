@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Stripe Payment Integration Setup Guide"
-description: "This guide will help you set up Stripe payment integration for the Deesha Foundation donation page."
-owner: "Deesha Team"
+description: "This guide will help you set up Stripe payment integration for the Deessa Foundation donation page."
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Stripe Payment Integration Setup Guide
 
-This guide will help you set up Stripe payment integration for the Deesha Foundation donation page.
+This guide will help you set up Stripe payment integration for the Deessa Foundation donation page.
 
 ## Overview
 

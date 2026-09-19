@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ],
       publishedTime: story.published_at || story.created_at,
       modifiedTime: story.updated_at,
-      authors: ['Deesha Foundation'],
+      authors: ['Deessa Foundation'],
       section: story.category || 'Stories',
     },
     twitter: {

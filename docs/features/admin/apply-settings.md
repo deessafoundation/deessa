@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Apply Site Settings to Database"
 description: "Your homepage is now connected to the database settings, but you need to populate the database first."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Receipt URL Fix for Vercel Deployment âœ…"
 description: "Your receipt download URLs were using localhost:3000 even in Vercel deployments, causing ERRBLOCKEDBYCLIENT errors. T..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: operator

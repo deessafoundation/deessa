@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Deesha Foundation API
+  title: Deessa Foundation API
   version: 1.0.0
   description: |
-    API for Deesha Foundation - donation management, event registration, and payment processing.
+    API for Deessa Foundation - donation management, event registration, and payment processing.
     
     ## Authentication
     Most endpoints require authentication via Supabase Auth JWT tokens.
@@ -11,16 +11,16 @@ info:
     ## Rate Limiting
     Public endpoints are rate-limited. See individual endpoint documentation for limits.
   contact:
-    name: Deesha Foundation
-    url: https://deesha.org
+    name: Deessa Foundation
+    url: https://deessa.org
   license:
     name: Proprietary
-    url: https://deesha.org
+    url: https://deessa.org
 
 servers:
-  - url: https://deesha.org/api
+  - url: https://deessa.org/api
     description: Production
-  - url: https://staging.deesha.org/api
+  - url: https://staging.deessa.org/api
     description: Staging
   - url: http://localhost:3000/api
     description: Development

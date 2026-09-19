@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Story Editor Modernization â€” Implementation Status"
 description: " Last Updated: April 4, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

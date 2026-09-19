@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” Payment Flows"
 description: "- Frontend sends POST /api/events/start-payment with {registrationId, email, provider: \"stripe\"}"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

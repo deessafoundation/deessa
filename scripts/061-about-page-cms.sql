@@ -22,7 +22,7 @@ VALUES (
       "trustBadges": ["Govt Registered", "SWC Affiliated"]
     },
     "intro": {
-      "sinceBadge": "✦ Since 2015",
+      "sinceBadge": "✦ Since 2022",
       "label": "Who We Are",
       "headline": "Every child deserves to be understood, accepted, and valued — just as they are.",
       "paragraphs": [

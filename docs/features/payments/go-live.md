@@ -1,7 +1,7 @@
-﻿---
+---
 title: "deessa Foundation â€“ Payments Architecture & Go-Live Guide"
 description: "This document explains how the donation payment system works Stripe + Khalti + eSewa, how to configure it per environ..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin
@@ -552,6 +552,6 @@ For detailed provider-specific documentation, see:
 3. Verify environment variables are set correctly
 4. Test in sandbox/staging environment
 5. Contact provider support if issue persists
-6. Contact Deesha Foundation technical team
+6. Contact Deessa Foundation technical team
 
 This document should give future maintainers everything needed to understand, audit, and safely evolve the payment system without re-reading all of the implementation code. If you change any payment-related logic, please update this file accordingly.

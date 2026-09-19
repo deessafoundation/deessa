@@ -26,7 +26,12 @@ interface SchemaImportExportProps {
 }
 
 interface ImportData {
-  deesha_form_schema: boolean
+  deessa_form_schema?: boolean
+  /**
+   * Legacy marker from before the "Deesha" spelling was corrected. Still
+   * accepted on import so schema files exported by older builds keep working.
+   */
+  deesha_form_schema?: boolean
   version?: number
   exportedAt?: string
   schema: FormSchema
@@ -41,7 +46,7 @@ export function SchemaImportExport({ schema, onImport }: SchemaImportExportProps
   // ── Export ────────────────────────────────────────────────────────────────
   const handleExport = () => {
     const exportData = {
-      deesha_form_schema: true,
+      deessa_form_schema: true,
       version: schema.version,
       exportedAt: new Date().toISOString(),
       schema,
@@ -78,9 +83,9 @@ export function SchemaImportExport({ schema, onImport }: SchemaImportExportProps
       try {
         const data = JSON.parse(event.target?.result as string) as ImportData
 
-        // Validate
-        if (!data.deesha_form_schema) {
-          setImportError("This is not a valid Deesha form schema file.")
+        // Validate. Accept the legacy marker so older exports still import.
+        if (!data.deessa_form_schema && !data.deesha_form_schema) {
+          setImportError("This is not a valid Deessa form schema file.")
           setImportDialogOpen(true)
           return
         }

@@ -1,23 +1,23 @@
-﻿---
-title: "Deesha Foundation API Reference"
-description: "The Deesha Foundation API provides programmatic access to the donation management, event registration, payment proces..."
-owner: "Deesha Team"
+---
+title: "Deessa Foundation API Reference"
+description: "The Deessa Foundation API provides programmatic access to the donation management, event registration, payment proces..."
+owner: "Deessa Team"
 status: reference
 category: reference
 audience: admin
 last_updated: 2026-09-12
 ---
-# Deesha Foundation API Reference
+# Deessa Foundation API Reference
 
 ## Overview
 
-The Deesha Foundation API provides programmatic access to the donation management, event registration, payment processing, and admin systems. All endpoints follow RESTful conventions and return JSON responses.
+The Deessa Foundation API provides programmatic access to the donation management, event registration, payment processing, and admin systems. All endpoints follow RESTful conventions and return JSON responses.
 
 ## Base URL
 
 ```
-Production:  https://deesha.org/api
-Staging:     https://staging.deesha.org/api
+Production:  https://deessa.org/api
+Staging:     https://staging.deessa.org/api
 Development: http://localhost:3000/api
 ```
 

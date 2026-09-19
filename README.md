@@ -11,7 +11,7 @@
   [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat&logo=github-actions)](https://github.com/features/actions)
   [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat&logo=vercel)](https://vercel.com/)
   
-  **Website:** [deessafoundation.com](https://deessafoundation.com) | **Since:** 2015 | **Location:** Kathmandu, Nepal
+  **Website:** [deessafoundation.com](https://deessafoundation.com) | **Since:** 2022 | **Location:** Kathmandu, Nepal
   
   ---
   
@@ -23,7 +23,7 @@
 
 ## 🌟 About
 
-Founded in 2015, deessa Foundation works to bridge the gap between potential and opportunity in Nepal's most remote communities. We focus on holistic community development through:
+Founded in 2022, deessa Foundation works to bridge the gap between potential and opportunity in Nepal's most remote communities. We focus on holistic community development through:
 
 - **Education:** Building schools and providing educational resources
 - **Healthcare:** Delivering medical supplies and health camps

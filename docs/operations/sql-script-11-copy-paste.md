@@ -1,7 +1,7 @@
-﻿---
+---
 title: "SQL SCRIPT 11 - COMPLETE COPY & PASTE READY (FIXED VERSION)"
 description: "1. Open Supabase Dashboard: https://app.supabase.com"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

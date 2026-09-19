@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Google Email Configuration Guide for Receipt System"
 description: "The receipt system is configured to send emails using Google Email Gmail or Google Workspace. This guide walks you th..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: setup
 audience: admin

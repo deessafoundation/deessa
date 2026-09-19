@@ -75,7 +75,7 @@ export async function getHomeHeroSettings(): Promise<HomeHeroSettings> {
     title: "Hope for Every Child.",
     subtitle:
       "We are rewriting the future of rural Nepal through education, healthcare, and community empowerment.",
-    badge: "Est. 2015 • Kathmandu",
+    badge: "Est. 2022 • Kathmandu",
   }
 
   try {
@@ -170,7 +170,7 @@ export async function getPageHeroSettings(page: string): Promise<HeroSettings> {
       title: "Our Story, Your Impact.",
       subtitle:
         "We are dedicated to bridging the gap between potential and opportunity in Nepal's most remote communities.",
-      badge: "Since 2015",
+      badge: "Since 2022",
       overlayOpacity: 0.6,
     },
     contact: {

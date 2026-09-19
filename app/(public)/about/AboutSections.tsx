@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
+import { OrgStructure } from "./OrgStructure"
 
 const TEAL = "#29b6c8"
 const DARK = "#1a1a2e"
@@ -322,6 +323,9 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           </div>
         </div>
       </section>
+
+      {/* SECTION 5.5: HOW THE FOUNDATION IS ORGANIZED (GOVERNANCE) */}
+      <OrgStructure />
 
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
       <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team">

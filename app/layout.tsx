@@ -15,8 +15,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.c
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Deesha Foundation - Empowering Nepal Through Education & Social Development",
-    template: "%s | Deesha Foundation",
+    default: "Deessa Foundation - Empowering Nepal Through Education & Social Development",
+    template: "%s | Deessa Foundation",
   },
   description:
     "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for the most vulnerable communities in Nepal, with a special focus on children with disabilities and autism.",
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     "inclusive education",
     "community empowerment",
   ],
-  authors: [{ name: "Deesha Foundation" }],
-  creator: "Deesha Foundation",
-  publisher: "Deesha Foundation",
+  authors: [{ name: "Deessa Foundation" }],
+  creator: "Deessa Foundation",
+  publisher: "Deessa Foundation",
   robots: {
     index: true,
     follow: true,
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Deesha Foundation",
-    title: "Deesha Foundation - Empowering Nepal",
+    siteName: "Deessa Foundation",
+    title: "Deessa Foundation - Empowering Nepal",
     description:
       "Dedicated to sustainable development, quality education, and social upliftment for the most vulnerable in Nepal.",
     images: [
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
         url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Deesha Foundation - Empowering Nepal",
+        alt: "Deessa Foundation - Empowering Nepal",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Deesha Foundation - Empowering Nepal",
+    title: "Deessa Foundation - Empowering Nepal",
     description:
       "Dedicated to sustainable development, quality education, and social upliftment for the most vulnerable in Nepal.",
     images: [`${SITE_URL}/og-image.png`],

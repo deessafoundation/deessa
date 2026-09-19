@@ -1,17 +1,17 @@
-﻿---
-title: "Internal Linking Strategy - Deesha Foundation"
+---
+title: "Internal Linking Strategy - Deessa Foundation"
 description: "Internal linking is crucial for SEO and user experience. This document outlines the internal linking strategy impleme..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: reference
 audience: developer
 last_updated: 2026-09-12
 ---
-# Internal Linking Strategy - Deesha Foundation
+# Internal Linking Strategy - Deessa Foundation
 
 ## Overview
 
-Internal linking is crucial for SEO and user experience. This document outlines the internal linking strategy implemented across the Deesha Foundation website, following Google SEO best practices.
+Internal linking is crucial for SEO and user experience. This document outlines the internal linking strategy implemented across the Deessa Foundation website, following Google SEO best practices.
 
 ## Why Internal Linking Matters
 
@@ -636,7 +636,7 @@ Page includes:
 
 ## Conclusion
 
-A strong internal linking strategy benefits both SEO and user experience. By following the guidelines in this document and consistently implementing contextual links, the Deesha Foundation website will:
+A strong internal linking strategy benefits both SEO and user experience. By following the guidelines in this document and consistently implementing contextual links, the Deessa Foundation website will:
 
 - Improve search engine rankings
 - Increase user engagement

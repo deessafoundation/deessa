@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Database Migration Guide - Multi-Event Support"
 description: "Quick Reference: Which scripts to run and in what order"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

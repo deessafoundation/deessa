@@ -124,7 +124,7 @@ VALUES (
     "milestones": [
       {
         "id": "milestone-1",
-        "year": "2015",
+        "year": "2022",
         "milestone": "Founded in Kathmandu",
         "description": "deessa Foundation began with a simple commitment: serve communities that are often left behind.",
         "icon": "MapPin",

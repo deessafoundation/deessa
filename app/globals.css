@@ -1783,3 +1783,138 @@ body.high-contrast img {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ===========================================
+   ACCESSIBILITY: TEXT-TO-SPEECH & PREFERENCES
+   =========================================== */
+
+/* ── Spoken section highlight ──────────────────────────────────────────────
+   Applied as an attribute so CMS HTML is never rewritten. Uses an outline plus
+   a background tint so the cue survives high-contrast and forced-colors modes
+   where background colours are overridden. */
+[data-tts-active="true"] {
+  background-color: rgb(63 171 222 / 0.14);
+  outline: 2px solid rgb(11 95 138);
+  outline-offset: 3px;
+  border-radius: 4px;
+  scroll-margin-block: 25vh;
+  /* Keep the tint above decorative section backgrounds. */
+  position: relative;
+  z-index: 1;
+}
+
+body.high-contrast [data-tts-active="true"] {
+  background-color: rgb(255 243 176);
+  outline-color: rgb(0 0 0);
+  outline-width: 3px;
+}
+
+@media (forced-colors: active) {
+  [data-tts-active="true"] {
+    outline: 3px solid Highlight;
+    background-color: Canvas;
+  }
+}
+
+/* ── Reduce motion ────────────────────────────────────────────────────────
+   Opt-in mirror of prefers-reduced-motion for visitors whose OS setting does
+   not match what they want on this site. */
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+body.reduce-motion [class*="animate-"] {
+  animation: none !important;
+}
+
+body.reduce-motion {
+  scroll-behavior: auto !important;
+}
+
+/* ── Calming mode ─────────────────────────────────────────────────────────
+   Lowers visual intensity for visitors with sensory sensitivity, migraine or
+   attention-related needs: desaturated colour, no motion, softer contrast. */
+body.calming-mode {
+  --brand-yellow: 214 200 160;
+}
+
+body.calming-mode img,
+body.calming-mode video,
+body.calming-mode [class*="gradient"] {
+  filter: saturate(0.55) contrast(0.95);
+}
+
+body.calming-mode *,
+body.calming-mode *::before,
+body.calming-mode *::after {
+  animation: none !important;
+  transition-duration: 0.001ms !important;
+  text-shadow: none !important;
+}
+
+body.calming-mode * {
+  box-shadow: none !important;
+}
+
+/* ── Accessibility panel range inputs ─────────────────────────────────────
+   Native <input type="range"> needs per-engine styling. Track and thumb sizes
+   keep the 44px touch target from the wrapper while staying visually compact. */
+.a11y-range {
+  --a11y-range-track: rgb(226 232 240);
+  --a11y-range-fill: rgb(63 171 222);
+}
+
+.a11y-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--a11y-range-track);
+}
+
+.a11y-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  margin-top: -6px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid var(--a11y-range-fill);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+  cursor: pointer;
+}
+
+.a11y-range::-moz-range-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--a11y-range-track);
+}
+
+.a11y-range::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid var(--a11y-range-fill);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+  cursor: pointer;
+}
+
+.a11y-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--a11y-range-fill);
+  outline-offset: 2px;
+}
+
+.a11y-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--a11y-range-fill);
+  outline-offset: 2px;
+}
+
+body.high-contrast .a11y-range {
+  --a11y-range-track: rgb(120 120 120);
+  --a11y-range-fill: rgb(0 0 0);
+}

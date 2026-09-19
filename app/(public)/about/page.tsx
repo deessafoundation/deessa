@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import { createClient } from "@/lib/supabase/server"
 import { AboutHero } from "@/components/about-hero"
 import { AboutSections } from "./AboutSections"
@@ -7,12 +7,12 @@ import { teamMembers as fallbackTeamMembers } from "@/data/team"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Who We Are - About Deesha Foundation",
+  title: "Who We Are - About Deessa Foundation",
   description:
-    "Learn about Deesha Foundation, a non-profit working for and with children with disabilities in Nepal, with a special focus on autism. Building a Nepal where every child is seen, heard, and included.",
+    "Learn about Deessa Foundation, a non-profit working for and with children with disabilities in Nepal, with a special focus on autism. Building a Nepal where every child is seen, heard, and included.",
   path: "/about",
   keywords: [
-    "about Deesha Foundation",
+    "about Deessa Foundation",
     "Nepal disability NGO",
     "autism organization Nepal",
     "child disability support",

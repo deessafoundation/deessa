@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
@@ -12,7 +12,7 @@ export const revalidate = 0
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Impact Stories - Real Stories of Change in Nepal",
-  description: "Read inspiring stories of impact and transformation from our community. Discover how Deesha Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
+  description: "Read inspiring stories of impact and transformation from our community. Discover how Deessa Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
   path: "/stories",
   keywords: [
     "Nepal impact stories",

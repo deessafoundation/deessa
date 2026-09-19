@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Backend & Admin Functionality Analysis"
 description: "Your backend infrastructure is well-architected with proper database schema, authentication, and role-based access co..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: architecture
 audience: admin

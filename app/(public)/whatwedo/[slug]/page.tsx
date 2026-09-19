@@ -9,6 +9,8 @@ import { getProjectBySlug, getPublishedProjectsStatic } from "@/lib/data/project
 import { generateSEOMetadata, extractExcerpt, getOGImageUrl, generateKeywords } from "@/lib/seo/metadata-utils"
 import { StructuredData } from "@/components/seo/structured-data"
 import { getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
+import { WhatWeDoAreaDetail } from "@/components/what-we-do-area-detail"
+import { getWhatWeDoArea, WHAT_WE_DO_AREA_IDS } from "@/lib/data/what-we-do-areas"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -16,13 +18,27 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const projects = await getPublishedProjectsStatic()
-  return projects.map((project) => ({
-    slug: project.slug,
-  }))
+  const slugs = new Set([
+    ...WHAT_WE_DO_AREA_IDS,
+    ...projects.map((project) => project.slug),
+  ])
+
+  return Array.from(slugs).map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const area = getWhatWeDoArea(slug)
+
+  if (area) {
+    return generateSEOMetadata({
+      title: `${area.label} | What We Do`,
+      description: area.subtitle,
+      path: `/whatwedo/${area.id}`,
+      keywords: [area.label, "autism support Nepal", "inclusive education", "Deessa Foundation"],
+    })
+  }
+
   const project = await getProjectBySlug(slug)
 
   if (!project) {
@@ -48,6 +64,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProgramDetailPage({ params }: PageProps) {
   const { slug } = await params
+  const area = getWhatWeDoArea(slug)
+
+  if (area) {
+    return <WhatWeDoAreaDetail area={area} />
+  }
+
   const project = await getProjectBySlug(slug)
 
   if (!project) {

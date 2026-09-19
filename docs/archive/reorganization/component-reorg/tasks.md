@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Component Reorganization Plan"
 description: " Status: Planning only â€” no files moved or renamed yet."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin
