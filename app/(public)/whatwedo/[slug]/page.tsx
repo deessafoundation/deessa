@@ -1,223 +1,58 @@
 import type { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, MapPin, Heart, CheckCircle, Clock, Circle } from "lucide-react"
-import { Section } from "@/components/ui/section"
-import { Button } from "@/components/ui/button"
-import { getProjectBySlug, getPublishedProjectsStatic } from "@/lib/data/projects"
-import { generateSEOMetadata, extractExcerpt, getOGImageUrl, generateKeywords } from "@/lib/seo/metadata-utils"
-import { StructuredData } from "@/components/seo/structured-data"
-import { getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
+import { getPublishedProgramBySlug, getRelatedPrograms } from "@/lib/programs/data"
+import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
+import { CmsProgramRenderer } from "@/components/programs/CmsProgramRenderer"
+import type { ProgramDocument } from "@/lib/programs/content"
 
 interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  const projects = await getPublishedProjectsStatic()
-  return projects.map((project) => ({
-    slug: project.slug,
-  }))
+export const revalidate = 60
+
+async function sanitizeDocument(doc: ProgramDocument): Promise<ProgramDocument> {
+  const sanitized = { ...doc, sections: [...doc.sections] }
+  for (let i = 0; i < sanitized.sections.length; i++) {
+    const section = sanitized.sections[i]
+    // Sanitize rich_text body (dangerouslySetInnerHTML)
+    if (section.content.type === "rich_text") {
+      sanitized.sections[i] = {
+        ...section,
+        content: { ...section.content, body: await sanitizeProgramContent(section.content.body) },
+      }
+    }
+    // Defense-in-depth: sanitize section headings and intros
+    if (section.heading) {
+      sanitized.sections[i] = { ...sanitized.sections[i], heading: await sanitizeProgramContent(section.heading) }
+    }
+    if (section.intro) {
+      sanitized.sections[i] = { ...sanitized.sections[i], intro: await sanitizeProgramContent(section.intro) }
+    }
+  }
+  return sanitized
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const program = await getPublishedProgramBySlug(slug)
 
-  if (!project) {
+  if (!program) {
     return { title: "Project Not Found" }
   }
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-  const imageUrl = getOGImageUrl(project.image)
-  const description = extractExcerpt(project.description, 155)
-  const keywords = generateKeywords(project.category, [project.title, 'Nepal program'])
-
-  return generateSEOMetadata({
-    title: project.title,
-    description,
-    path: `/programs/${slug}`,
-    image: imageUrl,
-    imageAlt: project.title,
-    keywords,
-    type: 'article',
-    section: 'Programs',
-  })
+  return { title: program.document.seo.title || `${program.document.title} | DEESSA Foundation`, description: program.document.seo.description || program.document.shortDescription, alternates: { canonical: `/whatwedo/${program.slug}` }, robots: { index: true, follow: true } }
 }
 
 export default async function ProgramDetailPage({ params }: PageProps) {
   const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const program = await getPublishedProgramBySlug(slug)
+  if (!program) notFound()
+  const sanitizedDoc = await sanitizeDocument(program.document)
 
-  if (!project) {
-    notFound()
-  }
+  // Fetch related programs if IDs are present
+  const relatedIds = (program.document as any).relatedProgramIds as string[] | undefined
+  const relatedPrograms = relatedIds?.length ? await getRelatedPrograms(relatedIds) : undefined
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-  const progress = project.raised && project.goal ? Math.round((project.raised / project.goal) * 100) : 0
-
-  // Generate breadcrumb structured data
-  const breadcrumbStructuredData = getBreadcrumbStructuredData([
-    { name: 'Home', url: SITE_URL },
-    { name: 'Programs', url: `${SITE_URL}/programs` },
-    { name: project.title, url: `${SITE_URL}/programs/${slug}` },
-  ])
-
-  return (
-    <>
-      <StructuredData data={breadcrumbStructuredData} />
-      
-      {/* Hero Section */}
-      <section className="relative">
-        <div className="w-full h-[500px] relative overflow-hidden">
-          <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-            <div className="max-w-[1400px] mx-auto">
-              <Link
-                href="/whatwedo"
-                className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
-              >
-                <ArrowLeft className="size-4" />
-                Back to Programs
-              </Link>
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    project.status === "urgent"
-                      ? "bg-red-500 text-white"
-                      : project.status === "active"
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-500 text-white"
-                  }`}
-                >
-                  {project.status}
-                </span>
-                <span className="px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase">
-                  {project.category}
-                </span>
-              </div>
-              <h1 className="text-white text-3xl md:text-5xl font-black leading-tight mb-4 max-w-3xl">
-                {project.title}
-              </h1>
-              <div className="flex items-center gap-2 text-white/80">
-                <MapPin className="size-4" />
-                <span className="font-medium">{project.location}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Content Section */}
-      <Section className="bg-background">
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">About This Project</h2>
-              <p className="text-foreground-muted leading-relaxed text-lg">
-                {project.long_description || project.description}
-              </p>
-            </div>
-
-            {/* Timeline */}
-            {project.timeline && project.timeline.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-6">Project Timeline</h2>
-                <div className="relative">
-                  <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
-                  <div className="space-y-6">
-                    {project.timeline.map(
-                      (item: { phase: string; date: string; description: string; status: string }, index: number) => (
-                        <div key={index} className="relative flex gap-6 pl-10">
-                          <div
-                            className={`absolute left-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                              item.status === "completed"
-                                ? "bg-green-500 text-white"
-                                : item.status === "current"
-                                  ? "bg-primary text-white"
-                                  : "bg-muted text-foreground-muted"
-                            }`}
-                          >
-                            {item.status === "completed" ? (
-                              <CheckCircle className="size-4" />
-                            ) : item.status === "current" ? (
-                              <Clock className="size-4" />
-                            ) : (
-                              <Circle className="size-4" />
-                            )}
-                          </div>
-                          <div className="flex-1 bg-surface p-5 rounded-xl border border-border">
-                            <h3 className="font-bold text-foreground">{item.phase}</h3>
-                            <p className="text-sm text-primary font-medium mt-1">{item.date}</p>
-                            <p className="text-foreground-muted mt-2">{item.description}</p>
-                          </div>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Metrics */}
-            {project.metrics && project.metrics.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-6">Impact Metrics</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {project.metrics.map((metric: { value: string; label: string }, index: number) => (
-                    <div key={index} className="bg-surface p-6 rounded-xl border border-border text-center">
-                      <div className="text-3xl font-black text-primary">{metric.value}</div>
-                      <div className="text-sm font-medium text-foreground-muted mt-1">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar - Donation Card */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-surface rounded-2xl border border-border overflow-hidden shadow-lg">
-              {project.raised && project.goal && (
-                <>
-                  <div className="p-6 border-b border-border">
-                    <div className="flex justify-between items-end mb-3">
-                      <div>
-                        <span className="text-3xl font-black text-foreground">${project.raised.toLocaleString()}</span>
-                        <span className="text-foreground-muted"> raised</span>
-                      </div>
-                      <span className="text-sm font-bold text-foreground-muted">
-                        of ${project.goal.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(progress, 100)}%` }}
-                      />
-                    </div>
-                    <p className="text-sm text-foreground-muted mt-2">{progress}% of goal reached</p>
-                  </div>
-                </>
-              )}
-              <div className="p-6">
-                <Button asChild size="lg" className="w-full rounded-full h-14 shadow-lg shadow-primary/25">
-                  <Link href="/donate">
-                    <Heart className="mr-2 size-5 fill-current" />
-                    Support This Project
-                  </Link>
-                </Button>
-                <p className="text-xs text-center text-foreground-muted mt-4">
-                  100% of your donation goes directly to this project.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-    </>
-  )
+  return <CmsProgramRenderer document={sanitizedDoc} relatedPrograms={relatedPrograms} />
 }
