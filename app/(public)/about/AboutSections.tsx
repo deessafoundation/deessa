@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 import {
   ArrowRight,
   Download,
@@ -53,15 +54,16 @@ const partnerCategories = [
   { icon: Trees, label: "Environment", bg: "bg-emerald-50", iconColor: "text-emerald-500" },
 ]
 
-function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
+function SectionHeader({ label, title, sub, level = 2 }: { label: string; title: string; sub?: string; level?: 2 | 3 | 4 }) {
+  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
-      <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+      <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest about-teal-text">
         {label}
       </span>
-      <h2 className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px]" style={{ color: DARK }}>
+      <HeadingTag className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px] about-heading-dark">
         {title}
-      </h2>
+      </HeadingTag>
       {sub && <p className="font-dm-sans mt-4 text-lg text-[#6b7280]">{sub}</p>}
     </motion.div>
   )
@@ -78,6 +80,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
   const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
   const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
+  const { preferences } = useAccessibility()
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ["start 75%", "end 60%"],
@@ -86,7 +89,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
   return (
     <>
       {/* SECTION 2: WHO WE ARE */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
+      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="Who We Are">
         <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:px-8 lg:grid-cols-[35fr_65fr] lg:gap-16">
           {/* Left, sticky visual anchor */}
           <motion.div
@@ -115,12 +118,11 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
           {/* Right, text content, left-aligned */}
           <div>
             <motion.div {...reveal} transition={{ duration: 0.5 }}>
-              <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+              <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest about-teal-text">
                 {introContent.label}
               </span>
               <h2
-                className="font-marissa mb-8 text-3xl font-medium leading-[1.25] md:text-[44px]"
-                style={{ color: DARK }}
+                className="font-marissa mb-8 text-3xl font-medium leading-[1.25] md:text-[44px] about-heading-dark"
               >
                 {introContent.headline}
               </h2>
@@ -135,7 +137,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                 <p key={i}>{p}</p>
               ))}
               <p
-                className="rounded-r-xl py-4 pl-5 pr-6 font-semibold"
+                className="about-quote-block rounded-r-xl py-4 pl-5 pr-6 font-semibold"
                 style={{
                   backgroundColor: "rgba(41,182,200,0.08)",
                   borderLeft: `3px solid ${TEAL}`,
@@ -155,14 +157,14 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="font-comic rounded-full border bg-white px-4 py-1.5 text-sm font-bold"
+                    className="about-flow-pill font-comic rounded-full border bg-white px-4 py-1.5 text-sm font-bold"
                     style={{ borderColor: "rgba(41,182,200,0.3)", color: TEAL }}
                   >
                     {step}
                   </motion.span>
                   {i < introContent.flowSteps.length - 1 && (
                     <motion.span
-                      animate={{ x: [0, 5, 0] }}
+                      animate={preferences.reduceMotion ? false : { x: [0, 5, 0] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       aria-hidden
                     >
@@ -177,7 +179,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 4: HOW WE DO IT */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
+      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="How We Do It">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
@@ -192,7 +194,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 1.1, ease: "easeOut" }}
-              className="absolute left-0 right-0 top-7 hidden origin-left border-t-2 border-dashed md:block"
+              className="about-dashed-line absolute left-0 right-0 top-7 hidden origin-left border-t-2 border-dashed md:block"
               style={{ borderColor: "rgba(41,182,200,0.4)" }}
               aria-hidden
             />
@@ -212,13 +214,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                     style={{ borderColor: step.color }}
                     aria-hidden
                   />
-                  <p className="font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
+                  <p className="about-step-number font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
                     {String(i + 1).padStart(2, "0")}
                   </p>
-                  <h3 className="font-comic mb-3 text-[17px] font-bold" style={{ color: DARK }}>
+                  <h3 className="about-step-title font-comic mb-3 text-[17px] font-bold" style={{ color: DARK }}>
                     {step.title}
                   </h3>
-                  <p className="font-dm-sans text-[15px] leading-relaxed text-[#6b7280]">{step.body}</p>
+                  <p className="about-step-body font-dm-sans text-[15px] leading-relaxed text-[#6b7280]">{step.body}</p>
                 </motion.div>
               ))}
             </div>
@@ -227,7 +229,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
           <motion.p
             {...reveal}
             transition={{ duration: 0.6 }}
-            className="font-marissa mx-auto mt-16 max-w-[700px] text-center text-2xl italic leading-snug"
+            className="about-closing-text font-marissa mx-auto mt-16 max-w-[700px] text-center text-2xl italic leading-snug"
             style={{ color: DARK }}
           >
             {howWeDoItContent.closingLine}
@@ -236,19 +238,19 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 5: OUR JOURNEY TIMELINE */}
-      <section className="bg-white py-20 lg:py-[90px]" id="journey">
+      <section className="bg-white py-20 lg:py-[90px]" id="journey" aria-label="Our Journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader label="Our Journey" title="Milestones that defined our path." />
 
           <div ref={timelineRef} className="relative">
             {/* Track + scroll-drawn line */}
             <div
-              className="absolute bottom-0 left-4 top-0 w-[2px] -translate-x-1/2 md:left-1/2"
+              className="about-timeline-track absolute bottom-0 left-4 top-0 w-[2px] -translate-x-1/2 md:left-1/2"
               style={{ backgroundColor: "rgba(41,182,200,0.15)" }}
               aria-hidden
             />
             <motion.div
-              className="absolute bottom-0 left-4 top-0 w-[2px] origin-top -translate-x-1/2 md:left-1/2"
+              className="about-timeline-progress absolute bottom-0 left-4 top-0 w-[2px] origin-top -translate-x-1/2 md:left-1/2"
               style={{
                 scaleY: scrollYProgress,
                 background: "linear-gradient(to bottom, #29b6c8, #1a8fa0)",
@@ -267,13 +269,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                       whileInView={{ scale: [0, 1.5, 1] }}
                       viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-4 top-9 z-10 size-4 -translate-x-1/2 rounded-full border-2 border-white shadow md:left-1/2"
+                      className="about-timeline-marker absolute left-4 top-9 z-10 size-4 -translate-x-1/2 rounded-full border-2 border-white shadow md:left-1/2"
                       style={{ backgroundColor: TEAL }}
                       aria-hidden
                     />
                     {/* Horizontal connector to center line */}
                     <div
-                      className={`absolute top-9 hidden h-[2px] w-10 md:block ${
+                      className={`about-connector absolute top-9 hidden h-[2px] w-10 md:block ${
                         onLeft ? "right-1/2 mr-[7px]" : "left-1/2 ml-[7px]"
                       }`}
                       style={{ backgroundColor: "rgba(41,182,200,0.3)" }}
@@ -285,14 +287,15 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5 }}
+                      aria-label={`${item.year} - ${item.title}`}
                       className={`ml-12 min-h-[140px] rounded-2xl border border-black/[0.04] bg-[#f8f6f1] px-7 py-6 shadow-sm md:ml-0 ${
                         onLeft ? "md:col-start-1 md:mr-6" : "md:col-start-2 md:ml-6"
                       }`}
                     >
-                      <p className="font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
+                      <p className="about-timeline-year font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
                         {item.year}
                       </p>
-                      <h3 className="font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
+                      <h3 className="about-heading-dark font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
                         {item.title}
                       </h3>
                       <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
@@ -308,7 +311,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team">
+      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team" aria-label="Meet the Team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
@@ -328,10 +331,20 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                   key={member.name}
                   {...reveal}
                   transition={{ duration: 0.5, delay: i * 0.12 }}
-                  className="team-card group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg cursor-pointer"
+                  className="team-card group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg cursor-pointer focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View ${member.name}'s profile`}
+                  aria-expanded={isActive}
                   onMouseEnter={() => setActiveCard(i)}
                   onMouseLeave={() => setActiveCard(null)}
                   onClick={() => setActiveCard(isActive ? null : i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      setActiveCard(isActive ? null : i)
+                    }
+                  }}
                 >
                   <div className="relative aspect-[4/5.5] overflow-hidden rounded-t-2xl">
                     {member.image ? (
@@ -355,43 +368,43 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                     >
                       <div className="p-4 pt-6">
                         <h3 className="font-comic text-[17px] font-bold text-white">{member.name}</h3>
-                        <p className="font-dm-sans text-[13px]" style={{ color: TEAL }}>
+                        <p className="font-dm-sans text-[13px] text-white/80">
                           {member.role}
                         </p>
                         {member.bio && (
-                          <p className="font-dm-sans mt-2 text-[13px] leading-relaxed text-gray-300">
+                          <p className="font-dm-sans mt-2 text-[13px] leading-relaxed text-white/70">
                             {member.bio}
                           </p>
                         )}
                         {member.social_links && Object.values(member.social_links).some((v) => v) && (
                           <div className="mt-2 flex gap-2">
                             {member.social_links.facebook && (
-                              <a href={member.social_links.facebook} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Facebook`} className="text-gray-400 transition-colors hover:text-[#1877f2]">
+                              <a href={member.social_links.facebook} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Facebook`} className="text-white/70 transition-colors hover:text-[#1877f2]">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                               </a>
                             )}
                             {member.social_links.twitter && (
-                              <a href={member.social_links.twitter} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Twitter`} className="text-gray-400 transition-colors hover:text-[#1da1f2]">
+                              <a href={member.social_links.twitter} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Twitter`} className="text-white/70 transition-colors hover:text-[#1da1f2]">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M18.24 2.25h3.31l-7.23 8.26L22.83 21.75h-6.66l-5.22-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.72 6.24 5.44-6.24zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64z"/></svg>
                               </a>
                             )}
                             {member.social_links.linkedin && (
-                              <a href={member.social_links.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on LinkedIn`} className="text-gray-400 transition-colors hover:text-[#0a66c2]">
+                              <a href={member.social_links.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on LinkedIn`} className="text-white/70 transition-colors hover:text-[#0a66c2]">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
                               </a>
                             )}
                             {member.social_links.instagram && (
-                              <a href={member.social_links.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Instagram`} className="text-gray-400 transition-colors hover:text-[#e4405f]">
+                              <a href={member.social_links.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on Instagram`} className="text-white/70 transition-colors hover:text-[#e4405f]">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                               </a>
                             )}
                             {member.social_links.tiktok && (
-                              <a href={member.social_links.tiktok} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on TikTok`} className="text-gray-400 transition-colors hover:text-[#000000]">
+                              <a href={member.social_links.tiktok} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on TikTok`} className="text-white/70 transition-colors hover:text-white">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52v-3.4a4.85 4.85 0 01-1-.18z"/></svg>
                               </a>
                             )}
                             {member.social_links.whatsapp && (
-                              <a href={member.social_links.whatsapp} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on WhatsApp`} className="text-gray-400 transition-colors hover:text-[#25d366]">
+                              <a href={member.social_links.whatsapp} target="_blank" rel="noopener noreferrer" aria-label={`${member.name} on WhatsApp`} className="text-white/70 transition-colors hover:text-[#25d366]">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="size-4"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                               </a>
                             )}
@@ -409,7 +422,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 7: PARTNERS & SUPPORTERS */}
-      <section className="bg-white py-20 lg:py-[90px]" id="partners">
+      <section className="bg-white py-20 lg:py-[90px]" id="partners" aria-label="Partners and Supporters">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -418,10 +431,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
             transition={{ duration: 0.6 }}
           >
             <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest about-teal-text">
                 Collaboration
               </span>
-              <h2 className="font-marissa text-2xl font-medium md:text-3xl" style={{ color: DARK }}>
+              <h2 className="font-marissa text-2xl font-medium md:text-3xl about-heading-dark">
                 Our Partners <span className="font-comic-num">&</span> Supporters
               </h2>
               <p className="font-dm-sans mt-3 text-[15px] text-[#6b7280]">
@@ -434,14 +447,16 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                 return (
                   <div
                     key={partner.label}
+                    role="article"
+                    aria-label={partner.label}
                     className="group flex min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
                   >
                     <div
-                      className={`flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
+                      className={`about-partner-icon flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
                     >
-                      <Icon className="size-6" />
+                      <Icon className="size-6" aria-hidden="true" />
                     </div>
-                    <span className="font-comic text-[13px] font-bold uppercase tracking-wide" style={{ color: DARK }}>
+                    <span className="about-heading-dark font-comic text-[13px] font-bold uppercase tracking-wide">
                       {partner.label}
                     </span>
                   </div>
@@ -453,7 +468,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
+      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="Official Documents and Materials">
         <div className="mx-auto max-w-4xl px-4 md:px-8">
           <SectionHeader
             label="Resources"
@@ -472,13 +487,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                 >
                   <div className="mb-4 flex items-start gap-4">
                     <div
-                      className="flex size-11 shrink-0 items-center justify-center rounded-full"
+                      className="about-resource-icon flex size-11 shrink-0 items-center justify-center rounded-full"
                       style={{ backgroundColor: "rgba(41,182,200,0.1)", color: TEAL }}
                     >
-                      <Icon className="size-5" />
+                      <Icon className="size-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-comic mb-1 text-base font-bold" style={{ color: DARK }}>
+                      <h3 className="about-heading-dark font-comic mb-1 text-base font-bold">
                         {resource.title}
                       </h3>
                       <p className="font-dm-sans text-sm leading-relaxed text-[#6b7280]">{resource.description}</p>
@@ -487,9 +502,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                   <a
                     href={resource.file}
                     download
-                    className="font-comic group mt-auto flex w-full items-center justify-center gap-2 rounded-xl border border-[#eee] bg-[#f8f6f1] px-4 py-2.5 text-sm font-bold text-[#4a4a4a] transition-colors hover:border-[#29b6c8] hover:bg-[#29b6c8]/10 hover:text-[#1a8fa0]"
+                    aria-label={`Download ${resource.title} (${resource.type?.toUpperCase()})`}
+                    className="about-download-btn font-comic group mt-auto flex w-full items-center justify-center gap-2 rounded-xl border border-[#eee] bg-[#f8f6f1] px-4 py-2.5 text-sm font-bold text-[#4a4a4a] transition-colors hover:border-[#29b6c8] hover:bg-[#29b6c8]/10 hover:text-[#1a8fa0]"
                   >
-                    <Download className="size-4 transition-colors group-hover:text-[#29b6c8]" />
+                    <Download className="size-4 transition-colors group-hover:text-[#29b6c8]" aria-hidden="true" />
                     Download {resource.type?.toUpperCase()}
                   </a>
                 </motion.article>
@@ -500,7 +516,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 9: FINAL CTA */}
-      <section className="relative overflow-hidden pb-20 pt-32" style={{ backgroundColor: DARK }}>
+      <section className="relative overflow-hidden pb-20 pt-32 dark-section" style={{ backgroundColor: DARK }} aria-label="Get Involved">
         {/* Brush stroke transition from previous section */}
         <div className="pointer-events-none absolute left-0 top-0 w-full rotate-180" style={{ lineHeight: 0 }} aria-hidden>
           <svg
@@ -551,7 +567,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <motion.div
-              animate={{ scale: [1, 1.045, 1] }}
+              animate={preferences.reduceMotion ? false : { scale: [1, 1.045, 1] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             >
               <Link

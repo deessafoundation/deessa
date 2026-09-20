@@ -142,7 +142,7 @@ export function AboutHero({ settings }: AboutHeroProps) {
           style={{ marginBottom: 22 }}
         >
           <span
-            className="font-comic"
+            className="font-comic about-hero-badge"
             style={{
               display: "inline-block",
               backgroundColor: "#29b6c8",
@@ -191,7 +191,8 @@ export function AboutHero({ settings }: AboutHeroProps) {
         >
           <Link
             href={s.primaryCtaUrl}
-            className="font-comic"
+            className="font-comic about-hero-cta-primary"
+            role="button"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -220,7 +221,8 @@ export function AboutHero({ settings }: AboutHeroProps) {
           </Link>
           <Link
             href={s.secondaryCtaUrl}
-            className="font-comic"
+            className="font-comic about-hero-cta-secondary"
+            role="button"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -267,6 +269,7 @@ export function AboutHero({ settings }: AboutHeroProps) {
           {s.trustBadges.map((text) => (
             <span key={text} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <span
+                className="about-hero-trust-dot"
                 style={{
                   width: 6,
                   height: 6,
