@@ -7,7 +7,7 @@ import { Facebook, Linkedin } from "@/components/social-icons"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { PrintButton } from "@/components/ui/print-button"
-import { getPublishedStories, getStoryBySlug } from "@/lib/data/stories"
+import { getPublishedStoriesStatic, getPublishedStories, getStoryBySlug } from "@/lib/data/stories"
 import { sanitizeStoryContent } from "@/lib/sanitize/story-content"
 import { processStoryContent } from "@/lib/utils/legacy-story"
 import { StructuredData } from "@/components/seo/structured-data"
@@ -25,7 +25,7 @@ interface PageProps {
 // Generate static params for all published stories at build time
 // This ensures stories are pre-rendered and included in sitemap
 export async function generateStaticParams() {
-  const stories = await getPublishedStories()
+  const stories = await getPublishedStoriesStatic()
   
   // Pre-generate the first 50 stories at build time
   // Remaining stories will be generated on-demand and cached
