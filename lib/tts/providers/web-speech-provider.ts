@@ -196,7 +196,19 @@ export class WebSpeechTtsProvider implements TtsProvider {
     const filtered = all.filter(
       (v) => matchesLocale(v, locale) || isScriptSubstituteVoice(v, locale)
     )
-    return filtered.map(toTtsVoice).sort(compareVoices)
+
+    // Genuine matches ALWAYS rank above substitutes. Without this a local
+    // Hindi voice outranks an online Nepali one (localService used to be the
+    // first sort key), which is exactly how Nepali ends up sounding Hindi.
+    return filtered
+      .map(toTtsVoice)
+      .sort((a, b) => {
+        const aGenuine = localeMatchesTag(a.lang, locale)
+        const bGenuine = localeMatchesTag(b.lang, locale)
+        if (aGenuine !== bGenuine) return aGenuine ? -1 : 1
+        if (aGenuine) return compareGenuineVoices(a, b)
+        return compareVoices(a, b)
+      })
   }
 
   /**
@@ -218,7 +230,14 @@ export class WebSpeechTtsProvider implements TtsProvider {
       isScriptSubstitute: boolean
     ) =>
       candidates.length > 0
-        ? { voice: candidates.sort(compareRawVoices)[0], isScriptSubstitute }
+        ? {
+            // Genuine matches are ranked on quality (natural/neural first);
+            // substitutes keep the conservative on-device-first ordering.
+            voice: candidates.sort(
+              isScriptSubstitute ? compareRawVoices : compareGenuineRawVoices
+            )[0],
+            isScriptSubstitute,
+          }
         : null
 
     // An explicit choice wins, but is still labelled if it is a substitute.
@@ -578,6 +597,45 @@ function compareRawVoices(
   b: SpeechSynthesisVoice
 ): number {
   if (a.localService !== b.localService) return a.localService ? -1 : 1
+  if (a.default !== b.default) return a.default ? -1 : 1
+  return a.name.localeCompare(b.name)
+}
+
+/** True when a voice's own tag genuinely belongs to the locale's language. */
+function localeMatchesTag(tag: string, locale: SupportedSpeechLocale): boolean {
+  const normalized = normalizeTag(tag)
+  if (normalized === normalizeTag(locale)) return true
+  if (LOCALE_ALIASES[locale].includes(normalized)) return true
+  return baseLanguageOf(normalized) === baseLanguageOf(locale)
+}
+
+/** Neural/natural engines are markedly better; prefer them by name. */
+const NATURAL_VOICE = /\b(natural|neural|online|enhanced|premium)\b/i
+
+/**
+ * Ordering among voices that genuinely match the locale.
+ *
+ * Quality comes FIRST here, deliberately unlike `compareRawVoices`. A device
+ * offering both a clipped legacy Nepali voice and a Microsoft "Natural" one
+ * should use the natural one, and the natural ones are typically online — so
+ * ranking on-device first would systematically pick the worse voice.
+ */
+function compareGenuineVoices(a: TtsVoice, b: TtsVoice): number {
+  const aNatural = NATURAL_VOICE.test(a.name)
+  const bNatural = NATURAL_VOICE.test(b.name)
+  if (aNatural !== bNatural) return aNatural ? -1 : 1
+  if (a.default !== b.default) return a.default ? -1 : 1
+  return a.name.localeCompare(b.name)
+}
+
+/** Same ordering as `compareGenuineVoices`, for raw engine voices. */
+function compareGenuineRawVoices(
+  a: SpeechSynthesisVoice,
+  b: SpeechSynthesisVoice
+): number {
+  const aNatural = NATURAL_VOICE.test(a.name)
+  const bNatural = NATURAL_VOICE.test(b.name)
+  if (aNatural !== bNatural) return aNatural ? -1 : 1
   if (a.default !== b.default) return a.default ? -1 : 1
   return a.name.localeCompare(b.name)
 }

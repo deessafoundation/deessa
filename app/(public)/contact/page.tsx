@@ -26,12 +26,12 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Our Office",
-    lines: ["Thamel, Kathmandu", "Nepal, 44600"],
+    lines: ["Dhobighat Nayabato, Sanepa", "Lalitpur 44600, Nepal"],
   },
   {
     icon: Mail,
     title: "Email Us",
-    lines: ["info@dessafoundation.org", "support@dessafoundation.org"],
+    lines: ["deessa.social@gmail.com"],
   },
   {
     icon: Phone,
@@ -121,16 +121,16 @@ export default async function ContactPage() {
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url("https://maps.googleapis.com/maps/api/staticmap?center=Thamel,Kathmandu,Nepal&zoom=15&size=600x400&maptype=roadmap&key=placeholder")`,
+                backgroundImage: `url("https://maps.googleapis.com/maps/api/staticmap?center=Sanepa,Lalitpur,Nepal&zoom=15&size=600x400&maptype=roadmap&key=placeholder")`,
               }}
             />
             <div className="absolute inset-0 bg-muted flex items-center justify-center">
               <div className="text-center p-8">
                 <MapPin className="size-12 text-primary mx-auto mb-4" />
                 <h3 className="font-bold text-foreground mb-2">Visit Our Office</h3>
-                <p className="text-foreground-muted text-sm">Thamel, Kathmandu, Nepal</p>
+                <p className="text-foreground-muted text-sm">Dhobighat Nayabato, Sanepa, Lalitpur, Nepal</p>
                 <Button asChild variant="outline" className="mt-4 rounded-full bg-transparent">
-                  <a href="https://maps.google.com/?q=Thamel,Kathmandu,Nepal" target="_blank" rel="noopener noreferrer">
+                  <a href="https://maps.google.com/?q=Sanepa,Lalitpur,Nepal" target="_blank" rel="noopener noreferrer">
                     Open in Maps
                   </a>
                 </Button>

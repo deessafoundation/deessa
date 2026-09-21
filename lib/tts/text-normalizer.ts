@@ -13,8 +13,8 @@ import { TTS_LIMITS, type SupportedSpeechLocale } from "./types"
  *
  * NEVER use hyphens to mark syllable breaks. Speech engines treat a short
  * hyphenated token as an initialism and spell it out letter by letter, so
- * "Dee-sa" comes out as "D S A". Write respellings as ordinary words and let
- * the engine's grapheme-to-phoneme rules do the work.
+ * "Dee-sa" comes out as "D S A". Use ordinary words with a space when a
+ * reliable syllable break is needed.
  *
  * Use spaces only when you genuinely want letters read individually ("N G O").
  */
@@ -31,7 +31,10 @@ import { TTS_LIMITS, type SupportedSpeechLocale } from "./types"
  * If the final syllable should be "shaa" rather than "saa", change them to
  * "Deeshaa" / "दिशा" and nothing else needs touching.
  */
-const ORG_NAME_SPOKEN_EN = "Deesaa" // reads roughly "dee-SAA"
+// Two simple words give browser voices an unambiguous, natural reading:
+// "Dee sah". A hyphenated version is deliberately avoided because it is
+// commonly read as the initials "D S A".
+const ORG_NAME_SPOKEN_EN = "Dee sah"
 const ORG_NAME_SPOKEN_NE = "दीसा"
 
 const PRONUNCIATION_DICTIONARY: Record<

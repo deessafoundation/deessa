@@ -121,6 +121,7 @@ export interface TtsProvider {
 export type TtsStatus =
   | "idle"
   | "loading"
+  | "translating"
   | "speaking"
   | "paused"
   | "finished"

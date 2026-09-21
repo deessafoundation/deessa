@@ -38,25 +38,32 @@ const challengeCards = [
 
 const timelineItems = [
   {
-    year: "2021: The Realization",
-    text: "The seed of deessa was planted during late-night discussions about the lack of accessible resources in Nepal's remote regions.",
+    year: "2022: deessa Foundation begins",
+    text: "deessa began with a commitment to help every child be understood, accepted, and valued.",
     icon: Lightbulb,
     color: "bg-primary",
     textColor: "text-primary",
   },
   {
-    year: "2022: Building Community",
-    text: "We began connecting with specialists and parents, realizing that a unified platform for advocacy was essential.",
+    year: "2024: Building understanding",
+    text: "We brought autism and neurodiversity into conversations with families, educators, and communities.",
     icon: HandHeart,
     color: "bg-empowerment",
     textColor: "text-empowerment",
   },
   {
-    year: "2023: Official Launch",
-    text: "deessa Foundation was officially established, focusing on education, health equity, and social inclusion.",
+    year: "2025: Belonging through participation",
+    text: "Sport and youth-centred activities celebrated confidence, teamwork, and the belief that every child belongs.",
     icon: Rocket,
     color: "bg-chart-4",
     textColor: "text-chart-4",
+  },
+  {
+    year: "2026: Advocacy for inclusive support",
+    text: "We called for accessible services, inclusive education, and disability-inclusive support during crises.",
+    icon: Flag,
+    color: "bg-primary",
+    textColor: "text-primary",
   },
 ]
 

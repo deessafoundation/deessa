@@ -42,11 +42,16 @@ export interface PanelStrings {
   open: string
   statusReady: string
   statusLoading: string
+  statusTranslating: string
   statusSpeaking: string
   statusPaused: string
   statusFinished: string
   statusError: string
   sectionProgress: (current: number, total: number) => string
+  translationPartialTitle: string
+  translationPartialHelp: string
+  translationFailedTitle: string
+  translationFailedHelp: string
   noVoiceInstalled: string
   noVoiceHelp: string
   substituteVoiceTitle: (language: string) => string
@@ -94,11 +99,18 @@ const EN: PanelStrings = {
   open: "Open accessibility tools",
   statusReady: "Ready",
   statusLoading: "Loading voice",
+  statusTranslating: "Translating to Nepali",
   statusSpeaking: "Speaking",
   statusPaused: "Paused",
   statusFinished: "Finished",
   statusError: "Error",
   sectionProgress: (current, total) => `Section ${current} of ${total}`,
+  translationPartialTitle: "Some sections could not be translated",
+  translationPartialHelp:
+    "Those parts are read in English instead, so nothing on the page is skipped.",
+  translationFailedTitle: "Translation is unavailable right now",
+  translationFailedHelp:
+    "The page is being read in English instead. Check your connection and try again.",
   noVoiceInstalled: "No Nepali voice is installed",
   noVoiceHelp:
     "Add a Nepali (ne-NP) voice in your device's language or speech settings, then reopen this panel.",
@@ -150,11 +162,18 @@ const NE: PanelStrings = {
   open: "पहुँचयोग्यता उपकरण खोल्नुहोस्",
   statusReady: "तयार",
   statusLoading: "आवाज लोड हुँदैछ",
+  statusTranslating: "नेपालीमा अनुवाद हुँदैछ",
   statusSpeaking: "पढिँदैछ",
   statusPaused: "रोकिएको छ",
   statusFinished: "सम्पन्न भयो",
   statusError: "त्रुटि",
   sectionProgress: (current, total) => `खण्ड ${current} / ${total}`,
+  translationPartialTitle: "केही खण्ड अनुवाद हुन सकेन",
+  translationPartialHelp:
+    "त्यस्ता भाग अंग्रेजीमा पढिनेछ, त्यसैले पृष्ठको कुनै सामग्री छुट्दैन।",
+  translationFailedTitle: "अनुवाद अहिले उपलब्ध छैन",
+  translationFailedHelp:
+    "पृष्ठ अंग्रेजीमा पढिनेछ। इन्टरनेट जाँच गरी पुनः प्रयास गर्नुहोस्।",
   noVoiceInstalled: "नेपाली आवाज उपलब्ध छैन",
   noVoiceHelp:
     "आफ्नो यन्त्रको भाषा वा आवाज सेटिङमा नेपाली (ne-NP) आवाज थप्नुहोस्, त्यसपछि यो प्यानल पुनः खोल्नुहोस्।",

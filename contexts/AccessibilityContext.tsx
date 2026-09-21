@@ -39,6 +39,7 @@ import {
   type AccessibilityPreferences,
 } from "@/lib/tts/preferences"
 import { chunkText } from "@/lib/tts/text-normalizer"
+import { translateSectionsToNepali } from "@/lib/tts/translator"
 import {
   TTS_ATTRIBUTES,
   TTS_LIMITS,
@@ -88,6 +89,11 @@ interface AccessibilityContextValue {
    * (a Hindi voice reading Nepali). Disclosed in the UI; never silent.
    */
   substituteVoice: { name: string; lang: string } | null
+  /**
+   * Outcome of the last Nepali translation pass. "partial" means some sections
+   * fell back to English; "failed" means none could be translated.
+   */
+  translationOutcome: "none" | "partial" | "failed"
   errorCode: TtsErrorCode | null
 
   // TTS commands
@@ -131,6 +137,9 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     lang: string
   } | null>(null)
   const [errorCode, setErrorCode] = useState<TtsErrorCode | null>(null)
+  const [translationOutcome, setTranslationOutcome] = useState<
+    "none" | "partial" | "failed"
+  >("none")
   const [sectionCount, setSectionCount] = useState(0)
   const [currentSectionIndex, setCurrentSectionIndex] = useState(-1)
 
@@ -345,8 +354,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       if (!provider || !isCurrent()) return
 
       if (sectionsRef.current.length === 0) rescan()
-      const sections = sectionsRef.current
-      if (sections.length === 0) {
+      if (sectionsRef.current.length === 0) {
         setStatus("error")
         setErrorCode("empty-content")
         return
@@ -356,6 +364,36 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       pauseAllNativeMedia()
 
       const preferredLocale = preferencesRef.current.locale
+
+      // ── Nepali reading mode ────────────────────────────────────────────────
+      // The site is authored in English, so sections that merely inherited the
+      // Nepali preference are translated before they are spoken. This runs on
+      // the already-extracted list, so reading order and every extraction rule
+      // (skipped video/iframe media, hidden and duplicate content, sensitive
+      // fields) are preserved untouched.
+      if (preferredLocale === "ne-NP") {
+        setStatus("translating")
+        let outcome: "none" | "partial" | "failed" = "none"
+        try {
+          const result = await translateSectionsToNepali(sectionsRef.current)
+          if (!isCurrent()) return
+          sectionsRef.current = result.sections
+          if (result.failed > 0) {
+            outcome = result.translated > 0 ? "partial" : "failed"
+          }
+        } catch {
+          // Translation is best-effort: keep the English sections and read them
+          // with an English voice rather than failing the whole read.
+          if (!isCurrent()) return
+          outcome = "failed"
+        }
+        setTranslationOutcome(outcome)
+        setStatus("loading")
+      } else {
+        setTranslationOutcome("none")
+      }
+
+      const sections = sectionsRef.current
 
       // Work out which locales this device can actually speak. A page may mix
       // English and Nepali, and a missing Nepali voice should skip those
@@ -492,6 +530,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     setCurrentSectionIndex(-1)
     setStatus((prev) => (prev === "unsupported" ? prev : "idle"))
     setErrorCode(null)
+    setTranslationOutcome("none")
     sectionsRef.current = []
     setSectionCount(0)
     pendingRescanRef.current = false
@@ -562,6 +601,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       stop()
       setHasVoiceForLocale(null)
       setSubstituteVoice(null)
+      setTranslationOutcome("none")
       updatePreferences({ locale, voiceId: null })
       void refreshVoices(locale)
       // Locale feeds script detection, so the section list must be rebuilt.
@@ -724,6 +764,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       voices,
       hasVoiceForLocale,
       substituteVoice,
+      translationOutcome,
       errorCode,
       readPage,
       readSection,
@@ -760,6 +801,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       voices,
       hasVoiceForLocale,
       substituteVoice,
+      translationOutcome,
       errorCode,
       readPage,
       readSection,

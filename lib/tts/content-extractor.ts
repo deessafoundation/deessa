@@ -28,6 +28,10 @@ const SKIP_TAGS = new Set([
   "TEMPLATE",
   "SVG",
   "CANVAS",
+  // Image alt text is useful to screen readers, but this page-reading mode is
+  // intentionally text-only. Real headings, paragraphs, captions, and buttons
+  // layered over an image remain separate DOM nodes and are still spoken.
+  "IMG",
   "IFRAME",
   "VIDEO",
   "AUDIO",
@@ -83,6 +87,13 @@ const SKIP_SELECTORS = [
   "nextjs-portal",
   ".sr-only",
   "[data-tts-panel]",
+  // Carousel transport controls. Their accessible names ("Previous slide",
+  // "Next slide", "Go to slide 3", "Pause carousel") are navigation affordances
+  // for sighted pointer users, not page content — announcing them mid-read
+  // interrupts the prose for no benefit. The shadcn carousel exposes these
+  // slots; the hero carousel marks its own controls with data-tts-ignore.
+  "[data-slot='carousel-previous']",
+  "[data-slot='carousel-next']",
   // Collapsed disclosures/accordions. Radix only adds `hidden` once its exit
   // animation finishes, so match on state as well.
   "[data-state='closed']",
@@ -171,6 +182,12 @@ function isElement(node: Node): node is HTMLElement {
  * Note the `display: contents` special case: such elements generate no box and
  * therefore report zero client rects, but their children are perfectly
  * visible. Treating them as hidden would silently drop whole subtrees.
+ *
+ * `opacity: 0` on its own is deliberately NOT treated as hidden. This site's
+ * scroll-reveal animations (ScrollReveal in components/scroll-animations.tsx)
+ * render every not-yet-scrolled-into-view section at `opacity: 0` before
+ * fading it in — which on a long homepage is most of the page at extraction
+ * time. Treating that as hidden silently drops most of the readable page.
  */
 function isVisuallyHidden(el: HTMLElement): boolean {
   const style = window.getComputedStyle(el)
@@ -178,8 +195,20 @@ function isVisuallyHidden(el: HTMLElement): boolean {
   if (style.visibility === "hidden" || style.visibility === "collapse") {
     return true
   }
-  if (Number.parseFloat(style.opacity || "1") === 0) return true
   if (style.display === "contents") return false
+
+  // `opacity: 0` *paired with* `pointer-events: none` is this codebase's idiom
+  // for a genuinely hidden overlay or control that still keeps its layout box:
+  // the back-to-top button, hover glows, the intro-video fade, the mobile menu.
+  // ScrollReveal never sets `pointer-events: none`, so revealing content is
+  // unaffected. Opacity does not inherit, so this only skips the element that
+  // actually declares both — not children of a mid-animation wrapper.
+  if (
+    Number.parseFloat(style.opacity || "1") === 0 &&
+    style.pointerEvents === "none"
+  ) {
+    return true
+  }
 
   // Detached, zero-size, or `content-visibility: hidden` subtrees produce no
   // client rects. Decorative zero-size tags are already filtered by SKIP_TAGS.
@@ -275,12 +304,6 @@ function visibleTextOf(el: HTMLElement): string {
     const nodeOverride = node.getAttribute(TTS_ATTRIBUTES.text)
     if (node !== el && nodeOverride !== null) {
       parts.push(` ${nodeOverride} `)
-      return
-    }
-
-    if (node.tagName === "IMG") {
-      const alt = node.getAttribute("alt")
-      if (alt && alt.trim()) parts.push(` ${alt} `)
       return
     }
 
@@ -392,13 +415,6 @@ export function extractSections(options: ExtractOptions): ExtractResult {
     // Author-provided spoken alternative replaces the whole subtree.
     if (el !== root && el.hasAttribute(TTS_ATTRIBUTES.text)) {
       emit(el, el.getAttribute(TTS_ATTRIBUTES.text) ?? "", kindForElement(el))
-      return
-    }
-
-    // Standalone meaningful image.
-    if (el.tagName === "IMG") {
-      const alt = el.getAttribute("alt")
-      if (alt && alt.trim()) emit(el, alt, "caption")
       return
     }
 

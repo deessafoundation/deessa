@@ -45,6 +45,7 @@ export function TtsControls() {
     voices,
     hasVoiceForLocale,
     substituteVoice,
+    translationOutcome,
     errorCode,
     sectionCount,
     currentSectionIndex,
@@ -67,7 +68,7 @@ export function TtsControls() {
   const isSpeaking = status === "speaking"
   const isPaused = status === "paused"
   const isActive = isSpeaking || isPaused
-  const isBusy = status === "loading"
+  const isBusy = status === "loading" || status === "translating"
 
   // A missing voice is only blocking once we have actually checked.
   const voiceMissing = hasVoiceForLocale === false
@@ -94,6 +95,8 @@ export function TtsControls() {
     switch (status) {
       case "loading":
         return strings.statusLoading
+      case "translating":
+        return strings.statusTranslating
       case "speaking":
         return strings.statusSpeaking
       case "paused":
@@ -190,6 +193,23 @@ export function TtsControls() {
           {voiceMissing ? (
             <p className="mt-1 opacity-90">{strings.noVoiceHelp}</p>
           ) : null}
+        </PanelNotice>
+      ) : null}
+
+      {/* Translation fell back to English for some or all of the page. Shown
+          so nobody assumes they heard a Nepali rendering of everything. */}
+      {!errorMessage && translationOutcome !== "none" ? (
+        <PanelNotice tone="warning" icon={<Languages className="size-4" />}>
+          <p className="font-semibold">
+            {translationOutcome === "failed"
+              ? strings.translationFailedTitle
+              : strings.translationPartialTitle}
+          </p>
+          <p className="mt-1 opacity-90">
+            {translationOutcome === "failed"
+              ? strings.translationFailedHelp
+              : strings.translationPartialHelp}
+          </p>
         </PanelNotice>
       ) : null}
 

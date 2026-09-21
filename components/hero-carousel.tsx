@@ -246,8 +246,10 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       ))}
 
       {/* Arrow navigation - Always visible on desktop, larger touch targets */}
+      {/* data-tts-ignore: these are navigation controls, not page content. */}
       <button
         onClick={prev}
+        data-tts-ignore=""
         className="absolute left-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Previous slide"
       >
@@ -255,6 +257,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       </button>
       <button
         onClick={next}
+        data-tts-ignore=""
         className="absolute right-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Next slide"
       >
@@ -300,7 +303,12 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       </div>
 
       {/* Bottom controls: dots + pause */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 md:bottom-6">
+      {/* data-tts-ignore on the container covers every dot ("Go to slide N")
+          and the play/pause button, so the reader never announces them. */}
+      <div
+        data-tts-ignore=""
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 md:bottom-6"
+      >
         {slides.map((_, i) => (
           <button
             key={i}

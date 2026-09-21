@@ -2,24 +2,34 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDown, ArrowUpRight, Heart, Mic2, Play, Quote } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Heart, Lightbulb, Mic2, Play, Plus, Quote, Users } from 'lucide-react';
 import { useVideoModal } from '@/contexts/VideoModalContext';
+import styles from './podcasts-page.module.css';
 import type { Podcast } from '@/lib/types/podcast';
 
 // Host information with actual photographs
 const hosts = [
-  { 
-    name: 'Merina Panthii', 
-    role: 'President, deessa Foundation', 
-    description: 'Parent & host — sharing real stories of raising children with autism', 
-    image: '/Merina Panthii.jpg' 
+  {
+    name: 'Merina Panthii',
+    role: 'President, deessa Foundation',
+    description: 'Parent & host — sharing real stories of raising children with autism',
+    image: '/Merina Panthii.jpg'
   },
-  { 
-    name: 'Sarita Sapkota', 
-    role: 'Parent & Host', 
-    description: 'Mother — bringing lived experiences to every conversation', 
-    image: '/Sarita Sapkota.jpg' 
+  {
+    name: 'Sarita Sapkota',
+    role: 'Parent & Host',
+    description: 'Mother — bringing lived experiences to every conversation',
+    image: '/Sarita Sapkota.jpg'
   },
+];
+
+// Conversation themes shown in the "Latest conversation" strip.
+// Lucide icons tinted per theme rather than emoji, so the glyphs render
+// identically on every OS instead of varying by platform font.
+const conversationThemes = [
+  { label: 'Parents’ experiences', Icon: Users, color: '#2F9BCA', fill: 'none' },
+  { label: 'Expert perspectives', Icon: Lightbulb, color: '#D9A227', fill: 'none' },
+  { label: 'Shared understanding', Icon: Heart, color: '#A8447F', fill: 'currentColor' },
 ];
 
 export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: Podcast }) {
@@ -30,69 +40,64 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
 
   return (
     <>
-      <section aria-labelledby="podcast-title" className="relative isolate overflow-hidden rounded-[2rem] border border-brand-primary/15 bg-[#edf6fa] px-6 py-10 sm:px-10 lg:px-12 lg:py-16">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-32 -z-10 h-[35rem] w-[35rem] rounded-full bg-[#e7e0f2]/70" />
-        <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+      <section aria-labelledby="podcast-title" className={styles.hero}>
+        <div className={styles.heroGrid}>
           <div>
-            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#276781]"><Mic2 className="h-4 w-4" aria-hidden="true" /> A parent-led video podcast</p>
-            <h1 id="podcast-title" className="mt-5 font-heading text-4xl font-bold leading-[1.2] text-text-main sm:text-5xl lg:text-[3.3rem]">Living with Autism:<span className="mt-3 block text-[#2784aa]">Real Voices.<br />Real Stories.</span></h1>
-            <p className="mt-6 max-w-lg text-base leading-7 text-text-muted sm:text-lg sm:leading-8">Honest conversations about raising children with autism. The joy, the questions, and the hope that bring us together.</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {latestEpisode && <button onClick={watchLatest} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-primary px-6 py-3 font-bold text-white shadow-lg shadow-brand-primary/20 transition-colors hover:bg-brand-primary-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary"><Play className="h-4 w-4 fill-current" aria-hidden="true" /> Watch latest episode</button>}
-              {!latestEpisode && <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-primary px-6 py-3 font-bold text-white shadow-lg shadow-brand-primary/20 hover:bg-brand-primary-dark"><Play className="h-4 w-4 fill-current" aria-hidden="true" /> Watch on YouTube<span className="sr-only"> (opens in a new tab)</span></a>}
-              <Link href="#episodes" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#276781]/25 bg-white/70 px-6 py-3 font-semibold text-[#276781] transition-colors hover:bg-white">Browse episodes <ArrowDown className="h-4 w-4" aria-hidden="true" /></Link>
+            <p className={styles.eyebrow}><Mic2 size={16} aria-hidden="true" />A parent-led video podcast</p>
+            <h1 id="podcast-title" className={styles.heroTitle}>Living with Autism:<span>Real Voices.<br />Real Stories.</span></h1>
+            <p className={styles.heroDescription}>Honest conversations about raising children with autism. The joy, the questions, and the hope that bring us together.</p>
+            <div className={styles.actions}>
+              {latestEpisode ? <button onClick={watchLatest} className={styles.primary}><Play size={16} fill="currentColor" aria-hidden="true" />Watch latest episode</button> : <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className={styles.primary}>Watch on YouTube<span className="sr-only"> (opens in a new tab)</span></a>}
+              <Link href="#episodes" className={styles.secondary}>Browse episodes<ArrowDown size={16} aria-hidden="true" /></Link>
             </div>
-            <p className="mt-6 text-xs leading-6 text-text-muted">By <span className="font-semibold text-text-main">deessa Foundation</span><br />With technical support from <span className="font-semibold text-text-main">SDG Studio</span></p>
-          </div>
-          <div className="relative min-w-0">
-            <div className="overflow-hidden rounded-2xl border border-white bg-white shadow-xl shadow-[#34485b]/10">
-              <Image src="/podcast_banner.png" alt="Living with Autism: Real Voices Real Stories — Sarita and Merina in the podcast studio" width={1672} height={941} priority sizes="(max-width: 1023px) 90vw, 580px" className="aspect-video w-full object-contain" />
-              {latestEpisode ? (
-                <button onClick={watchLatest} className="group flex w-full items-center gap-4 border-t border-brand-primary/10 p-5 text-left transition-colors hover:bg-sky-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-primary sm:p-6">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ebf5fa] text-[#2784aa] transition-colors group-hover:bg-brand-primary group-hover:text-white"><Play className="h-5 w-5 fill-current" aria-hidden="true" /></span>
-                  <span className="min-w-0"><span className="block text-xs font-bold uppercase tracking-widest text-[#2784aa]">Latest conversation{latestEpisode.episodeNumber ? ` · Ep. ${latestEpisode.episodeNumber}` : ''}</span><span className="mt-1 line-clamp-2 block text-sm font-semibold leading-6 text-text-main">{latestEpisode.title}</span></span>
-                </button>
-              ) : <p className="p-5 text-center text-sm text-text-muted">A space for understanding, acceptance, and inclusion.</p>}
+            <div className={styles.credits}>
+              <div><span>By</span><Image src="/logo.png" alt="deessa Foundation" width={138} height={47} /></div>
+              <div><span>With technical support from</span><strong className={styles.sdgLogo}><span className={styles.sdgLetter} style={{ backgroundColor: '#12B2E9' }}>S</span><span className={styles.sdgLetter} style={{ backgroundColor: '#F7B52E' }}>D</span><span className={styles.sdgLetter} style={{ backgroundColor: '#82B94F' }}>G</span><span className={styles.sdgStudioWord}>Studio</span></strong></div>
             </div>
-            <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-semibold text-[#5a5270]"><span>Parents’ experiences</span><span>Expert perspectives</span><span>Shared understanding</span></div>
           </div>
+          <div className={styles.banner}>
+            <Image src="/podcast_banner.png" alt="Living with Autism: Real Voices Real Stories — Sarita and Merina in the podcast studio" width={1672} height={941} priority sizes="(max-width: 1023px) 92vw, 680px" />
+          </div>
+        </div>
+        <div className={styles.conversationStrip}>
+          {latestEpisode ? <button onClick={watchLatest} className={styles.latest}>
+            <span className={styles.playCircle}><Play size={20} fill="currentColor" aria-hidden="true" /></span>
+            <span><span className={styles.latestLabel}>Latest conversation{latestEpisode.episodeNumber ? ` · Ep. ${latestEpisode.episodeNumber}` : ''}</span><span className={styles.latestTitle}>{latestEpisode.title}</span></span>
+          </button> : <p>A space for understanding, acceptance, and inclusion.</p>}
+          <span className={styles.stripDivider} aria-hidden="true"><Plus size={18} strokeWidth={2.5} /></span>
+          <ul className={styles.themes}>
+            {conversationThemes.map(theme => (
+              <li key={theme.label}>
+                <span className={styles.themeIcon} style={{ color: theme.color }}>
+                  <theme.Icon size={22} fill={theme.fill} strokeWidth={2} aria-hidden="true" />
+                </span>
+                <span>{theme.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section aria-labelledby="series-about" className="grid gap-8 px-2 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-        <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2784aa]">More than a conversation</p><h2 id="series-about" className="mt-3 font-heading text-3xl font-bold leading-snug text-text-main sm:text-4xl">Listening is the first step towards understanding.</h2></div>
-        <div className="space-y-4 text-base leading-8 text-text-muted">
+      <div className={styles.storyAndHosts}>
+        <section aria-labelledby="series-about" className={styles.story}>
+          <p className={styles.eyebrow}>More than a conversation</p>
+          <h2 id="series-about" className={styles.sectionTitle}>Listening is the first step towards understanding.</h2>
           <p>Created to bring lived experiences of autism into the conversation, this series shares the real journeys of families — the love and joy, the challenges they navigate, and the hope that keeps them moving forward.</p>
           <p>Alongside parents’ stories, expert insights help challenge misconceptions and build empathy, acceptance, and inclusion. At deessa Foundation, we believe every family’s story matters.</p>
-          <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-semibold text-[#2784aa] underline decoration-brand-primary/30 underline-offset-4 hover:decoration-brand-primary">Visit our YouTube channel <ArrowUpRight className="h-4 w-4" aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
-        </div>
-      </section>
-
-      <section aria-labelledby="hosts-title" className="rounded-[2rem] bg-[#f0edf5] px-6 py-10 sm:px-10 lg:p-12">
-        <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#756091]">Meet the hosts</p><h2 id="hosts-title" className="mt-3 font-heading text-3xl font-bold text-text-main sm:text-4xl">Parents leading the conversation</h2></div><Heart className="hidden h-9 w-9 text-[#9b83b4] lg:block" strokeWidth={1.3} aria-hidden="true" /></div>
-        <div className="grid gap-5 md:grid-cols-2">
-          {hosts.map((host) => (
-            <article key={host.name} className="flex flex-col overflow-hidden rounded-2xl border border-white bg-white/90 shadow-md hover:shadow-xl transition-all duration-300 sm:flex-row md:flex-col xl:flex-row">
-              <div className="relative h-56 shrink-0 sm:h-auto sm:w-40 md:h-56 md:w-auto xl:h-auto xl:w-40">
-                <Image 
-                  src={host.image} 
-                  alt={`${host.name}, ${host.role}`} 
-                  fill 
-                  sizes="(min-width: 1280px) 160px, (min-width: 768px) 40vw, 90vw" 
-                  className="object-cover object-center" 
-                />
-              </div>
-              <div className="flex flex-col justify-center p-6 lg:py-8">
-                <span className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#756091]">Your host</span>
-                <h3 className="text-xl font-bold text-text-main">{host.name}</h3>
-                <p className="mt-2 text-sm font-semibold text-[#756091]">{host.role}</p>
-                <p className="mt-2 text-sm leading-6 text-text-muted">{host.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="mx-auto mt-7 flex max-w-3xl items-start justify-center gap-3 text-center text-sm leading-7 text-[#635271] sm:text-base"><Quote className="mt-1 h-5 w-5 shrink-0" aria-hidden="true" />Two mothers. Two journeys. One shared commitment to acceptance, understanding, and inclusion.</p>
-      </section>
+          <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className={styles.primary}>Visit our YouTube channel<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
+        </section>
+        <section aria-labelledby="hosts-title" className={styles.hosts}>
+          <p className={styles.eyebrow}>Meet the hosts<Heart size={17} aria-hidden="true" /></p>
+          <h2 id="hosts-title" className={styles.sectionTitle}>Parents leading the conversation</h2>
+          <div className={styles.hostGrid}>
+            {hosts.map(host => <article key={host.name} className={styles.hostCard}>
+              <div className={styles.hostPhoto}><Image src={host.image} alt={host.name} fill sizes="(max-width: 639px) 85vw, (max-width: 1023px) 40vw, 260px" className="object-cover object-center" /></div>
+              <div className={styles.hostBio}><span className={styles.hostLabel}>Your host</span><h3>{host.name}</h3><p className={styles.hostRole}>{host.role}</p><p>{host.description}</p></div>
+            </article>)}
+          </div>
+          <p className={styles.hostQuote}><Quote size={17} aria-hidden="true" />Two mothers. Two journeys. One shared commitment to acceptance, understanding, and inclusion.</p>
+        </section>
+      </div>
     </>
   );
 }

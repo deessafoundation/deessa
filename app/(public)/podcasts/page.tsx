@@ -1,3 +1,4 @@
+import styles from '@/components/podcasts/podcasts-page.module.css';
 import { Metadata } from 'next';
 import PodcastSeriesIntro from '@/components/podcasts/podcast-series-intro';
 import PodcastArchiveSection from '@/components/podcasts/podcast-archive-section';
@@ -35,8 +36,8 @@ export default async function PodcastsPage() {
   const archiveEpisodes = allPodcasts;
 
   return (
-    <div className="min-h-screen bg-bg-main">
-      <main className="container max-w-7xl mx-auto px-4 py-6 space-y-12 sm:py-8 sm:space-y-16">
+    <div className={styles.page}>
+      <main className={styles.main}>
         <PodcastSeriesIntro latestEpisode={latestEpisode} />
 
         {/* Archive Section with Filters - Show only if we have archive episodes */}

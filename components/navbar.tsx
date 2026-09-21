@@ -18,7 +18,7 @@ import {
   Mail,
   ClipboardList,
   Headphones,
-  LifeBuoy,
+  MessageSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -43,7 +43,7 @@ const primaryNavLinks = [
 const secondaryNavLinks = [
   // { href: "/impact", label: "Impact", icon: Award },
   { href: "/podcasts", label: "Podcasts", icon: Headphones },
-  { href: "/support", label: "Support", icon: LifeBuoy },
+  { href: "/support", label: "Site Feedback", icon: MessageSquare },
   { href: "/contact", label: "Contact", icon: Mail },
 ] as const
 
@@ -52,7 +52,7 @@ const tabletQuickLinks = [
   { href: "/events", label: "Events", icon: Calendar },
   { href: "/stories", label: "Stories", icon: FileText },
   { href: "/contact", label: "Contact", icon: Mail },
-  { href: "/support", label: "Support", icon: LifeBuoy },
+  { href: "/support", label: "Site Feedback", icon: MessageSquare },
 ] as const
 
 function isNavLinkActive(pathname: string, href: string) {
@@ -540,7 +540,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                 </h3>
                 <div className="space-y-1">
                   {[
-                    ...(supportEnabled ? [{ href: "/support", label: "Support", icon: LifeBuoy }] : []),
+                    ...(supportEnabled ? [{ href: "/support", label: "Site Feedback", icon: MessageSquare }] : []),
                     { href: "/contact", label: "Contact", icon: Mail },
                   ].map((link) => {
                     const IconComponent = link.icon
@@ -586,8 +586,8 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]")}
                   >
-                    <LifeBuoy className="size-4" strokeWidth={2.5} />
-                    Support us
+                    <MessageSquare className="size-4" strokeWidth={2.5} />
+                    Report an Issue
                   </Link>
                 )}
 
