@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { SecretKeyListener } from "@/components/secret-key-listener"
 import { HeroCarousel } from "@/components/hero-carousel"
 import type { HeroSlide } from "@/components/hero-carousel"
-import { HomeAccessibilityButton } from "@/components/home-accessibility-button"
 import {
   OurStorySection,
   MissionVisionSection,
@@ -67,9 +66,6 @@ export default async function HomePage() {
 
   return (
     <SecretKeyListener>
-      {/* Accessibility Button - fixed on right side */}
-      <HomeAccessibilityButton />
-
       {/* 1. HERO BANNER CAROUSEL - CMS POWERED */}
       <HeroCarousel 
         slides={heroSlides.length > 0 ? heroSlides : heroSlides} 
