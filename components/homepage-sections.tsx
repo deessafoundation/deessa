@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
+import { HomepageImage } from "./homepage-image"
+import styles from "./homepage-accessibility.module.css"
 import Link from "next/link"
 import {
   Heart, ArrowRight, GraduationCap, MapPin, Stethoscope,
@@ -79,14 +81,14 @@ export function OurStorySection({ story }: OurStorySectionProps) {
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
-                <Image
+                <HomepageImage
                   src={imageSrc}
                   alt={s.imageAlt}
                   width={700}
                   height={500}
                   className="w-full h-auto object-cover"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
+                <div className={`${styles.storyOverlay} absolute inset-0`} />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
@@ -257,7 +259,7 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
+            <span className={`${styles.darkLabel} text-primary font-bold tracking-widest uppercase text-sm mb-4 block`}>{w.eyebrow}</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{w.title}</h2>
             <p className="text-lg text-white/60 max-w-2xl mx-auto">
               {w.subtitle}
@@ -435,7 +437,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
 
               return (
                 <ScrollReveal 
-                  key={item.year} 
+                  key={`${item.year}-${i}`} 
                   animation={isLeft ? "fade-right" : "fade-left"} 
                   delay={i * 100}
                 >
@@ -492,7 +494,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
             const IconComp = item.icon
 
             return (
-              <ScrollReveal key={item.year} animation="fade-left" delay={i * 100}>
+              <ScrollReveal key={`${item.year}-${i}`} animation="fade-left" delay={i * 100}>
                 <div className="relative">
                   {/* Dot on the line */}
                   <div className="absolute -left-8 top-6">
@@ -561,7 +563,7 @@ export function PodcastSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110">
+                  <span className={`${styles.podcastPlay} flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110`}>
                     <Play className="ml-1 size-7 fill-current" aria-hidden="true" />
                   </span>
                 </div>
@@ -652,17 +654,17 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
           </div>
         </ScrollReveal>
 
-        <div className="flex justify-center">
+        <div className={`${styles.testimonials} flex justify-center`}>
           <CircularTestimonials
             testimonials={circularTestimonials}
             autoplay={true}
             colors={{
-              name: "hsl(var(--foreground))",
-              designation: "hsl(var(--muted-foreground))",
-              testimony: "hsl(var(--foreground) / 0.8)",
-              arrowBackground: "hsl(var(--primary))",
-              arrowForeground: "hsl(var(--primary-foreground))",
-              arrowHoverBackground: "hsl(var(--primary) / 0.8)",
+              name: "var(--foreground)",
+              designation: "var(--muted-foreground)",
+              testimony: "color-mix(in srgb, var(--foreground) 80%, transparent)",
+              arrowBackground: "var(--primary)",
+              arrowForeground: "var(--primary-foreground)",
+              arrowHoverBackground: "color-mix(in srgb, var(--primary) 80%, transparent)",
             }}
             fontSizes={{
               name: "1.75rem",
