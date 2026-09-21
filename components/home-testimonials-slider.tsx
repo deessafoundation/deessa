@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
 interface Testimonial {
   name: string
@@ -62,6 +63,7 @@ const testimonials: Testimonial[] = [
 ]
 
 export function HomeTestimonialsSlider() {
+  const { preferences } = useAccessibility()
   const [current, setCurrent] = useState(0)
   const [animating, setAnimating] = useState(false)
   const [direction, setDirection] = useState<"left" | "right">("right")
@@ -82,11 +84,16 @@ export function HomeTestimonialsSlider() {
   const prev = () => go((current - 1 + testimonials.length) % testimonials.length, "left")
   const next = useCallback(() => go((current + 1) % testimonials.length, "right"), [current, go])
 
-  // Auto-advance every 6 seconds
+  // Auto-advance every 6 seconds (only if reduce motion is disabled)
   useEffect(() => {
+    // Skip autoplay if user prefers reduced motion or sensory-friendly mode
+    if (preferences.reduceMotion || preferences.sensoryFriendly) {
+      return
+    }
+    
     const timer = setInterval(next, 6000)
     return () => clearInterval(timer)
-  }, [next])
+  }, [next, preferences.reduceMotion, preferences.sensoryFriendly])
 
   const t = testimonials[current]
 

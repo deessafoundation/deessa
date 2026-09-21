@@ -3,6 +3,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
 interface Testimonial {
   quote: string
@@ -56,6 +57,8 @@ export const CircularTestimonials = ({
   showContent = true,
   imageHeight = "24rem",
 }: CircularTestimonialsProps) => {
+  const { preferences } = useAccessibility()
+  
   // Color & font config
   const colorName = colors.name ?? "#000"
   const colorDesignation = colors.designation ?? "#6b7280"
@@ -98,7 +101,8 @@ export const CircularTestimonials = ({
 
   // Autoplay
   const startAutoplay = useCallback(() => {
-    if (!autoplay || testimonialsLength === 0) {
+    // Skip autoplay if accessibility preferences are enabled
+    if (!autoplay || testimonialsLength === 0 || preferences.reduceMotion || preferences.sensoryFriendly) {
       return
     }
 
@@ -109,7 +113,7 @@ export const CircularTestimonials = ({
     autoplayIntervalRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonialsLength)
     }, 5000)
-  }, [autoplay, testimonialsLength])
+  }, [autoplay, testimonialsLength, preferences.reduceMotion, preferences.sensoryFriendly])
 
   const pauseAutoplayTemporarily = useCallback(() => {
     if (autoplayIntervalRef.current) {
@@ -122,7 +126,8 @@ export const CircularTestimonials = ({
       resumeAutoplayTimeoutRef.current = null
     }
 
-    if (!autoplay || testimonialsLength === 0) {
+    // Skip resume if accessibility preferences are enabled
+    if (!autoplay || testimonialsLength === 0 || preferences.reduceMotion || preferences.sensoryFriendly) {
       return
     }
 
@@ -130,7 +135,7 @@ export const CircularTestimonials = ({
       setActiveIndex((prev) => (prev + 1) % testimonialsLength)
       startAutoplay()
     }, 5000)
-  }, [autoplay, testimonialsLength, startAutoplay])
+  }, [autoplay, testimonialsLength, startAutoplay, preferences.reduceMotion, preferences.sensoryFriendly])
 
   useEffect(() => {
     startAutoplay()
