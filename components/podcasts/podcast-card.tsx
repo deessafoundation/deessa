@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Play, ExternalLink, Clock, Video } from "lucide-react"
+import { Play, ExternalLink, Clock, Video, Music } from "lucide-react"
 import { Youtube } from "@/components/social-icons"
 import { cn } from "@/lib/utils"
 import { Podcast } from "@/lib/types/podcast"
@@ -39,7 +39,7 @@ export function PodcastCard({
     <Link
       href={`/podcasts/${podcast.slug}`}
       className={cn(
-        "group relative flex flex-col rounded-xl overflow-hidden bg-white border border-border/40 shadow-lg transition-all duration-500 ease-out",
+        "podcast-card group relative flex flex-col rounded-xl overflow-hidden bg-white border border-border/40 shadow-lg transition-all duration-500 ease-out",
         "hover:shadow-2xl hover:shadow-brand-primary/20 hover:border-brand-primary/50 hover:-translate-y-1.5 hover:scale-[1.02]",
         isPrimary ? "h-full" : "h-auto",
         className
@@ -63,9 +63,14 @@ export function PodcastCard({
           </span>
         </div>
 
+        {/* Loading Placeholder - Shows while image loads */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 z-0 bg-gray-300 animate-pulse" />
+        )}
+
         {/* Thumbnail Image */}
         <div className={cn(
-          "absolute inset-0 transition-opacity duration-500",
+          "absolute inset-0 z-0 transition-opacity duration-500",
           imageLoaded ? "opacity-100" : "opacity-0"
         )}>
           <Image
@@ -78,13 +83,9 @@ export function PodcastCard({
             )}
             onLoad={() => setImageLoaded(true)}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
           />
         </div>
-
-        {/* Loading Placeholder */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-bg-soft animate-pulse" />
-        )}
 
         {/* Play Button Overlay */}
         <button
@@ -92,21 +93,27 @@ export function PodcastCard({
             e.preventDefault()
             onPlay?.(podcast)
           }}
-          className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all"
+          className="absolute inset-0 z-30 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-all duration-300"
           aria-label={`Play ${podcast.title}`}
         >
           <div
             className={cn(
-              "w-14 h-14 md:w-16 md:h-16 rounded-full bg-white flex items-center justify-center shadow-lg transition-transform",
-              isHovered && "scale-110"
+              "w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-xl ring-2 ring-white/50 transition-all duration-300",
+              isHovered ? "scale-110 bg-brand-primary ring-brand-primary/50" : "scale-100"
             )}
           >
-            <Play className="w-6 h-6 md:w-7 md:h-7 text-brand-primary ml-0.5" fill="currentColor" />
+            <Play 
+              className={cn(
+                "w-7 h-7 md:w-9 md:h-9 transition-colors duration-300 ml-1",
+                isHovered ? "text-white" : "text-brand-primary"
+              )} 
+              fill="currentColor" 
+            />
           </div>
         </button>
 
         {/* Gradient Overlay - Subtle */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none z-10" />
       </div>
 
       {/* Content */}
@@ -130,7 +137,7 @@ export function PodcastCard({
 
         <h3 
           className={cn(
-            "font-heading font-bold text-text-main leading-tight transition-colors duration-300 group-hover:text-brand-primary",
+            "font-heading font-bold text-foreground leading-tight transition-colors duration-300 group-hover:text-brand-primary",
             isPrimary ? "text-lg md:text-xl" : "text-base"
           )}
         >
@@ -138,7 +145,7 @@ export function PodcastCard({
         </h3>
 
         {isPrimary && (
-          <p className="text-text-muted text-sm md:text-base leading-relaxed line-clamp-2">
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed line-clamp-2">
             {podcast.description}
           </p>
         )}
@@ -161,7 +168,7 @@ export function PodcastCard({
             role="link"
             tabIndex={0}
             className={cn(
-              "flex items-center gap-1.5 text-text-muted transition-all duration-300 hover:text-red-600 hover:scale-105",
+              "flex items-center gap-1.5 text-muted-foreground transition-all duration-300 hover:text-red-600 hover:scale-105",
               isPrimary ? "text-sm" : "text-xs"
             )}
             onClick={openYouTube}
@@ -179,4 +186,3 @@ export function PodcastCard({
     </Link>
   )
 }
-

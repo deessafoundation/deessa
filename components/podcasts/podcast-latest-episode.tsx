@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { ArchiveThumbnailImage } from './archive-thumbnail-image';
+import styles from './archive-thumbnail.module.css';
 import { Play, Calendar, Clock, FileText, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Podcast } from '@/lib/types/podcast';
@@ -23,22 +24,24 @@ export default function PodcastLatestEpisode({ episode }: PodcastLatestEpisodePr
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
           {/* Left - Image with Play Button */}
           <div className="md:col-span-2">
-            <div className="relative aspect-video rounded-lg overflow-hidden group cursor-pointer">
-              <Image
+            <div className={`${styles.thumbnail} relative aspect-video rounded-lg overflow-hidden group cursor-pointer`}>
+              <ArchiveThumbnailImage
+                key={`${episode.thumbnailUrl}:${episode.youtubeId}`}
                 src={episode.thumbnailUrl}
+                youtubeId={episode.youtubeId}
                 alt={episode.title}
-                fill
+                sizes="(max-width: 767px) 100vw, 40vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               
               {/* Play Button Overlay */}
               <button
                 onClick={() => openVideoModal(episode.youtubeId, episode.title)}
-                className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all"
+                className={`${styles.playOverlay} absolute inset-0 flex items-center justify-center transition-all`}
                 aria-label={`Play ${episode.title}`}
               >
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <Play className="w-8 h-8 text-brand-primary ml-1" fill="currentColor" />
+                <div className={`${styles.playCircle} w-16 h-16 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                  <Play className={`${styles.playIcon} w-8 h-8 text-brand-primary ml-1`} fill="currentColor" />
                 </div>
               </button>
             </div>

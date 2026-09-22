@@ -258,7 +258,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                     <Link
                       key={episode.id}
                       href={`/podcasts/${episode.slug}`}
-                      className="flex flex-col bg-white rounded-xl border-2 border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:border-brand-primary hover:-translate-y-1 transition-all duration-300 group h-full"
+                      className="podcast-card flex flex-col bg-white rounded-xl border-2 border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:border-brand-primary hover:-translate-y-1 transition-all duration-300 group h-full"
                     >
                   {/* Thumbnail */}
                   <div className="relative aspect-video overflow-hidden bg-gray-900">

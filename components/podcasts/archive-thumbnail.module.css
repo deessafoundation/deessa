@@ -1,0 +1,28 @@
+/* Keep media layers outside the global high-contrast utility overrides. */
+.playOverlay {
+  background-color: rgb(0 0 0 / 20%);
+}
+
+:global(.group:hover) .playOverlay {
+  background-color: rgb(0 0 0 / 40%);
+}
+
+.gradient {
+  background-image: linear-gradient(to top, rgb(0 0 0 / 40%), transparent);
+}
+
+.playCircle {
+  background-color: #fff;
+}
+
+:global(body.high-contrast) .thumbnail .playOverlay,
+:global(body.high-contrast) .thumbnail .gradient {
+  background: transparent !important;
+}
+
+:global(body.high-contrast) .thumbnail .playIcon,
+:global(body.high-contrast) .thumbnail .playIcon * {
+  color: #000 !important;
+  fill: #000 !important;
+  stroke: #000 !important;
+}

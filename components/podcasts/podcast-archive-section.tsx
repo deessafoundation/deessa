@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ArchiveThumbnailImage } from './archive-thumbnail-image';
+import styles from './archive-thumbnail.module.css';
 import { Calendar, Clock, ArrowRight, Heart, Play, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -154,15 +155,15 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
               <Link
                 key={episode.id}
                 href={`/podcasts/${episode.slug}`}
-                className="flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-primary/20 hover:border-brand-primary/50 hover:-translate-y-1.5 hover:scale-[1.02] transition-all duration-500 group h-full"
+                className="podcast-card flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-primary/20 hover:border-brand-primary/50 hover:-translate-y-1.5 hover:scale-[1.02] transition-all duration-500 group h-full"
               >
                 {/* Thumbnail with Play Button */}
-                <div className="relative aspect-video overflow-hidden bg-gray-900">
-                  <Image
+                <div className={`${styles.thumbnail} relative aspect-video overflow-hidden bg-gray-900`}>
+                  <ArchiveThumbnailImage
+                    key={`${episode.thumbnailUrl}:${episode.youtubeId}`}
                     src={episode.thumbnailUrl}
+                    youtubeId={episode.youtubeId}
                     alt={episode.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   
                   {/* Episode Badge - Always show, use index as fallback if episodeNumber missing */}
@@ -180,14 +181,14 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
                   </div>
                   
                   {/* Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
-                    <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <Play className="w-6 h-6 text-brand-primary ml-0.5" fill="currentColor" />
+                  <div className={`${styles.playOverlay} absolute inset-0 flex items-center justify-center transition-all`}>
+                    <div className={`${styles.playCircle} w-14 h-14 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                      <Play className={`${styles.playIcon} w-6 h-6 text-brand-primary ml-0.5`} fill="currentColor" />
                     </div>
                   </div>
                   
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                  <div className={`${styles.gradient} absolute inset-x-0 bottom-0 h-20 pointer-events-none`} />
                 </div>
 
                 {/* Content */}
