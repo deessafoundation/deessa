@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import styles from "./navbar.module.css"
 
 const comicNeue = Comic_Neue({ subsets: ["latin"], weight: ["400", "700"] })
 
@@ -56,7 +57,8 @@ const tabletQuickLinks = [
 ] as const
 
 function isNavLinkActive(pathname: string, href: string) {
-  return pathname === href
+  if (href === "/") return pathname === "/"
+  return pathname === href || pathname.startsWith(href + "/")
 }
 
 export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
@@ -129,8 +131,10 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
         )}
         <Link
           href={link.href}
+          aria-current={active ? "page" : undefined}
           className={cn(
             comicNeue.className,
+            isSecondary && styles.secondaryLink,
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
               ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"
@@ -336,6 +340,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
           {/* Layer 2 (middle): Sub-nav tucked under the curve */}
           <div
             className={cn(
+              styles.secondaryRow,
               "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 dark:bg-slate-900 lg:block",
               scrolled ? "max-h-0 translate-y-[-8px] py-0 pt-0 pb-0 opacity-0" : "max-h-24 translate-y-0 opacity-100"
             )}

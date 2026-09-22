@@ -1,0 +1,21 @@
+/* The secondary row's dark-mode utility also matches broad accessibility
+   selectors. Set both the surface and its foreground explicitly here. */
+:global(body.high-contrast) .secondaryRow.secondaryRow {
+  background-color: #fff !important;
+  background-image: none !important;
+}
+
+:global(body.high-contrast) .secondaryRow a.secondaryLink,
+:global(body.high-contrast) .secondaryRow a.secondaryLink * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .secondaryRow a.secondaryLink {
+  background-color: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.high-contrast) .secondaryRow a.secondaryLink[aria-current="page"] {
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
+}
