@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { Volume2, VolumeX } from "lucide-react"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
 export function HeroVideo() {
+  const { preferences } = useAccessibility()
   const [introComplete, setIntroComplete] = useState(false)
   const [isInView, setIsInView] = useState(true) // Start as true since hero is typically at top
   const [isMuted, setIsMuted] = useState(true)
@@ -77,6 +79,14 @@ export function HeroVideo() {
 
   // Play video when intro is complete and video is in viewport
   useEffect(() => {
+    // Skip video playback if accessibility preferences are enabled
+    if (preferences.reduceMotion || preferences.sensoryFriendly) {
+      if (videoRef.current && !videoRef.current.paused) {
+        videoRef.current.pause()
+      }
+      return
+    }
+    
     if (!introComplete || !isInView) {
       if (videoRef.current && !videoRef.current.paused) {
         videoRef.current.pause()
@@ -109,7 +119,7 @@ export function HeroVideo() {
       window.removeEventListener('click', handleUserInteraction)
       window.removeEventListener('scroll', handleUserInteraction)
     }
-  }, [introComplete, isInView, playVideo])
+  }, [introComplete, isInView, playVideo, preferences.reduceMotion, preferences.sensoryFriendly])
 
   return (
     <div className="absolute inset-0 w-full h-full group/video">
