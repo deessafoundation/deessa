@@ -1,0 +1,65 @@
+:global(body.high-contrast) :global(#whatwedo-hero).hero img {
+  filter: grayscale(1) !important;
+}
+
+:global(body.high-contrast) :global(#whatwedo-hero).hero [data-hero-shade] {
+  background: linear-gradient(to right, rgb(0 0 0 / 68%), rgb(0 0 0 / 60%) 60%, rgb(0 0 0 / 25%)) !important;
+}
+
+:global(body.high-contrast) :global(#whatwedo-hero).hero [data-mobile-shade] {
+  background: transparent !important;
+}
+
+:global(body.high-contrast) :global(#whatwedo-hero).hero [data-hero-copy],
+:global(body.high-contrast) :global(#whatwedo-hero).hero [data-hero-copy] > div,
+:global(body.high-contrast) :global(#whatwedo-hero).hero h1,
+:global(body.high-contrast) :global(#whatwedo-hero).hero h1 span,
+:global(body.high-contrast) :global(#whatwedo-hero).hero [data-hero-copy] > p {
+  color: #fff !important;
+}
+
+/* Stories uses dark text: reveal the grayscale photo beneath a light scrim. */
+:global(body.high-contrast) :global(#stories-hero).hero [data-hero-photo] {
+  filter: grayscale(1);
+  opacity: 1;
+}
+
+:global(body.high-contrast) :global(#stories-hero).hero [data-hero-shade] {
+  background: linear-gradient(to right, rgb(255 255 255 / 82%), rgb(255 255 255 / 70%) 60%, rgb(255 255 255 / 55%)) !important;
+}
+
+:global(body.high-contrast) :global(#stories-hero).hero [data-hero-decoration] {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  :global(body.high-contrast) :global(#whatwedo-hero).hero [data-hero-shade] {
+    background: rgb(0 0 0 / 60%) !important;
+  }
+
+  :global(body.high-contrast) :global(#stories-hero).hero [data-hero-shade] {
+    background: rgb(255 255 255 / 80%) !important;
+  }
+}
+:global(body.high-contrast) :global(#our-story-hero).hero img {
+  filter: grayscale(1) !important;
+}
+
+/* Centered text needs an even scrim across the entire photograph. */
+:global(body.high-contrast) :global(#our-story-hero).hero [data-hero-shade] {
+  background: rgb(0 0 0 / 60%) !important;
+}
+
+:global(body.high-contrast) :global(#our-story-hero).hero h1,
+:global(body.high-contrast) :global(#our-story-hero).hero p,
+:global(body.high-contrast) :global(#our-story-hero).hero span {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) :global(#events-hero).hero [data-hero-shade] {
+  background: linear-gradient(135deg, #f3f3f3, #dedede) !important;
+}
+
+:global(body.high-contrast) :global(#events-hero).hero [data-hero-decoration] {
+  display: none;
+}

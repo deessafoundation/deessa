@@ -1,11 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import Image from "next/image"
+import { HomepageImage } from "@/components/homepage-image"
+import styles from "./homepage-accessibility.module.css"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
 export interface HeroSlide {
   image: string
@@ -27,6 +29,7 @@ const NEWS_TICKER_ITEMS = [
 ]
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
+  const { preferences } = useAccessibility()
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [direction, setDirection] = useState<"next" | "prev">("next")
@@ -34,18 +37,22 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
 
-  // Check for reduced motion preference
+  // Check for reduced motion preference (system OR app preference)
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
+    // Combine system preference with app preference
+    const shouldReduceMotion = mediaQuery.matches || preferences.reduceMotion || preferences.sensoryFriendly
+    setPrefersReducedMotion(shouldReduceMotion)
 
     const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches)
+      // Re-check app preferences when system preference changes
+      const shouldReduceMotion = e.matches || preferences.reduceMotion || preferences.sensoryFriendly
+      setPrefersReducedMotion(shouldReduceMotion)
     }
 
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
+  }, [preferences.reduceMotion, preferences.sensoryFriendly])
 
   const goTo = useCallback(
     (index: number, dir?: "next" | "prev") => {
@@ -98,6 +105,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
 
   return (
     <section
+      id="home-hero"
       ref={sectionRef}
       role="region"
       aria-roledescription="carousel"
@@ -107,7 +115,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
-      className="relative w-full h-[92svh] min-h-[540px] overflow-hidden bg-slate-900 md:h-[100svh] md:min-h-[620px]"
+      className={`${styles.hero} relative w-full h-[92svh] min-h-[540px] overflow-hidden bg-slate-900 md:h-[100svh] md:min-h-[620px]`}
     >
       {/* Slides */}
       {slides.map((slide, i) => (
@@ -124,7 +132,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
         >
           {/* Background image with subtle zoom */}
           <div className="absolute inset-0">
-            <Image
+            <HomepageImage
               src={slide.image}
               alt=""
               fill
@@ -137,8 +145,8 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
             />
           </div>
           {/* Gradient overlay - stronger for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30" />
+          <div data-hero-shade="horizontal" className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30" />
+          <div data-hero-shade="vertical" className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30" />
 
           {/* Content - Improved typography and hierarchy */}
           <div className="relative z-10 h-full flex items-center">
@@ -151,7 +159,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
                 >
-                  <span className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm">
+                  <span data-hero-control className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm">
                     Supporting Children with Autism in Nepal
                   </span>
                 </div>
@@ -194,7 +202,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     size="lg"
                     className="h-12 w-full px-6 text-base font-semibold rounded-lg border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
                   >
-                    <Link href="/whatwedo">Explore Programs</Link>
+                    <Link href="/whatwedo" data-hero-control>Explore Programs</Link>
                   </Button>
                 </div>
               </div>
@@ -206,6 +214,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       {/* Arrow navigation - Always visible on desktop, larger touch targets */}
       <button
         onClick={prev}
+        data-hero-control
         className="absolute left-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Previous slide"
       >
@@ -213,6 +222,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       </button>
       <button
         onClick={next}
+        data-hero-control
         className="absolute right-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
         aria-label="Next slide"
       >
@@ -275,6 +285,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
         ))}
         <button
           onClick={() => setIsPaused((p) => !p)}
+          data-hero-control
           aria-label={isPaused ? "Play carousel" : "Pause carousel"}
           className="ml-2 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 flex items-center justify-center transition-colors"
         >
