@@ -12,13 +12,13 @@ const hosts = [
   {
     name: 'Merina Panthii',
     role: 'President, deessa Foundation',
-    description: 'Parent & host — sharing real stories of raising children with autism',
+    description: 'A parent and host sharing real stories of raising children with autism',
     image: '/Merina Panthii.jpg'
   },
   {
     name: 'Sarita Sapkota',
     role: 'Parent & Host',
-    description: 'Mother — bringing lived experiences to every conversation',
+    description: 'A mother bringing lived experiences to every conversation',
     image: '/Sarita Sapkota.jpg'
   },
 ];
@@ -56,7 +56,7 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
             </div>
           </div>
           <div className={styles.banner}>
-            <Image src="/podcast_banner.png" alt="Living with Autism: Real Voices Real Stories — Sarita and Merina in the podcast studio" width={1672} height={941} priority sizes="(max-width: 1023px) 92vw, 680px" />
+            <Image src="/podcast_banner.png" alt="Living with Autism: Real Voices Real Stories, with Sarita and Merina in the podcast studio" width={1672} height={941} priority sizes="(max-width: 1023px) 92vw, 680px" />
           </div>
         </div>
         <div className={styles.conversationStrip}>
@@ -82,7 +82,7 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
         <section aria-labelledby="series-about" className={styles.story}>
           <p className={styles.eyebrow}>More than a conversation</p>
           <h2 id="series-about" className={styles.sectionTitle}>Listening is the first step towards understanding.</h2>
-          <p>Created to bring lived experiences of autism into the conversation, this series shares the real journeys of families — the love and joy, the challenges they navigate, and the hope that keeps them moving forward.</p>
+          <p>Created to bring lived experiences of autism into the conversation, this series shares families' real journeys, including the love and joy, the challenges they navigate, and the hope that keeps them moving forward.</p>
           <p>Alongside parents’ stories, expert insights help challenge misconceptions and build empathy, acceptance, and inclusion. At deessa Foundation, we believe every family’s story matters.</p>
           <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className={styles.primary}>Visit our YouTube channel<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
         </section>

@@ -1,16 +1,13 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ChevronDown, Users, Wrench } from "lucide-react"
+import { Cog, Lightbulb, Network, UsersRound, Wrench } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
-const TEAL = "#29b6c8"
-const DARK = "#1a1a2e"
-
-/* Shared scroll-reveal props (matches AboutSections) */
 const reveal = {
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-60px" },
+  viewport: { once: true, margin: "-40px" },
 } as const
 
 type Accent = "vision" | "board" | "advisory" | "assembly"
@@ -22,17 +19,12 @@ interface Tier {
   accent: Accent
 }
 
-/**
- * Governance hierarchy, top → bottom. Content provided by the Foundation.
- * The four vertical tiers form the governance chain; the operational level
- * (Working + Technical teams) branches into two parallel columns below.
- */
 const tiers: Tier[] = [
   {
     title: "Founding Vision",
     subtitle: "Concept Designer & Co-Founders",
     description:
-      "The minds behind the Foundation — shaping its idea, mission, and direction from the start.",
+      "The minds behind the Foundation shape its idea, mission, and direction from the start.",
     accent: "vision",
   },
   {
@@ -46,21 +38,21 @@ const tiers: Tier[] = [
     title: "Advisory Circle",
     subtitle: "Advisory Board & Thematic Advisors",
     description:
-      "Senior advisors and thematic experts guiding the Foundation's strategy, credibility, and direction — from institutional oversight to focused expertise in programs.",
+      "Senior advisors and thematic experts guide the Foundation's strategy, credibility, and direction through institutional oversight and program expertise.",
     accent: "advisory",
   },
   {
     title: "General Assembly",
     subtitle: "General Members",
     description:
-      "The Foundation's highest authority — every member has a right, and together they elect and hold the Executive Board accountable.",
+      "The General Assembly is the Foundation's highest authority. Its members elect the Executive Board and hold it accountable.",
     accent: "assembly",
   },
 ]
 
 const operationalTeams = [
   {
-    icon: Users,
+    icon: UsersRound,
     title: "Working Team",
     description: "Handles the Foundation's day-to-day operations and management.",
   },
@@ -71,116 +63,83 @@ const operationalTeams = [
   },
 ]
 
-/* Accent styling per tier — 'vision' and 'assembly' are highlighted like the
-   reference (warm cream border + teal border), the middle tiers are neutral. */
-const accentStyles: Record<Accent, { border: string; bg: string; bar: string }> = {
-  vision: { border: "rgba(212,163,71,0.55)", bg: "rgba(212,163,71,0.07)", bar: "#d4a347" },
-  board: { border: "rgba(26,26,46,0.10)", bg: "#ffffff", bar: "rgba(26,26,46,0.25)" },
-  advisory: { border: "rgba(26,26,46,0.10)", bg: "#ffffff", bar: "rgba(26,26,46,0.25)" },
-  assembly: { border: "rgba(41,182,200,0.55)", bg: "rgba(41,182,200,0.07)", bar: TEAL },
+const accentStyles: Record<Accent, { icon: LucideIcon; color: string; bg: string }> = {
+  vision: { icon: Lightbulb, color: "#7848a2", bg: "#f3ebfa" },
+  board: { icon: Network, color: "#228cc4", bg: "#e9f5fc" },
+  advisory: { icon: UsersRound, color: "#55a748", bg: "#edf8e9" },
+  assembly: { icon: UsersRound, color: "#e88b23", bg: "#fff2e5" },
 }
 
 function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
-    <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-10 max-w-[720px] text-center md:mb-14">
-      <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+    <motion.div {...reveal} transition={{ duration: 0.45 }} className="mb-8 max-w-4xl md:mb-10">
+      <h2 id="governance-heading" className="font-comic text-xs font-bold uppercase tracking-widest leading-[1.12] text-[#15151c]">
         {label}
-      </span>
-      <h2 className="font-marissa text-[26px] font-medium leading-[1.25] sm:text-3xl md:text-[40px]" style={{ color: DARK }}>
-        {title}
       </h2>
-      {sub && <p className="font-dm-sans mx-auto mt-3 max-w-[46ch] text-[15px] italic leading-relaxed text-[#6b7280] sm:text-base md:mt-4 md:text-lg">{sub}</p>}
+      <p className="font-marissa mt-1 text-3xl leading-[1.25] text-[#0b76b7] md:text-[40px]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
+        {title}
+      </p>
+      {sub && <p className="font-dm-sans mt-2 max-w-4xl text-[15px] leading-relaxed text-[#495a70] sm:text-base">{sub}</p>}
     </motion.div>
-  )
-}
-
-function Connector() {
-  return (
-    <div className="flex justify-center py-1.5" aria-hidden>
-      <ChevronDown className="size-5" style={{ color: "rgba(41,182,200,0.55)" }} />
-    </div>
   )
 }
 
 export function OrgStructure() {
   return (
-    <section className="scroll-mt-24 bg-[#f8f6f1] py-14 sm:py-20 lg:py-[90px]" id="organization">
-      <div className="mx-auto max-w-4xl px-4 md:px-8">
+    <section className="scroll-mt-24 bg-[radial-gradient(ellipse_at_top,_#eaf8ff_0%,_#f4fbff_56%,_#fff_100%)] py-14 sm:py-20 lg:py-[90px]" id="organization" aria-labelledby="governance-heading">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           label="Governance"
           title="How the Foundation Is Organized"
-          sub="Born from experience. United by purpose. The Foundation brings like-minded people together for one mission — an inclusive society, guided by strong governance."
+          sub="Born from experience. United by purpose. The Foundation brings like-minded people together to build an inclusive society through strong governance."
         />
 
-        {/* Governance chain: four stacked tiers */}
-        <ol className="list-none">
+        <ol className="grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {tiers.map((tier, i) => {
             const style = accentStyles[tier.accent]
+            const Icon = style.icon
             return (
-              <li key={tier.title}>
-                <motion.div
-                  {...reveal}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className="relative overflow-hidden rounded-2xl border shadow-sm"
-                  style={{ borderColor: style.border, backgroundColor: style.bg }}
-                >
-                  {/* Left accent bar */}
-                  <span
-                    className="absolute inset-y-0 left-0 w-1"
-                    style={{ backgroundColor: style.bar }}
-                    aria-hidden
-                  />
-                  <div className="px-5 py-5 pl-6 text-center sm:px-6 sm:pl-7 md:px-8 md:py-6">
-                    <h3 className="font-comic text-[17px] font-bold sm:text-lg md:text-xl" style={{ color: DARK }}>
-                      {tier.title}
-                    </h3>
-                    <p className="font-dm-sans mt-1 text-[13px] italic sm:text-sm" style={{ color: TEAL }}>
-                      {tier.subtitle}
-                    </p>
-                    <p className="font-dm-sans mx-auto mt-2.5 max-w-2xl text-[14px] leading-relaxed text-[#4a4a4a] sm:text-[15px] md:mt-3">
-                      {tier.description}
-                    </p>
+              <li key={tier.title} className="min-w-0">
+                <motion.article {...reveal} transition={{ duration: 0.4, delay: i * 0.06 }} className="flex h-full flex-col rounded-xl border border-[#cce8f7] bg-white p-5 shadow-[0_4px_18px_rgba(25,100,145,0.05)] sm:p-6">
+                  <div className="flex items-start gap-3.5">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl sm:size-12" style={{ color: style.color, backgroundColor: style.bg }} aria-hidden="true">
+                      <Icon className="size-7" strokeWidth={2.2} />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-comic text-[17px] font-bold leading-tight text-[#134b76]">{tier.title}</h3>
+                      <p className="font-comic mt-1 text-[15px] font-bold italic leading-snug text-[#276c9f]">{tier.subtitle}</p>
+                    </div>
                   </div>
-                </motion.div>
-                {i < tiers.length - 1 && <Connector />}
+                  <p className="font-dm-sans mt-5 text-[15px] leading-[1.65] text-[#354b60]">{tier.description}</p>
+                </motion.article>
               </li>
             )
           })}
         </ol>
 
-        {/* Branch connector into the operational level */}
-        <Connector />
-
-        {/* Operational level — two parallel teams */}
-        <motion.div {...reveal} transition={{ duration: 0.5 }} className="mt-2">
-          <div className="mb-5 flex items-center gap-3 sm:gap-4">
-            <span className="h-px flex-1" style={{ backgroundColor: "rgba(26,26,46,0.12)" }} aria-hidden />
-            <span className="font-comic shrink-0 text-[11px] font-bold uppercase tracking-[0.15em] sm:text-xs sm:tracking-[0.2em]" style={{ color: "#9aa0aa" }}>
-              Operational Level
-            </span>
-            <span className="h-px flex-1" style={{ backgroundColor: "rgba(26,26,46,0.12)" }} aria-hidden />
+        <motion.div {...reveal} transition={{ duration: 0.45 }} className="mt-5 rounded-xl border border-[#c7e7f7] bg-[#eaf7ff]/80 p-4 sm:p-5 lg:mt-6">
+          <div className="mb-4 flex items-center gap-2.5 text-[#1889c7]">
+            <Cog className="size-7" strokeWidth={2.5} aria-hidden="true" />
+            <h3 className="font-comic text-lg font-bold text-[#134b76] sm:text-xl">Operational Level</h3>
           </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+          <div className="grid gap-4 md:grid-cols-2">
             {operationalTeams.map((team, i) => {
               const Icon = team.icon
               return (
-                <motion.div
+                <motion.article
                   key={team.title}
                   {...reveal}
-                  transition={{ duration: 0.5, delay: i * 0.12 }}
-                  className="group flex flex-col items-center rounded-2xl border border-[#eee] bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg sm:p-7"
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  className="flex items-start gap-4 rounded-lg bg-white p-5 shadow-[0_3px_12px_rgba(25,100,145,0.04)] sm:items-center sm:p-6"
                 >
-                  <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-[rgba(41,182,200,0.1)] text-[#29b6c8] transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="size-6" />
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#e8f5fc] text-[#168ac8]" aria-hidden="true">
+                    <Icon className="size-7" strokeWidth={2.2} />
                   </div>
-                  <h3 className="font-comic text-[17px] font-bold" style={{ color: DARK }}>
-                    {team.title}
-                  </h3>
-                  <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
-                    {team.description}
-                  </p>
-                </motion.div>
+                  <div>
+                    <h4 className="font-comic text-[17px] font-bold text-[#134b76]">{team.title}</h4>
+                    <p className="font-dm-sans mt-1 text-[15px] leading-relaxed text-[#354b60]">{team.description}</p>
+                  </div>
+                </motion.article>
               )
             })}
           </div>

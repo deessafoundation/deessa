@@ -60,10 +60,10 @@ const partnerCategories = [
 function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
-      <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+      <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
         {label}
       </span>
-      <h2 className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px]" style={{ color: DARK }}>
+      <h2 className="font-marissa text-3xl font-medium leading-[1.25] text-[#0b76b7] md:text-[40px]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
         {title}
       </h2>
       {sub && <p className="font-dm-sans mt-4 text-lg text-[#6b7280]">{sub}</p>}
@@ -403,10 +403,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
             transition={{ duration: 0.6 }}
           >
             <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
+              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
                 Collaboration
               </span>
-              <h2 className="font-marissa text-2xl font-medium md:text-3xl" style={{ color: DARK }}>
+              <h2 className="font-marissa text-2xl font-medium text-[#0b76b7] md:text-3xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
                 Our Partners <span className="font-comic-num">&</span> Supporters
               </h2>
               <p className="font-dm-sans mt-3 text-[15px] text-[#6b7280]">
@@ -438,148 +438,98 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 9: FINAL CTA */}
-      <section className="relative isolate overflow-hidden">
-        {/* A single flat-brush sweep: deep-blue through the body, thinning to pale
-            sky-blue bristle spikes where the brush enters and leaves the stroke.
-            Matches the Figma "Ready to Make a Difference" reference. */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          viewBox="0 0 1440 150"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            {/* Pigment load across the sweep: thin and pale where the brush entered
-                and left the stroke, saturated through the body. */}
-            <linearGradient id="cta-band" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--cta-brush-pale)" />
-              <stop offset="3%" stopColor="var(--cta-brush)" />
-              <stop offset="13%" stopColor="var(--cta-banner)" />
-              <stop offset="87%" stopColor="var(--cta-banner)" />
-              <stop offset="96%" stopColor="var(--cta-brush)" />
-              <stop offset="100%" stopColor="var(--cta-brush-pale)" />
-            </linearGradient>
-
-            {/* Broad, low-frequency wobble: keeps the long edges organic without
-                shredding them into a torn-paper zigzag. */}
-            <filter id="cta-sweep" x="-5%" y="-45%" width="110%" height="190%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.011 0.03" numOctaves="3" seed="9" result="noise" />
-              {/* Flatten R to 0.5 so displacement is vertical only: 0.5 is the
-                  neutral value, so the X channel contributes no shift. */}
-              <feColorMatrix
-                in="noise"
-                type="matrix"
-                values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0  0 0 0 0 1"
-                result="vertical"
-              />
-              <feDisplacementMap in="SourceGraphic" in2="vertical" scale="8" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            {/* Noise that changes fast vertically but slowly horizontally, displaced
-                along X only — turns a blunt shape into horizontal bristle spikes. */}
-            <filter id="cta-fringe" x="-25%" y="-40%" width="150%" height="180%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.005 0.45" numOctaves="2" seed="5" result="noise" />
-              <feColorMatrix
-                in="noise"
-                type="matrix"
-                values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0  0 0 0 0 1"
-                result="horizontal"
-              />
-              <feDisplacementMap in="SourceGraphic" in2="horizontal" scale="34" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            {/* Mirror of the above: fast horizontal noise displaced along Y only, so
-                the top and bottom edges grow fine upright brush hairs. */}
-            <filter id="cta-edge-hair" x="-8%" y="-100%" width="116%" height="300%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.35 0.01" numOctaves="2" seed="17" result="noise" />
-              <feColorMatrix
-                in="noise"
-                type="matrix"
-                values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0  0 0 0 0 1"
-                result="vertical"
-              />
-              <feDisplacementMap in="SourceGraphic" in2="vertical" scale="7" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-          </defs>
-
-          {/* One continuous flat-brush sweep. Nested filters compose: the inner
-              sweep gives the long edges a broad wobble, the outer one grows fine
-              brush hairs off the top and bottom. */}
-          <g filter="url(#cta-edge-hair)">
-            <g filter="url(#cta-sweep)">
-              <path
-                fill="url(#cta-band)"
-                d="M40,24
-                   C 180,14 280,18 420,15
-                   C 560,12 700,22 860,17
-                   C 1020,12 1160,20 1290,14
-                   C 1340,11 1372,12 1400,11
-                   L 1400,139
-                   C 1360,143 1330,136 1200,140
-                   C 1060,144 940,134 800,139
-                   C 660,144 520,134 380,139
-                   C 240,143 140,136 40,141
-                   Z"
-              />
+      <section className="relative isolate pt-5 sm:pt-7" style={{ background: "linear-gradient(to bottom, #fff 0 50%, var(--newsletter-bg) 50% 100%)" }} aria-labelledby="about-final-cta-heading">
+        <div className="relative w-full">
+          <svg
+            className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+            viewBox="0 0 1440 190"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="about-cta-paint" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#329bd0" />
+                <stop offset="13%" stopColor="#1a6a9e" />
+                <stop offset="82%" stopColor="#155f91" />
+                <stop offset="100%" stopColor="#2e9bce" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="#59afe0"
+              opacity="0.82"
+              d="M0 76 C72 52 163 38 295 36 C482 32 628 39 806 36 C1015 32 1260 27 1440 22 L1440 190 C1274 188 1110 190 918 190 C702 190 501 187 319 190 C192 190 85 187 0 190 Z"
+            />
+            <path
+              fill="url(#about-cta-paint)"
+              d="M0 91 C68 61 150 37 281 29 C398 22 508 26 634 25 C775 24 885 31 1013 25 C1190 17 1338 24 1440 28 L1440 183 C1368 187 1269 185 1149 188 C982 190 855 186 717 188 C544 190 436 185 299 188 C178 190 74 186 0 188 Z"
+            />
+            <g fill="none" strokeLinecap="round" opacity="0.32">
+              <path d="M0 66 C68 52 129 48 216 46" stroke="#75c3e7" strokeWidth="3" />
+              <path d="M0 75 C46 68 105 62 178 58" stroke="#75c3e7" strokeWidth="2" />
+              <path d="M0 150 C76 155 119 153 210 151" stroke="#70bee5" strokeWidth="2" />
+              <path d="M1260 37 C1328 39 1381 39 1440 43" stroke="#82c9e9" strokeWidth="2" />
+              <path d="M1305 146 C1362 148 1409 150 1440 149" stroke="#82c9e9" strokeWidth="3" />
             </g>
-          </g>
+            <g fill="none" stroke="#9bd3ed" strokeLinecap="round" opacity="0.12">
+              <path d="M150 60 C381 48 653 56 890 51 C1074 47 1241 49 1375 47" strokeWidth="3" />
+              <path d="M200 118 C438 112 638 118 842 115 C1066 111 1202 116 1350 112" strokeWidth="2" />
+              <path d="M62 137 C299 133 539 137 731 134 C910 132 1142 137 1380 131" strokeWidth="2" />
+            </g>
+          </svg>
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full lg:hidden"
+            viewBox="0 0 390 360"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="about-cta-mobile-paint" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#329bd0" />
+                <stop offset="20%" stopColor="#1a6a9e" />
+                <stop offset="85%" stopColor="#155f91" />
+                <stop offset="100%" stopColor="#329bd0" />
+              </linearGradient>
+            </defs>
+            <path fill="#6ab9e1" opacity="0.7" d="M0 34 C64 20 144 18 218 19 C289 20 341 17 390 30 L390 360 C328 358 260 360 191 360 C117 360 50 358 0 360 Z" />
+            <path fill="url(#about-cta-mobile-paint)" d="M0 45 C52 27 113 30 178 24 C244 20 322 26 390 36 L390 350 C325 356 258 350 190 354 C118 357 49 351 0 352 Z" />
+            <g fill="none" stroke="#a0d5ee" strokeLinecap="round" opacity="0.13">
+              <path d="M20 49 C118 39 247 44 366 43" strokeWidth="2" />
+              <path d="M16 308 C104 303 255 309 370 304" strokeWidth="3" />
+            </g>
+          </svg>
 
-          {/* Dry-bristle streaking along the sweep. Uses the vertical wobble so the
-              streaks undulate with the stroke; a horizontal displacement would
-              leave a long horizontal bar looking unchanged. Kept faint and inside
-              the band's vertical bounds so it never spills past the painted edges
-              or erodes the contrast of the white text. */}
-          <g filter="url(#cta-sweep)" opacity="0.13">
-            <path fill="var(--cta-brush-pale)" d="M40 38 H1300 V43 H40 Z" />
-            <path fill="var(--cta-brush-pale)" d="M120 74 H1240 V78 H120 Z" />
-            <path fill="var(--cta-brush-pale)" d="M80 112 H1320 V117 H80 Z" />
-          </g>
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.6 }}
+            className="relative z-10 mx-auto flex min-h-[310px] max-w-[1500px] flex-col items-center justify-center gap-5 px-8 py-12 text-center sm:min-h-[290px] sm:px-14 lg:min-h-[174px] lg:flex-row lg:justify-between lg:gap-10 lg:px-[8%] lg:py-7 lg:text-left"
+          >
+            <div className="max-w-[38rem]">
+              <h2 id="about-final-cta-heading" className="font-brush text-[1.7rem] font-bold italic leading-tight text-white sm:text-[1.9rem]">
+                Ready to Make a Difference?
+              </h2>
+              <p className="font-dm-sans mt-2 max-w-[34rem] text-sm leading-relaxed text-white/95 sm:text-[0.95rem]">
+                Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
+                mission.
+              </p>
+            </div>
 
-          {/* Stroke entry: pale, thinly loaded pigment shredded into horizontal
-              bristle spikes. Overlaps the band so the two read as one stroke, and
-              its outer edge sits far enough inside the viewport that the spikes
-              break against white rather than being clipped. */}
-          <g filter="url(#cta-fringe)">
-            <path fill="var(--cta-brush-pale)" d="M34 22 H185 V138 H34 Z" />
-            <path fill="var(--cta-brush)" opacity="0.7" d="M40 34 H150 V120 H40 Z" />
-          </g>
-
-          {/* Stroke exit, same treatment mirrored */}
-          <g filter="url(#cta-fringe)">
-            <path fill="var(--cta-brush-pale)" d="M1252 18 H1404 V136 H1252 Z" />
-            <path fill="var(--cta-brush)" opacity="0.7" d="M1288 30 H1398 V118 H1288 Z" />
-          </g>
-        </svg>
-
-        <motion.div
-          {...reveal}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 mx-auto flex max-w-[1500px] flex-col items-center gap-6 px-8 py-8 text-center sm:px-12 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-[11%] lg:text-left"
-        >
-          <div className="lg:max-w-[25rem]">
-            <h2 className="font-brush text-[1.6rem] font-bold italic leading-tight text-white md:text-[1.75rem]">
-              Ready to Make a Difference?
-            </h2>
-            <p className="font-dm-sans mt-1.5 text-[0.8rem] leading-snug text-white">
-              Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
-              mission.
-            </p>
-          </div>
-
-          <div className="flex shrink-0 flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-            <Link
-              href="/donate"
-              className="font-dm-sans inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-white px-7 text-[0.8rem] font-semibold text-cta-banner transition-colors duration-200 hover:bg-newsletter-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
-            >
-              Donate Now
-              <ArrowRight className="size-3.5" strokeWidth={2.75} aria-hidden="true" />
-            </Link>
-            <Link
-              href="/get-involved"
-              className="font-dm-sans inline-flex h-10 items-center justify-center rounded-[7px] border-[1.5px] border-white px-7 text-[0.8rem] font-semibold text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
-            >
-              Join Our Team
-            </Link>
-          </div>
-        </motion.div>
+            <div className="flex w-full max-w-[21rem] flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center lg:w-auto lg:shrink-0">
+              <Link
+                href="/donate"
+                className="font-comic inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-7 text-[0.95rem] font-bold text-cta-banner shadow-sm transition-colors duration-200 hover:bg-newsletter-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
+              >
+                Donate Now
+                <ArrowRight className="size-4" strokeWidth={2.5} aria-hidden="true" />
+              </Link>
+              <Link
+                href="/get-involved"
+                className="font-comic inline-flex min-h-11 items-center justify-center rounded-lg border-[1.5px] border-white bg-white/5 px-7 text-[0.95rem] font-bold text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
+              >
+                Join Our Team
+              </Link>
+            </div>
+          </motion.div>
+        </div>
       </section>
     </>
   )

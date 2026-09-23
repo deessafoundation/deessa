@@ -62,11 +62,37 @@ export async function getAboutPageSettings(): Promise<AboutPageSettings> {
 
   return {
     ...settings,
+    hero: {
+      ...settings.hero,
+      subtitle: settings.hero.subtitle ===
+        "We are parents, educators, professionals, and advocates working for and with children with disabilities — with a special focus on autism — to build a society where every child belongs."
+        ? DEFAULT_ABOUT_PAGE_SETTINGS.hero.subtitle
+        : settings.hero.subtitle,
+    },
     intro: {
       ...(usesLegacyIntro
         ? { ...DEFAULT_ABOUT_PAGE_SETTINGS.intro, headline: UPDATED_INTRO_HEADLINE }
       : settings.intro),
+      paragraphs: (usesLegacyIntro
+        ? DEFAULT_ABOUT_PAGE_SETTINGS.intro.paragraphs
+        : settings.intro.paragraphs
+      ).map((paragraph) =>
+        paragraph.replace(
+          "disability is never seen as a limit — where every child is known for their strengths, abilities, and potential. Where being different is never seen as being less.",
+          "disability is never seen as a limit. Every child is known for their strengths, abilities, and potential. Being different is never seen as being less."
+        )
+      ),
       sinceBadge: settings.intro.sinceBadge.replace(/\b2015\b/g, "2022"),
+    },
+    howWeDoIt: {
+      ...settings.howWeDoIt,
+      steps: settings.howWeDoIt.steps.map((step) => ({
+        ...step,
+        body: step.body.replace(
+          "We listen first — to their needs, their challenges, their hopes — before we design any solution.",
+          "We listen to their needs, their challenges, and their hopes before we design any solution."
+        ),
+      })),
     },
     journey: {
       ...DEFAULT_ABOUT_PAGE_SETTINGS.journey,

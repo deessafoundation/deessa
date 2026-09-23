@@ -4,7 +4,7 @@ import { WhatWeDoClient } from "./whatwedo-client"
 
 export const metadata: Metadata = {
   title: "What We Do - deessa Foundation",
-  description: "From classrooms in Karnali to clinics in the Terai — our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
+  description: "From classrooms in Karnali to clinics in the Terai, our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
 }
 
 // Hardcoded programs data
@@ -121,7 +121,7 @@ export default function ProgramsPage() {
 
           {/* Subtitle */}
           <p className="mb-8 text-[17px] font-dm-sans text-white/76 max-w-[460px] leading-[1.7]">
-            From classrooms in Karnali to clinics in the Terai — sustainable education, healthcare, and empowerment
+            From classrooms in Karnali to clinics in the Terai, our work brings sustainable education, healthcare, and empowerment
             reaching Nepal&apos;s most remote communities.
           </p>
 
@@ -172,10 +172,10 @@ export default function ProgramsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="text-center mb-14 md:mb-20">
-            <div className="mb-4 text-[11px] font-comic tracking-widest text-[#29b6c8] uppercase">
+            <div className="mb-4 text-[11px] font-comic tracking-widest text-[#15151c] uppercase">
               What We Do
             </div>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[52px] font-marissa leading-[1.15] text-[#1a1a2e] mb-5 px-4">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[52px] font-marissa leading-[1.15] text-[#0b76b7] mb-5 px-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               We turn understanding into action for children, families, and communities.
             </h2>
             <p className="text-[16px] md:text-[18px] font-dm-sans text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
@@ -199,7 +199,7 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Awareness & Community Engagement
                 </h3>
 
@@ -226,7 +226,7 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Training
                 </h3>
 
@@ -253,7 +253,7 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Resources
                 </h3>
 
@@ -280,7 +280,7 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Advocacy
                 </h3>
 

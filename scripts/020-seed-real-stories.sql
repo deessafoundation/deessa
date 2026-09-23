@@ -25,7 +25,7 @@ INSERT INTO stories (
 (
   'Finding Aryan''s Voice: A Journey Through Speech Therapy',
   'finding-aryans-voice',
-  'At four years old, Aryan had not spoken a single word. His parents feared the silence would last forever — until a dedicated therapist at deessa Foundation changed everything.',
+  'At four years old, Aryan had not spoken a single word. His parents feared the silence would last forever until a dedicated therapist at deessa Foundation changed everything.',
   '<p>When Priya and Rajesh first brought their son Aryan to deessa Foundation, they carried with them eighteen months of unanswered questions. Aryan was four years old, bright-eyed, and almost entirely silent.</p>
 
 <p>"He would look at us like he had so much to say," Priya recalls, her hands folded in her lap. "But the words just wouldn''t come."</p>
@@ -66,7 +66,7 @@ INSERT INTO stories (
 (
   'The Classroom That Waited: Inclusive Education in Kathmandu',
   'inclusive-classroom-kathmandu',
-  'A neighbourhood school in Kathmandu''s Baneshwor district transformed its fourth-grade classroom — and changed the way 28 children understand difference, belonging, and friendship.',
+  'A neighbourhood school in Kathmandu''s Baneshwor district transformed its fourth-grade classroom and changed the way 28 children understand difference, belonging, and friendship.',
   '<p>Room 4B at Shree Janajagrit Secondary School was not designed to be inclusive. The desks were in fixed rows, the curriculum was rigid, and until eighteen months ago, children with developmental differences were quietly steered toward "special sections" — separate, underfunded, and largely invisible.</p>
 
 <p>That changed when deessa Foundation partnered with the school to pilot an inclusive education model that kept neurodiverse learners in the main classroom, supported by trained inclusion aides and a restructured teaching approach.</p>
@@ -103,7 +103,7 @@ INSERT INTO stories (
 (
   'A Mother''s Shift: How Parent Training Transformed Their Home',
   'parent-training-anita',
-  'Anita had tried everything she could think of. She just hadn''t yet been taught the right things. A 12-week parent training programme gave her a new language for understanding her son — and herself.',
+  'Anita had tried everything she could think of. She just hadn''t yet been taught the right things. A 12-week parent training programme gave her a new language for understanding her son and herself.',
   '<p>Anita sits across from us at the deessa Foundation community room, calmly describing a version of her life from two years ago that sounds nothing like the composed woman in front of us.</p>
 
 <p>"I used to cry in the bathroom every evening," she says matter-of-factly. "Not because I didn''t love Rohan. I loved him more than anything. But I didn''t know how to reach him, and no one had taught me."</p>
@@ -140,7 +140,7 @@ INSERT INTO stories (
 (
   'From Diagnosis to Direction: Early Intervention That Works',
   'early-intervention-that-works',
-  'Research is clear: the earlier the intervention, the greater the impact. Meet the three families who reached deessa Foundation before their children turned two — and see what early support made possible.',
+  'Research is clear: the earlier the intervention, the greater the impact. Meet the three families who reached deessa Foundation before their children turned two and see what early support made possible.',
   '<p>The window is narrow. Neuroscience tells us that the first two years of life represent an extraordinary period of neural plasticity — a time when targeted, consistent intervention can meaningfully alter developmental trajectories for children with autism.</p>
 
 <p>deessa Foundation''s Early Start Programme operates at exactly this threshold, identifying children as young as 14 months and beginning structured support before a formal diagnosis is even confirmed.</p>
@@ -182,7 +182,7 @@ INSERT INTO stories (
 (
   'Life Skills for Life: Preparing Teenagers with Autism for Adulthood',
   'life-skills-for-adulthood',
-  'What does independence look like for a teenager with autism? At deessa Foundation''s Transition Programme, 16 young adults are answering that question — on their own terms.',
+  'What does independence look like for a teenager with autism? At deessa Foundation''s Transition Programme, 16 young adults are answering that question on their own terms.',
   '<p>Rajan is seventeen. He can prepare four different meals from scratch, navigate his local bus route independently, and manage a personal budget with a spreadsheet he built himself. Two years ago, he had never cooked, taken public transport alone, or handled money without direct supervision.</p>
 
 <p>He is one of sixteen teenagers enrolled in deessa Foundation''s Adolescent Transition Programme, a structured two-year curriculum designed to build the practical and social skills that bridge autism support services and adult life.</p>
@@ -220,7 +220,7 @@ INSERT INTO stories (
 (
   'Sensory Sanctuary: How We Redesigned Space for Every Child',
   'sensory-sanctuary-redesign',
-  'A sensory-friendly room doesn''t look like a therapy room. It looks like a place where children breathe easier, engage longer, and leave calmer. Here''s how ours was built — and why it matters.',
+  'A sensory-friendly room doesn''t look like a therapy room. It looks like a place where children breathe easier, engage longer, and leave calmer. Here''s how ours was built and why it matters.',
   '<p>The first thing you notice about the deessa Foundation sensory room is the light. It''s soft, adjustable, and never fluorescent. The second thing you notice is the silence — not emptiness, but a careful acoustic calm that makes the room feel buffered from the world outside.</p>
 
 <p>The room was designed in consultation with three occupational therapists, two sensory integration specialists, and — crucially — eight children with autism whose feedback shaped every element of the space.</p>

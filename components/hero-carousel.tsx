@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
 import { cn } from "@/lib/utils"
 
 export interface HeroSlide {
@@ -66,6 +67,8 @@ function getHeroImagePositionClass(slide: HeroSlide) {
 }
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
+  const accessibility = useOptionalAccessibility()
+  const isPageReading = accessibility?.status === "loading" || accessibility?.status === "translating" || accessibility?.status === "speaking"
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [direction, setDirection] = useState<"next" | "prev">("next")
@@ -119,12 +122,12 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
 
   // Auto-advance
   useEffect(() => {
-    if (isPaused || prefersReducedMotion) return
+    if (isPaused || isPageReading || prefersReducedMotion) return
     timerRef.current = setInterval(next, interval)
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [isPaused, next, interval, prefersReducedMotion])
+  }, [isPaused, isPageReading, next, interval, prefersReducedMotion])
 
   // Keyboard navigation
   const handleKeyDown = useCallback(

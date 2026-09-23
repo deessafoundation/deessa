@@ -111,10 +111,18 @@ export async function getHomepageStats(): Promise<HomepageStatsSettings> {
  * Get homepage "How deessa Started" story section with fallback
  */
 export async function getHomepageStory(): Promise<HomepageStorySettings> {
-  return getHomepageSetting<HomepageStorySettings>(
+  const settings = await getHomepageSetting<HomepageStorySettings>(
     HOMEPAGE_SETTINGS_KEYS.STORY,
     DEFAULT_HOMEPAGE_STORY
   )
+  return {
+    ...settings,
+    paragraphs: settings.paragraphs.map((paragraph) =>
+      paragraph
+        .replace("two little girls — our twin daughters", "two little girls, our twin daughters")
+        .replace('their story — "Dee"', 'their story: "Dee"')
+    ),
+  }
 }
 
 // ============================================================================
@@ -125,10 +133,24 @@ export async function getHomepageStory(): Promise<HomepageStorySettings> {
  * Get homepage "What We Do" core pillars section with fallback
  */
 export async function getHomepageWhatWeDo(): Promise<HomepageWhatWeDoSettings> {
-  return getHomepageSetting<HomepageWhatWeDoSettings>(
+  const settings = await getHomepageSetting<HomepageWhatWeDoSettings>(
     HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO,
     DEFAULT_WHAT_WE_DO
   )
+  return {
+    ...settings,
+    title: settings.title.replace(
+      "We turn understanding into action — for children, families, and communities.",
+      "We turn understanding into action for children, families, and communities."
+    ),
+    pillars: settings.pillars.map((pillar) => ({
+      ...pillar,
+      description: pillar.description.replace(
+        "child's rights — so inclusion",
+        "child's rights, so inclusion"
+      ),
+    })),
+  }
 }
 
 // ============================================================================
@@ -205,10 +227,20 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
     ],
   }
 
-  return getHomepageSetting<HomepageProgramsSettings>(
+  const settings = await getHomepageSetting<HomepageProgramsSettings>(
     HOMEPAGE_SETTINGS_KEYS.PROGRAMS,
     defaultPrograms
   )
+  return {
+    ...settings,
+    programs: settings.programs.map((program) => ({
+      ...program,
+      body: program.body
+        .replace("communities — ensuring", "communities, ensuring")
+        .replace("maternal care — meeting", "maternal care, meeting")
+        .replace("leadership workshops — creating", "leadership workshops, creating"),
+    })),
+  }
 }
 
 // ============================================================================
@@ -326,10 +358,17 @@ export async function getHomepageBanners(): Promise<HomepageBannersSettings> {
     ],
   }
 
-  return getHomepageSetting<HomepageBannersSettings>(
+  const settings = await getHomepageSetting<HomepageBannersSettings>(
     HOMEPAGE_SETTINGS_KEYS.BANNERS,
     defaultBanners
   )
+  return {
+    ...settings,
+    banners: settings.banners.map((banner) => ({
+      ...banner,
+      body: banner.body?.replace("we award — these are", "we award. These are"),
+    })),
+  }
 }
 
 // ============================================================================
@@ -439,10 +478,20 @@ export async function getHomepageFeaturedStoriesRules(): Promise<HomepageFeature
  * Get homepage hero carousel slides
  */
 export async function getHomepageHeroCarousel(): Promise<HomepageHeroCarouselSettings> {
-  return getHomepageSetting<HomepageHeroCarouselSettings>(
+  const settings = await getHomepageSetting<HomepageHeroCarouselSettings>(
     HOMEPAGE_SETTINGS_KEYS.HERO_CAROUSEL,
     DEFAULT_HERO_CAROUSEL
   )
+  return {
+    ...settings,
+    slides: settings.slides.map((slide) => ({
+      ...slide,
+      subtitle: slide.subtitle.replace(
+        "Real voices, real stories — honest conversations",
+        "Real voices, real stories. Honest conversations"
+      ),
+    })),
+  }
 }
 
 // ============================================================================

@@ -50,7 +50,7 @@ export function AboutHero({ settings }: AboutHeroProps) {
       <div className={styles.artwork}>
         <Image
           src="/about/hero/about_hero_img.png"
-          alt="Unlocking Potential, Embracing Neurodiversity — colourful craft materials and a child's hand."
+          alt="Unlocking Potential, Embracing Neurodiversity with colourful craft materials and a child's hand."
           width={752}
           height={450}
           priority

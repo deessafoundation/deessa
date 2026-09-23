@@ -77,7 +77,7 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
     headlineLine1: "The People",
     headlineLine2: "Behind Nepal's Change.",
     subtitle:
-      "We are parents, educators, professionals, and advocates working for and with children with disabilities, with a special focus on autism, to build a society where every child belongs.",
+      "We are parents, educators, professionals, and advocates working for and with children with disabilities. With a special focus on autism, we are building a society where every child belongs.",
     primaryCtaLabel: "Read Our Story",
     primaryCtaUrl: "#journey",
     secondaryCtaLabel: "View Annual Reports",

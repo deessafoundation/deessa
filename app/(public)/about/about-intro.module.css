@@ -1,11 +1,12 @@
 .section { background: #fff; padding: 32px 24px; }
 .layout { display: grid; grid-template-columns: 49% minmax(0, 1fr); gap: 32px; max-width: 1240px; margin: 0 auto; align-items: start; }
-.media { overflow: hidden; border-radius: 10px; background: #E8F6FC; }
-.video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; }
+.media { position: relative; overflow: hidden; border: 1px solid rgb(11 95 138 / 14%); border-radius: 18px; clip-path: inset(0 round 18px); background: transparent; }
+.media::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at bottom right, transparent 17px, #fff 18px) top left / 18px 18px no-repeat, radial-gradient(circle at bottom left, transparent 17px, #fff 18px) top right / 18px 18px no-repeat, radial-gradient(circle at top right, transparent 17px, #fff 18px) bottom left / 18px 18px no-repeat, radial-gradient(circle at top left, transparent 17px, #fff 18px) bottom right / 18px 18px no-repeat; }
+.video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 18px; clip-path: inset(0 round 18px); object-fit: cover; }
 .content { min-width: 0; }
-.label { margin: 0 0 6px; font-family: var(--font-comic); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #0B5F8A; }
-.title { margin: 0 0 14px; font-family: var(--font-marissa); font-size: clamp(25px, 2.15vw, 31px); line-height: 1.2; font-weight: 700; color: #0B5F8A; -webkit-text-stroke: 0.25px currentColor; }
-.paragraphs { font-family: var(--font-dm-sans); font-size: 14px; line-height: 1.55; color: #52606b; }
+.label { margin: 0 0 6px; font-family: var(--font-comic); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #15151c; }
+.title { margin: 0 0 14px; font-family: var(--font-marissa); font-size: clamp(25px, 2.15vw, 31px); line-height: 1.2; font-weight: 700; color: #0b76b7; -webkit-text-stroke: 0.7px currentColor; }
+.paragraphs { font-family: var(--font-dm-sans); font-size: clamp(15px, 1.15vw, 17px); font-weight: 400; line-height: 1.65; color: #52606b; }
 .paragraphs p { margin: 0; }
 .paragraphs p + p { margin-top: 10px; }
 .quote { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0 10px; padding: 10px 14px; border-radius: 9px; background: #dff3fc; color: #0B5F8A; }
@@ -27,6 +28,6 @@
   .section { padding: 28px 20px; }
   .layout { grid-template-columns: 1fr; gap: 24px; max-width: 600px; }
   .title { font-size: 28px; }
-  .paragraphs { font-size: 15px; line-height: 1.65; }
+  .paragraphs { font-size: 16px; line-height: 1.65; }
   .quote p { font-size: 15px; }
 }

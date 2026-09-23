@@ -194,16 +194,16 @@ export function Footer() {
     "flex size-11 items-center justify-center rounded-full text-white transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-footer-blue sm:size-9"
 
   return (
-    <footer className="bg-footer-blue text-white">
+    <footer className="font-comic bg-footer-blue text-white">
       {/* ================= NEWSLETTER STRIP ================= */}
       <section aria-labelledby="footer-newsletter-heading" className="bg-newsletter-bg">
         <div className="mx-auto grid max-w-[1500px] gap-7 px-8 py-7 sm:px-12 lg:grid-cols-3 lg:gap-0 lg:px-[8%]">
           {/* Column 1 — Stay Connected */}
           <div className="lg:pr-7">
-            <h2 id="footer-newsletter-heading" className="font-brush text-center text-[1.6rem] font-bold italic leading-none text-newsletter-heading lg:text-left">
+            <h2 id="footer-newsletter-heading" className="font-comic text-center text-[1.6rem] font-bold leading-none text-newsletter-heading lg:text-left">
               Stay Connected
             </h2>
-            <p className="font-dm-sans mt-2 max-w-[19rem] text-[0.7rem] leading-snug text-newsletter-body">
+            <p className="font-comic mt-2 max-w-[19rem] text-[0.7rem] leading-snug text-newsletter-body">
               Get the latest updates on our impact, upcoming events, and new ways to make a difference in rural Nepal.
             </p>
 
@@ -213,7 +213,7 @@ export function Footer() {
                 return (
                   <li key={benefit.label} className="flex items-center gap-3">
                     <BenefitIcon className="size-[1.15rem] shrink-0 text-newsletter-heading" />
-                    <span className="font-dm-sans text-[0.72rem] text-newsletter-label">{benefit.label}</span>
+                    <span className="font-comic text-[0.72rem] text-newsletter-label">{benefit.label}</span>
                   </li>
                 )
               })}
@@ -222,7 +222,7 @@ export function Footer() {
 
           {/* Column 2 — Subscribe */}
           <div className="lg:border-l lg:border-newsletter-rule lg:px-7">
-            <h3 className="font-brush text-center text-[0.95rem] font-bold italic text-newsletter-navy lg:text-left">
+            <h3 className="font-comic text-center text-[0.95rem] font-bold text-newsletter-navy lg:text-left">
               Join 2,400+ supporters
             </h3>
 
@@ -230,7 +230,7 @@ export function Footer() {
               <NewsletterForm variant="footer" />
             </div>
 
-            <p className="font-dm-sans mt-2 text-[0.62rem] text-newsletter-body">
+            <p className="font-comic mt-2 text-[0.62rem] text-newsletter-body">
               No spam. Unsubscribe anytime.
             </p>
           </div>
@@ -241,12 +241,12 @@ export function Footer() {
               <ShieldCheckTwoTone className="size-7 shrink-0" />
               <div className="w-full">
                 <h3 className="font-comic text-center text-[0.8rem] font-bold text-newsletter-navy lg:text-left">100% Transparent</h3>
-                <p className="font-dm-sans mt-1 max-w-[13rem] text-[0.7rem] leading-snug text-newsletter-body">
+                <p className="font-comic mt-1 max-w-[13rem] text-[0.7rem] leading-snug text-newsletter-body">
                   We believe in complete financial transparency. Every rupee you donate or track through our reports goes directly toward empowering rural communities in Nepal.
                 </p>
                 <Link
                   href="/impact"
-                  className="font-dm-sans mt-2 inline-flex items-center gap-1.5 text-[0.7rem] font-semibold text-newsletter-heading transition-colors duration-200 hover:text-newsletter-subscribe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2"
+                  className="font-comic mt-2 inline-flex items-center gap-1.5 text-[0.7rem] font-semibold text-newsletter-heading transition-colors duration-200 hover:text-newsletter-subscribe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2"
                 >
                   Explore our financials
                   <ArrowRight className="size-3" strokeWidth={2.75} aria-hidden="true" />
@@ -273,21 +273,21 @@ export function Footer() {
               />
             </Link>
 
-            <h2 className="font-dm-sans mt-5 text-sm font-bold text-white">Our Mission</h2>
-            <p className="font-dm-sans mt-2 max-w-xs text-xs leading-relaxed text-footer-muted">
+            <h2 className="font-comic mt-5 text-sm font-bold text-white">Our Mission</h2>
+            <p className="font-comic mt-2 max-w-xs text-xs leading-relaxed text-footer-muted">
               Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
               initiatives since 2022.
             </p>
-            <p className="font-dm-sans mt-3 border-l-2 border-white/40 pl-3 text-xs italic text-footer-muted">
+            <p className="font-comic mt-3 border-l-2 border-white/40 pl-3 text-xs italic text-footer-muted">
               Making a difference, one community at a time.
             </p>
 
             <ul className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
-              <li className="font-dm-sans inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
+              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
                 <Award className="size-3" aria-hidden="true" />
                 Govt Registered NGO since 2022
               </li>
-              <li className="font-dm-sans inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
+              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
                 <CheckCircle className="size-3" aria-hidden="true" />
                 SWC Affiliated
               </li>
@@ -296,14 +296,14 @@ export function Footer() {
 
           {/* Get in Touch */}
           <div className="col-span-2 md:col-span-4 xl:col-span-1">
-            <h2 className="font-dm-sans text-sm font-bold text-white">Get in Touch</h2>
+            <h2 className="font-comic text-sm font-bold text-white">Get in Touch</h2>
             <ul className="mt-4 space-y-3">
               {contactItems.map((item) => {
                 const ContactIcon = item.icon
                 return (
                   <li key={item.srLabel} className="flex items-start justify-center gap-2.5 md:justify-start">
                     <ContactIcon className="mt-px size-4 shrink-0 text-white/90" strokeWidth={1.75} aria-hidden="true" />
-                    <p className="font-dm-sans text-xs leading-relaxed text-footer-muted">
+                    <p className="font-comic text-xs leading-relaxed text-footer-muted">
                       <span className="sr-only">{item.srLabel}: </span>
                       {item.value}
                     </p>
@@ -316,7 +316,7 @@ export function Footer() {
           {/* Link columns */}
           {linkColumns.map((column) => (
             <nav key={column.title} aria-label={column.title} className="w-full">
-              <h2 className="font-dm-sans text-sm font-bold text-white">{column.title}</h2>
+              <h2 className="font-comic text-sm font-bold text-white">{column.title}</h2>
               <ul className="mt-4 space-y-2">
                 {column.links.map((link) => (
                   <li key={link.href}>
@@ -324,14 +324,14 @@ export function Footer() {
                       <a
                         href={link.href}
                         download
-                        className="font-dm-sans rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        className="font-comic rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                       >
                         {link.label}
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="font-dm-sans rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        className="font-comic rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                       >
                         {link.label}
                       </Link>
@@ -352,13 +352,13 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <p className="font-dm-sans mt-5 text-center text-[11px] text-footer-muted md:text-right">
+        <p className="font-comic mt-5 text-center text-[11px] text-footer-muted">
           © {new Date().getFullYear()} deessa Foundation. All rights reserved.
         </p>
 
         {/* Socials + legal */}
-        <div className="mt-4 flex flex-col items-center gap-5 md:flex-row md:justify-between">
-          <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-4 grid grid-cols-1 items-center justify-items-center gap-5 md:grid-cols-[1fr_auto_1fr]">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:justify-self-start">
             <nav aria-label="Follow our journey" className="flex items-center gap-2.5">
               {socialLinks.map((social) => (
                 social.isAlert ? (
@@ -387,12 +387,12 @@ export function Footer() {
             </nav>
           </div>
 
-          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:col-start-2">
             {legalLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-x-3">
                 <Link
                   href={link.href}
-                  className="font-dm-sans rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="font-comic rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {link.label}
                 </Link>
@@ -402,7 +402,7 @@ export function Footer() {
                     href="/admin"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-dm-sans rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="font-comic rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     Admin
                   </Link>

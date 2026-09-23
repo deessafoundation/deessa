@@ -34,6 +34,7 @@ interface CircularTestimonialsProps {
   autoplay?: boolean
   colors?: Colors
   fontSizes?: FontSizes
+  nameTextStroke?: string
   /** When false, hides the name/quote column and shows just the photo carousel. Defaults to true. */
   showContent?: boolean
   /** Height of the image stack. Defaults to "24rem". */
@@ -58,6 +59,7 @@ export const CircularTestimonials = ({
   autoplay = true,
   colors = {},
   fontSizes = {},
+  nameTextStroke,
   showContent = true,
   imageHeight = "24rem",
   videoAutoplay = true,
@@ -390,7 +392,7 @@ export const CircularTestimonials = ({
               )}
               <h3
                 className="name"
-                style={{ color: colorName, fontSize: fontSizeName }}
+                style={{ color: colorName, fontSize: fontSizeName, WebkitTextStroke: nameTextStroke }}
               >
                 {activeTestimonial.name}
               </h3>

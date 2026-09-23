@@ -185,8 +185,8 @@ export function MissionVisionSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
           <div className="mb-14 text-center md:mb-16">
-            <span className="mb-4 block text-sm font-bold tracking-widest text-primary uppercase">Our Direction</span>
-            <h2 className="mb-4 text-3xl font-black tracking-tight text-foreground md:text-5xl">
+            <span className="mb-4 block text-sm font-bold tracking-widest text-[#15151c] uppercase">Our Direction</span>
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-[#0b76b7] md:text-5xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               Mission, Vision <span className="font-normal">&</span> Objectives
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-foreground/60">
@@ -232,7 +232,7 @@ export function MissionVisionSection() {
                 </div>
                 <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Vision</h3>
                 <p className="text-lg leading-relaxed text-foreground/70">
-                  A Nepal where every community thrives — where children dream freely, families are healthy, and
+                  A Nepal where every community thrives. Children dream freely, families are healthy, and
                   opportunities are within everyone&apos;s reach.
                 </p>
               </div>
@@ -316,8 +316,8 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-[#1a1a2e]">{w.title}</h2>
+            <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
+            <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               {w.subtitle}
             </p>
@@ -748,16 +748,19 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
 
   return (
     <section
-      className="py-16 md:py-24 bg-muted relative overflow-hidden"
+      className="relative overflow-hidden bg-muted py-10 md:py-12"
       data-tts-section=""
       data-tts-priority="heading"
       data-tts-text={testimonialsSpokenText}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-12">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Global Voices</span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">
+          <div className="mb-8 text-center">
+            <span className="mb-4 block text-sm font-bold uppercase tracking-widest text-[#15151c]">Global Voices</span>
+            <h2
+              className="font-marissa mb-4 text-3xl tracking-tight text-[#0b76b7] md:text-4xl"
+              style={{ WebkitTextStroke: "0.7px currentColor" }}
+            >
               Inclusion Begins with Acceptance
             </h2>
 
@@ -767,10 +770,11 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
         <div className="flex justify-center">
           <CircularTestimonials
             testimonials={circularTestimonials}
+            nameTextStroke="0.55px currentColor"
             autoplay={false}
             videoAutoplay={true}
             colors={{
-              name: "hsl(var(--foreground))",
+              name: "#0b76b7",
               designation: "hsl(var(--muted-foreground))",
               testimony: "hsl(var(--foreground) / 0.8)",
               arrowBackground: "hsl(var(--primary))",
@@ -1087,14 +1091,14 @@ export function ContactSection() {
 
   return (
     <section
-      className="py-20 md:py-28 bg-background"
+      className="pt-8 pb-20 md:pt-12 md:pb-28 bg-background"
       data-tts-section=""
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
-            <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight mb-4">
+            <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               Visit Our Office
             </h2>
           </div>

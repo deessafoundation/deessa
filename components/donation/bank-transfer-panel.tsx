@@ -139,7 +139,7 @@ export function BankTransferPanel({ accounts }: BankTransferPanelProps) {
           <Info className="size-5 text-primary shrink-0 mt-0.5" />
           <p className="text-sm text-foreground-muted">
             Bank transfers are confirmed by hand, so your receipt is not instant. Fill in the form below
-            after transferring — without it we cannot match your payment to your name.
+            after transferring so we can match your payment to your name.
           </p>
         </div>
 

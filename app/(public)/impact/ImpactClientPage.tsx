@@ -587,7 +587,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
     {
       badge: "📚 Education",
       headline: "Building Classrooms, Building Futures",
-      body: "Since 2014, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+      body: "Since 2014, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities, ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
       bullets: [
         "50+ schools built & renovated from Humla to Dang",
         "500+ teachers trained in child-centered pedagogy",
@@ -603,7 +603,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
     {
       badge: "🏥 Healthcare",
       headline: "Bringing Medicine to the Mountains",
-      body: "200+ free health camps have reached villages where the nearest hospital is a full day's walk away. Our mobile health units carry everything from basic diagnostics to maternal care — meeting communities where they are, not where is convenient.",
+      body: "200+ free health camps have reached villages where the nearest hospital is a full day's walk away. Our mobile health units carry everything from basic diagnostics to maternal care, meeting communities where they are, not where is convenient.",
       bullets: [
         "200+ free health camps across 25 districts",
         "Maternal & child health care for 5,000+ women",
@@ -619,7 +619,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
     {
       badge: "👩 Women Empowerment",
       headline: "Women Who Lead",
-      body: "When women rise, communities transform. Our women's empowerment programs provide vocational training, microfinance access, and leadership workshops — creating 500+ self-sufficient entrepreneurs and community advocates across Nepal's remotest corners.",
+      body: "When women rise, communities transform. Our women's empowerment programs provide vocational training, microfinance access, and leadership workshops, creating 500+ self-sufficient entrepreneurs and community advocates across Nepal's remotest corners.",
       bullets: [
         "500+ women trained in vocational skills",
         "Microfinance access for rural women entrepreneurs",
@@ -691,7 +691,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                   size="compact"
                   eyebrow="Impact in motion"
                   headline="A wall of lived change across Nepal"
-                  description="✦ OUR IMPACT 2014–2024 · 10,000+ Lives. One Mission. From Humla's frozen peaks to Terai's golden plains, we've been showing up — with books, medicine, and unwavering belief in Nepal's communities."
+                  description="✦ OUR IMPACT 2014–2024 · 10,000+ Lives. One Mission. From Humla's frozen peaks to Terai's golden plains, we've been showing up with books, medicine, and unwavering belief in Nepal's communities."
                   badges={["Govt Registered", "SWC Affiliated", "10+ Years"]}
                   className="relative"
                 />
@@ -854,7 +854,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                         </h2>
                         <p className="font-dm text-gray-600 text-lg leading-relaxed mb-6">
                           Nepal has one of the lowest rates of autism diagnosis and support infrastructure in
-                          South Asia. deessa Foundation is changing that — running 12 therapy centers,
+                          South Asia. deessa Foundation is changing that by running 12 therapy centers,
                           training 200+ specialist educators, and fighting the stigma that silences
                           thousands of families across the country.
                         </p>
@@ -881,11 +881,11 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                         <blockquote className="border-l-4 border-orange pl-5 mb-8">
                           <p className="font-marissa italic text-dark" style={{ fontSize: 22, lineHeight: 1.5 }}>
                             "For the first time, my son has a place where he belongs.
-                            deessa Foundation didn't just help him — they gave our whole
+                            deessa Foundation didn't just help him. They gave our whole
                             family hope we didn't know we'd lost."
                           </p>
                           <footer className="font-comic font-bold text-gray-500 mt-2 text-sm">
-                            — Ranjana Maharjan, mother · Lalitpur
+                            Ranjana Maharjan, mother · Lalitpur
                           </footer>
                         </blockquote>
 
@@ -961,7 +961,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
             <div className="relative lg:w-3/5 aspect-video lg:aspect-auto min-h-[360px]">
               <Image
                 src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200&auto=format&fit=crop"
-                alt="Featured story — Ramesh Karki"
+                alt="Featured story featuring Ramesh Karki"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 60vw"
@@ -1082,7 +1082,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                 <div className="relative z-10">
                   <h3 className="font-comic font-bold text-white text-2xl mb-3 tracking-wide">Volunteer</h3>
                   <p className="font-dm text-white/80 text-base leading-relaxed">
-                    Give your time, skills, and energy. Teach, build, support — your talent has a home here.
+                    Give your time, skills, and energy. Teach, build, and support. Your talent has a home here.
                   </p>
                 </div>
                 <Link
@@ -1107,7 +1107,7 @@ export default function ImpactClientPage({ statsFromCMS, programsFromCMS }: Impa
                 <div className="relative z-10">
                   <h3 className="font-comic font-bold text-white text-2xl mb-3 tracking-wide">Partner</h3>
                   <p className="font-dm text-white/80 text-base leading-relaxed">
-                    CSR partnerships, institutional grants, or joint programs — grow impact together with us.
+                    Grow impact together with us through CSR partnerships, institutional grants, or joint programs.
                   </p>
                 </div>
                 <Link
