@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   FolderKanban,
   Calendar,
@@ -8,7 +9,6 @@ import {
   Users,
   HandHeart,
   Heart,
-  TrendingUp,
   MessageSquare,
   Building,
   BarChart3,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 import {
   type AdminRole,
   hasPermission,
@@ -26,6 +27,21 @@ import {
   getRoleDisplayName,
   getRoleDescription,
 } from "@/lib/types/admin"
+import { getDashboardTrends, getPendingActions } from "@/lib/actions/admin-dashboard"
+import {
+  DashboardStatCard,
+  DonationTrendChart,
+  ContentActivityChart,
+  ProviderBreakdownChart,
+  PendingActions,
+  ActivityFeed,
+  SystemHealthCard,
+  FundraisingProgressChart,
+  VolunteerSkillsChart,
+  MonthlyVsOneTimeChart,
+  EventCapacityChart,
+  DonationByCategoryChart,
+} from "@/components/admin/dashboard"
 
 async function getAdminUser() {
   const supabase = await createClient()
@@ -45,7 +61,6 @@ async function getDashboardStats(role: AdminRole) {
 
   const stats: Record<string, number | string> = {}
 
-  // Content stats - for SUPER_ADMIN, ADMIN, EDITOR
   if (hasPermission(role, "projects")) {
     const { count } = await supabase.from("projects").select("*", { count: "exact", head: true })
     stats.projects = count || 0
@@ -71,7 +86,6 @@ async function getDashboardStats(role: AdminRole) {
     stats.partners = count || 0
   }
 
-  // Finance stats - for SUPER_ADMIN, ADMIN, FINANCE
   if (canViewFinance(role)) {
     const { count: donationsCount } = await supabase.from("donations").select("*", { count: "exact", head: true })
     const { data: donationsTotal } = await supabase.from("donations").select("amount").eq("payment_status", "completed")
@@ -79,7 +93,6 @@ async function getDashboardStats(role: AdminRole) {
     stats.totalDonations = donationsTotal?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0
   }
 
-  // Engagement stats - for SUPER_ADMIN, ADMIN
   if (hasPermission(role, "volunteers")) {
     const { count } = await supabase
       .from("volunteer_applications")
@@ -101,7 +114,6 @@ async function getDashboardStats(role: AdminRole) {
     stats.subscribers = count || 0
   }
 
-  // User management - for SUPER_ADMIN, ADMIN
   if (canManageUsers(role)) {
     const { count } = await supabase.from("admin_users").select("*", { count: "exact", head: true })
     stats.adminUsers = count || 0
@@ -113,7 +125,6 @@ async function getDashboardStats(role: AdminRole) {
 async function getRecentActivity(role: AdminRole, userId: string) {
   const supabase = await createClient()
 
-  // For EDITOR and FINANCE, only show their own activity
   const query = supabase
     .from("activity_logs")
     .select(`
@@ -121,7 +132,7 @@ async function getRecentActivity(role: AdminRole, userId: string) {
       user:admin_users(full_name, email)
     `)
     .order("created_at", { ascending: false })
-    .limit(10)
+    .limit(15)
 
   if (role === "EDITOR" || role === "FINANCE") {
     query.eq("user_id", userId)
@@ -129,6 +140,69 @@ async function getRecentActivity(role: AdminRole, userId: string) {
 
   const { data } = await query
   return data || []
+}
+
+async function getSystemHealth() {
+  const supabase = await createClient()
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+  const { data: receipts } = await supabase
+    .from("donations")
+    .select("id")
+    .gte("created_at", oneDayAgo)
+
+  const { data: failures } = await supabase
+    .from("receipt_failures")
+    .select("id")
+    .gte("created_at", oneDayAgo)
+
+  const totalReceipts = (receipts?.length || 0) + (failures?.length || 0)
+  const receiptSuccessRate = totalReceipts > 0 ? ((totalReceipts - (failures?.length || 0)) / totalReceipts) * 100 : 100
+
+  const { data: emails } = await supabase
+    .from("donations")
+    .select("id")
+    .eq("receipt_sent", true)
+    .gte("created_at", oneDayAgo)
+
+  const { data: emailFailures } = await supabase
+    .from("email_failures")
+    .select("id")
+    .gte("created_at", oneDayAgo)
+
+  const totalEmails = (emails?.length || 0) + (emailFailures?.length || 0)
+  const emailSuccessRate = totalEmails > 0 ? ((totalEmails - (emailFailures?.length || 0)) / totalEmails) * 100 : 100
+
+  return { receiptSuccessRate, emailSuccessRate }
+}
+
+function StatCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-5 w-5 rounded" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-8 w-16 mb-1" />
+        <Skeleton className="h-3 w-20" />
+      </CardContent>
+    </Card>
+  )
+}
+
+function ChartSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-4 w-60" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-[300px] w-full rounded-lg" />
+      </CardContent>
+    </Card>
+  )
 }
 
 export default async function AdminDashboard() {
@@ -140,18 +214,23 @@ export default async function AdminDashboard() {
 
   const role = adminUser.role as AdminRole
   const stats = await getDashboardStats(role)
-  const recentActivity = await getRecentActivity(role, adminUser.id)
+  const [trends, recentActivity, pendingActions, systemHealth] = await Promise.all([
+    getDashboardTrends(role),
+    getRecentActivity(role, adminUser.id),
+    getPendingActions(role),
+    canManageUsers(role) ? getSystemHealth() : Promise.resolve(null),
+  ])
 
-  // Build stat cards based on role permissions
   const statCards = []
 
   if (hasPermission(role, "projects")) {
     statCards.push({
       title: "Total Projects",
       value: stats.projects,
-      icon: FolderKanban,
+      icon: "FolderKanban",
       href: "/admin/projects",
       color: "text-blue-600",
+      trend: trends.projects,
     })
   }
 
@@ -159,9 +238,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Events",
       value: stats.events,
-      icon: Calendar,
+      icon: "Calendar",
       href: "/admin/events",
       color: "text-green-600",
+      trend: trends.events,
     })
   }
 
@@ -169,9 +249,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Stories",
       value: stats.stories,
-      icon: FileText,
+      icon: "FileText",
       href: "/admin/stories",
       color: "text-purple-600",
+      trend: trends.stories,
     })
   }
 
@@ -179,9 +260,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Team Members",
       value: stats.team,
-      icon: Users,
+      icon: "Users",
       href: "/admin/team",
       color: "text-orange-600",
+      trend: trends.team,
     })
   }
 
@@ -189,9 +271,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Partners",
       value: stats.partners,
-      icon: Building,
+      icon: "Building",
       href: "/admin/partners",
       color: "text-cyan-600",
+      trend: trends.partners,
     })
   }
 
@@ -199,9 +282,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Total Donations",
       value: `₹${((stats.totalDonations as number) || 0).toLocaleString()}`,
-      icon: HandHeart,
+      icon: "HandHeart",
       href: "/admin/donations",
       color: "text-pink-600",
+      trend: trends.totalDonations,
     })
   }
 
@@ -209,9 +293,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Pending Volunteers",
       value: stats.pendingVolunteers,
-      icon: Heart,
+      icon: "Heart",
       href: "/admin/volunteers",
       color: "text-red-600",
+      trend: trends.pendingVolunteers,
     })
   }
 
@@ -219,9 +304,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Contact Messages",
       value: stats.contacts,
-      icon: MessageSquare,
+      icon: "MessageSquare",
       href: "/admin/contacts",
       color: "text-amber-600",
+      trend: trends.contacts,
     })
   }
 
@@ -229,9 +315,10 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Subscribers",
       value: stats.subscribers,
-      icon: Newspaper,
+      icon: "Newspaper",
       href: "/admin/newsletter",
       color: "text-indigo-600",
+      trend: trends.subscribers,
     })
   }
 
@@ -239,13 +326,13 @@ export default async function AdminDashboard() {
     statCards.push({
       title: "Admin Users",
       value: stats.adminUsers,
-      icon: UserCog,
+      icon: "UserCog",
       href: "/admin/users",
       color: "text-slate-600",
+      trend: undefined,
     })
   }
 
-  // Build quick actions based on role
   const quickActions = []
 
   if (hasPermission(role, "projects")) {
@@ -253,7 +340,6 @@ export default async function AdminDashboard() {
       href: "/admin/projects/new",
       icon: FolderKanban,
       title: "Add New Project",
-      description: "Create a new program or initiative",
     })
   }
 
@@ -262,7 +348,6 @@ export default async function AdminDashboard() {
       href: "/admin/events/new",
       icon: Calendar,
       title: "Create Event",
-      description: "Schedule a new event",
     })
   }
 
@@ -271,25 +356,6 @@ export default async function AdminDashboard() {
       href: "/admin/stories/new",
       icon: FileText,
       title: "Write Story",
-      description: "Publish news or impact story",
-    })
-  }
-
-  if (hasPermission(role, "contacts")) {
-    quickActions.push({
-      href: "/admin/contacts",
-      icon: MessageSquare,
-      title: "View Messages",
-      description: `${stats.contacts || 0} contact submissions`,
-    })
-  }
-
-  if (canViewFinance(role)) {
-    quickActions.push({
-      href: "/admin/donations",
-      icon: HandHeart,
-      title: "View Donations",
-      description: `${stats.donations || 0} total donations`,
     })
   }
 
@@ -298,7 +364,6 @@ export default async function AdminDashboard() {
       href: "/admin/stats",
       icon: BarChart3,
       title: "Update Stats",
-      description: "Manage impact statistics",
     })
   }
 
@@ -307,7 +372,6 @@ export default async function AdminDashboard() {
       href: "/admin/settings",
       icon: Settings,
       title: "Site Settings",
-      description: "Configure website settings",
     })
   }
 
@@ -319,12 +383,14 @@ export default async function AdminDashboard() {
           <h1 className="text-2xl font-bold">Welcome back, {adminUser.full_name.split(" ")[0]}!</h1>
           <p className="text-muted-foreground">Here&apos;s an overview of your foundation.</p>
         </div>
-        <Badge variant="outline" className="w-fit">
-          {getRoleDisplayName(role)}
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="w-fit">
+            {getRoleDisplayName(role)}
+          </Badge>
+        </div>
       </div>
 
-      {/* Role Info Card - Only show for non-super-admin */}
+      {/* Role Info Card */}
       {role !== "SUPER_ADMIN" && (
         <Card className="bg-muted/50 border-dashed">
           <CardContent className="py-4">
@@ -339,79 +405,109 @@ export default async function AdminDashboard() {
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {statCards.map((stat) => (
-          <Link key={stat.title} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-              </CardContent>
-            </Card>
-          </Link>
+          <DashboardStatCard
+            key={stat.title}
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            href={stat.href}
+            color={stat.color}
+            trend={stat.trend}
+          />
         ))}
       </div>
 
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Quick Actions */}
+      {/* Quick Actions Row */}
+      {quickActions.length > 0 && (
         <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks for your role</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-2">
-            {quickActions.slice(0, 5).map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted transition-colors"
-              >
-                <action.icon className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="font-medium">{action.title}</p>
-                  <p className="text-sm text-muted-foreground">{action.description}</p>
-                </div>
-              </Link>
-            ))}
+          <CardContent className="py-4">
+            <div className="flex flex-wrap gap-2">
+              {quickActions.map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted transition-colors"
+                >
+                  <action.icon className="h-4 w-4" />
+                  {action.title}
+                </Link>
+              ))}
+            </div>
           </CardContent>
         </Card>
+      )}
 
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>
-              {role === "EDITOR" || role === "FINANCE" ? "Your recent actions" : "Latest actions by admin users"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {recentActivity.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No recent activity</p>
-            ) : (
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                      <TrendingUp className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm">
-                        <span className="font-medium">{activity.user?.full_name || "System"}</span>{" "}
-                        <span className="text-muted-foreground">
-                          {activity.action.toLowerCase()} {activity.entity_type.replace(/_/g, " ")}
-                        </span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">{new Date(activity.created_at).toLocaleString()}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      {/* Charts Row — Finance roles */}
+      {canViewFinance(role) && (
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <Suspense fallback={<ChartSkeleton />}>
+              <DonationTrendChart />
+            </Suspense>
+          </div>
+          <div>
+            <Suspense fallback={<ChartSkeleton />}>
+              <ProviderBreakdownChart />
+            </Suspense>
+          </div>
+        </div>
+      )}
+
+      {/* Finance Insights Row */}
+      {canViewFinance(role) && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Suspense fallback={<ChartSkeleton />}>
+            <MonthlyVsOneTimeChart />
+          </Suspense>
+          <Suspense fallback={<ChartSkeleton />}>
+            <DonationByCategoryChart />
+          </Suspense>
+        </div>
+      )}
+
+      {/* Charts Row — Content roles */}
+      {hasPermission(role, "projects") && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Suspense fallback={<ChartSkeleton />}>
+            <ContentActivityChart />
+          </Suspense>
+          <div>
+            <Suspense fallback={<ChartSkeleton />}>
+              <PendingActions actions={pendingActions} />
+            </Suspense>
+          </div>
+        </div>
+      )}
+
+      {/* Projects & Volunteers Row */}
+      {hasPermission(role, "projects") && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Suspense fallback={<ChartSkeleton />}>
+            <FundraisingProgressChart />
+          </Suspense>
+          <Suspense fallback={<ChartSkeleton />}>
+            <VolunteerSkillsChart />
+          </Suspense>
+        </div>
+      )}
+
+      {/* Events Row */}
+      {hasPermission(role, "events") && (
+        <Suspense fallback={<ChartSkeleton />}>
+          <EventCapacityChart />
+        </Suspense>
+      )}
+
+      {/* System Health — Admin only */}
+      {systemHealth && (
+        <SystemHealthCard
+          receiptSuccessRate={systemHealth.receiptSuccessRate}
+          emailSuccessRate={systemHealth.emailSuccessRate}
+        />
+      )}
+
+      {/* Activity Feed */}
+      <ActivityFeed activities={recentActivity} />
     </div>
   )
 }
