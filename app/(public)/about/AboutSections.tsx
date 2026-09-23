@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useRef, useState } from "react"
+import { Fragment, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import {
@@ -9,14 +9,19 @@ import {
   Globe,
   GraduationCap,
   Handshake,
-  Heart,
   HeartPulse,
   Droplet,
   Trees,
+  Eye,
+  MessageCircle,
+  Heart,
+  Sprout,
+  Quote,
 } from "lucide-react"
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { OrgStructure } from "./OrgStructure"
+import introStyles from "./about-intro.module.css"
 
 const TEAL = "#29b6c8"
 const DARK = "#1a1a2e"
@@ -87,92 +92,52 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
   return (
     <>
       {/* SECTION 2: WHO WE ARE */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
-        <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:px-8 lg:grid-cols-[35fr_65fr] lg:gap-16">
-          {/* Left, sticky visual anchor */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-            className="lg:sticky lg:top-28"
-          >
-            <div className="relative -rotate-2">
-              <video
-                autoPlay
-                controls
-                muted
-                playsInline
-                preload="metadata"
-                aria-label="Every child has potential"
-                className="h-auto w-full rounded-2xl shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
-              >
-                <source src="/every_child.mp4" type="video/mp4" />
-                Your browser does not support embedded videos.
-              </video>
-            </div>
-          </motion.div>
-
-          {/* Right, text content, left-aligned */}
-          <div>
-            <motion.div {...reveal} transition={{ duration: 0.5 }}>
-              <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest" style={{ color: TEAL }}>
-                {introContent.label}
-              </span>
-              <h2
-                className="font-marissa mb-8 text-3xl font-medium leading-[1.25] md:text-[44px]"
-                style={{ color: DARK }}
-              >
-                {introContent.headline}
-              </h2>
-            </motion.div>
-
-            <motion.div
-              {...reveal}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-dm-sans space-y-5 text-[17px] leading-[1.8] text-[#4a4a4a]"
+      <section className={introStyles.section} aria-labelledby="about-intro-title">
+        <div className={introStyles.layout}>
+          <div className={introStyles.media}>
+            <video
+              autoPlay
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              aria-label="Every child has potential"
+              className={introStyles.video}
             >
-              {introContent.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-              <p
-                className="rounded-r-xl py-4 pl-5 pr-6 font-semibold"
-                style={{
-                  backgroundColor: "rgba(41,182,200,0.08)",
-                  borderLeft: `3px solid ${TEAL}`,
-                  color: DARK,
-                }}
-              >
-                {introContent.quote}
-              </p>
-            </motion.div>
-
-            {/* Understood → Accepted → Valued → Thrive flow */}
-            <div className="mt-10 flex flex-wrap items-center gap-2">
-              {introContent.flowSteps.map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <motion.span
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="font-comic rounded-full border bg-white px-4 py-1.5 text-sm font-bold"
-                    style={{ borderColor: "rgba(41,182,200,0.3)", color: TEAL }}
-                  >
-                    {step}
-                  </motion.span>
-                  {i < introContent.flowSteps.length - 1 && (
-                    <motion.span
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      aria-hidden
-                    >
-                      <ArrowRight className="size-4" style={{ color: TEAL }} />
-                    </motion.span>
-                  )}
-                </div>
-              ))}
+              <source src="/every_child.mp4" type="video/mp4" />
+              Your browser does not support embedded videos.
+            </video>
+          </div>
+          <div className={introStyles.content}>
+            <p className={introStyles.label}>{introContent.label}</p>
+            <h2 id="about-intro-title" className={introStyles.title}>{introContent.headline}</h2>
+            <div className={introStyles.paragraphs}>
+              {introContent.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
             </div>
+            <blockquote className={introStyles.quote}>
+              <Quote size={28} aria-hidden="true" />
+              <p>{introContent.quote}</p>
+            </blockquote>
+            <ol className={introStyles.flow}>
+              {introContent.flowSteps.map((step, index) => {
+                const Icon = [Eye, MessageCircle, Heart, Sprout][index] || Heart
+                return (
+                  <Fragment key={step}>
+                    <li className={introStyles.step}>
+                      <div className={introStyles.stepContent}>
+                        <span className={introStyles.icon}><Icon size={25} aria-hidden="true" /></span>
+                        <span>{step}</span>
+                      </div>
+                    </li>
+                    {index < introContent.flowSteps.length - 1 && (
+                      <li className={introStyles.arrowItem} aria-hidden="true">
+                        <ArrowRight size={17} className={introStyles.arrow} />
+                      </li>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </ol>
           </div>
         </div>
       </section>
@@ -473,72 +438,143 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 9: FINAL CTA */}
-      <section className="relative overflow-hidden pb-20 pt-32" style={{ backgroundColor: DARK }}>
-        {/* Brush stroke transition from previous section */}
-        <div className="pointer-events-none absolute left-0 top-0 w-full rotate-180" style={{ lineHeight: 0 }} aria-hidden>
-          <svg
-            viewBox="0 0 1440 100"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ display: "block", width: "100%", height: "clamp(50px, 6vw, 90px)" }}
-          >
-            <path
-              d="M0,38 C120,72 240,18 380,52 C500,80 620,12 760,44 C880,70 1000,8 1140,38 C1260,62 1360,22 1440,42 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
-            />
-            <path
-              d="M0,55 C150,28 300,68 440,38 C570,10 700,62 840,35 C970,10 1100,58 1240,30 C1330,12 1400,48 1440,32 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
-              opacity="0.55"
-            />
-          </svg>
-        </div>
+      <section className="relative isolate overflow-hidden">
+        {/* A single flat-brush sweep: deep-blue through the body, thinning to pale
+            sky-blue bristle spikes where the brush enters and leaves the stroke.
+            Matches the Figma "Ready to Make a Difference" reference. */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          viewBox="0 0 1440 150"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            {/* Pigment load across the sweep: thin and pale where the brush entered
+                and left the stroke, saturated through the body. */}
+            <linearGradient id="cta-band" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="var(--cta-brush-pale)" />
+              <stop offset="3%" stopColor="var(--cta-brush)" />
+              <stop offset="13%" stopColor="var(--cta-banner)" />
+              <stop offset="87%" stopColor="var(--cta-banner)" />
+              <stop offset="96%" stopColor="var(--cta-brush)" />
+              <stop offset="100%" stopColor="var(--cta-brush-pale)" />
+            </linearGradient>
 
-        {/* Dot-grid texture */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-          aria-hidden
-        />
-        {/* Radial teal glow */}
-        <div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(circle at center, rgba(41,182,200,0.12) 0%, transparent 60%)" }}
-          aria-hidden
-        />
+            {/* Broad, low-frequency wobble: keeps the long edges organic without
+                shredding them into a torn-paper zigzag. */}
+            <filter id="cta-sweep" x="-5%" y="-45%" width="110%" height="190%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.011 0.03" numOctaves="3" seed="9" result="noise" />
+              {/* Flatten R to 0.5 so displacement is vertical only: 0.5 is the
+                  neutral value, so the X channel contributes no shift. */}
+              <feColorMatrix
+                in="noise"
+                type="matrix"
+                values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0  0 0 0 0 1"
+                result="vertical"
+              />
+              <feDisplacementMap in="SourceGraphic" in2="vertical" scale="8" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            {/* Noise that changes fast vertically but slowly horizontally, displaced
+                along X only — turns a blunt shape into horizontal bristle spikes. */}
+            <filter id="cta-fringe" x="-25%" y="-40%" width="150%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.005 0.45" numOctaves="2" seed="5" result="noise" />
+              <feColorMatrix
+                in="noise"
+                type="matrix"
+                values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0  0 0 0 0 1"
+                result="horizontal"
+              />
+              <feDisplacementMap in="SourceGraphic" in2="horizontal" scale="34" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            {/* Mirror of the above: fast horizontal noise displaced along Y only, so
+                the top and bottom edges grow fine upright brush hairs. */}
+            <filter id="cta-edge-hair" x="-8%" y="-100%" width="116%" height="300%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.35 0.01" numOctaves="2" seed="17" result="noise" />
+              <feColorMatrix
+                in="noise"
+                type="matrix"
+                values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0  0 0 0 0 1"
+                result="vertical"
+              />
+              <feDisplacementMap in="SourceGraphic" in2="vertical" scale="7" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+
+          {/* One continuous flat-brush sweep. Nested filters compose: the inner
+              sweep gives the long edges a broad wobble, the outer one grows fine
+              brush hairs off the top and bottom. */}
+          <g filter="url(#cta-edge-hair)">
+            <g filter="url(#cta-sweep)">
+              <path
+                fill="url(#cta-band)"
+                d="M40,24
+                   C 180,14 280,18 420,15
+                   C 560,12 700,22 860,17
+                   C 1020,12 1160,20 1290,14
+                   C 1340,11 1372,12 1400,11
+                   L 1400,139
+                   C 1360,143 1330,136 1200,140
+                   C 1060,144 940,134 800,139
+                   C 660,144 520,134 380,139
+                   C 240,143 140,136 40,141
+                   Z"
+              />
+            </g>
+          </g>
+
+          {/* Dry-bristle streaking along the sweep. Uses the vertical wobble so the
+              streaks undulate with the stroke; a horizontal displacement would
+              leave a long horizontal bar looking unchanged. Kept faint and inside
+              the band's vertical bounds so it never spills past the painted edges
+              or erodes the contrast of the white text. */}
+          <g filter="url(#cta-sweep)" opacity="0.13">
+            <path fill="var(--cta-brush-pale)" d="M40 38 H1300 V43 H40 Z" />
+            <path fill="var(--cta-brush-pale)" d="M120 74 H1240 V78 H120 Z" />
+            <path fill="var(--cta-brush-pale)" d="M80 112 H1320 V117 H80 Z" />
+          </g>
+
+          {/* Stroke entry: pale, thinly loaded pigment shredded into horizontal
+              bristle spikes. Overlaps the band so the two read as one stroke, and
+              its outer edge sits far enough inside the viewport that the spikes
+              break against white rather than being clipped. */}
+          <g filter="url(#cta-fringe)">
+            <path fill="var(--cta-brush-pale)" d="M34 22 H185 V138 H34 Z" />
+            <path fill="var(--cta-brush)" opacity="0.7" d="M40 34 H150 V120 H40 Z" />
+          </g>
+
+          {/* Stroke exit, same treatment mirrored */}
+          <g filter="url(#cta-fringe)">
+            <path fill="var(--cta-brush-pale)" d="M1252 18 H1404 V136 H1252 Z" />
+            <path fill="var(--cta-brush)" opacity="0.7" d="M1288 30 H1398 V118 H1288 Z" />
+          </g>
+        </svg>
 
         <motion.div
           {...reveal}
           transition={{ duration: 0.6 }}
-          className="relative z-10 mx-auto max-w-3xl px-4 text-center md:px-8"
+          className="relative z-10 mx-auto flex max-w-[1500px] flex-col items-center gap-6 px-8 py-8 text-center sm:px-12 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-[11%] lg:text-left"
         >
-          <h2 className="font-marissa mb-4 text-3xl font-medium text-white md:text-4xl">
-            Ready to Make a Difference?
-          </h2>
-          <p className="font-dm-sans mx-auto mb-8 max-w-2xl text-gray-400">
-            Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
-            mission.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <motion.div
-              animate={{ scale: [1, 1.045, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          <div className="lg:max-w-[25rem]">
+            <h2 className="font-brush text-[1.6rem] font-bold italic leading-tight text-white md:text-[1.75rem]">
+              Ready to Make a Difference?
+            </h2>
+            <p className="font-dm-sans mt-1.5 text-[0.8rem] leading-snug text-white">
+              Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
+              mission.
+            </p>
+          </div>
+
+          <div className="flex shrink-0 flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            <Link
+              href="/donate"
+              className="font-dm-sans inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-white px-7 text-[0.8rem] font-semibold text-cta-banner transition-colors duration-200 hover:bg-newsletter-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
             >
-              <Link
-                href="/donate"
-                className="font-comic inline-flex h-12 items-center gap-2 rounded-full px-8 font-bold text-white shadow-lg transition-colors hover:bg-[#1a8fa0]"
-                style={{ backgroundColor: TEAL }}
-              >
-                <Heart className="size-4 fill-current" />
-                Donate Now
-              </Link>
-            </motion.div>
+              Donate Now
+              <ArrowRight className="size-3.5" strokeWidth={2.75} aria-hidden="true" />
+            </Link>
             <Link
               href="/get-involved"
-              className="font-comic inline-flex h-12 items-center rounded-full border border-gray-600 bg-transparent px-8 font-bold text-white transition-colors hover:bg-white/10"
+              className="font-dm-sans inline-flex h-10 items-center justify-center rounded-[7px] border-[1.5px] border-white px-7 text-[0.8rem] font-semibold text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
             >
               Join Our Team
             </Link>

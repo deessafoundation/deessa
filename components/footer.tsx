@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Settings, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Newspaper, Music, Video, Briefcase, Camera, Archive, UserPlus, Handshake } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, ArrowRight } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter-form"
 import { Facebook, Twitter, Instagram, Youtube } from "@/components/social-icons"
 
@@ -68,6 +68,96 @@ const socialLinks = [
   },
 ]
 
+/* Presentation-only lookups (data above is untouched) */
+const socialBrandClass: Record<string, string> = {
+  Facebook: "bg-[#1877F2]",
+  Instagram: "bg-gradient-to-br from-[#F9CE34] via-[#EE2A7B] to-[#6228D7]",
+  YouTube: "bg-[#FF0000]",
+  Twitter: "bg-[#1DA1F2]",
+}
+
+/* Solid glyphs — the design calls for filled icons and lucide ships outline only. */
+function SolidEnvelope({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M2 6.6 12 12.2 22 6.6V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+      <path d="M22 9 12 14.6 2 9V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z" />
+    </svg>
+  )
+}
+
+function SolidCalendar({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M8 2v2h8V2h2v2h1.5A2.5 2.5 0 0 1 22 6.5V9H2V6.5A2.5 2.5 0 0 1 4.5 4H6V2Z" />
+      <path d="M2 11h20v8.5A2.5 2.5 0 0 1 19.5 22h-15A2.5 2.5 0 0 1 2 19.5Z" />
+    </svg>
+  )
+}
+
+function SolidPeopleGroup({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <circle cx="12" cy="6.6" r="3.1" />
+      <circle cx="4.6" cy="8.8" r="2.4" />
+      <circle cx="19.4" cy="8.8" r="2.4" />
+      <path d="M12 11.3c-3.2 0-5.7 2-5.7 4.8V20h11.4v-3.9c0-2.8-2.5-4.8-5.7-4.8Z" />
+      <path d="M4.6 12.4c-2.4 0-4.1 1.6-4.1 3.6V20h4.4v-3.9c0-1.3.3-2.5 1-3.5a5 5 0 0 0-1.3-.2Z" />
+      <path d="M19.4 12.4c-.4 0-.9.06-1.3.2.7 1 1 2.2 1 3.5V20h4.4v-4c0-2-1.7-3.6-4.1-3.6Z" />
+    </svg>
+  )
+}
+
+/* Two-tone green/blue shield with a white check. */
+function ShieldCheckTwoTone({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <defs>
+        <clipPath id="footer-shield-clip">
+          <path d="M12 1.8 3.6 4.9v6.3c0 5.2 3.5 9.2 8.4 10.9 4.9-1.7 8.4-5.7 8.4-10.9V4.9Z" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#footer-shield-clip)">
+        <rect x="0" y="0" width="12" height="24" fill="var(--shield-green)" />
+        <rect x="12" y="0" width="12" height="24" fill="var(--shield-blue)" />
+      </g>
+      <path
+        d="M7.9 12.2 10.8 15.1 16.2 9.4"
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth="2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+const newsletterBenefits = [
+  { icon: SolidEnvelope, label: "Monthly impact reports" },
+  { icon: SolidCalendar, label: "Upcoming events & programs" },
+  { icon: SolidPeopleGroup, label: "Stories from the field" },
+]
+
+const contactItems = [
+  { icon: MapPin, srLabel: "Location", value: "Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal" },
+  { icon: Mail, srLabel: "Email", value: "deessa.social@gmail.com" },
+  { icon: Phone, srLabel: "Phone", value: "+977 1-4123456" },
+]
+
+const linkColumns = [
+  { title: "About", links: footerLinks.about },
+  { title: "Programs", links: footerLinks.programs },
+  { title: "Get Involved", links: footerLinks.getInvolved },
+  { title: "Resources", links: footerLinks.resources },
+]
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
+  { label: "Sitemap", href: "/sitemap" },
+]
+
 export function Footer() {
   const [clickCount, setClickCount] = useState(0)
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -100,378 +190,186 @@ export function Footer() {
     alert("🐦 We'll be on Twitter Soon! 🌟\n\nWe're excited to connect with you on Twitter!\nIn the meantime, follow us on our other social platforms to stay updated with our latest work and impact stories.\n\n💙 Thank you for your support!")
   }
 
+  const socialButtonClass =
+    "flex size-11 items-center justify-center rounded-full text-white transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-footer-blue sm:size-9"
+
   return (
-    <footer className="relative bg-gradient-to-b from-slate-900 via-slate-950 to-black text-white overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
-      </div>
+    <footer className="bg-footer-blue text-white">
+      {/* ================= NEWSLETTER STRIP ================= */}
+      <section aria-labelledby="footer-newsletter-heading" className="bg-newsletter-bg">
+        <div className="mx-auto grid max-w-[1500px] gap-7 px-8 py-7 sm:px-12 lg:grid-cols-3 lg:gap-0 lg:px-[8%]">
+          {/* Column 1 — Stay Connected */}
+          <div className="lg:pr-7">
+            <h2 id="footer-newsletter-heading" className="font-brush text-center text-[1.6rem] font-bold italic leading-none text-newsletter-heading lg:text-left">
+              Stay Connected
+            </h2>
+            <p className="font-dm-sans mt-2 max-w-[19rem] text-[0.7rem] leading-snug text-newsletter-body">
+              Get the latest updates on our impact, upcoming events, and new ways to make a difference in rural Nepal.
+            </p>
 
-      {/* Newsletter Section */}
-      <div className="relative border-b border-gray-800/50 backdrop-blur-sm overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-[0.08]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary rounded-full blur-[120px]"></div>
-        </div>
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }}></div>
-        {/* Large watermark envelope */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.04]">
-          <Mail className="w-[400px] h-[400px]" />
-        </div>
-        {/* Floating teal dots */}
-        <div className="absolute top-20 left-[15%] w-3 h-3 bg-primary rounded-full blur-sm opacity-40"></div>
-        <div className="absolute bottom-24 right-[20%] w-4 h-4 bg-primary rounded-full blur-md opacity-30"></div>
-        <div className="absolute top-32 right-[10%] w-2 h-2 bg-primary rounded-full blur-sm opacity-50"></div>
-        <div className="absolute bottom-16 left-[25%] w-3 h-3 bg-primary rounded-full blur-md opacity-35"></div>
+            <ul className="mt-3 space-y-2">
+              {newsletterBenefits.map((benefit) => {
+                const BenefitIcon = benefit.icon
+                return (
+                  <li key={benefit.label} className="flex items-center gap-3">
+                    <BenefitIcon className="size-[1.15rem] shrink-0 text-newsletter-heading" />
+                    <span className="font-dm-sans text-[0.72rem] text-newsletter-label">{benefit.label}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-16 md:py-20 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* LEFT SIDE */}
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-                <Mail className="size-4" />
-                <span>Newsletter</span>
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Stay Connected
-              </h3>
-              <p className="text-gray-400 text-base leading-relaxed">
-                Get the latest updates on our impact, upcoming events, and new ways to make a difference in rural Nepal.
-              </p>
+          {/* Column 2 — Subscribe */}
+          <div className="lg:border-l lg:border-newsletter-rule lg:px-7">
+            <h3 className="font-brush text-center text-[0.95rem] font-bold italic text-newsletter-navy lg:text-left">
+              Join 2,400+ supporters
+            </h3>
 
-              {/* Benefits list */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle className="size-5 text-primary flex-shrink-0" />
-                  <span className="text-sm">Monthly impact reports</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle className="size-5 text-primary flex-shrink-0" />
-                  <span className="text-sm">Upcoming events & programs</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle className="size-5 text-primary flex-shrink-0" />
-                  <span className="text-sm">Stories from the field</span>
-                </div>
-              </div>
-
-              {/* Avatars row */}
-              <div className="flex items-center gap-3 pt-4">
-                <div className="flex -space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                    A
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                    S
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                    M
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                    R
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold">
-                    K
-                  </div>
-                </div>
-                <p className="text-sm text-gray-400">
-                  Join <span className="text-primary font-semibold">2,400+</span> supporters
-                </p>
-              </div>
+            <div className="mt-2.5">
+              <NewsletterForm variant="footer" />
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="space-y-6">
-              <div className="bg-white/5 backdrop-blur-sm border border-primary/30 rounded-2xl p-6 md:p-8 shadow-2xl shadow-primary/10">
-                <NewsletterForm variant="stacked" className="max-w-md mx-auto" />
-                <p className="text-gray-500 text-xs text-center mt-4">
-                  No spam. Unsubscribe anytime.
-                </p>
-              </div>
+            <p className="font-dm-sans mt-2 text-[0.62rem] text-newsletter-body">
+              No spam. Unsubscribe anytime.
+            </p>
+          </div>
 
-              {/* Actionable Trust Builder */}
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Heart className="size-5 text-rose-500" />
-                  <span className="font-marissa text-white text-xl">100% Transparent</span>
-                </div>
-                <p className="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed">
+          {/* Column 3 — Transparency */}
+          <div className="lg:border-l lg:border-newsletter-rule lg:pl-7">
+            <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-start">
+              <ShieldCheckTwoTone className="size-7 shrink-0" />
+              <div className="w-full">
+                <h3 className="font-comic text-center text-[0.8rem] font-bold text-newsletter-navy lg:text-left">100% Transparent</h3>
+                <p className="font-dm-sans mt-1 max-w-[13rem] text-[0.7rem] leading-snug text-newsletter-body">
                   We believe in complete financial transparency. Every rupee you donate or track through our reports goes directly toward empowering rural communities in Nepal.
                 </p>
-                <div className="mt-5 flex justify-center">
-                  <Link 
-                    href="/impact" 
-                    className="text-xs font-semibold text-primary hover:text-primary-light uppercase tracking-wider underline underline-offset-4 decoration-primary/30 transition-all duration-300"
-                  >
-                    Explore our financials
-                  </Link>
-                </div>
+                <Link
+                  href="/impact"
+                  className="font-dm-sans mt-2 inline-flex items-center gap-1.5 text-[0.7rem] font-semibold text-newsletter-heading transition-colors duration-200 hover:text-newsletter-subscribe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2"
+                >
+                  Explore our financials
+                  <ArrowRight className="size-3" strokeWidth={2.75} aria-hidden="true" />
+                </Link>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Main Footer Content */}
-      <div className="relative max-w-[1400px] mx-auto px-4 md:px-8 py-12 lg:py-20">
-        {/* Mission Statement + Contact row */}
-        <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16 mb-12 lg:mb-16">
-          {/* Mission Statement */}
-          <div className="lg:max-w-md">
-            <h4 className="text-xl font-semibold text-white mb-4">Our Mission</h4>
-            <p className="text-gray-400 leading-relaxed mb-6 text-base">
+      {/* ================= MAIN FOOTER ================= */}
+      <div className="mx-auto max-w-[1400px] px-6 py-10 text-center md:px-10 md:text-left">
+        <div className="grid grid-cols-2 justify-items-center gap-8 md:grid-cols-4 md:justify-items-stretch xl:grid-cols-[1.15fr_1fr_repeat(4,0.85fr)]">
+          {/* Logo + mission */}
+          <div className="col-span-2 md:col-span-4 xl:col-span-1">
+            <Link href="/" onClick={handleLogoClick} className="inline-block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+              <Image
+                src="/logo.png"
+                alt="deessa Foundation"
+                width={290}
+                height={100}
+                className="h-12 w-auto"
+                priority={false}
+              />
+            </Link>
+
+            <h2 className="font-dm-sans mt-5 text-sm font-bold text-white">Our Mission</h2>
+            <p className="font-dm-sans mt-2 max-w-xs text-xs leading-relaxed text-footer-muted">
               Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
               initiatives since 2022.
             </p>
-            <div className="bg-gradient-to-r from-primary/10 to-transparent p-4 rounded-lg border border-primary/20 mb-6">
-              <p className="text-primary text-sm font-medium">Making a difference, one community at a time.</p>
-            </div>
+            <p className="font-dm-sans mt-3 border-l-2 border-white/40 pl-3 text-xs italic text-footer-muted">
+              Making a difference, one community at a time.
+            </p>
 
-            {/* Social proof badges */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
-                <Award className="size-3.5 text-primary" />
-                <span className="text-gray-300">Govt Registered NGO since 2022</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-full text-xs">
-                <CheckCircle className="size-3.5 text-primary" />
-                <span className="text-gray-300">SWC Affiliated</span>
-              </div>
-            </div>
-
-            {/* Social icons */}
-            <div className="space-y-3">
-              <p className="text-gray-400 text-sm font-medium">Follow our journey:</p>
-              <div className="flex items-center gap-3">
-                {socialLinks.map((social) => (
-                  social.isAlert ? (
-                    <button
-                      key={social.label}
-                      onClick={handleTwitterClick}
-                      className="relative size-10 rounded-lg bg-white/5 hover:bg-primary/20 flex items-center justify-center text-gray-400 hover:text-primary border border-gray-800/50 hover:border-primary/50 transition-all duration-300 group"
-                      aria-label={social.label}
-                    >
-                      <social.icon className="size-4 group-hover:scale-110 transition-transform duration-300" />
-                    </button>
-                  ) : (
-                    <Link
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative size-10 rounded-lg bg-white/5 hover:bg-primary/20 flex items-center justify-center text-gray-400 hover:text-primary border border-gray-800/50 hover:border-primary/50 transition-all duration-300 group"
-                      aria-label={social.label}
-                    >
-                      <social.icon className="size-4 group-hover:scale-110 transition-transform duration-300" />
-                    </Link>
-                  )
-                ))}
-              </div>
-            </div>
+            <ul className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
+              <li className="font-dm-sans inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
+                <Award className="size-3" aria-hidden="true" />
+                Govt Registered NGO since 2022
+              </li>
+              <li className="font-dm-sans inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
+                <CheckCircle className="size-3" aria-hidden="true" />
+                SWC Affiliated
+              </li>
+            </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="lg:ml-auto">
-            <h4 className="text-lg font-semibold text-white mb-4">Get in Touch</h4>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-gray-800/50 hover:border-primary/30 transition-colors group">
-                <div className="p-2 bg-primary/20 rounded-lg group-hover:bg-primary/30 transition-colors">
-                  <MapPin className="size-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider">Location</p>
-                  <p className="text-white text-sm font-medium">Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-gray-800/50 hover:border-primary/30 transition-colors group">
-                <div className="p-2 bg-primary/20 rounded-lg group-hover:bg-primary/30 transition-colors">
-                  <Mail className="size-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider">Email</p>
-                  <p className="text-white text-sm font-medium">deessa.social@gmail.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-gray-800/50 hover:border-primary/30 transition-colors group">
-                <div className="p-2 bg-primary/20 rounded-lg group-hover:bg-primary/30 transition-colors">
-                  <Phone className="size-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wider">Phone</p>
-                  <p className="text-white text-sm font-medium">+977 1-4123456</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Divider with logo */}
-        <div className="relative flex items-center justify-center mb-12 lg:mb-16">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-primary/15"></div>
-          </div>
-          <div className="relative bg-slate-950 px-4">
-            <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <Heart className="size-5 text-primary" />
-            </div>
-          </div>
-        </div>
-
-        {/* Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-primary/20 rounded-lg">
-                <Target className="size-4 text-primary" />
-              </div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wider">About</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.about.map((link) => {
-                const IconComponent = link.icon;
+          {/* Get in Touch */}
+          <div className="col-span-2 md:col-span-4 xl:col-span-1">
+            <h2 className="font-dm-sans text-sm font-bold text-white">Get in Touch</h2>
+            <ul className="mt-4 space-y-3">
+              {contactItems.map((item) => {
+                const ContactIcon = item.icon
                 return (
-                  <li key={link.href}>
-                    <Link href={link.href} className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group">
-                      <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                      <span className="group-hover:translate-x-0.5 transition-transform">{link.label}</span>
-                    </Link>
+                  <li key={item.srLabel} className="flex items-start justify-center gap-2.5 md:justify-start">
+                    <ContactIcon className="mt-px size-4 shrink-0 text-white/90" strokeWidth={1.75} aria-hidden="true" />
+                    <p className="font-dm-sans text-xs leading-relaxed text-footer-muted">
+                      <span className="sr-only">{item.srLabel}: </span>
+                      {item.value}
+                    </p>
                   </li>
-                );
+                )
               })}
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-primary/20 rounded-lg">
-                <GraduationCap className="size-4 text-primary" />
-              </div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wider">Programs</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.programs.map((link) => {
-                const IconComponent = link.icon;
-                return (
+          {/* Link columns */}
+          {linkColumns.map((column) => (
+            <nav key={column.title} aria-label={column.title} className="w-full">
+              <h2 className="font-dm-sans text-sm font-bold text-white">{column.title}</h2>
+              <ul className="mt-4 space-y-2">
+                {column.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group">
-                      <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                      <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-primary/20 rounded-lg">
-                <HeartHandshake className="size-4 text-primary" />
-              </div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wider">Get Involved</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.getInvolved.map((link) => {
-                const IconComponent = link.icon;
-                return (
-                  <li key={link.href}>
-                    <Link href={link.href} className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group">
-                      <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                      <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-primary/20 rounded-lg">
-                <FileText className="size-4 text-primary" />
-              </div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wider">Resources</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => {
-                const IconComponent = link.icon;
-                return (
-                  <li key={link.href}>
-                    {link.download ? (
+                    {"download" in link && link.download ? (
                       <a
                         href={link.href}
                         download
-                        className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group"
+                        className="font-dm-sans rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                       >
-                        <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                        <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                        {link.label}
                       </a>
                     ) : (
-                      <Link href={link.href} className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group">
-                        <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                        <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                      <Link
+                        href={link.href}
+                        className="font-dm-sans rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      >
+                        {link.label}
                       </Link>
                     )}
                   </li>
-                );
-              })}
-            </ul>
-          </div>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="relative border-t border-gray-800/50 bg-gradient-to-r from-black/50 to-gray-950/50 backdrop-blur-sm">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
-              <p className="text-gray-400 text-sm text-center sm:text-left">
-                © {new Date().getFullYear()} deessa Foundation. All rights reserved.
-              </p>
-              <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-              <div className="flex items-center gap-3 text-xs">
-                <Link href="/privacy" className="text-gray-500 hover:text-primary transition-colors">
-                  Privacy Policy
-                </Link>
-                <span className="text-gray-700">|</span>
-                <Link href="/terms" className="text-gray-500 hover:text-primary transition-colors">
-                  Terms of Use
-                </Link>
-                <span className="text-gray-700">|</span>
-                <Link href="/sitemap" className="text-gray-500 hover:text-primary transition-colors">
-                  Sitemap
-                </Link>
-              </div>
-              <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-              <Link
-                href="/admin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-gray-600 text-xs opacity-30 hover:opacity-60 hover:text-primary transition-all group"
-              >
-                <Settings className="size-3 group-hover:rotate-90 transition-transform duration-300" />
-                <span>Admin</span>
-              </Link>
-            </div>
+        {/* Hairline with heart marker */}
+        <div className="relative mt-10 flex items-center justify-center" aria-hidden="true">
+          <div className="h-px w-full bg-footer-rule" />
+          <span className="absolute flex size-7 items-center justify-center rounded-full bg-footer-blue">
+            <Heart className="size-3.5 fill-white/80 text-white/80" />
+          </span>
+        </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500 text-xs mr-2">Follow us:</span>
+        {/* Copyright */}
+        <p className="font-dm-sans mt-5 text-center text-[11px] text-footer-muted md:text-right">
+          © {new Date().getFullYear()} deessa Foundation. All rights reserved.
+        </p>
+
+        {/* Socials + legal */}
+        <div className="mt-4 flex flex-col items-center gap-5 md:flex-row md:justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <nav aria-label="Follow our journey" className="flex items-center gap-2.5">
               {socialLinks.map((social) => (
                 social.isAlert ? (
                   <button
                     key={social.label}
+                    type="button"
                     onClick={handleTwitterClick}
-                    className="relative size-10 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary/20 border border-gray-700/50 hover:border-primary/50 transition-all duration-300 group overflow-hidden"
+                    className={`${socialButtonClass} ${socialBrandClass[social.label]}`}
                     aria-label={social.label}
                   >
-                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-                    <social.icon className="size-4 relative z-10 group-hover:scale-110 group-hover:text-primary transition-all duration-300" />
+                    <social.icon className="size-4" aria-hidden="true" />
                   </button>
                 ) : (
                   <Link
@@ -479,16 +377,39 @@ export function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative size-10 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary/20 border border-gray-700/50 hover:border-primary/50 transition-all duration-300 group overflow-hidden"
+                    className={`${socialButtonClass} ${socialBrandClass[social.label]}`}
                     aria-label={social.label}
                   >
-                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-                    <social.icon className="size-4 relative z-10 group-hover:scale-110 group-hover:text-primary transition-all duration-300" />
+                    <social.icon className="size-4" aria-hidden="true" />
                   </Link>
                 )
               ))}
-            </div>
+            </nav>
           </div>
+
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+            {legalLinks.map((link, index) => (
+              <span key={link.href} className="flex items-center gap-x-3">
+                <Link
+                  href={link.href}
+                  className="font-dm-sans rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  {link.label}
+                </Link>
+                <span aria-hidden="true" className="text-white/35">|</span>
+                {index === legalLinks.length - 1 && (
+                  <Link
+                    href="/admin"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-dm-sans rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  >
+                    Admin
+                  </Link>
+                )}
+              </span>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

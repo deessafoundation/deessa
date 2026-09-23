@@ -68,28 +68,36 @@ interface OurStorySectionProps {
 
 export function OurStorySection({ story }: OurStorySectionProps) {
   const s = story || DEFAULT_HOMEPAGE_STORY
-  const imageSrc = s.image || "/image_coming_soon.png"
+  const storyIllustration = "/home/story/two-paths-one-purpose.png"
+  const useStoryIllustration = !s.image || [
+    "/ourStory.png",
+    "/home/story/deessa-foundation-origin-story.jpg",
+    storyIllustration,
+  ].includes(s.image)
+  const imageSrc = useStoryIllustration ? storyIllustration : s.image
+  const imageAlt = useStoryIllustration
+    ? "Illustration of two sisters following paths toward a welcoming school in Nepal"
+    : s.imageAlt
 
   return (
-    <section className="py-20 md:py-28 bg-white relative overflow-hidden">
+    <section className="py-14 sm:py-16 md:py-24 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 lg:gap-16 items-center">
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="relative aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4] rounded-2xl md:rounded-3xl overflow-hidden shadow-xl">
                 <Image
                   src={imageSrc}
-                  alt={s.imageAlt}
-                  width={700}
-                  height={500}
-                  className="w-full h-auto object-cover"
+                  alt={imageAlt}
+                  fill
+                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) 45vw, 560px"
+                  className="object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
-                <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
+                <div className="absolute bottom-3 right-3 md:-bottom-5 md:-right-5 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl">
                   <p className="text-2xl md:text-4xl font-black font-comic-num">
                     {s.founded}
                   </p>

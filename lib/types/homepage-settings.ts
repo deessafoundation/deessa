@@ -409,8 +409,8 @@ export const DEFAULT_HOMEPAGE_STORY: HomepageStorySettings = {
   linkUrl: '/our-story',
   founded: '2022',
   foundedLabel: 'Founded',
-  image: '/home/story/deessa-foundation-origin-story.jpg',
-  imageAlt: 'The story behind deessa Foundation, featuring Deetya and Marissa',
+  image: '/home/story/two-paths-one-purpose.png',
+  imageAlt: 'Illustration of two sisters following paths toward a welcoming school in Nepal',
 }
 
 export const DEFAULT_WHAT_WE_DO: HomepageWhatWeDoSettings = {

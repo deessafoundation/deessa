@@ -524,6 +524,19 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isHydrated) return
 
+    // Read before the reset below, so it still reflects the page we are leaving:
+    // was speech actually running at the moment of this navigation?
+    //
+    // Only an already-running read may carry over to the next page, and a read
+    // can only be running because the visitor pressed play in this session. On
+    // a first load or a reload there is nothing in flight, so this is false and
+    // the page stays silent until play is pressed. "paused" is deliberately
+    // excluded: the visitor stopped the audio themselves.
+    const wasReadingAloud =
+      statusRef.current === "speaking" ||
+      statusRef.current === "loading" ||
+      statusRef.current === "translating"
+
     playbackTokenRef.current += 1
     providerRef.current?.stop()
     clearHighlight()
@@ -537,9 +550,11 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
 
     const timer = setTimeout(() => {
       rescan()
-      // Auto-read is opt-in, and opting in required a gesture in an earlier
-      // session, which satisfies the browser autoplay requirement.
-      if (preferencesRef.current.autoRead && sectionsRef.current.length > 0) {
+      if (
+        wasReadingAloud &&
+        preferencesRef.current.autoRead &&
+        sectionsRef.current.length > 0
+      ) {
         void startPlayback(0)
       }
     }, ROUTE_SETTLE_MS)

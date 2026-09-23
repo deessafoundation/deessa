@@ -39,10 +39,10 @@
 .story { padding: 16px 0; }
 .story > p:not(.eyebrow) { font-size: 17px; line-height: 1.75; color: #52606b; margin: 20px 0; }
 .story > .eyebrow { color: #6F3E96; }
-/* Brush-painted panel. The paint silhouette lives in the SVG, so no border-radius here;
-   ::before bleeds slightly past the content box so the ragged edge is not clipped square. */
 .hosts { position: relative; isolation: isolate; padding: 34px 32px 32px; }
-.hosts::before { content: ''; position: absolute; inset: -10px -12px -18px -20px; z-index: -1; background: url('/brush-panel-blue.svg') no-repeat center / 100% 100%; pointer-events: none; }
+.hosts::before, .hosts::after { content: ''; position: absolute; z-index: -1; width: min(100%, 580px); aspect-ratio: 760 / 260; background: url('/podcasts/hosts-watercolor-accent.svg') no-repeat center / contain; pointer-events: none; }
+.hosts::before { top: -30px; left: -12px; }
+.hosts::after { right: -8px; bottom: -30px; width: min(72%, 420px); transform: rotate(180deg); opacity: .65; }
 .hosts .sectionTitle { font-size: 28px; }
 .hostGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
 .hostCard { min-width: 0; background: white; border: 1px solid #d7eaf4; border-radius: 12px; overflow: hidden; }
@@ -137,7 +137,8 @@
   .themes li { font-size: 11px; gap: 6px; max-width: 96px; }
   .sectionTitle { font-size: 28px; }
   .hosts { padding: 28px 22px 26px; }
-  .hosts::before { inset: -8px -8px -14px -14px; }
+  .hosts::before { top: -20px; left: -10px; width: min(100%, 390px); }
+  .hosts::after { right: -6px; bottom: -18px; width: min(80%, 300px); }
   .hostGrid, .sidebar, .episodeGrid { grid-template-columns: 1fr; }
   .hostPhoto { aspect-ratio: 1.8; }
   .hostBio { padding: 0 16px 20px; }

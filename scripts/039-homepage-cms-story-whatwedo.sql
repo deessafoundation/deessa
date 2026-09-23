@@ -19,8 +19,8 @@ VALUES (
     "linkUrl": "/our-story",
     "founded": "2022",
     "foundedLabel": "Founded",
-    "image": "/ourStory.png",
-    "imageAlt": "How deessa started - our origin story"
+    "image": "/home/story/two-paths-one-purpose.png",
+    "imageAlt": "Illustration of two sisters following paths toward a welcoming school in Nepal"
   }'::jsonb,
   NOW()
 )
@@ -35,7 +35,7 @@ VALUES (
   'homepage_what_we_do',
   '{
     "eyebrow": "What We Do",
-    "title": "We turn understanding into action — for children, families, and communities.",
+    "title": "We turn understanding into action for children, families, and communities.",
     "subtitle": "Our work supports children with disabilities, their families, educators, and communities through four areas.",
     "pillars": [
       {

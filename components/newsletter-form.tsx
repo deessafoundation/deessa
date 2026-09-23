@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { subscribeToNewsletter } from "@/lib/actions/newsletter"
 
 interface NewsletterFormProps {
-  variant?: "inline" | "stacked"
+  variant?: "inline" | "stacked" | "footer"
   className?: string
 }
 
@@ -46,6 +46,54 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
         <CheckCircle className="size-5" />
         <span className="text-sm font-medium">Thanks for subscribing!</span>
       </div>
+    )
+  }
+
+  if (variant === "footer") {
+    return (
+      <form onSubmit={handleSubmit} className={className} noValidate>
+        <label
+          htmlFor="footer-newsletter-email"
+          className="font-dm-sans mb-1.5 block text-[0.7rem] font-bold text-newsletter-navy"
+        >
+          Email address <span className="text-red-600">*</span>
+        </label>
+        <div className="flex items-stretch gap-2">
+          <input
+            id="footer-newsletter-email"
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setError(null)
+            }}
+            required
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? "footer-newsletter-error" : undefined}
+            className="newsletter-input font-dm-sans h-9 min-w-0 flex-1 appearance-none rounded-[8px] border border-newsletter-input-border bg-white px-3 text-[0.72rem] text-newsletter-navy transition-colors duration-200 placeholder:text-newsletter-placeholder focus-visible:border-newsletter-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading/35"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="font-dm-sans inline-flex h-9 shrink-0 appearance-none items-center justify-center gap-1.5 rounded-[8px] bg-newsletter-subscribe px-5 text-[0.72rem] font-bold text-white transition-colors duration-200 hover:bg-newsletter-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                <span>Subscribe</span>
+              </>
+            ) : (
+              "Subscribe"
+            )}
+          </button>
+        </div>
+        {error && (
+          <p id="footer-newsletter-error" role="alert" className="font-dm-sans mt-1.5 text-[0.65rem] text-red-600">
+            {error}
+          </p>
+        )}
+      </form>
     )
   }
 

@@ -1,0 +1,32 @@
+.section { background: #fff; padding: 32px 24px; }
+.layout { display: grid; grid-template-columns: 49% minmax(0, 1fr); gap: 32px; max-width: 1240px; margin: 0 auto; align-items: start; }
+.media { overflow: hidden; border-radius: 10px; background: #E8F6FC; }
+.video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; }
+.content { min-width: 0; }
+.label { margin: 0 0 6px; font-family: var(--font-comic); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #0B5F8A; }
+.title { margin: 0 0 14px; font-family: var(--font-marissa); font-size: clamp(25px, 2.15vw, 31px); line-height: 1.2; font-weight: 700; color: #0B5F8A; -webkit-text-stroke: 0.25px currentColor; }
+.paragraphs { font-family: var(--font-dm-sans); font-size: 14px; line-height: 1.55; color: #52606b; }
+.paragraphs p { margin: 0; }
+.paragraphs p + p { margin-top: 10px; }
+.quote { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0 10px; padding: 10px 14px; border-radius: 9px; background: #dff3fc; color: #0B5F8A; }
+.quote svg { flex-shrink: 0; color: #3FABDE; fill: #3fabde33; }
+.quote p { margin: 0; font-family: var(--font-dm-sans); font-size: 14px; font-weight: 600; line-height: 1.5; }
+.flow { display: grid; grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr); list-style: none; margin: 0; padding: 0; align-items: start; column-gap: 12px; }
+.step { min-width: 0; }
+.stepContent { display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--font-comic); color: #0B5F8A; font-size: 12px; font-weight: 700; }
+.icon { display: grid; place-items: center; width: 48px; height: 36px; border-radius: 50%; background: white; color: #159dd0; }
+.step:nth-child(3) .icon { color: #D6336C; }
+.step:nth-child(4) .icon { color: #65a844; }
+.arrowItem { display: grid; place-items: center; margin-top: 10px; }
+.arrow { color: #0B5F8A; }
+@media (max-width: 1000px) {
+  .layout { gap: 24px; grid-template-columns: 45% minmax(0, 1fr); }
+  .flow { column-gap: 6px; }
+}
+@media (max-width: 760px) {
+  .section { padding: 28px 20px; }
+  .layout { grid-template-columns: 1fr; gap: 24px; max-width: 600px; }
+  .title { font-size: 28px; }
+  .paragraphs { font-size: 15px; line-height: 1.65; }
+  .quote p { font-size: 15px; }
+}
