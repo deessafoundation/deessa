@@ -50,20 +50,35 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
   }
 
   if (variant === "stacked") {
+    const errorId = "newsletter-error-stacked"
+    const inputId = "newsletter-email-stacked"
+    
     return (
       <form onSubmit={handleSubmit} className={`space-y-3 ${className}`}>
-        {error && <p className="text-red-500 text-xs">{error}</p>}
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value)
-            setError(null)
-          }}
-          required
-          className="w-full h-11 px-4 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-        />
+        <div>
+          <label htmlFor={inputId} className="sr-only">
+            Email address for newsletter subscription
+          </label>
+          <input
+            id={inputId}
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setError(null)
+            }}
+            required
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby={error ? errorId : undefined}
+            className="w-full h-11 px-4 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+          {error && (
+            <p id={errorId} className="text-red-500 text-xs mt-1" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
         <Button type="submit" className="w-full rounded-lg" disabled={isLoading}>
           {isLoading ? (
             <Loader2 className="size-4 animate-spin" />
@@ -78,10 +93,17 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
     )
   }
 
+  const errorId = "newsletter-error-inline"
+  const inputId = "newsletter-email-inline"
+  
   return (
     <form onSubmit={handleSubmit} className={`flex gap-2 ${className}`}>
       <div className="flex-1">
+        <label htmlFor={inputId} className="sr-only">
+          Email address for newsletter subscription
+        </label>
         <input
+          id={inputId}
           type="email"
           placeholder="Enter your email"
           value={email}
@@ -90,9 +112,15 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
             setError(null)
           }}
           required
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? errorId : undefined}
           className="w-full h-11 px-4 rounded-lg border border-border bg-surface text-foreground placeholder:text-foreground-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
-        {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        {error && (
+          <p id={errorId} className="text-red-500 text-xs mt-1" role="alert">
+            {error}
+          </p>
+        )}
       </div>
       <Button type="submit" className="rounded-lg h-11 px-6" disabled={isLoading}>
         {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}

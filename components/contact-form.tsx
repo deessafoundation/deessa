@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Send, CheckCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FormField, TextareaField } from "@/components/form"
 import { submitContactForm } from "@/lib/actions/contact"
 
 interface ContactFormProps {
@@ -74,71 +75,67 @@ export function ContactForm({ initialSubject = "", initialMessage = "" }: Contac
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {error && <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">{error}</div>}
+    <form onSubmit={handleSubmit} className="space-y-5" aria-label="Contact form">
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm" role="alert">
+          {error}
+        </div>
+      )}
+      
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="firstName" className="block text-sm font-bold text-foreground mb-2">
-            First Name
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            required
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full h-12 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="block text-sm font-bold text-foreground mb-2">
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            required
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full h-12 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
-        </div>
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-sm font-bold text-foreground mb-2">
-          Email Address
-        </label>
-        <input
-          type="email"
-          id="email"
+        <FormField
+          id="firstName"
+          type="text"
+          label="First Name"
+          value={formData.firstName}
+          onChange={handleChange}
           required
-          value={formData.email}
+          className="h-12 rounded-xl"
+        />
+        
+        <FormField
+          id="lastName"
+          type="text"
+          label="Last Name"
+          value={formData.lastName}
           onChange={handleChange}
-          className="w-full h-12 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          required
+          className="h-12 rounded-xl"
         />
       </div>
-      <div>
-        <label htmlFor="phone" className="block text-sm font-bold text-foreground mb-2">
-          Phone Number <span className="text-foreground-muted font-normal">(Optional)</span>
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          className="w-full h-12 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-        />
-      </div>
-      <div>
-        <label htmlFor="subject" className="block text-sm font-bold text-foreground mb-2">
+      
+      <FormField
+        id="email"
+        type="email"
+        label="Email Address"
+        value={formData.email}
+        onChange={handleChange}
+        required
+        className="h-12 rounded-xl"
+      />
+      
+      <FormField
+        id="phone"
+        type="tel"
+        label="Phone Number"
+        helperText="Optional"
+        value={formData.phone}
+        onChange={handleChange}
+        className="h-12 rounded-xl"
+      />
+      
+      <div className="space-y-1.5">
+        <label htmlFor="subject" className="block text-sm font-medium text-foreground">
           Subject
+          <span className="text-red-500 ml-1" aria-hidden="true">*</span>
         </label>
         <select
           id="subject"
           required
           value={formData.subject}
           onChange={handleChange}
-          className="w-full h-12 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          aria-required="true"
+          className="w-full h-11 px-4 rounded-lg border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <option value="">Select a topic</option>
           <option value="General Inquiry">General Inquiry</option>
@@ -150,20 +147,18 @@ export function ContactForm({ initialSubject = "", initialMessage = "" }: Contac
           <option value="Other">Other</option>
         </select>
       </div>
-      <div>
-        <label htmlFor="message" className="block text-sm font-bold text-foreground mb-2">
-          Message
-        </label>
-        <textarea
-          id="message"
-          rows={5}
-          required
-          value={formData.message}
-          onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-          placeholder="How can we help you?"
-        />
-      </div>
+      
+      <TextareaField
+        id="message"
+        label="Message"
+        rows={5}
+        value={formData.message}
+        onChange={handleChange}
+        required
+        placeholder="How can we help you?"
+        className="rounded-xl"
+      />
+      
       <Button type="submit" size="lg" className="w-full rounded-full h-12" disabled={isLoading}>
         {isLoading ? (
           <>
