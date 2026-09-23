@@ -222,7 +222,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
 
       <div className="space-y-6 p-6 sm:p-8">
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700 shadow-sm">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700 shadow-sm" role="alert">
             {error}
           </div>
         )}
