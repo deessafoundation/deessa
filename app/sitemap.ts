@@ -171,17 +171,17 @@ async function getDynamicRoutes(baseUrl: string): Promise<MetadataRoute.Sitemap>
       })
     }
 
-    // Fetch published programs/projects
-    const { data: projects } = await supabase
-      .from('projects')
-      .select('slug, updated_at, created_at')
-      .eq('is_published', true)
+    // Fetch published programs
+    const { data: programs } = await supabase
+      .from('program_publications')
+      .select('slug, published_at')
+      .limit(500)
 
-    if (projects) {
-      projects.forEach((project) => {
+    if (programs) {
+      programs.forEach((program) => {
         routes.push({
-          url: `${baseUrl}/whatwedo/${project.slug}`,
-          lastModified: new Date(project.updated_at || project.created_at),
+          url: `${baseUrl}/whatwedo/${program.slug}`,
+          lastModified: new Date(program.published_at),
           changeFrequency: 'monthly',
           priority: 0.7,
         })
