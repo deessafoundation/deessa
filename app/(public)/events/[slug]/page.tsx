@@ -22,6 +22,7 @@ import {
   QrCode,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
+import { createClient as createStaticClient } from "@/lib/supabase/static"
 import type { EventModuleEvent, EventAgendaItem } from "@/lib/types/events-module"
 import { ShareEventButton } from "@/components/events/share-event-button"
 import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from "@/lib/seo/metadata-utils"
@@ -32,7 +33,7 @@ export const revalidate = 300
 
 // Generate static params for published events at build time
 export async function generateStaticParams() {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase
     .from('events')
     .select('slug')
@@ -55,7 +56,7 @@ export async function generateMetadata({
   if (!event) return { title: "Event Not Found" }
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-  const imageUrl = getOGImageUrl(event.banner_image_url)
+  const imageUrl = getOGImageUrl(event.banner_url || event.image)
   const description = extractExcerpt(event.short_description || event.description || event.title, 155)
 
   return generateSEOMetadata({
@@ -64,7 +65,7 @@ export async function generateMetadata({
     path: `/events/${slug}`,
     image: imageUrl,
     imageAlt: event.title,
-    keywords: [event.category, 'Nepal event', 'community event', event.is_online ? 'online event' : 'in-person event'],
+    keywords: [event.category, 'Nepal event', 'community event', 'in-person event'],
     type: 'article',
     section: 'Events',
   })
@@ -110,6 +111,28 @@ const categoryConfig: Record<string, { label: string; color: string; bg: string;
   seminar: { label: "Seminar", color: "text-[#29b6c8]", bg: "bg-[#29b6c8]/10", solid: "bg-[#29b6c8]", border: "border-[#29b6c8]/20" },
   meetup: { label: "Meetup", color: "text-[#D6336C]", bg: "bg-[#D6336C]/10", solid: "bg-[#D6336C]", border: "border-[#D6336C]/20" },
   general: { label: "Event", color: "text-[#1a1a2e]", bg: "bg-[#1a1a2e]/10", solid: "bg-[#1a1a2e]", border: "border-[#1a1a2e]/20" },
+}
+
+const ALLOWED_IMAGE_HOSTS = ["images.unsplash.com", "lh3.googleusercontent.com", "img.youtube.com"]
+
+function isSafeImageSrc(src: string | null | undefined): boolean {
+  if (!src) return false
+  if (src.includes(".supabase.co")) return true
+  try {
+    return ALLOWED_IMAGE_HOSTS.includes(new URL(src).hostname)
+  } catch {
+    return false
+  }
+}
+
+function SafeImage({ src, alt, fill, priority, quality, sizes, className, style }: {
+  src: string; alt: string; fill?: boolean; priority?: boolean; quality?: number;
+  sizes?: string; className?: string; style?: React.CSSProperties;
+}) {
+  if (isSafeImageSrc(src)) {
+    return <Image src={src} alt={alt} fill={fill} priority={priority} quality={quality} sizes={sizes} className={className} style={style} />
+  }
+  return <img src={src} alt={alt} loading={priority ? "eager" : "lazy"} className={className?.replace(/absolute/g, "")} style={{ ...style, width: "100%", height: "100%", objectFit: "cover" }} />
 }
 
 function formatDate(dateString: string) {
@@ -185,8 +208,8 @@ export default async function EventDetailPage({
       name: event.location,
       address: event.location,
     } : undefined,
-    image: event.banner_image_url,
-    isOnline: event.is_online,
+    image: event.banner_url || event.image || undefined,
+    isOnline: false, // Default to in-person event
     registrationUrl: event.registration_enabled ? `${SITE_URL}/events/${event.slug}/register` : undefined,
   })
 
@@ -207,7 +230,7 @@ export default async function EventDetailPage({
         <div className="relative h-[480px] w-full md:h-[560px]">
           {bannerImage ? (
             <>
-              <Image src={bannerImage} alt={event.title} fill priority quality={90} sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} className="absolute inset-0" />
+              <SafeImage src={bannerImage} alt={event.title} fill priority quality={90} sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} className="absolute inset-0" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/40" />
             </>
           ) : (
@@ -607,7 +630,7 @@ export default async function EventDetailPage({
                     idx === 0 ? "col-span-2 row-span-2" : ""
                   } ${idx === 0 ? "aspect-square" : "aspect-square"}`}
                 >
-                  <Image
+                  <SafeImage
                     src={url}
                     alt={`${event.title} - Photo ${idx + 1}`}
                     fill

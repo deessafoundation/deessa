@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import Image from "next/image"
+import styles from "@/components/page-hero-contrast.module.css"
 import Link from "next/link"
 import {
   Calendar,
@@ -39,13 +40,24 @@ export const metadata: Metadata = generateSEOMetadata({
 })
 
 async function getPublishedEvents(): Promise<EventModuleEvent[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("events")
-    .select("*")
-    .eq("status", "published")
-    .order("event_date", { ascending: true })
-  return (data || []) as EventModuleEvent[]
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .eq("status", "published")
+      .order("event_date", { ascending: true })
+
+    if (error) {
+      console.error("[events] Supabase query error:", error.message, error.code, error.details)
+      return []
+    }
+
+    return (data || []) as EventModuleEvent[]
+  } catch (err) {
+    console.error("[events] Unexpected error:", err)
+    return []
+  }
 }
 
 /* Brand-aligned category accents */
@@ -148,10 +160,10 @@ export default async function EventsPage() {
       {/* ═══════════════════════════════════════════
           HERO, warm brand light (Stories / Impact language)
           ═══════════════════════════════════════════ */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_45%,#f7f4ef_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_88%_12%,rgba(111,62,150,0.14),transparent_24%),radial-gradient(circle_at_78%_88%,rgba(247,197,43,0.18),transparent_22%),radial-gradient(circle_at_center,rgba(255,255,255,0.5),transparent_60%)]" />
-        <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(11,95,138,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.18)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black_10%,transparent_90%)]" />
+      <section id="events-hero" className={`${styles.hero} relative isolate overflow-hidden`}>
+        <div data-hero-shade className="absolute inset-0 bg-[linear-gradient(180deg,#f8fcff_0%,#eaf5fb_45%,#f7f4ef_100%)]" />
+        <div data-hero-decoration className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(41,182,200,0.22),transparent_28%),radial-gradient(circle_at_88%_12%,rgba(111,62,150,0.14),transparent_24%),radial-gradient(circle_at_78%_88%,rgba(247,197,43,0.18),transparent_22%),radial-gradient(circle_at_center,rgba(255,255,255,0.5),transparent_60%)]" />
+        <div data-hero-decoration className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(11,95,138,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(11,95,138,0.18)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black_10%,transparent_90%)]" />
 
         <div className="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-16 md:px-8 md:py-20 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-24">
           {/* Copy */}
@@ -419,6 +431,25 @@ function EventMedia({
   past?: boolean
   large?: boolean
 }) {
+  const ALLOWED_HOSTS = [
+    "images.unsplash.com",
+    "lh3.googleusercontent.com",
+    "img.youtube.com",
+  ]
+
+  const isSupabase = src?.includes(".supabase.co")
+  const isAllowedHost = src
+    ? ALLOWED_HOSTS.some((h) => {
+        try {
+          return new URL(src).hostname === h
+        } catch {
+          return false
+        }
+      })
+    : false
+
+  const useNextImage = src && (isSupabase || isAllowedHost)
+
   return (
     <div
       className={`relative isolate h-full w-full overflow-hidden bg-gradient-to-br from-[#eaf5fb] via-[#f8fcff] to-[#f7f4ef] ${className}`}
@@ -431,22 +462,33 @@ function EventMedia({
             className="absolute inset-0 scale-110 bg-cover bg-center opacity-50 blur-2xl"
             style={{ backgroundImage: `url(${src})` }}
           />
-          {/* Main photo, optimized with Next.js Image, stretched to fill container */}
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
-            sizes={sizes}
-            quality={large ? 90 : 85}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-            className={`relative z-[1] transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.05] ${
-              past ? "grayscale-[30%] group-hover:grayscale-0" : ""
-            }`}
-            placeholder="blur"
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvd7POQAAAABJRU5ErkJggg=="
-          />
+          {/* Main photo */}
+          {useNextImage ? (
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
+              sizes={sizes}
+              quality={large ? 90 : 85}
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              className={`relative z-[1] transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.05] ${
+                past ? "grayscale-[30%] group-hover:grayscale-0" : ""
+              }`}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/+F9PQAI8wNPvd7POQAAAABJRU5ErkJggg=="
+            />
+          ) : (
+            <img
+              src={src}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              className={`absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05] ${
+                past ? "grayscale-[30%] group-hover:grayscale-0" : ""
+              }`}
+            />
+          )}
         </>
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
