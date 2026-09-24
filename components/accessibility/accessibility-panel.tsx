@@ -156,8 +156,8 @@ export function AccessibilityPanel() {
         title={isPanelOpen ? strings.close : strings.open}
         data-tts-ignore=""
         className={cn(
-          "fixed right-0 top-[42%] z-[60] flex -translate-y-1/2 items-center gap-1.5",
-          "rounded-l-2xl bg-primary py-3.5 pl-3 pr-2.5 text-white shadow-lg",
+          "fixed right-0 top-[42%] z-[60] flex -translate-y-1/2 items-center gap-1.5 max-sm:bottom-24 max-sm:right-3 max-sm:top-auto max-sm:z-40 max-sm:translate-y-0",
+          "rounded-l-2xl bg-primary py-3.5 pl-3 pr-2.5 text-white shadow-lg max-sm:rounded-full max-sm:p-2.5",
           "transition-[padding,background-color] duration-200",
           "hover:bg-primary/90 sm:hover:pr-4",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",

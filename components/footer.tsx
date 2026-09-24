@@ -203,7 +203,7 @@ export function Footer() {
             <h2 id="footer-newsletter-heading" className="font-comic text-center text-[1.6rem] font-bold leading-none text-newsletter-heading lg:text-left">
               Stay Connected
             </h2>
-            <p className="font-comic mt-2 max-w-[19rem] text-[0.7rem] leading-snug text-newsletter-body">
+            <p className="font-comic mt-2 max-w-[19rem] text-[13px] leading-relaxed text-newsletter-body sm:text-[0.7rem] sm:leading-snug">
               Get the latest updates on our impact, upcoming events, and new ways to make a difference in rural Nepal.
             </p>
 
@@ -213,7 +213,7 @@ export function Footer() {
                 return (
                   <li key={benefit.label} className="flex items-center gap-3">
                     <BenefitIcon className="size-[1.15rem] shrink-0 text-newsletter-heading" />
-                    <span className="font-comic text-[0.72rem] text-newsletter-label">{benefit.label}</span>
+                    <span className="font-comic text-[13px] text-newsletter-label sm:text-[0.72rem]">{benefit.label}</span>
                   </li>
                 )
               })}
@@ -230,7 +230,7 @@ export function Footer() {
               <NewsletterForm variant="footer" />
             </div>
 
-            <p className="font-comic mt-2 text-[0.62rem] text-newsletter-body">
+            <p className="font-comic mt-2 text-xs text-newsletter-body sm:text-[0.62rem]">
               No spam. Unsubscribe anytime.
             </p>
           </div>
@@ -241,12 +241,12 @@ export function Footer() {
               <ShieldCheckTwoTone className="size-7 shrink-0" />
               <div className="w-full">
                 <h3 className="font-comic text-center text-[0.8rem] font-bold text-newsletter-navy lg:text-left">100% Transparent</h3>
-                <p className="font-comic mt-1 max-w-[13rem] text-[0.7rem] leading-snug text-newsletter-body">
+                <p className="font-comic mt-1 w-full text-[13px] leading-relaxed text-newsletter-body sm:text-[0.7rem] sm:leading-snug">
                   We believe in complete financial transparency. Every rupee you donate or track through our reports goes directly toward empowering rural communities in Nepal.
                 </p>
                 <Link
                   href="/impact"
-                  className="font-comic mt-2 inline-flex items-center gap-1.5 text-[0.7rem] font-semibold text-newsletter-heading transition-colors duration-200 hover:text-newsletter-subscribe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2"
+                  className="font-comic mt-2 inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-newsletter-heading transition-colors duration-200 hover:text-newsletter-subscribe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2 sm:min-h-0 sm:text-[0.7rem]"
                 >
                   Explore our financials
                   <ArrowRight className="size-3" strokeWidth={2.75} aria-hidden="true" />
@@ -274,11 +274,11 @@ export function Footer() {
             </Link>
 
             <h2 className="font-comic mt-5 text-sm font-bold text-white">Our Mission</h2>
-            <p className="font-comic mt-2 max-w-xs text-xs leading-relaxed text-footer-muted">
+            <p className="font-comic mt-2 max-w-xs text-sm leading-relaxed text-footer-muted sm:text-xs">
               Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
               initiatives since 2022.
             </p>
-            <p className="font-comic mt-3 border-l-2 border-white/40 pl-3 text-xs italic text-footer-muted">
+            <p className="font-comic mt-3 border-l-2 border-white/40 pl-3 text-sm italic text-footer-muted sm:text-xs">
               Making a difference, one community at a time.
             </p>
 
@@ -303,7 +303,7 @@ export function Footer() {
                 return (
                   <li key={item.srLabel} className="flex items-start justify-center gap-2.5 md:justify-start">
                     <ContactIcon className="mt-px size-4 shrink-0 text-white/90" strokeWidth={1.75} aria-hidden="true" />
-                    <p className="font-comic text-xs leading-relaxed text-footer-muted">
+                    <p className="font-comic text-[13px] leading-relaxed text-footer-muted sm:text-xs">
                       <span className="sr-only">{item.srLabel}: </span>
                       {item.value}
                     </p>
@@ -324,14 +324,14 @@ export function Footer() {
                       <a
                         href={link.href}
                         download
-                        className="font-comic rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        className="font-comic inline-flex min-h-8 items-center rounded text-[13px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0 sm:text-xs"
                       >
                         {link.label}
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="font-comic rounded text-xs text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                        className="font-comic inline-flex min-h-8 items-center rounded text-[13px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0 sm:text-xs"
                       >
                         {link.label}
                       </Link>

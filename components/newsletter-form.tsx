@@ -58,7 +58,7 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
         >
           Email address <span className="text-red-600">*</span>
         </label>
-        <div className="flex items-stretch gap-2">
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row">
           <input
             id="footer-newsletter-email"
             type="email"
@@ -71,12 +71,12 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
             required
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "footer-newsletter-error" : undefined}
-            className="newsletter-input font-comic h-9 min-w-0 flex-1 appearance-none rounded-[8px] border border-newsletter-input-border bg-white px-3 text-[0.72rem] text-newsletter-navy transition-colors duration-200 placeholder:text-newsletter-placeholder focus-visible:border-newsletter-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading/35"
+            className="newsletter-input font-comic h-11 w-full min-w-0 flex-none appearance-none rounded-[8px] border border-newsletter-input-border bg-white px-3 text-sm text-newsletter-navy transition-colors duration-200 placeholder:text-newsletter-placeholder focus-visible:border-newsletter-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading/35 sm:h-9 sm:w-auto sm:flex-1 sm:text-[0.72rem]"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="font-comic inline-flex h-9 shrink-0 appearance-none items-center justify-center gap-1.5 rounded-[8px] bg-newsletter-subscribe px-5 text-[0.72rem] font-bold text-white transition-colors duration-200 hover:bg-newsletter-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="font-comic inline-flex h-11 shrink-0 appearance-none items-center justify-center gap-1.5 rounded-[8px] bg-newsletter-subscribe px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-newsletter-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-newsletter-heading focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:h-9 sm:text-[0.72rem]"
           >
             {isLoading ? (
               <>

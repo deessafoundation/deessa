@@ -35,11 +35,16 @@
 
 /* Force Comic Neue on numbers and ampersands inside headings */
 .font-comic-num {
-  font-family: "Comic Neue", sans-serif !important;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif !important;
   font-weight: 700;
 }
 
 @custom-variant dark (&:is(.dark *));
+
+.website-layout {
+  --font-sans: var(--font-comic-neue, "Comic Neue"), sans-serif;
+  --font-comic: var(--font-comic-neue, "Comic Neue"), sans-serif;
+}
 
 :root {
   /* Primary Brand Colors */
@@ -183,7 +188,7 @@
 @theme inline {
   --font-sans: "Comic Neue", sans-serif;
   --font-heading: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
-  --font-comic: "Comic Neue", sans-serif;
+  --font-comic: var(--font-comic-neue, "Comic Neue"), sans-serif;
   --font-marissa: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
   --font-dm-sans: "DM Sans", system-ui, sans-serif;
   --color-background: var(--background);
@@ -1249,7 +1254,7 @@ body.high-contrast img {
 
 /* Comic Neue font for numbers */
 .font-comic-num {
-  font-family: "Comic Neue", sans-serif;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif;
   font-weight: 700;
 }
 

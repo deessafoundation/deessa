@@ -31,3 +31,20 @@
   .paragraphs { font-size: 16px; line-height: 1.65; }
   .quote p { font-size: 15px; }
 }
+@media (max-width: 420px) {
+  .section { padding: 24px 16px; }
+  .layout { gap: 20px; }
+  .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  .stepContent { gap: 6px; font-size: 14px; line-height: 1.3; text-align: center; }
+  .icon { width: 44px; height: 44px; border-radius: 14px; }
+  .arrowItem { display: none; }
+}
+@media (max-width: 600px) {
+  .content { display: contents; }
+  .label { grid-row: 1; }
+  .title { grid-row: 2; margin-bottom: 0; }
+  .media { grid-row: 3; }
+  .paragraphs { grid-row: 4; }
+  .quote { grid-row: 5; }
+  .flow { grid-row: 6; }
+}

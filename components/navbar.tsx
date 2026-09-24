@@ -5,7 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import type { RegisterButtonConfig } from "@/lib/support/settings"
-import { Comic_Neue } from "next/font/google"
+import { comicNeue } from "@/lib/fonts"
 import {
   Heart,
   Menu,
@@ -22,8 +22,6 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
-const comicNeue = Comic_Neue({ subsets: ["latin"], weight: ["400", "700"] })
 
 interface NavbarProps {
   supportEnabled?: boolean
@@ -288,7 +286,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
               <button
                 type="button"
                 className={cn(
-                  "relative z-50 rounded-lg p-2 transition-colors duration-200 lg:hidden",
+                  "relative z-50 flex size-11 items-center justify-center rounded-lg transition-colors duration-200 lg:hidden",
                   mobileMenuOpen
                     ? "bg-primary text-white"
                     : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"

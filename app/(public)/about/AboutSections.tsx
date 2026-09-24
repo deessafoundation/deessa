@@ -59,14 +59,14 @@ const partnerCategories = [
 
 function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
   return (
-    <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
+    <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-9 max-w-[700px] text-center sm:mb-14">
       <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
         {label}
       </span>
       <h2 className="font-marissa text-3xl font-medium leading-[1.25] text-[#0b76b7] md:text-[40px]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
         {title}
       </h2>
-      {sub && <p className="font-dm-sans mt-4 text-lg text-[#6b7280]">{sub}</p>}
+      {sub && <p className="font-dm-sans mt-4 text-base leading-relaxed text-[#6b7280] sm:text-lg">{sub}</p>}
     </motion.div>
   )
 }
@@ -143,7 +143,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 4: HOW WE DO IT */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]">
+      <section className="bg-[#f8f6f1] py-12 sm:py-20 lg:py-[90px]">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
@@ -162,7 +162,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
               style={{ borderColor: "rgba(41,182,200,0.4)" }}
               aria-hidden
             />
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+            <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-10 md:grid-cols-4 md:gap-6">
               {howWeDoItContent.steps.map((step, i) => (
                 <motion.div
                   key={step.id}
@@ -193,7 +193,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           <motion.p
             {...reveal}
             transition={{ duration: 0.6 }}
-            className="font-marissa mx-auto mt-16 max-w-[700px] text-center text-2xl italic leading-snug"
+            className="font-marissa mx-auto mt-10 max-w-[700px] text-center text-2xl italic leading-snug sm:mt-16"
             style={{ color: DARK }}
           >
             {howWeDoItContent.closingLine}
@@ -202,7 +202,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 5: OUR JOURNEY TIMELINE */}
-      <section className="bg-white py-20 lg:py-[90px]" id="journey">
+      <section className="bg-white py-12 sm:py-20 lg:py-[90px]" id="journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader
             label={journeyContent.label}
@@ -226,7 +226,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
               aria-hidden
             />
 
-            <div className="space-y-12 md:space-y-20">
+            <div className="space-y-8 sm:space-y-12 md:space-y-20">
               {journeyContent.milestones.map((item, index) => {
                 const onLeft = index % 2 === 0
                 return (
@@ -255,7 +255,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5 }}
-                      className={`ml-12 min-h-[140px] overflow-hidden rounded-2xl border border-black/[0.04] bg-[#f8f6f1] shadow-sm md:ml-0 ${
+                      className={`ml-10 min-h-[140px] overflow-hidden rounded-2xl border border-black/[0.04] bg-[#f8f6f1] shadow-sm sm:ml-12 md:ml-0 ${
                         onLeft ? "md:col-start-1 md:mr-6" : "md:col-start-2 md:ml-6"
                       }`}
                     >
@@ -269,7 +269,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                           />
                         </div>
                       )}
-                      <div className="px-7 py-6">
+                      <div className="px-5 py-5 sm:px-7 sm:py-6">
                         <p className="font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
                           {item.year}
                         </p>
@@ -293,14 +293,14 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       <OrgStructure />
 
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team">
+      <section className="bg-[#f8f6f1] py-12 sm:py-20 lg:py-[90px]" id="team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
             title="Meet the Changemakers"
             sub="Our diverse team of passionate individuals working tirelessly on the ground and behind the scenes."
           />
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
             {teamMembers.length === 0 ? (
               <div className="col-span-full py-12 text-center">
                 <p className="font-dm-sans text-[#6b7280]">Team members coming soon.</p>
@@ -335,7 +335,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
 
                     {/* Bottom overlay, name & role + bio + social */}
                     <div
-                      className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"}`}
+                      className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"} max-sm:translate-y-0`}
                       style={{ background: "linear-gradient(to top, rgba(10,15,35,0.92) 0%, rgba(10,15,35,0.7) 70%, transparent 100%)" }}
                     >
                       <div className="p-4 pt-6">
@@ -394,7 +394,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 7: PARTNERS & SUPPORTERS */}
-      <section className="bg-white py-20 lg:py-[90px]" id="partners">
+      <section className="bg-white py-12 sm:py-20 lg:py-[90px]" id="partners">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -419,7 +419,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                 return (
                   <div
                     key={partner.label}
-                    className="group flex min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
+                    className="group flex min-h-32 min-w-0 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg sm:min-h-40 sm:p-6"
                   >
                     <div
                       className={`flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
@@ -501,7 +501,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           <motion.div
             {...reveal}
             transition={{ duration: 0.6 }}
-            className="relative z-10 mx-auto flex min-h-[310px] max-w-[1500px] flex-col items-center justify-center gap-5 px-8 py-12 text-center sm:min-h-[290px] sm:px-14 lg:min-h-[174px] lg:flex-row lg:justify-between lg:gap-10 lg:px-[8%] lg:py-7 lg:text-left"
+            className="relative z-10 mx-auto flex max-w-[1500px] flex-col items-center justify-center gap-5 px-5 py-10 text-center sm:min-h-[290px] sm:px-14 sm:py-12 lg:min-h-[174px] lg:flex-row lg:justify-between lg:gap-10 lg:px-[8%] lg:py-7 lg:text-left"
           >
             <div className="max-w-[38rem]">
               <h2 id="about-final-cta-heading" className="font-brush text-[1.7rem] font-bold italic leading-tight text-white sm:text-[1.9rem]">

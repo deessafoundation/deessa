@@ -80,11 +80,11 @@ export function OurStorySection({ story }: OurStorySectionProps) {
     : s.imageAlt
 
   return (
-    <section className="py-14 sm:py-16 md:py-24 bg-white relative overflow-hidden">
+    <section className="py-10 sm:py-16 md:py-24 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-9 md:gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 gap-7 sm:gap-9 md:grid-cols-2 md:gap-12 lg:gap-16 items-center">
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
               <div className="relative aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4] rounded-2xl md:rounded-3xl overflow-hidden shadow-xl">
@@ -109,7 +109,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
 
           <ScrollReveal animation="fade-left" delay={200}>
             <div>
-              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{s.eyebrow}</span>
+              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-3 sm:mb-4 block">{s.eyebrow}</span>
               <div className="mx-auto w-fit max-w-[92vw] mb-5 md:mb-6">
                 <BrushStroke
                   variant="calligraphy"
@@ -132,7 +132,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
               {s.paragraphs.map((p, i) => (
                 <p
                   key={i}
-                  className={`text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-8" : "mb-6"}`}
+                  className={`text-base sm:text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-6 sm:mb-8" : "mb-4 sm:mb-6"}`}
                 >
                   {p}
                 </p>
@@ -171,7 +171,7 @@ export function MissionVisionSection() {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-muted py-20 md:py-28">
+    <section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
       <div className="pointer-events-none absolute top-0 left-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute right-0 bottom-0 size-96 translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
       <div
@@ -184,18 +184,18 @@ export function MissionVisionSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="mb-14 text-center md:mb-16">
+          <div className="mb-9 text-center sm:mb-14 md:mb-16">
             <span className="mb-4 block text-sm font-bold tracking-widest text-[#15151c] uppercase">Our Direction</span>
             <h2 className="mb-4 text-3xl font-black tracking-tight text-[#0b76b7] md:text-5xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               Mission, Vision <span className="font-normal">&</span> Objectives
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-foreground/60">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-lg">
               Guided by clear values and a bold vision for Nepal&apos;s future.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
           {/* MISSION — the anchor statement, so it carries the section as a
               solid deep-ocean panel rather than competing as a third white box */}
           <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
@@ -206,12 +206,12 @@ export function MissionVisionSection() {
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-primary/25 blur-3xl"
               />
-              <div className="relative flex flex-1 flex-col p-8 md:p-11">
-                <div className="mb-7 flex size-16 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110">
+              <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
+                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
                   <Target aria-hidden="true" className="size-8 text-white" />
                 </div>
                 <h3 className="mb-4 text-2xl font-black text-white md:text-[30px]">Our Mission</h3>
-                <p className="text-lg leading-relaxed text-white/80 md:text-xl">
+                <p className="text-base leading-relaxed text-white/80 sm:text-lg md:text-xl">
                   To empower marginalized communities in Nepal through education, healthcare, and sustainable
                   development, ensuring every individual has the opportunity to live with dignity and purpose.
                 </p>
@@ -226,12 +226,12 @@ export function MissionVisionSection() {
                 aria-hidden="true"
                 className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-primary via-sky-400 to-indigo-400"
               />
-              <div className="flex flex-1 flex-col p-8 md:p-10">
-                <div className="mb-7 flex size-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110">
+              <div className="flex flex-1 flex-col p-5 sm:p-8 md:p-10">
+                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
                   <Eye aria-hidden="true" className="size-8 text-primary" />
                 </div>
                 <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Vision</h3>
-                <p className="text-lg leading-relaxed text-foreground/70">
+                <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
                   A Nepal where every community thrives. Children dream freely, families are healthy, and
                   opportunities are within everyone&apos;s reach.
                 </p>
@@ -246,13 +246,13 @@ export function MissionVisionSection() {
                 aria-hidden="true"
                 className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-indigo-400 via-sky-400 to-primary"
               />
-              <div className="grid grid-cols-1 items-center gap-8 p-8 md:p-10 lg:grid-cols-12 lg:gap-14">
+              <div className="grid grid-cols-1 items-center gap-6 p-5 sm:gap-8 sm:p-8 md:p-10 lg:grid-cols-12 lg:gap-14">
                 <div className="lg:col-span-5">
-                  <div className="mb-7 flex size-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110">
+                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
                     <Flag aria-hidden="true" className="size-8 text-primary" />
                   </div>
                   <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Objectives</h3>
-                  <p className="text-lg leading-relaxed text-foreground/70">
+                  <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
                     Concrete goals that turn our mission into measurable change, district by district, until every
                     community we serve feels the difference.
                   </p>
@@ -262,11 +262,11 @@ export function MissionVisionSection() {
                   <p className="mb-5 text-xs font-bold tracking-widest text-primary uppercase">
                     What we are working toward
                   </p>
-                  <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
                     {targets.map((target) => (
                       <li
                         key={target.label}
-                        className="rounded-2xl border border-primary/10 bg-primary/[0.04] p-5 transition-colors duration-300 group-hover:border-primary/25"
+                        className="rounded-2xl border border-primary/10 bg-primary/[0.04] p-4 transition-colors duration-300 group-hover:border-primary/25 sm:p-5"
                       >
                         <p className="mb-1.5 text-3xl font-black text-primary md:text-[34px]">
                           <CountUp end={target.value} suffix={target.suffix} />
@@ -303,7 +303,7 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
     .sort((a, b) => a.order - b.order)
 
   return (
-    <section id="what-we-do" className="py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
+    <section id="what-we-do" className="py-12 sm:py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div
@@ -315,16 +315,16 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-16">
+          <div className="mb-9 text-center sm:mb-16">
             <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
             <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
               {w.subtitle}
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {corePillars.map((pillar, idx) => {
             const IconComp = pillarIconMap[pillar.icon] || Megaphone
             return (
@@ -339,9 +339,9 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                   aria-label={`Explore ${pillar.title}`}
                   className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
                 >
-                  <div className="p-8 text-center flex flex-col flex-1">
+                  <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <div className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
                     <h3 className="text-xl font-black mb-3 text-[#1a1a2e]">
@@ -1091,20 +1091,20 @@ export function ContactSection() {
 
   return (
     <section
-      className="pt-8 pb-20 md:pt-12 md:pb-28 bg-background"
+      className="bg-background pt-8 pb-12 sm:pb-20 md:pt-12 md:pb-28"
       data-tts-section=""
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-16">
+          <div className="mb-9 text-center sm:mb-16">
             <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
             <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               Visit Our Office
             </h2>
           </div>
         </ScrollReveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2">
+          <div className="space-y-6 sm:space-y-8">
             {contactItems.map((item, i) => {
               const IconComp = item.icon
               return (

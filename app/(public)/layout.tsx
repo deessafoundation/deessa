@@ -6,6 +6,7 @@ import { DevelopmentNoticeModal } from "@/components/development-notice-modal"
 import { VideoModalProvider } from "@/contexts/VideoModalContext"
 import { GlobalVideoModal } from "@/components/global-video-modal"
 import { AccessibilityRoot } from "@/components/accessibility/accessibility-root"
+import { comicNeue } from "@/lib/fonts"
 
 export const dynamic = "force-dynamic"
 
@@ -19,7 +20,7 @@ export default function PublicLayout({
       {/* Owns accessibility preferences + text-to-speech for all public pages.
           `data-tts-root` marks the region the reader is allowed to read. */}
       <AccessibilityRoot>
-        <div className="website-layout relative flex min-h-screen w-full flex-col">
+        <div className={`${comicNeue.variable} ${comicNeue.className} website-layout relative flex min-h-screen w-full flex-col`}>
           <IntroVideo />
           <NavbarWrapper />
           <DevelopmentNoticeModal />
