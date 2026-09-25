@@ -165,6 +165,21 @@
   --font-comic: "Comic Neue", sans-serif;
   --font-marissa: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
   --font-dm-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Brand Colors */
+  --color-brand-primary: rgb(63 171 222);
+  --color-brand-primary-dark: rgb(11 95 138);
+  --color-brand-light: rgb(232 246 252);
+  --color-brand-soft: rgb(179 224 245);
+  --color-brand-medium: rgb(125 200 235);
+
+  /* Pillar Accent Colors */
+  --color-empowerment: rgb(214 51 108);
+  --color-empowerment-light: rgb(251 232 240);
+  --color-environment: rgb(149 193 31);
+  --color-environment-light: rgb(243 248 229);
+  --color-education: rgb(245 158 11);
+  --color-education-light: rgb(254 243 229);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -347,7 +362,7 @@
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Reduced motion */
+/* Reduced motion - respect BOTH system preference AND app preference */
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .animate-shimmer,
@@ -359,6 +374,21 @@
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+body.reduce-motion .animate-marquee,
+body.reduce-motion .animate-shimmer,
+body.reduce-motion .animate-fade-in-up,
+body.sensory-friendly .animate-marquee,
+body.sensory-friendly .animate-shimmer,
+body.sensory-friendly .animate-fade-in-up {
+  animation: none !important;
+}
+
+body.reduce-motion *,
+body.sensory-friendly * {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
 }
 
 /* ===========================================
@@ -426,7 +456,116 @@ select:focus-visible {
   border-width: 0;
 }
 
-/* Text Size Options */
+/* Font Family Support - V2 Implementation */
+body.font-default {
+  /* Uses site's designed typography (default state) */
+}
+
+body.font-system {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+body.font-system * {
+  font-family: inherit !important;
+}
+
+body.font-opendyslexic {
+  font-family: "OpenDyslexic", "Comic Neue", sans-serif !important;
+}
+
+body.font-opendyslexic * {
+  font-family: inherit !important;
+}
+
+/* Link Highlight - V2 Implementation */
+body.link-highlight a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+body.link-highlight a:hover {
+  background-color: rgba(63, 171, 222, 0.1);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+body.link-highlight a:focus-visible {
+  background-color: rgba(63, 171, 222, 0.2);
+}
+
+/* Sensory-Friendly Mode - V2 Implementation */
+body.sensory-friendly {
+  /* Animations already disabled via reduce-motion */
+  
+  /* Reduce decorative elements */
+  .decorative-gradient,
+  .decorative-shape,
+  .background-pattern {
+    opacity: 0.3 !important;
+  }
+  
+  /* Tone down shadows (keep essential ones only) */
+  * {
+    box-shadow: none !important;
+  }
+  
+  .card,
+  .modal,
+  .dropdown,
+  button,
+  input,
+  textarea,
+  select {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Reduce image saturation slightly */
+  img:not([role="presentation"]) {
+    filter: saturate(0.8);
+  }
+  
+  /* Remove background videos */
+  video.background-video {
+    display: none !important;
+  }
+  
+  /* Simplify borders */
+  * {
+    border-radius: min(var(--radius, 0.5rem), 0.5rem) !important;
+  }
+}
+
+/* Text Size - V2 Implementation with CSS Variable */
+/* Uses --a11y-text-scale variable set by provider (1.0-2.0 range) */
+html[data-a11y-scope="public"] {
+  font-size: calc(100% * var(--a11y-text-scale, 1));
+}
+
+/* Prevent text clipping at larger text scales (WCAG 2.0 Level AA: 1.4.4 Resize Text) */
+/* When text is scaled to 150% or more, remove line clamping to prevent content being cut off */
+/* This is applied via data attribute set by the provider based on textScale value */
+html[data-a11y-scope="public"][data-text-scale-high="true"] {
+  .line-clamp-1,
+  .line-clamp-2,
+  .line-clamp-3,
+  .line-clamp-4,
+  .line-clamp-5,
+  .line-clamp-6 {
+    -webkit-line-clamp: unset !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  
+  /* Allow truncated text to wrap */
+  .truncate {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+}
+
+/* Legacy text size classes - DEPRECATED in V2, kept for backwards compat */
 body.text-normal {
   font-size: 16px;
 }
@@ -448,15 +587,6 @@ body.text-xlarge h1 { font-size: 4rem; }
 body.text-xlarge h2 { font-size: 3rem; }
 body.text-xlarge h3 { font-size: 2.25rem; }
 body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
-
-/* High Contrast Mode */
-body.high-contrast {
-  --text-main: 0 0 0;
-  --text-muted: 33 37 41;
-  --bg-white: 255 255 255;
-  --bg-soft: 255 255 255;
-  --border: 0 0 0;
-}
 
 /* ===========================================
    SECTION ANIMATION ENHANCEMENTS
@@ -788,7 +918,7 @@ body.high-contrast {
   letter-spacing: 2px;
 }
 
-/* Reduced motion - disable all new animations too */
+/* Reduced motion - disable all animations (respects system AND app preferences) */
 @media (prefers-reduced-motion: reduce) {
   .animate-kenburns,
   .animate-float-particle,
@@ -805,7 +935,14 @@ body.high-contrast {
   .animate-badge-shimmer,
   .animate-dot-pulse,
   .animate-timeline-draw,
-  .animate-marquee-reverse {
+  .animate-marquee-reverse,
+  .animate-fade-up,
+  .animate-fade-down,
+  .animate-fade-left,
+  .animate-fade-right,
+  .animate-scale-in,
+  .animate-wave-bar,
+  .animate-cart-bounce {
     animation: none !important;
   }
   
@@ -814,22 +951,58 @@ body.high-contrast {
   }
 }
 
-body.high-contrast * {
-  border-color: rgb(0, 0, 0) !important;
+body.reduce-motion .animate-kenburns,
+body.reduce-motion .animate-float-particle,
+body.reduce-motion .animate-scroll-bounce,
+body.reduce-motion .animate-cta-ripple,
+body.reduce-motion .animate-badge-bounce,
+body.reduce-motion .animate-icon-float,
+body.reduce-motion .animate-year-pulse,
+body.reduce-motion .animate-avatar-glow,
+body.reduce-motion .animate-sound-wave,
+body.reduce-motion .animate-sound-wave-delayed,
+body.reduce-motion .animate-sound-wave-delayed-2,
+body.reduce-motion .animate-heartbeat,
+body.reduce-motion .animate-badge-shimmer,
+body.reduce-motion .animate-dot-pulse,
+body.reduce-motion .animate-timeline-draw,
+body.reduce-motion .animate-marquee-reverse,
+body.reduce-motion .animate-fade-up,
+body.reduce-motion .animate-fade-down,
+body.reduce-motion .animate-fade-left,
+body.reduce-motion .animate-fade-right,
+body.reduce-motion .animate-scale-in,
+body.reduce-motion .animate-wave-bar,
+body.reduce-motion .animate-cart-bounce,
+body.sensory-friendly .animate-kenburns,
+body.sensory-friendly .animate-float-particle,
+body.sensory-friendly .animate-scroll-bounce,
+body.sensory-friendly .animate-cta-ripple,
+body.sensory-friendly .animate-badge-bounce,
+body.sensory-friendly .animate-icon-float,
+body.sensory-friendly .animate-year-pulse,
+body.sensory-friendly .animate-avatar-glow,
+body.sensory-friendly .animate-sound-wave,
+body.sensory-friendly .animate-sound-wave-delayed,
+body.sensory-friendly .animate-sound-wave-delayed-2,
+body.sensory-friendly .animate-heartbeat,
+body.sensory-friendly .animate-badge-shimmer,
+body.sensory-friendly .animate-dot-pulse,
+body.sensory-friendly .animate-timeline-draw,
+body.sensory-friendly .animate-marquee-reverse,
+body.sensory-friendly .animate-fade-up,
+body.sensory-friendly .animate-fade-down,
+body.sensory-friendly .animate-fade-left,
+body.sensory-friendly .animate-fade-right,
+body.sensory-friendly .animate-scale-in,
+body.sensory-friendly .animate-wave-bar,
+body.sensory-friendly .animate-cart-bounce {
+  animation: none !important;
 }
 
-body.high-contrast a {
-  text-decoration: underline;
-  font-weight: 600;
-}
-
-body.high-contrast button {
-  border: 2px solid rgb(0, 0, 0) !important;
-  font-weight: 600;
-}
-
-body.high-contrast img {
-  filter: contrast(1.2);
+body.reduce-motion .hover-lift:hover,
+body.sensory-friendly .hover-lift:hover {
+  transform: none !important;
 }
 
 /* ===========================================
@@ -1782,4 +1955,1716 @@ body.high-contrast img {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+
+/* ============================================================================
+   ACCESSIBILITY SYSTEM - CSS Variables & Body Classes
+   ============================================================================ */
+
+/* CSS Variables for accessibility controls */
+:root {
+  --a11y-font-scale: 1;
+  --a11y-line-height: 1.5;
+  --a11y-letter-spacing: 0em;
+  --a11y-animation-duration: 1;
+  --a11y-transition-duration: 200ms;
+  --a11y-contrast-multiplier: 1;
+  
+  /* Dyslexia font (loaded separately) */
+  --font-dyslexic: 'OpenDyslexic', Arial, sans-serif;
+}
+
+/* Apply font scaling to body */
+body {
+  font-size: calc(16px * var(--a11y-font-scale));
+  line-height: var(--a11y-line-height);
+  letter-spacing: var(--a11y-letter-spacing);
+}
+
+/* ============================================================================
+   HIGH CONTRAST MODE
+   ============================================================================ */
+
+body.high-contrast {
+  --background: oklch(1 0 0);  /* Pure white */
+  --foreground: oklch(0 0 0);  /* Pure black */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0 0 0);
+  --border: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  
+  /* Muted / surface / foreground-muted → high contrast */
+  --muted: oklch(1 0 0);
+  --muted-foreground: oklch(0 0 0);
+  --surface: oklch(1 0 0);
+  --foreground-muted: oklch(0 0 0);
+  --accent: oklch(1 0 0);
+  --accent-foreground: oklch(0 0 0);
+  --secondary: oklch(1 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  
+  /* Brand colors → black for text, white for bg */
+  --brand-primary: 0 0 0;
+  --brand-primary-dark: 0 0 0;
+  --accent-empowerment: 0 0 0;
+  --accent-environment: 0 0 0;
+  --accent-education: 0 0 0;
+  
+  /* Chart colors → black */
+  --chart-1: oklch(0 0 0);
+  --chart-2: oklch(0 0 0);
+  --chart-3: oklch(0 0 0);
+  --chart-4: oklch(0 0 0);
+  --chart-5: oklch(0 0 0);
+  --chart-6: oklch(0 0 0);
+  --chart-7: oklch(0 0 0);
+  
+  /* Input / ring */
+  --input: oklch(0 0 0);
+  --ring: oklch(0 0 0);
+  --destructive: oklch(0 0 0);
+  --destructive-foreground: oklch(1 0 0);
+}
+
+body.high-contrast a {
+  text-decoration: underline;
+  font-weight: 600;
+  color: oklch(0 0 0);
+}
+
+body.high-contrast button,
+body.high-contrast .button {
+  border: 2px solid oklch(0 0 0) !important;
+  font-weight: 600;
+}
+
+body.high-contrast img {
+  filter: grayscale(1) contrast(1.2);
+}
+
+/* High Contrast - Override Hard-Coded Colors for Maximum Contrast */
+/* Ensures WCAG AAA contrast ratios by forcing black/white scheme */
+body.high-contrast {
+  /* Override all hard-coded background colors */
+  [class*="bg-[#"] button,
+  [class*="bg-[#"] a {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Primary colors (blues, brand colors) -> Black background */
+  .bg-primary,
+  [class*="bg-blue-"],
+  [class*="bg-[#3FABDE]"],
+  [class*="bg-[#2F9BCA]"],
+  [class*="bg-[#2f9bca]"],
+  [class*="bg-[#2889b5]"],
+  [class*="bg-[#eaf5fc]"],
+  [class*="bg-[#e8f5fb]"],
+  [class*="bg-[#d9eef8]"],
+  [class*="bg-[#f0f8fc]"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Ensure text on dark backgrounds is white */
+  .bg-primary *,
+  [class*="bg-blue-"] *,
+  [class*="bg-[#3FABDE]"] *,
+  [class*="bg-[#2F9BCA]"] * {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Success/info backgrounds -> White with black border */
+  [class*="bg-green-"],
+  [class*="bg-emerald-"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Error/warning backgrounds -> White with black border */
+  [class*="bg-red-"],
+  [class*="bg-yellow-"],
+  [class*="bg-orange-"],
+  [class*="bg-amber-"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Purple backgrounds -> White with black border */
+  [class*="bg-purple-"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Dark backgrounds (800-950) -> Stay BLACK with WHITE text */
+  [class*="bg-slate-8"],
+  [class*="bg-slate-9"],
+  [class*="bg-gray-8"],
+  [class*="bg-gray-9"],
+  [class*="bg-neutral-8"],
+  [class*="bg-neutral-9"],
+  [class*="bg-zinc-8"],
+  [class*="bg-zinc-9"],
+  .bg-foreground {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Force all children of dark backgrounds to have WHITE text */
+  [class*="bg-slate-8"] *,
+  [class*="bg-slate-9"] *,
+  [class*="bg-gray-8"] *,
+  [class*="bg-gray-9"] *,
+  [class*="bg-neutral-8"] *,
+  [class*="bg-neutral-9"] *,
+  .bg-foreground * {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Contact section - force darker text */
+  section[class*="bg-background"] [class*="text-foreground/70"],
+  section[class*="bg-background"] [class*="text-foreground/50"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Light neutral gray backgrounds (50-300) -> WHITE with BLACK text */
+  [class*="bg-slate-"]:not([class*="bg-slate-8"]):not([class*="bg-slate-9"]),
+  [class*="bg-gray-"]:not([class*="bg-gray-8"]):not([class*="bg-gray-9"]),
+  [class*="bg-neutral-"]:not([class*="bg-neutral-8"]):not([class*="bg-neutral-9"]),
+  [class*="bg-zinc-"]:not([class*="bg-zinc-8"]):not([class*="bg-zinc-9"]),
+  [class*="bg-[#f"],
+  [class*="bg-[#F"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Text colors -> Black ONLY if not inside dark backgrounds or footer */
+  [class*="text-[#"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-primary"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-blue-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-slate-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-gray-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-green-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-red-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-yellow-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-orange-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *) {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* CRITICAL: Keep text-white WHITE when inside buttons/dark backgrounds */
+  .bg-primary [class*="text-white"],
+  [class*="bg-blue-"] [class*="text-white"],
+  [class*="bg-slate-8"] [class*="text-white"],
+  [class*="bg-slate-9"] [class*="text-white"],
+  [class*="bg-gray-8"] [class*="text-white"],
+  [class*="bg-gray-9"] [class*="text-white"],
+  .bg-foreground [class*="text-white"],
+  button[class*="bg-"] [class*="text-white"],
+  a[class*="bg-"] [class*="text-white"],
+  button [class*="text-white"],
+  a[class*="bg-"] * {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Keep text on primary buttons and their children white */
+  button.bg-primary,
+  button.bg-primary *,
+  .bg-primary button,
+  .bg-primary button * {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Hero carousel and other sections with gradient overlays - keep text white */
+  section[class*="bg-slate-9"] *[class*="text-white"],
+  [class*="bg-gradient"] *[class*="text-white"],
+  section[aria-label*="carousel"] *[class*="text-white"],
+  section[aria-roledescription="carousel"] *[class*="text-white"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Buttons with primary colors -> Black background (except footer/header) */
+  button[class*="bg-[#"]:not(footer *):not(header *),
+  a[class*="bg-[#"]:not(footer *):not(header *) {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Remove gradient backgrounds (preserve dark sections that need text contrast) */
+  [class*="bg-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
+  [class*="from-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
+  [class*="via-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
+  [class*="to-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
+  [class*="bg-[linear-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *) {
+    background: rgb(255, 255, 255) !important;
+    background-image: none !important;
+  }
+  
+  /* Fix: Gradient overlays on images must be transparent, not white */
+  [class*="absolute"][class*="inset-0"][class*="bg-gradient"] {
+    background: transparent !important;
+    background-image: none !important;
+  }
+  
+  /* Form elements */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  input::placeholder,
+  textarea::placeholder {
+    color: rgb(0, 0, 0) !important;
+    opacity: 0.7 !important;
+  }
+  
+  /* Modals and overlays -> White with strong border (except footer) */
+  [role="dialog"],
+  [class*="backdrop-blur"]:not(footer *):not(header *):not([class*="bg-black"]):not([class*="bg-slate-"]):not([class*="bg-gray-"]) {
+    background-color: rgb(255, 255, 255) !important;
+    border: 3px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Focus states -> Strong black outline */
+  *:focus-visible {
+    outline: 3px solid rgb(0, 0, 0) !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Links -> Black with underline (except footer which has dark bg) */
+  a:not([class*="bg-"]):not(footer a):not(footer *) {
+    color: rgb(0, 0, 0) !important;
+    text-decoration: underline !important;
+    text-decoration-thickness: 2px !important;
+    text-underline-offset: 3px !important;
+  }
+  
+  /* Shadows -> Remove (not needed in high contrast) */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* ── CARD ICONS: Black bg + white icon (overrides all colored bg rules) ── */
+  /* These icon containers use inline-colored bg classes that need to be uniform in HC mode */
+  .w-16.h-16[class*="bg-"] {
+    background-color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  .w-16.h-16[class*="bg-"] svg {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* ── FIX: Restore dark backgrounds where white text is required ── */
+  
+  /* ── NAVBAR: Ensure white bg with black readable text ── */
+  header {
+    background-color: rgb(255, 255, 255) !important;
+    background-image: none !important;
+  }
+  header * {
+    box-shadow: none !important;
+  }
+  /* Primary row and sub-nav backgrounds stay white/light */
+  header > div > div,
+  header > div > div > div {
+    background-color: inherit !important;
+    background-image: none !important;
+  }
+  /* Nav link text - black on white */
+  header a[class*="text-slate"],
+  header a[class*="text-primary"],
+  header button[class*="text-slate"] {
+    color: rgb(0, 0, 0) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+  }
+  /* Active nav link - use a visible dark blue instead of pure black */
+  header a.text-primary {
+    color: rgb(0, 95, 130) !important;
+    text-decoration: none !important;
+  }
+  /* Register button - black border + black text on white */
+  header a[class*="border-primary"],
+  header a[class*="border-["] {
+    background-color: transparent !important;
+    color: rgb(0, 0, 0) !important;
+    border-color: rgb(0, 0, 0) !important;
+    text-decoration: none !important;
+  }
+  /* Donate button - black bg with white text */
+  header [class*="bg-[#3FABDE]"],
+  header [class*="bg-[#2f9bca]"],
+  header [class*="bg-primary"][class*="text-white"] {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border-color: rgb(0, 0, 0) !important;
+  }
+  /* Donate button link text stays white */
+  header button[class*="bg-"] a,
+  header button[class*="bg-"] a * {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Mobile menu button */
+  header button[class*="bg-slate-100"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  header button[class*="bg-primary"][class*="text-white"] {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Sub-nav bar - keep light background */
+  header [class*="bg-[#f1f7fe]"] {
+    background-color: rgb(240, 248, 255) !important;
+  }
+  /* Nav link underline animation - make it visible black */
+  header [class*="from-[#7ad8ff]"],
+  header [class*="via-[#3FABDE]"],
+  header [class*="to-[#2f95c8]"] {
+    background-color: rgb(0, 0, 0) !important;
+    background-image: none !important;
+  }
+  /* Nav link divider lines */
+  header [class*="bg-slate-200"],
+  header [class*="dark:bg-slate-600"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  /* Tablet quick links */
+  header [class*="border-slate-200"][class*="bg-white"] {
+    border-color: rgb(0, 0, 0) !important;
+  }
+  header [class*="bg-white"][class*="text-slate-700"] {
+    color: rgb(0, 0, 0) !important;
+    border-color: rgb(0, 0, 0) !important;
+  }
+  /* Development badge */
+  header [class*="bg-amber-50"] {
+    background-color: rgb(255, 255, 200) !important;
+    color: rgb(0, 0, 0) !important;
+    border-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Mobile drawer overlay - keep dark overlay visible */
+  header [class*="bg-black/60"] {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+  /* Mobile drawer sidebar - white bg with black text */
+  header [role="dialog"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+  }
+  header [role="dialog"] * {
+    color: rgb(0, 0, 0) !important;
+  }
+  header [role="dialog"] [class*="text-primary"],
+  header [role="dialog"] [class*="text-[#1a6f96]"] {
+    color: rgb(0, 95, 130) !important;
+  }
+  header [role="dialog"] [class*="bg-[#eaf5fc]"] {
+    background-color: rgb(220, 240, 252) !important;
+  }
+  header [role="dialog"] [class*="bg-[#2F9BCA]"],
+  header [role="dialog"] [class*="bg-[#2889b5]"] {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+  }
+  header [role="dialog"] [class*="bg-[#e8f5fb]"],
+  header [role="dialog"] [class*="bg-[#d9eef8]"],
+  header [role="dialog"] [class*="bg-[#f0f8fc]"] {
+    background-color: rgb(230, 245, 255) !important;
+  }
+  header [role="dialog"] [class*="border-slate-200"] {
+    border-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Hero carousel - restore dark section and gradient overlays for white text */
+  section[aria-roledescription="carousel"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  section[aria-roledescription="carousel"] > div {
+    background-color: rgb(0, 0, 0) !important;
+    background-image: none !important;
+  }
+  section[aria-roledescription="carousel"] [role="group"] > div:nth-child(2),
+  section[aria-roledescription="carousel"] [role="group"] > div:nth-child(3) {
+    background: rgba(0, 0, 0, 0.85) !important;
+    background-image: none !important;
+  }
+  section[aria-roledescription="carousel"] [class*="text-white"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  section[aria-roledescription="carousel"] a[class*="border-white"],
+  section[aria-roledescription="carousel"] button[class*="bg-white"],
+  section[aria-roledescription="carousel"] [class*="bg-white/"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    color: rgb(255, 255, 255) !important;
+  }
+  section[aria-roledescription="carousel"] [class*="backdrop-blur"] {
+    background-color: transparent !important;
+  }
+  
+  /* ── FOOTER: Pure black bg + white text for maximum contrast ── */
+  
+  footer,
+  footer > div,
+  footer > div > div,
+  footer > div > div > div,
+  footer * {
+    background-color: rgb(0, 0, 0) !important;
+    background-image: none !important;
+    color: rgb(255, 255, 255) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: none !important;
+  }
+  
+  /* Newsletter form and trust builder cards - white border for visibility */
+  footer [class*="bg-white/5"],
+  footer [class*="bg-white/10"],
+  footer [class*="backdrop-blur"] {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  }
+  
+  /* Social icon buttons */
+  footer .size-10 {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  }
+  footer .size-10 svg {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Primary accent color - bright teal on black */
+  footer [class*="text-primary"],
+  footer [class*="text-[#3FABDE]"] {
+    color: rgb(100, 200, 255) !important;
+  }
+  
+  /* "Stay Connected" gradient text - solid white instead */
+  footer [class*="bg-clip-text"] {
+    background: none !important;
+    -webkit-text-fill-color: rgb(255, 255, 255) !important;
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Links - white, no underline (high contrast doesn't need underline on dark bg) */
+  footer a {
+    color: rgb(255, 255, 255) !important;
+    text-decoration: none !important;
+  }
+  footer a:hover {
+    color: rgb(100, 200, 255) !important;
+    text-decoration: underline !important;
+  }
+  
+  /* Divider lines */
+  footer [class*="border-t"],
+  footer [class*="border-b"],
+  footer [class*="border-gray"] {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  footer [class*="bg-gray-700"] {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  /* Avatar circles - white border */
+  footer [class*="rounded-full"][class*="border-2"] {
+    border-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Admin link - keep subtle */
+  footer a[class*="opacity-30"] {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+  
+  /* Timeline section - restore subtle background */
+  section[class*="bg-[linear-gradient"] {
+    background: rgb(246, 243, 237) !important;
+    background-image: none !important;
+  }
+  
+  /* Timeline section - high contrast: black & white cards */
+  section[class*="bg-[linear-gradient"] .bg-white {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+    box-shadow: none !important;
+  }
+  /* Override inline gradient styles on icon circles */
+  section[class*="bg-[linear-gradient"] .size-14.rounded-full,
+  section[class*="bg-[linear-gradient"] .size-12.rounded-full {
+    background: rgb(0, 0, 0) !important;
+    background-image: none !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+    box-shadow: none !important;
+  }
+  section[class*="bg-[linear-gradient"] .size-14.rounded-full svg,
+  section[class*="bg-[linear-gradient"] .size-12.rounded-full svg {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Override inline solid styles on year pills */
+  section[class*="bg-[linear-gradient"] .rounded-full.font-comic-num {
+    background-color: rgb(0, 0, 0) !important;
+    background-image: none !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  /* Override inline solid styles on center dots */
+  section[class*="bg-[linear-gradient"] .size-4.rounded-full.ring-4 {
+    background-color: rgb(0, 0, 0) !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+  /* Timeline card text */
+  section[class*="bg-[linear-gradient"] h4,
+  section[class*="bg-[linear-gradient"] p {
+    color: rgb(0, 0, 0) !important;
+  }
+  /* Timeline vertical line */
+  section[class*="bg-[linear-gradient"] .bg-gradient-to-b {
+    background: rgb(0, 0, 0) !important;
+    background-image: none !important;
+  }
+  
+  /* ── ABOUT PAGE: High contrast overrides ── */
+
+  /* ── ABOUT HERO: Visible grayscale photo with readable white text ── */
+  .about-hero-section {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  /* Preserve photo detail; the scrim provides the text contrast. */
+  .about-hero-section > img {
+    filter: grayscale(1) !important;
+  }
+  /* Match the homepage: darker behind the text, lighter toward the right. */
+  .about-hero-section .about-hero-scrim {
+    background: linear-gradient(to right, rgb(0 0 0 / 68%), rgb(0 0 0 / 60%) 60%, rgb(0 0 0 / 25%)) !important;
+  }
+  @media (max-width: 767px) {
+    .about-hero-section .about-hero-scrim {
+      background: rgb(0 0 0 / 60%) !important;
+    }
+  }
+  /* Breadcrumb text: solid white */
+  .about-hero-section nav[aria-label="Breadcrumb"],
+  .about-hero-section nav[aria-label="Breadcrumb"] a {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Badge pill: black bg + white text + white border */
+  .about-hero-section .about-hero-badge {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  /* H1: keep white */
+  .about-hero-section h1,
+  .about-hero-section h1 span {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Subtitle: solid white (remove semi-transparent) */
+  .about-hero-section .about-hero-text > p {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Primary CTA: black bg + white text */
+  .about-hero-section .about-hero-cta-primary {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  /* Secondary CTA: transparent bg + white border + white text */
+  .about-hero-section .about-hero-cta-secondary {
+    background-color: transparent !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  /* Trust strip: solid white text */
+  .about-hero-section .about-hero-text > div:last-child {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Trust badge dots: white */
+  .about-hero-section .about-hero-trust-dot {
+    background-color: rgb(255, 255, 255) !important;
+  }
+  /* Brush stroke SVG divider: white fill to match next section */
+  .about-hero-section .about-hero-brush svg path {
+    fill: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+  }
+
+  /* ── CONTACT HERO: Force dark treatment for max contrast ── */
+  .contact-hero-section {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  /* Background image: desaturate + boost contrast */
+  .contact-hero-section > div > div:first-child {
+    filter: grayscale(1) contrast(1.4) brightness(0.6) !important;
+  }
+  /* Scrim: solid black instead of gradient */
+  .contact-hero-section [style*="linear-gradient"] {
+    background: rgba(0, 0, 0, 0.92) !important;
+    background-image: none !important;
+  }
+  /* Badge pill: black bg + white text + white border */
+  .contact-hero-section span.rounded-full {
+    background-color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  /* H1 and subtitle: keep white */
+  .contact-hero-section h1,
+  .contact-hero-section p {
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Section backgrounds - force white */
+  [class*="bg-[#f8f6f1]"],
+  [class*="bg-[#f6f3ed]"] {
+    background-color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Gray body text - force black on light backgrounds only */
+  [class*="text-[#6b7280]"],
+  [class*="text-[#4a4a4a]"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  /* Restore white text in dark sections (CTA, footer, about-hero) */
+  footer [class*="text-gray-400"],
+  footer [class*="text-gray-300"],
+  .dark-section [class*="text-gray-400"],
+  .dark-section [class*="text-gray-300"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  /* Dark section - force all text white */
+  .dark-section h2,
+  .dark-section p,
+  .dark-section span,
+  .dark-section a {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* ── Class-based about page selectors ── */
+  .about-heading-dark, .about-step-title { color: rgb(0, 0, 0) !important; }
+  .about-teal-text, .about-step-number, .about-timeline-year { color: rgb(0, 0, 0) !important; }
+  .about-quote-block { border-left-color: rgb(0, 0, 0) !important; background-color: rgb(240, 240, 240) !important; }
+  .about-flow-pill { border-color: rgb(0, 0, 0) !important; color: rgb(0, 0, 0) !important; }
+  .about-dashed-line, .about-connector, .about-timeline-track { border-color: rgb(0, 0, 0) !important; background-color: rgb(0, 0, 0) !important; }
+  .about-timeline-marker { background-color: rgb(0, 0, 0) !important; }
+  .about-timeline-progress { background: rgb(0, 0, 0) !important; background-image: none !important; }
+  .about-partner-icon { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; }
+  .about-partner-icon svg { color: rgb(0, 0, 0) !important; }
+  .about-resource-icon { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; }
+  .about-resource-icon svg { color: rgb(0, 0, 0) !important; }
+  .about-download-btn { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; color: rgb(0, 0, 0) !important; }
+  .about-closing-text { color: rgb(0, 0, 0) !important; }
+  
+  /* Partner card borders (Tailwind class is stable) */
+  [class*="border-[#eee]"] { border-color: rgb(0, 0, 0) !important; }
+  
+  /* Team cards */
+  .team-card {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  .team-card img {
+    filter: grayscale(1) contrast(1.1) !important;
+  }
+  .team-card h3,
+  .team-card > div > div > h3,
+  .team-card > div > div > p {
+    color: rgb(0, 0, 0) !important;
+  }
+  .team-card .absolute,
+  .team-card [style*="linear-gradient"] {
+    background: rgba(0, 0, 0, 0.95) !important;
+    background-image: none !important;
+  }
+  .team-card .absolute h3,
+  .team-card .absolute p,
+  .team-card .absolute a,
+  .team-card .absolute span,
+  .team-card [style*="linear-gradient"] h3,
+  .team-card [style*="linear-gradient"] p,
+  .team-card [style*="linear-gradient"] a,
+  .team-card [style*="linear-gradient"] span {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+  }
+  .team-card [class*="text-gray-300"],
+  .team-card [class*="text-white/70"],
+  .team-card [class*="text-white/80"],
+  .team-card [class*="text-gray-400"] {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important;
+  }
+  
+  /* About hero & CTA - semi-transparent text to solid white */
+  [style*="rgba(255,255,255,0.55)"],
+  [style*="rgba(255,255,255,0.5)"],
+  [style*="rgba(255,255,255,0.78)"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  [style*="rgba(255,255,255,0.6)"] {
+    color: rgb(255, 255, 255) !important;
+    border-color: rgb(255, 255, 255) !important;
+  }
+  
+  /* CTA donate button - darker teal for contrast */
+  [style*="background-color: #29b6c8"],
+  [style*="background-color:#29b6c8"] {
+    background-color: rgb(0, 100, 100) !important;
+  }
+  
+  /* ── OUR STORY PAGE: Inline style overrides ── */
+  
+  /* Hero badge - teal text on dark bg → white text */
+  [style*="color: #29b6c8"][style*="background-color: rgba(41"],
+  [style*="color:#29b6c8"][style*="background-color:rgba(41"] {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  /* Hero subtitle - semi-transparent white → solid white */
+  [style*="color: rgba(255, 255, 255, 0.82)"],
+  [style*="color:rgba(255, 255, 255, 0.82)"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Timeline colored circle icons - white text on colored bg → white on black */
+  .bg-primary, .bg-empowerment, [class*="bg-chart-"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Timeline colored text labels */
+  .text-primary, .text-empowerment, [class*="text-chart-"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Remove all shadows */
+  .shadow-sm, .shadow-lg, .shadow-xl, .shadow-2xl, [class*="shadow-"] {
+    box-shadow: none !important;
+  }
+  
+  /* Remove gradients */
+  [style*="linear-gradient"] {
+    background-image: none !important;
+  }
+  
+  /* Mission/Vision card top borders - force black */
+  .border-t-8 {
+    border-top-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Impact icon circles - force white bg, black border */
+  .size-28, .size-32 {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Direction badge icon circle */
+  .bg-primary\/25 {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* ── STORIES PAGE: High contrast overrides ── */
+  
+  /* Hard-coded dark headings - force black */
+  [class*="text-[#1a1a2e]"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Slate text colors - force black */
+  [class*="text-slate-950"],
+  [class*="text-slate-900"],
+  [class*="text-slate-700"],
+  [class*="text-slate-600"],
+  [class*="text-slate-500"],
+  [class*="text-slate-400"],
+  [class*="text-slate-300"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Teal text - force black */
+  .text-teal {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Preserve white text on category badges and image overlays */
+  [class*="rounded-full"][class*="text-white"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  [class*="absolute"][class*="text-white"],
+  [class*="absolute"][class*="text-white/"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Ensure story card titles are visible (black on white) */
+  article h3[class*="text-[#1a1a2e]"],
+  article h2[class*="text-[#1a1a2e]"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Partner icons - white icon on black bg (bg-*50 forced to black, icon needs to be white) */
+  .about-partner-icon {
+    background-color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  .about-partner-icon svg,
+  .about-partner-icon i {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Light background sections - force white */
+  [class*="bg-[#faf9f6]"] {
+    background-color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Decorative blobs - force to white instead of hiding */
+  [class*="bg-primary/10"],
+  [class*="bg-secondary/10"],
+  [class*="bg-violet-100"],
+  [class*="bg-teal-100"],
+  [class*="bg-teal/15"],
+  [class*="bg-teal/8"] {
+    background-color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Stats card */
+  [class*="bg-white/85"],
+  [class*="bg-white/80"],
+  [class*="bg-white/75"] {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Stat number boxes */
+  [class*="bg-primary/8"],
+  [class*="bg-secondary/8"],
+  [class*="bg-slate-100"] {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Secondary text - force black */
+  .text-secondary {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Primary buttons - black bg, white text */
+  .bg-primary {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  .bg-primary.text-white,
+  [class*="bg-primary"][class*="text-white"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Secondary buttons */
+  .bg-secondary {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Category badges on stories */
+  .bg-violet-600, .bg-emerald-600, .bg-rose-600,
+  .bg-amber-600, .bg-sky-600, .bg-teal-600,
+  .bg-indigo-600 {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Featured story blockquote */
+  blockquote {
+    background-color: rgb(255, 255, 255) !important;
+    border-left: 4px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Tag borders */
+  [class*="border-slate-200"] {
+    border-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Filter tabs - active */
+  [class*="bg-[#1a1a2e]"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Story cards - white bg, black border, remove shadows */
+  article[class*="bg-white"] {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+    box-shadow: none !important;
+  }
+  
+  /* Ring borders on cards - replace with border */
+  [class*="ring-1"][class*="ring-slate"] {
+    --tw-ring-color: transparent !important;
+    box-shadow: none !important;
+    border: 1px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* ── EVENTS PAGE: High contrast overrides ── */
+  
+  /* Event category chips - preserve white text on colored hex backgrounds */
+  [class*="bg-[#0B5F8A]"][class*="text-white"],
+  [class*="bg-[#6F3E96]"][class*="text-white"],
+  [class*="bg-[#29b6c8]"][class*="text-white"],
+  [class*="bg-[#D6336C]"][class*="text-white"],
+  [class*="bg-[#1a1a2e]"][class*="text-white"] {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Event category colored bars and accents - force black */
+  [class*="bg-[#0B5F8A]"],
+  [class*="bg-[#6F3E96]"],
+  [class*="bg-[#29b6c8]"],
+  [class*="bg-[#D6336C]"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Event category text colors - force black */
+  [class*="text-[#0B5F8A]"],
+  [class*="text-[#6F3E96]"],
+  [class*="text-[#29b6c8]"],
+  [class*="text-[#D6336C]"] {
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Event urgency badges - white bg with black text and border */
+  [class*="bg-[rgba(247,197,43"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Event icon circles - white bg with black border */
+  [class*="bg-[#eaf5fb]"] {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Event detail hero - keep dark overlay for white text */
+  [class*="from-black/95"][class*="via-black/60"] {
+    background: rgb(0, 0, 0) !important;
+    background-image: none !important;
+  }
+  
+  /* Event stat boxes - white bg with black border */
+  [class*="bg-[rgba(111,62,150,0.1)"],
+  [class*="bg-[rgba(247,197,43,0.18)"] {
+    background-color: rgb(255, 255, 255) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Event payment method icons & credential icons - white icon on black bg */
+  [class*="bg-blue-100"][class*="text-blue-600"],
+  [class*="bg-amber-100"][class*="text-amber-600"],
+  [class*="bg-green-100"][class*="text-green-600"],
+  [class*="bg-purple-100"][class*="text-purple-600"],
+  [class*="bg-pink-100"][class*="text-pink-600"],
+  [class*="bg-red-100"][class*="text-red-600"],
+  [class*="bg-indigo-100"][class*="text-indigo-600"],
+  [class*="bg-teal-100"][class*="text-teal-600"] {
+    background-color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(255, 255, 255) !important;
+  }
+  [class*="bg-blue-100"][class*="text-blue-600"] svg,
+  [class*="bg-amber-100"][class*="text-amber-600"] svg,
+  [class*="bg-green-100"][class*="text-green-600"] svg,
+  [class*="bg-purple-100"][class*="text-purple-600"] svg,
+  [class*="bg-pink-100"][class*="text-pink-600"] svg,
+  [class*="bg-red-100"][class*="text-red-600"] svg,
+  [class*="bg-indigo-100"][class*="text-indigo-600"] svg,
+  [class*="bg-teal-100"][class*="text-teal-600"] svg {
+    color: rgb(255, 255, 255) !important;
+  }
+  
+  /* Event success/verification check circle - black with white icon */
+  [class*="bg-green-500"] {
+    background-color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Event past event badge - white bg with black text */
+  [class*="bg-slate-100"][class*="text-slate-500"] {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+  }
+  
+  /* Event gradient text - force solid color (bg-clip:text makes text invisible) */
+  [class*="bg-clip-text"][class*="text-transparent"] {
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Event hero pill with backdrop-blur - keep readable */
+  [class*="rounded-full"][class*="backdrop-blur"] {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid rgb(0, 0, 0) !important;
+    color: rgb(0, 0, 0) !important;
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION MODE
+   ============================================================================ */
+
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ============================================================================
+   SENSORY-FRIENDLY MODE (Comprehensive autism-informed mode)
+   ============================================================================ */
+
+body.sensory-friendly {
+  /* DO NOT apply filter to body - it breaks position:fixed! */
+  /* We'll apply filter to specific elements instead */
+  
+  /* Increase line height for better readability */
+  --a11y-line-height: 1.7;
+  
+  /* Softer shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
+  
+  /* Reduce spacing intensity */
+  letter-spacing: 0.01em;
+}
+
+/* Apply saturation filter ONLY to specific content areas to preserve position:fixed */
+/* DO NOT apply to body, html, layout containers, or any potential parent of fixed elements */
+body.sensory-friendly main > * {
+  filter: saturate(0.8);
+}
+
+body.sensory-friendly header > *,
+body.sensory-friendly footer > *,
+body.sensory-friendly nav > * {
+  filter: saturate(0.8);
+}
+
+body.sensory-friendly section,
+body.sensory-friendly article {
+  filter: saturate(0.8);
+}
+
+/* Explicitly prevent filter on layout containers that might contain fixed elements */
+body.sensory-friendly .website-layout,
+body.sensory-friendly [class*="layout"] {
+  filter: none !important;
+  transform: none !important;
+  perspective: none !important;
+  will-change: auto !important;
+}
+
+/* Ensure accessibility widgets and their parents are NEVER filtered or transformed */
+body.sensory-friendly .accessibility-button,
+body.sensory-friendly .accessibility-panel {
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Kill all animations and transitions (except accessibility widgets and their children) */
+body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *),
+body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *)::before,
+body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *)::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* CRITICAL: Explicitly maintain accessibility widget positioning in sensory mode */
+/* Using multiple selectors for maximum specificity */
+.accessibility-button,
+button.accessibility-button,
+button[aria-label="Accessibility options"].accessibility-button,
+body .accessibility-button,
+body button.accessibility-button,
+body button[aria-label="Accessibility options"].accessibility-button {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 9999 !important;
+  transform: none !important;
+}
+
+/* Extra protection in sensory mode */
+body.sensory-friendly .accessibility-button,
+body.sensory-friendly button.accessibility-button,
+body.sensory-friendly button[aria-label="Accessibility options"] {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 9999 !important;
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  min-width: 3.5rem !important;
+  min-height: 3.5rem !important;
+  max-width: 3.5rem !important;
+  max-height: 3.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  inset: auto 1.5rem 1.5rem auto !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.accessibility-panel,
+div.accessibility-panel,
+body .accessibility-panel,
+body div.accessibility-panel {
+  position: fixed !important;
+  bottom: 6rem !important;
+  right: 1.5rem !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 9999 !important;
+}
+
+body.sensory-friendly .accessibility-panel,
+body.sensory-friendly div.accessibility-panel {
+  position: fixed !important;
+  bottom: 6rem !important;
+  right: 1.5rem !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 9999 !important;
+  max-height: calc(100vh - 140px) !important;
+  transform: none !important;
+  margin: 0 !important;
+  inset: auto 1.5rem 6rem auto !important;
+}
+
+/* Hide decorative elements */
+body.sensory-friendly .decorative-bg,
+body.sensory-friendly .pattern-overlay,
+body.sensory-friendly [aria-hidden="true"]:not(svg) {
+  opacity: 0.3;
+}
+
+/* Disable specific animations */
+body.sensory-friendly .animate-pulse,
+body.sensory-friendly .animate-bounce,
+body.sensory-friendly .animate-spin,
+body.sensory-friendly .animate-dot-pulse,
+body.sensory-friendly .animate-ping {
+  animation: none !important;
+}
+
+/* Simplify gradients to solid colors */
+body.sensory-friendly .gradient-ocean,
+body.sensory-friendly .gradient-purple,
+body.sensory-friendly [class*="gradient-"] {
+  background: rgb(var(--brand-primary)) !important;
+  background-image: none !important;
+}
+
+/* Remove background patterns */
+body.sensory-friendly .pattern-confetti,
+body.sensory-friendly .texture-diagonal,
+body.sensory-friendly [class*="pattern-"],
+body.sensory-friendly [class*="texture-"] {
+  background-image: none !important;
+  background: transparent !important;
+}
+
+/* Simplify hover effects - remove transforms (except accessibility widgets) */
+body.sensory-friendly *:not(.accessibility-button):not(.accessibility-panel):not([aria-label="Accessibility options"]):hover {
+  transform: none !important;
+}
+
+/* Stop parallax effects (except accessibility widgets) */
+body.sensory-friendly [data-parallax]:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly .parallax:not(.accessibility-button):not(.accessibility-panel) {
+  transform: none !important;
+}
+
+/* Disable autoplay videos/carousels */
+body.sensory-friendly video[autoplay] {
+  animation-play-state: paused !important;
+}
+
+/* Reduce intensity of focus indicators */
+body.sensory-friendly *:focus-visible {
+  outline-width: 2px;
+  outline-offset: 2px;
+}
+
+/* Simplify card shadows (except accessibility widgets) */
+body.sensory-friendly .card:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly [class*="shadow-"]:not(.accessibility-button):not(.accessibility-panel) {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Remove backdrop blur effects */
+body.sensory-friendly .backdrop-blur,
+body.sensory-friendly [class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+}
+
+/* Simplify navbar effects */
+body.sensory-friendly .navbar-shrink.scrolled {
+  backdrop-filter: none !important;
+  background: white !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Remove pulsing notification badges */
+body.sensory-friendly .notification-badge,
+body.sensory-friendly .badge-pulse {
+  animation: none !important;
+}
+
+/* Simplify skeleton loaders - no shimmer */
+body.sensory-friendly .skeleton,
+body.sensory-friendly [class*="skeleton"] {
+  animation: none !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Remove marquee/scrolling text effects */
+body.sensory-friendly marquee,
+body.sensory-friendly .marquee,
+body.sensory-friendly [class*="scroll-text"] {
+  animation: none !important;
+  white-space: normal !important;
+}
+
+/* Disable confetti/particle effects */
+body.sensory-friendly .confetti,
+body.sensory-friendly .particles,
+body.sensory-friendly canvas[class*="particle"],
+body.sensory-friendly canvas[class*="confetti"] {
+  display: none !important;
+}
+
+/* Simplify loading spinners to static */
+body.sensory-friendly .spinner,
+body.sensory-friendly .loading-spinner,
+body.sensory-friendly [class*="spin"] {
+  animation: none !important;
+}
+
+/* Show static alternative for loading state */
+body.sensory-friendly .spinner::after {
+  content: '⏳';
+  font-size: 1.5rem;
+}
+
+/* Remove Ken Burns effect on images (except accessibility widgets) */
+body.sensory-friendly img[class*="zoom"]:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly .ken-burns:not(.accessibility-button):not(.accessibility-panel) {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Disable typewriter effects */
+body.sensory-friendly .typewriter,
+body.sensory-friendly [class*="type-"] {
+  animation: none !important;
+}
+
+/* Remove flickering/blinking elements */
+body.sensory-friendly .blink,
+body.sensory-friendly .flicker {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* Simplify modal/dialog animations */
+body.sensory-friendly .modal,
+body.sensory-friendly .dialog,
+body.sensory-friendly [role="dialog"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Reduce carousel/slider motion */
+body.sensory-friendly .carousel,
+body.sensory-friendly .slider,
+body.sensory-friendly [class*="swiper"] {
+  scroll-behavior: auto !important;
+}
+
+body.sensory-friendly .carousel-item,
+body.sensory-friendly .slide {
+  transition: none !important;
+}
+
+/* Remove wave/ripple effects */
+body.sensory-friendly .wave,
+body.sensory-friendly .ripple,
+body.sensory-friendly [class*="wave-"],
+body.sensory-friendly [class*="ripple-"] {
+  animation: none !important;
+}
+
+/* Simplify progress bars - no animations */
+body.sensory-friendly .progress-bar,
+body.sensory-friendly progress {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Remove floating/levitating animations (except accessibility widgets) */
+body.sensory-friendly .float:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly .levitate:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly [class*="float-"]:not(.accessibility-button):not(.accessibility-panel) {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Disable slide-in/fade-in on scroll (except accessibility widgets) */
+body.sensory-friendly [data-aos]:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly .fade-in:not(.accessibility-button):not(.accessibility-panel),
+body.sensory-friendly .slide-in:not(.accessibility-button):not(.accessibility-panel) {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Remove glow effects */
+body.sensory-friendly .glow,
+body.sensory-friendly [class*="glow-"] {
+  animation: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================================
+   DYSLEXIA-FRIENDLY FONT
+   ============================================================================ */
+
+body.dyslexia-font,
+body.dyslexia-font * {
+  font-family: var(--font-dyslexic) !important;
+  letter-spacing: 0.02em;
+}
+
+/* Maintain font weight variations */
+body.dyslexia-font strong,
+body.dyslexia-font b,
+body.dyslexia-font .font-bold {
+  font-weight: 700;
+}
+
+body.dyslexia-font em,
+body.dyslexia-font i {
+  font-style: italic;
+}
+
+/* Don't apply to code blocks */
+body.dyslexia-font code,
+body.dyslexia-font pre {
+  font-family: var(--font-mono) !important;
+}
+
+/* Helper class for testing font directly (without full body class) */
+.dyslexia-font {
+  font-family: var(--font-dyslexic) !important;
+  letter-spacing: 0.02em;
+}
+
+.dyslexia-font strong,
+.dyslexia-font b {
+  font-weight: 700;
+}
+
+.dyslexia-font em,
+.dyslexia-font i {
+  font-style: italic;
+}
+
+/* ============================================================================
+   LINK HIGHLIGHTING
+   ============================================================================ */
+
+body.link-highlight a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+body.link-highlight a:hover {
+  text-decoration-thickness: 3px;
+  background-color: rgba(63, 171, 222, 0.1);
+}
+
+/* ============================================================================
+   READING MODE (Distraction-free content)
+   ============================================================================ */
+
+body.reading-mode {
+  background: oklch(0.98 0.005 20);
+}
+
+body.reading-mode .website-layout {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Hide non-essential elements in reading mode */
+body.reading-mode aside:not([role="complementary"]),
+body.reading-mode .sidebar:not([role="navigation"]),
+body.reading-mode .decorative-bg,
+body.reading-mode .hero-bg {
+  display: none;
+}
+
+/* Focus on content */
+body.reading-mode main {
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================================
+   PRINT STYLES - Preserve accessibility settings
+   ============================================================================ */
+
+@media print {
+  /* Reset animations for printing */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* Preserve high contrast */
+  body.high-contrast {
+    background: white;
+    color: black;
+  }
+  
+  body.high-contrast a {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  /* Preserve dyslexia font */
+  body.dyslexia-font,
+  body.dyslexia-font * {
+    font-family: var(--font-dyslexic) !important;
+  }
+  
+  /* Hide accessibility controls */
+  .accessibility-button,
+  .accessibility-toolbar,
+  .accessibility-panel {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   SYSTEM PREFERENCES - Respect user's OS settings
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --a11y-contrast-multiplier: 1.2;
+  }
+}
+
+@media (forced-colors: active) {
+  /* Windows High Contrast Mode - use system colors */
+  * {
+    forced-color-adjust: auto;
+  }
+}
+
+/* ============================================================================
+   FOCUS INDICATORS - Enhanced visibility
+   ============================================================================ */
+
+*:focus-visible {
+  outline: 3px solid oklch(0.68 0.11 230);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body.high-contrast *:focus-visible {
+  outline: 3px solid oklch(0 0 0);
+  outline-offset: 3px;
+}
+
+body.sensory-friendly *:focus-visible {
+  outline: 4px solid oklch(0.68 0.11 230);
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   SKIP TO CONTENT LINK
+   ============================================================================ */
+
+.skip-to-main {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  background: oklch(0.68 0.11 230);
+  color: white;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 8px 0;
+  z-index: 9999;
+}
+
+.skip-to-main:focus {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  overflow: visible;
+}
+
+/* ============================================================================
+   SCREEN READER ONLY - Hide visually but keep for screen readers
+   ============================================================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================================================
+   HIGH CONTRAST - Team Cards (appended last to beat Tailwind layer cascade)
+   ============================================================================ */
+
+body.high-contrast .team-card img {
+  filter: grayscale(1) contrast(1.1) !important;
+}
+
+body.high-contrast .team-card [style*="linear-gradient"] {
+  background: rgba(0, 0, 0, 0.95) !important;
+  background-image: none !important;
+}
+
+body.high-contrast .team-card [style*="linear-gradient"] h3,
+body.high-contrast .team-card [style*="linear-gradient"] p,
+body.high-contrast .team-card [style*="linear-gradient"] a,
+body.high-contrast .team-card [style*="linear-gradient"] span {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+body.high-contrast .team-card [class*="text-white/70"]:hover {
+  color: #ffffff !important;
+}
+
+/* ============================================================================
+   HIGH CONTRAST - Podcast Cards
+   ============================================================================ */
+
+body.high-contrast .group:has(h3) {
+  /* Podcast cards - ensure text is visible */
+  text-decoration: none !important;
+}
+
+body.high-contrast .podcast-card h3,
+body.high-contrast .podcast-card p,
+body.high-contrast .podcast-card span:not([class*="bg-"]) {
+  color: rgb(0, 0, 0) !important;
+  text-decoration: none !important;
+}
+
+body.high-contrast .group button[class*="bg-brand-primary"],
+body.high-contrast .group button[class*="bg-brand-primary"] * {
+  background-color: rgb(0, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+  border: 2px solid rgb(0, 0, 0) !important;
+}
+
+/* Episode and duration badges */
+body.high-contrast .group [class*="bg-brand-primary"] {
+  background-color: rgb(0, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+body.high-contrast .group [class*="bg-black"] {
+  background-color: rgb(0, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+/* Podcast card thumbnail container - keep dark background for contrast */
+body.high-contrast .group [class*="bg-gray-900"],
+body.high-contrast .group [class*="aspect-video"] {
+  background-color: rgb(30, 30, 30) !important;
+}
+
+/* Ensure Next.js Image components are visible with grayscale filter */
+body.high-contrast .group [class*="aspect-video"] img,
+body.high-contrast .group img[alt] {
+  filter: grayscale(1) contrast(1.4) brightness(1.1) !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Image container should be visible */
+body.high-contrast .group [class*="aspect-video"] > div {
+  opacity: 1 !important;
+}
+
+/* Loading placeholder should be visible */
+body.high-contrast .group [class*="animate-pulse"] {
+  background-color: rgb(100, 100, 100) !important;
+  opacity: 1 !important;
+}
+
+/* Play button should be white with black icon in high contrast */
+body.high-contrast .group button[aria-label*="Play"] > div {
+  background-color: rgb(255, 255, 255) !important;
+  border: 2px solid rgb(0, 0, 0) !important;
+}
+
+body.high-contrast .group button[aria-label*="Play"] svg {
+  color: rgb(0, 0, 0) !important;
 }
