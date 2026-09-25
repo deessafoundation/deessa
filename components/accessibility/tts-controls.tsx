@@ -196,8 +196,7 @@ export function TtsControls() {
         </PanelNotice>
       ) : null}
 
-      {/* Translation fell back to English for some or all of the page. Shown
-          so nobody assumes they heard a Nepali rendering of everything. */}
+      {/* Nepali playback stops when any section remains untranslated. */}
       {!errorMessage && translationOutcome !== "none" ? (
         <PanelNotice tone="warning" icon={<Languages className="size-4" />}>
           <p className="font-semibold">

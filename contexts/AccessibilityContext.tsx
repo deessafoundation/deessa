@@ -42,6 +42,7 @@ import { chunkText } from "@/lib/tts/text-normalizer"
 import { translateSectionsToNepali } from "@/lib/tts/translator"
 import {
   TTS_ATTRIBUTES,
+  TTS_EVENTS,
   TTS_LIMITS,
   type SpeechSection,
   type SupportedSpeechLocale,
@@ -49,7 +50,7 @@ import {
   type TtsStatus,
   type TtsVoice,
 } from "@/lib/tts/types"
-import type { WebSpeechTtsProvider } from "@/lib/tts/providers/web-speech-provider"
+import type { CompositeTtsProvider } from "@/lib/tts/providers/composite-tts-provider"
 
 interface AccessibilityContextValue {
   // Panel
@@ -90,8 +91,8 @@ interface AccessibilityContextValue {
    */
   substituteVoice: { name: string; lang: string } | null
   /**
-   * Outcome of the last Nepali translation pass. "partial" means some sections
-   * fell back to English; "failed" means none could be translated.
+   * Outcome of the last Nepali translation pass. Playback waits for every
+   * section; "partial" means some failed, "failed" means none translated.
    */
   translationOutcome: "none" | "partial" | "failed"
   errorCode: TtsErrorCode | null
@@ -143,7 +144,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   const [sectionCount, setSectionCount] = useState(0)
   const [currentSectionIndex, setCurrentSectionIndex] = useState(-1)
 
-  const providerRef = useRef<WebSpeechTtsProvider | null>(null)
+  const providerRef = useRef<CompositeTtsProvider | null>(null)
   const sectionsRef = useRef<SpeechSection[]>([])
   const playbackTokenRef = useRef(0)
   const highlightedRef = useRef<HTMLElement | null>(null)
@@ -216,7 +217,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const applyHighlight = useCallback(
-    (element: HTMLElement) => {
+    (element: HTMLElement, scrollTarget: HTMLElement = element) => {
       clearHighlight()
       if (!preferencesRef.current.highlight) return
       if (!element.isConnected) return
@@ -225,7 +226,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       highlightedRef.current = element
 
       // Scroll only when the section is substantially outside the viewport.
-      const rect = element.getBoundingClientRect()
+      const rect = scrollTarget.getBoundingClientRect()
       const viewportHeight =
         window.innerHeight || document.documentElement.clientHeight
       const isComfortablyVisible = rect.top >= 0 && rect.bottom <= viewportHeight
@@ -235,7 +236,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
         preferencesRef.current.reduceMotion ||
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-      element.scrollIntoView({
+      scrollTarget.scrollIntoView({
         behavior: prefersReducedMotion ? "auto" : "smooth",
         block: "center",
       })
@@ -246,7 +247,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   // ── Provider bootstrap (lazy) ────────────────────────────────────────────
 
   const ensureProvider =
-    useCallback(async (): Promise<WebSpeechTtsProvider | null> => {
+    useCallback(async (): Promise<CompositeTtsProvider | null> => {
       if (providerRef.current) return providerRef.current
       if (typeof window === "undefined") return null
 
@@ -257,10 +258,13 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const { WebSpeechTtsProvider: Provider } = await import(
-          "@/lib/tts/providers/web-speech-provider"
+        const { CompositeTtsProvider: Provider } = await import(
+          "@/lib/tts/providers/composite-tts-provider"
         )
-        const provider = new Provider()
+        // Nepali is routed to the cloud neural voice when a server key is set;
+        // English stays on the browser voice, and Nepali falls back to the
+        // browser (Hindi-substitute) voice when no cloud key is configured.
+        const provider = new Provider(["ne-NP"])
         if (!provider.isSupported()) {
           setIsSupported(false)
           setStatus("unsupported")
@@ -347,6 +351,12 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       const token = ++playbackTokenRef.current
       const isCurrent = () => playbackTokenRef.current === token
 
+      // Section navigation replaces the current utterance. Cancel it before
+      // translation/voice lookup so old audio cannot keep playing or race the
+      // next section's audio request.
+      providerRef.current?.stop()
+      clearHighlight()
+
       setErrorCode(null)
       setStatus("loading")
 
@@ -366,7 +376,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       const preferredLocale = preferencesRef.current.locale
 
       // ── Nepali reading mode ────────────────────────────────────────────────
-      // The site is authored in English, so sections that merely inherited the
+      // The site is authored in English, so sections that inherited the
       // Nepali preference are translated before they are spoken. This runs on
       // the already-extracted list, so reading order and every extraction rule
       // (skipped video/iframe media, hidden and duplicate content, sensitive
@@ -382,12 +392,15 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
             outcome = result.translated > 0 ? "partial" : "failed"
           }
         } catch {
-          // Translation is best-effort: keep the English sections and read them
-          // with an English voice rather than failing the whole read.
+          // Never speak the original English sections in Nepali mode.
           if (!isCurrent()) return
           outcome = "failed"
         }
         setTranslationOutcome(outcome)
+        if (outcome !== "none") {
+          setStatus("error")
+          return
+        }
         setStatus("loading")
       } else {
         setTranslationOutcome("none")
@@ -437,8 +450,21 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
         // No voice for this section's language: skip rather than mispronounce.
         if (!speakable.has(section.locale)) continue
 
+        if (section.element.hasAttribute(TTS_ATTRIBUTES.carouselSlide)) {
+          section.element.dispatchEvent(
+            new Event(TTS_EVENTS.activateCarouselSlide, { bubbles: true })
+          )
+        }
         setCurrentSectionIndex(index)
-        applyHighlight(section.element)
+        // Cue the spoken hero text, while keeping scrollIntoView anchored to
+        // the stable carousel during its slide transition.
+        const carousel = section.element.hasAttribute(TTS_ATTRIBUTES.carouselSlide)
+          ? section.element.closest<HTMLElement>("[aria-roledescription='carousel']")
+          : null
+        const highlightElement = carousel
+          ? section.element.querySelector<HTMLElement>("[data-tts-highlight-target]") ?? section.element
+          : section.element
+        applyHighlight(highlightElement, carousel ?? highlightElement)
 
         const chunks = chunkText(section.text, TTS_LIMITS.maxCharsPerUtterance)
 

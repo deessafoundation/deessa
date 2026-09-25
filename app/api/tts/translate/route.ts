@@ -48,6 +48,21 @@ const LIMITS = {
  */
 const CACHE_LIMIT = 8_000
 const cache = new Map<string, string>()
+const LATIN_LETTERS = /[A-Za-z]/g
+const DEVANAGARI_CHARACTERS = /[\u0900-\u097F]/g
+
+/** A provider can return the English source unchanged while reporting success. */
+function isNepaliResult(source: string, translated: string): boolean {
+  if (!translated.trim()) return false
+  const sourceLatin = (source.match(LATIN_LETTERS) ?? []).length
+  if (sourceLatin > 0 && translated.trim().toLowerCase() === source.trim().toLowerCase()) {
+    return false
+  }
+  if (sourceLatin < 20) return true
+  const translatedLatin = (translated.match(LATIN_LETTERS) ?? []).length
+  const translatedNepali = (translated.match(DEVANAGARI_CHARACTERS) ?? []).length
+  return translatedNepali > translatedLatin
+}
 
 function cacheGet(key: string): string | undefined {
   return cache.get(key)
@@ -181,7 +196,7 @@ async function translatePiece(text: string): Promise<string | null> {
   for (const provider of PROVIDERS) {
     try {
       const result = await provider(text)
-      if (result) return result
+      if (result && isNepaliResult(text, result)) return result
     } catch {
       // Network error, timeout or malformed payload: try the next provider.
     }
@@ -245,7 +260,7 @@ async function translateBatchViaGoogle(
   if (lines.length !== texts.length) return null
 
   const trimmed = lines.map((line) => line.trim())
-  if (trimmed.some((line) => line.length === 0)) return null
+  if (trimmed.some((line, index) => !isNepaliResult(texts[index]!, line))) return null
   return trimmed
 }
 
@@ -313,7 +328,8 @@ async function translateMany(
         continue
       }
       try {
-        out.set(source, await translateSection(source))
+        const translated = await translateSection(source)
+        out.set(source, translated && isNepaliResult(source, translated) ? translated : null)
       } catch {
         out.set(source, null)
       }
@@ -400,7 +416,8 @@ export async function POST(request: Request): Promise<Response> {
   const seen = new Set<string>()
   for (const text of texts) {
     if (!text.trim()) continue
-    if (cacheGet(`${TARGET_LANG}::${text}`) !== undefined) continue
+    const cached = cacheGet(`${TARGET_LANG}::${text}`)
+    if (cached !== undefined && isNepaliResult(text, cached)) continue
     if (seen.has(text)) continue
     seen.add(text)
     sources.push(text)
@@ -409,17 +426,18 @@ export async function POST(request: Request): Promise<Response> {
   if (sources.length > 0) {
     const fresh = await translateMany(sources)
     for (const [source, translated] of fresh) {
-      if (translated) cacheSet(`${TARGET_LANG}::${source}`, translated)
+      if (translated && isNepaliResult(source, translated)) {
+        cacheSet(`${TARGET_LANG}::${source}`, translated)
+      }
     }
   }
 
   let failed = 0
   const translations = texts.map((text) => {
     const cached = cacheGet(`${TARGET_LANG}::${text}`)
-    if (cached !== undefined) return cached
+    if (cached !== undefined && isNepaliResult(text, cached)) return cached
     failed += 1
-    // null tells the client to keep English for this section and read it with
-    // an English voice, rather than mispronouncing it with a Nepali one.
+    // null tells the client to stop Nepali playback and offer a retry.
     return null
   })
 

@@ -25,6 +25,14 @@ export async function sendSupportReplyEmail(opts: { to: string; toName?: string;
     reportStatus: opts.reportStatus,
   })
 
+  // Fail fast with a clear error if the SMTP credentials are wrong/unreachable.
+  try {
+    await transporter.verify()
+  } catch (verifyError) {
+    const detail = verifyError instanceof Error ? verifyError.message : String(verifyError)
+    throw new Error(`Email server connection failed: ${detail}`)
+  }
+
   await transporter.sendMail({
     from: `"DEESSA Foundation" <${orgEmail}>`,
     to: opts.to,
@@ -32,13 +40,18 @@ export async function sendSupportReplyEmail(opts: { to: string; toName?: string;
     html,
   })
 
-  // Log reply in support_admin_actions table (preserve who performed it when provided)
-  const supabase = createServiceRoleClient()
-  await supabase.from('support_admin_actions').insert({
-    report_id: opts.reportId,
-    action_type: 'sent-reply',
-    payload: { to: opts.to, subject: opts.subject, reportStatus: opts.reportStatus ?? null },
-    performed_by: opts.performed_by || 'admin',
-    created_at: new Date().toISOString(),
-  })
+  // Log reply in support_admin_actions table (preserve who performed it when provided).
+  // The email already went out — a logging failure must not surface as a send failure.
+  try {
+    const supabase = createServiceRoleClient()
+    await supabase.from('support_admin_actions').insert({
+      report_id: opts.reportId,
+      action_type: 'sent-reply',
+      payload: { to: opts.to, subject: opts.subject, reportStatus: opts.reportStatus ?? null },
+      performed_by: opts.performed_by || 'admin',
+      created_at: new Date().toISOString(),
+    })
+  } catch (logError) {
+    console.error('Support reply sent but audit log insert failed:', logError)
+  }
 }

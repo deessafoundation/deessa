@@ -16,4 +16,10 @@ describe("normalizeForSpeech", () => {
       "दीसा Foundation"
     )
   })
+
+  it("speaks 2022 as Nepali words in Nepali mode", () => {
+    expect(normalizeForSpeech("Founded in 2022", "ne-NP")).toBe(
+      "Founded in सन् दुई हजार बाइस"
+    )
+  })
 })

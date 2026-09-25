@@ -3,6 +3,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
 
 interface Testimonial {
   quote: string
@@ -64,6 +65,17 @@ export const CircularTestimonials = ({
   imageHeight = "24rem",
   videoAutoplay = true,
 }: CircularTestimonialsProps) => {
+  // While the screen reader (TTS) is reading, the testimonial video must stay
+  // silent so it never talks over the spoken text. Read the shared TTS status;
+  // the hook is optional so the carousel still works outside the provider.
+  const accessibility = useOptionalAccessibility()
+  const ttsStatus = accessibility?.status
+  const isTtsActive =
+    ttsStatus === "loading" ||
+    ttsStatus === "translating" ||
+    ttsStatus === "speaking" ||
+    ttsStatus === "paused"
+
   // Color & font config
   const colorName = colors.name ?? "#000"
   const colorDesignation = colors.designation ?? "#6b7280"
@@ -181,9 +193,11 @@ export const CircularTestimonials = ({
   }, [activeIndex])
 
   // Start the active speaker video only when this section is in view. Audio is
-  // explicitly enabled, and every other video remains paused.
+  // explicitly enabled, and every other video remains paused. While TTS is
+  // reading, autoplay is suppressed and any playing video is paused so speech
+  // is the only audio source.
   useEffect(() => {
-    if (!isInViewport) {
+    if (!isInViewport || isTtsActive) {
       Object.values(videoRefs.current).forEach((video) => video?.pause())
       return
     }
@@ -196,7 +210,7 @@ export const CircularTestimonials = ({
     activeVideo.muted = false
     const playPromise = activeVideo.play()
     playPromise?.catch(() => undefined)
-  }, [activeIndex, isInViewport, videoAutoplay])
+  }, [activeIndex, isInViewport, videoAutoplay, isTtsActive])
 
   // Navigation handlers
   const handleNext = useCallback(() => {

@@ -143,7 +143,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 4: HOW WE DO IT */}
-      <section className="bg-[#f8f6f1] py-12 sm:py-20 lg:py-[90px]">
+      <section className="bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
@@ -178,7 +178,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                     style={{ borderColor: step.color }}
                     aria-hidden
                   />
-                  <p className="font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
+                  <p data-tts-ignore="" className="font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
                     {String(i + 1).padStart(2, "0")}
                   </p>
                   <h3 className="font-comic mb-3 text-[17px] font-bold" style={{ color: DARK }}>
@@ -193,7 +193,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           <motion.p
             {...reveal}
             transition={{ duration: 0.6 }}
-            className="font-marissa mx-auto mt-10 max-w-[700px] text-center text-2xl italic leading-snug sm:mt-16"
+            className="font-marissa mx-auto mt-8 max-w-[700px] text-center text-2xl italic leading-snug sm:mt-10"
             style={{ color: DARK }}
           >
             {howWeDoItContent.closingLine}
@@ -293,7 +293,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       <OrgStructure />
 
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
-      <section className="bg-[#f8f6f1] py-12 sm:py-20 lg:py-[90px]" id="team">
+      <section className="bg-white py-10 sm:py-14 lg:py-16" id="team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
@@ -394,39 +394,43 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 7: PARTNERS & SUPPORTERS */}
-      <section className="bg-white py-12 sm:py-20 lg:py-[90px]" id="partners">
-        <div className="mx-auto max-w-5xl px-4 md:px-8">
+      <section className="bg-white py-12 sm:py-16 lg:py-20" id="partners">
+        <div className="mx-auto max-w-[1500px] px-5 sm:px-14 lg:px-[8%]">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
+            className="flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:text-left"
           >
-            <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
+            {/* Left: Heading block */}
+            <div className="max-w-[38rem] lg:shrink-0">
+              <span className="font-comic mb-1 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
                 Collaboration
               </span>
               <h2 className="font-marissa text-2xl font-medium text-[#0b76b7] md:text-3xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
                 Our Partners <span className="font-comic-num">&</span> Supporters
               </h2>
-              <p className="font-dm-sans mt-3 text-[15px] text-[#6b7280]">
+              <p className="font-dm-sans mt-2 text-[15px] text-[#6b7280]">
                 Working across sectors with organizations who share our vision.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
+
+            {/* Right: Horizontal icon row */}
+            <div className="flex w-full flex-wrap items-stretch justify-center gap-3 sm:gap-4 lg:w-auto lg:flex-nowrap lg:justify-end">
               {partnerCategories.map((partner) => {
                 const Icon = partner.icon
                 return (
                   <div
                     key={partner.label}
-                    className="group flex min-h-32 min-w-0 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg sm:min-h-40 sm:p-6"
+                    className="group flex min-w-[86px] flex-1 basis-[28%] flex-col items-center justify-center gap-2 rounded-2xl border border-[#e2eef6] bg-[#f7fbfe] p-3 text-center shadow-[0_4px_18px_rgba(25,100,145,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#bfe1f4] hover:shadow-[0_10px_26px_rgba(25,100,145,0.1)] sm:basis-auto sm:px-4 sm:py-4 lg:min-w-[92px]"
                   >
                     <div
-                      className={`flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
+                      className={`flex size-11 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110 sm:size-12`}
                     >
                       <Icon className="size-6" />
                     </div>
-                    <span className="font-comic text-[13px] font-bold uppercase tracking-wide" style={{ color: DARK }}>
+                    <span className="font-comic text-[12px] font-bold uppercase tracking-wide sm:text-[13px]" style={{ color: DARK }}>
                       {partner.label}
                     </span>
                   </div>

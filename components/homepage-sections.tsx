@@ -344,7 +344,7 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                     <div className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
-                    <h3 className="text-xl font-black mb-3 text-[#1a1a2e]">
+                    <h3 className="text-xl font-black mb-3 text-[#1a1a2e]" style={{ WebkitTextStroke: "0.5px currentColor" }}>
                       {pillar.title.split("&").map((part, i, arr) =>
                         i === arr.length - 1 ? (
                           <span key={i}>{part}</span>
@@ -1124,7 +1124,7 @@ export function ContactSection() {
             })}
           </div>
           <ScrollReveal animation="scale-in" delay={200}>
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]" data-tts-ignore="">
               <iframe
                 src={`https://www.google.com/maps?q=${encodeURIComponent("Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal")}&output=embed&z=16`}
                 width="100%"

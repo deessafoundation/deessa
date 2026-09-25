@@ -67,6 +67,10 @@ const PRONUNCIATION_DICTIONARY: Record<
     ["PDF", "पी डी एफ"],
     ["Rs.", "रुपैयाँ"],
     ["Rs", "रुपैयाँ"],
+    // Years occur throughout the site's story and impact content. Spell this
+    // one out so Nepali and Hindi substitute voices do not read its digits as
+    // English numerals.
+    ["2022", "सन् दुई हजार बाइस"],
   ],
 }
 

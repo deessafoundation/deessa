@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
 import { cn } from "@/lib/utils"
+import { TTS_ATTRIBUTES, TTS_EVENTS } from "@/lib/tts/types"
 
 export interface HeroSlide {
   id?: string
@@ -68,7 +69,11 @@ function getHeroImagePositionClass(slide: HeroSlide) {
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
   const accessibility = useOptionalAccessibility()
-  const isPageReading = accessibility?.status === "loading" || accessibility?.status === "translating" || accessibility?.status === "speaking"
+  const isPageReading =
+    accessibility?.status === "loading" ||
+    accessibility?.status === "translating" ||
+    accessibility?.status === "speaking" ||
+    accessibility?.status === "paused"
   const [current, setCurrent] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [direction, setDirection] = useState<"next" | "prev">("next")
@@ -104,6 +109,25 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
   const prev = useCallback(() => {
     goTo((current - 1 + slides.length) % slides.length, "prev")
   }, [current, slides.length, goTo])
+
+  useEffect(() => {
+    const carousel = sectionRef.current
+    if (!carousel) return
+
+    const activateSpokenSlide = (event: Event) => {
+      const target = event.target
+      if (!(target instanceof HTMLElement)) return
+      const slideIndex = target.getAttribute(TTS_ATTRIBUTES.carouselSlide)
+      if (slideIndex === null) return
+      const index = Number(slideIndex)
+      if (Number.isInteger(index) && index >= 0 && index < slides.length && index !== current) {
+        goTo(index)
+      }
+    }
+
+    carousel.addEventListener(TTS_EVENTS.activateCarouselSlide, activateSpokenSlide)
+    return () => carousel.removeEventListener(TTS_EVENTS.activateCarouselSlide, activateSpokenSlide)
+  }, [current, goTo, slides.length])
 
   const getSlidePositionClass = (index: number) => {
     if (index === current) return "translate-x-0 opacity-100 z-20"
@@ -161,6 +185,8 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
           aria-roledescription="slide"
           aria-label={`${i + 1} of ${slides.length}: ${slide.title}`}
           aria-hidden={i !== current}
+          data-tts-carousel-slide={i}
+          data-tts-text={`${slide.title}. ${slide.subtitle}. ${slide.cta}. Explore Programs.`}
           className={cn(
             "absolute inset-0 transition-all duration-700 ease-in-out will-change-transform",
             getSlidePositionClass(i),
@@ -188,7 +214,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
           {/* Content - Improved typography and hierarchy */}
           <div className="relative z-10 h-full flex items-center">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="max-w-xl sm:max-w-2xl">
+              <div data-tts-highlight-target className="max-w-xl sm:max-w-2xl">
                 {/* Pre-heading tag */}
                 <div
                   className={cn(

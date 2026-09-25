@@ -86,7 +86,7 @@ function SectionHeader({ label, title, sub }: { label: string; title: string; su
 
 export function OrgStructure() {
   return (
-    <section className="scroll-mt-24 bg-[radial-gradient(ellipse_at_top,_#eaf8ff_0%,_#f4fbff_56%,_#fff_100%)] py-14 sm:py-20 lg:py-[90px]" id="organization" aria-labelledby="governance-heading">
+    <section className="scroll-mt-24 bg-white py-14 sm:py-20 lg:py-[90px]" id="organization" aria-labelledby="governance-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           label="Governance"
@@ -100,7 +100,7 @@ export function OrgStructure() {
             const Icon = style.icon
             return (
               <li key={tier.title} className="min-w-0">
-                <motion.article {...reveal} transition={{ duration: 0.4, delay: i * 0.06 }} className="flex h-full flex-col rounded-xl border border-[#cce8f7] bg-white p-5 shadow-[0_4px_18px_rgba(25,100,145,0.05)] sm:p-6">
+                <motion.article {...reveal} transition={{ duration: 0.4, delay: i * 0.06 }} className="flex h-full flex-col rounded-xl border border-[#e2eef6] bg-[#f7fbfe] p-5 shadow-[0_4px_18px_rgba(25,100,145,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#bfe1f4] hover:shadow-[0_10px_26px_rgba(25,100,145,0.1)] sm:p-6">
                   <div className="flex items-start gap-3.5">
                     <div className="flex size-11 shrink-0 items-center justify-center rounded-xl sm:size-12" style={{ color: style.color, backgroundColor: style.bg }} aria-hidden="true">
                       <Icon className="size-7" strokeWidth={2.2} />
@@ -117,7 +117,7 @@ export function OrgStructure() {
           })}
         </ol>
 
-        <motion.div {...reveal} transition={{ duration: 0.45 }} className="mt-5 rounded-xl border border-[#c7e7f7] bg-[#eaf7ff]/80 p-4 sm:p-5 lg:mt-6">
+        <motion.div {...reveal} transition={{ duration: 0.45 }} className="mt-5 rounded-xl border border-[#e2eef6] bg-[#f7fbfe] p-4 sm:p-5 lg:mt-6">
           <div className="mb-4 flex items-center gap-2.5 text-[#1889c7]">
             <Cog className="size-7" strokeWidth={2.5} aria-hidden="true" />
             <h3 className="font-comic text-lg font-bold text-[#134b76] sm:text-xl">Operational Level</h3>
@@ -130,7 +130,7 @@ export function OrgStructure() {
                   key={team.title}
                   {...reveal}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
-                  className="flex items-start gap-4 rounded-lg bg-white p-5 shadow-[0_3px_12px_rgba(25,100,145,0.04)] sm:items-center sm:p-6"
+                  className="flex items-start gap-4 rounded-lg border border-[#eaf2f8] bg-white p-5 shadow-[0_3px_12px_rgba(25,100,145,0.04)] sm:items-center sm:p-6"
                 >
                   <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#e8f5fc] text-[#168ac8]" aria-hidden="true">
                     <Icon className="size-7" strokeWidth={2.2} />

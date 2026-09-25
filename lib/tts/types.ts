@@ -153,4 +153,9 @@ export const TTS_ATTRIBUTES = {
   language: "data-tts-language",
   priority: "data-tts-priority",
   active: "data-tts-active",
+  carouselSlide: "data-tts-carousel-slide",
+} as const
+
+export const TTS_EVENTS = {
+  activateCarouselSlide: "tts:activate-carousel-slide",
 } as const

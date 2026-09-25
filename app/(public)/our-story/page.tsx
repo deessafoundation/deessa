@@ -235,11 +235,11 @@ export default function OurStoryPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl bg-muted p-6">
-                <p className="text-3xl font-bold text-primary">D</p>
+                <p data-tts-ignore="" className="text-3xl font-bold text-primary">D</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Deetya</p>
               </div>
               <div className="rounded-2xl bg-muted p-6">
-                <p className="text-3xl font-bold text-empowerment">M</p>
+                <p data-tts-ignore="" className="text-3xl font-bold text-empowerment">M</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Marissa</p>
               </div>
             </div>
@@ -342,11 +342,11 @@ export default function OurStoryPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="border-primary/25 rounded-3xl border p-7 text-center">
-                <p className="text-5xl font-extrabold text-primary">dee</p>
+                <p data-tts-ignore="" className="text-5xl font-extrabold text-primary">dee</p>
                 <p className="text-muted-foreground mt-2 text-xs uppercase tracking-[0.2em]">Deetya</p>
               </div>
               <div className="border-empowerment/35 rounded-3xl border p-7 text-center">
-                <p className="text-5xl font-extrabold text-empowerment">ssa</p>
+                <p data-tts-ignore="" className="text-5xl font-extrabold text-empowerment">ssa</p>
                 <p className="text-muted-foreground mt-2 text-xs uppercase tracking-[0.2em]">Marissa</p>
               </div>
             </div>

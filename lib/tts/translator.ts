@@ -12,7 +12,6 @@
 // forbids persisting page text to local storage, so this is deliberately not
 // written to disk. The server route keeps the shared, longer-lived cache.
 
-import { containsDevanagari } from "./language-detector"
 import { normalizeForSpeech } from "./text-normalizer"
 import type { SpeechSection } from "./types"
 
@@ -23,10 +22,15 @@ const TARGET = "ne"
 const BATCH_MAX_TEXTS = 300
 const BATCH_MAX_CHARS = 120_000
 
-const LATIN_LETTER = /[A-Za-z]/
+const LATIN_LETTERS = /[A-Za-z]/g
+const DEVANAGARI_CHARACTERS = /[\u0900-\u097F]/g
 
 /** Session-scoped cache. Key is the source string; value is the Nepali text. */
 const sessionCache = new Map<string, string>()
+// A translated section can legitimately retain Latin names, addresses, or
+// placeholders. Do not send its output back through English → Nepali on the
+// next/previous transport buttons.
+let translatedSections = new WeakSet<SpeechSection>()
 
 export interface TranslationOutcome {
   /** Sections to speak. Same order and same DOM elements as the input. */
@@ -38,18 +42,28 @@ export interface TranslationOutcome {
 }
 
 /**
- * A section needs translation when it inherited the Nepali preference but its
- * text is still Latin script.
- *
- * Sections the author explicitly marked as English (`data-tts-language="en-US"`
- * or `lang="en"`) arrive tagged `en-US` and are intentionally left alone — the
- * spec treats a declared locale as deliberate, and they keep their English
- * voice.
+ * In Nepali reading mode, a section needs translation when its text is
+ * predominantly Latin script. Normalization can insert a few Nepali
+ * words (for example, "deessa" becomes "दीसा") into an English paragraph;
+ * one Devanagari word must not make us skip the whole paragraph.
  */
 function needsTranslation(section: SpeechSection): boolean {
-  if (section.locale !== "ne-NP") return false
-  if (containsDevanagari(section.text)) return false
-  return LATIN_LETTER.test(section.text)
+  if (translatedSections.has(section)) return false
+  const latinCount = (section.text.match(LATIN_LETTERS) ?? []).length
+  const devanagariCount = (section.text.match(DEVANAGARI_CHARACTERS) ?? []).length
+  return latinCount > devanagariCount
+}
+
+/** Reject an untranslated English paragraph returned as a successful result. */
+function isNepaliResult(source: string, translated: string): boolean {
+  const sourceLatin = (source.match(LATIN_LETTERS) ?? []).length
+  if (sourceLatin > 0 && translated.trim().toLowerCase() === source.trim().toLowerCase()) {
+    return false
+  }
+  if (sourceLatin < 20) return true
+  const translatedLatin = (translated.match(LATIN_LETTERS) ?? []).length
+  const translatedNepali = (translated.match(DEVANAGARI_CHARACTERS) ?? []).length
+  return translatedNepali > translatedLatin
 }
 
 /** Split into request-sized batches, bounded by both count and characters. */
@@ -87,17 +101,18 @@ async function requestBatch(texts: string[]): Promise<Array<string | null>> {
 
   return texts.map((_, index) => {
     const value = translations[index]
-    return typeof value === "string" && value.trim() ? value : null
+    return typeof value === "string" && value.trim() && isNepaliResult(texts[index]!, value)
+      ? value
+      : null
   })
 }
 
 /**
  * Translate every section that needs it, then return a new section list.
  *
- * Failure is never fatal: a section that could not be translated is returned
- * with its English text and its locale switched to `en-US`, so the playback
- * loop reads it with an English voice instead of mispronouncing English with a
- * Nepali one. The visitor still hears the page.
+ * A section that could not be translated stays unchanged and is counted as a
+ * failure. Playback must stop rather than reading its English text in Nepali
+ * mode; the visitor can retry when translation is available.
  */
 export async function translateSectionsToNepali(
   sections: SpeechSection[]
@@ -143,16 +158,17 @@ export async function translateSectionsToNepali(
     const nepali = sessionCache.get(section.text)
     if (!nepali) {
       failed += 1
-      // Read the original English, with an English voice.
-      return { ...section, locale: "en-US" as const }
+      return section
     }
 
     translated += 1
-    return {
+    const translatedSection = {
       ...section,
       text: normalizeForSpeech(nepali, "ne-NP"),
       locale: "ne-NP" as const,
     }
+    translatedSections.add(translatedSection)
+    return translatedSection
   })
 
   return { sections: next, translated, failed }
@@ -161,4 +177,5 @@ export async function translateSectionsToNepali(
 /** Test/debug helper. Not used in the UI. */
 export function clearTranslationCache(): void {
   sessionCache.clear()
+  translatedSections = new WeakSet<SpeechSection>()
 }

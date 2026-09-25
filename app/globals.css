@@ -1836,14 +1836,27 @@ body.high-contrast img {
    a background tint so the cue survives high-contrast and forced-colors modes
    where background colours are overridden. */
 [data-tts-active="true"] {
-  background-color: rgb(63 171 222 / 0.14);
+  /* Cue the active section with an outline + soft glow only. A background tint
+     was repainting sections that have their own imagery/dark backgrounds
+     (e.g. the podcast banner), washing out their text and visuals. The outline
+     alone is a clear cue and does not alter the section's actual UI. */
   outline: 2px solid rgb(11 95 138);
   outline-offset: 3px;
   border-radius: 4px;
+  box-shadow: 0 0 0 4px rgb(63 171 222 / 0.25);
   scroll-margin-block: 25vh;
-  /* Keep the tint above decorative section backgrounds. */
+  /* Keep the cue above decorative section backgrounds. */
   position: relative;
   z-index: 1;
+}
+
+/* The hero sits on a dark photograph. Highlight its spoken copy rather than
+   the full-bleed section, whose outline falls outside the visible viewport. */
+[aria-roledescription="carousel"] [data-tts-highlight-target][data-tts-active="true"] {
+  outline: 3px solid rgb(125 211 252);
+  outline-offset: 8px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 5px rgb(56 189 248 / 0.25);
 }
 
 body.high-contrast [data-tts-active="true"] {

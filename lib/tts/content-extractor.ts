@@ -410,7 +410,13 @@ export function extractSections(options: ExtractOptions): ExtractResult {
   /** Depth-first walk in document order. */
   const walk = (el: HTMLElement) => {
     if (truncated) return
-    if (el !== root && shouldSkipSubtree(el)) return
+    // Homepage hero slides have an explicit spoken alternative. Include all
+    // four in order even though only the current slide is visually exposed.
+    if (
+      el !== root &&
+      !el.hasAttribute(TTS_ATTRIBUTES.carouselSlide) &&
+      shouldSkipSubtree(el)
+    ) return
 
     // Author-provided spoken alternative replaces the whole subtree.
     if (el !== root && el.hasAttribute(TTS_ATTRIBUTES.text)) {
