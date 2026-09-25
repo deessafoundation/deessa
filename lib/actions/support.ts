@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { sendSupportEmails } from "@/lib/email/support-mailer"
+import { notifyAdminsByRole } from "@/lib/notifications/create-notification"
 
 const SUPPORT_BUCKET = "support-screenshots"
 const MAX_SCREENSHOT_SIZE = 2 * 1024 * 1024
@@ -158,6 +159,23 @@ export async function submitSupportReport(formData: FormData): Promise<SupportSu
       screenshotName: screenshotName || undefined,
     }).catch((err) => {
       console.error("Support notification email error (non-fatal):", err)
+    })
+
+    // Create in-app notifications for admins who can view support reports.
+    // Fire-and-forget: a notification failure must never break the submission.
+    notifyAdminsByRole(["SUPER_ADMIN", "ADMIN"], {
+      type: "system",
+      title: `New ${values.issueType}`,
+      message: `${values.name}: ${values.summary}`,
+      link: `/admin/support/${submissionId}`,
+      metadata: {
+        submissionId,
+        email: values.email,
+        issueType: values.issueType,
+        pageUrl: values.pageUrl || null,
+      },
+    }).catch((err) => {
+      console.error("Support admin notification error (non-fatal):", err)
     })
 
     return {

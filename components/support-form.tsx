@@ -164,7 +164,10 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
           Report Submitted
         </div>
         
-        <h3 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+        <h3
+          className="mt-4 font-marissa text-3xl font-medium tracking-tight text-black sm:text-4xl"
+          style={{ WebkitTextStroke: "0.6px currentColor" }}
+        >
           Thanks. We&apos;re on it.
         </h3>
         
@@ -202,17 +205,22 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
-      <div className="border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 px-6 py-6 sm:px-8 sm:py-7">
+      <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 via-white to-sky-50 px-6 py-6 sm:px-8 sm:py-7">
         <div className="flex items-start gap-4">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white shadow-xl shadow-slate-900/20">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 shadow-sm">
             <Bug className="size-6" />
           </div>
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-700">
-              <Sparkles className="size-3.5" />
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-black ring-1 ring-sky-100">
+              <Sparkles className="size-3.5 text-amber-500" />
               Quick Report
             </div>
-            <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Tell us what happened</h3>
+            <h3
+              className="mt-2 font-marissa text-2xl font-medium tracking-tight text-black sm:text-3xl"
+              style={{ WebkitTextStroke: "0.5px currentColor" }}
+            >
+              Tell us what happened
+            </h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
               Include the page you were on, what you expected, and a screenshot if you have one. Clear reports help us fix things faster.
             </p>
@@ -328,7 +336,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
             type="file"
             accept="image/*"
             onChange={handleScreenshotChange}
-            className="block w-full cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-4 text-sm text-slate-600 transition file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-gradient-to-r file:from-cyan-500 file:to-sky-500 file:px-5 file:py-2.5 file:text-sm file:font-bold file:text-white file:shadow-lg file:shadow-cyan-500/25 hover:border-slate-400 hover:bg-slate-100"
+            className="block w-full cursor-pointer rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50/50 px-4 py-4 text-sm text-slate-600 transition file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-gradient-to-r file:from-[#0b76b7] file:to-sky-500 file:px-5 file:py-2.5 file:text-sm file:font-bold file:text-white file:shadow-lg file:shadow-sky-500/25 hover:border-sky-300 hover:bg-sky-50"
           />
           <p className="mt-2 text-xs text-slate-500">PNG, JPG, or WEBP up to 2MB.</p>
 
@@ -370,7 +378,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
           <Button
             type="submit"
             size="lg"
-            className="h-12 rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 px-8 text-base font-bold text-white shadow-xl shadow-cyan-500/25 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30"
+            className="h-12 rounded-full bg-gradient-to-r from-[#0b76b7] to-sky-500 px-8 text-base font-bold text-white shadow-xl shadow-sky-500/25 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-sky-500/30"
             disabled={isLoading}
           >
             {isLoading ? (
