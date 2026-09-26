@@ -5,11 +5,11 @@
  * into the new Programs CMS database tables.
  * 
  * Usage:
- *   npx tsx scripts/migrate-programs.ts --dry-run        # Preview changes
- *   npx tsx scripts/migrate-programs.ts --import          # Execute migration
- *   npx tsx scripts/migrate-programs.ts --import --source hardcoded  # Only hardcoded prototypes
- *   npx tsx scripts/migrate-programs.ts --import --source legacy     # Only old projects table
- *   npx tsx scripts/migrate-programs.ts --skip-existing               # Skip if slug exists
+ *   npx tsx scripts/archive/migrate-programs.ts --dry-run        # Preview changes
+ *   npx tsx scripts/archive/migrate-programs.ts --import          # Execute migration
+ *   npx tsx scripts/archive/migrate-programs.ts --import --source hardcoded  # Only hardcoded prototypes
+ *   npx tsx scripts/archive/migrate-programs.ts --import --source legacy     # Only old projects table
+ *   npx tsx scripts/archive/migrate-programs.ts --skip-existing               # Skip if slug exists
  * 
  * Environment:
  *   NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (or .env.local)
@@ -30,7 +30,7 @@ const SOURCE = args.includes("--source") ? args[args.indexOf("--source") + 1] : 
 const SKIP_EXISTING = args.includes("--skip-existing")
 
 if (!DO_IMPORT && !DRY_RUN) {
-  console.log("Usage: npx tsx scripts/migrate-programs.ts --dry-run | --import")
+  console.log("Usage: npx tsx scripts/archive/migrate-programs.ts --dry-run | --import")
   process.exit(1)
 }
 

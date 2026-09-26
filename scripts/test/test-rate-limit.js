@@ -7,10 +7,10 @@
  * Expected behavior: First 20 succeed, remaining 5 get rate limited.
  * 
  * Usage:
- *   node scripts/test-rate-limit.js [verification-id] [base-url]
+ *   node scripts/test/test-rate-limit.js [verification-id] [base-url]
  * 
  * Example:
- *   node scripts/test-rate-limit.js 123e4567-e89b-12d3-a456-426614174000 http://localhost:3000
+ *   node scripts/test/test-rate-limit.js 123e4567-e89b-12d3-a456-426614174000 http://localhost:3000
  */
 
 const https = require('https');

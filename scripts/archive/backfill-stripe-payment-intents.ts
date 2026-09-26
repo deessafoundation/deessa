@@ -5,7 +5,7 @@
  * Run this BEFORE the database migration to ensure all data is complete.
  * 
  * Usage:
- *   npx tsx scripts/backfill-stripe-payment-intents.ts
+ *   npx tsx scripts/archive/backfill-stripe-payment-intents.ts
  * 
  * Environment variables required:
  *   - STRIPE_SECRET_KEY
