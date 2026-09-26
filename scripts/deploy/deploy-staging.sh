@@ -118,7 +118,7 @@ if [ "$SKIP_MIGRATIONS" = false ]; then
         echo ""
         echo -e "${YELLOW}  IMPORTANT: Run these migrations in Supabase SQL Editor:${NC}"
         echo -e "${YELLOW}  1. Open https://supabase.com/dashboard/project/$SUPABASE_PROJECT_REF/sql${NC}"
-        echo -e "${YELLOW}  2. Copy and paste each migration file from scripts/payments-v2/${NC}"
+        echo -e "${YELLOW}  2. Copy and paste each migration file from scripts/db/payments-v2/${NC}"
         echo -e "${YELLOW}  3. Execute in order (020, 021, 023, 024, 025, 026, 027)${NC}"
         echo ""
         read -p "  Have you completed the migrations? (y/n) " -n 1 -r

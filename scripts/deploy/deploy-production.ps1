@@ -1,5 +1,5 @@
-# Payment Architecture V2 - Staging Deployment Script
-# This script automates the deployment of Payment V2 to staging environment
+# Payment Architecture V2 - Production Deployment Script
+# This script automates the deployment of Payment V2 to production environment
 
 param(
     [switch]$SkipMigrations = $false,
@@ -10,21 +10,43 @@ param(
 $ErrorActionPreference = "Stop"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Payment Architecture V2 - Staging Deployment" -ForegroundColor Cyan
+Write-Host "Payment Architecture V2 - PRODUCTION Deployment" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "⚠️  WARNING: This will deploy to PRODUCTION" -ForegroundColor Red
 Write-Host ""
 
 # Configuration
-$STAGING_URL = $env:STAGING_URL
-$SUPABASE_PROJECT_REF = $env:SUPABASE_STAGING_PROJECT_REF
+$PRODUCTION_URL = $env:PRODUCTION_URL
+$SUPABASE_PROJECT_REF = $env:SUPABASE_PRODUCTION_PROJECT_REF
 
-if (-not $STAGING_URL) {
-    Write-Host "ERROR: STAGING_URL environment variable not set" -ForegroundColor Red
-    Write-Host "Set it with: `$env:STAGING_URL = 'https://your-staging.vercel.app'" -ForegroundColor Yellow
+if (-not $PRODUCTION_URL) {
+    Write-Host "ERROR: PRODUCTION_URL environment variable not set" -ForegroundColor Red
+    Write-Host "Set it with: `$env:PRODUCTION_URL = 'https://your-production.com'" -ForegroundColor Yellow
     exit 1
 }
 
-Write-Host "Staging URL: $STAGING_URL" -ForegroundColor Green
+Write-Host "Production URL: $PRODUCTION_URL" -ForegroundColor Green
+Write-Host ""
+
+# Confirmation
+if (-not $DryRun) {
+    Write-Host "This will deploy Payment Architecture V2 to PRODUCTION" -ForegroundColor Yellow
+    Write-Host "Please confirm you have:" -ForegroundColor Yellow
+    Write-Host "  ✓ Completed staging deployment successfully" -ForegroundColor White
+    Write-Host "  ✓ Run all smoke tests in staging" -ForegroundColor White
+    Write-Host "  ✓ Monitored staging for 24-48 hours" -ForegroundColor White
+    Write-Host "  ✓ Reviewed and approved deployment plan" -ForegroundColor White
+    Write-Host "  ✓ Notified team of deployment window" -ForegroundColor White
+    Write-Host "  ✓ Backed up production database" -ForegroundColor White
+    Write-Host ""
+    $confirm = Read-Host "Type 'DEPLOY' to continue"
+    if ($confirm -ne "DEPLOY") {
+        Write-Host "Deployment cancelled" -ForegroundColor Red
+        exit 1
+    }
+}
+
 Write-Host ""
 
 # Step 1: Pre-deployment checks
@@ -34,10 +56,8 @@ Write-Host "[1/6] Running pre-deployment checks..." -ForegroundColor Yellow
 $currentBranch = git rev-parse --abbrev-ref HEAD
 Write-Host "  Current branch: $currentBranch" -ForegroundColor Gray
 
-# Check for uncommitted changes
-$gitStatus = git status --porcelain
-if ($gitStatus) {
-    Write-Host "  WARNING: You have uncommitted changes" -ForegroundColor Yellow
+if ($currentBranch -ne "main" -and $currentBranch -ne "master") {
+    Write-Host "  WARNING: Not on main/master branch" -ForegroundColor Yellow
     if (-not $DryRun) {
         $continue = Read-Host "  Continue anyway? (y/n)"
         if ($continue -ne "y") {
@@ -45,6 +65,14 @@ if ($gitStatus) {
             exit 1
         }
     }
+}
+
+# Check for uncommitted changes
+$gitStatus = git status --porcelain
+if ($gitStatus) {
+    Write-Host "  ERROR: You have uncommitted changes" -ForegroundColor Red
+    Write-Host "  Commit or stash changes before deploying to production" -ForegroundColor Yellow
+    exit 1
 }
 
 # Run tests
@@ -69,11 +97,23 @@ if (-not $DryRun) {
 }
 Write-Host "  ✓ Configuration valid" -ForegroundColor Green
 
+# Verify staging success
+Write-Host "  Verifying staging deployment..." -ForegroundColor Gray
+$stagingSuccess = Read-Host "  Has staging been running successfully for 24-48 hours? (y/n)"
+if ($stagingSuccess -ne "y") {
+    Write-Host "  ERROR: Staging must be stable before production deployment" -ForegroundColor Red
+    exit 1
+}
+Write-Host "  ✓ Staging verified" -ForegroundColor Green
+
 Write-Host ""
 
 # Step 2: Database migrations
 if (-not $SkipMigrations) {
     Write-Host "[2/6] Running database migrations..." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  ⚠️  CRITICAL: Database migrations for PRODUCTION" -ForegroundColor Red
+    Write-Host ""
     
     $migrations = @(
         "020-create-payments-table.sql",
@@ -96,12 +136,22 @@ if (-not $SkipMigrations) {
         Write-Host ""
         Write-Host "  IMPORTANT: Run these migrations in Supabase SQL Editor:" -ForegroundColor Yellow
         Write-Host "  1. Open https://supabase.com/dashboard/project/$SUPABASE_PROJECT_REF/sql" -ForegroundColor Yellow
-        Write-Host "  2. Copy and paste each migration file from scripts/payments-v2/" -ForegroundColor Yellow
-        Write-Host "  3. Execute in order (020, 021, 023, 024, 025, 026, 027)" -ForegroundColor Yellow
+        Write-Host "  2. BACKUP DATABASE FIRST!" -ForegroundColor Red
+        Write-Host "  3. Copy and paste each migration file from scripts/db/payments-v2/" -ForegroundColor Yellow
+        Write-Host "  4. Execute in order (020, 021, 023, 024, 025, 026, 027)" -ForegroundColor Yellow
+        Write-Host "  5. Verify each migration succeeds before proceeding" -ForegroundColor Yellow
         Write-Host ""
         $migrationsComplete = Read-Host "  Have you completed the migrations? (y/n)"
         if ($migrationsComplete -ne "y") {
             Write-Host "Deployment cancelled - complete migrations first" -ForegroundColor Red
+            exit 1
+        }
+        
+        # Verify migrations
+        Write-Host "  Verifying migrations..." -ForegroundColor Gray
+        $migrationsVerified = Read-Host "  Have you verified all tables exist? (y/n)"
+        if ($migrationsVerified -ne "y") {
+            Write-Host "Deployment cancelled - verify migrations first" -ForegroundColor Red
             exit 1
         }
     }
@@ -117,7 +167,7 @@ Write-Host ""
 Write-Host "[3/6] Deploying application code..." -ForegroundColor Yellow
 
 if ($DryRun) {
-    Write-Host "  [DRY RUN] Would deploy to staging" -ForegroundColor Cyan
+    Write-Host "  [DRY RUN] Would deploy to production" -ForegroundColor Cyan
 } else {
     Write-Host "  Building application..." -ForegroundColor Gray
     npm run build
@@ -126,8 +176,15 @@ if ($DryRun) {
         exit 1
     }
     
-    Write-Host "  Deploying to Vercel staging..." -ForegroundColor Gray
-    vercel --env=preview
+    Write-Host "  Deploying to Vercel production..." -ForegroundColor Gray
+    Write-Host "  ⚠️  This will deploy to PRODUCTION" -ForegroundColor Red
+    $deployConfirm = Read-Host "  Type 'YES' to deploy"
+    if ($deployConfirm -ne "YES") {
+        Write-Host "Deployment cancelled" -ForegroundColor Red
+        exit 1
+    }
+    
+    vercel --prod
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  ERROR: Deployment failed" -ForegroundColor Red
         exit 1
@@ -147,18 +204,32 @@ Write-Host ""
 if (-not $SkipVerification) {
     Write-Host "[5/6] Verifying deployment..." -ForegroundColor Yellow
     
+    # Wait for deployment to propagate
+    Write-Host "  Waiting for deployment to propagate (30 seconds)..." -ForegroundColor Gray
+    if (-not $DryRun) {
+        Start-Sleep -Seconds 30
+    }
+    
     # Health check
     Write-Host "  Checking health endpoint..." -ForegroundColor Gray
     if (-not $DryRun) {
         try {
-            $response = Invoke-RestMethod -Uri "$STAGING_URL/api/health" -Method Get -TimeoutSec 10
+            $response = Invoke-RestMethod -Uri "$PRODUCTION_URL/api/health" -Method Get -TimeoutSec 10
             if ($response.status -eq "healthy") {
                 Write-Host "  ✓ Health check passed" -ForegroundColor Green
+                
+                # Verify V2 is DISABLED initially
+                if ($response.features.paymentV2Enabled -eq $false) {
+                    Write-Host "  ✓ V2 is disabled (as expected)" -ForegroundColor Green
+                } else {
+                    Write-Host "  ⚠️  WARNING: V2 is enabled (should be disabled initially)" -ForegroundColor Yellow
+                }
             } else {
                 Write-Host "  WARNING: Health check returned non-healthy status" -ForegroundColor Yellow
             }
         } catch {
             Write-Host "  ERROR: Health check failed - $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "  Consider rolling back deployment" -ForegroundColor Yellow
             exit 1
         }
     } else {
@@ -182,15 +253,24 @@ Write-Host ""
 # Step 6: Post-deployment summary
 Write-Host "[6/6] Deployment Summary" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "  Staging URL: $STAGING_URL" -ForegroundColor Green
+Write-Host "  Production URL: $PRODUCTION_URL" -ForegroundColor Green
 Write-Host "  Feature Flag: PAYMENT_V2_ENABLED=false (V1 active)" -ForegroundColor Yellow
+Write-Host "  Deployment Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Gray
+Write-Host ""
+Write-Host "⚠️  IMPORTANT: V2 is NOT yet enabled in production" -ForegroundColor Red
 Write-Host ""
 Write-Host "Next Steps:" -ForegroundColor Cyan
-Write-Host "  1. Run smoke tests: npm run test:staging" -ForegroundColor White
-Write-Host "  2. Enable V2: Set PAYMENT_V2_ENABLED=true in Vercel" -ForegroundColor White
-Write-Host "  3. Monitor logs: vercel logs --env=preview" -ForegroundColor White
-Write-Host "  4. Test payment flows manually" -ForegroundColor White
+Write-Host "  1. Monitor production for 1-2 hours (V1 should work normally)" -ForegroundColor White
+Write-Host "  2. Run production smoke tests" -ForegroundColor White
+Write-Host "  3. Enable V2 incrementally (Task 28.5):" -ForegroundColor White
+Write-Host "     - Start with 10% traffic" -ForegroundColor White
+Write-Host "     - Monitor closely" -ForegroundColor White
+Write-Host "     - Gradually increase to 100%" -ForegroundColor White
+Write-Host "  4. Monitor logs: vercel logs --prod --follow" -ForegroundColor White
+Write-Host ""
+Write-Host "Rollback Procedure (if needed):" -ForegroundColor Cyan
+Write-Host "  vercel rollback [previous-deployment-url]" -ForegroundColor White
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Staging Deployment Complete!" -ForegroundColor Green
+Write-Host "Production Deployment Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Cyan

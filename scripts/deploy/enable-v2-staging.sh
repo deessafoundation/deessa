@@ -120,7 +120,7 @@ if [ "$DRY_RUN" = true ]; then
 else
     echo -e "${GRAY}  Checking health endpoint...${NC}"
     sleep 10  # Wait for deployment
-    
+
     STAGING_URL=${STAGING_URL:-}
     if [ -z "$STAGING_URL" ]; then
         echo -e "${YELLOW}  WARNING: STAGING_URL not set, skipping verification${NC}"
