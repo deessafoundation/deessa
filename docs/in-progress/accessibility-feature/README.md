@@ -1,9 +1,13 @@
 # Accessibility Feature Documentation
 
 **Status:** Phase 2A In Progress
-**Last Updated:** 2026-09-16
+**Last Updated:** 2026-09-26
 
 ---
+
+## Completed: contrast and reading aids (2026-09-26)
+
+This task is complete at the user’s request. Contrast/font tap cards, negative colors, reading mask, and the cursor-following reading line with selectable friends are implemented. See [the final standard](STANDARDS.md#24-final-state-and-task-closure-2026-09-26) and [closed implementation plan](specs/contrast-and-reading-aids-plan.md). Other accessibility work, including the dictionary proposal, keeps its existing status.
 
 ## Quick Start
 
@@ -11,6 +15,7 @@
 - **For Developers:** See `specs/how-it-works.md` and `operations/technical-implementation-guide.md`
 - **For Testers:** See `operations/test-validation-guide.md`
 - **For CMS Authors:** See `operations/cms-author-guidelines.md`
+- **Dictionary proposal (2026-09-25):** [Wiktionary research and implementation plan](specs/dictionary-wiktionary-plan.md) and [execution checklist](tasks/dictionary-wiktionary.md). Planning only; implementation has not started.
 
 ---
 

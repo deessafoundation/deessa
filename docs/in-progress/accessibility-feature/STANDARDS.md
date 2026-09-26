@@ -1,7 +1,7 @@
 # Accessibility Standards - Per-Page Checklist
 
 **Status:** Living Document
-**Last Updated:** 2026-09-21
+**Last Updated:** 2026-09-23
 **Scope:** Every public-facing page must meet these standards
 
 ---
@@ -665,3 +665,115 @@ Paths are repository-relative. These references describe the implementation rath
 | `lib/utils/accessibility.ts` | Accessibility utilities and focus/live-announcement helpers |
 | `components/home-accessibility-button.tsx` | Accessibility panel UI |
 | `app/(public)/layout.tsx` | Public layout and accessibility-provider integration |
+
+## 20. Public-page rollout: 2026-09-22–23
+
+### Implementation and scope
+
+The public layout already supplies the accessibility provider to every public route. This rollout repairs component presentation and semantics; it does not introduce separate preference stores per page.
+
+- `components/public-accessibility.css`, imported by the public layout, scopes shared rules to `#main-content`. Shared Button variants now expose `data-variant`: filled buttons use white text on black, while outline/secondary/ghost/link variants use black on white. Icons follow their button foreground. Focus indicators have both a black outline and white separation. At high text scale, shared buttons can wrap and grow.
+- Use `data-a11y-region="neutral"` only for the audited photo-free copy/decorative regions (Support, Conference, program CTAs, and story detail header). This contract deliberately clears their decorative descendant backgrounds and supplies black copy on gray. Do not apply it to a whole page, arbitrary CMS rich content, or an image gallery.
+- Photo heroes use separate `data-a11y-hero="photo"`, `data-a11y-photo`, `data-a11y-shade`, and `data-a11y-hero-copy` hooks. Contact, Donate, Press, Get Involved, event detail, and legacy full-bleed program heroes retain grayscale images with readable scrims. Their text containers can grow. Contact's former rule that removed its background photo is no longer applied.
+- The current CMS program module has scoped contrast variables, grayscale photos, dark-section foreground pairs, and visible button/focus treatments. Existing template/content work was preserved.
+- Episode listings reuse `ArchiveThumbnailImage` and the archive overlay/play-icon module. Share buttons are siblings of the episode link rather than nested inside it; a stretched link retains the clickable card area. Highlights have explicit caption and play-icon treatments. Playback controls and search/filter controls have accessible names; the off-screen sticky player is inert.
+- One main landmark and one `main-content` ID belong to the public layout. Nested main elements were removed from Contact, Our Story, and podcast pages. The skip target is programmatically focusable. Contact's interactive map container is a labeled region, not an image role containing a link.
+- `FancySelect` accepts label/error/required ARIA metadata and exposes listbox IDs, active-option IDs, highlighted state, and arrow-key opening. Support and podcast selectors are named. Conference text, email, phone, number, textarea, and select fields link help/errors with `aria-describedby`, indicate invalid/required state, and announce errors. These additions preserve existing validation and submission handlers.
+- Donation frequency/amount buttons expose their existing selection through `aria-pressed`. What We Do category filters are a labeled button group with pressed states, rather than incomplete tab semantics. Event payment-screenshot upload can be activated with Enter/Space; its remove control is named.
+- Impact's photo gallery is keyboard-focusable. The precise HTTPS `plus.unsplash.com` image host was added to Next's allowlist because an existing photo caused the page to crash before it could be audited.
+
+### Verification method and evidence
+
+Used locally installed axe-core 4.13 against the rendered main content on localhost:3000, with WCAG 2 A/AA and 2.1 AA rules. Later checks used isolated headless Chrome, a temporary profile, the intro marked as previously seen, and a delay after enabling contrast so color transitions had settled. Initial scans during hydration/transitions were discarded and repeated. Screenshots of Support and a populated program detail confirmed visible copy, controls, and grayscale imagery.
+
+Desktop high-contrast scans reported no violations for the rendered states of Home, About, Our Story, What We Do, Support, Contact, Verify, Privacy, Terms, Newsletter Archive, Press, podcast episode/highlight listings, the initial Conference registration form, and two populated service program details. Earlier live-browser checks also passed Donate, Get Involved, and Conference after hydration.
+
+Conference failure/success/payment-options/pending-payment/payment-success, Donate cancel/success, Complete Payment, an invalid receipt, and the Khalti return route were checked without payment or registration identifiers. Their available empty/error states passed; this does not verify a successful transaction. No payment, registration, support report, or contact message was submitted.
+
+Targeted ESLint checks passed for the edited shared controls, podcast filters, Contact form/layout, and Conference field metadata. Additional edited files have existing warnings; Support's existing state-setting effect remains a lint error. Repository-wide TypeScript checking remains blocked by existing errors, including test globals, About heading types, and `field.disabled` in the pre-existing Conference select implementation. These are not a clean-build claim.
+
+### Limits and follow-up requirements
+
+- Event/story list scans covered their available empty states: the local database returned permission errors for `is_admin_user` and `get_admin_role`. Populated event/story detail pages and event registration flows still require valid accessible fixtures. Their source-level changes are not an end-to-end pass.
+- Automated scans do not certify every image crop, hidden dialog, later form step, normal-mode brand color, screen reader, or payment outcome. Complete section 18's manual checklist before claiming site-wide WCAG compliance.
+- Normal-mode component classes and transaction logic were preserved apart from explicit semantic, image-loading, and text-growth fixes. This is a scope boundary, not a guarantee that every existing feature has been tested.
+- Future components should use the explicit contracts above rather than extending broad global `.group`, background-substring, or descendant-color rules.
+
+Mobile follow-up: at 390px and 200% text scale, Support, Contact, the initial Conference form, and Impact passed the high-contrast main-content scan with no document-wide horizontal overflow. Impact's focusable-gallery fix was included. Screenshot review additionally found the mobile navbar icon inherited a white foreground; `navbar.module.css` now explicitly pairs its white surface with black SVG strokes, and the toggle exposes `aria-expanded`.
+
+Final interaction checks passed in the isolated mobile browser: Support's selector opened with ArrowDown, exposed an existing active-option ID, selected with Enter, closed, and retained trigger focus. The mobile navigation toggle had computed black SVG strokes, opened the menu, then closed it with `aria-expanded` reflecting both states. Targeted lint and whitespace checks passed after the final edits. These interaction checks did not submit either form.
+
+## 21. Contrast palettes and cursor/reading aids (2026-09-23)
+
+The public accessibility panel now provides **Normal**, **High contrast** (the existing light palette), and **Inverted contrast** (dark content surfaces with light text). Inverted contrast is a deliberate palette, not a page-wide `filter: invert()`. Photos, hero scrims, footer treatment, and video play-circle/triangle pairs retain their explicit media colors.
+
+The **Cursor** button cycles **Off → Large cursor → Reading mask → Reading guide → Off**. Its name includes the current and next action; a separate Off action is available. Contrast and cursor settings are independent. The existing reading-layout setting remains separate.
+
+### Implementation contracts
+
+- `lib/types/accessibility.ts` owns schema V3: `contrastMode` and `cursorMode`. Legacy V1/V2 data is decoded into canonical V3 preferences; V2 `highContrast` maps to normal/high and cursor defaults off. Existing unrelated preferences are preserved. The provider retains the load-before-save guard and attempts a `deesha-a11y-preferences-pre-v3` backup before migration. Backup failure must not disable settings.
+- Persistence uses the existing storage key. Accessibility-storage read/write failures fall back to session storage; corrupt values safely default. Reset, presets, equality, modified indicators and announcements include both new fields. Public provider unmount removes all owned body classes, data attributes and root variables.
+- Existing high-contrast color declarations now reference `--a11y-ink` / `--a11y-paper` pairs. Normal styling stays outside those rules. Owned surfaces, portaled controls, navbar and neutral regions share the palette; photos and their copy use explicit exceptions. Do not introduce a whole-page inversion filter or more generic descendant overrides.
+- `AccessibilityReadingAids` renders a single body portal at z-index 39, below the panel/dialog layers. It is aria-hidden, has no focusable elements, and uses `pointer-events: none`. It suspends while a visible content dialog is open and on pointer exit/window blur. The accessibility panel remains above the aid and does not suspend its page preview. Keyboard focus moves and expands the mask's clear band. Pointer work is throttled with requestAnimationFrame and does not update React preferences or storage.
+- Mask/guide listeners, observer, pending frame and portal are cleaned up on disable/unmount. Sensory mode explicitly preserves the owned layer. Print hides it. Fine-pointer devices use local SVG arrow/hand cursors with native fallbacks; touch movement never draws a fake cursor. Embedded cross-origin players retain their own cursor behavior.
+- Panel controls use a labeled native contrast select and a named cycle button. Tab stays within the open panel; Escape closes and restores focus. Modified markers and the text-size progress indicator have appropriate accessible names.
+- Inactive home carousel slides are inert as well as aria-hidden, so their links cannot receive keyboard focus.
+
+### Verification evidence
+
+- Seven dedicated preference tests pass: V1/V2 migration, V3 round-trip, null spacing, invalid enums/data, defaults/presets/equality, exact cursor cycle. Run `node node_modules/jest/bin/jest.js --config jest.accessibility.config.cjs --runInBand`.
+- Targeted ESLint passes for the provider, types, both panel/toolbar consumers and reading-aid component. Repository-wide TypeScript checking still reports pre-existing issues, including the separate nullable typography control and unrelated program/test code; no diagnostics were reported for the new/modified accessibility feature files.
+- Isolated Chromium against localhost:3000 verified all three contrast modes × all four cursor states on Episodes; mask/guide dialog suspension, visibility, click-through hit testing, native input focus, reload persistence and Reset All passed. Computed play-circle backgrounds remain white and SVG paths black in both contrast modes.
+- Browser migration tests passed for V1/V2/V3, retained legacy backups, corrupt JSON, accessibility-key storage denial with session fallback/restore, sensory-mode mask, keyboard combobox opening, and public-to-admin cleanup. This tests accessibility-owned storage failures, not every unrelated application's behavior when all browser storage is blocked.
+- Inverted full-document axe scans passed on Episodes, Support, Contact, Donate and Conference Registration at 390px; Support, Contact, Episodes and Events also passed at 200% text without document overflow. Desktop scans passed on About, Our Story, What We Do, Stories, Podcasts, Impact and Support. Events' empty-state surface was corrected and the subsequent scan passed.
+- Existing light high-contrast full-document scans passed on Home, Episodes, Events, Contact and Support. Screenshots were inspected for inverted Home, Episodes and the panel. System forced-colors emulation resolves the palette to system colors.
+- Normal-mode brand-color contrast findings predate this feature and remain outside this palette change. Story/event scans include the available empty/list states, not proof of populated CMS detail flows. Real screen-reader, physical touch, cross-browser, populated CMS detail and actual transaction/submission testing remain manual follow-up coverage; no payment or form business logic was changed.
+
+### Reading aid visibility correction
+
+Mask/guide now appear centered immediately when selected, including while the settings panel is open. Pointer/focus within the panel retains the last reading position. The closed mobile drawer is explicitly aria-hidden and inert; dialog detection ignores hidden ancestors and offscreen dialogs. Transition-end events refresh suspension after animated drawers open/close. Desktop and 390px checks cover immediate visibility, panel close, click-through, and navigation suspension/resumption.
+
+## 22. Negative colors and tap cards (supersedes section 21's inverted palette)
+
+The requested behavior was clarified: **Negative colors** means actual photographic/pixel inversion, not an additional dark high-contrast palette. The Contrast card now cycles **Normal → High contrast → Negative colors → Normal**. The Font card cycles **Site font → System font → OpenDyslexic → Site font**. Both are native buttons, support tap/Enter/Space, show the current/next choice and step number, and retain separate resets. The alternative toolbar uses the same contrast cycle.
+
+Negative mode uses `filter: invert(1)` on the public document root, including images and portal content. It does not enable the high-contrast class or grayscale/media overrides. Applying the filter to the root, rather than body or an inner wrapper, avoids trapping viewport-fixed controls (Filter Effects specification: https://www.w3.org/TR/filter-effects-1/#FilterProperty). The provider removes the root attribute on public unmount. Print and system forced-colors disable the filter. Reading-mask shade uses white before inversion so it still dims the final displayed page.
+
+The canonical contrast values are now normal/high/negative; previously saved V3 inverted values map to high. No unrelated saved font, text or cursor preference is cleared. The earlier plan's prohibition of whole-page inversion applied to the previous palette interpretation and is superseded by this explicit user request for negative colors.
+
+Eight preference tests pass, including both cycles and retired-value migration. Targeted lint passes. Browser checks cover all contrast/font combinations, absence of dropdowns, negative filter application, fixed accessibility-button positioning after scrolling, reading-mask visibility, reload persistence and reset, on desktop and 390px mobile. Negative mode is a user-selected visual transformation, not a claim of improved WCAG contrast ratios; image colors intentionally change.
+
+## 23. Reading band and friends (2026-09-25)
+
+The Reading Guide is now an inset two-column layout: a borderless friend on the left, then an 8px mobile / 12px desktop gap and a separate text band. The entire guide has 10% horizontal insets. The band uses solid Deep Ocean (#0B5F8A) top/bottom borders and a low-opacity Ocean Blue (#3FABDE at 10%) highlight. The marker column and gap stay transparent. High contrast removes the fill and uses black borders with a white outline; negative mode compensates the band's decorative colors before root inversion to retain ocean blue. System forced colors uses CanvasText/Canvas. These treatments do not assert contrast compliance for arbitrary underlying text.
+
+Five named choices (butterfly, star, flower, bear, rocket) appear when Reading Guide is selected. Butterfly is the default; the guideSticker preference is validated, saved, included in equality/reset, and defaults safely for older data. Native selection buttons expose aria-pressed and a visible selected-name label. Optional PNGs use the same component in the selector and guide, falling back to emoji if the image fails. See public/accessibility/reading-friends/README.md for the artwork contract and configuration.
+
+The guide band adapts to text scale and keyboard-focus height. Its marker and band stay within the viewport at top/bottom edges and never intercept clicks. Reading Mask behavior remains separate. Targeted ESLint and nine preference tests pass. Isolated Chromium checks verified all five selections, persistence/reset, 10% insets, separation, viewport edges and click-through at 1280px/390px, plus computed colors in all three contrast modes. The normal-mode panel scan still reports a color-contrast finding; do not interpret the interaction checks as a complete WCAG audit. Optional custom-PNG replacement has not been visually checked with user artwork yet.
+
+### Reading-band gradient refinement
+
+The normal guide now has 14px rounded corners, a soft blue horizontal gradient (12% / 22% / 12% opacity), and a subtle shadow. Negative mode uses complementary pre-inversion colors for the same displayed blue treatment. High contrast and system forced colors remove the fill and shadow. Only background/shadow transitions are allowed; guide position never eases, and reduced-motion/sensory modes disable transitions.
+
+The gradient was refined on 2026-09-26 to saturated sky/ocean blue (RGB 56/189/248 edges, 14/165/233 center), retaining 12% / 22% / 12% opacity. Negative-mode complementary colors were updated to match; high-contrast and reduced-motion rules are unchanged.
+
+### Cursor-following line revision (supersedes the band treatments above)
+
+Reading Guide now uses a single 3px brand-blue line with a subtle glow, no filled band, and the selected friend centered 10px below it. Its width is 50% of the available viewport. Both pointer X and Y are tracked; the line centers horizontally near the pointer and sits below its reading position. Guide and friend are clamped inside viewport edges. Keyboard focus places the line below the focused control. Reading Mask is unchanged. High contrast uses black with a white outline and no glow; negative mode preserves the displayed brand blue through complementary colors; forced colors uses system colors.
+
+Targeted component lint and CSS parsing passed. The attempted live check at localhost:3000/podcasts/episodes returned a 404 page, so this latest geometry has not been verified in the running app.
+
+## 24. Final state and task closure (2026-09-26)
+
+**Status: Complete at the user's request.** The user reported that the guide appears to be working and asked to close this task. This is user-reported confirmation, not a new automated browser verification.
+
+Current behavior (supersedes earlier band designs):
+
+- Contrast card cycles Normal → High Contrast → Negative Colors; Font card cycles Site Font → System Font → OpenDyslexic.
+- Cursor card cycles Off → Large Cursor → Reading Mask → Reading Guide.
+- Reading Mask dims the surroundings of a clear horizontal reading area.
+- Reading Guide is a 3px brand-blue line with subtle glow, 50% viewport width, and no filled band. It follows pointer X and Y, follows keyboard focus, and clamps to screen edges. The chosen friend sits centered 10px below the line.
+- Butterfly, star, flower, bear and rocket are selectable and saved; butterfly is the default. Optional transparent PNGs fall back to emojis. See the artwork instructions in public/accessibility/reading-friends/README.md.
+- Guides remain click-through; contrast/negative/system-color styling and public-route cleanup remain in place.
+
+Verification history remains as documented: nine preference tests and targeted lint passed for the implemented features; earlier browser checks covered persistence, reset, marker choices and prior layouts. The latest horizontal-guide live test was interrupted/blocked by unavailable routes, so it is not recorded as an automated pass. Existing broader audit limitations remain follow-up work and do not change the user-requested closure of this task. No application code changed during closure.

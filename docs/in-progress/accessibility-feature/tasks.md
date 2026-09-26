@@ -656,6 +656,8 @@ New component/module names should follow the repository conventions found during
 
 **Priority:** P3. **Dependencies:** E0, E1, E6.
 
+**2026-09-25 proposal:** [Wiktionary research and implementation plan](specs/dictionary-wiktionary-plan.md) and [ordered execution checklist](tasks/dictionary-wiktionary.md). English-only scope and keyboard access are defined in the proposal; implementation remains pending. Reassess broad E1/E6 dependencies against this bounded scope before starting.
+
 - [ ] E8-01 Choose an editorial glossary or licensed dictionary source and document ownership, licensing and update responsibility.
 - [ ] E8-02 Define supported languages and reviewed terminology, especially autism/support-related terms.
 - [ ] E8-03 Decide whether activation uses authored glossary links, selected words or both; keep an ordinary keyboard-accessible alternative.
@@ -746,4 +748,3 @@ Copy this record into implementation notes for each task or tightly related grou
 | Follow-up | Defect, impact, owner and target review date |
 
 A task is complete only when implementation/content changes are present, its relevant acceptance checks pass, required regressions pass, documentation matches behavior, and evidence is linked. Keep failed or blocked tasks unchecked.
-

@@ -276,6 +276,8 @@ This register tracks all accessibility features across the Deesha Foundation web
 
 ### E8: Dictionary & Definitions
 
+**2026-09-25 update:** English word lookup is now proposed using Wiktionary. See the [research and implementation plan](dictionary-wiktionary-plan.md) and [execution checklist](../tasks/dictionary-wiktionary.md). This supersedes the blanket deferral and paid-API assumption below for English selection/hover lookup only. Implementation has not started; translation remains deferred. The table and rationale below record the earlier assessment.
+
 | Feature | Status | Owner | Target | Complexity | Rationale |
 |---------|--------|-------|--------|------------|-----------|
 | Word definitions on hover | ⏭️ | TBD | P4 | High | Content-heavy feature |
