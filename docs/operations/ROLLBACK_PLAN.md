@@ -30,9 +30,9 @@ GRANT SELECT ON public.donation_stats_by_currency TO authenticated;
 ```
 
 Repeat similarly for the other 3 views if needed. The original view definitions are in:
-- `scripts/008-currency-support.sql`
-- `scripts/payments-v2/025-create-payment-logs-table.sql`
-- `scripts/056-event-payment-integration.sql`
+- `scripts/db/migrations/008-currency-support.sql`
+- `scripts/db/payments-v2/025b-create-payment-logs-table.sql`
+- `scripts/db/migrations/056-event-payment-integration.sql`
 
 ---
 

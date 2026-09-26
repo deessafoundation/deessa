@@ -36,10 +36,10 @@ A `SECURITY DEFINER` view runs with the permissions of the user who **created** 
 
 | View | Defined In | App Usage | Risk |
 |------|-----------|-----------|------|
-| `donation_stats_by_currency` | `scripts/008-currency-support.sql:22` | Docs only, no TS references | Low — aggregate stats |
-| `recent_payment_errors` | `scripts/payments-v2/025-create-payment-logs-table.sql:118` | No TS references | Medium — error details |
-| `payment_mismatches` | `scripts/payments-v2/025-create-payment-logs-table.sql:137` | No TS references | Medium — mismatch data |
-| `event_registrations_with_event` | `scripts/056-event-payment-integration.sql:110` | Admin dashboards | High — PII + payment data |
+| `donation_stats_by_currency` | `scripts/db/migrations/008-currency-support.sql:22` | Docs only, no TS references | Low — aggregate stats |
+| `recent_payment_errors` | `scripts/db/payments-v2/025b-create-payment-logs-table.sql:118` | No TS references | Medium — error details |
+| `payment_mismatches` | `scripts/db/payments-v2/025b-create-payment-logs-table.sql:137` | No TS references | Medium — mismatch data |
+| `event_registrations_with_event` | `scripts/db/migrations/056-event-payment-integration.sql:110` | Admin dashboards | High — PII + payment data |
 
 ### Why they have SECURITY DEFINER
 
@@ -63,15 +63,15 @@ Tables in the `public` schema are exposed via PostgREST (the Supabase REST API).
 
 | Table | Defined In | App Usage | Sensitivity |
 |-------|-----------|-----------|-------------|
-| `payments` | `scripts/payments-v2/020-create-payments-table.sql` | PaymentService, admin-actions, backfill | **High** — payment data + session_id |
-| `receipts` | `scripts/payments-v2/021-create-receipts-table.sql` | validation.ts | Medium — receipt metadata |
-| `payment_jobs` | `scripts/payments-v2/022-create-payment-jobs-table.sql` | Placeholder only | Low — not yet active |
-| `email_failures` | `scripts/payments-v2/027-create-email-failures-table.sql` | metrics.ts, admin emails | Medium — failure details |
-| `payment_events` | `scripts/009-payment-security-hardening.sql` | PaymentService, webhooks, admin (heavy) | **High** — idempotency + audit |
-| `receipt_sequences` | `scripts/payments-v2/025-atomic-receipt-number.sql` | generator.ts via RPC | Medium — sequence data |
-| `payment_logs` | `scripts/payments-v2/025-create-payment-logs-table.sql` | logging.ts | Medium — structured logs |
-| `review_notes` | `scripts/030-admin-transaction-detail-schema.sql` | admin-payment-actions | Medium — admin notes |
-| `status_change_log` | `scripts/030-admin-transaction-detail-schema.sql` | admin-payment-actions | Medium — audit trail |
+| `payments` | `scripts/db/payments-v2/020-create-payments-table.sql` | PaymentService, admin-actions, backfill | **High** — payment data + session_id |
+| `receipts` | `scripts/db/payments-v2/021-create-receipts-table.sql` | validation.ts | Medium — receipt metadata |
+| `payment_jobs` | `scripts/db/payments-v2/022-create-payment-jobs-table.sql` | Placeholder only | Low — not yet active |
+| `email_failures` | `scripts/db/payments-v2/027-create-email-failures-table.sql` | metrics.ts, admin emails | Medium — failure details |
+| `payment_events` | `scripts/db/migrations/009-payment-security-hardening.sql` | PaymentService, webhooks, admin (heavy) | **High** — idempotency + audit |
+| `receipt_sequences` | `scripts/db/payments-v2/025-atomic-receipt-number.sql` | generator.ts via RPC | Medium — sequence data |
+| `payment_logs` | `scripts/db/payments-v2/025b-create-payment-logs-table.sql` | logging.ts | Medium — structured logs |
+| `review_notes` | `scripts/db/migrations/030-admin-transaction-detail-schema.sql` | admin-payment-actions | Medium — admin notes |
+| `status_change_log` | `scripts/db/migrations/030-admin-transaction-detail-schema.sql` | admin-payment-actions | Medium — audit trail |
 | `payments_with_session` | **Not in migrations** (phantom table) | None | Unknown |
 
 ### Why RLS is not enabled
@@ -96,7 +96,7 @@ The `payments` table is exposed via API without RLS and contains `session_id` �
 
 - **Table:** `payments`
 - **Column:** `session_id` (Stripe Checkout Session ID)
-- **Defined in:** `scripts/031-enhance-payments-stripe-references.sql`
+- **Defined in:** `scripts/db/migrations/031-enhance-payments-stripe-references.sql`
 
 ### Fix
 
@@ -141,9 +141,9 @@ After applying fixes, re-run the Supabase database linter to confirm all 16 erro
 
 | File | Purpose |
 |------|---------|
-| `scripts/fixes/DATABASE_ISSUES_ANALYSIS.md` | This document |
+| `docs/operations/DATABASE_ISSUES_ANALYSIS.md` | This document |
 | `scripts/fixes/001-fix-security-definer-views.sql` | SQL to fix SECURITY DEFINER views |
 | `scripts/fixes/002-enable-rls-tables.sql` | SQL to enable RLS on tables |
 | `scripts/fixes/003-sensitive-columns-protection.sql` | SQL to protect sensitive columns |
-| `scripts/fixes/ROLLBACK_PLAN.md` | Rollback procedures |
-| `scripts/fixes/errors.md` | Original linter output |
+| `docs/operations/ROLLBACK_PLAN.md` | Rollback procedures |
+| `docs/operations/fixes-errors.md` | Original linter output |

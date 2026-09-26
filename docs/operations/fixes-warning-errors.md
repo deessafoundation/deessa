@@ -28,57 +28,57 @@ Add `SET search_path = public` to each function definition. This is a safe, non-
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 1 | `get_next_receipt_number` | Generates atomic receipt numbers with yearly reset | `scripts/payments-v2/025-atomic-receipt-number.sql:19` |
-| 2 | `cleanup_old_payment_logs` | Deletes payment logs older than N days | `scripts/payments-v2/025-create-payment-logs-table.sql:156` |
-| 3 | `increment_receipt_failure_attempt` | Increments retry count for receipt failures | `scripts/payments-v2/026-create-receipt-failures-table.sql:46` |
-| 4 | `increment_email_failure_attempt` | Increments retry count for email failures | `scripts/payments-v2/027-create-email-failures-table.sql:51` |
-| 5 | `increment_rate_limit` | Tracks API rate limit counters | `scripts/018-rate-limit-function.sql:9` |
-| 6 | `get_currency_symbol` | Returns currency symbol for a code (USD→$) | `scripts/008-currency-support.sql:34` |
+| 1 | `get_next_receipt_number` | Generates atomic receipt numbers with yearly reset | `scripts/db/payments-v2/025-atomic-receipt-number.sql:19` |
+| 2 | `cleanup_old_payment_logs` | Deletes payment logs older than N days | `scripts/db/payments-v2/025b-create-payment-logs-table.sql:156` |
+| 3 | `increment_receipt_failure_attempt` | Increments retry count for receipt failures | `scripts/db/payments-v2/026-create-receipt-failures-table.sql:46` |
+| 4 | `increment_email_failure_attempt` | Increments retry count for email failures | `scripts/db/payments-v2/027-create-email-failures-table.sql:51` |
+| 5 | `increment_rate_limit` | Tracks API rate limit counters | `scripts/db/migrations/018-rate-limit-function.sql:9` |
+| 6 | `get_currency_symbol` | Returns currency symbol for a code (USD→$) | `scripts/db/migrations/008-currency-support.sql:34` |
 
 **Admin system functions:**
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 7 | `is_admin_user` | Checks if current user has admin role | `scripts/002-admin-schema.sql:176` |
-| 8 | `get_admin_role` | Returns the admin role for current user | `scripts/002-admin-schema.sql:188` |
-| 9 | `create_admin_notification` | Creates a notification for an admin user | `scripts/036-admin-notifications.sql:57` |
-| 10 | `mark_notification_read` | Marks a single notification as read | `scripts/036-admin-notifications.sql:78` |
-| 11 | `mark_all_notifications_read` | Marks all notifications as read for a user | `scripts/036-admin-notifications.sql:90` |
-| 12 | `get_unread_notification_count` | Returns count of unread notifications | `scripts/036-admin-notifications.sql:105` |
+| 7 | `is_admin_user` | Checks if current user has admin role | `scripts/db/migrations/002-admin-schema.sql:176` |
+| 8 | `get_admin_role` | Returns the admin role for current user | `scripts/db/migrations/002-admin-schema.sql:188` |
+| 9 | `create_admin_notification` | Creates a notification for an admin user | `scripts/db/migrations/036-admin-notifications.sql:57` |
+| 10 | `mark_notification_read` | Marks a single notification as read | `scripts/db/migrations/036-admin-notifications.sql:78` |
+| 11 | `mark_all_notifications_read` | Marks all notifications as read for a user | `scripts/db/migrations/036-admin-notifications.sql:90` |
+| 12 | `get_unread_notification_count` | Returns count of unread notifications | `scripts/db/migrations/036-admin-notifications.sql:105` |
 
 **Homepage CMS functions:**
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 13 | `get_homepage_stats` | Returns donation/volunteer stats for homepage | `scripts/037-homepage-cms-schema.sql:438` |
-| 14 | `get_homepage_programs` | Returns active programs for homepage | `scripts/037-homepage-cms-schema.sql:452` |
-| 15 | `get_homepage_trust_indicators` | Returns trust indicators for homepage | `scripts/037-homepage-cms-schema.sql:466` |
-| 16 | `get_homepage_featured_stories_rules` | Returns featured stories rules | `scripts/037-homepage-cms-schema.sql:480` |
-| 17 | `update_homepage_setting` | Updates a homepage CMS setting | `scripts/037-homepage-cms-schema.sql:494` |
+| 13 | `get_homepage_stats` | Returns donation/volunteer stats for homepage | `scripts/db/migrations/037-homepage-cms-schema.sql:438` |
+| 14 | `get_homepage_programs` | Returns active programs for homepage | `scripts/db/migrations/037-homepage-cms-schema.sql:452` |
+| 15 | `get_homepage_trust_indicators` | Returns trust indicators for homepage | `scripts/db/migrations/037-homepage-cms-schema.sql:466` |
+| 16 | `get_homepage_featured_stories_rules` | Returns featured stories rules | `scripts/db/migrations/037-homepage-cms-schema.sql:480` |
+| 17 | `update_homepage_setting` | Updates a homepage CMS setting | `scripts/db/migrations/037-homepage-cms-schema.sql:494` |
 
 **Content/media functions:**
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 18 | `search_podcasts` | Full-text search across podcasts | `scripts/012-create_podcasts_table.sql:116` |
-| 19 | `increment_podcast_views` | Increments view count for a podcast | `scripts/012-create_podcasts_table.sql:135` |
-| 20 | `update_media_assets_updated_at` | Trigger: auto-updates `updated_at` column | `scripts/006-media-assets.sql:33` |
-| 21 | `update_updated_at_column` | Generic trigger: auto-updates `updated_at` | `scripts/002-admin-schema.sql:327` |
+| 18 | `search_podcasts` | Full-text search across podcasts | `scripts/db/migrations/012-create-podcasts-table.sql:116` |
+| 19 | `increment_podcast_views` | Increments view count for a podcast | `scripts/db/migrations/012-create-podcasts-table.sql:135` |
+| 20 | `update_media_assets_updated_at` | Trigger: auto-updates `updated_at` column | `scripts/db/migrations/006-media-assets.sql:33` |
+| 21 | `update_updated_at_column` | Generic trigger: auto-updates `updated_at` | `scripts/db/migrations/002-admin-schema.sql:327` |
 
 **Events/conference functions:**
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 22 | `can_delete_event` | Checks if an event can be deleted | `scripts/050-events-module-schema.sql:450` |
-| 23 | `update_conference_form_template_updated_at` | Trigger: auto-updates `updated_at` | `scripts/042-conference-form-templates.sql:56` |
-| 24 | `get_current_conference_event_id` | Returns the active conference event ID | `scripts/043-multi-event-support.sql:25` |
+| 22 | `can_delete_event` | Checks if an event can be deleted | `scripts/db/migrations/050-events-module-schema.sql:450` |
+| 23 | `update_conference_form_template_updated_at` | Trigger: auto-updates `updated_at` | `scripts/db/migrations/042-conference-form-templates.sql:56` |
+| 24 | `get_current_conference_event_id` | Returns the active conference event ID | `scripts/db/migrations/043-multi-event-support.sql:25` |
 
 **Ticket functions:**
 
 | # | Function | What it does | Defined in |
 |---|----------|-------------|-----------|
-| 25 | `increment_ticket_sold_count` | Atomically increments tickets sold | `scripts/057-ticket-sold-count-rpc.sql:4` |
-| 26 | `decrement_ticket_sold_count` | Atomically decrements tickets sold | `scripts/057-ticket-sold-count-rpc.sql:13` |
+| 25 | `increment_ticket_sold_count` | Atomically increments tickets sold | `scripts/db/migrations/057c-ticket-sold-count-rpc.sql:4` |
+| 26 | `decrement_ticket_sold_count` | Atomically decrements tickets sold | `scripts/db/migrations/057c-ticket-sold-count-rpc.sql:13` |
 
 **Impact:** Low. This is a defense-in-depth measure. None of these functions currently have known conflicts, but it's best practice to pin the search path.
 
@@ -105,32 +105,32 @@ These policies give a false sense of security. You might think RLS is protecting
 
 | # | Table | Policy Name | What the table stores | Defined in |
 |---|-------|-------------|----------------------|-----------|
-| 27 | `activity_logs` | System can insert logs | User activity audit trail | `scripts/002-admin-schema.sql:280` |
-| 28 | `admin_notifications` | System can insert notifications | Admin notification queue | `scripts/036-admin-notifications.sql:47` |
-| 29 | `receipt_audit_log` | System can insert receipt logs | Receipt generation audit trail | `scripts/011-receipt-system-complete.sql:75` |
-| 30 | `support_admin_actions` | System can insert support admin actions | Support ticket admin actions | `scripts/035-support-admin-actions.sql:58` |
+| 27 | `activity_logs` | System can insert logs | User activity audit trail | `scripts/db/migrations/002-admin-schema.sql:280` |
+| 28 | `admin_notifications` | System can insert notifications | Admin notification queue | `scripts/db/migrations/036-admin-notifications.sql:47` |
+| 29 | `receipt_audit_log` | System can insert receipt logs | Receipt generation audit trail | `scripts/db/migrations/010-receipt-system.sql:75` |
+| 30 | `support_admin_actions` | System can insert support admin actions | Support ticket admin actions | `scripts/db/migrations/035-support-admin-actions.sql:58` |
 
 **"Anonymous" insert policies (INSERT WITH CHECK true) — intended for public form submissions:**
 
 | # | Table | Policy Name | What the table stores | Defined in |
 |---|-------|-------------|----------------------|-----------|
-| 31 | `contact_submissions` | Allow anonymous inserts | Contact form submissions | `scripts/001-create-tables.sql:70` |
-| 32 | `newsletter_subscriptions` | Allow anonymous inserts | Newsletter signups | `scripts/001-create-tables.sql:71` |
-| 33 | `volunteer_applications` | Allow anonymous inserts | Volunteer applications | `scripts/001-create-tables.sql:74` |
+| 31 | `contact_submissions` | Allow anonymous inserts | Contact form submissions | `scripts/db/migrations/001-create-tables.sql:70` |
+| 32 | `newsletter_subscriptions` | Allow anonymous inserts | Newsletter signups | `scripts/db/migrations/001-create-tables.sql:71` |
+| 33 | `volunteer_applications` | Allow anonymous inserts | Volunteer applications | `scripts/db/migrations/001-create-tables.sql:74` |
 
 **Authenticated user policies (INSERT/UPDATE/DELETE with always-true) — media management:**
 
 | # | Table | Policy Name | Operation | What the table stores | Defined in |
 |---|-------|-------------|-----------|----------------------|-----------|
-| 34 | `media_assets` | Authenticated users can insert media | INSERT | Media file metadata | `scripts/006-media-assets.sql:57` |
-| 35 | `media_assets` | Authenticated users can update media | UPDATE | Media file metadata | `scripts/006-media-assets.sql:64` |
-| 36 | `media_assets` | Authenticated users can delete media | DELETE | Media file metadata | `scripts/006-media-assets.sql:71` |
+| 34 | `media_assets` | Authenticated users can insert media | INSERT | Media file metadata | `scripts/db/migrations/006-media-assets.sql:57` |
+| 35 | `media_assets` | Authenticated users can update media | UPDATE | Media file metadata | `scripts/db/migrations/006-media-assets.sql:64` |
+| 36 | `media_assets` | Authenticated users can delete media | DELETE | Media file metadata | `scripts/db/migrations/006-media-assets.sql:71` |
 
 | # | Table | Policy Name | Operation | What the table stores | Defined in |
 |---|-------|-------------|-----------|----------------------|-----------|
-| — | `podcasts` | Authenticated users can insert podcasts | INSERT | Podcast episodes | `scripts/012-create_podcasts_table.sql:79` |
-| — | `podcasts` | Authenticated users can update podcasts | UPDATE | Podcast episodes | `scripts/012-create_podcasts_table.sql:86` |
-| — | `podcasts` | Authenticated users can delete podcasts | DELETE | Podcast episodes | `scripts/012-create_podcasts_table.sql:94` |
+| — | `podcasts` | Authenticated users can insert podcasts | INSERT | Podcast episodes | `scripts/db/migrations/012-create-podcasts-table.sql:79` |
+| — | `podcasts` | Authenticated users can update podcasts | UPDATE | Podcast episodes | `scripts/db/migrations/012-create-podcasts-table.sql:86` |
+| — | `podcasts` | Authenticated users can delete podcasts | DELETE | Podcast episodes | `scripts/db/migrations/012-create-podcasts-table.sql:94` |
 
 ### Should you fix these?
 
@@ -161,20 +161,20 @@ If someone knows the bucket name, they can call the Supabase Storage API to list
 
 | # | Bucket | What it stores | Risk | Defined in |
 |---|--------|---------------|------|-----------|
-| 37 | `conference-uploads` | Conference-related files | Low | `scripts/041-conference-file-upload-bucket.sql:83` |
-| 38 | `event-images` | Event cover photos | Low | `scripts/003-storage-setup.sql:29` |
-| 39 | `event-uploads` | Event-related files | Low | `scripts/056-event-uploads-storage-bucket.sql:72` |
-| 40 | `hero-images` | Homepage hero banners | Low | `scripts/004-site-assets-storage.sql:20` |
-| 41 | `og-images` | Open Graph preview images | Low | `scripts/004-site-assets-storage.sql:35` |
-| 42 | `partner-logos` | Partner/sponsor logos | Low | `scripts/003-storage-setup.sql:33` |
-| 43 | `press-gallery` | Press/media photos | Low | `scripts/004-site-assets-storage.sql:30` |
-| 44 | `project-images` | Project photos | Low | `scripts/003-storage-setup.sql:17` |
-| 45 | `receipts` | Generated receipt PDFs | **Medium** | `scripts/011-receipt-system-complete.sql:141` |
-| 46 | `site-assets` | General site assets | Low | `scripts/004-site-assets-storage.sql:25` |
-| 47 | `story-images` | Blog/story images | Low | `scripts/003-storage-setup.sql:21` |
-| 48 | `team-photos` | Team member photos | Low | `scripts/003-storage-setup.sql:25` |
-| 49 | `testimonials` | Testimonial images | Low | `scripts/039-testimonials-storage-bucket.sql:38` |
-| 50 | `videos` | Video files | Low | `scripts/003-storage-setup.sql:37` |
+| 37 | `conference-uploads` | Conference-related files | Low | `scripts/db/migrations/041-conference-file-upload-bucket.sql:83` |
+| 38 | `event-images` | Event cover photos | Low | `scripts/db/migrations/003-storage-setup.sql:29` |
+| 39 | `event-uploads` | Event-related files | Low | `scripts/db/migrations/056b-event-uploads-storage-bucket.sql:72` |
+| 40 | `hero-images` | Homepage hero banners | Low | `scripts/db/migrations/004-site-assets-storage.sql:20` |
+| 41 | `og-images` | Open Graph preview images | Low | `scripts/db/migrations/004-site-assets-storage.sql:35` |
+| 42 | `partner-logos` | Partner/sponsor logos | Low | `scripts/db/migrations/003-storage-setup.sql:33` |
+| 43 | `press-gallery` | Press/media photos | Low | `scripts/db/migrations/004-site-assets-storage.sql:30` |
+| 44 | `project-images` | Project photos | Low | `scripts/db/migrations/003-storage-setup.sql:17` |
+| 45 | `receipts` | Generated receipt PDFs | **Medium** | `scripts/db/migrations/010-receipt-system.sql:141` |
+| 46 | `site-assets` | General site assets | Low | `scripts/db/migrations/004-site-assets-storage.sql:25` |
+| 47 | `story-images` | Blog/story images | Low | `scripts/db/migrations/003-storage-setup.sql:21` |
+| 48 | `team-photos` | Team member photos | Low | `scripts/db/migrations/003-storage-setup.sql:25` |
+| 49 | `testimonials` | Testimonial images | Low | `scripts/db/migrations/039b-testimonials-storage-bucket.sql:38` |
+| 50 | `videos` | Video files | Low | `scripts/db/migrations/003-storage-setup.sql:37` |
 
 **Not affected (private buckets):**
 - `bank-transfer-proofs` — private, no public policy

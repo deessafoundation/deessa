@@ -23,7 +23,7 @@ OR嘉宾 ILIKE '%' || search_term || '%'  -- Invalid Chinese characters
 OR guest_name ILIKE '%' || search_term || '%'  -- Correct column name
 ```
 
-**Impact:** Script will now execute without errors. The `search_podcasts` function will correctly search the `guest_name` column (verified from `scripts/012-create_podcasts_table.sql`).
+**Impact:** Script will now execute without errors. The `search_podcasts` function will correctly search the `guest_name` column (verified from `scripts/db/migrations/012-create-podcasts-table.sql`).
 
 ---
 
@@ -36,7 +36,7 @@ OR guest_name ILIKE '%' || search_term || '%'  -- Correct column name
 **Added:**
 ```sql
 -- 10. receipt_failures
---    Source: scripts/payments-v2/026-create-receipt-failures-table.sql
+--    Source: scripts/db/payments-v2/026-create-receipt-failures-table.sql
 --    App access: Monitoring/admin workflows (service-role)
 ALTER TABLE public.receipt_failures ENABLE ROW LEVEL SECURITY;
 
