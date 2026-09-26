@@ -1,523 +1,412 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useSyncExternalStore, type ComponentType } from "react"
 import { createPortal } from "react-dom"
-import { Accessibility, Type, Contrast, ZoomIn, ZoomOut, RotateCcw, X, Pause, Palette, Keyboard } from "lucide-react"
+import { 
+  Accessibility, Type, ZoomIn, ZoomOut, RotateCcw, X, 
+  Pause, Palette, Keyboard, BookOpen, Eye, Wrench, MousePointer2
+} from "lucide-react"
+import { ReadingGuideSticker } from "./reading-guide-sticker"
+import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
-import { DEFAULT_ACCESSIBILITY_PREFERENCES } from "@/lib/types/accessibility"
+import { dictionaryAllowedOnPath } from "@/lib/dictionary/terms"
+import { 
+  DICTIONARY_LABELS, DICTIONARY_MODES, 
+  GUIDE_STICKERS, DEFAULT_ACCESSIBILITY_PREFERENCES, 
+  CURSOR_LABELS, CURSOR_MODES, 
+  CONTRAST_LABELS, CONTRAST_MODES, 
+  FONT_LABELS, FONT_MODES,
+  WIDGET_POSITIONS, WIDGET_POSITION_LABELS
+} from "@/lib/types/accessibility"
+
+const subscribeToMount = () => () => {}
+const clientMounted = () => true
+const serverMounted = () => false
+
+// Reusable Segmented Control for 1-click toggles
+const SegmentedControl = <T extends string>({ options, value, onChange, isHighContrast = false }: { options: {value: T; label: string}[], value: T, onChange: (val: T) => void, isHighContrast?: boolean }) => (
+  <div className="flex bg-slate-100/80 p-1 rounded-xl w-full border border-slate-200/60 shadow-inner" role="radiogroup">
+    {options.map(opt => (
+      <button
+        key={opt.value}
+        type="button"
+        role="radio"
+        aria-checked={value === opt.value}
+        onClick={() => onChange(opt.value)}
+        className={cn(
+          "flex-1 text-[11px] sm:text-xs font-semibold py-2 px-1 rounded-lg transition-all duration-200 truncate border-[1.5px]",
+          value === opt.value
+            ? (isHighContrast ? "bg-slate-900 text-white border-slate-900 shadow-sm" : "bg-white text-primary shadow-sm border-primary/20 text-shadow-sm")
+            : (isHighContrast ? "text-slate-700 hover:text-slate-900 border-transparent hover:bg-slate-200" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 border-transparent")
+        )}
+      >
+        {opt.label}
+      </button>
+    ))}
+  </div>
+)
+
+// Reusable elegant Toggle
+const Toggle = ({ label, description, icon: Icon, checked, onChange, isModified, onReset, isHighContrast = false }: { label: string, description?: string, icon: ComponentType<{ size?: number; strokeWidth?: number }>, checked: boolean, onChange: (val: boolean) => void, isModified?: boolean, onReset?: () => void, isHighContrast?: boolean }) => (
+  <div className="relative group flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-primary/20 bg-slate-50/50 transition-colors cursor-pointer" role="switch" aria-checked={checked} tabIndex={0} onClick={() => onChange(!checked)} onKeyDown={(e) => { if(e.key === ' ' || e.key === 'Enter') { e.preventDefault(); onChange(!checked); } }}>
+    <div className="flex items-center gap-3">
+        <div className={cn("p-1.5 rounded-lg transition-colors border", checked ? (isHighContrast ? "bg-slate-900 text-white border-slate-900" : "bg-primary text-white shadow-sm border-primary/20") : "bg-slate-200 text-slate-500 border-transparent")}>
+          <Icon size={18} strokeWidth={2.5} />
+        </div>
+        <div>
+          <span className="text-sm font-bold text-slate-800">{label}</span>
+          {description && <span className="block text-[11px] text-slate-500 font-medium leading-tight">{description}</span>}
+        </div>
+    </div>
+    <div className={cn("w-11 h-6 shrink-0 rounded-full p-0.5 transition-colors duration-200 relative shadow-inner border-2", checked ? (isHighContrast ? "bg-slate-900 border-slate-900" : "bg-primary border-primary") : "bg-slate-300 border-transparent")}>
+      <div className={cn("w-4 h-4 rounded-full shadow-sm transition-transform duration-200 border", checked ? (isHighContrast ? "bg-white border-slate-200 translate-x-5" : "bg-white border-primary/20 translate-x-5") : "bg-white border-slate-200 translate-x-0")} />
+    </div>
+    {isModified && (
+      <button onClick={(e) => { e.stopPropagation(); onReset?.(); }} className="absolute -right-2 -top-2 bg-white rounded-full shadow-sm border border-slate-200 text-slate-400 hover:text-primary hidden group-hover:flex z-10 p-1 transition-colors relative" type="button" aria-label="Reset">
+        <RotateCcw className="w-3 h-3" />
+      </button>
+    )}
+  </div>
+)
+
+// Smart modifier indicator with built-in hidden reset functionality
+const ModifiedIndicator = ({ onClick }: { onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className="group relative flex items-center justify-center p-1 w-6 h-6 hover:bg-slate-100 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
+    title="Modified setting. Click to restore default."
+    aria-label="Restore setting to default"
+    type="button"
+  >
+    <span className="w-2 h-2 bg-amber-500 rounded-full group-hover:scale-0 transition-transform absolute" />
+    <RotateCcw className="w-3.5 h-3.5 text-slate-500 scale-0 group-hover:scale-100 transition-transform absolute" />
+  </button>
+)
+
 
 export function HomeAccessibilityButton() {
   const [isOpen, setIsOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { preferences, updatePreference, resetAll, resetPreference } = useAccessibility()
-  
-  // Refs for focus management
+  const dictionaryAllowed = dictionaryAllowedOnPath(usePathname())
+  const mounted = useSyncExternalStore(subscribeToMount, clientMounted, serverMounted)
+  const { preferences, updatePreference, resetAll, resetPreference, isModified } = useAccessibility()
+
   const buttonRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  // Check if individual settings are modified from default
+  // Modification checks
   const isTextScaleModified = preferences.textScale !== DEFAULT_ACCESSIBILITY_PREFERENCES.textScale
   const isLineSpacingModified = preferences.lineSpacing !== DEFAULT_ACCESSIBILITY_PREFERENCES.lineSpacing
   const isLetterSpacingModified = preferences.letterSpacing !== DEFAULT_ACCESSIBILITY_PREFERENCES.letterSpacing
   const isFontFamilyModified = preferences.fontFamily !== DEFAULT_ACCESSIBILITY_PREFERENCES.fontFamily
-  const isHighContrastModified = preferences.highContrast !== DEFAULT_ACCESSIBILITY_PREFERENCES.highContrast
+  const isHighContrastModified = preferences.contrastMode !== 'normal'
   const isReduceMotionModified = preferences.reduceMotion !== DEFAULT_ACCESSIBILITY_PREFERENCES.reduceMotion
   const isSensoryFriendlyModified = preferences.sensoryFriendly !== DEFAULT_ACCESSIBILITY_PREFERENCES.sensoryFriendly
+  const isDictionaryModified = preferences.dictionaryMode !== DEFAULT_ACCESSIBILITY_PREFERENCES.dictionaryMode
+  const isCursorModified = preferences.cursorMode !== DEFAULT_ACCESSIBILITY_PREFERENCES.cursorMode
+  const isBigCursorModified = preferences.bigCursor !== DEFAULT_ACCESSIBILITY_PREFERENCES.bigCursor
+  const isWidgetPositionModified = preferences.widgetPosition !== DEFAULT_ACCESSIBILITY_PREFERENCES.widgetPosition
 
-  // Modified indicator component
-  const ModifiedIndicator = () => (
-    <span 
-      className="inline-flex items-center justify-center w-2 h-2 bg-amber-500 rounded-full ring-2 ring-amber-100" 
-      aria-label="Modified from default"
-      title="Modified from default"
-    />
-  )
-
-  // Ensure we only render portal on client side
+  // Write positioning CSS custom properties to :root so globals.css !important rules
+  // respect the user's chosen position instead of locking to bottom-right.
   useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
+    const root = document.documentElement
+    const pos = preferences.widgetPosition ?? 'bottom-right'
+    const isRight  = pos === 'bottom-right' || pos === 'middle-right'
+    const isBottom = pos === 'bottom-right' || pos === 'bottom-left'
+    const isMiddle = pos === 'middle-right'  || pos === 'middle-left'
 
-  // Focus management: trap focus and return focus on close
+    // Button — centered vertically in middle mode via translateY(-50%)
+    root.style.setProperty('--a11y-btn-top',       isMiddle ? '50%'    : 'auto')
+    root.style.setProperty('--a11y-btn-right',     isRight  ? '1.5rem' : 'auto')
+    root.style.setProperty('--a11y-btn-bottom',    isBottom ? '1.5rem' : 'auto')
+    root.style.setProperty('--a11y-btn-left',      !isRight ? '1.5rem' : 'auto')
+    root.style.setProperty('--a11y-btn-transform', isMiddle ? 'translateY(-50%)' : 'none')
+
+    if (isMiddle) {
+      // MIDDLE mode: open panel BESIDE the button (inward from screen edge),
+      // vertically centered with the button.
+      // Button width = 3.5rem (w-14), gap = 0.75rem, edge = 1.5rem
+      // → panel edge offset = 1.5rem + 3.5rem + 0.75rem = 5.75rem
+      const panelEdge = '5.75rem'
+      root.style.setProperty('--a11y-panel-top',       '50%')
+      root.style.setProperty('--a11y-panel-right',     isRight  ? panelEdge : 'auto')
+      root.style.setProperty('--a11y-panel-left',      !isRight ? panelEdge : 'auto')
+      root.style.setProperty('--a11y-panel-bottom',    'auto')
+      root.style.setProperty('--a11y-panel-transform', 'translateY(-50%)')
+    } else {
+      // BOTTOM mode: open panel ABOVE the button (existing behaviour, works great)
+      root.style.setProperty('--a11y-panel-top',       'auto')
+      root.style.setProperty('--a11y-panel-right',     isRight  ? '1rem' : 'auto')
+      root.style.setProperty('--a11y-panel-left',      !isRight ? '1rem' : 'auto')
+      root.style.setProperty('--a11y-panel-bottom',    'max(6rem, calc(env(safe-area-inset-bottom) + 1.5rem))')
+      root.style.setProperty('--a11y-panel-transform', 'none')
+    }
+
+    return () => {
+      root.style.removeProperty('--a11y-btn-top')
+      root.style.removeProperty('--a11y-btn-right')
+      root.style.removeProperty('--a11y-btn-bottom')
+      root.style.removeProperty('--a11y-btn-left')
+      root.style.removeProperty('--a11y-btn-transform')
+      root.style.removeProperty('--a11y-panel-top')
+      root.style.removeProperty('--a11y-panel-right')
+      root.style.removeProperty('--a11y-panel-bottom')
+      root.style.removeProperty('--a11y-panel-left')
+      root.style.removeProperty('--a11y-panel-transform')
+    }
+  }, [preferences.widgetPosition])
+
+  // Option arrays for SegmentedControls
+  const contrastOptions = CONTRAST_MODES.map(mode => ({ value: mode, label: CONTRAST_LABELS[mode] }))
+  const fontOptions = FONT_MODES.map(mode => ({ value: mode, label: FONT_LABELS[mode] }))
+  const dictionaryOptions = DICTIONARY_MODES.map(mode => ({ value: mode, label: DICTIONARY_LABELS[mode] }))
+  const cursorOptions = CURSOR_MODES.map(mode => ({ value: mode, label: CURSOR_LABELS[mode] }))
+  const widgetPositionOptions = WIDGET_POSITIONS.map(p => ({ value: p, label: WIDGET_POSITION_LABELS[p] }))
+
   useEffect(() => {
     if (isOpen) {
-      // Store what had focus before opening
-      previousFocusRef.current = document.activeElement as HTMLElement
-      
-      // Focus the first interactive element in the panel after a brief delay
-      setTimeout(() => {
+      previousFocusRef.current = document.activeElement === document.body ? buttonRef.current : document.activeElement as HTMLElement
+      const focusTimer = setTimeout(() => {
         const firstButton = panelRef.current?.querySelector('button, input, select') as HTMLElement
         firstButton?.focus()
-      }, 100)
+      }, 50)
+      return () => clearTimeout(focusTimer)
     } else if (previousFocusRef.current && document.contains(previousFocusRef.current)) {
-      // Return focus to the button when closing
       previousFocusRef.current.focus()
       previousFocusRef.current = null
     }
   }, [isOpen])
 
-  // Escape key handler
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false)
+      if (e.key === 'Tab' && isOpen && panelRef.current) {
+        const controls = [...panelRef.current.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), a[href]')].filter(node => node.getClientRects().length)
+        const first = controls[0], last = controls[controls.length - 1]
+        if (e.shiftKey && (document.activeElement === first || !panelRef.current.contains(document.activeElement))) {
+          e.preventDefault(); last?.focus()
+        } else if (!e.shiftKey && (document.activeElement === last || !panelRef.current.contains(document.activeElement))) {
+          e.preventDefault(); first?.focus()
+        }
       }
+      if (e.key === 'Escape' && isOpen) setIsOpen(false)
     }
-    
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen])
 
-  // Listen for custom event from footer link
   useEffect(() => {
-    const handleOpenPanel = () => {
-      setIsOpen(true)
-    }
-    
+    const handleOpenPanel = () => setIsOpen(true)
     window.addEventListener('openAccessibilityPanel', handleOpenPanel)
     return () => window.removeEventListener('openAccessibilityPanel', handleOpenPanel)
   }, [])
 
-  // Convenience functions for text scale (V2: 1.0-2.0 range)
-  const increaseTextSize = () => {
-    const newSize = Math.min(2.0, preferences.textScale + 0.1)
-    updatePreference('textScale', newSize)
-  }
-
-  const decreaseTextSize = () => {
-    const newSize = Math.max(1.0, preferences.textScale - 0.1)
-    updatePreference('textScale', newSize)
-  }
-
-  // Calculate font size percentage for display
   const fontSizePercent = Math.round(preferences.textScale * 100)
 
-  // The actual button and panel JSX
   const buttonContent = (
     <>
-      {/* Floating circular button on right side */}
       <button
         ref={buttonRef}
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "accessibility-button fixed z-50 w-14 h-14 rounded-full shadow-lg transition-shadow duration-300 flex items-center justify-center group",
-          isOpen
-            ? "bg-primary text-white shadow-xl"
-            : "bg-primary text-white hover:shadow-2xl",
-          !preferences.sensoryFriendly && "hover:scale-110 transition-transform"
+          "accessibility-button fixed z-50 w-14 h-14 rounded-full shadow-lg transition-transform duration-300 flex items-center justify-center group",
+          isOpen ? "bg-primary text-white shadow-xl scale-95 ring-4 ring-primary/20" : "bg-primary text-white hover:shadow-2xl hover:scale-105"
         )}
-        style={{ 
-          position: 'fixed',
-          right: '1.5rem',
-          bottom: '1.5rem',
-          top: 'auto',
-          left: 'auto'
-        }}
         aria-label="Accessibility options"
         aria-expanded={isOpen}
-        aria-controls="accessibility-panel"
-        title="Accessibility options"
       >
-        <Accessibility className="w-6 h-6" />
+        <Accessibility className="w-6 h-6 stroke-[2.5]" />
       </button>
 
-      {/* Accessibility panel */}
       {isOpen && (
         <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
-            aria-hidden="true"
-          />
+          <div className="fixed inset-0 z-40 bg-transparent transition-all" onClick={() => setIsOpen(false)} aria-hidden="true" />
           <div
             ref={panelRef}
             id="accessibility-panel"
             className={cn(
-              "accessibility-panel fixed z-50 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 sm:p-6 w-80 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto",
-              !preferences.sensoryFriendly && "animate-in fade-in slide-in-from-bottom-4 duration-300"
+              "accessibility-panel fixed z-50 rounded-3xl p-4 sm:p-5 w-[340px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto overflow-x-hidden transition-colors",
+              "bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl",
+              !preferences.sensoryFriendly && "animate-in fade-in slide-in-from-bottom-6 duration-300 zoom-in-95"
             )}
-            style={{ 
-              position: 'fixed',
-              right: '1rem',
-              bottom: 'max(6rem, calc(env(safe-area-inset-bottom) + 1.5rem))',
-              top: 'auto',
-              left: 'auto'
-            }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="accessibility-panel-title"
           >
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <h3 id="accessibility-panel-title" className="font-bold text-slate-900 text-lg flex items-center gap-2">
-                <Accessibility className="w-5 h-5 text-primary" />
-                Accessibility
-              </h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-colors touch-manipulation"
-                aria-label="Close accessibility panel"
-              >
-                <X className="w-5 h-5 sm:w-4 sm:h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {/* Font Size */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Type className="w-4 h-4 inline" />
-                    <span>Text Size ({fontSizePercent}%)</span>
-                    {isTextScaleModified && <ModifiedIndicator />}
-                  </label>
-                  {isTextScaleModified && (
-                    <button
-                      onClick={() => resetPreference('textScale')}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-                      aria-label="Reset text size to default"
-                      title="Reset to default"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
+            {/* Intelligent Header */}
+            <div className="flex flex-col gap-1 pb-4 mb-4 border-b border-slate-100">
+               <div className="flex items-center justify-between">
+                  <h3 id="accessibility-panel-title" className="font-extrabold text-slate-800 text-lg flex items-center gap-2.5 tracking-tight">
+                    <div className="p-1.5 bg-primary/10 text-primary rounded-xl shadow-sm"><Accessibility className="w-5 h-5 stroke-[2.5]" /></div>
+                    Accessibility
+                  </h3>
+                  <div className="flex items-center gap-1.5">
+                    {isModified && (
+                       <button onClick={resetAll} type="button" className="text-[11px] font-bold text-slate-400 hover:text-amber-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-amber-50">Reset All</button>
+                    )}
+                    <button onClick={() => setIsOpen(false)} type="button" className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors" aria-label="Close panel">
+                      <X className="w-5 h-5" />
                     </button>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={decreaseTextSize}
-                    disabled={preferences.textScale <= 1.0}
-                    className="w-10 h-10 sm:w-10 sm:h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                    aria-label="Decrease font size"
-                  >
-                    <ZoomOut className="w-4 h-4" />
-                  </button>
-                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all"
-                      style={{ width: `${((preferences.textScale - 1.0) / 1.0) * 100}%` }}
-                      role="progressbar"
-                      aria-valuenow={fontSizePercent}
-                      aria-valuemin={100}
-                      aria-valuemax={200}
-                    />
                   </div>
-                  <button
-                    onClick={increaseTextSize}
-                    disabled={preferences.textScale >= 2.0}
-                    className="w-10 h-10 sm:w-10 sm:h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                    aria-label="Increase font size"
-                  >
-                    <ZoomIn className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Line Spacing */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label 
-                    htmlFor="line-spacing-slider"
-                    className="text-sm font-semibold text-slate-700 flex items-center gap-2"
-                  >
-                    <span>Line Spacing ({preferences.lineSpacing !== null ? preferences.lineSpacing.toFixed(1) : 'Default'})</span>
-                    {isLineSpacingModified && <ModifiedIndicator />}
-                  </label>
-                  {isLineSpacingModified && (
-                    <button
-                      onClick={() => resetPreference('lineSpacing')}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-                      aria-label="Reset line spacing to default"
-                      title="Reset to default"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-                <input
-                  id="line-spacing-slider"
-                  type="range"
-                  min="1.5"
-                  max="2.5"
-                  step="0.1"
-                  value={preferences.lineSpacing ?? 1.5}
-                  onChange={(e) => updatePreference('lineSpacing', parseFloat(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer
-                    [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-                    [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer
-                    [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full 
-                    [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-                  aria-label={`Line spacing: ${preferences.lineSpacing !== null ? preferences.lineSpacing.toFixed(1) : 'default'}`}
-                  aria-valuemin={1.5}
-                  aria-valuemax={2.5}
-                  aria-valuenow={preferences.lineSpacing ?? 1.5}
-                />
-                <div className="flex justify-between text-xs text-slate-500 mt-1">
-                  <span>Compact</span>
-                  <span>Comfortable</span>
-                  <span>Spacious</span>
-                </div>
-              </div>
-
-              {/* Letter Spacing */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label 
-                    htmlFor="letter-spacing-slider"
-                    className="text-sm font-semibold text-slate-700 flex items-center gap-2"
-                  >
-                    <span>Letter Spacing ({preferences.letterSpacing !== null ? (preferences.letterSpacing * 100).toFixed(0) + '%' : 'Default'})</span>
-                    {isLetterSpacingModified && <ModifiedIndicator />}
-                  </label>
-                  {isLetterSpacingModified && (
-                    <button
-                      onClick={() => resetPreference('letterSpacing')}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-                      aria-label="Reset letter spacing to default"
-                      title="Reset to default"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-                <input
-                  id="letter-spacing-slider"
-                  type="range"
-                  min="0"
-                  max="0.12"
-                  step="0.01"
-                  value={preferences.letterSpacing ?? 0}
-                  onChange={(e) => updatePreference('letterSpacing', parseFloat(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer
-                    [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-                    [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer
-                    [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full 
-                    [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-                  aria-label={`Letter spacing: ${preferences.letterSpacing !== null ? (preferences.letterSpacing * 100).toFixed(0) : '0'} percent`}
-                  aria-valuemin={0}
-                  aria-valuemax={12}
-                  aria-valuenow={(preferences.letterSpacing ?? 0) * 100}
-                />
-                <div className="flex justify-between text-xs text-slate-500 mt-1">
-                  <span>Normal</span>
-                  <span>Wide</span>
-                </div>
-              </div>
-
-              {/* High Contrast */}
-              <div className="relative">
-                <button
-                  onClick={() => updatePreference('highContrast', !preferences.highContrast)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all touch-manipulation",
-                    preferences.highContrast
-                      ? "bg-primary/10 border-primary text-primary"
-                      : "bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/30"
-                  )}
-                  aria-pressed={preferences.highContrast}
-                >
-                  <Contrast className="w-5 h-5" />
-                  <span className="font-semibold text-sm flex items-center gap-2">
-                    High Contrast
-                    {isHighContrastModified && <ModifiedIndicator />}
-                  </span>
-                  <span className={cn(
-                    "ml-auto text-xs font-bold px-2 py-0.5 rounded-full",
-                    preferences.highContrast ? "bg-primary text-white" : "bg-slate-200 text-slate-500"
-                  )}>
-                    {preferences.highContrast ? "ON" : "OFF"}
-                  </span>
-                </button>
-                {isHighContrastModified && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      resetPreference('highContrast')
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors z-10"
-                    aria-label="Reset high contrast to default"
-                    title="Reset to default"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-
-              {/* Reduced Motion */}
-              <div className="relative">
-                <button
-                  onClick={() => updatePreference('reduceMotion', !preferences.reduceMotion)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all touch-manipulation",
-                    preferences.reduceMotion
-                      ? "bg-primary/10 border-primary text-primary"
-                      : "bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/30"
-                  )}
-                  aria-pressed={preferences.reduceMotion}
-                >
-                  <Pause className="w-5 h-5" />
-                  <span className="font-semibold text-sm flex items-center gap-2">
-                    Reduce Motion
-                    {isReduceMotionModified && <ModifiedIndicator />}
-                  </span>
-                  <span className={cn(
-                    "ml-auto text-xs font-bold px-2 py-0.5 rounded-full",
-                    preferences.reduceMotion ? "bg-primary text-white" : "bg-slate-200 text-slate-500"
-                  )}>
-                    {preferences.reduceMotion ? "ON" : "OFF"}
-                  </span>
-                </button>
-                {isReduceMotionModified && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      resetPreference('reduceMotion')
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors z-10"
-                    aria-label="Reset reduce motion to default"
-                    title="Reset to default"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-
-              {/* Sensory-Friendly Mode (replaces old Calming Mode) */}
-              <div className="relative">
-                <button
-                  onClick={() => updatePreference('sensoryFriendly', !preferences.sensoryFriendly)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all touch-manipulation",
-                    preferences.sensoryFriendly
-                      ? "bg-primary/10 border-primary text-primary"
-                      : "bg-slate-50 border-slate-200 text-slate-600 hover:border-primary/30"
-                  )}
-                  aria-pressed={preferences.sensoryFriendly}
-                >
-                  <Palette className="w-5 h-5" />
-                  <span className="font-semibold text-sm flex items-center gap-2">
-                    Sensory-Friendly Mode
-                    {isSensoryFriendlyModified && <ModifiedIndicator />}
-                  </span>
-                  <span className={cn(
-                    "ml-auto text-xs font-bold px-2 py-0.5 rounded-full",
-                    preferences.sensoryFriendly ? "bg-primary text-white" : "bg-slate-200 text-slate-500"
-                  )}>
-                    {preferences.sensoryFriendly ? "ON" : "OFF"}
-                  </span>
-                </button>
-                {isSensoryFriendlyModified && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      resetPreference('sensoryFriendly')
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors z-10"
-                    aria-label="Reset sensory-friendly mode to default"
-                    title="Reset to default"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-
-              {/* Font Family (V2) - Replaces old Dyslexia Font toggle */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label 
-                    htmlFor="font-family-select"
-                    className="text-sm font-semibold text-slate-700 flex items-center gap-2"
-                  >
-                    <Type className="w-4 h-4 inline" />
-                    <span>Font Family</span>
-                    {isFontFamilyModified && <ModifiedIndicator />}
-                  </label>
-                  {isFontFamilyModified && (
-                    <button
-                      onClick={() => resetPreference('fontFamily')}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-                      aria-label="Reset font family to default"
-                      title="Reset to default"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-                <select
-                  id="font-family-select"
-                  value={preferences.fontFamily}
-                  onChange={(e) => updatePreference('fontFamily', e.target.value as 'default' | 'system' | 'opendyslexic')}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-sm hover:border-primary/30 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                  aria-label="Choose font family"
-                >
-                  <option value="default">Default (Site Font)</option>
-                  <option value="system">System Font</option>
-                  <option value="opendyslexic">OpenDyslexic (Dyslexia-Friendly)</option>
-                </select>
-                <p className="text-xs text-slate-500 mt-1.5">
-                  {preferences.fontFamily === 'default' && 'Using the site\'s designed typography'}
-                  {preferences.fontFamily === 'system' && 'Using your device\'s system font'}
-                  {preferences.fontFamily === 'opendyslexic' && 'Font designed for better readability'}
-                </p>
-              </div>
-
-              {/* Reset */}
-              <button
-                onClick={() => {
-                  resetAll()
-                }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-700 hover:border-slate-400 transition-all text-sm font-semibold touch-manipulation"
-                aria-label="Reset all accessibility settings to defaults"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reset All
-              </button>
+               </div>
             </div>
 
-            <p className="text-xs text-slate-400 mt-4 text-center leading-relaxed">
-              These settings are saved automatically and persist across pages.
-            </p>
+            <div className="space-y-6 pb-2">
+               
+               {/* 1. TYPOGRAPHY */}
+               <div className="space-y-4">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                     <Type className="w-3.5 h-3.5" strokeWidth={3} /> Typography
+                  </h4>
+                  
+                  <div className="space-y-1.5">
+                     <div className="flex items-center justify-between px-1">
+                       <label className="text-sm font-bold text-slate-700">Font Style</label>
+                       {isFontFamilyModified && <ModifiedIndicator onClick={() => resetPreference('fontFamily')} />}
+                     </div>
+                     <SegmentedControl options={fontOptions} value={preferences.fontFamily} onChange={val => updatePreference('fontFamily', val)} isHighContrast={isHighContrastModified} />
+                  </div>
 
-            {/* Keyboard shortcuts help */}
-            <details className="mt-4 border-t border-slate-200 pt-4">
-              <summary className="text-sm font-semibold text-slate-700 cursor-pointer hover:text-primary flex items-center gap-2 transition-colors">
-                <Keyboard className="w-4 h-4" />
-                Keyboard Shortcuts
+                  <div className="space-y-1.5">
+                     <div className="flex items-center justify-between px-1">
+                       <label className="text-sm font-bold text-slate-700">Text Size <span className="text-slate-400 font-medium ml-1">({fontSizePercent}%)</span></label>
+                       {isTextScaleModified && <ModifiedIndicator onClick={() => resetPreference('textScale')} />}
+                     </div>
+                     <div className="flex items-center gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                       <button type="button" onClick={() => updatePreference('textScale', Math.max(1.0, preferences.textScale - 0.1))} disabled={preferences.textScale <= 1.0} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Decrease text size"><ZoomOut className="w-4 h-4" strokeWidth={2.5} /></button>
+                       <div className="flex-1 px-1">
+                         <input type="range" min="1.0" max="2.0" step="0.1" value={preferences.textScale} onChange={e => updatePreference('textScale', parseFloat(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer" aria-label="Adjust text size" />
+                       </div>
+                       <button type="button" onClick={() => updatePreference('textScale', Math.min(2.0, preferences.textScale + 0.1))} disabled={preferences.textScale >= 2.0} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Increase text size"><ZoomIn className="w-4 h-4" strokeWidth={2.5} /></button>
+                     </div>
+                  </div>
+
+                  <div className="space-y-4">
+                     <div className="space-y-1.5">
+                       <div className="flex items-center justify-between px-1">
+                         <label className="text-sm font-bold text-slate-700">Line Height <span className="text-slate-400 font-medium ml-1">({preferences.lineSpacing ?? 1.5})</span></label>
+                         {isLineSpacingModified && <ModifiedIndicator onClick={() => resetPreference('lineSpacing')} />}
+                       </div>
+                       <div className="flex items-center gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                         <button type="button" onClick={() => updatePreference('lineSpacing', Math.max(1.5, (preferences.lineSpacing ?? 1.5) - 0.1))} disabled={(preferences.lineSpacing ?? 1.5) <= 1.5} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Decrease line height"><ZoomOut className="w-4 h-4" strokeWidth={2.5} /></button>
+                         <div className="flex-1 px-1">
+                           <input type="range" min="1.5" max="2.5" step="0.1" value={preferences.lineSpacing ?? 1.5} onChange={e => updatePreference('lineSpacing', parseFloat(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer" aria-label="Adjust line height" />
+                         </div>
+                         <button type="button" onClick={() => updatePreference('lineSpacing', Math.min(2.5, (preferences.lineSpacing ?? 1.5) + 0.1))} disabled={(preferences.lineSpacing ?? 1.5) >= 2.5} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Increase line height"><ZoomIn className="w-4 h-4" strokeWidth={2.5} /></button>
+                       </div>
+                     </div>
+                     <div className="space-y-1.5">
+                       <div className="flex items-center justify-between px-1">
+                         <label className="text-sm font-bold text-slate-700">Character Space <span className="text-slate-400 font-medium ml-1">({preferences.letterSpacing ?? 0})</span></label>
+                         {isLetterSpacingModified && <ModifiedIndicator onClick={() => resetPreference('letterSpacing')} />}
+                       </div>
+                       <div className="flex items-center gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                         <button type="button" onClick={() => updatePreference('letterSpacing', Math.max(0, (preferences.letterSpacing ?? 0) - 0.01))} disabled={(preferences.letterSpacing ?? 0) <= 0} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Decrease character space"><ZoomOut className="w-4 h-4" strokeWidth={2.5} /></button>
+                         <div className="flex-1 px-1">
+                           <input type="range" min="0" max="0.12" step="0.01" value={preferences.letterSpacing ?? 0} onChange={e => updatePreference('letterSpacing', parseFloat(e.target.value))} className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer" aria-label="Adjust character space" />
+                         </div>
+                         <button type="button" onClick={() => updatePreference('letterSpacing', Math.min(0.12, (preferences.letterSpacing ?? 0) + 0.01))} disabled={(preferences.letterSpacing ?? 0) >= 0.12} className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm" aria-label="Increase character space"><ZoomIn className="w-4 h-4" strokeWidth={2.5} /></button>
+                       </div>
+                     </div>
+                  </div>
+               </div>
+
+               {/* 2. VISUALS & FOCUS */}
+               <div className="space-y-4">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                     <Eye className="w-3.5 h-3.5" strokeWidth={3} /> Visuals & Focus
+                  </h4>
+                  
+                  <div className="space-y-1.5">
+                     <div className="flex items-center justify-between px-1">
+                       <label className="text-sm font-bold text-slate-700">Contrast</label>
+                       {isHighContrastModified && <ModifiedIndicator onClick={() => resetPreference('contrastMode')} />}
+                     </div>
+                     <SegmentedControl options={contrastOptions} value={preferences.contrastMode} onChange={val => updatePreference('contrastMode', val)} isHighContrast={isHighContrastModified} />
+                  </div>
+
+                   <div className="flex flex-col gap-2">
+                     <Toggle label="Sensory-Friendly Mode" description="Mutes bright colors & removes auto-play elements" icon={Palette} checked={preferences.sensoryFriendly} onChange={val => updatePreference('sensoryFriendly', val)} isModified={isSensoryFriendlyModified} onReset={() => resetPreference('sensoryFriendly')} isHighContrast={isHighContrastModified} />
+                     <Toggle label="Reduce Motion" description="Disables UI animations & slick transitions" icon={Pause} checked={preferences.reduceMotion} onChange={val => updatePreference('reduceMotion', val)} isModified={isReduceMotionModified} onReset={() => resetPreference('reduceMotion')} isHighContrast={isHighContrastModified} />
+                   </div>
+               </div>
+
+               {/* 3. ASSISTIVE TOOLS */}
+               <div className="space-y-4">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                     <Wrench className="w-3.5 h-3.5" strokeWidth={3} /> Assistive Tools
+                  </h4>
+                  
+                  <div className="space-y-1.5">
+                     <div className="flex items-center justify-between px-1">
+                       <label className="text-sm font-bold text-slate-700">Reading Dictionary</label>
+                       {isDictionaryModified && <ModifiedIndicator onClick={() => resetPreference('dictionaryMode')} />}
+                     </div>
+                     <SegmentedControl options={dictionaryOptions} value={preferences.dictionaryMode} onChange={val => updatePreference('dictionaryMode', val)} isHighContrast={isHighContrastModified} />
+                     {preferences.dictionaryMode !== 'off' && dictionaryAllowed && (
+                        <div className="px-1 mt-1.5">
+                          <button type="button" onClick={() => { setIsOpen(false); requestAnimationFrame(() => window.dispatchEvent(new Event('openAccessibilityDictionary'))) }} className="text-xs text-primary font-bold hover:underline py-1 flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" strokeWidth={3}/> Look up a word right now</button>
+                        </div>
+                     )}
+                  </div>
+
+                  <div className="space-y-1.5">
+                     <Toggle label="Large Cursor" description="Increases pointer size for easier tracking" icon={MousePointer2} checked={preferences.bigCursor} onChange={val => updatePreference('bigCursor', val)} isModified={isBigCursorModified} onReset={() => resetPreference('bigCursor')} isHighContrast={isHighContrastModified} />
+                  </div>
+
+                  <div className="space-y-1.5 pb-2 pt-1 border-t border-slate-100/60 mt-4">
+                     <div className="flex items-center justify-between px-1 mt-2">
+                       <label className="text-sm font-bold text-slate-700">Reading Assist</label>
+                       {isCursorModified && <ModifiedIndicator onClick={() => resetPreference('cursorMode')} />}
+                     </div>
+                     <SegmentedControl options={cursorOptions} value={preferences.cursorMode} onChange={val => updatePreference('cursorMode', val)} isHighContrast={isHighContrastModified} />
+                     
+                     {preferences.cursorMode === 'guide' && (
+                       <div className="mt-2.5 p-3 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative animate-in fade-in slide-in-from-top-2">
+                         <p className="text-xs font-bold text-slate-600 mb-2.5">Choose your reading buddy:</p>
+                         <div className="flex flex-wrap gap-2">
+                           {GUIDE_STICKERS.map(sticker => (
+                             <button key={sticker.id} type="button" aria-label={sticker.label} title={sticker.label} onClick={() => updatePreference('guideSticker', sticker.id)}
+                               className={cn('h-10 w-10 rounded-lg border-2 p-1 text-xl flex items-center justify-center transition-all bg-white', preferences.guideSticker === sticker.id ? 'border-primary ring-2 ring-primary/20 scale-110 shadow-md' : 'border-slate-200 hover:border-primary/50')}>
+                               <ReadingGuideSticker id={sticker.id} />
+                             </button>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+                  </div>
+
+               </div>
+               
+             {/* 4. WIDGET POSITION */}
+               <div className="space-y-4">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+                     Button Placement
+                  </h4>
+
+                  <div className="space-y-1.5">
+                     <div className="flex items-center justify-between px-1">
+                       <label className="text-sm font-bold text-slate-700">Widget Position</label>
+                       {isWidgetPositionModified && <ModifiedIndicator onClick={() => resetPreference('widgetPosition')} />}
+                     </div>
+                     <SegmentedControl options={widgetPositionOptions} value={preferences.widgetPosition} onChange={val => updatePreference('widgetPosition', val)} isHighContrast={isHighContrastModified} />
+                     <p className="text-[10px] text-slate-400 px-1 leading-tight">Choose where the <span className="font-semibold">♿ button</span> anchors on your screen.</p>
+                  </div>
+               </div>
+
+            </div>
+
+            <details className="mt-2 border-t border-slate-100 pt-4 group">
+              <summary className="text-xs font-bold text-slate-500 cursor-pointer hover:text-primary flex items-center gap-2 transition-colors list-none outline-none">
+                <Keyboard className="w-4 h-4" /> Keyboard Shortcuts
               </summary>
-              <dl className="mt-3 space-y-2 text-xs text-slate-600">
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1.5">
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">Esc</kbd>
-                  </dt>
-                  <dd className="text-slate-500">Close panel</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1.5">
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">Tab</kbd>
-                    <span className="text-slate-400">/</span>
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">Shift+Tab</kbd>
-                  </dt>
-                  <dd className="text-slate-500">Navigate controls</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1.5">
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">Space</kbd>
-                  </dt>
-                  <dd className="text-slate-500">Toggle switches</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1.5">
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">↑ ↓</kbd>
-                  </dt>
-                  <dd className="text-slate-500">Adjust sliders</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1.5">
-                    <kbd className="px-2 py-1 bg-slate-100 rounded border border-slate-300 font-mono text-xs">Enter</kbd>
-                  </dt>
-                  <dd className="text-slate-500">Select dropdown</dd>
-                </div>
+              <dl className="mt-3 text-[11px] text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100 grid grid-cols-2 gap-y-2 gap-x-4">
+                <div className="flex items-center justify-between"><dt className="flex items-center gap-1.5"><kbd className="px-1.5 py-0.5 bg-white rounded border border-slate-200 font-mono shadow-sm">Esc</kbd></dt><dd>Close</dd></div>
+                <div className="flex items-center justify-between"><dt className="flex items-center gap-1.5"><kbd className="px-1.5 py-0.5 bg-white rounded border border-slate-200 font-mono shadow-sm">Tab</kbd></dt><dd>Navigate</dd></div>
+                <div className="flex items-center justify-between"><dt className="flex items-center gap-1.5"><kbd className="px-1.5 py-0.5 bg-white rounded border border-slate-200 font-mono shadow-sm">Space</kbd></dt><dd>Toggle</dd></div>
               </dl>
             </details>
           </div>
@@ -526,9 +415,6 @@ export function HomeAccessibilityButton() {
     </>
   )
 
-  // Use portal to render directly to document.body, bypassing all parent containers
-  // This ensures position:fixed works correctly regardless of parent CSS properties
   if (!mounted) return null
-  
   return createPortal(buttonContent, document.body)
 }

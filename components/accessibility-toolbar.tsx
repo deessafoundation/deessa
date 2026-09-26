@@ -1,4 +1,6 @@
-'use client';
+'use client'
+
+import { CONTRAST_LABELS, nextContrastMode } from '@/lib/types/accessibility';
 
 import { useState } from 'react';
 import { Type, Contrast, FileText, X } from 'lucide-react';
@@ -86,22 +88,11 @@ export default function AccessibilityToolbar({
               </span>
             </Button>
 
-            {/* High Contrast */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => updatePreference('highContrast', !preferences.highContrast)}
-              className={cn(
-                "flex items-center gap-2 transition-all duration-300",
-                preferences.highContrast && "bg-brand-primary/10 border-brand-primary text-brand-primary"
-              )}
-              aria-label={`High contrast: ${preferences.highContrast ? 'on' : 'off'}`}
-              aria-pressed={preferences.highContrast}
-            >
-              <Contrast className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs">
-                {preferences.highContrast ? 'High Contrast' : 'Normal'}
-              </span>
+            <Button variant="outline" size="sm"
+              aria-label={`Contrast: ${CONTRAST_LABELS[preferences.contrastMode]}. Next: ${CONTRAST_LABELS[nextContrastMode(preferences.contrastMode)]}`}
+              onClick={() => updatePreference('contrastMode', nextContrastMode(preferences.contrastMode))}>
+              <Contrast className="w-4 h-4" aria-hidden="true" />
+              {CONTRAST_LABELS[preferences.contrastMode]}
             </Button>
 
             {/* Transcript Toggle (conditional) */}

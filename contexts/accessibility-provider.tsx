@@ -30,11 +30,9 @@ import type {
 import {
   DEFAULT_ACCESSIBILITY_PREFERENCES,
   STORAGE_CONFIG,
-  isValidStoredData,
-  isValidStoredDataV1,
+  decodeAccessibilityData,
   validatePreferences,
   preferencesEqual,
-  migrateV1toV2,
 } from '@/lib/types/accessibility'
 import { liveAnnouncer } from '@/lib/utils/accessibility'
 
@@ -61,10 +59,10 @@ export function AccessibilityProvider({
     DEFAULT_ACCESSIBILITY_PREFERENCES
   )
   const [isLoading, setIsLoading] = useState(true)
-  const [isModified, setIsModified] = useState(false)
+  const isModified = !preferencesEqual(preferences, DEFAULT_ACCESSIBILITY_PREFERENCES)
 
   // ============================================================================
-  // INITIALIZATION - Load from localStorage/sessionStorage with V1→V2 Migration
+  // INITIALIZATION - Load from localStorage/sessionStorage with V1/V2 → V3 migration
   // ============================================================================
 
   useEffect(() => {
@@ -74,68 +72,26 @@ export function AccessibilityProvider({
         const systemPrefersReducedMotion =
           window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-        // Try localStorage first, then sessionStorage as fallback
-        let stored = localStorage.getItem(STORAGE_CONFIG.KEY)
-        let storageType = 'localStorage'
-        
-        if (!stored) {
-          stored = sessionStorage.getItem(STORAGE_CONFIG.KEY)
-          storageType = 'sessionStorage'
-        }
-
-        if (stored) {
-          const parsed: unknown = JSON.parse(stored)
-
-          // Check if it's V2 (current)
-          if (isValidStoredData(parsed)) {
-            const validated = validatePreferences(parsed.preferences)
-
-            // Respect system preference for reduced motion
-            if (systemPrefersReducedMotion && !validated.reduceMotion) {
-              validated.reduceMotion = true
+        let loaded: AccessibilityPreferences | null = null
+        for (const storageName of ['localStorage', 'sessionStorage'] as const) {
+          try {
+            const storage = window[storageName]
+            const stored = storage.getItem(STORAGE_CONFIG.KEY)
+            if (!stored) continue
+            const parsed: unknown = JSON.parse(stored)
+            loaded = decodeAccessibilityData(parsed)
+            if (loaded) {
+              if ((parsed as { version: unknown }).version !== STORAGE_CONFIG.VERSION) {
+                try { storage.setItem(STORAGE_CONFIG.KEY + '-pre-v4', stored) } catch { /* Migration works even when backup storage is full. */ }
+              }
+              break
             }
-
-            setPreferences(validated)
-            setIsModified(
-              !preferencesEqual(validated, DEFAULT_ACCESSIBILITY_PREFERENCES)
-            )
-
-            console.log(`✅ Accessibility preferences loaded from ${storageType} (V2)`)
-          } 
-          // Check if it's V1 (legacy) - migrate to V2
-          else if (isValidStoredDataV1(parsed)) {
-            console.log('🔄 Detected V1 preferences, migrating to V2...')
-            const migrated = migrateV1toV2(parsed.preferences)
-
-            // Respect system preference for reduced motion
-            if (systemPrefersReducedMotion && !migrated.reduceMotion) {
-              migrated.reduceMotion = true
-            }
-
-            setPreferences(migrated)
-            setIsModified(
-              !preferencesEqual(migrated, DEFAULT_ACCESSIBILITY_PREFERENCES)
-            )
-
-            console.log('✅ Migration complete, preferences loaded (V2)')
-          } 
-          // Unknown version - use defaults
-          else {
-            console.warn('⚠️ Invalid stored accessibility data, using defaults')
-            migrateOldSettings()
-          }
-        } else {
-          // No stored preferences, check for old settings to migrate
-          migrateOldSettings()
-
-          // Apply system preferences as defaults
-          if (systemPrefersReducedMotion) {
-            setPreferences((prev) => ({
-              ...prev,
-              reduceMotion: true,
-            }))
-          }
+          } catch { /* Try the other storage if denied or malformed. */ }
         }
+        const initial = loaded ?? { ...DEFAULT_ACCESSIBILITY_PREFERENCES }
+        if (systemPrefersReducedMotion) initial.reduceMotion = true
+        setPreferences(initial)
+
       } catch (error) {
         console.error('❌ Failed to load accessibility preferences:', error)
       } finally {
@@ -176,37 +132,16 @@ export function AccessibilityProvider({
       try {
         localStorage.setItem(STORAGE_CONFIG.KEY, serialized)
         console.log('💾 Accessibility preferences saved to localStorage')
-      } catch (localStorageError) {
-        // If localStorage fails (quota exceeded), try sessionStorage as fallback
-        if (localStorageError instanceof Error && localStorageError.name === 'QuotaExceededError') {
-          console.warn('⚠️ localStorage full, falling back to sessionStorage')
-          
-          try {
-            sessionStorage.setItem(STORAGE_CONFIG.KEY, serialized)
-            console.log('💾 Accessibility preferences saved to sessionStorage (session-only)')
-            
-            liveAnnouncer.announce(
-              'Accessibility settings saved for this session only. Browser storage is full.',
-              'assertive'
-            )
-          } catch (sessionStorageError) {
-            // Both storages failed - inform user
-            console.error('❌ Both localStorage and sessionStorage failed:', sessionStorageError)
-            liveAnnouncer.announce(
-              'Unable to save accessibility settings. Your browser storage is full.',
-              'assertive'
-            )
-          }
-        } else {
-          // Some other error
-          throw localStorageError
+      } catch {
+        try {
+          sessionStorage.setItem(STORAGE_CONFIG.KEY, serialized)
+          liveAnnouncer.announce('Accessibility settings saved for this session only.', 'polite')
+        } catch {
+          liveAnnouncer.announce('Accessibility settings work, but browser storage is unavailable. Changes cannot be saved.', 'polite')
         }
       }
 
-      // Update isModified flag
-      setIsModified(
-        !preferencesEqual(preferences, DEFAULT_ACCESSIBILITY_PREFERENCES)
-      )
+
     } catch (error) {
       console.error('❌ Failed to save accessibility preferences:', error)
       
@@ -286,7 +221,11 @@ export function AccessibilityProvider({
     const body = document.body
 
     // High Contrast
-    body.classList.toggle('high-contrast', preferences.highContrast)
+    body.classList.toggle('high-contrast', preferences.contrastMode === 'high')
+    body.dataset.a11yContrast = preferences.contrastMode
+    document.documentElement.dataset.a11yNegative = String(preferences.contrastMode === 'negative')
+    body.dataset.a11yCursor = preferences.cursorMode
+    if (preferences.bigCursor) body.dataset.a11yBigCursor = 'true'; else delete body.dataset.a11yBigCursor;
 
     // Reduce Motion
     body.classList.toggle('reduce-motion', preferences.reduceMotion)
@@ -308,7 +247,13 @@ export function AccessibilityProvider({
     // Reading Mode
     body.classList.toggle('reading-mode', preferences.readingMode)
 
-    console.log('🎭 Body classes updated')
+    return () => {
+      body.classList.remove('high-contrast', 'reduce-motion', 'sensory-friendly', 'font-default', 'font-system', 'font-opendyslexic', 'link-highlight', 'reading-mode')
+      delete body.dataset.a11yContrast
+      delete document.documentElement.dataset.a11yNegative
+      delete body.dataset.a11yCursor
+      delete body.dataset.a11yBigCursor
+    }
   }, [preferences])
 
   // ============================================================================
@@ -361,17 +306,22 @@ export function AccessibilityProvider({
       const labels: Record<keyof AccessibilityPreferences, string> = {
         textScale: 'Text size',
         fontFamily: 'Font family',
-        highContrast: 'High contrast',
+        contrastMode: 'Contrast',
+        cursorMode: 'Reading aid',
+        bigCursor: 'Large cursor',
+        guideSticker: 'Reading guide friend',
         reduceMotion: 'Reduced motion',
         sensoryFriendly: 'Sensory-friendly mode',
         linkHighlight: 'Link highlighting',
         lineSpacing: 'Line spacing',
         letterSpacing: 'Letter spacing',
         readingMode: 'Reading mode',
+        dictionaryMode: 'Dictionary mode',
+        widgetPosition: 'Widget position',
       }
 
       const label = labels[key]
-      const state = typeof value === 'boolean' ? (value ? 'enabled' : 'disabled') : 'updated'
+      const state = typeof value === 'boolean' ? (value ? 'enabled' : 'disabled') : String(value ?? 'default')
 
       liveAnnouncer.announce(`${label} ${state}`, 'polite')
     },
@@ -411,13 +361,18 @@ export function AccessibilityProvider({
       const labels: Record<keyof AccessibilityPreferences, string> = {
         textScale: 'Text size',
         fontFamily: 'Font family',
-        highContrast: 'High contrast',
+        contrastMode: 'Contrast',
+        cursorMode: 'Reading aid',
+        bigCursor: 'Large cursor',
+        guideSticker: 'Reading guide friend',
         reduceMotion: 'Reduced motion',
         sensoryFriendly: 'Sensory-friendly mode',
         linkHighlight: 'Link highlighting',
         lineSpacing: 'Line spacing',
         letterSpacing: 'Letter spacing',
         readingMode: 'Reading mode',
+        dictionaryMode: 'Dictionary mode',
+        widgetPosition: 'Widget position',
       }
 
       liveAnnouncer.announce(`${labels[key]} reset to default`, 'polite')
@@ -447,30 +402,6 @@ export function AccessibilityProvider({
 }
 
 // ============================================================================
-// MIGRATION HELPER
-// ============================================================================
-
-/**
- * Migrate old accessibility settings from previous implementation
- */
-function migrateOldSettings() {
-  try {
-    const oldKey = 'accessibility-seen'
-    const oldValue = localStorage.getItem(oldKey)
-
-    if (oldValue === 'true') {
-      console.log('📦 Migrating old accessibility settings...')
-      // Old toolbar was shown, but no settings to migrate
-      // Just clean up the old key
-      localStorage.removeItem(oldKey)
-      console.log('✅ Migration complete')
-    }
-  } catch (error) {
-    console.error('❌ Migration failed:', error)
-  }
-}
-
-// ============================================================================
 // HOOK FOR CONSUMING CONTEXT
 // ============================================================================
 
@@ -484,7 +415,7 @@ function migrateOldSettings() {
  *   const { preferences, updatePreference } = useAccessibility()
  *   
  *   return (
- *     <button onClick={() => updatePreference('highContrast', !preferences.highContrast)}>
+ *     <button onClick={() => updatePreference('contrastMode', preferences.contrastMode === 'normal' ? 'high' : 'normal')}>
  *       Toggle High Contrast
  *     </button>
  *   )

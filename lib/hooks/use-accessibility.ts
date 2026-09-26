@@ -20,10 +20,10 @@ export { useAccessibility } from '@/contexts/accessibility-provider'
  *   return (
  *     <div>
  *       <button 
- *         onClick={() => updatePreference('highContrast', !preferences.highContrast)}
- *         aria-pressed={preferences.highContrast}
+ *         onClick={() => updatePreference('contrastMode', preferences.contrastMode === 'normal' ? 'high' : 'normal')}
+ *         aria-pressed={(preferences.contrastMode !== 'normal')}
  *       >
- *         {preferences.highContrast ? 'Disable' : 'Enable'} High Contrast
+ *         {(preferences.contrastMode !== 'normal') ? 'Disable' : 'Enable'} High Contrast
  *       </button>
  *     </div>
  *   )
