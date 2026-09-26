@@ -1,0 +1,266 @@
+/* Explicit public component contracts; normal-mode styling is unchanged. */
+body.high-contrast #main-content [data-a11y-region="neutral"] {
+  background: var(--a11y-neutral) !important;
+  color: var(--a11y-ink) !important;
+}
+
+/* These opt-in regions contain copy/decorations, not photos or form controls. */
+body.high-contrast #main-content [data-a11y-region="neutral"] :is(div, span, h1, h2, h3, p, svg) {
+  background: transparent !important;
+  color: var(--a11y-ink) !important;
+  -webkit-text-fill-color: currentColor;
+  border-color: var(--a11y-ink) !important;
+}
+
+body.high-contrast #main-content [data-a11y-hero="photo"] {
+  background: #666 !important;
+}
+
+body.high-contrast #main-content [data-a11y-photo] {
+  filter: grayscale(1) !important;
+}
+
+body.high-contrast #main-content [data-a11y-hero-copy],
+body.high-contrast #main-content [data-a11y-hero-copy] :is(h1, h2, p, span, svg) {
+  color: #fff !important;
+}
+
+body.high-contrast #main-content [data-a11y-control],
+body.high-contrast #main-content [data-slot="button"],
+body.high-contrast #main-content [data-a11y-region="neutral"] :is(a, button) {
+  background: var(--a11y-ink) !important;
+  color: var(--a11y-paper) !important;
+  border: 2px solid var(--a11y-ink) !important;
+  text-decoration: underline;
+}
+
+body.high-contrast #main-content [data-a11y-control] *,
+body.high-contrast #main-content [data-slot="button"] *,
+body.high-contrast #main-content [data-a11y-region="neutral"] :is(a, button) * {
+  background: transparent !important;
+  color: var(--a11y-paper) !important;
+}
+
+body.high-contrast #main-content [data-slot="button"][data-variant="outline"],
+body.high-contrast #main-content [data-slot="button"][data-variant="secondary"],
+body.high-contrast #main-content [data-slot="button"][data-variant="ghost"],
+body.high-contrast #main-content [data-slot="button"][data-variant="link"] {
+  background: var(--a11y-paper) !important;
+  color: var(--a11y-ink) !important;
+}
+
+body.high-contrast #main-content [data-slot="button"][data-variant="outline"] *,
+body.high-contrast #main-content [data-slot="button"][data-variant="secondary"] *,
+body.high-contrast #main-content [data-slot="button"][data-variant="ghost"] *,
+body.high-contrast #main-content [data-slot="button"][data-variant="link"] * {
+  color: var(--a11y-ink) !important;
+}
+
+body.high-contrast #main-content :is([data-slot="button"], [data-a11y-control], [role="combobox"]):focus-visible {
+  outline: 3px solid var(--a11y-ink) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 3px var(--a11y-paper) !important;
+}
+
+body.high-contrast #main-content [role="combobox"],
+body.high-contrast #main-content [role="listbox"],
+body.high-contrast #main-content [role="option"] {
+  background: var(--a11y-paper) !important;
+  color: var(--a11y-ink) !important;
+  border-color: var(--a11y-ink) !important;
+}
+
+body.high-contrast #main-content :is([role="combobox"], [role="option"]) * {
+  color: inherit !important;
+}
+
+body.high-contrast #main-content [role="option"][data-highlighted="true"] {
+  outline: 2px solid var(--a11y-ink);
+  outline-offset: -2px;
+}
+
+html[data-text-scale-high="true"] #main-content [data-slot="button"] {
+  height: auto;
+  min-height: 2.75rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Text gradients must remain text when decorative gradients are removed. */
+body.high-contrast #main-content .bg-clip-text {
+  background: none !important;
+  color: var(--a11y-ink) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.high-contrast #main-content [data-a11y-shade] {
+  background: rgb(0 0 0 / 65%) !important;
+}
+
+body.high-contrast #main-content [data-a11y-hero="photo"] img {
+  filter: grayscale(1) !important;
+}
+
+body.high-contrast #main-content [data-a11y-photo]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 20%);
+}
+
+body.high-contrast #main-content [data-a11y-hero-copy] :is(span, div)[class*="backdrop-blur"] {
+  background: #000 !important;
+  border-color: #fff !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"] {
+  background: transparent !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"]>div {
+  background: #fff !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"] svg,
+body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"] svg * {
+  color: #000 !important;
+  fill: #000 !important;
+  stroke: #000 !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-caption] {
+  background: #000 !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-caption] :is(p, span) {
+  color: #fff !important;
+}
+
+body.high-contrast #main-content [data-a11y-video-caption] a,
+body.high-contrast #main-content [data-a11y-video-caption] a * {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* Palette ownership is limited to the public provider's lifetime. */
+body.high-contrast {
+  --a11y-ink: #000;
+  --a11y-paper: #fff;
+  --a11y-neutral: #ededed;
+  --a11y-active: rgb(0 95 130);
+}
+
+/* Existing literal Tailwind surfaces need the same content palette. */
+/* Preserve existing white-on-photo copy and media controls, including modules. */
+body.high-contrast :is(#home-hero, #whatwedo-hero, #stories-hero, #our-story-hero, #events-hero, .about-hero-section, .contact-hero-section, [data-a11y-hero="photo"], [data-a11y-video-card], footer) {
+  --a11y-ink: #000;
+  --a11y-paper: #fff;
+}
+
+/* Explicitly owned reading layers are not sensory decorations. */
+body.sensory-friendly [data-a11y-reading-layer] {
+  display: block !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+@media (any-pointer: fine) {
+
+  body[data-a11y-big-cursor="true"],
+  body[data-a11y-big-cursor="true"] .website-layout {
+    cursor: url('/accessibility/cursor-arrow.svg') 5 3, auto;
+  }
+
+  body[data-a11y-big-cursor="true"] :is(a[href], button, summary, select, [role="button"], [role="combobox"], label[for]) {
+    cursor: url('/accessibility/cursor-pointer.svg') 20 3, pointer;
+  }
+
+  body[data-a11y-big-cursor="true"] :is(input, textarea, [contenteditable="true"]) {
+    cursor: text;
+  }
+
+  body[data-a11y-big-cursor="true"] :is(input[type="checkbox"], input[type="radio"], input[type="range"]) {
+    cursor: url('/accessibility/cursor-pointer.svg') 20 3, pointer;
+  }
+
+  body[data-a11y-big-cursor="true"] :is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+  }
+}
+
+@media print {
+  body [data-a11y-reading-layer] {
+    display: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  body.high-contrast {
+    --a11y-ink: CanvasText;
+    --a11y-paper: Canvas;
+    --a11y-active: LinkText;
+    --a11y-neutral: Canvas;
+  }
+}
+
+body.high-contrast [data-a11y-contact-badge] {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+
+body.high-contrast footer a[href="/admin"] {
+  opacity: 1 !important;
+}
+
+@media (forced-colors: active) {
+  body.high-contrast[data-a11y-contrast] {
+    --a11y-ink: CanvasText;
+    --a11y-paper: Canvas;
+    --a11y-active: LinkText;
+    --a11y-neutral: Canvas;
+  }
+}
+
+body.high-contrast [data-a11y-surface="content"] {
+  background: var(--a11y-paper) !important;
+  color: var(--a11y-ink) !important;
+  border-color: var(--a11y-ink) !important;
+}
+
+body.high-contrast .accessibility-panel {
+  background: var(--a11y-paper) !important;
+  color: var(--a11y-ink) !important;
+  border: 3px solid var(--a11y-ink) !important;
+  backdrop-filter: none !important;
+}
+
+body.high-contrast .accessibility-panel * {
+  backdrop-filter: none !important;
+}
+
+/* Negative colors intentionally invert all page pixels, including media.
+   Root filter preserves viewport-fixed descendants; never move to body/wrappers.
+   https://www.w3.org/TR/filter-effects-1/#FilterProperty */
+html[data-a11y-scope="public"][data-a11y-negative="true"] {
+  filter: invert(1);
+  background-color: #fff;
+}
+
+html[data-a11y-scope="public"][data-a11y-negative="true"] .accessibility-panel,
+html[data-a11y-scope="public"][data-a11y-negative="true"] .accessibility-panel * {
+  backdrop-filter: none !important;
+}
+
+/* Keep the reading mask a dark shade after the root inversion. */
+html[data-a11y-negative="true"] [data-a11y-reading-layer="mask"]>div {
+  background: rgb(255 255 255 / 65%);
+}
+
+@media print,
+(forced-colors: active) {
+  html[data-a11y-scope="public"][data-a11y-negative="true"] {
+    filter: none;
+  }
+}

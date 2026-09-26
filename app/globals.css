@@ -1987,23 +1987,23 @@ body {
    ============================================================================ */
 
 body.high-contrast {
-  --background: oklch(1 0 0);  /* Pure white */
-  --foreground: oklch(0 0 0);  /* Pure black */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0 0 0);
-  --border: oklch(0 0 0);
-  --primary: oklch(0 0 0);
-  --primary-foreground: oklch(1 0 0);
+  --background: var(--a11y-paper);  /* Pure white */
+  --foreground: var(--a11y-ink);  /* Pure black */
+  --card: var(--a11y-paper);
+  --card-foreground: var(--a11y-ink);
+  --border: var(--a11y-ink);
+  --primary: var(--a11y-ink);
+  --primary-foreground: var(--a11y-paper);
   
   /* Muted / surface / foreground-muted → high contrast */
-  --muted: oklch(1 0 0);
-  --muted-foreground: oklch(0 0 0);
-  --surface: oklch(1 0 0);
-  --foreground-muted: oklch(0 0 0);
-  --accent: oklch(1 0 0);
-  --accent-foreground: oklch(0 0 0);
-  --secondary: oklch(1 0 0);
-  --secondary-foreground: oklch(0 0 0);
+  --muted: var(--a11y-paper);
+  --muted-foreground: var(--a11y-ink);
+  --surface: var(--a11y-paper);
+  --foreground-muted: var(--a11y-ink);
+  --accent: var(--a11y-paper);
+  --accent-foreground: var(--a11y-ink);
+  --secondary: var(--a11y-paper);
+  --secondary-foreground: var(--a11y-ink);
   
   /* Brand colors → black for text, white for bg */
   --brand-primary: 0 0 0;
@@ -2013,30 +2013,30 @@ body.high-contrast {
   --accent-education: 0 0 0;
   
   /* Chart colors → black */
-  --chart-1: oklch(0 0 0);
-  --chart-2: oklch(0 0 0);
-  --chart-3: oklch(0 0 0);
-  --chart-4: oklch(0 0 0);
-  --chart-5: oklch(0 0 0);
-  --chart-6: oklch(0 0 0);
-  --chart-7: oklch(0 0 0);
+  --chart-1: var(--a11y-ink);
+  --chart-2: var(--a11y-ink);
+  --chart-3: var(--a11y-ink);
+  --chart-4: var(--a11y-ink);
+  --chart-5: var(--a11y-ink);
+  --chart-6: var(--a11y-ink);
+  --chart-7: var(--a11y-ink);
   
   /* Input / ring */
-  --input: oklch(0 0 0);
-  --ring: oklch(0 0 0);
-  --destructive: oklch(0 0 0);
-  --destructive-foreground: oklch(1 0 0);
+  --input: var(--a11y-ink);
+  --ring: var(--a11y-ink);
+  --destructive: var(--a11y-ink);
+  --destructive-foreground: var(--a11y-paper);
 }
 
 body.high-contrast a {
   text-decoration: underline;
   font-weight: 600;
-  color: oklch(0 0 0);
+  color: var(--a11y-ink);
 }
 
 body.high-contrast button,
 body.high-contrast .button {
-  border: 2px solid oklch(0 0 0) !important;
+  border: 2px solid var(--a11y-ink) !important;
   font-weight: 600;
 }
 
@@ -2050,9 +2050,9 @@ body.high-contrast {
   /* Override all hard-coded background colors */
   [class*="bg-[#"] button,
   [class*="bg-[#"] a {
-    background-color: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
+    color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Primary colors (blues, brand colors) -> Black background */
@@ -2066,7 +2066,7 @@ body.high-contrast {
   [class*="bg-[#e8f5fb]"],
   [class*="bg-[#d9eef8]"],
   [class*="bg-[#f0f8fc]"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Ensure text on dark backgrounds is white */
@@ -2074,15 +2074,15 @@ body.high-contrast {
   [class*="bg-blue-"] *,
   [class*="bg-[#3FABDE]"] *,
   [class*="bg-[#2F9BCA]"] * {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Success/info backgrounds -> White with black border */
   [class*="bg-green-"],
   [class*="bg-emerald-"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Error/warning backgrounds -> White with black border */
@@ -2090,16 +2090,16 @@ body.high-contrast {
   [class*="bg-yellow-"],
   [class*="bg-orange-"],
   [class*="bg-amber-"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Purple backgrounds -> White with black border */
   [class*="bg-purple-"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Dark backgrounds (800-950) -> Stay BLACK with WHITE text */
@@ -2112,7 +2112,7 @@ body.high-contrast {
   [class*="bg-zinc-8"],
   [class*="bg-zinc-9"],
   .bg-foreground {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Force all children of dark backgrounds to have WHITE text */
@@ -2123,13 +2123,13 @@ body.high-contrast {
   [class*="bg-neutral-8"] *,
   [class*="bg-neutral-9"] *,
   .bg-foreground * {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Contact section - force darker text */
   section[class*="bg-background"] [class*="text-foreground/70"],
   section[class*="bg-background"] [class*="text-foreground/50"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Light neutral gray backgrounds (50-300) -> WHITE with BLACK text */
@@ -2139,8 +2139,8 @@ body.high-contrast {
   [class*="bg-zinc-"]:not([class*="bg-zinc-8"]):not([class*="bg-zinc-9"]),
   [class*="bg-[#f"],
   [class*="bg-[#F"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Text colors -> Black ONLY if not inside dark backgrounds or footer */
@@ -2153,7 +2153,7 @@ body.high-contrast {
   [class*="text-red-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
   [class*="text-yellow-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
   [class*="text-orange-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *) {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* CRITICAL: Keep text-white WHITE when inside buttons/dark backgrounds */
@@ -2168,7 +2168,7 @@ body.high-contrast {
   a[class*="bg-"] [class*="text-white"],
   button [class*="text-white"],
   a[class*="bg-"] * {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Keep text on primary buttons and their children white */
@@ -2176,7 +2176,7 @@ body.high-contrast {
   button.bg-primary *,
   .bg-primary button,
   .bg-primary button * {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Hero carousel and other sections with gradient overlays - keep text white */
@@ -2190,9 +2190,9 @@ body.high-contrast {
   /* Buttons with primary colors -> Black background (except footer/header) */
   button[class*="bg-[#"]:not(footer *):not(header *),
   a[class*="bg-[#"]:not(footer *):not(header *) {
-    background-color: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
+    color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Remove gradient backgrounds (preserve dark sections that need text contrast) */
@@ -2201,7 +2201,7 @@ body.high-contrast {
   [class*="via-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
   [class*="to-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
   [class*="bg-[linear-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *) {
-    background: rgb(255, 255, 255) !important;
+    background: var(--a11y-paper) !important;
     background-image: none !important;
   }
   
@@ -2215,33 +2215,33 @@ body.high-contrast {
   input:not([type="checkbox"]):not([type="radio"]),
   textarea,
   select {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   input::placeholder,
   textarea::placeholder {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
     opacity: 0.7 !important;
   }
   
   /* Modals and overlays -> White with strong border (except footer) */
   [role="dialog"],
   [class*="backdrop-blur"]:not(footer *):not(header *):not([class*="bg-black"]):not([class*="bg-slate-"]):not([class*="bg-gray-"]) {
-    background-color: rgb(255, 255, 255) !important;
-    border: 3px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 3px solid var(--a11y-ink) !important;
   }
   
   /* Focus states -> Strong black outline */
   *:focus-visible {
-    outline: 3px solid rgb(0, 0, 0) !important;
+    outline: 3px solid var(--a11y-ink) !important;
     outline-offset: 2px !important;
   }
   
   /* Links -> Black with underline (except footer which has dark bg) */
   a:not([class*="bg-"]):not(footer a):not(footer *) {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
     text-decoration: underline !important;
     text-decoration-thickness: 2px !important;
     text-underline-offset: 3px !important;
@@ -2256,18 +2256,18 @@ body.high-contrast {
   /* ── CARD ICONS: Black bg + white icon (overrides all colored bg rules) ── */
   /* These icon containers use inline-colored bg classes that need to be uniform in HC mode */
   .w-16.h-16[class*="bg-"] {
-    background-color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(255, 255, 255) !important;
+    background-color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-paper) !important;
   }
   .w-16.h-16[class*="bg-"] svg {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* ── FIX: Restore dark backgrounds where white text is required ── */
   
   /* ── NAVBAR: Ensure white bg with black readable text ── */
   header {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-paper) !important;
     background-image: none !important;
   }
   header * {
@@ -2283,45 +2283,45 @@ body.high-contrast {
   header a[class*="text-slate"],
   header a[class*="text-primary"],
   header button[class*="text-slate"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
     text-decoration: none !important;
     font-weight: 600;
   }
   /* Active nav link - use a visible dark blue instead of pure black */
   header a.text-primary {
-    color: rgb(0, 95, 130) !important;
+    color: var(--a11y-active) !important;
     text-decoration: none !important;
   }
   /* Register button - black border + black text on white */
   header a[class*="border-primary"],
   header a[class*="border-["] {
     background-color: transparent !important;
-    color: rgb(0, 0, 0) !important;
-    border-color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
+    border-color: var(--a11y-ink) !important;
     text-decoration: none !important;
   }
   /* Donate button - black bg with white text */
   header [class*="bg-[#3FABDE]"],
   header [class*="bg-[#2f9bca]"],
   header [class*="bg-primary"][class*="text-white"] {
-    background-color: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
-    border-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
+    color: var(--a11y-paper) !important;
+    border-color: var(--a11y-ink) !important;
   }
   /* Donate button link text stays white */
   header button[class*="bg-"] a,
   header button[class*="bg-"] a * {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   /* Mobile menu button */
   header button[class*="bg-slate-100"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   header button[class*="bg-primary"][class*="text-white"] {
-    background-color: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-ink) !important;
+    color: var(--a11y-paper) !important;
   }
   /* Sub-nav bar - keep light background */
   header [class*="bg-[#f1f7fe]"] {
@@ -2331,27 +2331,27 @@ body.high-contrast {
   header [class*="from-[#7ad8ff]"],
   header [class*="via-[#3FABDE]"],
   header [class*="to-[#2f95c8]"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
     background-image: none !important;
   }
   /* Nav link divider lines */
   header [class*="bg-slate-200"],
   header [class*="dark:bg-slate-600"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   /* Tablet quick links */
   header [class*="border-slate-200"][class*="bg-white"] {
-    border-color: rgb(0, 0, 0) !important;
+    border-color: var(--a11y-ink) !important;
   }
   header [class*="bg-white"][class*="text-slate-700"] {
-    color: rgb(0, 0, 0) !important;
-    border-color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
+    border-color: var(--a11y-ink) !important;
   }
   /* Development badge */
   header [class*="bg-amber-50"] {
     background-color: rgb(255, 255, 200) !important;
-    color: rgb(0, 0, 0) !important;
-    border-color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
+    border-color: var(--a11y-ink) !important;
   }
   
   /* Mobile drawer overlay - keep dark overlay visible */
@@ -2360,23 +2360,23 @@ body.high-contrast {
   }
   /* Mobile drawer sidebar - white bg with black text */
   header [role="dialog"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
   }
   header [role="dialog"] * {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   header [role="dialog"] [class*="text-primary"],
   header [role="dialog"] [class*="text-[#1a6f96]"] {
-    color: rgb(0, 95, 130) !important;
+    color: var(--a11y-active) !important;
   }
   header [role="dialog"] [class*="bg-[#eaf5fc]"] {
     background-color: rgb(220, 240, 252) !important;
   }
   header [role="dialog"] [class*="bg-[#2F9BCA]"],
   header [role="dialog"] [class*="bg-[#2889b5]"] {
-    background-color: rgb(0, 0, 0) !important;
-    color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-ink) !important;
+    color: var(--a11y-paper) !important;
   }
   header [role="dialog"] [class*="bg-[#e8f5fb]"],
   header [role="dialog"] [class*="bg-[#d9eef8]"],
@@ -2384,7 +2384,7 @@ body.high-contrast {
     background-color: rgb(230, 245, 255) !important;
   }
   header [role="dialog"] [class*="border-slate-200"] {
-    border-color: rgb(0, 0, 0) !important;
+    border-color: var(--a11y-ink) !important;
   }
   
   /* Hero carousel - restore dark section and gradient overlays for white text */
@@ -2496,43 +2496,43 @@ body.high-contrast {
   
   /* Timeline section - high contrast: black & white cards */
   section[class*="bg-[linear-gradient"] .bg-white {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
     box-shadow: none !important;
   }
   /* Override inline gradient styles on icon circles */
   section[class*="bg-[linear-gradient"] .size-14.rounded-full,
   section[class*="bg-[linear-gradient"] .size-12.rounded-full {
-    background: rgb(0, 0, 0) !important;
+    background: var(--a11y-ink) !important;
     background-image: none !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    border: 2px solid var(--a11y-ink) !important;
     box-shadow: none !important;
   }
   section[class*="bg-[linear-gradient"] .size-14.rounded-full svg,
   section[class*="bg-[linear-gradient"] .size-12.rounded-full svg {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   /* Override inline solid styles on year pills */
   section[class*="bg-[linear-gradient"] .rounded-full.font-comic-num {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
     background-image: none !important;
-    color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   /* Override inline solid styles on center dots */
   section[class*="bg-[linear-gradient"] .size-4.rounded-full.ring-4 {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
     background-image: none !important;
     box-shadow: none !important;
   }
   /* Timeline card text */
   section[class*="bg-[linear-gradient"] h4,
   section[class*="bg-[linear-gradient"] p {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   /* Timeline vertical line */
   section[class*="bg-[linear-gradient"] .bg-gradient-to-b {
-    background: rgb(0, 0, 0) !important;
+    background: var(--a11y-ink) !important;
     background-image: none !important;
   }
   
@@ -2629,13 +2629,13 @@ body.high-contrast {
   /* Section backgrounds - force white */
   [class*="bg-[#f8f6f1]"],
   [class*="bg-[#f6f3ed]"] {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-paper) !important;
   }
   
   /* Gray body text - force black on light backgrounds only */
   [class*="text-[#6b7280]"],
   [class*="text-[#4a4a4a]"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   /* Restore white text in dark sections (CTA, footer, about-hero) */
   footer [class*="text-gray-400"],
@@ -2649,31 +2649,31 @@ body.high-contrast {
   .dark-section p,
   .dark-section span,
   .dark-section a {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* ── Class-based about page selectors ── */
-  .about-heading-dark, .about-step-title { color: rgb(0, 0, 0) !important; }
-  .about-teal-text, .about-step-number, .about-timeline-year { color: rgb(0, 0, 0) !important; }
-  .about-quote-block { border-left-color: rgb(0, 0, 0) !important; background-color: rgb(240, 240, 240) !important; }
-  .about-flow-pill { border-color: rgb(0, 0, 0) !important; color: rgb(0, 0, 0) !important; }
-  .about-dashed-line, .about-connector, .about-timeline-track { border-color: rgb(0, 0, 0) !important; background-color: rgb(0, 0, 0) !important; }
-  .about-timeline-marker { background-color: rgb(0, 0, 0) !important; }
-  .about-timeline-progress { background: rgb(0, 0, 0) !important; background-image: none !important; }
-  .about-partner-icon { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; }
-  .about-partner-icon svg { color: rgb(0, 0, 0) !important; }
-  .about-resource-icon { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; }
-  .about-resource-icon svg { color: rgb(0, 0, 0) !important; }
-  .about-download-btn { background-color: rgb(255, 255, 255) !important; border: 2px solid rgb(0, 0, 0) !important; color: rgb(0, 0, 0) !important; }
-  .about-closing-text { color: rgb(0, 0, 0) !important; }
+  .about-heading-dark, .about-step-title { color: var(--a11y-ink) !important; }
+  .about-teal-text, .about-step-number, .about-timeline-year { color: var(--a11y-ink) !important; }
+  .about-quote-block { border-left-color: var(--a11y-ink) !important; background-color: rgb(240, 240, 240) !important; }
+  .about-flow-pill { border-color: var(--a11y-ink) !important; color: var(--a11y-ink) !important; }
+  .about-dashed-line, .about-connector, .about-timeline-track { border-color: var(--a11y-ink) !important; background-color: var(--a11y-ink) !important; }
+  .about-timeline-marker { background-color: var(--a11y-ink) !important; }
+  .about-timeline-progress { background: var(--a11y-ink) !important; background-image: none !important; }
+  .about-partner-icon { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; }
+  .about-partner-icon svg { color: var(--a11y-ink) !important; }
+  .about-resource-icon { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; }
+  .about-resource-icon svg { color: var(--a11y-ink) !important; }
+  .about-download-btn { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; color: var(--a11y-ink) !important; }
+  .about-closing-text { color: var(--a11y-ink) !important; }
   
   /* Partner card borders (Tailwind class is stable) */
-  [class*="border-[#eee]"] { border-color: rgb(0, 0, 0) !important; }
+  [class*="border-[#eee]"] { border-color: var(--a11y-ink) !important; }
   
   /* Team cards */
   .team-card {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   .team-card img {
     filter: grayscale(1) contrast(1.1) !important;
@@ -2681,7 +2681,7 @@ body.high-contrast {
   .team-card h3,
   .team-card > div > div > h3,
   .team-card > div > div > p {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   .team-card .absolute,
   .team-card [style*="linear-gradient"] {
@@ -2711,11 +2711,11 @@ body.high-contrast {
   [style*="rgba(255,255,255,0.55)"],
   [style*="rgba(255,255,255,0.5)"],
   [style*="rgba(255,255,255,0.78)"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   [style*="rgba(255,255,255,0.6)"] {
-    color: rgb(255, 255, 255) !important;
-    border-color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
+    border-color: var(--a11y-paper) !important;
   }
   
   /* CTA donate button - darker teal for contrast */
@@ -2729,24 +2729,24 @@ body.high-contrast {
   /* Hero badge - teal text on dark bg → white text */
   [style*="color: #29b6c8"][style*="background-color: rgba(41"],
   [style*="color:#29b6c8"][style*="background-color:rgba(41"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
     background-color: rgba(255, 255, 255, 0.15) !important;
   }
   
   /* Hero subtitle - semi-transparent white → solid white */
   [style*="color: rgba(255, 255, 255, 0.82)"],
   [style*="color:rgba(255, 255, 255, 0.82)"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Timeline colored circle icons - white text on colored bg → white on black */
   .bg-primary, .bg-empowerment, [class*="bg-chart-"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Timeline colored text labels */
   .text-primary, .text-empowerment, [class*="text-chart-"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Remove all shadows */
@@ -2761,26 +2761,26 @@ body.high-contrast {
   
   /* Mission/Vision card top borders - force black */
   .border-t-8 {
-    border-top-color: rgb(0, 0, 0) !important;
+    border-top-color: var(--a11y-ink) !important;
   }
   
   /* Impact icon circles - force white bg, black border */
   .size-28, .size-32 {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Direction badge icon circle */
   .bg-primary\/25 {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* ── STORIES PAGE: High contrast overrides ── */
   
   /* Hard-coded dark headings - force black */
   [class*="text-[#1a1a2e]"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Slate text colors - force black */
@@ -2791,42 +2791,42 @@ body.high-contrast {
   [class*="text-slate-500"],
   [class*="text-slate-400"],
   [class*="text-slate-300"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Teal text - force black */
   .text-teal {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Preserve white text on category badges and image overlays */
   [class*="rounded-full"][class*="text-white"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   [class*="absolute"][class*="text-white"],
   [class*="absolute"][class*="text-white/"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Ensure story card titles are visible (black on white) */
   article h3[class*="text-[#1a1a2e]"],
   article h2[class*="text-[#1a1a2e]"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Partner icons - white icon on black bg (bg-*50 forced to black, icon needs to be white) */
   .about-partner-icon {
-    background-color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(255, 255, 255) !important;
+    background-color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-paper) !important;
   }
   .about-partner-icon svg,
   .about-partner-icon i {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Light background sections - force white */
   [class*="bg-[#faf9f6]"] {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-paper) !important;
   }
   
   /* Decorative blobs - force to white instead of hiding */
@@ -2836,71 +2836,71 @@ body.high-contrast {
   [class*="bg-teal-100"],
   [class*="bg-teal/15"],
   [class*="bg-teal/8"] {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: var(--a11y-paper) !important;
   }
   
   /* Stats card */
   [class*="bg-white/85"],
   [class*="bg-white/80"],
   [class*="bg-white/75"] {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Stat number boxes */
   [class*="bg-primary/8"],
   [class*="bg-secondary/8"],
   [class*="bg-slate-100"] {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Secondary text - force black */
   .text-secondary {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Primary buttons - black bg, white text */
   .bg-primary {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   .bg-primary.text-white,
   [class*="bg-primary"][class*="text-white"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Secondary buttons */
   .bg-secondary {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Category badges on stories */
   .bg-violet-600, .bg-emerald-600, .bg-rose-600,
   .bg-amber-600, .bg-sky-600, .bg-teal-600,
   .bg-indigo-600 {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Featured story blockquote */
   blockquote {
-    background-color: rgb(255, 255, 255) !important;
-    border-left: 4px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border-left: 4px solid var(--a11y-ink) !important;
   }
   
   /* Tag borders */
   [class*="border-slate-200"] {
-    border-color: rgb(0, 0, 0) !important;
+    border-color: var(--a11y-ink) !important;
   }
   
   /* Filter tabs - active */
   [class*="bg-[#1a1a2e]"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Story cards - white bg, black border, remove shadows */
   article[class*="bg-white"] {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
     box-shadow: none !important;
   }
   
@@ -2908,7 +2908,7 @@ body.high-contrast {
   [class*="ring-1"][class*="ring-slate"] {
     --tw-ring-color: transparent !important;
     box-shadow: none !important;
-    border: 1px solid rgb(0, 0, 0) !important;
+    border: 1px solid var(--a11y-ink) !important;
   }
   
   /* ── EVENTS PAGE: High contrast overrides ── */
@@ -2919,7 +2919,7 @@ body.high-contrast {
   [class*="bg-[#29b6c8]"][class*="text-white"],
   [class*="bg-[#D6336C]"][class*="text-white"],
   [class*="bg-[#1a1a2e]"][class*="text-white"] {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Event category colored bars and accents - force black */
@@ -2927,7 +2927,7 @@ body.high-contrast {
   [class*="bg-[#6F3E96]"],
   [class*="bg-[#29b6c8]"],
   [class*="bg-[#D6336C]"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Event category text colors - force black */
@@ -2935,33 +2935,33 @@ body.high-contrast {
   [class*="text-[#6F3E96]"],
   [class*="text-[#29b6c8]"],
   [class*="text-[#D6336C]"] {
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Event urgency badges - white bg with black text and border */
   [class*="bg-[rgba(247,197,43"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Event icon circles - white bg with black border */
   [class*="bg-[#eaf5fb]"] {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Event detail hero - keep dark overlay for white text */
   [class*="from-black/95"][class*="via-black/60"] {
-    background: rgb(0, 0, 0) !important;
+    background: var(--a11y-ink) !important;
     background-image: none !important;
   }
   
   /* Event stat boxes - white bg with black border */
   [class*="bg-[rgba(111,62,150,0.1)"],
   [class*="bg-[rgba(247,197,43,0.18)"] {
-    background-color: rgb(255, 255, 255) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Event payment method icons & credential icons - white icon on black bg */
@@ -2973,8 +2973,8 @@ body.high-contrast {
   [class*="bg-red-100"][class*="text-red-600"],
   [class*="bg-indigo-100"][class*="text-indigo-600"],
   [class*="bg-teal-100"][class*="text-teal-600"] {
-    background-color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(255, 255, 255) !important;
+    background-color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-paper) !important;
   }
   [class*="bg-blue-100"][class*="text-blue-600"] svg,
   [class*="bg-amber-100"][class*="text-amber-600"] svg,
@@ -2984,19 +2984,19 @@ body.high-contrast {
   [class*="bg-red-100"][class*="text-red-600"] svg,
   [class*="bg-indigo-100"][class*="text-indigo-600"] svg,
   [class*="bg-teal-100"][class*="text-teal-600"] svg {
-    color: rgb(255, 255, 255) !important;
+    color: var(--a11y-paper) !important;
   }
   
   /* Event success/verification check circle - black with white icon */
   [class*="bg-green-500"] {
-    background-color: rgb(0, 0, 0) !important;
+    background-color: var(--a11y-ink) !important;
   }
   
   /* Event past event badge - white bg with black text */
   [class*="bg-slate-100"][class*="text-slate-500"] {
-    background-color: rgb(255, 255, 255) !important;
-    color: rgb(0, 0, 0) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
+    background-color: var(--a11y-paper) !important;
+    color: var(--a11y-ink) !important;
+    border: 2px solid var(--a11y-ink) !important;
   }
   
   /* Event gradient text - force solid color (bg-clip:text makes text invisible) */
@@ -3004,14 +3004,14 @@ body.high-contrast {
     background-image: none !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
-    color: rgb(0, 0, 0) !important;
+    color: var(--a11y-ink) !important;
   }
   
   /* Event hero pill with backdrop-blur - keep readable */
   [class*="rounded-full"][class*="backdrop-blur"] {
     background-color: rgba(255, 255, 255, 0.9) !important;
-    border: 2px solid rgb(0, 0, 0) !important;
-    color: rgb(0, 0, 0) !important;
+    border: 2px solid var(--a11y-ink) !important;
+    color: var(--a11y-ink) !important;
   }
 }
 
@@ -3091,8 +3091,24 @@ body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):
   scroll-behavior: auto !important;
 }
 
-/* CRITICAL: Explicitly maintain accessibility widget positioning in sensory mode */
-/* Using multiple selectors for maximum specificity */
+/* CRITICAL: Accessibility widget positioning driven by CSS custom properties.
+   React sets --a11y-btn-* / --a11y-panel-* on :root so these !important rules
+   read from React-controlled values instead of fighting inline styles. */
+
+/* Default values (bottom-right preset) */
+:root {
+  --a11y-btn-top: auto;
+  --a11y-btn-right: 1.5rem;
+  --a11y-btn-bottom: 1.5rem;
+  --a11y-btn-left: auto;
+  --a11y-btn-transform: none;
+  --a11y-panel-top: auto;
+  --a11y-panel-right: 1rem;
+  --a11y-panel-bottom: max(6rem, calc(env(safe-area-inset-bottom) + 1.5rem));
+  --a11y-panel-left: auto;
+  --a11y-panel-transform: none;
+}
+
 .accessibility-button,
 button.accessibility-button,
 button[aria-label="Accessibility options"].accessibility-button,
@@ -3100,23 +3116,23 @@ body .accessibility-button,
 body button.accessibility-button,
 body button[aria-label="Accessibility options"].accessibility-button {
   position: fixed !important;
-  bottom: 1.5rem !important;
-  right: 1.5rem !important;
-  top: auto !important;
-  left: auto !important;
+  top: var(--a11y-btn-top) !important;
+  right: var(--a11y-btn-right) !important;
+  bottom: var(--a11y-btn-bottom) !important;
+  left: var(--a11y-btn-left) !important;
   z-index: 9999 !important;
-  transform: none !important;
+  transform: var(--a11y-btn-transform) !important;
 }
 
-/* Extra protection in sensory mode */
+/* Extra protection in sensory mode — same CSS vars, no hardcoded overrides */
 body.sensory-friendly .accessibility-button,
 body.sensory-friendly button.accessibility-button,
 body.sensory-friendly button[aria-label="Accessibility options"] {
   position: fixed !important;
-  bottom: 1.5rem !important;
-  right: 1.5rem !important;
-  top: auto !important;
-  left: auto !important;
+  top: var(--a11y-btn-top) !important;
+  right: var(--a11y-btn-right) !important;
+  bottom: var(--a11y-btn-bottom) !important;
+  left: var(--a11y-btn-left) !important;
   z-index: 9999 !important;
   width: 3.5rem !important;
   height: 3.5rem !important;
@@ -3127,10 +3143,9 @@ body.sensory-friendly button[aria-label="Accessibility options"] {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transform: none !important;
+  transform: var(--a11y-btn-transform) !important;
   margin: 0 !important;
   padding: 0 !important;
-  inset: auto 1.5rem 1.5rem auto !important;
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
   box-sizing: border-box !important;
@@ -3141,25 +3156,25 @@ div.accessibility-panel,
 body .accessibility-panel,
 body div.accessibility-panel {
   position: fixed !important;
-  bottom: 6rem !important;
-  right: 1.5rem !important;
-  top: auto !important;
-  left: auto !important;
+  top: var(--a11y-panel-top) !important;
+  right: var(--a11y-panel-right) !important;
+  bottom: var(--a11y-panel-bottom) !important;
+  left: var(--a11y-panel-left) !important;
+  transform: var(--a11y-panel-transform) !important;
   z-index: 9999 !important;
 }
 
 body.sensory-friendly .accessibility-panel,
 body.sensory-friendly div.accessibility-panel {
   position: fixed !important;
-  bottom: 6rem !important;
-  right: 1.5rem !important;
-  top: auto !important;
-  left: auto !important;
+  top: var(--a11y-panel-top) !important;
+  right: var(--a11y-panel-right) !important;
+  bottom: var(--a11y-panel-bottom) !important;
+  left: var(--a11y-panel-left) !important;
+  transform: var(--a11y-panel-transform) !important;
   z-index: 9999 !important;
   max-height: calc(100vh - 140px) !important;
-  transform: none !important;
   margin: 0 !important;
-  inset: auto 1.5rem 6rem auto !important;
 }
 
 /* Hide decorative elements */
@@ -3521,7 +3536,7 @@ body.reading-mode main {
 }
 
 body.high-contrast *:focus-visible {
-  outline: 3px solid oklch(0 0 0);
+  outline: 3px solid var(--a11y-ink);
   outline-offset: 3px;
 }
 
@@ -3612,26 +3627,26 @@ body.high-contrast .group:has(h3) {
 body.high-contrast .podcast-card h3,
 body.high-contrast .podcast-card p,
 body.high-contrast .podcast-card span:not([class*="bg-"]) {
-  color: rgb(0, 0, 0) !important;
+  color: var(--a11y-ink) !important;
   text-decoration: none !important;
 }
 
 body.high-contrast .group button[class*="bg-brand-primary"],
 body.high-contrast .group button[class*="bg-brand-primary"] * {
-  background-color: rgb(0, 0, 0) !important;
-  color: rgb(255, 255, 255) !important;
-  border: 2px solid rgb(0, 0, 0) !important;
+  background-color: var(--a11y-ink) !important;
+  color: var(--a11y-paper) !important;
+  border: 2px solid var(--a11y-ink) !important;
 }
 
 /* Episode and duration badges */
 body.high-contrast .group [class*="bg-brand-primary"] {
-  background-color: rgb(0, 0, 0) !important;
-  color: rgb(255, 255, 255) !important;
+  background-color: var(--a11y-ink) !important;
+  color: var(--a11y-paper) !important;
 }
 
 body.high-contrast .group [class*="bg-black"] {
-  background-color: rgb(0, 0, 0) !important;
-  color: rgb(255, 255, 255) !important;
+  background-color: var(--a11y-ink) !important;
+  color: var(--a11y-paper) !important;
 }
 
 /* Podcast card thumbnail container - keep dark background for contrast */

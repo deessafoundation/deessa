@@ -1,4 +1,5 @@
 import type React from "react"
+import "@/components/public-accessibility.css"
 import { NavbarWrapper } from "@/components/navbar-wrapper"
 import { Footer } from "@/components/footer"
 import { IntroVideo } from "@/components/intro-video"
@@ -8,6 +9,9 @@ import { GlobalVideoModal } from "@/components/global-video-modal"
 import { AccessibilityProvider } from "@/contexts/accessibility-provider"
 import { HomeAccessibilityButton } from "@/components/home-accessibility-button"
 import { openDyslexic } from "@/app/fonts"
+
+import { AccessibilityReadingAids } from "@/components/accessibility-reading-aids"
+import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
 
 export const dynamic = "force-dynamic"
 
@@ -33,7 +37,7 @@ export default function PublicLayout({
             <NavbarWrapper />
             <DevelopmentNoticeModal />
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-              <main id="main-content" className="flex-1">
+              <main id="main-content" tabIndex={-1} className="flex-1">
                 {children}
               </main>
               <Footer />
@@ -41,6 +45,8 @@ export default function PublicLayout({
           </div>
           <GlobalVideoModal />
           <HomeAccessibilityButton />
+          <AccessibilityReadingAids />
+          <AccessibilityDictionary />
         </VideoModalProvider>
       </AccessibilityProvider>
     </div>
