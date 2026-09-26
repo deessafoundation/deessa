@@ -1,4 +1,4 @@
-﻿---
+---
 title: "SQL Script 11 - Fixed Version"
 description: "Documentation for sql script 11 - fixed version"
 owner: "Deesha Team"
@@ -37,7 +37,7 @@ This means you can run the script multiple times without errors.
 ### Option 1: Run the Fixed Script (Recommended)
 
 1. Open Supabase: https://app.supabase.com
-2. Go to: SQL Editor â†’ New Query
+2. Go to: SQL Editor → New Query
 3. Copy the script from: `SQL_SCRIPT_11_COPY_PASTE.md`
 4. Paste into SQL Editor
 5. Click "Run"
@@ -45,7 +45,7 @@ This means you can run the script multiple times without errors.
 The fixed script will:
 - Drop old policies
 - Create new policies
-- Complete successfully âœ…
+- Complete successfully ✅
 
 ### Option 2: Manual Fix (If you want to understand what happened)
 
@@ -69,32 +69,32 @@ DROP POLICY IF EXISTS "Authenticated users can upload receipts" ON storage.objec
 
 After running the fixed script, you should see:
 
-âœ… All verification queries return results
-âœ… No errors in the output
-âœ… Receipt columns added to donations table
-âœ… receipt_audit_log table created
-âœ… Policies created successfully
-âœ… Storage bucket created
+✅ All verification queries return results
+✅ No errors in the output
+✅ Receipt columns added to donations table
+✅ receipt_audit_log table created
+✅ Policies created successfully
+✅ Storage bucket created
 
 ---
 
 ## Next Steps
 
-1. âœ… Run the fixed SQL script
-2. âœ… Configure Google Email (see: `docs/GOOGLE_EMAIL_SETUP.md`)
-3. âœ… Set Organization Details (Admin > Settings > Organization)
-4. âœ… Add to Payment Webhooks
-5. âœ… Test with a sample donation
+1. ✅ Run the fixed SQL script
+2. ✅ Configure Google Email (see: `docs/GOOGLE_EMAIL_SETUP.md`)
+3. ✅ Set Organization Details (Admin > Settings > Organization)
+4. ✅ Add to Payment Webhooks
+5. ✅ Test with a sample donation
 
 ---
 
 ## Files Updated
 
-- `scripts/011-receipt-system-complete.sql` - Fixed version
+- `scripts/db/migrations/010-receipt-system.sql` - Fixed version
 - `SQL_SCRIPT_11_COPY_PASTE.md` - Fixed version with DROP POLICY commands
 
 ---
 
-**The error is now fixed!** ðŸŽ‰
+**The error is now fixed!** 🎉
 
 Just copy the script from `SQL_SCRIPT_11_COPY_PASTE.md` and run it again.

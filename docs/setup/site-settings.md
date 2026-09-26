@@ -26,7 +26,7 @@ You need to run two new SQL scripts in your Supabase dashboard to create the nec
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
 2. Select your project
 3. Navigate to **SQL Editor** (left sidebar)
-4. Open `scripts/004-site-assets-storage.sql`
+4. Open `scripts/db/migrations/004-site-assets-storage.sql`
 5. Copy all contents and paste into SQL Editor
 6. Click **Run**
 
@@ -40,7 +40,7 @@ This creates 4 new storage buckets:
 #### 1.2 Add Default Site Settings
 
 1. In the same SQL Editor
-2. Open `scripts/005-expand-site-settings.sql`
+2. Open `scripts/db/migrations/005-expand-site-settings.sql`
 3. Copy all contents and paste into SQL Editor
 4. Click **Run**
 
@@ -182,8 +182,8 @@ Pages will automatically use database settings when available, or fall back to d
 ### New Files Created
 
 ```bash
-scripts/004-site-assets-storage.sql          # Storage buckets & policies
-scripts/005-expand-site-settings.sql         # Default site settings
+scripts/db/migrations/004-site-assets-storage.sql          # Storage buckets & policies
+scripts/db/migrations/005-expand-site-settings.sql         # Default site settings
 lib/data/site-settings.ts                    # Data fetching utilities
 components/admin/gallery-manager.tsx         # Multi-image gallery component
 ```

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Production Deployment Checklist - Payment Architecture V2"
 description: "This checklist is for deploying Payment Architecture V2 to PRODUCTION with real financial transactions. Follow every ..."
 owner: "Deesha Team"
@@ -9,17 +9,17 @@ last_updated: 2026-09-12
 ---
 # Production Deployment Checklist - Payment Architecture V2
 
-## âš ï¸ CRITICAL: Read Before Proceeding
+## ⚠️ CRITICAL: Read Before Proceeding
 
 This checklist is for deploying Payment Architecture V2 to **PRODUCTION** with real financial transactions. Follow every step carefully.
 
 **Prerequisites:**
-- âœ… Staging deployment successful
-- âœ… All smoke tests passed in staging
-- âœ… Staging monitored for 24-48 hours with no critical issues
-- âœ… Team approval obtained
-- âœ… Deployment window scheduled
-- âœ… Rollback plan prepared
+- ✅ Staging deployment successful
+- ✅ All smoke tests passed in staging
+- ✅ Staging monitored for 24-48 hours with no critical issues
+- ✅ Team approval obtained
+- ✅ Deployment window scheduled
+- ✅ Rollback plan prepared
 
 ---
 
@@ -73,7 +73,7 @@ This checklist is for deploying Payment Architecture V2 to **PRODUCTION** with r
 
 **Time: 15-30 minutes**
 
-âš ï¸ **CRITICAL: Backup database before proceeding**
+⚠️ **CRITICAL: Backup database before proceeding**
 
 - [ ] **BACKUP PRODUCTION DATABASE**
 - [ ] Verify backup completed successfully
@@ -240,7 +240,7 @@ WHERE created_at > NOW() - INTERVAL '1 hour';
 
 2. **Database Rollback (if necessary):**
    - Restore from backup
-   - Or execute rollback script (see scripts/payments-v2/README.md)
+   - Or execute rollback script (see scripts/db/payments-v2/README.md)
 
 3. **Notify Team:**
    - Announce rollback
@@ -274,11 +274,11 @@ WHERE created_at > NOW() - INTERVAL '1 hour';
 
 After successful production deployment with V1 active:
 
-1. âœ… Monitor for 1-2 hours
-2. âœ… Verify V1 flow working normally
-3. âœ… Prepare for V2 incremental rollout (Task 28.5)
-4. âœ… Schedule V2 enablement window
-5. âœ… Notify team of next phase
+1. ✅ Monitor for 1-2 hours
+2. ✅ Verify V1 flow working normally
+3. ✅ Prepare for V2 incremental rollout (Task 28.5)
+4. ✅ Schedule V2 enablement window
+5. ✅ Notify team of next phase
 
 ---
 

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Smoke Test Guide - Payment Architecture V2"
 description: "This guide provides detailed instructions for running smoke tests in the staging environment after deploying Payment ..."
 owner: "Deesha Team"
@@ -30,7 +30,7 @@ This guide provides detailed instructions for running smoke tests in the staging
 .\scripts\smoke-tests-staging.ps1 -StagingUrl https://your-staging.vercel.app
 
 # Bash
-./scripts/smoke-tests-staging.sh https://your-staging.vercel.app
+./scripts/deploy/smoke-tests-staging.sh https://your-staging.vercel.app
 ```
 
 ### Manual Tests
@@ -57,7 +57,7 @@ Follow the detailed test procedures below for each payment provider.
    }
    ```
 
-**Expected Result:** âœ… Health check returns healthy status
+**Expected Result:** ✅ Health check returns healthy status
 
 **Troubleshooting:**
 - If 500 error: Check application logs
@@ -135,7 +135,7 @@ Follow the detailed test procedures below for each payment provider.
    - Verify receipt PDF attached or download link present
    - Verify receipt number matches database
 
-**Expected Result:** âœ… Complete payment flow works end-to-end
+**Expected Result:** ✅ Complete payment flow works end-to-end
 
 **Troubleshooting:**
 - If webhook not received: Check Stripe webhook configuration
@@ -187,7 +187,7 @@ Follow the detailed test procedures below for each payment provider.
 
 7. **Verify receipt email** (same as Stripe test)
 
-**Expected Result:** âœ… Complete payment flow works end-to-end
+**Expected Result:** ✅ Complete payment flow works end-to-end
 
 **Troubleshooting:**
 - If callback not received: Check Khalti return URL configuration
@@ -239,7 +239,7 @@ Follow the detailed test procedures below for each payment provider.
 
 7. **Verify receipt email** (same as Stripe test)
 
-**Expected Result:** âœ… Complete payment flow works end-to-end
+**Expected Result:** ✅ Complete payment flow works end-to-end
 
 **Troubleshooting:**
 - If signature verification fails: Check ESEWA_SECRET_KEY
@@ -276,7 +276,7 @@ Follow the detailed test procedures below for each payment provider.
    - Verify PDF downloads
    - Verify PDF contains correct donation details
 
-**Expected Result:** âœ… Receipts generate correctly with no failures
+**Expected Result:** ✅ Receipts generate correctly with no failures
 
 **Troubleshooting:**
 - If receipt_failures has entries: Check error messages
@@ -304,7 +304,7 @@ Follow the detailed test procedures below for each payment provider.
    - Verify email formatting is correct
    - Verify download links work
 
-**Expected Result:** âœ… Emails send correctly with no failures
+**Expected Result:** ✅ Emails send correctly with no failures
 
 **Troubleshooting:**
 - If email_failures has entries: Check SMTP credentials
@@ -337,7 +337,7 @@ Follow the detailed test procedures below for each payment provider.
 - Expected: No duplicate receipt generated
 - Expected: No duplicate email sent
 
-**Expected Result:** âœ… All error cases handled gracefully
+**Expected Result:** ✅ All error cases handled gracefully
 
 ---
 
@@ -366,7 +366,7 @@ Follow the detailed test procedures below for each payment provider.
    - Check logs for timing information
    - Target: < 5 seconds
 
-**Expected Result:** âœ… All performance targets met
+**Expected Result:** ✅ All performance targets met
 
 ---
 
@@ -400,7 +400,7 @@ done
 ```
 - Expected: 429 Too Many Requests after threshold
 
-**Expected Result:** âœ… All security measures working
+**Expected Result:** ✅ All security measures working
 
 ---
 
@@ -510,12 +510,12 @@ WHERE created_at > NOW() - INTERVAL '24 hours';
 
 After successful smoke tests:
 
-1. âœ… Document test results
-2. âœ… Review any issues found
-3. âœ… Fix critical issues
-4. âœ… Enable V2 with feature flag (Task 28.3)
-5. âœ… Monitor for 24-48 hours
-6. âœ… Prepare production deployment (Task 28.4)
+1. ✅ Document test results
+2. ✅ Review any issues found
+3. ✅ Fix critical issues
+4. ✅ Enable V2 with feature flag (Task 28.3)
+5. ✅ Monitor for 24-48 hours
+6. ✅ Prepare production deployment (Task 28.4)
 
 ---
 

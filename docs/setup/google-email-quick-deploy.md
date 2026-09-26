@@ -1,6 +1,6 @@
 ﻿---
 title: "Receipt System - Quick Deployment Guide (Google Email)"
-description: "File: scripts/011-receipt-system-complete.sql"
+description: "File: scripts/db/migrations/010-receipt-system.sql"
 owner: "Deesha Team"
 status: active
 category: setup
@@ -13,12 +13,12 @@ last_updated: 2026-09-12
 
 ### Step 1: Run SQL Script in Supabase (5 minutes)
 
-**File:** `scripts/011-receipt-system-complete.sql`
+**File:** `scripts/db/migrations/010-receipt-system.sql`
 
 1. Open Supabase Dashboard: https://app.supabase.com
 2. Go to: SQL Editor
 3. Click: "New Query"
-4. Copy entire contents of `scripts/011-receipt-system-complete.sql`
+4. Copy entire contents of `scripts/db/migrations/010-receipt-system.sql`
 5. Paste into the SQL Editor
 6. Click: "Run"
 7. Wait for completion (should see verification results)
@@ -263,7 +263,7 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ## File References
 
-- **SQL Script:** `scripts/011-receipt-system-complete.sql`
+- **SQL Script:** `scripts/db/migrations/010-receipt-system.sql`
 - **Email Setup:** `docs/GOOGLE_EMAIL_SETUP.md`
 - **Complete Docs:** `docs/RECEIPT_SYSTEM.md`
 - **Webhook Integration:** `docs/RECEIPT_WEBHOOK_INTEGRATION.md`

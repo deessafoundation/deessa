@@ -739,7 +739,7 @@ pnpm axe http://localhost:3000 --save results.json  # In another
 
 **Task B: Accessibility Scan Setup**
 - ✅ axe-core CLI installed (v4.13.0)
-- ✅ Scan script created (`scripts/scan-all-routes.ps1`)
+- ✅ Scan script created (`scripts/ops/scan-all-routes.ps1`)
 - ✅ 28 routes documented
 - ✅ Execution plan documented (`phase-0-scan-execution.md`)
 - ⏳ Ready to execute (needs dev server running)

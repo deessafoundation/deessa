@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Manual Storage Bucket Setup Guide"
 description: "If you encounter ERROR: 42501: must be owner of table buckets when running the SQL script, follow this manual setup g..."
 owner: "Deesha Team"
@@ -26,7 +26,7 @@ If you encounter `ERROR: 42501: must be owner of table buckets` when running the
 Fill in the following settings:
 
 - **Name**: `testimonials`
-- **Public bucket**: âœ… **Checked** (Yes)
+- **Public bucket**: ✅ **Checked** (Yes)
 - **File size limit**: `2097152` (2MB in bytes)
 - **Allowed MIME types**: 
   - `image/jpeg`
@@ -97,7 +97,7 @@ The SQL Editor should run as `postgres` by default. If not, you may need to:
 2. Or create the bucket via Dashboard (Option 1)
 
 ### Step 3: Run Full Script
-Copy and paste the entire content of `scripts/039-testimonials-storage-bucket.sql`
+Copy and paste the entire content of `scripts/db/migrations/039b-testimonials-storage-bucket.sql`
 
 ---
 
@@ -228,4 +228,4 @@ If you continue to have issues:
 ---
 
 **Last Updated**: June 1, 2026  
-**Related**: `scripts/039-testimonials-storage-bucket.sql`
+**Related**: `scripts/db/migrations/039b-testimonials-storage-bucket.sql`

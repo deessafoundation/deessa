@@ -200,7 +200,7 @@ export async function getPublishedProgramBySlug(slug: string) {
 
 #### 4. ⚠️ **SQL Injection in Search (LOW RISK)**
 
-**Location:** `scripts/migrations/060-programs-cms-foundation.sql` line 337
+**Location:** `scripts/db/programs-migrations/P01-programs-cms-foundation.sql` line 337
 
 **Current Code:**
 ```sql

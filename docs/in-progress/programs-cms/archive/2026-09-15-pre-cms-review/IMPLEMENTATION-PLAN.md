@@ -966,7 +966,7 @@ interface CTAButton {
 
 ### Step 2: Data Migration
 ```typescript
-// scripts/migrate-programs.ts
+// scripts/archive/migrate-programs.ts
 
 import { createClient } from '@supabase/supabase-js'
 import { aacSupportProgram } from '@/data/programs/aac-support'

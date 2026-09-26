@@ -61,8 +61,8 @@ Central documentation hub covering:
 
 #### Secret Generation Scripts
 
-**Windows PowerShell:** `scripts/generate-secrets.ps1`
-**Linux/Mac Bash:** `scripts/generate-secrets.sh`
+**Windows PowerShell:** `scripts/ops/generate-secrets.ps1`
+**Linux/Mac Bash:** `scripts/ops/generate-secrets.sh`
 
 Features:
 - Generates cryptographically secure secrets using system RNG
@@ -81,8 +81,8 @@ RECEIPT_RESEND_API_KEY=28b179f668fd1e8cbb0e99e2c94b937457317617db85d80131f404a56
 
 #### Credential Testing Scripts
 
-**Windows PowerShell:** `scripts/test-credentials.ps1`
-**Linux/Mac Bash:** `scripts/test-credentials.sh`
+**Windows PowerShell:** `scripts/ops/test-credentials.ps1`
+**Linux/Mac Bash:** `scripts/ops/test-credentials.sh`
 
 Features:
 - Validates all payment credentials are set
@@ -178,10 +178,10 @@ git log --all -S "sk_live_"
 4. `docs/operations/CREDENTIAL_ROTATION_IMPLEMENTATION.md` (this file)
 
 ### Scripts (4 files)
-1. `scripts/generate-secrets.ps1` (Windows PowerShell)
-2. `scripts/generate-secrets.sh` (Linux/Mac Bash)
-3. `scripts/test-credentials.ps1` (Windows PowerShell)
-4. `scripts/test-credentials.sh` (Linux/Mac Bash)
+1. `scripts/ops/generate-secrets.ps1` (Windows PowerShell)
+2. `scripts/ops/generate-secrets.sh` (Linux/Mac Bash)
+3. `scripts/ops/test-credentials.ps1` (Windows PowerShell)
+4. `scripts/ops/test-credentials.sh` (Linux/Mac Bash)
 
 ### Configuration Updates (2 files)
 1. `.env.example` (updated with rotation notes)
@@ -226,19 +226,19 @@ git log --all -S "sk_live_"
 **Generate secrets for new environment:**
 ```bash
 # Windows
-.\scripts\generate-secrets.ps1
+.\scripts\ops\generate-secrets.ps1
 
 # Linux/Mac
-./scripts/generate-secrets.sh
+./scripts/ops/generate-secrets.sh
 ```
 
 **Test credential configuration:**
 ```bash
 # Windows
-.\scripts\test-credentials.ps1
+.\scripts\ops\test-credentials.ps1
 
 # Linux/Mac
-./scripts/test-credentials.sh
+./scripts/ops/test-credentials.sh
 ```
 
 ### For Operations Team
@@ -254,7 +254,7 @@ git log --all -S "sk_live_"
 ### For Security Audits
 
 **Verify security posture:**
-1. Run `.\scripts\test-credentials.ps1`
+1. Run `.\scripts\ops\test-credentials.ps1`
 2. Review `docs/operations/CREDENTIAL_ROTATION_CHECKLIST.md` for last rotation date
 3. Audit git history: `git log --all --full-history -- .env`
 4. Verify .gitignore: `cat .gitignore | grep .env`
@@ -349,8 +349,8 @@ All credential rotations must be documented using the rotation checklist:
 - [Operations README](./README.md)
 
 ### Scripts
-- `scripts/generate-secrets.ps1` / `.sh`
-- `scripts/test-credentials.ps1` / `.sh`
+- `scripts/ops/generate-secrets.ps1` / `.sh`
+- `scripts/ops/test-credentials.ps1` / `.sh`
 
 ### Contacts
 - DevOps Team: [Your contact]

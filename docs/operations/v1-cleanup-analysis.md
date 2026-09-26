@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Payment V1 Code Cleanup Analysis"
 description: "This document analyzes the current state of the payment system to determine what V1 code can be safely removed now th..."
 owner: "Deesha Team"
@@ -13,7 +13,7 @@ last_updated: 2026-09-12
 
 This document analyzes the current state of the payment system to determine what V1 code can be safely removed now that V2 has been fully deployed and tested.
 
-**Status**: âœ… Safe to proceed with V1 cleanup
+**Status**: ✅ Safe to proceed with V1 cleanup
 **Risk Level**: LOW
 **Estimated Time**: 2-3 hours
 
@@ -25,7 +25,7 @@ This document analyzes the current state of the payment system to determine what
 
 All V2 components have been implemented and are working:
 
-âœ… **Core V2 Components**:
+✅ **Core V2 Components**:
 - PaymentService with transactional integrity
 - Provider adapters (Stripe, Khalti, eSewa)
 - Idempotency via payment_events
@@ -35,7 +35,7 @@ All V2 components have been implemented and are working:
 - Receipt verification system
 - Rate limiting
 
-âœ… **Database Schema**:
+✅ **Database Schema**:
 - payments table (created but not actively used yet)
 - receipts table (created but not actively used yet)
 - payment_events table (enhanced and actively used)
@@ -43,7 +43,7 @@ All V2 components have been implemented and are working:
 - receipt_failures table (actively used)
 - email_failures table (actively used)
 
-âœ… **V2 Deployment**:
+✅ **V2 Deployment**:
 - Task 28.5 marked complete (V2 enabled in production incrementally)
 - Feature flag PAYMENT_V2_ENABLED exists but V2 is the default path
 
@@ -107,11 +107,11 @@ All V2 components have been implemented and are working:
 **IMPORTANT**: These columns are STILL IN USE by V2!
 
 The design document suggested removing these columns:
-- `receipt_number` âŒ STILL USED
-- `receipt_url` âŒ STILL USED  
-- `receipt_generated_at` âŒ STILL USED
-- `receipt_sent_at` âŒ STILL USED
-- `receipt_download_count` âŒ STILL USED
+- `receipt_number` ❌ STILL USED
+- `receipt_url` ❌ STILL USED  
+- `receipt_generated_at` ❌ STILL USED
+- `receipt_sent_at` ❌ STILL USED
+- `receipt_download_count` ❌ STILL USED
 
 **Why they're still used**:
 - The `receipts` table was created but never implemented
@@ -151,11 +151,11 @@ The design document suggested removing these columns:
 ### 5. Deployment Scripts with Feature Flag
 
 **Files**:
-- `scripts/enable-v2-staging.ps1`
-- `scripts/enable-v2-staging.sh`
-- `scripts/deploy-staging.ps1`
-- `scripts/deploy-staging.sh`
-- `scripts/deploy-production.ps1`
+- `scripts/deploy/enable-v2-staging.ps1`
+- `scripts/deploy/enable-v2-staging.sh`
+- `scripts/deploy/deploy-staging.ps1`
+- `scripts/deploy/deploy-staging.sh`
+- `scripts/deploy/deploy-production.ps1`
 
 **Action**: 
 - Remove feature flag logic from scripts
@@ -271,15 +271,15 @@ resolved_at, created_at
 
 ### Phase 4: DO NOT DO (Not Safe)
 
-âŒ **DO NOT drop columns from donations table**
+❌ **DO NOT drop columns from donations table**
 - receipt_number, receipt_url, receipt_generated_at, receipt_sent_at, receipt_download_count
 - These are actively used by V2
 
-âŒ **DO NOT drop unused tables**
+❌ **DO NOT drop unused tables**
 - payments, receipts, payment_jobs
 - These are part of V2 design for future enhancements
 
-âŒ **DO NOT remove provider-specific columns**
+❌ **DO NOT remove provider-specific columns**
 - stripe_session_id, stripe_subscription_id, khalti_pidx, esewa_transaction_uuid
 - These are used for idempotency and status lookups
 
@@ -289,10 +289,10 @@ resolved_at, created_at
 
 ### Before Cleanup
 
-1. âœ… Verify V2 is working in production
-2. âœ… Check recent donations are being processed
-3. âœ… Verify receipts are being generated
-4. âœ… Check no errors in logs
+1. ✅ Verify V2 is working in production
+2. ✅ Check recent donations are being processed
+3. ✅ Verify receipts are being generated
+4. ✅ Check no errors in logs
 
 ### After Cleanup
 
@@ -374,7 +374,7 @@ If issues are discovered after cleanup:
 
 ## Conclusion
 
-**Recommendation**: âœ… PROCEED with V1 cleanup
+**Recommendation**: ✅ PROCEED with V1 cleanup
 
 **Confidence Level**: HIGH
 

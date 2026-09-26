@@ -193,7 +193,7 @@
 ### Task B: Accessibility Scan Setup
 
 **Deliverables Created:**
-1. **Scan Script** - `scripts/scan-all-routes.ps1`
+1. **Scan Script** - `scripts/ops/scan-all-routes.ps1`
    - Automated PowerShell script
    - Scans all 28 routes
    - Generates summary report

@@ -181,7 +181,7 @@ pnpm axe http://localhost:3000/events --save scan-events.json
 Create scan script for all 28 routes:
 
 ```powershell
-# Save this as: scripts/scan-all-routes.ps1
+# Save this as: scripts/ops/scan-all-routes.ps1
 
 $routes = @(
     "",

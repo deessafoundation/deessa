@@ -3,7 +3,7 @@
 ## Pre-Release Checklist
 
 - [ ] All Phase 5–6 tasks marked complete in tasks.md
-- [ ] Migration script tested in staging (`scripts/migrate-programs.ts --dry-run`)
+- [ ] Migration script tested in staging (`scripts/archive/migrate-programs.ts --dry-run`)
 - [ ] Feature flag `NEXT_PUBLIC_PROGRAMS_CMS=false` set in production env
 - [ ] Database backup taken and verified
 - [ ] Staging environment mirrors production schema
@@ -15,25 +15,25 @@
 ```bash
 # Apply in order (all additive, non-destructive):
 # 1. Foundation schema
-psql -f scripts/migrations/060-programs-cms-foundation.sql
+psql -f scripts/db/programs-migrations/P01-programs-cms-foundation.sql
 
 # 2. Indexes and constraints
-psql -f scripts/migrations/061-programs-indexes.sql
+psql -f scripts/db/programs-migrations/P02-program-assets-storage.sql
 
 # 3. SEO columns
-psql -f scripts/migrations/062-programs-seo-columns.sql
+psql -f scripts/db/programs-migrations/P03-program-seo-columns.sql
 
 # 4. Asset tracking
-psql -f scripts/migrations/063-program-assets.sql
+psql -f scripts/db/programs-migrations/P04-fix-program-assets-public-bucket.sql
 
 # 5. Storage policies
-psql -f scripts/migrations/064-program-assets-storage.sql
+psql -f scripts/db/programs-migrations/P05-simplify-program-assets-rls.sql
 
 # 6. Section types and triggers
-psql -f scripts/migrations/065-programs-phase12-hardening.sql
+psql -f scripts/db/programs-migrations/P06-programs-phase12-hardening.sql
 
 # 7. Test fixtures (OPTIONAL — skip in production)
-# psql -f scripts/migrations/066-programs-test-fixtures.sql
+# psql -f scripts/db/programs-migrations/P07-programs-test-fixtures.sql
 ```
 
 **Verify:**
@@ -55,14 +55,14 @@ Verify `program-assets` bucket exists in Supabase Dashboard > Storage:
 
 ```bash
 # Dry run first
-npx tsx scripts/migrate-programs.ts --dry-run
+npx tsx scripts/archive/migrate-programs.ts --dry-run
 
 # Review generated files
 cat scripts/migration-manifest.json
 cat scripts/migration-import.sql
 
 # Execute import
-npx tsx scripts/migrate-programs.ts --import
+npx tsx scripts/archive/migrate-programs.ts --import
 # OR paste migration-import.sql into Supabase SQL Editor
 ```
 

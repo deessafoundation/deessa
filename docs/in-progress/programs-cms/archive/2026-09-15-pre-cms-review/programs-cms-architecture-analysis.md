@@ -923,7 +923,7 @@ export async function GET(request: Request) {
 
 ## Migration Script
 
-**File:** `scripts/063-programs-cms-schema.sql`
+**File:** `scripts/db/migrations/063-programs-cms-schema.sql`
 
 ```sql
 -- =============================================
