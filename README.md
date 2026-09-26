@@ -122,7 +122,7 @@ cp .env.example .env.local
 See `.env.example` for all required environment variables.
 
 4. **Database Setup:**
-   Run the SQL scripts in the `scripts/` directory in order in your Supabase SQL editor:
+   Run the SQL scripts in the `scripts/db/migrations/` directory in order in your Supabase SQL editor:
 
    - `001-create-tables.sql`
    - `002-admin-schema.sql`
@@ -178,7 +178,7 @@ data/
 ├── team.ts            # Static team member data
 └── ...
 
-scripts/
+scripts/db/migrations/
 ├── 001-create-tables.sql  # Public forms schema
 └── 002-admin-schema.sql   # Admin panel schema
 ```
@@ -236,17 +236,17 @@ All payment credentials and API keys must be rotated quarterly for security. We 
 
 **Automation Scripts:**
 
-- `scripts/generate-secrets.ps1` / `.sh` - Generate all required secrets
-- `scripts/test-credentials.ps1` / `.sh` - Validate credential configuration
+- `scripts/ops/generate-secrets.ps1` / `.sh` - Generate all required secrets
+- `scripts/ops/test-credentials.ps1` / `.sh` - Validate credential configuration
 
 **Quick Start:**
 
 ```bash
 # Generate new secrets
-.\scripts\generate-secrets.ps1
+.\scripts\ops\generate-secrets.ps1
 
 # Test credential configuration
-.\scripts\test-credentials.ps1
+.\scripts\ops\test-credentials.ps1
 ```
 
 ### Security Best Practices
