@@ -1,0 +1,65 @@
+/* Below dialogs/panel (50+) but above ordinary page content. */
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none !important;
+  visibility: hidden;
+}
+.above, .below { position: absolute; left: 0; right: 0; background: rgb(0 0 0 / 65%); pointer-events: none !important; }
+.above { top: 0; height: var(--reading-top, 0px); }
+.below { top: var(--reading-bottom, 100vh); bottom: 0; }
+.guide {
+  position: absolute;
+  left: var(--guide-left, 8px);
+  width: var(--guide-width, 50vw);
+  top: var(--guide-top, 0px);
+  height: 58px;
+  pointer-events: none !important;
+}
+/* The friend sits below the center of the line without intercepting input. */
+.marker {
+  position: absolute;
+  top: 10px;
+  left: calc(50% - 24px);
+  width: 48px;
+  height: 48px;
+  font-size: 30px;
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  pointer-events: none !important;
+}
+.line {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  min-width: 0;
+  border-radius: 999px;
+  background: #3fabde;
+  box-shadow: 0 0 7px rgb(63 171 222 / 35%);
+  outline: 1px solid rgb(255 255 255 / 80%);
+  pointer-events: none !important;
+}
+:global(body.high-contrast) .line {
+  background: #000;
+  box-shadow: none;
+  outline-color: #fff;
+}
+/* Complementary colors become brand blue after the root negative filter. */
+:global(html[data-a11y-negative="true"]) .line {
+  background: #c05421;
+  box-shadow: 0 0 7px rgb(192 84 33 / 35%);
+  outline-color: rgb(0 0 0 / 80%);
+}
+@media (max-width: 480px) {
+  .marker { left: calc(50% - 20px); width: 40px; height: 40px; font-size: 28px; }
+}
+@media (forced-colors: active) {
+  .line, :global(body.high-contrast) .line, :global(html[data-a11y-negative="true"]) .line {
+    background: CanvasText;
+    box-shadow: none;
+    outline-color: Canvas;
+  }
+}
+@media print { .layer { display: none !important; } }
