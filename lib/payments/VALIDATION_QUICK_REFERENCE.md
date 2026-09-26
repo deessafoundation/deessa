@@ -93,7 +93,7 @@ GOOGLE_APP_PASSWORD=your_app_password
 **Problem**: Required database table missing
 **Fix**: Run database migrations
 ```bash
-psql -d your_db -f scripts/023-enhance-payment-events.sql
+psql -d your_db -f scripts/db/migrations/023-enhance-payment-events.sql
 ```
 
 ### MISSING_STRIPE_WEBHOOK_SECRET
@@ -153,7 +153,7 @@ export async function middleware(request: NextRequest) {
 
 - `lib/payments/validation.ts` - Core validation logic
 - `app/api/health/route.ts` - Health check endpoint
-- `scripts/validate-payment-config.ts` - CLI script
+- `scripts/ops/validate-payment-config.ts` - CLI script
 - `lib/payments/VALIDATION_GUIDE.md` - Full documentation
 
 ## 📞 Support

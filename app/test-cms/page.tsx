@@ -228,7 +228,7 @@ export default async function TestCMSPage() {
             <strong>Next steps:</strong>
           </p>
           <ol className="list-decimal list-inside text-blue-700 text-sm mt-2 space-y-1">
-            <li>Run the SQL migration: <code className="bg-blue-100 px-2 py-1 rounded">scripts/037-homepage-cms-schema.sql</code></li>
+            <li>Run the SQL migration: <code className="bg-blue-100 px-2 py-1 rounded">scripts/db/migrations/037-homepage-cms-schema.sql</code></li>
             <li>Refresh this page to see database values</li>
             <li>Build the admin UI to edit content</li>
             <li>Delete this test page</li>

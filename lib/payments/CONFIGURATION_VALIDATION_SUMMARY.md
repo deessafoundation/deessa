@@ -60,7 +60,7 @@ Created comprehensive documentation:
 ### 4. Testing Infrastructure
 
 - ✅ Basic unit tests (`__tests__/validation.test.ts`)
-- ✅ Validation script (`scripts/validate-payment-config.ts`)
+- ✅ Validation script (`scripts/ops/validate-payment-config.ts`)
 - ✅ npm script: `npm run validate-config`
 
 ## Files Created
@@ -237,7 +237,7 @@ The implementation includes:
 **"PAYMENT_EVENTS_TABLE_MISSING"**
 ```bash
 # Run database migrations
-psql -d your_database -f scripts/023-enhance-payment-events.sql
+psql -d your_database -f scripts/db/migrations/023-enhance-payment-events.sql
 ```
 
 **"MOCK_MODE_IN_PRODUCTION"**
