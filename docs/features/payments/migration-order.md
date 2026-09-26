@@ -85,14 +85,14 @@ These tables support the MVP inline processing approach for Vercel Hobby plan:
 supabase db push
 
 # Or execute individually
-psql $DATABASE_URL -f scripts/payments-v2/020-create-payments-table.sql
-psql $DATABASE_URL -f scripts/payments-v2/021-create-receipts-table.sql
-psql $DATABASE_URL -f scripts/payments-v2/022-create-payment-jobs-table.sql
-psql $DATABASE_URL -f scripts/payments-v2/023-enhance-payment-events.sql
-psql $DATABASE_URL -f scripts/payments-v2/024-add-indexes.sql
-psql $DATABASE_URL -f scripts/payments-v2/025-atomic-receipt-number.sql
-psql $DATABASE_URL -f scripts/payments-v2/026-create-receipt-failures-table.sql
-psql $DATABASE_URL -f scripts/payments-v2/027-create-email-failures-table.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/020-create-payments-table.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/021-create-receipts-table.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/022-create-payment-jobs-table.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/023-enhance-payment-events.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/024-add-indexes.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/025-atomic-receipt-number.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/026-create-receipt-failures-table.sql
+psql $DATABASE_URL -f scripts/db/payments-v2/027-create-email-failures-table.sql
 ```
 
 ## Verification
