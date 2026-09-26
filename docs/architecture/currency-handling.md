@@ -30,7 +30,7 @@ We've implemented a comprehensive multi-currency system that:
 
 ### 1. Database Schema Enhancement
 
-**File:** `scripts/008-currency-support.sql`
+**File:** `scripts/db/migrations/008-currency-support.sql`
 
 - Ensures `currency` column exists on the `donations` table
 - Sets default currency to 'NPR' for backwards compatibility
@@ -42,7 +42,7 @@ To apply this migration:
 
 ```sql
 -- Run in your Supabase SQL Editor
-\i scripts/008-currency-support.sql
+\i scripts/db/migrations/008-currency-support.sql
 ```
 
 ### 2. Currency Utility Functions
@@ -233,7 +233,7 @@ LIMIT 10;
 
 If you have existing donations without currency information:
 
-1. Run the migration script: `scripts/008-currency-support.sql`
+1. Run the migration script: `scripts/db/migrations/008-currency-support.sql`
 2. All NULL currency values will be set to 'NPR' (default)
 3. The admin dashboard will automatically display them correctly
 
@@ -281,7 +281,7 @@ SELECT DISTINCT currency FROM donations;
 - `lib/actions/donation.ts` - Donation creation logic
 - `app/admin/donations/page.tsx` - Admin dashboard
 - `app/(public)/donate/success/success-content.tsx` - Success page
-- `scripts/008-currency-support.sql` - Database migration
+- `scripts/db/migrations/008-currency-support.sql` - Database migration
 - `lib/payments/stripe.ts` - Stripe payment integration
 - `lib/payments/khalti.ts` - Khalti payment integration
 - `lib/payments/esewa.ts` - eSewa payment integration

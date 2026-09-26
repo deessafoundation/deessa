@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Task 28: Deployment - Completion Summary"
 description: "Task 28 Deployment has been completed with comprehensive documentation, scripts, and checklists to support the full d..."
 owner: "Deesha Team"
@@ -18,8 +18,8 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 ### 1. Deployment Scripts (Task 28.1)
 
 #### Staging Deployment
-- **`scripts/deploy-staging.ps1`** - PowerShell automation script
-- **`scripts/deploy-staging.sh`** - Bash automation script
+- **`scripts/deploy/deploy-staging.ps1`** - PowerShell automation script
+- **`scripts/deploy/deploy-staging.sh`** - Bash automation script
 
 **Features:**
 - Pre-deployment validation (tests, config)
@@ -30,7 +30,7 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 - Comprehensive error handling
 
 #### Production Deployment
-- **`scripts/deploy-production.ps1`** - PowerShell automation script
+- **`scripts/deploy/deploy-production.ps1`** - PowerShell automation script
 
 **Features:**
 - Enhanced safety checks and confirmations
@@ -43,8 +43,8 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 ### 2. Smoke Test Automation (Task 28.2)
 
 #### Test Scripts
-- **`scripts/smoke-tests-staging.ps1`** - PowerShell test automation
-- **`scripts/smoke-tests-staging.sh`** - Bash test automation
+- **`scripts/deploy/smoke-tests-staging.ps1`** - PowerShell test automation
+- **`scripts/deploy/smoke-tests-staging.sh`** - Bash test automation
 
 **Features:**
 - Automated health checks
@@ -68,8 +68,8 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 ### 3. V2 Enablement Tools (Task 28.3)
 
 #### Feature Flag Scripts
-- **`scripts/enable-v2-staging.ps1`** - PowerShell V2 control
-- **`scripts/enable-v2-staging.sh`** - Bash V2 control
+- **`scripts/deploy/enable-v2-staging.ps1`** - PowerShell V2 control
+- **`scripts/deploy/enable-v2-staging.sh`** - Bash V2 control
 
 **Features:**
 - Enable/disable V2 with feature flag
@@ -79,7 +79,7 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 - Rollback support
 
 #### Monitoring Script
-- **`scripts/monitor-staging.ps1`** - PowerShell monitoring
+- **`scripts/deploy/monitor-staging.ps1`** - PowerShell monitoring
 
 **Features:**
 - Real-time health checks
@@ -112,7 +112,7 @@ Task 28 (Deployment) has been completed with comprehensive documentation, script
 - **`docs/deployment/INCREMENTAL_ROLLOUT_GUIDE.md`**
 
 **Contents:**
-- Rollout strategy (10% â†’ 25% â†’ 50% â†’ 75% â†’ 100%)
+- Rollout strategy (10% → 25% → 50% → 75% → 100%)
 - Implementation options:
   - Simple feature flag (recommended for MVP)
   - Percentage-based rollout (advanced)
@@ -175,11 +175,11 @@ Added convenient npm scripts for deployment tasks:
 ```json
 {
   "scripts": {
-    "deploy:staging": "pwsh -File scripts/deploy-staging.ps1",
-    "deploy:production": "pwsh -File scripts/deploy-production.ps1",
-    "test:staging": "pwsh -File scripts/smoke-tests-staging.ps1",
-    "enable:v2": "pwsh -File scripts/enable-v2-staging.ps1",
-    "monitor:staging": "pwsh -File scripts/monitor-staging.ps1"
+    "deploy:staging": "pwsh -File scripts/deploy/deploy-staging.ps1",
+    "deploy:production": "pwsh -File scripts/deploy/deploy-production.ps1",
+    "test:staging": "pwsh -File scripts/deploy/smoke-tests-staging.ps1",
+    "enable:v2": "pwsh -File scripts/deploy/enable-v2-staging.ps1",
+    "monitor:staging": "pwsh -File scripts/deploy/monitor-staging.ps1"
   }
 }
 ```
@@ -193,10 +193,10 @@ Added convenient npm scripts for deployment tasks:
 npm run deploy:staging
 
 # Or directly
-pwsh -File scripts/deploy-staging.ps1 -StagingUrl https://staging.vercel.app
+pwsh -File scripts/deploy/deploy-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/deploy-staging.sh https://staging.vercel.app
+./scripts/deploy/deploy-staging.sh https://staging.vercel.app
 ```
 
 ### Smoke Tests
@@ -206,10 +206,10 @@ pwsh -File scripts/deploy-staging.ps1 -StagingUrl https://staging.vercel.app
 npm run test:staging
 
 # Or directly
-pwsh -File scripts/smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.app
+pwsh -File scripts/deploy/smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/smoke-tests-staging.sh https://staging.vercel.app
+./scripts/deploy/smoke-tests-staging.sh https://staging.vercel.app
 ```
 
 ### Enable V2
@@ -219,10 +219,10 @@ pwsh -File scripts/smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.ap
 npm run enable:v2
 
 # Or directly
-pwsh -File scripts/enable-v2-staging.ps1
+pwsh -File scripts/deploy/enable-v2-staging.ps1
 
 # Bash
-./scripts/enable-v2-staging.sh
+./scripts/deploy/enable-v2-staging.sh
 ```
 
 ### Production Deployment
@@ -232,7 +232,7 @@ pwsh -File scripts/enable-v2-staging.ps1
 npm run deploy:production
 
 # Or directly
-pwsh -File scripts/deploy-production.ps1 -ProductionUrl https://production.com
+pwsh -File scripts/deploy/deploy-production.ps1 -ProductionUrl https://production.com
 ```
 
 ### Monitoring
@@ -242,7 +242,7 @@ pwsh -File scripts/deploy-production.ps1 -ProductionUrl https://production.com
 npm run monitor:staging
 
 # Or directly
-pwsh -File scripts/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -Once
+pwsh -File scripts/deploy/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -Once
 ```
 
 ## Key Features
@@ -273,52 +273,52 @@ pwsh -File scripts/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -O
 ## Deployment Workflow
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   Staging Deployment                    â”‚
-â”‚                                                         â”‚
-â”‚  1. Run: npm run deploy:staging                        â”‚
-â”‚  2. Execute database migrations                        â”‚
-â”‚  3. Deploy application                                 â”‚
-â”‚  4. Run: npm run test:staging                          â”‚
-â”‚  5. Run: npm run enable:v2                             â”‚
-â”‚  6. Run: npm run monitor:staging                       â”‚
-â”‚  7. Monitor for 24-48 hours                            â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                 Production Deployment                   â”‚
-â”‚                                                         â”‚
-â”‚  1. Run: npm run deploy:production                     â”‚
-â”‚  2. Execute database migrations                        â”‚
-â”‚  3. Deploy application (V2 disabled)                   â”‚
-â”‚  4. Verify V1 working                                  â”‚
-â”‚  5. Enable V2 incrementally                            â”‚
-â”‚  6. Monitor for 7+ days                                â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    V1 Code Cleanup                      â”‚
-â”‚                                                         â”‚
-â”‚  1. Remove feature flags                               â”‚
-â”‚  2. Remove V1 code                                     â”‚
-â”‚  3. Database cleanup (optional)                        â”‚
-â”‚  4. Final verification                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────┐
+│                   Staging Deployment                    │
+│                                                         │
+│  1. Run: npm run deploy:staging                        │
+│  2. Execute database migrations                        │
+│  3. Deploy application                                 │
+│  4. Run: npm run test:staging                          │
+│  5. Run: npm run enable:v2                             │
+│  6. Run: npm run monitor:staging                       │
+│  7. Monitor for 24-48 hours                            │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                 Production Deployment                   │
+│                                                         │
+│  1. Run: npm run deploy:production                     │
+│  2. Execute database migrations                        │
+│  3. Deploy application (V2 disabled)                   │
+│  4. Verify V1 working                                  │
+│  5. Enable V2 incrementally                            │
+│  6. Monitor for 7+ days                                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                    V1 Code Cleanup                      │
+│                                                         │
+│  1. Remove feature flags                               │
+│  2. Remove V1 code                                     │
+│  3. Database cleanup (optional)                        │
+│  4. Final verification                                 │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ## Files Created
 
 ### Scripts (7 files)
-1. `scripts/deploy-staging.ps1`
-2. `scripts/deploy-staging.sh`
-3. `scripts/smoke-tests-staging.ps1`
-4. `scripts/smoke-tests-staging.sh`
-5. `scripts/enable-v2-staging.ps1`
-6. `scripts/enable-v2-staging.sh`
-7. `scripts/monitor-staging.ps1`
-8. `scripts/deploy-production.ps1`
+1. `scripts/deploy/deploy-staging.ps1`
+2. `scripts/deploy/deploy-staging.sh`
+3. `scripts/deploy/smoke-tests-staging.ps1`
+4. `scripts/deploy/smoke-tests-staging.sh`
+5. `scripts/deploy/enable-v2-staging.ps1`
+6. `scripts/deploy/enable-v2-staging.sh`
+7. `scripts/deploy/monitor-staging.ps1`
+8. `scripts/deploy/deploy-production.ps1`
 
 ### Documentation (8 files)
 1. `docs/deployment/STAGING_DEPLOYMENT_CHECKLIST.md`
@@ -338,47 +338,47 @@ pwsh -File scripts/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -O
 ## Success Criteria Met
 
 ### Task 28.1: Deploy to staging environment
-âœ… Staging deployment scripts created (PowerShell and Bash)
-âœ… Database migration guidance included
-âœ… Application deployment automated
-âœ… Worker deployment documented (MVP: inline processing)
-âœ… Verification procedures included
+✅ Staging deployment scripts created (PowerShell and Bash)
+✅ Database migration guidance included
+✅ Application deployment automated
+✅ Worker deployment documented (MVP: inline processing)
+✅ Verification procedures included
 
 ### Task 28.2: Run smoke tests in staging
-âœ… Smoke test scripts created (PowerShell and Bash)
-âœ… Stripe payment flow testing documented
-âœ… Khalti payment flow testing documented
-âœ… eSewa payment flow testing documented
-âœ… Receipt and email verification included
-âœ… Comprehensive test guide created
+✅ Smoke test scripts created (PowerShell and Bash)
+✅ Stripe payment flow testing documented
+✅ Khalti payment flow testing documented
+✅ eSewa payment flow testing documented
+✅ Receipt and email verification included
+✅ Comprehensive test guide created
 
 ### Task 28.3: Enable V2 in staging with feature flag
-âœ… V2 enablement scripts created (PowerShell and Bash)
-âœ… Feature flag control automated
-âœ… Monitoring script created
-âœ… Verification procedures included
+✅ V2 enablement scripts created (PowerShell and Bash)
+✅ Feature flag control automated
+✅ Monitoring script created
+✅ Verification procedures included
 
 ### Task 28.4: Deploy to production
-âœ… Production deployment script created
-âœ… Database migration guidance included
-âœ… Application deployment automated
-âœ… Worker deployment documented
-âœ… PAYMENT_V2_ENABLED=false initially enforced
-âœ… Comprehensive checklist created
+✅ Production deployment script created
+✅ Database migration guidance included
+✅ Application deployment automated
+✅ Worker deployment documented
+✅ PAYMENT_V2_ENABLED=false initially enforced
+✅ Comprehensive checklist created
 
 ### Task 28.5: Enable V2 in production incrementally
-âœ… Incremental rollout guide created
-âœ… Multiple implementation options documented
-âœ… Monitoring procedures defined
-âœ… Rollback procedures documented
-âœ… Success criteria defined
+✅ Incremental rollout guide created
+✅ Multiple implementation options documented
+✅ Monitoring procedures defined
+✅ Rollback procedures documented
+✅ Success criteria defined
 
 ### Task 28.6: Remove V1 code and feature flags
-âœ… V1 cleanup guide created
-âœ… Feature flag removal procedures documented
-âœ… V1 code removal procedures documented
-âœ… Database cleanup procedures documented (optional)
-âœ… Verification checklist included
+✅ V1 cleanup guide created
+✅ Feature flag removal procedures documented
+✅ V1 code removal procedures documented
+✅ Database cleanup procedures documented (optional)
+✅ Verification checklist included
 
 ## Next Steps
 
@@ -422,9 +422,9 @@ pwsh -File scripts/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -O
 - Tasks: `.kiro/specs/payment-architecture-v2/tasks.md`
 
 ### Migration Documentation
-- `scripts/payments-v2/README.md`
-- `scripts/payments-v2/QUICK_START.md`
-- `scripts/payments-v2/MIGRATION_ORDER.md`
+- `scripts/db/payments-v2/README.md`
+- `scripts/db/payments-v2/QUICK_START.md`
+- `scripts/db/payments-v2/MIGRATION_ORDER.md`
 
 ### Deployment Documentation
 - All files in `docs/deployment/`
@@ -434,15 +434,15 @@ pwsh -File scripts/monitor-staging.ps1 -StagingUrl https://staging.vercel.app -O
 Task 28 (Deployment) is complete with comprehensive automation, documentation, and guidance for deploying Payment Architecture V2 from staging through production to final V1 cleanup.
 
 The deployment package includes:
-- âœ… Automated deployment scripts
-- âœ… Comprehensive checklists
-- âœ… Detailed operational guides
-- âœ… Monitoring tools
-- âœ… Rollback procedures
-- âœ… Success criteria
-- âœ… Timeline guidance
+- ✅ Automated deployment scripts
+- ✅ Comprehensive checklists
+- ✅ Detailed operational guides
+- ✅ Monitoring tools
+- ✅ Rollback procedures
+- ✅ Success criteria
+- ✅ Timeline guidance
 
-**Status:** âœ… Complete
+**Status:** ✅ Complete
 **Quality:** Production-ready
 **Coverage:** Comprehensive
 

@@ -1,5 +1,5 @@
-﻿---
-title: "DEESSA Foundation â€” Conference Module: Deployment & Operations Manual"
+---
+title: "DEESSA Foundation — Conference Module: Deployment & Operations Manual"
 description: " Version: 1.0.0"
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Deployment & Operations Manual
+# DEESSA Foundation — Conference Module: Deployment & Operations Manual
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -110,22 +110,22 @@ SENTRY_DSN=https://...@sentry.io/...
 **Supabase**:
 
 1. Go to [supabase.com](https://supabase.com)
-2. Select project â†’ Settings â†’ API
+2. Select project → Settings → API
 3. Copy `URL`, `anon key`, and `service_role key`
 
 **Gmail SMTP**:
 
 1. Enable 2FA on Google account
-2. Go to Security â†’ App passwords
+2. Go to Security → App passwords
 3. Generate app password for "Mail"
 4. Use generated 16-character password (spaces included)
 
 **Stripe**:
 
 1. Go to [dashboard.stripe.com](https://dashboard.stripe.com)
-2. Developers â†’ API keys
+2. Developers → API keys
 3. Copy `Secret key` and `Publishable key`
-4. Webhooks â†’ Add endpoint â†’ Copy signing secret
+4. Webhooks → Add endpoint → Copy signing secret
 
 **Khalti**:
 
@@ -145,10 +145,10 @@ SENTRY_DSN=https://...@sentry.io/...
 
 | Key Type             | Rotation Frequency       | Procedure                                                |
 | -------------------- | ------------------------ | -------------------------------------------------------- |
-| Database keys        | Annually                 | Rotate in Supabase dashboard â†’ Update Vercel             |
-| Payment gateway keys | Annually or after breach | Rotate in gateway dashboard â†’ Update Vercel              |
-| CRON_SECRET          | Annually                 | Generate new random string â†’ Update Vercel + cron config |
-| Email password       | On security alert        | Regenerate app password â†’ Update Vercel                  |
+| Database keys        | Annually                 | Rotate in Supabase dashboard → Update Vercel             |
+| Payment gateway keys | Annually or after breach | Rotate in gateway dashboard → Update Vercel              |
+| CRON_SECRET          | Annually                 | Generate new random string → Update Vercel + cron config |
+| Email password       | On security alert        | Regenerate app password → Update Vercel                  |
 
 **Access Control**:
 
@@ -204,7 +204,7 @@ vercel env pull .env.local
 # Via Vercel Dashboard
 1. Go to Deployments tab
 2. Find previous working deployment
-3. Click "..." â†’ "Promote to Production"
+3. Click "..." → "Promote to Production"
 
 # Via CLI
 vercel rollback
@@ -217,7 +217,7 @@ vercel rollback
 1. **Write Migration Script**:
 
 ```sql
--- scripts/migrations/018-add-conference-field.sql
+-- scripts/db/migrations/018-add-conference-field.sql
 ALTER TABLE conference_registrations
 ADD COLUMN new_field text;
 
@@ -228,24 +228,24 @@ CREATE INDEX idx_new_field ON conference_registrations(new_field);
 
 ```bash
 # Connect to local Supabase
-psql $DEV_DATABASE_URL -f scripts/migrations/018-add-conference-field.sql
+psql $DEV_DATABASE_URL -f scripts/db/migrations/018-add-conference-field.sql
 ```
 
 1. **Backup Production Database**:
 
 ```bash
 # Via Supabase Dashboard
-Projects â†’ [Project] â†’ Database â†’ Backups â†’ "Backup Now"
+Projects → [Project] → Database → Backups → "Backup Now"
 ```
 
 1. **Apply to Production**:
 
 ```bash
 # Via Supabase SQL Editor (recommended)
-# Copy/paste migration script â†’ Run
+# Copy/paste migration script → Run
 
 # OR via CLI
-psql $SUPABASE_DATABASE_URL -f scripts/migrations/018-add-conference-field.sql
+psql $SUPABASE_DATABASE_URL -f scripts/db/migrations/018-add-conference-field.sql
 ```
 
 1. **Verify**:
@@ -287,12 +287,12 @@ git push origin main
 **Cron Schedule Format** (Unix cron):
 
 ```
- â”Œâ”€ minute (0-59)
- â”‚ â”Œâ”€ hour (0-23)
- â”‚ â”‚ â”Œâ”€ day of month (1-31)
- â”‚ â”‚ â”‚ â”Œâ”€ month (1-12)
- â”‚ â”‚ â”‚ â”‚ â”Œâ”€ day of week (0-6, Sunday=0)
- â”‚ â”‚ â”‚ â”‚ â”‚
+ ┌─ minute (0-59)
+ │ ┌─ hour (0-23)
+ │ │ ┌─ day of month (1-31)
+ │ │ │ ┌─ month (1-12)
+ │ │ │ │ ┌─ day of week (0-6, Sunday=0)
+ │ │ │ │ │
  * * * * *
 ```
 
@@ -315,7 +315,7 @@ Examples:
 
 ```bash
 # Check webhook logs in Stripe Dashboard
-1. Developers â†’ Webhooks â†’ [Endpoint] â†’ Events
+1. Developers → Webhooks → [Endpoint] → Events
 2. Look for failed deliveries (red X)
 3. Note event ID (e.g., evt_...)
 
@@ -336,7 +336,7 @@ SELECT * FROM payment_events WHERE event_id = 'evt_...';
 # Option 2: Replay webhook manually
 # In Stripe Dashboard:
 1. Find failed event
-2. Click "..." â†’ "Resend event"
+2. Click "..." → "Resend event"
 3. Monitor server logs for processing
 
 # Option 3: Direct SQL (last resort)
@@ -379,7 +379,7 @@ vercel logs --since 1h | grep "Email send failed"
 ```bash
 # Resend email via admin dashboard
 1. Go to /admin/conference/[id]
-2. Quick Actions â†’ "Send Custom Email"
+2. Quick Actions → "Send Custom Email"
 3. Select template (Registration/Confirmation)
 4. Click "Send"
 
@@ -471,11 +471,11 @@ curl https://deessa.org/api/cron/expire-conference-registrations \
 
 ```bash
 # If cron disabled in Vercel
-1. Vercel Dashboard â†’ Project Settings â†’ Cron Jobs
+1. Vercel Dashboard → Project Settings → Cron Jobs
 2. Ensure "Enable Cron Jobs" is checked
 
 # If CRON_SECRET wrong/missing
-1. Vercel â†’ Settings â†’ Environment Variables
+1. Vercel → Settings → Environment Variables
 2. Verify CRON_SECRET is set
 3. Update vercel.json if needed
 4. Redeploy
@@ -507,7 +507,7 @@ WHERE id = 'registration-uuid';
 
 # Get Stripe session (if Stripe)
 # Via Stripe Dashboard:
-1. Payments â†’ Search by session ID (from payment_id)
+1. Payments → Search by session ID (from payment_id)
 2. Check amount charged vs. expected
 
 # Possible causes:
@@ -521,12 +521,12 @@ WHERE id = 'registration-uuid';
 ```bash
 # Verify amount with gateway
 # If amount is correct:
-1. Admin dashboard â†’ "Mark as Paid"
+1. Admin dashboard → "Mark as Paid"
 2. Updates status to 'confirmed'
 
 # If amount is wrong:
 1. Initiate refund via payment gateway dashboard
-2. Admin dashboard â†’ "Cancel Registration"
+2. Admin dashboard → "Cancel Registration"
 3. Ask user to register again with correct amount
 
 # Update DB if needed
@@ -567,7 +567,7 @@ vercel log-drains add <webhook-url>
 
 ```bash
 # Set up notification rules in Vercel
-# Dashboard â†’ Project â†’ Settings â†’ Notifications
+# Dashboard → Project → Settings → Notifications
 # - Deployment failure
 # - Domain errors
 # - Function errors (>10 in 5 min)
@@ -630,8 +630,8 @@ vercel logs --since 1h | grep "ECONNREFUSED"
 
 ```bash
 # Via Supabase Dashboard
-1. Database â†’ Tables â†’ conference_registrations
-2. Click "..." â†’ Export as CSV
+1. Database → Tables → conference_registrations
+2. Click "..." → Export as CSV
 
 # Via psql
 pg_dump $SUPABASE_DATABASE_URL \
@@ -649,7 +649,7 @@ TO '/tmp/registrations.csv' CSV HEADER;
 **From Supabase Backup** (Pro tier):
 
 ```bash
-1. Supabase Dashboard â†’ Database â†’ Backups
+1. Supabase Dashboard → Database → Backups
 2. Select backup date
 3. Click "Restore"
 4. Confirm (WARNING: overwrites current data)

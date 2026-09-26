@@ -1,5 +1,5 @@
-﻿---
-title: "Conference Dynamic Form Builder â€” Implementation Plan"
+---
+title: "Conference Dynamic Form Builder — Implementation Plan"
 description: " Goal: Replace hardcoded 4-step registration form with an admin-configurable dynamic form builder, without breaking a..."
 owner: "Deesha Team"
 status: active
@@ -7,50 +7,50 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Conference Dynamic Form Builder â€” Implementation Plan
+# Conference Dynamic Form Builder — Implementation Plan
 
 > **Goal:** Replace hardcoded 4-step registration form with an admin-configurable dynamic form builder, without breaking any existing functionality.
 >
 > **Stack:** Next.js 14 (App Router) + Supabase (Postgres, RLS)
 >
-> **Status:** ðŸŽ‰ **ALL PHASES COMPLETE** â€” 100% Project Completion
+> **Status:** 🎉 **ALL PHASES COMPLETE** — 100% Project Completion
 
 ---
 
-## ðŸ“Š Quick Status Overview
+## 📊 Quick Status Overview
 
 | Phase | Status | Completion |
 |-------|--------|------------|
-| **Phase 1: Foundation & Dynamic Renderer** | âœ… Complete | 100% |
-| **Phase 2: Admin Form Builder UI** | âœ… Complete | 100% |
-| **Phase 3: Submission & Data Handling** | âœ… Complete | 100% |
-| **Phase 4: Advanced Features** | âœ… Complete | 100% |
-| **Phase 5: Polish & Optimization** | âœ… Complete | 100% |
-| **Overall Progress** | ðŸŽ‰ **COMPLETE** | **100%** |
+| **Phase 1: Foundation & Dynamic Renderer** | ✅ Complete | 100% |
+| **Phase 2: Admin Form Builder UI** | ✅ Complete | 100% |
+| **Phase 3: Submission & Data Handling** | ✅ Complete | 100% |
+| **Phase 4: Advanced Features** | ✅ Complete | 100% |
+| **Phase 5: Polish & Optimization** | ✅ Complete | 100% |
+| **Overall Progress** | 🎉 **COMPLETE** | **100%** |
 
-### ðŸŽ‰ Project Highlights
-- âœ… **~45 files created** (~7,200 LOC)
-- âœ… **13 field types** (text, email, phone, number, select, radio, checkbox, toggle, heading, paragraph, date, URL, file)
-- âœ… **10 conditional operators** with AND/OR logic
-- âœ… **Form templates system** (save/load/clone)
-- âœ… **Supabase Storage integration**
-- âœ… **Performance optimized** (caching, memoization)
-- âœ… **WCAG 2.1 AA compliant**
-- âœ… **Comprehensive testing infrastructure**
-- âœ… **Zero breaking changes**
-- âœ… **Production ready**
+### 🎉 Project Highlights
+- ✅ **~45 files created** (~7,200 LOC)
+- ✅ **13 field types** (text, email, phone, number, select, radio, checkbox, toggle, heading, paragraph, date, URL, file)
+- ✅ **10 conditional operators** with AND/OR logic
+- ✅ **Form templates system** (save/load/clone)
+- ✅ **Supabase Storage integration**
+- ✅ **Performance optimized** (caching, memoization)
+- ✅ **WCAG 2.1 AA compliant**
+- ✅ **Comprehensive testing infrastructure**
+- ✅ **Zero breaking changes**
+- ✅ **Production ready**
 
-### Recent Completion (Phase 5) ðŸŽŠ
-- âœ… Performance monitoring & caching
-- âœ… Accessibility features (WCAG 2.1 AA)
-- âœ… Testing infrastructure (15 helpers)
-- âœ… Admin user guide (2,500+ words)
+### Recent Completion (Phase 5) 🎊
+- ✅ Performance monitoring & caching
+- ✅ Accessibility features (WCAG 2.1 AA)
+- ✅ Testing infrastructure (15 helpers)
+- ✅ Admin user guide (2,500+ words)
 
 See documentation:
-- [PHASE_5_COMPLETE.md](./PHASE_5_COMPLETE.md) â€” Phase 5 details
-- [PHASE_4_IMPLEMENTATION.md](./PHASE_4_IMPLEMENTATION.md) â€” Phase 4 details
-- [ADMIN_USER_GUIDE.md](./ADMIN_USER_GUIDE.md) â€” Complete admin guide
-- [PROJECT_STATUS_SUMMARY.md](./PROJECT_STATUS_SUMMARY.md) â€” Overall status
+- [PHASE_5_COMPLETE.md](./PHASE_5_COMPLETE.md) — Phase 5 details
+- [PHASE_4_IMPLEMENTATION.md](./PHASE_4_IMPLEMENTATION.md) — Phase 4 details
+- [ADMIN_USER_GUIDE.md](./ADMIN_USER_GUIDE.md) — Complete admin guide
+- [PROJECT_STATUS_SUMMARY.md](./PROJECT_STATUS_SUMMARY.md) — Overall status
 
 ---
 
@@ -70,38 +70,38 @@ See documentation:
 ### 1.1 High-Level Design
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    Admin Panel                             â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-â”‚  â”‚  Conference Settings (/admin/conference/settings)    â”‚  â”‚
-â”‚  â”‚  â”Œâ”€ Event Details â”€â” â”Œâ”€ Form Builder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚  â”‚
-â”‚  â”‚  â”‚ name, dates,    â”‚ â”‚ Add/remove fields         â”‚  â”‚  â”‚
-â”‚  â”‚  â”‚ venue, agenda,  â”‚ â”‚ Configure field types      â”‚  â”‚  â”‚
-â”‚  â”‚  â”‚ email templates â”‚ â”‚ Set validation rules       â”‚  â”‚  â”‚
-â”‚  â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚ Organize into steps        â”‚  â”‚  â”‚
-â”‚  â”‚                       â”‚ Preview form               â”‚  â”‚  â”‚
-â”‚  â”‚  â”Œâ”€ Payment Config â”€â” â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚  â”‚
-â”‚  â”‚  â”‚ fees, currency    â”‚                                  â”‚  â”‚
-â”‚  â”‚  â”‚ expiry window     â”‚                                  â”‚  â”‚
-â”‚  â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                                  â”‚  â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-          â”‚ writes                          â”‚ reads
-          â–¼                                  â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  site_settings       â”‚        â”‚ conference_registrations    â”‚
-â”‚  key='conference_    â”‚â”€â”€â”€â”€â”€â”€â”€â–¶â”‚                             â”‚
-â”‚   form_schema'       â”‚  info  â”‚  full_name  (core column)   â”‚
-â”‚  (JSONB)             â”‚        â”‚  email      (core column)   â”‚
-â”‚                     â”‚        â”‚  role       (core column)    â”‚
-â”‚  Stores:             â”‚        â”‚  ...                        â”‚
-â”‚  { steps: [{         â”‚        â”‚  custom_fields (JSONB) â—„â”€â”€â”€â”‚ NEW
-â”‚    id, label,        â”‚        â”‚    { "linkedin": "...",     â”‚
-â”‚    fields: [{        â”‚        â”‚      "heardAbout": [...],   â”‚
-â”‚      id, type,       â”‚        â”‚      "skills": "..." }       â”‚
-â”‚      label, ... }]   â”‚        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-â”‚  }] }                â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌───────────────────────────────────────────────────────────┐
+│                    Admin Panel                             │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │  Conference Settings (/admin/conference/settings)    │  │
+│  │  ┌─ Event Details ─┐ ┌─ Form Builder ────────────┐  │  │
+│  │  │ name, dates,    │ │ Add/remove fields         │  │  │
+│  │  │ venue, agenda,  │ │ Configure field types      │  │  │
+│  │  │ email templates │ │ Set validation rules       │  │  │
+│  │  └─────────────────┘ │ Organize into steps        │  │  │
+│  │                       │ Preview form               │  │  │
+│  │  ┌─ Payment Config ─┐ └────────────────────────────┘  │  │
+│  │  │ fees, currency    │                                  │  │
+│  │  │ expiry window     │                                  │  │
+│  │  └───────────────────┘                                  │  │
+│  └─────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────┘
+          │ writes                          │ reads
+          ▼                                  ▼
+┌─────────────────────┐        ┌────────────────────────────┐
+│  site_settings       │        │ conference_registrations    │
+│  key='conference_    │───────▶│                             │
+│   form_schema'       │  info  │  full_name  (core column)   │
+│  (JSONB)             │        │  email      (core column)   │
+│                     │        │  role       (core column)    │
+│  Stores:             │        │  ...                        │
+│  { steps: [{         │        │  custom_fields (JSONB) ◄───│ NEW
+│    id, label,        │        │    { "linkedin": "...",     │
+│    fields: [{        │        │      "heardAbout": [...],   │
+│      id, type,       │        │      "skills": "..." }       │
+│      label, ... }]   │        └────────────────────────────┘
+│  }] }                │
+└─────────────────────┘
 ```
 
 ### 1.2 Design Principles
@@ -109,7 +109,7 @@ See documentation:
 | Principle                      | Rationale                                                                                                                                                        |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Dual storage**               | Core fields (name, email, consent) stay in fixed columns for email templating, payment flow, and legal compliance. Dynamic fields go into `custom_fields` JSONB. |
-| **Schema-as-config**           | Form schema stored in dedicated `conference_form_schemas` table (decided â€” see Â§5.1).                                                                            |
+| **Schema-as-config**           | Form schema stored in dedicated `conference_form_schemas` table (decided — see §5.1).                                                                            |
 | **Backward-compatible render** | During migration, the form renderer reads the schema but initially mirrors the hardcoded fields exactly. No visible change to registrants.                       |
 | **Versioned saves**            | Every schema update creates a new version entry, so old registrations always link back to the schema they were submitted under.                                  |
 | **Gradual admin rollout**      | Admin form builder ships behind a feature gate. The dynamic renderer goes live first (reading a schema that matches the current form 1:1).                       |
@@ -125,13 +125,13 @@ See documentation:
 
 ### 1.4 What DOES NOT Change
 
-- **RLS policies** on `conference_registrations` â€” public INSERT / admin SELECT+UPDATE remains identical
-- **Payment flow** (`startConferencePayment`, `confirmConferenceRegistration`, etc.) â€” still uses core columns
-- **Email templates** â€” still reference `full_name`, `attendance_mode`, etc. from core columns
-- **CSV export** â€” expanded to include `custom_fields` but existing columns remain
-- **Unique constraint** (`uq_conf_reg_active_email`) â€” unaffected
-- **Webhook reconciliation** â€” uses provider-specific columns, unchanged
-- **Consent fields** â€” `consent_terms` and `consent_newsletter` remain hardcoded for legal reasons
+- **RLS policies** on `conference_registrations` — public INSERT / admin SELECT+UPDATE remains identical
+- **Payment flow** (`startConferencePayment`, `confirmConferenceRegistration`, etc.) — still uses core columns
+- **Email templates** — still reference `full_name`, `attendance_mode`, etc. from core columns
+- **CSV export** — expanded to include `custom_fields` but existing columns remain
+- **Unique constraint** (`uq_conf_reg_active_email`) — unaffected
+- **Webhook reconciliation** — uses provider-specific columns, unchanged
+- **Consent fields** — `consent_terms` and `consent_newsletter` remain hardcoded for legal reasons
 
 ---
 
@@ -139,7 +139,7 @@ See documentation:
 
 ### 2.1 New: `conference_form_schemas` Table
 
-This table stores versioned form schemas. The _active_ schema is the one the registration form reads. Schemas are scoped per event (see Â§5.6).
+This table stores versioned form schemas. The _active_ schema is the one the registration form reads. Schemas are scoped per event (see §5.6).
 
 ```sql
 CREATE TABLE conference_form_schemas (
@@ -150,7 +150,7 @@ CREATE TABLE conference_form_schemas (
   version     INT NOT NULL,
   is_active   BOOLEAN DEFAULT false,
 
-  -- The complete form configuration (JSONB â€” see Â§2.3 for shape)
+  -- The complete form configuration (JSONB — see §2.3 for shape)
   form_config JSONB NOT NULL,
 
   -- Audit trail
@@ -207,7 +207,7 @@ CREATE INDEX IF NOT EXISTS idx_conf_reg_custom_fields
 ### 2.3 Form Schema JSON Structure
 
 ```typescript
-// â”€â”€ The top-level schema object stored in form_config â”€â”€
+// ── The top-level schema object stored in form_config ──
 
 interface FormSchema {
   version: number;
@@ -250,7 +250,7 @@ interface FormField {
   required: boolean;
   defaultValue?: string | string[] | boolean;
 
-  // For select/radio/checkbox â€” the options
+  // For select/radio/checkbox — the options
   options?: FieldOption[];
 
   // Multi-select constraints
@@ -267,7 +267,7 @@ interface FormField {
     patternMessage?: string; // User-facing error for pattern mismatch
   };
 
-  // Layout â€” full width by default
+  // Layout — full width by default
   width?: "full" | "half";
 
   // Conditional visibility
@@ -294,7 +294,7 @@ interface FieldOption {
 
 ### 2.4 Core Fields Mapping
 
-These fields always exist in the schema with `storage: "core"`. `full_name`, `email`, and `consent_terms` are locked â€” cannot be hidden or removed. Other core fields can be hidden or dropped (see Â§5.4).
+These fields always exist in the schema with `storage: "core"`. `full_name`, `email`, and `consent_terms` are locked — cannot be hidden or removed. Other core fields can be hidden or dropped (see §5.4).
 
 | Field ID                  | Column                    | Type     | Always Required? |
 | ------------------------- | ------------------------- | -------- | ---------------- |
@@ -334,9 +334,9 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 **Files to create:**
 
-- `lib/actions/conference-form-schema.ts` â€” server actions for schema CRUD
-- `lib/types/conference-form-schema.ts` â€” TypeScript types for the schema
-- `components/conference/dynamic-form-renderer.tsx` â€” renders a step given its schema
+- `lib/actions/conference-form-schema.ts` — server actions for schema CRUD
+- `lib/types/conference-form-schema.ts` — TypeScript types for the schema
+- `components/conference/dynamic-form-renderer.tsx` — renders a step given its schema
 - `components/conference/fields/field-text.tsx`
 - `components/conference/fields/field-email.tsx`
 - `components/conference/fields/field-tel.tsx`
@@ -347,21 +347,21 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 - `components/conference/fields/field-toggle.tsx`
 - `components/conference/fields/field-heading.tsx`
 - `components/conference/fields/field-paragraph.tsx`
-- `components/conference/fields/index.ts` â€” barrel export + field registry map
-- `components/conference/dynamic-step.tsx` â€” renders one step's fields with validation
-- `lib/validation/form-schema.ts` â€” Zod schemas for field validation
-- `scripts/040-conference-form-schema.sql` â€” migration for new schema table + custom_fields column
-- `scripts/seed-default-form-schema.sql` â€” seeds the schema matching current form
+- `components/conference/fields/index.ts` — barrel export + field registry map
+- `components/conference/dynamic-step.tsx` — renders one step's fields with validation
+- `lib/validation/form-schema.ts` — Zod schemas for field validation
+- `scripts/db/migrations/040-conference-form-schema.sql` — migration for new schema table + custom_fields column
+- `scripts/db/seeds/seed-default-form-schema.sql` — seeds the schema matching current form
 
 **Files to modify:**
 
-- `components/conference/conference-registration-form.tsx` â€” replace hardcoded step rendering with dynamic renderer (reads active schema)
-- `lib/types/conference.ts` â€” add `custom_fields` and `form_schema_version` to `ConferenceRegistration`
-- `lib/actions/conference-registration.ts` â€” update `registerForConference()` to save `custom_fields` and `form_schema_version`
+- `components/conference/conference-registration-form.tsx` — replace hardcoded step rendering with dynamic renderer (reads active schema)
+- `lib/types/conference.ts` — add `custom_fields` and `form_schema_version` to `ConferenceRegistration`
+- `lib/actions/conference-registration.ts` — update `registerForConference()` to save `custom_fields` and `form_schema_version`
 
 **Detailed checkboxes:**
 
-- [x] Create migration `scripts/040-conference-form-schema.sql`:
+- [x] Create migration `scripts/db/migrations/040-conference-form-schema.sql`:
   - [x] `CREATE TABLE conference_form_schemas` with `event_id` column
   - [x] `ALTER TABLE conference_registrations ADD COLUMN custom_fields JSONB`
   - [x] `ALTER TABLE conference_registrations ADD COLUMN form_schema_version INT`
@@ -373,18 +373,18 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] `validateFieldValue(field: FormField, value: unknown): string | null`
   - [x] `validateStepFields(fields: FormField[], data: Record<string, unknown>): Record<string, string>`
 - [x] Create field components in `components/conference/fields/`:
-  - [x] `field-text.tsx` â€” single-line text input
-  - [x] `field-email.tsx` â€” email input (type="email" + pattern)
-  - [x] `field-tel.tsx` â€” telephone input (type="tel")
-  - [x] `field-number.tsx` â€” numeric input (type="number", min/max)
-  - [x] `field-select.tsx` â€” dropdown (single select)
-  - [x] `field-radio.tsx` â€” radio button group
-  - [x] `field-checkbox.tsx` â€” checkbox group with min/max selections
-  - [x] `field-toggle.tsx` â€” single boolean toggle
-  - [x] `field-heading.tsx` â€” section heading (display only)
-  - [x] `field-paragraph.tsx` â€” info text block (display only)
-  - [x] `field-textarea.tsx` â€” multi-line text area (added)
-  - [x] `index.ts` â€” barrel export + `FIELD_REGISTRY` Map<FieldType, Component>
+  - [x] `field-text.tsx` — single-line text input
+  - [x] `field-email.tsx` — email input (type="email" + pattern)
+  - [x] `field-tel.tsx` — telephone input (type="tel")
+  - [x] `field-number.tsx` — numeric input (type="number", min/max)
+  - [x] `field-select.tsx` — dropdown (single select)
+  - [x] `field-radio.tsx` — radio button group
+  - [x] `field-checkbox.tsx` — checkbox group with min/max selections
+  - [x] `field-toggle.tsx` — single boolean toggle
+  - [x] `field-heading.tsx` — section heading (display only)
+  - [x] `field-paragraph.tsx` — info text block (display only)
+  - [x] `field-textarea.tsx` — multi-line text area (added)
+  - [x] `index.ts` — barrel export + `FIELD_REGISTRY` Map<FieldType, Component>
 - [x] Create `components/conference/dynamic-step.tsx`:
   - [x] Takes a `FormStep` and current `formData`
   - [x] Renders each visible field (respects conditional logic)
@@ -392,12 +392,12 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] Shows per-field error messages
   - [x] Handles `width: "half"` for side-by-side layout
 - [x] Create `lib/actions/conference-form-schema.ts`:
-  - [x] `getActiveFormSchema(eventId?: string): Promise<FormSchema>` â€” scoped to event
+  - [x] `getActiveFormSchema(eventId?: string): Promise<FormSchema>` — scoped to event
   - [x] `getFormSchemaByVersion(version: number): Promise<FormSchema>`
   - [x] `createFormSchema(schema: FormSchema, adminId: string, eventId: string): Promise<Result>`
   - [x] `activateSchemaVersion(version: number, eventId: string): Promise<Result>`
   - [x] `getFormSchemaHistory(eventId: string): Promise<FormSchemaMeta[]>`
-- [x] Create seed script `scripts/seed-default-form-schema.sql`:
+- [x] Create seed script `scripts/db/seeds/seed-default-form-schema.sql`:
   - [x] Generates JSON matching current hardcoded form exactly
   - [x] Inserts as version 1, marks active for the conference event
 - [x] Modify `components/conference/conference-registration-form.tsx`:
@@ -416,7 +416,7 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] Write `form_schema_version`
   - [x] Keep existing duplicate-email guard, expiry logic, payment flow identical
 
-**Status:** âœ… Phase 1 Complete. All components functional and tested.
+**Status:** ✅ Phase 1 Complete. All components functional and tested.
 
 **What could break / how we prevent it:**
 | Risk | Mitigation |
@@ -431,23 +431,23 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 ### Phase 2: Admin Form Builder UI (Estimated: 6-8 days)
 
-> **STATUS: âœ… COMPLETE** ðŸŽ‰
+> **STATUS: ✅ COMPLETE** 🎉
 > 
 > **All Core Features Implemented:**
-> - âœ… Tab-based settings layout with Form Builder tab
-> - âœ… Three-panel form builder (Palette | Canvas | Properties)
-> - âœ… Field type palette with 10 field types
-> - âœ… Visual form canvas with step/field display
-> - âœ… Field properties editor (label, placeholder, validation, options)
-> - âœ… Form preview modal with DynamicFormRenderer
-> - âœ… Save draft and publish workflow
-> - âœ… Unsaved changes protection
-> - âœ… Step management (add/edit/delete/reorder steps)
-> - âœ… Target step selector for adding fields
-> - âœ… Conditional logic editor (show/hide fields based on other fields)
-> - âœ… Client-side schema validation before save
-> - âœ… Validation error/warning display
-> - âœ… Circular dependency detection
+> - ✅ Tab-based settings layout with Form Builder tab
+> - ✅ Three-panel form builder (Palette | Canvas | Properties)
+> - ✅ Field type palette with 10 field types
+> - ✅ Visual form canvas with step/field display
+> - ✅ Field properties editor (label, placeholder, validation, options)
+> - ✅ Form preview modal with DynamicFormRenderer
+> - ✅ Save draft and publish workflow
+> - ✅ Unsaved changes protection
+> - ✅ Step management (add/edit/delete/reorder steps)
+> - ✅ Target step selector for adding fields
+> - ✅ Conditional logic editor (show/hide fields based on other fields)
+> - ✅ Client-side schema validation before save
+> - ✅ Validation error/warning display
+> - ✅ Circular dependency detection
 > 
 > **Optional Enhancements (Deferred):**
 > - Drag-and-drop between steps (arrows work well)
@@ -459,21 +459,21 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 **Files to create:**
 
-- `components/admin/conference-form-builder.tsx` â€” main form builder page component
-- `components/admin/conference-form-builder-client.tsx` â€” client interactive builder
-- `components/admin/form-field-editor.tsx` â€” modal/sheet for editing a single field
-- `components/admin/form-step-editor.tsx` â€” add/remove/reorder steps
-- `components/admin/form-field-options-editor.tsx` â€” manage select/radio/checkbox options
-- `components/admin/form-preview.tsx` â€” renders the current form as registrants will see it
-- `components/admin/form-field-palette.tsx` â€” draggable list of available field types
-- `components/admin/field-validation-editor.tsx` â€” configure validation rules per field
-- `components/admin/form-conditional-editor.tsx` â€” configure conditional logic (if/else)
+- `components/admin/conference-form-builder.tsx` — main form builder page component
+- `components/admin/conference-form-builder-client.tsx` — client interactive builder
+- `components/admin/form-field-editor.tsx` — modal/sheet for editing a single field
+- `components/admin/form-step-editor.tsx` — add/remove/reorder steps
+- `components/admin/form-field-options-editor.tsx` — manage select/radio/checkbox options
+- `components/admin/form-preview.tsx` — renders the current form as registrants will see it
+- `components/admin/form-field-palette.tsx` — draggable list of available field types
+- `components/admin/field-validation-editor.tsx` — configure validation rules per field
+- `components/admin/form-conditional-editor.tsx` — configure conditional logic (if/else)
 
 **Files to modify:**
 
-- `app/admin/conference/settings/page.tsx` â€” add "Form Builder" tab/section
-- `components/admin/conference-settings-form.tsx` â€” add form builder section (or link to sub-page)
-- `app/admin/conference/settings/layout.tsx` (create) â€” add tabs: Settings | Form Builder
+- `app/admin/conference/settings/page.tsx` — add "Form Builder" tab/section
+- `components/admin/conference-settings-form.tsx` — add form builder section (or link to sub-page)
+- `app/admin/conference/settings/layout.tsx` (create) — add tabs: Settings | Form Builder
 
 **Detailed checkboxes:**
 
@@ -488,32 +488,32 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] Save button with version increment and confirmation dialog
   - [x] Unsaved changes warning when navigating away
   - [x] "Activate" toggle (publish/unpublish current schema)
-  - [ ] Event selector (if multiple events exist) â€” DEFERRED: Single event for now
+  - [ ] Event selector (if multiple events exist) — DEFERRED: Single event for now
 - [x] Create `components/admin/form-field-palette.tsx`:
   - [x] List of draggable field types (text, email, select, radio, checkbox, heading, etc.)
   - [x] Drag source that creates a new field when dropped onto canvas
-  - [ ] Search/filter for longer lists â€” DEFERRED: Not needed yet with 10 types
+  - [ ] Search/filter for longer lists — DEFERRED: Not needed yet with 10 types
 - [x] Create `components/admin/form-canvas.tsx` (inside builder):
   - [x] Visual representation of steps and fields
-  - [x] Drag-and-drop reorder within a step â€” IMPLEMENTED: Up/down arrows (DnD enhancement optional)
-  - [ ] Drag fields between steps â€” TODO: Phase 2 enhancement
-  - [x] Click field to select â€” opens properties panel
+  - [x] Drag-and-drop reorder within a step — IMPLEMENTED: Up/down arrows (DnD enhancement optional)
+  - [ ] Drag fields between steps — TODO: Phase 2 enhancement
+  - [x] Click field to select — opens properties panel
   - [x] Delete field with confirmation
   - [x] Core fields shown with lock icon (cannot remove, can toggle required)
 - [x] Create `components/admin/form-field-editor.tsx`:
   - [x] Edit: label, placeholder, help text, required toggle, default value
-  - [x] Type selector (disable switching if options are set) â€” DEFERRED: Type is set on creation
+  - [x] Type selector (disable switching if options are set) — DEFERRED: Type is set on creation
   - [x] Width selector (full / half)
   - [x] "Core field" badge (read-only indicator)
 - [x] Create `components/admin/form-field-options-editor.tsx`:
   - [x] Add/remove options for select/radio/checkbox
   - [x] Edit option label and value
-  - [x] Drag to reorder options â€” PARTIAL: Visual handle, no DnD yet
-  - [ ] Bulk import (paste CSV lines) â€” DEFERRED: Phase 2 enhancement
+  - [x] Drag to reorder options — PARTIAL: Visual handle, no DnD yet
+  - [ ] Bulk import (paste CSV lines) — DEFERRED: Phase 2 enhancement
 - [x] Create `components/admin/field-validation-editor.tsx`:
   - [x] Min/max length (text fields)
   - [x] Min/max value (number fields)
-  - [ ] Regex pattern + custom error message â€” DEFERRED: Phase 4
+  - [ ] Regex pattern + custom error message — DEFERRED: Phase 4
   - [x] Min/max selections (checkbox groups)
 - [ ] Create `components/admin/form-conditional-editor.tsx`:
   - [x] "Show this field only when..." dropdown
@@ -523,10 +523,10 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] Smart value selector (dropdown if dependency has options, text input otherwise)
   - [x] Summary display of conditional rule
   - [x] Enable/disable conditional logic
-  - **COMPLETED** âœ…
+  - **COMPLETED** ✅
 - [x] Create `components/admin/form-step-editor.tsx`:
   - [x] Add new step with label + description
-  - [x] Reorder steps via drag-and-drop â€” IMPLEMENTED: Up/down arrows
+  - [x] Reorder steps via drag-and-drop — IMPLEMENTED: Up/down arrows
   - [x] Delete step (requires confirmation; warns if fields will be lost)
   - [x] Edit step label and description inline
 - [x] Create `components/admin/form-preview.tsx`:
@@ -535,37 +535,37 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] Resets form data when preview opens
   - [x] Includes step navigation
 - [x] Implement save workflow:
-  - [x] "Save as Draft" â€” increments version, sets is_active=false
-  - [x] "Publish" â€” increments version, sets is_active=true, deactivates previous
-  - [x] Confirmation dialog with summary of changes â€” PARTIAL: Toast notification only
+  - [x] "Save as Draft" — increments version, sets is_active=false
+  - [x] "Publish" — increments version, sets is_active=true, deactivates previous
+  - [x] Confirmation dialog with summary of changes — PARTIAL: Toast notification only
   - [x] Toast notification on success/failure
-  - [ ] Activity log entry on save â€” TODO: Phase 3 enhancement
-- [ ] Add form builder link to admin sidebar navigation (if applicable) â€” TODO: If sidebar exists
+  - [ ] Activity log entry on save — TODO: Phase 3 enhancement
+- [ ] Add form builder link to admin sidebar navigation (if applicable) — TODO: If sidebar exists
 
 **What could break / how we prevent it:**
 | Risk | Mitigation |
 |------|-----------|
-| Admin saves invalid schema (broken conditional reference, empty required field, etc.) | âœ… Client-side validation before save; server-side Zod validation rejects malformed schemas |
-| Published schema breaks the public form | âœ… Validation layer catches: all steps must have >=1 field, all conditionals reference valid field IDs, required fields have valid default values |
+| Admin saves invalid schema (broken conditional reference, empty required field, etc.) | ✅ Client-side validation before save; server-side Zod validation rejects malformed schemas |
+| Published schema breaks the public form | ✅ Validation layer catches: all steps must have >=1 field, all conditionals reference valid field IDs, required fields have valid default values |
 | Drag-and-drop state loss during save | N/A - Using up/down arrows, no DnD state to lose |
-| Conflicting edits (two admins editing simultaneously) | â³ Version-based conflict detection â€” if remote version > local version, warn and force reload (TODO: Phase 3) |
-| Removing a core field from the schema | âœ… Core fields `full_name`, `email`, `consent_terms` are locked; other core fields show destructive confirmation modal |
-| Form preview doesn't match actual render | âœ… Preview uses the exact same `<DynamicFormRenderer>` component as the public form |
-| Circular conditional dependencies | âœ… Validation detects circular dependencies and prevents save |
-| Empty steps or fields without labels | âœ… Validation catches and displays errors before save |
+| Conflicting edits (two admins editing simultaneously) | ⏳ Version-based conflict detection — if remote version > local version, warn and force reload (TODO: Phase 3) |
+| Removing a core field from the schema | ✅ Core fields `full_name`, `email`, `consent_terms` are locked; other core fields show destructive confirmation modal |
+| Form preview doesn't match actual render | ✅ Preview uses the exact same `<DynamicFormRenderer>` component as the public form |
+| Circular conditional dependencies | ✅ Validation detects circular dependencies and prevents save |
+| Empty steps or fields without labels | ✅ Validation catches and displays errors before save |
 
 ---
 
-### Phase 3: Submission & Data Handling (Estimated: 3-4 days) âœ… COMPLETE
+### Phase 3: Submission & Data Handling (Estimated: 3-4 days) ✅ COMPLETE
 
 **Goal:** Custom field data stored correctly, visible in admin dashboard, included in exports.
 
 **Files to modify:**
 
-- `app/admin/conference/[id]/page.tsx` â€” admin registration detail
-- `app/admin/conference/page.tsx` â€” registrations table
-- `app/api/admin/conference/export/route.ts` â€” CSV export
-- `lib/actions/conference-registration.ts` â€” ensure custom_fields write is robust
+- `app/admin/conference/[id]/page.tsx` — admin registration detail
+- `app/admin/conference/page.tsx` — registrations table
+- `app/api/admin/conference/export/route.ts` — CSV export
+- `lib/actions/conference-registration.ts` — ensure custom_fields write is robust
 
 **Detailed checkboxes:**
 
@@ -589,29 +589,29 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 **What could break / how we prevent it:**
 | Risk | Mitigation |
 |------|-----------|
-| CSV export breaks if `custom_fields` is `null` | âœ… Use `COALESCE(custom_fields, '{}'::jsonb)` or `?? {}` in JS |
-| CSV export reveals sensitive fields | âœ… Admin-only endpoint; same protection as existing export |
-| Admin detail page shows raw JSON keys (ugly) | âœ… Render with schema labels if available, fall back to title-cased keys |
-| Registration with old schema version has no `custom_fields` | âœ… `custom_fields` defaults to `{}`; display says "No custom data" |
+| CSV export breaks if `custom_fields` is `null` | ✅ Use `COALESCE(custom_fields, '{}'::jsonb)` or `?? {}` in JS |
+| CSV export reveals sensitive fields | ✅ Admin-only endpoint; same protection as existing export |
+| Admin detail page shows raw JSON keys (ugly) | ✅ Render with schema labels if available, fall back to title-cased keys |
+| Registration with old schema version has no `custom_fields` | ✅ `custom_fields` defaults to `{}`; display says "No custom data" |
 
-**Status:** âœ… All checkboxes complete. See `PHASE_3_COMPLETE.md` for details.
+**Status:** ✅ All checkboxes complete. See `PHASE_3_COMPLETE.md` for details.
 
 ---
 
-### Phase 4: Advanced Features (Estimated: 5-7 days) âœ… COMPLETE
+### Phase 4: Advanced Features (Estimated: 5-7 days) ✅ COMPLETE
 
-> **STATUS: âœ… COMPLETE** ðŸŽ‰
+> **STATUS: ✅ COMPLETE** 🎉
 > 
 > **All Core Features Implemented:**
-> - âœ… New field types: Date picker, URL input, File upload
-> - âœ… Enhanced conditional logic with AND/OR operators
-> - âœ… Advanced comparison operators (contains, greaterThan, lessThan, etc.)
-> - âœ… Form templates system (save/load/clone)
-> - âœ… Supabase Storage integration for file uploads
-> - âœ… Template browser UI with category filtering
-> - âœ… Enhanced conditional editor (simple & advanced modes)
-> - âœ… Circular dependency detection
-> - âœ… Template usage tracking
+> - ✅ New field types: Date picker, URL input, File upload
+> - ✅ Enhanced conditional logic with AND/OR operators
+> - ✅ Advanced comparison operators (contains, greaterThan, lessThan, etc.)
+> - ✅ Form templates system (save/load/clone)
+> - ✅ Supabase Storage integration for file uploads
+> - ✅ Template browser UI with category filtering
+> - ✅ Enhanced conditional editor (simple & advanced modes)
+> - ✅ Circular dependency detection
+> - ✅ Template usage tracking
 > 
 > See [PHASE_4_IMPLEMENTATION.md](./PHASE_4_IMPLEMENTATION.md) for full details.
 
@@ -619,23 +619,23 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 **Files to create:**
 
-- âœ… `components/conference/fields/field-file-upload.tsx` â€” file upload via Supabase Storage
-- âœ… `components/conference/fields/field-date.tsx` â€” date picker
-- âœ… `components/conference/fields/field-url.tsx` â€” URL input with validation
-- âœ… `lib/validation/conditional-engine.ts` â€” evaluate conditional visibility rules
-- âœ… `components/admin/conference-form-builder/FormTemplateChooser.tsx` â€” pick from template library
-- âœ… `lib/actions/conference-form-templates.ts` â€” save/load templates
-- âœ… `components/admin/conference-form-builder/EnhancedConditionalEditor.tsx` â€” advanced conditional editor
-- âœ… `scripts/041-conference-file-upload-bucket.sql` â€” storage bucket migration
-- âœ… `scripts/042-conference-form-templates.sql` â€” templates table migration
+- ✅ `components/conference/fields/field-file-upload.tsx` — file upload via Supabase Storage
+- ✅ `components/conference/fields/field-date.tsx` — date picker
+- ✅ `components/conference/fields/field-url.tsx` — URL input with validation
+- ✅ `lib/validation/conditional-engine.ts` — evaluate conditional visibility rules
+- ✅ `components/admin/conference-form-builder/FormTemplateChooser.tsx` — pick from template library
+- ✅ `lib/actions/conference-form-templates.ts` — save/load templates
+- ✅ `components/admin/conference-form-builder/EnhancedConditionalEditor.tsx` — advanced conditional editor
+- ✅ `scripts/db/migrations/041-conference-file-upload-bucket.sql` — storage bucket migration
+- ✅ `scripts/db/migrations/042-conference-form-templates.sql` — templates table migration
 
 **Files to modify:**
 
-- âœ… `components/conference/dynamic-step.tsx` â€” add conditional visibility filtering
-- âœ… `components/conference/fields/index.ts` â€” register new field types
-- âœ… `lib/types/conference-form-schema.ts` â€” add new field types, operators, and configs
-- âœ… `components/admin/form-field-palette.tsx` â€” add new field types to palette
-- â³ Various admin form builder components for conditional UI (Enhanced editor created)
+- ✅ `components/conference/dynamic-step.tsx` — add conditional visibility filtering
+- ✅ `components/conference/fields/index.ts` — register new field types
+- ✅ `lib/types/conference-form-schema.ts` — add new field types, operators, and configs
+- ✅ `components/admin/form-field-palette.tsx` — add new field types to palette
+- ⏳ Various admin form builder components for conditional UI (Enhanced editor created)
 
 **Detailed checkboxes:**
 
@@ -649,9 +649,9 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [x] `detectCircularDependencies(fields): string[]`
   - [x] `validateConditionalRule(field, allFields): string | null`
 - [x] Create new field components:
-  - [x] `field-date.tsx` â€” date picker with min/max/disabled dates
-  - [x] `field-url.tsx` â€” URL validation and auto-correction
-  - [x] `field-file.tsx` â€” Supabase Storage file upload
+  - [x] `field-date.tsx` — date picker with min/max/disabled dates
+  - [x] `field-url.tsx` — URL validation and auto-correction
+  - [x] `field-file.tsx` — Supabase Storage file upload
 - [x] Update `components/conference/fields/index.ts`:
   - [x] Register date, url, file field types in FIELD_REGISTRY
 - [x] Update `components/conference/dynamic-step.tsx`:
@@ -701,16 +701,16 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
   - [ ] Clear field value when hidden (to prevent stale data)
   - [ ] Smooth animation on show/hide
 - [ ] Add advanced field types:
-  - [ ] `field-date.tsx` â€” date field with native date picker + validation
-  - [ ] `field-url.tsx` â€” URL input with pattern validation
-  - [ ] `field-file-upload.tsx` â€” requires Supabase `conference-uploads` bucket + file size limits
+  - [ ] `field-date.tsx` — date field with native date picker + validation
+  - [ ] `field-url.tsx` — URL input with pattern validation
+  - [ ] `field-file-upload.tsx` — requires Supabase `conference-uploads` bucket + file size limits
 - [ ] Register new field types in field palette and `FIELD_REGISTRY`
 - [ ] Add file upload handling server action:
   - [ ] Upload to Supabase Storage bucket
   - [ ] Store file URL in `custom_fields` (not the file itself)
   - [ ] Validate file type and size (10 MB max, common document/image types)
 - [ ] Add schema template system:
-  - [ ] `createFormSchemaFromTemplate(templateId)` â€” clones a template
+  - [ ] `createFormSchemaFromTemplate(templateId)` — clones a template
   - [ ] Template library with "Conference Default"
   - [ ] Admin can save current schema as template
 - [ ] Improve form preview:
@@ -730,16 +730,16 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 ---
 
-### Phase 5: Polish & Testing (Estimated: 3-4 days) âœ… COMPLETE
+### Phase 5: Polish & Testing (Estimated: 3-4 days) ✅ COMPLETE
 
-> **STATUS: âœ… COMPLETE** ðŸŽ‰
+> **STATUS: ✅ COMPLETE** 🎉
 > 
 > **All Features Implemented:**
-> - âœ… Performance optimization (caching, memoization)
-> - âœ… Accessibility features (WCAG 2.1 AA compliant)
-> - âœ… Comprehensive testing infrastructure
-> - âœ… Admin user guide (2,500+ words)
-> - âœ… Production readiness validation
+> - ✅ Performance optimization (caching, memoization)
+> - ✅ Accessibility features (WCAG 2.1 AA compliant)
+> - ✅ Comprehensive testing infrastructure
+> - ✅ Admin user guide (2,500+ words)
+> - ✅ Production readiness validation
 > 
 > See [PHASE_5_COMPLETE.md](./PHASE_5_COMPLETE.md) for full details.
 
@@ -747,12 +747,12 @@ The initial seed schema will exactly match the current hardcoded form. This ensu
 
 **Files created:**
 
-- âœ… `lib/hooks/useFormPerformance.ts` â€” Performance monitoring hook
-- âœ… `lib/validation/form-validation-cache.ts` â€” Validation result caching
-- âœ… `lib/utils/accessibility.ts` â€” WCAG 2.1 AA compliance utilities
-- âœ… `lib/testing/form-test-helpers.ts` â€” Comprehensive testing helpers
-- âœ… `docs/new-conference/ADMIN_USER_GUIDE.md` â€” Complete admin documentation
-- âœ… `docs/new-conference/PHASE_5_COMPLETE.md` â€” Phase 5 summary
+- ✅ `lib/hooks/useFormPerformance.ts` — Performance monitoring hook
+- ✅ `lib/validation/form-validation-cache.ts` — Validation result caching
+- ✅ `lib/utils/accessibility.ts` — WCAG 2.1 AA compliance utilities
+- ✅ `lib/testing/form-test-helpers.ts` — Comprehensive testing helpers
+- ✅ `docs/new-conference/ADMIN_USER_GUIDE.md` — Complete admin documentation
+- ✅ `docs/new-conference/PHASE_5_COMPLETE.md` — Phase 5 summary
 
 **Detailed checkboxes:**
 
@@ -831,7 +831,7 @@ DROP TABLE IF EXISTS conference_form_schemas;
 
 | Step | Action                                              | Impact                                                                          |
 | ---- | --------------------------------------------------- | ------------------------------------------------------------------------------- |
-| 1    | Run SQL migration (040-conference-form-schema.sql)  | Non-blocking â€” ADD COLUMN IF NOT EXISTS doesn't lock table significantly        |
+| 1    | Run SQL migration (040-conference-form-schema.sql)  | Non-blocking — ADD COLUMN IF NOT EXISTS doesn't lock table significantly        |
 | 2    | Deploy Phase 1 code (dynamic renderer reads schema) | Public form still renders identically; no visible change                        |
 | 3    | Deploy Phase 2 code (admin form builder)            | Admin sees new tab; no change to public form until admin publishes a new schema |
 | 4    | Admin publishes new schema                          | Public form immediately renders new fields                                      |
@@ -844,16 +844,16 @@ const useDynamicForm = process.env.NEXT_PUBLIC_ENABLE_DYNAMIC_FORM === "true";
 
 ### 4.4 Existing Flow Compatibility Checklist
 
-- [x] **Registration submission** â€” core columns still written; payment flow unchanged
-- [x] **Email templates** â€” reference `full_name`, `attendance_mode` from core columns only
-- [x] **Duplicate email guard** â€” unique index on `email` (status not cancelled/expired) still works
-- [x] **Payment processing** â€” `startConferencePayment()` reads core payment columns only
-- [x] **Webhook reconciliation** â€” uses `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid` columns
-- [x] **Admin confirm/cancel/mark-paid** â€” reads/writes core status columns only
-- [x] **CSV export** â€” existing columns preserved; `custom_fields` appended
-- [x] **RLS policies** â€” unchanged
-- [x] **Activity logs** â€” unchanged
-- [x] **Notifications** â€” unchanged
+- [x] **Registration submission** — core columns still written; payment flow unchanged
+- [x] **Email templates** — reference `full_name`, `attendance_mode` from core columns only
+- [x] **Duplicate email guard** — unique index on `email` (status not cancelled/expired) still works
+- [x] **Payment processing** — `startConferencePayment()` reads core payment columns only
+- [x] **Webhook reconciliation** — uses `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid` columns
+- [x] **Admin confirm/cancel/mark-paid** — reads/writes core status columns only
+- [x] **CSV export** — existing columns preserved; `custom_fields` appended
+- [x] **RLS policies** — unchanged
+- [x] **Activity logs** — unchanged
+- [x] **Notifications** — unchanged
 
 ---
 
@@ -868,47 +868,47 @@ const useDynamicForm = process.env.NEXT_PUBLIC_ENABLE_DYNAMIC_FORM === "true";
 
 **Option B (rejected):** Store as JSONB in `site_settings` key `conference_form_schema`.
 
-**âœ… Decision: Option A.** Proceed with dedicated `conference_form_schemas` table as designed in Â§2.1.
+**✅ Decision: Option A.** Proceed with dedicated `conference_form_schemas` table as designed in §2.1.
 
 ### 5.2 Conditional Logic Complexity
 
 The plan includes conditional logic (Phase 4) with basic operators (equals, notEquals, isEmpty, isNotEmpty). More advanced conditions like AND/OR groups, comparison operators, or "contains" were considered.
 
-**âœ… Decision: Start with equals/notEquals/isEmpty/isNotEmpty in Phase 4.** Add AND/OR groups and comparison operators in a follow-up enhancement. The conditional engine will be designed with extensibility in mind so adding operators later doesn't require a rewrite.
+**✅ Decision: Start with equals/notEquals/isEmpty/isNotEmpty in Phase 4.** Add AND/OR groups and comparison operators in a follow-up enhancement. The conditional engine will be designed with extensibility in mind so adding operators later doesn't require a rewrite.
 
 ### 5.3 Multi-Step vs Single-Page Form
 
 The builder supports any number of steps (1-N).
 
-**âœ… Decision: 1-N steps.** The step progress bar adapts automatically. A 1-step form shows "Step 1 of 1" with the bar; if the admin wants a scrollable single-page feel, they define 1 step with all fields. No special "single page" mode needed.
+**✅ Decision: 1-N steps.** The step progress bar adapts automatically. A 1-step form shows "Step 1 of 1" with the bar; if the admin wants a scrollable single-page feel, they define 1 step with all fields. No special "single page" mode needed.
 
 ### 5.4 Core Field Removability
 
 Admins can both **hide** and **remove (drop)** non-locked core fields:
 
-1. **Hide** â€” field stays in the schema with `required: false` but doesn't render. A "Show hidden fields" toggle in the builder reveals them.
-2. **Remove (drop)** â€” field is permanently removed from the schema. A destructive confirmation modal appears:
+1. **Hide** — field stays in the schema with `required: false` but doesn't render. A "Show hidden fields" toggle in the builder reveals them.
+2. **Remove (drop)** — field is permanently removed from the schema. A destructive confirmation modal appears:
    - Title: "Remove field?"
    - Body: "This field will be permanently removed from the registration form. Registrations submitted after removal will not contain data for this field. Existing registration data is preserved in the database but will no longer be displayed. This action cannot be undone via the form builder (you can add a new field with the same label, but it will not recover historical data)."
    - Buttons: "Cancel" / "Yes, Remove Permanently" (red)
 
-**âš ï¸ Locked core fields (`full_name`, `email`, `consent_terms`) are always required and cannot be hidden or removed.** They are locked in the builder with a visual indicator.
+**⚠️ Locked core fields (`full_name`, `email`, `consent_terms`) are always required and cannot be hidden or removed.** They are locked in the builder with a visual indicator.
 
 ### 5.5 File Upload Storage
 
-**âœ… Decision: Supabase Storage bucket (`conference-uploads`).** Proceed with Supabase Storage for file upload fields (Phase 4). Bucket setup included in Phase 4 SQL migration. Standard limits apply: 10 MB max, common document/image types. File URLs stored in `custom_fields`, never the binary data itself.
+**✅ Decision: Supabase Storage bucket (`conference-uploads`).** Proceed with Supabase Storage for file upload fields (Phase 4). Bucket setup included in Phase 4 SQL migration. Standard limits apply: 10 MB max, common document/image types. File URLs stored in `custom_fields`, never the binary data itself.
 
 ### 5.6 Schema Templates for Multiple Conferences
 
 **Option A (rejected):** Single `conference_form_schemas` table with active schema for the current conference.
 
-**Option B (chosen):** Schema per event â€” `conference_form_schemas` gets an `event_id` column linked to the `events` table.
+**Option B (chosen):** Schema per event — `conference_form_schemas` gets an `event_id` column linked to the `events` table.
 
-**âœ… Decision: Option B.** Phase 1 migration includes `event_id UUID REFERENCES events(id) ON DELETE CASCADE` in the `conference_form_schemas` table. The `is_active` uniqueness constraint becomes per-event via a partial unique index on `(event_id, is_active) WHERE is_active = true`. The public form renderer reads the schema for the event identified by the URL (defaults to the current conference). The admin form builder scopes to the selected event. A future admin events list can manage schemas per event.
+**✅ Decision: Option B.** Phase 1 migration includes `event_id UUID REFERENCES events(id) ON DELETE CASCADE` in the `conference_form_schemas` table. The `is_active` uniqueness constraint becomes per-event via a partial unique index on `(event_id, is_active) WHERE is_active = true`. The public form renderer reads the schema for the event identified by the URL (defaults to the current conference). The admin form builder scopes to the selected event. A future admin events list can manage schemas per event.
 
 ### 5.7 Email Template Integration with Custom Fields
 
-**âœ… Decision: Defer.** Phase 1-4 do not add custom field token resolution in email templates. It remains a documented future enhancement. When implemented, tokens would follow the pattern `{{custom.field_id}}` and resolve from the registration's `custom_fields` JSONB in the mailer.
+**✅ Decision: Defer.** Phase 1-4 do not add custom field token resolution in email templates. It remains a documented future enhancement. When implemented, tokens would follow the pattern `{{custom.field_id}}` and resolve from the registration's `custom_fields` JSONB in the mailer.
 
 ---
 
@@ -918,7 +918,7 @@ Admins can both **hide** and **remove (drop)** non-locked core fields:
 
 | File                                                     | Role                                                   | Changes Needed                                    |
 | -------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------- |
-| `components/conference/conference-registration-form.tsx` | Orchestrator â€” manages step state, calls server action | Replace with dynamic renderer                     |
+| `components/conference/conference-registration-form.tsx` | Orchestrator — manages step state, calls server action | Replace with dynamic renderer                     |
 | `components/conference/step1-personal-details.tsx`       | Step 1 fields                                          | **Delete after Phase 1**                          |
 | `components/conference/step2-participation.tsx`          | Step 2 fields                                          | **Delete after Phase 1**                          |
 | `components/conference/step3-additional-info.tsx`        | Step 3 fields                                          | **Delete after Phase 1**                          |
@@ -939,17 +939,17 @@ Admins can both **hide** and **remove (drop)** non-locked core fields:
 | `app/api/admin/conference/export/route.ts`               | CSV export                                             | Add dynamic `custom_fields` columns               |
 | `lib/email/conference-mailer.ts`                         | Email sending                                          | No change (uses core columns)                     |
 | `lib/email/templates/conference-*.tsx`                   | Email HTML templates                                   | No change                                         |
-| `scripts/migrations/conference_registrations.sql`        | Initial table                                          | Reference only                                    |
-| `scripts/migrations/017-conference-payment-columns.sql`  | Payment columns                                        | Reference only                                    |
-| `scripts/019-conference-email-timestamps.sql`            | Email timestamps                                       | Reference only                                    |
+| `scripts/db/migrations/017b-conference-registrations.sql`        | Initial table                                          | Reference only                                    |
+| `scripts/db/migrations/017-conference-payment-columns.sql`  | Payment columns                                        | Reference only                                    |
+| `scripts/db/migrations/019-conference-email-timestamps.sql`            | Email timestamps                                       | Reference only                                    |
 
 ### 6.2 Files to Create
 
 | File                                                  | Phase | Purpose                             |
 | ----------------------------------------------------- | ----- | ----------------------------------- |
-| `docs/new-conference/tasks.md`                        | â€”     | This document                       |
-| `scripts/040-conference-form-schema.sql`              | P1    | Schema table + custom_fields column |
-| `scripts/seed-default-form-schema.sql`                | P1    | Seed schema matching current form   |
+| `docs/new-conference/tasks.md`                        | —     | This document                       |
+| `scripts/db/migrations/040-conference-form-schema.sql`              | P1    | Schema table + custom_fields column |
+| `scripts/db/seeds/seed-default-form-schema.sql`                | P1    | Seed schema matching current form   |
 | `lib/types/conference-form-schema.ts`                 | P1    | TypeScript types                    |
 | `lib/validation/form-schema.ts`                       | P1    | Zod validation schemas              |
 | `lib/actions/conference-form-schema.ts`               | P1    | Server actions for schema CRUD      |
@@ -988,72 +988,72 @@ _End of implementation plan._
 
 ---
 
-## ðŸ“‹ Implementation Summary
+## 📋 Implementation Summary
 
-### âœ… All 5 Phases Complete â€” Production Ready
+### ✅ All 5 Phases Complete — Production Ready
 
 **Phase Completion:**
-- âœ… **Phase 1:** Foundation & Dynamic Renderer (100%)
-- âœ… **Phase 2:** Admin Form Builder UI (100%)
-- âœ… **Phase 3:** Submission & Data Handling (100%)
-- âœ… **Phase 4:** Advanced Features (100%)
-- âœ… **Phase 5:** Polish & Optimization (100%)
+- ✅ **Phase 1:** Foundation & Dynamic Renderer (100%)
+- ✅ **Phase 2:** Admin Form Builder UI (100%)
+- ✅ **Phase 3:** Submission & Data Handling (100%)
+- ✅ **Phase 4:** Advanced Features (100%)
+- ✅ **Phase 5:** Polish & Optimization (100%)
 
-**Total Progress: 100% ðŸŽ‰**
+**Total Progress: 100% 🎉**
 
-### ðŸŽ¯ Project Achievements
+### 🎯 Project Achievements
 
 **Technical Milestones:**
-- âœ… ~50 files created (~7,200+ LOC)
-- âœ… 13 field types (text, email, phone, number, select, radio, checkbox, toggle, heading, paragraph, date, URL, file)
-- âœ… 10 conditional operators with AND/OR logic
-- âœ… Form templates system (save/load/clone)
-- âœ… Supabase Storage integration
-- âœ… Performance optimized (50-70% CPU reduction)
-- âœ… WCAG 2.1 AA compliant
-- âœ… Comprehensive testing infrastructure (15 helpers)
-- âœ… Zero breaking changes confirmed
-- âœ… 100% backward compatible
+- ✅ ~50 files created (~7,200+ LOC)
+- ✅ 13 field types (text, email, phone, number, select, radio, checkbox, toggle, heading, paragraph, date, URL, file)
+- ✅ 10 conditional operators with AND/OR logic
+- ✅ Form templates system (save/load/clone)
+- ✅ Supabase Storage integration
+- ✅ Performance optimized (50-70% CPU reduction)
+- ✅ WCAG 2.1 AA compliant
+- ✅ Comprehensive testing infrastructure (15 helpers)
+- ✅ Zero breaking changes confirmed
+- ✅ 100% backward compatible
 
 **Documentation:**
-- âœ… Admin user guide (2,500+ words)
-- âœ… Phase implementation docs (4 docs)
-- âœ… Migration guides
-- âœ… Project status summary
-- âœ… Troubleshooting guide
+- ✅ Admin user guide (2,500+ words)
+- ✅ Phase implementation docs (4 docs)
+- ✅ Migration guides
+- ✅ Project status summary
+- ✅ Troubleshooting guide
 
 **Database:**
-- âœ… 2 new tables
-- âœ… 2 new columns
-- âœ… 1 storage bucket
-- âœ… 4 SQL migrations
-- âœ… RLS policies configured
+- ✅ 2 new tables
+- ✅ 2 new columns
+- ✅ 1 storage bucket
+- ✅ 4 SQL migrations
+- ✅ RLS policies configured
 
-### ðŸ“¦ Deliverables
+### 📦 Deliverables
 
 **Components:**
-- âœ… 14 field type components
-- âœ… Dynamic form renderer
-- âœ… Admin form builder (3-panel UI)
-- âœ… Template browser & saver
-- âœ… Enhanced conditional editor
-- âœ… Performance monitoring hook
-- âœ… Accessibility utilities
+- ✅ 14 field type components
+- ✅ Dynamic form renderer
+- ✅ Admin form builder (3-panel UI)
+- ✅ Template browser & saver
+- ✅ Enhanced conditional editor
+- ✅ Performance monitoring hook
+- ✅ Accessibility utilities
 
 **Server Actions:**
-- âœ… Schema CRUD operations
-- âœ… Template management (7 actions)
-- âœ… Registration with custom fields
-- âœ… Validation & caching
+- ✅ Schema CRUD operations
+- ✅ Template management (7 actions)
+- ✅ Registration with custom fields
+- ✅ Validation & caching
 
 **Testing:**
-- âœ… 15 test helper functions
-- âœ… Edge case generators
-- âœ… Performance benchmarking
-- âœ… Mock data creators
-- âœ… Schema validators
+- ✅ 15 test helper functions
+- ✅ Edge case generators
+- ✅ Performance benchmarking
+- ✅ Mock data creators
+- ✅ Schema validators
 
-### ðŸš€ Ready for Deployment
+### 🚀 Ready for Deployment
 
 **Pre-Deployment Checklist:**
 - [x] All TypeScript errors resolved
@@ -1067,23 +1067,23 @@ _End of implementation plan._
 - [x] Accessibility features enabled
 
 **Deployment Order:**
-1. âœ… Phase 1 migrations (schema table + columns)
-2. âœ… Phase 1 code (dynamic renderer)
-3. âœ… Phase 2 code (form builder UI)
-4. âœ… Phase 3 code (data handling)
-5. â³ Phase 4 migrations (storage + templates)
-6. â³ Phase 4 code (advanced features)
-7. â³ Phase 5 code (polish & optimization)
+1. ✅ Phase 1 migrations (schema table + columns)
+2. ✅ Phase 1 code (dynamic renderer)
+3. ✅ Phase 2 code (form builder UI)
+4. ✅ Phase 3 code (data handling)
+5. ⏳ Phase 4 migrations (storage + templates)
+6. ⏳ Phase 4 code (advanced features)
+7. ⏳ Phase 5 code (polish & optimization)
 
 **Production Status:**
-- Phases 1-3: âœ… Deployed and stable
-- Phase 4: â³ Ready for deployment
-- Phase 5: â³ Ready for deployment
+- Phases 1-3: ✅ Deployed and stable
+- Phase 4: ⏳ Ready for deployment
+- Phase 5: ⏳ Ready for deployment
 
-### ðŸ“Š Success Metrics (Expected)
+### 📊 Success Metrics (Expected)
 
 **Admin Efficiency:**
-- Form creation time: 30 min â†’ 2 min (93% reduction)
+- Form creation time: 30 min → 2 min (93% reduction)
 - Zero developer involvement for form changes
 - Unlimited form variations
 - Template reusability
@@ -1100,7 +1100,7 @@ _End of implementation plan._
 - Self-service admin capabilities
 - Scalable to unlimited events
 
-### ðŸŽ“ Next Steps
+### 🎓 Next Steps
 
 **Immediate:**
 1. Deploy Phase 4 & 5 to production
@@ -1120,19 +1120,19 @@ _End of implementation plan._
 - Integration with CRM systems
 - Mobile app support
 
-### ðŸ“š Documentation Index
+### 📚 Documentation Index
 
-1. **[tasks.md](./tasks.md)** â€” This file (master plan)
-2. **[PHASE_4_IMPLEMENTATION.md](./PHASE_4_IMPLEMENTATION.md)** â€” Phase 4 details
-3. **[PHASE_4_MIGRATION_GUIDE.md](./PHASE_4_MIGRATION_GUIDE.md)** â€” Phase 4 deployment
-4. **[PHASE_5_COMPLETE.md](./PHASE_5_COMPLETE.md)** â€” Phase 5 details
-5. **[ADMIN_USER_GUIDE.md](./ADMIN_USER_GUIDE.md)** â€” Admin documentation
-6. **[PROJECT_STATUS_SUMMARY.md](./PROJECT_STATUS_SUMMARY.md)** â€” Overall status
-7. **[README.md](./README.md)** â€” Quick navigation
+1. **[tasks.md](./tasks.md)** — This file (master plan)
+2. **[PHASE_4_IMPLEMENTATION.md](./PHASE_4_IMPLEMENTATION.md)** — Phase 4 details
+3. **[PHASE_4_MIGRATION_GUIDE.md](./PHASE_4_MIGRATION_GUIDE.md)** — Phase 4 deployment
+4. **[PHASE_5_COMPLETE.md](./PHASE_5_COMPLETE.md)** — Phase 5 details
+5. **[ADMIN_USER_GUIDE.md](./ADMIN_USER_GUIDE.md)** — Admin documentation
+6. **[PROJECT_STATUS_SUMMARY.md](./PROJECT_STATUS_SUMMARY.md)** — Overall status
+7. **[README.md](./README.md)** — Quick navigation
 
 ---
 
-## ðŸŽ‰ Project Complete!
+## 🎉 Project Complete!
 
 **The Conference Dynamic Form Builder is now 100% complete and production-ready.**
 
@@ -1143,5 +1143,5 @@ All open decisions have been resolved, all phases implemented, all documentation
 ---
 
 **Last Updated:** Phase 5 Complete  
-**Project Status:** ðŸŽ‰ 100% COMPLETE  
-**Production Ready:** âœ… YES
+**Project Status:** 🎉 100% COMPLETE  
+**Production Ready:** ✅ YES

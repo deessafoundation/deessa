@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Database Migration Guide - Multi-Event Support"
 description: "Quick Reference: Which scripts to run and in what order"
 owner: "Deesha Team"
@@ -16,18 +16,18 @@ last_updated: 2026-09-12
 ## Your Current Status
 
 Based on your feedback:
-- âœ… Scripts 001-040 (or 041): Already executed
-- âš ï¸ Script 041: Had error â†’ **Fixed, needs execution**
-- âš ï¸ Script 042: Had error â†’ **Fixed, needs execution**
-- âœ… Script 043: **Successfully run** (you confirmed this)
+- ✅ Scripts 001-040 (or 041): Already executed
+- ⚠️ Script 041: Had error → **Fixed, needs execution**
+- ⚠️ Script 042: Had error → **Fixed, needs execution**
+- ✅ Script 043: **Successfully run** (you confirmed this)
 
 ---
 
 ## Scripts You Need to Run
 
-### Script 041: Conference File Upload Bucket âš ï¸
+### Script 041: Conference File Upload Bucket ⚠️
 
-**File:** `scripts/041-conference-file-upload-bucket.sql`
+**File:** `scripts/db/migrations/041-conference-file-upload-bucket.sql`
 
 **What it does:**
 - Creates `conference-uploads` storage bucket in Supabase
@@ -48,22 +48,22 @@ ERROR: 42501: must be owner of table objects
 **To run:**
 1. Open Supabase Dashboard
 2. Go to SQL Editor
-3. Copy entire content of `scripts/041-conference-file-upload-bucket.sql`
+3. Copy entire content of `scripts/db/migrations/041-conference-file-upload-bucket.sql`
 4. Click "Run"
 5. Check for success messages
 
 **Expected output:**
 ```
-âœ“ Storage bucket 'conference-uploads' is ready
-âœ“ RLS policies configured
+✓ Storage bucket 'conference-uploads' is ready
+✓ RLS policies configured
 NOTICE: Storage setup complete
 ```
 
 ---
 
-### Script 042: Conference Form Templates âš ï¸
+### Script 042: Conference Form Templates ⚠️
 
-**File:** `scripts/042-conference-form-templates.sql`
+**File:** `scripts/db/migrations/042-conference-form-templates.sql`
 
 **What it does:**
 - Seeds default form templates into database
@@ -85,24 +85,24 @@ DETAIL: Character with value 0x0d must be escaped.
 **To run:**
 1. Open Supabase Dashboard
 2. Go to SQL Editor
-3. Copy entire content of `scripts/042-conference-form-templates.sql`
+3. Copy entire content of `scripts/db/migrations/042-conference-form-templates.sql`
 4. Click "Run"
 5. Check for success messages
 
 **Expected output:**
 ```
-âœ“ Default form template created
-âœ“ Form schema seeded successfully
+✓ Default form template created
+✓ Form schema seeded successfully
 NOTICE: 1 form template inserted
 ```
 
 ---
 
-### Script 043: Multi-Event Support âœ…
+### Script 043: Multi-Event Support ✅
 
-**File:** `scripts/043-multi-event-support.sql`
+**File:** `scripts/db/migrations/043-multi-event-support.sql`
 
-**Status:** âœ… **Already run successfully** (you confirmed this)
+**Status:** ✅ **Already run successfully** (you confirmed this)
 
 **What it does:**
 - Adds `event_id` column to `conference_registrations`
@@ -123,16 +123,16 @@ Since script 043 is already done, you only need to run the two fixed scripts:
 
 ```bash
 # Step 1: Open Supabase Dashboard
-# Navigate to your project â†’ SQL Editor
+# Navigate to your project → SQL Editor
 
 # Step 2: Run Script 041
-# Copy content from: scripts/041-conference-file-upload-bucket.sql
+# Copy content from: scripts/db/migrations/041-conference-file-upload-bucket.sql
 # Paste into SQL Editor
 # Click "Run"
 # Wait for completion (should take ~2-5 seconds)
 
 # Step 3: Run Script 042
-# Copy content from: scripts/042-conference-form-templates.sql
+# Copy content from: scripts/db/migrations/042-conference-form-templates.sql
 # Paste into SQL Editor
 # Click "Run"
 # Wait for completion (should take ~1-3 seconds)
@@ -147,9 +147,9 @@ If you want to be extra sure, you can re-run script 043 as well (it's idempotent
 
 ```bash
 # Run scripts in order:
-# 1. scripts/041-conference-file-upload-bucket.sql
-# 2. scripts/042-conference-form-templates.sql
-# 3. scripts/043-multi-event-support.sql (already done, but safe to re-run)
+# 1. scripts/db/migrations/041-conference-file-upload-bucket.sql
+# 2. scripts/db/migrations/042-conference-form-templates.sql
+# 3. scripts/db/migrations/043-multi-event-support.sql (already done, but safe to re-run)
 ```
 
 ---
@@ -239,19 +239,19 @@ BEGIN
   ) INTO view_exists;
   
   -- Report
-  RAISE NOTICE 'â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•';
+  RAISE NOTICE '═══════════════════════════════════════';
   RAISE NOTICE 'Multi-Event System Status:';
-  RAISE NOTICE 'â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•';
-  RAISE NOTICE 'Storage Bucket (041): %', CASE WHEN bucket_exists THEN 'âœ“' ELSE 'âœ—' END;
+  RAISE NOTICE '═══════════════════════════════════════';
+  RAISE NOTICE 'Storage Bucket (041): %', CASE WHEN bucket_exists THEN '✓' ELSE '✗' END;
   RAISE NOTICE 'Form Schemas (042): % templates', form_count;
-  RAISE NOTICE 'Event Column (043): %', CASE WHEN event_column_exists THEN 'âœ“' ELSE 'âœ—' END;
-  RAISE NOTICE 'Helper View (043): %', CASE WHEN view_exists THEN 'âœ“' ELSE 'âœ—' END;
-  RAISE NOTICE 'â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•';
+  RAISE NOTICE 'Event Column (043): %', CASE WHEN event_column_exists THEN '✓' ELSE '✗' END;
+  RAISE NOTICE 'Helper View (043): %', CASE WHEN view_exists THEN '✓' ELSE '✗' END;
+  RAISE NOTICE '═══════════════════════════════════════';
   
   IF bucket_exists AND form_count > 0 AND event_column_exists AND view_exists THEN
-    RAISE NOTICE 'âœ“ All systems ready!';
+    RAISE NOTICE '✓ All systems ready!';
   ELSE
-    RAISE WARNING 'âœ— Some components missing';
+    RAISE WARNING '✗ Some components missing';
   END IF;
 END $$;
 ```
@@ -307,25 +307,25 @@ END $$;
 
 ```
 storage.buckets
-  â””â”€ conference-uploads/
-       â”œâ”€ Public: false
-       â”œâ”€ Size limit: 10MB per file
-       â”œâ”€ Allowed types: PDF, images, documents
-       â””â”€ RLS policies:
-            â”œâ”€ Admin can upload
-            â”œâ”€ Admin can view
-            â””â”€ Users can view own files
+  └─ conference-uploads/
+       ├─ Public: false
+       ├─ Size limit: 10MB per file
+       ├─ Allowed types: PDF, images, documents
+       └─ RLS policies:
+            ├─ Admin can upload
+            ├─ Admin can view
+            └─ Users can view own files
 ```
 
 ### Script 042: Default Form Schema
 
 ```
 conference_form_schemas
-  â””â”€ Default Form (v1)
-       â”œâ”€ event_id: NULL (global default)
-       â”œâ”€ version: 1
-       â”œâ”€ is_active: true
-       â””â”€ schema: {
+  └─ Default Form (v1)
+       ├─ event_id: NULL (global default)
+       ├─ version: 1
+       ├─ is_active: true
+       └─ schema: {
             steps: [
               {
                 id: "step-1",
@@ -346,20 +346,20 @@ conference_form_schemas
 
 ```
 conference_registrations (table modifications)
-  â”œâ”€ event_id (UUID, nullable, FK â†’ events.id)
-  â”œâ”€ Indexes:
-  â”‚    â”œâ”€ idx_conference_reg_event
-  â”‚    â”œâ”€ idx_conference_reg_event_status
-  â”‚    â””â”€ idx_conference_reg_event_created
-  â””â”€ Constraints:
-       â””â”€ uq_conf_reg_active_email_per_event
+  ├─ event_id (UUID, nullable, FK → events.id)
+  ├─ Indexes:
+  │    ├─ idx_conference_reg_event
+  │    ├─ idx_conference_reg_event_status
+  │    └─ idx_conference_reg_event_created
+  └─ Constraints:
+       └─ uq_conf_reg_active_email_per_event
             (unique per event_id + email)
 
 conference_registrations_with_event (view)
-  â””â”€ Joins registrations with event details
+  └─ Joins registrations with event details
 
 get_current_conference_event_id() (function)
-  â””â”€ Returns currently active event ID
+  └─ Returns currently active event ID
 ```
 
 ---
@@ -368,11 +368,11 @@ get_current_conference_event_id() (function)
 
 ### Quick Checklist
 
-- [ ] Run `scripts/041-conference-file-upload-bucket.sql`
-- [ ] Run `scripts/042-conference-form-templates.sql`
-- [ ] âœ… Script 043 already done
+- [ ] Run `scripts/db/migrations/041-conference-file-upload-bucket.sql`
+- [ ] Run `scripts/db/migrations/042-conference-form-templates.sql`
+- [ ] ✅ Script 043 already done
 - [ ] Run verification queries
-- [ ] Confirm all checks pass âœ“
+- [ ] Confirm all checks pass ✓
 
 ### Estimated Time
 

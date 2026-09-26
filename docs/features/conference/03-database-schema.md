@@ -1,5 +1,5 @@
-﻿---
-title: "DEESSA Foundation â€” Conference Module: Database Schema"
+---
+title: "DEESSA Foundation — Conference Module: Database Schema"
 description: " Version: 1.0.0"
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Database Schema
+# DEESSA Foundation — Conference Module: Database Schema
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -31,78 +31,78 @@ last_updated: 2026-09-12
 ## 1. Entity Relationship Diagram
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                     CONFERENCE_REGISTRATIONS                        â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ PK â”‚ id                          â”‚ uuid                             â”‚
-â”‚    â”‚ email                       â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ full_name                   â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ phone                       â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ organization                â”‚ text (nullable)                  â”‚
-â”‚    â”‚ role                        â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ attendance_mode             â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ workshops                   â”‚ text[] (nullable)                â”‚
-â”‚    â”‚ dietary_preference          â”‚ text (nullable)                  â”‚
-â”‚    â”‚ tshirt_size                 â”‚ text (nullable)                  â”‚
-â”‚    â”‚ heard_via                   â”‚ text[] (nullable)                â”‚
-â”‚    â”‚ emergency_contact_name      â”‚ text (nullable)                  â”‚
-â”‚    â”‚ emergency_contact_phone     â”‚ text (nullable)                  â”‚
-â”‚    â”‚ consent                     â”‚ boolean NOT NULL                 â”‚
-â”‚    â”‚ newsletter_opt_in           â”‚ boolean NOT NULL                 â”‚
-â”‚    â”‚ status                      â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ payment_status              â”‚ text NOT NULL DEFAULT 'unpaid'   â”‚
-â”‚    â”‚ payment_amount              â”‚ numeric (nullable)               â”‚
-â”‚    â”‚ payment_currency            â”‚ text (nullable)                  â”‚
-â”‚    â”‚ payment_provider            â”‚ text (nullable)                  â”‚
-â”‚    â”‚ payment_id                  â”‚ text (nullable)                  â”‚
-â”‚    â”‚ provider_ref                â”‚ text (nullable)                  â”‚
-â”‚    â”‚ stripe_session_id           â”‚ text (nullable)                  â”‚
-â”‚    â”‚ khalti_pidx                 â”‚ text (nullable)                  â”‚
-â”‚    â”‚ esewa_transaction_uuid      â”‚ text (nullable)                  â”‚
-â”‚    â”‚ payment_override_by         â”‚ text (nullable)                  â”‚
-â”‚    â”‚ admin_notes                 â”‚ text (nullable)                  â”‚
-â”‚    â”‚ expires_at                  â”‚ timestamptz (nullable)           â”‚
-â”‚    â”‚ created_at                  â”‚ timestamptz NOT NULL             â”‚
-â”‚    â”‚ updated_at                  â”‚ timestamptz NOT NULL             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Constraints:                                                        â”‚
-â”‚   CHECK status IN ('pending','pending_payment',                     â”‚
-â”‚                    'confirmed','cancelled','expired')               â”‚
-â”‚   CHECK payment_status IN ('unpaid','paid','failed','review')      â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                    â”‚
-                                    â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                       PAYMENT_EVENTS (Shared)                       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ PK â”‚ id                          â”‚ uuid                             â”‚
-â”‚    â”‚ event_id                    â”‚ text UNIQUE NOT NULL             â”‚
-â”‚    â”‚ event_type                  â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ provider                    â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ conference_registration_id  â”‚ uuid (nullable, FK)              â”‚
-â”‚    â”‚ donation_id                 â”‚ uuid (nullable, FK)              â”‚
-â”‚    â”‚ status                      â”‚ text NOT NULL                    â”‚
-â”‚    â”‚ amount                      â”‚ numeric                          â”‚
-â”‚    â”‚ currency                    â”‚ text                             â”‚
-â”‚    â”‚ metadata                    â”‚ jsonb                            â”‚
-â”‚    â”‚ processed_at                â”‚ timestamptz NOT NULL             â”‚
-â”‚    â”‚ created_at                  â”‚ timestamptz NOT NULL             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Foreign Keys:                                                       â”‚
-â”‚   conference_registration_id â†’ conference_registrations(id)         â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                    â”‚
-                                    â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                      SITE_SETTINGS (Shared)                         â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ PK â”‚ key                         â”‚ text UNIQUE NOT NULL             â”‚
-â”‚    â”‚ value                       â”‚ jsonb NOT NULL                   â”‚
-â”‚    â”‚ updated_at                  â”‚ timestamptz NOT NULL             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Special Keys Used by Conference:                                    â”‚
-â”‚   'conference_settings' â†’ stores full ConferenceSettings object     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌────────────────────────────────────────────────────────────────────┐
+│                     CONFERENCE_REGISTRATIONS                        │
+├────────────────────────────────────────────────────────────────────┤
+│ PK │ id                          │ uuid                             │
+│    │ email                       │ text NOT NULL                    │
+│    │ full_name                   │ text NOT NULL                    │
+│    │ phone                       │ text NOT NULL                    │
+│    │ organization                │ text (nullable)                  │
+│    │ role                        │ text NOT NULL                    │
+│    │ attendance_mode             │ text NOT NULL                    │
+│    │ workshops                   │ text[] (nullable)                │
+│    │ dietary_preference          │ text (nullable)                  │
+│    │ tshirt_size                 │ text (nullable)                  │
+│    │ heard_via                   │ text[] (nullable)                │
+│    │ emergency_contact_name      │ text (nullable)                  │
+│    │ emergency_contact_phone     │ text (nullable)                  │
+│    │ consent                     │ boolean NOT NULL                 │
+│    │ newsletter_opt_in           │ boolean NOT NULL                 │
+│    │ status                      │ text NOT NULL                    │
+│    │ payment_status              │ text NOT NULL DEFAULT 'unpaid'   │
+│    │ payment_amount              │ numeric (nullable)               │
+│    │ payment_currency            │ text (nullable)                  │
+│    │ payment_provider            │ text (nullable)                  │
+│    │ payment_id                  │ text (nullable)                  │
+│    │ provider_ref                │ text (nullable)                  │
+│    │ stripe_session_id           │ text (nullable)                  │
+│    │ khalti_pidx                 │ text (nullable)                  │
+│    │ esewa_transaction_uuid      │ text (nullable)                  │
+│    │ payment_override_by         │ text (nullable)                  │
+│    │ admin_notes                 │ text (nullable)                  │
+│    │ expires_at                  │ timestamptz (nullable)           │
+│    │ created_at                  │ timestamptz NOT NULL             │
+│    │ updated_at                  │ timestamptz NOT NULL             │
+├────────────────────────────────────────────────────────────────────┤
+│ Constraints:                                                        │
+│   CHECK status IN ('pending','pending_payment',                     │
+│                    'confirmed','cancelled','expired')               │
+│   CHECK payment_status IN ('unpaid','paid','failed','review')      │
+└────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                       PAYMENT_EVENTS (Shared)                       │
+├────────────────────────────────────────────────────────────────────┤
+│ PK │ id                          │ uuid                             │
+│    │ event_id                    │ text UNIQUE NOT NULL             │
+│    │ event_type                  │ text NOT NULL                    │
+│    │ provider                    │ text NOT NULL                    │
+│    │ conference_registration_id  │ uuid (nullable, FK)              │
+│    │ donation_id                 │ uuid (nullable, FK)              │
+│    │ status                      │ text NOT NULL                    │
+│    │ amount                      │ numeric                          │
+│    │ currency                    │ text                             │
+│    │ metadata                    │ jsonb                            │
+│    │ processed_at                │ timestamptz NOT NULL             │
+│    │ created_at                  │ timestamptz NOT NULL             │
+├────────────────────────────────────────────────────────────────────┤
+│ Foreign Keys:                                                       │
+│   conference_registration_id → conference_registrations(id)         │
+└────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                      SITE_SETTINGS (Shared)                         │
+├────────────────────────────────────────────────────────────────────┤
+│ PK │ key                         │ text UNIQUE NOT NULL             │
+│    │ value                       │ jsonb NOT NULL                   │
+│    │ updated_at                  │ timestamptz NOT NULL             │
+├────────────────────────────────────────────────────────────────────┤
+│ Special Keys Used by Conference:                                    │
+│   'conference_settings' → stores full ConferenceSettings object     │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -246,8 +246,8 @@ CREATE TRIGGER update_conference_registrations_updated_at
 **Status State Machine**:
 
 ```
-pending â†’ pending_payment â†’ confirmed
-   â†“            â†“               â†“
+pending → pending_payment → confirmed
+   ↓            ↓               ↓
 cancelled    expired      (final state)
 ```
 
@@ -633,7 +633,7 @@ WHERE email ILIKE '%john@example.com%';
 #### Migration 017: Add Payment Columns (December 2025)
 
 ```sql
--- File: scripts/migrations/017-add-payment-columns.sql
+-- File: scripts/db/migrations/017-add-payment-columns.sql
 
 -- Add gateway-specific columns
 ALTER TABLE conference_registrations
@@ -653,7 +653,7 @@ CREATE INDEX idx_esewa_uuid ON conference_registrations(esewa_transaction_uuid)
 #### Migration 018: Add Admin Override Tracking (January 2026)
 
 ```sql
--- File: scripts/migrations/018-add-admin-override.sql
+-- File: scripts/db/migrations/018-add-admin-override.sql
 
 ALTER TABLE conference_registrations
 ADD COLUMN payment_override_by text,
@@ -666,7 +666,7 @@ COMMENT ON COLUMN conference_registrations.payment_override_by IS
 #### Migration 019: Optimize Expiry Query (February 2026)
 
 ```sql
--- File: scripts/migrations/019-optimize-expiry.sql
+-- File: scripts/db/migrations/019-optimize-expiry.sql
 
 -- Add partial index for cron job
 CREATE INDEX idx_registrations_expires_optimized
@@ -683,7 +683,7 @@ DROP INDEX IF EXISTS idx_registrations_expires;
 **Manual (via Supabase SQL Editor)**:
 
 1. Copy migration SQL
-2. Go to Supabase Dashboard â†’ SQL Editor
+2. Go to Supabase Dashboard → SQL Editor
 3. Paste SQL
 4. Click "Run"
 5. Verify success
@@ -691,7 +691,7 @@ DROP INDEX IF EXISTS idx_registrations_expires;
 **Automated (via CLI)**:
 
 ```bash
-psql $SUPABASE_DATABASE_URL -f scripts/migrations/017-add-payment-columns.sql
+psql $SUPABASE_DATABASE_URL -f scripts/db/migrations/017-add-payment-columns.sql
 ```
 
 ### 6.3 Rollback Procedures
@@ -720,7 +720,7 @@ DROP INDEX IF EXISTS idx_esewa_uuid;
 ### 7.1 RLS Status
 
 **Table**: `conference_registrations`  
-**RLS Enabled**: âœ… Yes (but bypassed by service-role client)
+**RLS Enabled**: ✅ Yes (but bypassed by service-role client)
 
 ### 7.2 Policy Definitions
 
@@ -928,7 +928,7 @@ FROM conference_registrations;
 
 ### 8.2 Anti-Patterns (Avoid)
 
-âŒ **N+1 Queries**:
+❌ **N+1 Queries**:
 
 ```typescript
 // BAD: Fetches settings 500 times
@@ -943,7 +943,7 @@ for (const registration of registrations) {
 }
 ```
 
-âŒ **Unindexed Searches**:
+❌ **Unindexed Searches**:
 
 ```sql
 -- BAD: Full table scan
@@ -955,7 +955,7 @@ SELECT * FROM conference_registrations
 WHERE email = 'user@example.com'; -- Uses idx_registrations_email
 ```
 
-âŒ **Over-Fetching**:
+❌ **Over-Fetching**:
 
 ```typescript
 // BAD: Fetches all columns when only need few

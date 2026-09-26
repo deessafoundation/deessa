@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Apply Site Settings to Database"
 description: "Your homepage is now connected to the database settings, but you need to populate the database first."
 owner: "Deesha Team"
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Apply Site Settings to Database
 
-## âš ï¸ Important: Run SQL Scripts First
+## ⚠️ Important: Run SQL Scripts First
 
 Your homepage is now connected to the database settings, but you need to populate the database first.
 
@@ -17,10 +17,10 @@ Your homepage is now connected to the database settings, but you need to populat
 
 ### 1. Run Storage Setup Script
 
-Go to your Supabase dashboard â†’ SQL Editor and run:
+Go to your Supabase dashboard → SQL Editor and run:
 
 ```bash
-scripts/004-site-assets-storage.sql
+scripts/db/migrations/004-site-assets-storage.sql
 ```
 
 This creates the storage buckets for hero images, site assets, press gallery, and OG images.
@@ -30,7 +30,7 @@ This creates the storage buckets for hero images, site assets, press gallery, an
 Then run:
 
 ```bash
-scripts/005-expand-site-settings.sql
+scripts/db/migrations/005-expand-site-settings.sql
 ```
 
 This populates the `site_settings` table with all your current hardcoded URLs as defaults.
@@ -45,14 +45,14 @@ After running both scripts:
 
 ## What's Changed
 
-âœ… **Homepage Hero Section** - Now uses database settings for:
+✅ **Homepage Hero Section** - Now uses database settings for:
 
 - Main hero image
 - Classroom image  
 - Hero title, subtitle, badge
 - Donor avatars
 
-âœ… **Initiative Cards** - Now uses database settings for:
+✅ **Initiative Cards** - Now uses database settings for:
 
 - Education initiative (title, description, image)
 - Women's Empowerment (title, description, image)

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Payment Architecture V2 - Deployment Summary"
 description: "This document provides a comprehensive summary of the Payment Architecture V2 deployment process, including all scrip..."
 owner: "Deesha Team"
@@ -18,8 +18,8 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 ### Scripts
 
 #### Staging Deployment
-- **`scripts/deploy-staging.ps1`** - PowerShell script for staging deployment
-- **`scripts/deploy-staging.sh`** - Bash script for staging deployment
+- **`scripts/deploy/deploy-staging.ps1`** - PowerShell script for staging deployment
+- **`scripts/deploy/deploy-staging.sh`** - Bash script for staging deployment
 - **Features:**
   - Pre-deployment checks (tests, configuration validation)
   - Database migration guidance
@@ -28,8 +28,8 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
   - Dry-run mode support
 
 #### Smoke Tests
-- **`scripts/smoke-tests-staging.ps1`** - PowerShell smoke test script
-- **`scripts/smoke-tests-staging.sh`** - Bash smoke test script
+- **`scripts/deploy/smoke-tests-staging.ps1`** - PowerShell smoke test script
+- **`scripts/deploy/smoke-tests-staging.sh`** - Bash smoke test script
 - **Features:**
   - Automated health checks
   - Manual payment flow testing guidance
@@ -37,8 +37,8 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
   - Test result tracking
 
 #### Feature Flag Control
-- **`scripts/enable-v2-staging.ps1`** - PowerShell V2 enablement script
-- **`scripts/enable-v2-staging.sh`** - Bash V2 enablement script
+- **`scripts/deploy/enable-v2-staging.ps1`** - PowerShell V2 enablement script
+- **`scripts/deploy/enable-v2-staging.sh`** - Bash V2 enablement script
 - **Features:**
   - Enable/disable V2 with feature flag
   - Pre-flight checks
@@ -46,7 +46,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
   - Verification
 
 #### Monitoring
-- **`scripts/monitor-staging.ps1`** - PowerShell monitoring script
+- **`scripts/deploy/monitor-staging.ps1`** - PowerShell monitoring script
 - **Features:**
   - Real-time health checks
   - Response time monitoring
@@ -54,7 +54,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
   - Continuous or one-time monitoring
 
 #### Production Deployment
-- **`scripts/deploy-production.ps1`** - PowerShell production deployment script
+- **`scripts/deploy/deploy-production.ps1`** - PowerShell production deployment script
 - **Features:**
   - Enhanced safety checks
   - Confirmation prompts
@@ -103,7 +103,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
   - Continuous monitoring guidance
 
 - **`docs/deployment/INCREMENTAL_ROLLOUT_GUIDE.md`**
-  - Rollout strategy (10% â†’ 25% â†’ 50% â†’ 75% â†’ 100%)
+  - Rollout strategy (10% → 25% → 50% → 75% → 100%)
   - Implementation options (feature flag, percentage-based, provider-based)
   - Monitoring checklist
   - Rollback procedures
@@ -125,64 +125,64 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 
 ```
 1. Pre-deployment Preparation
-   â”œâ”€â”€ Run tests locally
-   â”œâ”€â”€ Validate configuration
-   â””â”€â”€ Review migration scripts
+   ├── Run tests locally
+   ├── Validate configuration
+   └── Review migration scripts
 
 2. Execute Staging Deployment
-   â”œâ”€â”€ Run: scripts/deploy-staging.ps1
-   â”œâ”€â”€ Execute database migrations
-   â”œâ”€â”€ Deploy application code
-   â””â”€â”€ Verify deployment
+   ├── Run: scripts/deploy/deploy-staging.ps1
+   ├── Execute database migrations
+   ├── Deploy application code
+   └── Verify deployment
 
 3. Run Smoke Tests
-   â”œâ”€â”€ Run: scripts/smoke-tests-staging.ps1
-   â”œâ”€â”€ Test Stripe payment flow
-   â”œâ”€â”€ Test Khalti payment flow
-   â”œâ”€â”€ Test eSewa payment flow
-   â””â”€â”€ Verify receipts and emails
+   ├── Run: scripts/deploy/smoke-tests-staging.ps1
+   ├── Test Stripe payment flow
+   ├── Test Khalti payment flow
+   ├── Test eSewa payment flow
+   └── Verify receipts and emails
 
 4. Enable V2 in Staging
-   â”œâ”€â”€ Run: scripts/enable-v2-staging.ps1
-   â”œâ”€â”€ Set PAYMENT_V2_ENABLED=true
-   â””â”€â”€ Verify V2 active
+   ├── Run: scripts/deploy/enable-v2-staging.ps1
+   ├── Set PAYMENT_V2_ENABLED=true
+   └── Verify V2 active
 
 5. Monitor Staging (24-48 hours)
-   â”œâ”€â”€ Run: scripts/monitor-staging.ps1
-   â”œâ”€â”€ Check metrics every 4 hours
-   â””â”€â”€ Review logs daily
+   ├── Run: scripts/deploy/monitor-staging.ps1
+   ├── Check metrics every 4 hours
+   └── Review logs daily
 ```
 
 ### Phase 2: Production Deployment
 
 ```
 1. Pre-deployment Preparation
-   â”œâ”€â”€ Verify staging success
-   â”œâ”€â”€ Get team approval
-   â”œâ”€â”€ Schedule deployment window
-   â””â”€â”€ Backup production database
+   ├── Verify staging success
+   ├── Get team approval
+   ├── Schedule deployment window
+   └── Backup production database
 
 2. Execute Production Deployment
-   â”œâ”€â”€ Run: scripts/deploy-production.ps1
-   â”œâ”€â”€ Execute database migrations
-   â”œâ”€â”€ Deploy application code
-   â””â”€â”€ Verify deployment (V2 disabled)
+   ├── Run: scripts/deploy/deploy-production.ps1
+   ├── Execute database migrations
+   ├── Deploy application code
+   └── Verify deployment (V2 disabled)
 
 3. Monitor Production (2 hours)
-   â”œâ”€â”€ Verify V1 working normally
-   â”œâ”€â”€ Check error rates
-   â””â”€â”€ Review logs
+   ├── Verify V1 working normally
+   ├── Check error rates
+   └── Review logs
 
 4. Incremental V2 Rollout
-   â”œâ”€â”€ Enable V2 (100% with monitoring)
-   â”œâ”€â”€ Monitor closely (6 hours)
-   â”œâ”€â”€ Continue monitoring (24 hours)
-   â””â”€â”€ Stabilization (7 days)
+   ├── Enable V2 (100% with monitoring)
+   ├── Monitor closely (6 hours)
+   ├── Continue monitoring (24 hours)
+   └── Stabilization (7 days)
 
 5. V1 Code Cleanup
-   â”œâ”€â”€ Remove feature flags
-   â”œâ”€â”€ Remove V1 code
-   â””â”€â”€ Optional: Database cleanup
+   ├── Remove feature flags
+   ├── Remove V1 code
+   └── Optional: Database cleanup
 ```
 
 ## Quick Reference
@@ -194,7 +194,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 .\scripts\deploy-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/deploy-staging.sh https://staging.vercel.app
+./scripts/deploy/deploy-staging.sh https://staging.vercel.app
 ```
 
 ### Smoke Tests
@@ -204,7 +204,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 .\scripts\smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/smoke-tests-staging.sh https://staging.vercel.app
+./scripts/deploy/smoke-tests-staging.sh https://staging.vercel.app
 ```
 
 ### Enable V2
@@ -214,7 +214,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 .\scripts\enable-v2-staging.ps1
 
 # Bash
-./scripts/enable-v2-staging.sh
+./scripts/deploy/enable-v2-staging.sh
 ```
 
 ### Production Deployment
@@ -224,7 +224,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 .\scripts\deploy-production.ps1 -ProductionUrl https://production.com
 
 # Bash (create if needed)
-./scripts/deploy-production.sh https://production.com
+./scripts/deploy/deploy-production.sh https://production.com
 ```
 
 ### Monitoring
@@ -242,7 +242,7 @@ This document provides a comprehensive summary of the Payment Architecture V2 de
 
 ## Database Migrations
 
-All migrations are located in `scripts/payments-v2/`:
+All migrations are located in `scripts/db/payments-v2/`:
 
 1. `020-create-payments-table.sql`
 2. `021-create-receipts-table.sql`
@@ -336,7 +336,7 @@ GROUP BY event_type;
 vercel rollback [previous-deployment-url]
 
 # Or via dashboard
-# Deployments â†’ Previous deployment â†’ Promote to Production
+# Deployments → Previous deployment → Promote to Production
 ```
 
 ### Feature Flag Rollback
@@ -349,34 +349,34 @@ vercel --prod
 
 ### Database Rollback
 
-âš ï¸ **Last resort only**
+⚠️ **Last resort only**
 
 ```sql
--- See scripts/payments-v2/README.md for rollback commands
+-- See scripts/db/payments-v2/README.md for rollback commands
 -- Or restore from backup
 ```
 
 ## Success Criteria
 
 ### Staging Success
-- âœ… All smoke tests passed
-- âœ… No critical errors in 24-48 hours
-- âœ… Payment success rate > 99%
-- âœ… Receipt generation rate > 98%
-- âœ… Email send rate > 95%
+- ✅ All smoke tests passed
+- ✅ No critical errors in 24-48 hours
+- ✅ Payment success rate > 99%
+- ✅ Receipt generation rate > 98%
+- ✅ Email send rate > 95%
 
 ### Production Success
-- âœ… V1 working normally after deployment
-- âœ… V2 enabled successfully
-- âœ… No critical errors in 7 days
-- âœ… All metrics meeting targets
-- âœ… Team consensus
+- ✅ V1 working normally after deployment
+- ✅ V2 enabled successfully
+- ✅ No critical errors in 7 days
+- ✅ All metrics meeting targets
+- ✅ Team consensus
 
 ### Cleanup Success
-- âœ… All V1 code removed
-- âœ… All feature flags removed
-- âœ… No errors after cleanup
-- âœ… Metrics stable for 7 days
+- ✅ All V1 code removed
+- ✅ All feature flags removed
+- ✅ No errors after cleanup
+- ✅ Metrics stable for 7 days
 
 ## Support and Troubleshooting
 
@@ -405,7 +405,7 @@ vercel --prod
 ### Getting Help
 
 - Review deployment guides in `docs/deployment/`
-- Check migration documentation in `scripts/payments-v2/`
+- Check migration documentation in `scripts/db/payments-v2/`
 - Review design document: `.kiro/specs/payment-architecture-v2/design.md`
 - Check requirements: `.kiro/specs/payment-architecture-v2/requirements.md`
 
