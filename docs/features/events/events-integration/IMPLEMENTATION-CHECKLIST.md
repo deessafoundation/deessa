@@ -1,5 +1,5 @@
-﻿---
-title: "V2 PaymentService Events Integration â€” Implementation Checklist"
+---
+title: "V2 PaymentService Events Integration — Implementation Checklist"
 description: "This checklist tracks the complete implementation of V2 PaymentService for event registrations."
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# V2 PaymentService Events Integration â€” Implementation Checklist
+# V2 PaymentService Events Integration — Implementation Checklist
 
 ## Overview
 
@@ -24,7 +24,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 0: Schema Migration â³
+## Phase 0: Schema Migration ⏳
 
 ### Prerequisites Verification
 - [ ] Verify migration 056 ran successfully
@@ -33,7 +33,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
   - [ ] `event_registrations` has provider-specific columns
 
 ### Migration Execution
-- [ ] Review `scripts/057-extend-payments-for-registrations.sql`
+- [ ] Review `scripts/db/migrations/057b-extend-payments-for-registrations.sql`
 - [ ] Run migration in **development** environment
   - [ ] Verify success (check NOTICE output)
   - [ ] Run manual verification queries
@@ -57,7 +57,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 1: PaymentService Changes â³
+## Phase 1: PaymentService Changes ⏳
 
 ### File: `lib/payments/core/types.ts`
 
@@ -100,9 +100,9 @@ This checklist tracks the complete implementation of V2 PaymentService for event
   - [ ] Return boolean success
 
 - [ ] Add `validateRegistrationStateTransition()` private method
-  - [ ] Check if already paid â†’ throw
-  - [ ] Check if already failed â†’ throw
-  - [ ] Check if not unpaid â†’ throw
+  - [ ] Check if already paid → throw
+  - [ ] Check if already failed → throw
+  - [ ] Check if not unpaid → throw
   - [ ] Return void on success
 
 **Code Review:** _______________________ Date: _______
@@ -110,7 +110,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 ### Unit Tests (Optional but Recommended)
 
 - [ ] Test `confirmRegistration()` with mock Supabase client
-  - [ ] Success case (unpaid â†’ paid)
+  - [ ] Success case (unpaid → paid)
   - [ ] Review case (amount mismatch)
   - [ ] Review case (currency mismatch)
   - [ ] Failed case (verification status not paid)
@@ -128,7 +128,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 2: Admin Action Fix â³
+## Phase 2: Admin Action Fix ⏳
 
 ### File: `lib/actions/events-module/event-registration.ts`
 
@@ -142,8 +142,8 @@ This checklist tracks the complete implementation of V2 PaymentService for event
   ```
 - [ ] Add comment explaining why
 - [ ] Test manual confirmation flow:
-  - [ ] Admin confirms registration with `payment_status = 'unpaid'` â†’ sold_count increments
-  - [ ] Admin confirms registration with `payment_status = 'paid'` â†’ sold_count does NOT increment
+  - [ ] Admin confirms registration with `payment_status = 'unpaid'` → sold_count increments
+  - [ ] Admin confirms registration with `payment_status = 'paid'` → sold_count does NOT increment
 
 **Code Review:** _______________________ Date: _______
 
@@ -151,7 +151,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 3: Stripe Webhook (CRITICAL PATH) â³
+## Phase 3: Stripe Webhook (CRITICAL PATH) ⏳
 
 ### Feature Flag Setup
 
@@ -218,7 +218,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 - [ ] Test amount mismatch:
   - [ ] Modify DB amount before webhook
-  - [ ] `payment_status` â†’ `'review'`
+  - [ ] `payment_status` → `'review'`
   - [ ] `payment_review_at` timestamp set
   - [ ] Admin alert sent
 
@@ -254,11 +254,11 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 4: eSewa Handler â³
+## Phase 4: eSewa Handler ⏳
 
 ### File: `app/api/payments/esewa/success/event-handler.ts`
 
-- [ ] Replace `handleEventVerification()` (~315 lines â†’ ~80 lines)
+- [ ] Replace `handleEventVerification()` (~315 lines → ~80 lines)
   - [ ] Keep HMAC signature verification FIRST
   - [ ] Add signature failure redirect
   - [ ] Create EsewaAdapter instance
@@ -294,7 +294,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 - [ ] Test amount mismatch:
   - [ ] Modify expected amount
-  - [ ] `payment_status` â†’ `'review'`
+  - [ ] `payment_status` → `'review'`
   - [ ] Redirect to review page
 
 - [ ] Test idempotency:
@@ -314,7 +314,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 5: Khalti Handler â³
+## Phase 5: Khalti Handler ⏳
 
 ### File: `app/api/payments/khalti/verify/route.ts`
 
@@ -323,7 +323,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
   - [ ] Idempotency checks (already paid, already failed)
   - [ ] Create KhaltiAdapter instance
   - [ ] Call `adapter.verify()`
-  - [ ] Handle "Pending" status â†’ return `processing`
+  - [ ] Handle "Pending" status → return `processing`
   - [ ] Create PaymentService instance
   - [ ] Call `paymentService.confirmRegistration()`
   - [ ] Handle result
@@ -363,7 +363,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 - [ ] Test amount mismatch:
   - [ ] Modify expected amount
-  - [ ] `payment_status` â†’ `'review'`
+  - [ ] `payment_status` → `'review'`
 
 - [ ] Test idempotency:
   - [ ] Call verify twice with same pidx
@@ -382,7 +382,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Phase 6: Cleanup (Optional) â³
+## Phase 6: Cleanup (Optional) ⏳
 
 ### Code Cleanup
 
@@ -403,7 +403,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Regression Testing âœ…
+## Regression Testing ✅
 
 ### Donation Flow (DO NOT BREAK)
 
@@ -441,7 +441,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Production Monitoring (First 7 Days) ðŸ“Š
+## Production Monitoring (First 7 Days) 📊
 
 ### Daily Checks
 
@@ -467,10 +467,10 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ### Alert Thresholds
 
-- [ ] Stripe webhook errors > 5 per hour â†’ investigate
-- [ ] sold_count mismatch detected â†’ audit immediately
-- [ ] Review status rate > 1% â†’ investigate amounts
-- [ ] Response time > 5 seconds â†’ check DB locks
+- [ ] Stripe webhook errors > 5 per hour → investigate
+- [ ] sold_count mismatch detected → audit immediately
+- [ ] Review status rate > 1% → investigate amounts
+- [ ] Response time > 5 seconds → check DB locks
 
 **Monitoring Log:**
 
@@ -480,7 +480,7 @@ This checklist tracks the complete implementation of V2 PaymentService for event
 
 ---
 
-## Final Sign-Off âœ…
+## Final Sign-Off ✅
 
 ### Pre-Production Checklist
 
@@ -551,7 +551,7 @@ git push
 
 ### Schema Rollback (Phase 0)
 
-**âš ï¸ ONLY if NO event payments exist**
+**⚠️ ONLY if NO event payments exist**
 
 ```sql
 SELECT COUNT(*) FROM payments WHERE event_registration_id IS NOT NULL;

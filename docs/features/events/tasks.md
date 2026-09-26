@@ -1,5 +1,5 @@
-﻿---
-title: "Event Management Module â€” Implementation Plan"
+---
+title: "Event Management Module — Implementation Plan"
 description: " Goal: Build a professional, CMS-like event management system that allows admins to create, customize, and manage eve..."
 owner: "Deesha Team"
 status: active
@@ -7,13 +7,13 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Event Management Module â€” Implementation Plan
+# Event Management Module — Implementation Plan
 
-> **Goal:** Build a professional, CMS-like event management system that allows admins to create, customize, and manage events with dynamic registration forms â€” without touching the existing conference system.
+> **Goal:** Build a professional, CMS-like event management system that allows admins to create, customize, and manage events with dynamic registration forms — without touching the existing conference system.
 >
 > **Stack:** Next.js 14 (App Router) + Supabase (Postgres, RLS)
 >
-> **Status:** ðŸŸ¡ Planning Complete â€” Ready for Phase 1
+> **Status:** 🟡 Planning Complete — Ready for Phase 1
 
 ---
 
@@ -21,13 +21,13 @@ last_updated: 2026-09-12
 
 | Phase | Description | Status | Est. Duration |
 |-------|-------------|--------|---------------|
-| **Phase 0** | Schema & Foundation | âœ… Complete | 3-4 days |
-| **Phase 1** | Admin CRUD Shell | âœ… Complete | 5-7 days |
-| **Phase 2** | Agenda, Form Builder, Pricing, Email | âœ… Complete | 7-10 days |
-| **Phase 3** | Public Listing & Detail Pages | âœ… Complete | 3-5 days |
-| **Phase 4** | Registration & Payment | âœ… Complete | 5-7 days |
-| **Phase 5** | Polish, Security & Hardening | âœ… Complete | 3-5 days |
-| **Overall** | | ðŸŸ¡ In Progress | **26-38 days** |
+| **Phase 0** | Schema & Foundation | ✅ Complete | 3-4 days |
+| **Phase 1** | Admin CRUD Shell | ✅ Complete | 5-7 days |
+| **Phase 2** | Agenda, Form Builder, Pricing, Email | ✅ Complete | 7-10 days |
+| **Phase 3** | Public Listing & Detail Pages | ✅ Complete | 3-5 days |
+| **Phase 4** | Registration & Payment | ✅ Complete | 5-7 days |
+| **Phase 5** | Polish, Security & Hardening | ✅ Complete | 3-5 days |
+| **Overall** | | 🟡 In Progress | **26-38 days** |
 
 ---
 
@@ -50,38 +50,38 @@ last_updated: 2026-09-12
 ### 1.1 High-Level Design
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                       PUBLIC SIDE                                â”‚
-â”‚                                                                  â”‚
-â”‚  /events              â†’ Event listing (card grid)                â”‚
-â”‚  /events/[slug]       â†’ Dynamic detail page (banner, agenda,    â”‚
-â”‚                          map, CTA)                               â”‚
-â”‚  /events/[slug]/register â†’ Dynamic form â†’ Payment flow          â”‚
-â”‚                                                                  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                       ADMIN SIDE                                 â”‚
-â”‚                                                                  â”‚
-â”‚  /admin/events              â†’ Event table, filters, quick toggle â”‚
-â”‚  /admin/events/new          â†’ Create wizard                     â”‚
-â”‚  /admin/events/[id]/*       â†’ Per-event tabs:                   â”‚
-â”‚    â”œâ”€â”€ details    (basic info)                                   â”‚
-â”‚    â”œâ”€â”€ media      (banner, card image, gallery)                  â”‚
-â”‚    â”œâ”€â”€ agenda     (multi-day schedule)                           â”‚
-â”‚    â”œâ”€â”€ location   (venue, address, map pin)                      â”‚
-â”‚    â”œâ”€â”€ form-builder (drag-and-drop registration form)            â”‚
-â”‚    â”œâ”€â”€ pricing    (ticket types, tiers)                          â”‚
-â”‚    â”œâ”€â”€ email-templates (per-event emails)                        â”‚
-â”‚    â”œâ”€â”€ registrations (view/manage submissions)                   â”‚
-â”‚    â””â”€â”€ settings   (enable/disable, archive, delete, duplicate)  â”‚
-â”‚                                                                  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                    SHARED LAYER (read-only imports)              â”‚
-â”‚                                                                  â”‚
-â”‚  Field components from conference system (14 types)              â”‚
-â”‚  FormSchema / FormStep / FormField types                         â”‚
-â”‚  Payment providers (Stripe, Khalti, eSewa) â€” when ready          â”‚
-â”‚  Email transport (sendEmail utility)                             â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────────┐
+│                       PUBLIC SIDE                                │
+│                                                                  │
+│  /events              → Event listing (card grid)                │
+│  /events/[slug]       → Dynamic detail page (banner, agenda,    │
+│                          map, CTA)                               │
+│  /events/[slug]/register → Dynamic form → Payment flow          │
+│                                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                       ADMIN SIDE                                 │
+│                                                                  │
+│  /admin/events              → Event table, filters, quick toggle │
+│  /admin/events/new          → Create wizard                     │
+│  /admin/events/[id]/*       → Per-event tabs:                   │
+│    ├── details    (basic info)                                   │
+│    ├── media      (banner, card image, gallery)                  │
+│    ├── agenda     (multi-day schedule)                           │
+│    ├── location   (venue, address, map pin)                      │
+│    ├── form-builder (drag-and-drop registration form)            │
+│    ├── pricing    (ticket types, tiers)                          │
+│    ├── email-templates (per-event emails)                        │
+│    ├── registrations (view/manage submissions)                   │
+│    └── settings   (enable/disable, archive, delete, duplicate)  │
+│                                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                    SHARED LAYER (read-only imports)              │
+│                                                                  │
+│  Field components from conference system (14 types)              │
+│  FormSchema / FormStep / FormField types                         │
+│  Payment providers (Stripe, Khalti, eSewa) — when ready          │
+│  Email transport (sendEmail utility)                             │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### 1.2 Design Principles
@@ -93,7 +93,7 @@ last_updated: 2026-09-12
 | **Additive database changes** | New migration file only, extend `events` table with nullable columns |
 | **Source system partition** | `source_system` column isolates events module data from legacy conference |
 | **Schema-driven forms** | Dynamic form builder reuses proven conference patterns |
-| **RESTRICT on registrations** | Cannot delete events with registrations â€” must archive instead |
+| **RESTRICT on registrations** | Cannot delete events with registrations — must archive instead |
 | **is_free flag** | Admin explicitly decides free/paid/free-then-paid pricing mode |
 
 ### 1.3 Naming Conventions
@@ -117,7 +117,7 @@ last_updated: 2026-09-12
 
 2. **Never edit an already-applied SQL migration.** All schema changes happen in new, additive migration files.
 
-3. **New feature = new namespace.** Routes, components, actions, types live in `events/` folders â€” never inside `conference/`.
+3. **New feature = new namespace.** Routes, components, actions, types live in `events/` folders — never inside `conference/`.
 
 4. **Additive only at the database level.** The `events` table is extended via nullable/defaulted columns in a new migration. No column renamed or dropped.
 
@@ -128,7 +128,7 @@ last_updated: 2026-09-12
 ```
 app/(public)/conference/**
 app/admin/conference/**
-components/conference/**                 (import from â€” never edit)
+components/conference/**                 (import from — never edit)
 components/admin/conference-form-builder.tsx
 components/admin/conference-form-builder/**
 lib/actions/conference-registration.ts
@@ -136,7 +136,7 @@ lib/actions/conference-form-schema.ts
 lib/actions/conference-settings.ts
 lib/types/conference.ts
 lib/types/conference-form-schema.ts
-scripts/001-043-*.sql (existing migrations)
+scripts/db/migrations/001-043-*.sql (existing migrations)
 ```
 
 ---
@@ -147,7 +147,7 @@ scripts/001-043-*.sql (existing migrations)
 |----|----------|--------|-----------|
 | **DEC-001** | Database strategy | **Drop existing events table, create fresh** | No production data, clean slate avoids migration complexity |
 | **DEC-002** | Component reuse | **Import field components (read-only)** | 14 generic field types, zero coupling risk, avoids 1000+ lines duplication |
-| **DEC-003** | Register button | **Direct to form** | Card Register â†’ `/events/[slug]/register`, card body â†’ `/events/[slug]` |
+| **DEC-003** | Register button | **Direct to form** | Card Register → `/events/[slug]/register`, card body → `/events/[slug]` |
 | **DEC-004** | Payment integration | **Deferred** | Another developer building modular payment system; integrate after completion |
 | **DEC-005** | Free events | **Admin decides via `is_free` flag** | Supports free, paid, and free-then-paid (time-limited early bird) |
 | **DEC-006** | Capacity/waitlist | **Defer to Phase 2+** | Not in MVP, adds complexity, can add later without breaking changes |
@@ -157,7 +157,7 @@ scripts/001-043-*.sql (existing migrations)
 
 ## 4. Data Model
 
-### 4.1 Events Table (Fresh â€” Drop & Recreate)
+### 4.1 Events Table (Fresh — Drop & Recreate)
 
 ```sql
 -- Migration: 050-events-module-schema.sql
@@ -307,7 +307,7 @@ CREATE INDEX idx_event_reg_event_status ON event_registrations(event_id, status)
 CREATE INDEX idx_event_reg_event_payment ON event_registrations(event_id, payment_status);
 ```
 
-**Key:** `ON DELETE RESTRICT` â€” event with registrations physically cannot be deleted; admin must archive.
+**Key:** `ON DELETE RESTRICT` — event with registrations physically cannot be deleted; admin must archive.
 
 ### 4.6 Event Ticket Types
 
@@ -365,7 +365,7 @@ Import from conference (read-only):
 import type { FormSchema, FormStep, FormField, FieldType } from "@/lib/types/conference-form-schema"
 ```
 
-These are structurally generic â€” operate on schema data, not conference-specific logic.
+These are structurally generic — operate on schema data, not conference-specific logic.
 
 ---
 
@@ -379,13 +379,13 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 | File | Purpose |
 |------|---------|
-| `scripts/050-events-module-schema.sql` | Complete migration: all 7 tables, indexes, view, function |
+| `scripts/db/migrations/050-events-module-schema.sql` | Complete migration: all 7 tables, indexes, view, function |
 | `lib/types/events-module.ts` | TypeScript types for all event module entities |
 | `lib/actions/events-module/event-crud.ts` | create, update, list, getBySlug, getById, duplicate, archive, restore, deleteWithGuard, setStatus |
 
 **Checkboxes:**
 
-- [x] Create migration `scripts/050-events-module-schema.sql`:
+- [x] Create migration `scripts/db/migrations/050-events-module-schema.sql`:
   - [x] DROP existing events table
   - [x] CREATE new events table with all columns
   - [x] CREATE event_agenda_items table
@@ -408,16 +408,16 @@ These are structurally generic â€” operate on schema data, not conference-s
   - [x] `EventEmailTemplate` type
   - [x] Import `FormSchema`, `FormStep`, `FormField` from conference types
 - [x] Create `lib/actions/events-module/event-crud.ts`:
-  - [x] `createEvent(data)` â€” INSERT with status='draft'
-  - [x] `updateEvent(id, data)` â€” UPDATE by id
-  - [x] `getAllEvents(filters)` â€” SELECT with status/category filters + pagination
-  - [x] `getEventBySlug(slug)` â€” SELECT for public pages
-  - [x] `getEventById(id)` â€” SELECT for admin pages
-  - [x] `duplicateEvent(id)` â€” Clone details + agenda + tickets + email templates + active form schema (NOT registrations)
-  - [x] `archiveEvent(id)` â€” SET status='archived'
-  - [x] `restoreEvent(id)` â€” SET status='draft'
-  - [x] `deleteEvent(id)` â€” Guarded by `can_delete_event()`, DELETE if allowed
-  - [x] `setEventStatus(id, status)` â€” Transition status with validation
+  - [x] `createEvent(data)` — INSERT with status='draft'
+  - [x] `updateEvent(id, data)` — UPDATE by id
+  - [x] `getAllEvents(filters)` — SELECT with status/category filters + pagination
+  - [x] `getEventBySlug(slug)` — SELECT for public pages
+  - [x] `getEventById(id)` — SELECT for admin pages
+  - [x] `duplicateEvent(id)` — Clone details + agenda + tickets + email templates + active form schema (NOT registrations)
+  - [x] `archiveEvent(id)` — SET status='archived'
+  - [x] `restoreEvent(id)` — SET status='draft'
+  - [x] `deleteEvent(id)` — Guarded by `can_delete_event()`, DELETE if allowed
+  - [x] `setEventStatus(id, status)` — Transition status with validation
 - [ ] Verify migration runs cleanly on fresh database
 - [ ] Verify RLS policies allow public read of published events, admin full access
 
@@ -434,7 +434,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 ### Phase 1: Admin CRUD Shell (Est: 5-7 days)
 
-**Goal:** Admin can create, edit, enable/disable, archive, and delete events. No form builder, agenda, or pricing yet â€” just prove the create â†’ edit â†’ lifecycle loop end to end.
+**Goal:** Admin can create, edit, enable/disable, archive, and delete events. No form builder, agenda, or pricing yet — just prove the create → edit → lifecycle loop end to end.
 
 **Files to create:**
 
@@ -531,7 +531,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 ### Phase 2: Agenda, Form Builder, Pricing, Email Templates (Est: 7-10 days)
 
-**Goal:** Build the four remaining admin tabs â€” agenda editor, form builder, pricing, and email templates.
+**Goal:** Build the four remaining admin tabs — agenda editor, form builder, pricing, and email templates.
 
 **Files to create:**
 
@@ -562,11 +562,11 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Day label support
     - [x] Delete confirmation dialog
   - [x] Create `lib/actions/events-module/event-agenda.ts`:
-    - [x] `getAgendaItems(eventId)` â€” ordered by day_number, sort_order
-    - [x] `createAgendaItem(input)` â€” INSERT
-    - [x] `updateAgendaItem(id, input)` â€” UPDATE
-    - [x] `deleteAgendaItem(id, eventId)` â€” DELETE
-    - [x] `getAgendaDays(eventId)` â€” distinct days
+    - [x] `getAgendaItems(eventId)` — ordered by day_number, sort_order
+    - [x] `createAgendaItem(input)` — INSERT
+    - [x] `updateAgendaItem(id, input)` — UPDATE
+    - [x] `deleteAgendaItem(id, eventId)` — DELETE
+    - [x] `getAgendaDays(eventId)` — distinct days
 
 - [x] **Form Builder:**
   - [x] Create `app/admin/events/[id]/form-builder/page.tsx`:
@@ -584,11 +584,11 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Unsaved changes protection
     - [x] 12 field types available
   - [x] Create `lib/actions/events-module/event-form-schema.ts`:
-    - [x] `getActiveFormSchema(eventId)` â€” SELECT WHERE is_active=true
-    - [x] `getFormSchemaByVersion(eventId, version)` â€” SELECT by version
-    - [x] `createFormSchema(eventId, formConfig, publish)` â€” version bump + insert
-    - [x] `activateSchemaVersion(eventId, version)` â€” deactivate others, activate this
-    - [x] `getFormSchemaHistory(eventId)` â€” list all versions
+    - [x] `getActiveFormSchema(eventId)` — SELECT WHERE is_active=true
+    - [x] `getFormSchemaByVersion(eventId, version)` — SELECT by version
+    - [x] `createFormSchema(eventId, formConfig, publish)` — version bump + insert
+    - [x] `activateSchemaVersion(eventId, version)` — deactivate others, activate this
+    - [x] `getFormSchemaHistory(eventId)` — list all versions
 
 - [x] **Pricing Editor:**
   - [x] Create `app/admin/events/[id]/pricing/page.tsx`
@@ -601,10 +601,10 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Toggle active/inactive per ticket type
     - [x] Free event mode (no ticket types needed)
   - [x] Create `lib/actions/events-module/event-pricing.ts`:
-    - [x] `getTicketTypes(eventId)` â€” ordered list
-    - [x] `createTicketType(input)` â€” INSERT
-    - [x] `updateTicketType(id, input)` â€” UPDATE
-    - [x] `deleteTicketType(id, eventId)` â€” DELETE
+    - [x] `getTicketTypes(eventId)` — ordered list
+    - [x] `createTicketType(input)` — INSERT
+    - [x] `updateTicketType(id, input)` — UPDATE
+    - [x] `deleteTicketType(id, eventId)` — DELETE
 
 - [x] **Email Templates:**
   - [x] Create `app/admin/events/[id]/email-templates/page.tsx`
@@ -616,10 +616,10 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Variable reference panel
     - [x] Save/update per template type (upsert)
   - [x] Create `lib/actions/events-module/event-email-templates.ts`:
-    - [x] `getEmailTemplates(eventId)` â€” all templates for event
-    - [x] `getEmailTemplate(eventId, type)` â€” single template by type
-    - [x] `upsertEmailTemplate(input)` â€” INSERT or UPDATE
-    - [x] `deleteEmailTemplate(id, eventId)` â€” DELETE
+    - [x] `getEmailTemplates(eventId)` — all templates for event
+    - [x] `getEmailTemplate(eventId, type)` — single template by type
+    - [x] `upsertEmailTemplate(input)` — INSERT or UPDATE
+    - [x] `deleteEmailTemplate(id, eventId)` — DELETE
 
 **What could break / how we prevent it:**
 
@@ -635,7 +635,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 ### Phase 3: Public Listing & Detail Pages (Est: 3-5 days)
 
-**Goal:** Public can browse events, view details. No registration yet â€” confirm the whole public browsing experience first.
+**Goal:** Public can browse events, view details. No registration yet — confirm the whole public browsing experience first.
 
 **Files to create:**
 
@@ -669,7 +669,7 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Short description
     - [x] Category badge (color-coded)
     - [x] Free event badge
-    - [x] Click â†’ `/events/[slug]` (detail page)
+    - [x] Click → `/events/[slug]` (detail page)
 
 - [x] **Event Detail (`/events/[slug]`):**
   - [x] Create `app/(public)/events/[slug]/page.tsx`:
@@ -692,7 +692,7 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] Sticky register card
     - [x] Price display (free or starting from)
     - [x] Date, time, location
-    - [x] "Register Now" button â†’ `/events/[slug]/register`
+    - [x] "Register Now" button → `/events/[slug]/register`
     - [x] Contact email link
   - [x] Register page placeholder (`/events/[slug]/register`):
     - [x] Event summary sidebar
@@ -712,7 +712,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 ### Phase 4: Registration & Payment (Est: 5-7 days)
 
-**Goal:** Full registration flow â€” dynamic form, submission, payment (when ready), confirmation emails.
+**Goal:** Full registration flow — dynamic form, submission, payment (when ready), confirmation emails.
 
 **Files to create:**
 
@@ -727,7 +727,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 | `components/events/public/event-registration-form.tsx` | Dynamic registration form |
 | `lib/actions/events-module/event-registration.ts` | Registration submission actions |
 
-> **TODO: Payment Integration** â€” The project already has a complete payment system at `lib/payments/` with Stripe, Khalti, and eSewa adapters. Once the payment module developer completes their work (DEC-004), integrate the existing `startStripeCheckout`, `startKhaltiPayment`, `startEsewaPayment` functions into `event-registration.ts`. The payment-options and pending-payment pages already have mock simulate buttons â€” replace with real provider redirects.
+> **TODO: Payment Integration** — The project already has a complete payment system at `lib/payments/` with Stripe, Khalti, and eSewa adapters. Once the payment module developer completes their work (DEC-004), integrate the existing `startStripeCheckout`, `startKhaltiPayment`, `startEsewaPayment` functions into `event-registration.ts`. The payment-options and pending-payment pages already have mock simulate buttons — replace with real provider redirects.
 
 **Checkboxes:**
 
@@ -753,10 +753,10 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 - [x] **Registration Server Action:**
   - [x] Create `lib/actions/events-module/event-registration.ts`:
-    - [x] `registerForEvent(input, formData)` â€” main submission handler
+    - [x] `registerForEvent(input, formData)` — main submission handler
     - [x] Server-side validation: event is published, registration enabled, not closed
-    - [x] Extract core fields (full_name, email, phone) â†’ columns
-    - [x] Write remaining fields â†’ `custom_fields` JSONB
+    - [x] Extract core fields (full_name, email, phone) → columns
+    - [x] Write remaining fields → `custom_fields` JSONB
     - [x] Write `form_schema_version`
     - [x] Check duplicate email per event (unique constraint)
     - [x] Set `expires_at` for pending registrations
@@ -764,7 +764,7 @@ These are structurally generic â€” operate on schema data, not conference-s
     - [x] If paid: set status='pending', return payment data
     - [x] Handle race condition: re-check event status at submit time
 
-- [x] **Payment Flow (Deferred â€” mock for now):**
+- [x] **Payment Flow (Deferred — mock for now):**
   - [x] Create payment-options page (with mock simulate button)
   - [x] Create pending-payment page (with mock simulate button)
   - [x] Create payment-success page
@@ -840,12 +840,12 @@ These are structurally generic â€” operate on schema data, not conference-s
 | Missing error states | Comprehensive error boundary + fallback UI |
 
 **Post-Analysis Fixes Applied:**
-- âœ… Added auth guards to all admin server actions (defense-in-depth)
-- âœ… Switched to distributed rate limiter (Supabase-backed)
-- âœ… Sanitized search input for PostgREST
-- âœ… Added missing revalidatePath calls
-- âœ… Fixed event ownership validation in reorderAgendaItems
-- âœ… Removed unused import (VALID_STATUS_TRANSITIONS)
+- ✅ Added auth guards to all admin server actions (defense-in-depth)
+- ✅ Switched to distributed rate limiter (Supabase-backed)
+- ✅ Sanitized search input for PostgREST
+- ✅ Added missing revalidatePath calls
+- ✅ Fixed event ownership validation in reorderAgendaItems
+- ✅ Removed unused import (VALID_STATUS_TRANSITIONS)
 
 ---
 
@@ -855,8 +855,8 @@ These are structurally generic â€” operate on schema data, not conference-s
 
 | Step | Action | Impact |
 |------|--------|--------|
-| 1 | Run migration `050-events-module-schema.sql` | Non-blocking â€” new tables, no existing data affected |
-| 2 | Deploy Phase 0 code (types + actions) | No UI change â€” backend only |
+| 1 | Run migration `050-events-module-schema.sql` | Non-blocking — new tables, no existing data affected |
+| 2 | Deploy Phase 0 code (types + actions) | No UI change — backend only |
 | 3 | Deploy Phase 1 code (admin CRUD) | Admin sees new events section |
 | 4 | Deploy Phase 2 code (agenda, form builder, pricing, email) | Admin tabs become functional |
 | 5 | Deploy Phase 3 code (public pages) | Public can browse events |
@@ -920,7 +920,7 @@ These are structurally generic â€” operate on schema data, not conference-s
 **Phase 0:**
 | File | Purpose |
 |------|---------|
-| `scripts/050-events-module-schema.sql` | Complete database migration |
+| `scripts/db/migrations/050-events-module-schema.sql` | Complete database migration |
 | `lib/types/events-module.ts` | TypeScript types |
 | `lib/actions/events-module/event-crud.ts` | Core CRUD actions |
 
@@ -1024,94 +1024,94 @@ lib/actions/conference-form-schema.ts
 lib/actions/conference-settings.ts
 lib/types/conference.ts
 lib/types/conference-form-schema.ts
-scripts/001-043-*.sql
+scripts/db/migrations/001-043-*.sql
 ```
 
 ---
 
 ## 9. Core Flows
 
-### 9.1 Public: Browse â†’ Register
+### 9.1 Public: Browse → Register
 
 ```
 /events (cards, status=published)
-   â”‚
-   â”œâ”€â”€ click Register on card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-   â”‚                                                       â–¼
-   â””â”€â”€ click card body                          /events/[slug]/register
-              â”‚                                            â”‚
-              â–¼                                   dynamic form (event_form_schemas,
-      /events/[slug]                              is_active=true) â†’ submit â†’
+   │
+   ├── click Register on card ───────────────────────────┐
+   │                                                       ▼
+   └── click card body                          /events/[slug]/register
+              │                                            │
+              ▼                                   dynamic form (event_form_schemas,
+      /events/[slug]                              is_active=true) → submit →
       banner + description +                      event_registrations INSERT
-      agenda (event_agenda_items) +                        â”‚
-      map (venue/address/lat-lng) +                â”Œâ”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”
-      Register CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶â”‚  is_free?      â”‚
-                                                     â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                                   trueâ”‚      â”‚false
-                                                          â–¼      â–¼
+      agenda (event_agenda_items) +                        │
+      map (venue/address/lat-lng) +                ┌───────┴────────┐
+      Register CTA ───────────────────────────────▶│  is_free?      │
+                                                     └───────┬────────┘
+                                                   true│      │false
+                                                          ▼      ▼
                                                      success  payment-options
-                                                              â†’ provider checkout
-                                                              â†’ pending-payment
-                                                              â†’ payment-success / failure
+                                                              → provider checkout
+                                                              → pending-payment
+                                                              → payment-success / failure
 ```
 
 ### 9.2 Admin: Create & Configure
 
 ```
 /admin/events/new
-   â†’ basic info (title, slug, dates, category, description)
-   â†’ INSERT events (status='draft')
-   â†’ redirect to /admin/events/[id]
+   → basic info (title, slug, dates, category, description)
+   → INSERT events (status='draft')
+   → redirect to /admin/events/[id]
 
-/admin/events/[id]/media        â†’ banner_url, image, gallery
-/admin/events/[id]/agenda       â†’ event_agenda_items CRUD
-/admin/events/[id]/location     â†’ venue_name, address, lat/lng
-/admin/events/[id]/form-builder â†’ event_form_schemas (version + publish)
-/admin/events/[id]/pricing      â†’ event_ticket_types CRUD
-/admin/events/[id]/email-templates â†’ event_email_templates CRUD
-/admin/events/[id]/settings     â†’ setStatus, duplicate, delete (guarded)
+/admin/events/[id]/media        → banner_url, image, gallery
+/admin/events/[id]/agenda       → event_agenda_items CRUD
+/admin/events/[id]/location     → venue_name, address, lat/lng
+/admin/events/[id]/form-builder → event_form_schemas (version + publish)
+/admin/events/[id]/pricing      → event_ticket_types CRUD
+/admin/events/[id]/email-templates → event_email_templates CRUD
+/admin/events/[id]/settings     → setStatus, duplicate, delete (guarded)
 ```
 
 ### 9.3 Admin: Form Builder Save
 
 ```
-Admin edits form â†’ Save Draft / Publish
-        â”‚
-        â–¼
+Admin edits form → Save Draft / Publish
+        │
+        ▼
  getNextVersion(event_id)
-        â”‚
-        â–¼
+        │
+        ▼
  if publish: set is_active=false for all other versions
-        â”‚
-        â–¼
+        │
+        ▼
  INSERT event_form_schemas (event_id, version, is_active=publish, form_config)
-        â”‚
-        â–¼
+        │
+        ▼
  revalidate the event's public register page
 ```
 
 ### 9.4 Event Lifecycle
 
 ```
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-   create â”€â”€â”€â”€â”€â–¶ â”‚  draft   â”‚
-                 â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜
-                      â”‚ publish
-                      â–¼
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   disable    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                 â”‚published â”‚ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¶ â”‚ disabled â”‚
-                 â”‚          â”‚ â—€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ â”‚          â”‚
-                 â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜   re-enable  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜
-                      â”‚                          â”‚
-                      â”‚          archive         â”‚
-                      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                   â–¼
-                             â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                             â”‚ archived â”‚ â”€â”€â–¶ restore (back to draft)
-                             â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                 ┌──────────┐
+   create ─────▶ │  draft   │
+                 └────┬─────┘
+                      │ publish
+                      ▼
+                 ┌──────────┐   disable    ┌──────────┐
+                 │published │ ───────────▶ │ disabled │
+                 │          │ ◀─────────── │          │
+                 └────┬─────┘   re-enable  └────┬─────┘
+                      │                          │
+                      │          archive         │
+                      └────────────┬─────────────┘
+                                   ▼
+                             ┌──────────┐
+                             │ archived │ ──▶ restore (back to draft)
+                             └──────────┘
 
   delete: allowed from any status IF can_delete_event(id) = true
-          (zero registrations). Otherwise â†’ Archive instead.
+          (zero registrations). Otherwise → Archive instead.
 ```
 
 ---
@@ -1122,9 +1122,9 @@ Admin edits form â†’ Save Draft / Publish
 Read docs/event-management-module/tasks.md in full before writing any code.
 It is the spec for a new "Events Module" feature for Deesha Foundation.
 
-Section 2 lists files you must never modify â€” treat that as a hard constraint.
-Section 3 has the 7 decisions already approved â€” follow them.
-Section 5 is your phase plan â€” work through it in order, and stop for review
+Section 2 lists files you must never modify — treat that as a hard constraint.
+Section 3 has the 7 decisions already approved — follow them.
+Section 5 is your phase plan — work through it in order, and stop for review
 at the end of each phase rather than running ahead.
 
 Start with Phase 0 (schema migration) and show the migration file before applying it.
@@ -1134,7 +1134,7 @@ Key rules:
 - All new files go in events/ namespaces
 - Import FormSchema/FormStep/FormField types from conference types (read-only)
 - Import field components from components/conference/fields/ (read-only)
-- Payment integration is deferred (mock handler only) â€” another dev is building it
+- Payment integration is deferred (mock handler only) — another dev is building it
 - is_free flag determines free vs paid flow
 - event_registrations uses ON DELETE RESTRICT (no delete with registrations)
 ```
@@ -1142,4 +1142,4 @@ Key rules:
 ---
 
 **Last Updated:** July 23, 2026
-**Project Status:** ðŸŸ¡ Planning Complete â€” Ready for Phase 0
+**Project Status:** 🟡 Planning Complete — Ready for Phase 0

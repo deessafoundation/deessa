@@ -1,6 +1,6 @@
 ﻿---
 title: "Receipt System - Implementation Checklist & Deployment Guide"
-description: "- x Create migration script: scripts/010-receipt-system.sql"
+description: "- x Create migration script: scripts/db/migrations/010-receipt-system.sql"
 owner: "Deesha Team"
 status: active
 category: feature
@@ -13,7 +13,7 @@ last_updated: 2026-09-12
 
 ### Phase 1: Database Setup âœ“
 
-- [x] Create migration script: `scripts/010-receipt-system.sql`
+- [x] Create migration script: `scripts/db/migrations/010-receipt-system.sql`
 - [x] Add receipt columns to donations table
 - [x] Create receipt_audit_log table
 - [x] Create indexes for performance
@@ -56,7 +56,7 @@ last_updated: 2026-09-12
 
 ```bash
 # 1. Open Supabase SQL Editor
-# 2. Copy contents of scripts/010-receipt-system.sql
+# 2. Copy contents of scripts/db/migrations/010-receipt-system.sql
 # 3. Paste into SQL Editor
 # 4. Click "Run"
 # 5. Verify success message

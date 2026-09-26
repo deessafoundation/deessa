@@ -1,5 +1,5 @@
-﻿---
-title: "Homepage Settings API - Role Case Sensitivity Fix âœ…"
+---
+title: "Homepage Settings API - Role Case Sensitivity Fix ✅"
 description: "The API was checking for lowercase role names, but the database stores UPPERCASE role names"
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Homepage Settings API - Role Case Sensitivity Fix âœ…
+# Homepage Settings API - Role Case Sensitivity Fix ✅
 
 ## The Real Issue Found!
 
@@ -17,7 +17,7 @@ The API was checking for **lowercase** role names, but the database stores **UPP
 
 ## Root Cause
 
-### Database Schema (`scripts/002-admin-schema.sql`)
+### Database Schema (`scripts/db/migrations/002-admin-schema.sql`)
 ```sql
 CREATE TABLE IF NOT EXISTS admin_users (
   ...
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
 
 ### API Route (BEFORE FIX)
 ```typescript
-// âŒ WRONG - lowercase
+// ❌ WRONG - lowercase
 if (!["super_admin", "admin", "editor"].includes(currentAdmin.role)) {
   return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 }
@@ -42,7 +42,7 @@ if (!["super_admin", "admin", "editor"].includes(currentAdmin.role)) {
 ```
 currentAdmin.role = "ADMIN"  // from database
 ["super_admin", "admin", "editor"].includes("ADMIN")  // false!
-â†’ Returns 403 Forbidden âŒ
+→ Returns 403 Forbidden ❌
 ```
 
 ---
@@ -52,7 +52,7 @@ currentAdmin.role = "ADMIN"  // from database
 ### File: `app/api/admin/homepage-settings/route.ts`
 
 ```typescript
-// âœ… CORRECT - UPPERCASE to match database
+// ✅ CORRECT - UPPERCASE to match database
 const allowedRoles = ["SUPER_ADMIN", "ADMIN", "EDITOR"]
 
 if (!allowedRoles.includes(currentAdmin.role)) {
@@ -69,20 +69,20 @@ if (!allowedRoles.includes(currentAdmin.role)) {
 
 ### 1. **Fixed Role Case Sensitivity**
 ```typescript
-// BEFORE âŒ
+// BEFORE ❌
 const allowedRoles = ["super_admin", "admin", "editor"]
 
-// AFTER âœ…
+// AFTER ✅
 const allowedRoles = ["SUPER_ADMIN", "ADMIN", "EDITOR"]
 ```
 
 ### 2. **Added Service Role Client** (from previous fix)
 ```typescript
-// BEFORE âŒ
+// BEFORE ❌
 import { createClient } from "@/lib/supabase/server"
 const supabase = await createClient()
 
-// AFTER âœ…
+// AFTER ✅
 import { createServiceRoleClient } from "@/lib/supabase/service"
 const supabase = createServiceRoleClient()
 ```
@@ -101,10 +101,10 @@ console.log('[Homepage Settings API] Checking role:', currentAdmin.role, 'agains
 
 ### 4. **Improved Error Messages**
 ```typescript
-// BEFORE âŒ
+// BEFORE ❌
 { error: "Forbidden - Admin access required" }
 
-// AFTER âœ…
+// AFTER ✅
 { error: `Forbidden - Admin access required. Your role: ${currentAdmin.role}` }
 ```
 
@@ -150,7 +150,7 @@ editor@example.com       | EDITOR      | true
    ```
 5. Should see success toast:
    ```
-   âœ… Saved successfully
+   ✅ Saved successfully
    Homepage settings have been updated.
    ```
 
@@ -166,47 +166,47 @@ grep -r "super_admin\|admin\|editor" app/api/admin/
 ```
 
 ### Files to Review:
-- âœ… `/api/admin/homepage-settings/route.ts` - **FIXED**
-- â“ `/api/admin/settings/support/route.ts` - May need fixing
-- â“ `/api/admin/donations/route.ts` - May need fixing
-- â“ `/api/admin/donations/export/route.ts` - May need fixing
-- â“ `/api/admin/conference/export/route.ts` - May need fixing
+- ✅ `/api/admin/homepage-settings/route.ts` - **FIXED**
+- ❓ `/api/admin/settings/support/route.ts` - May need fixing
+- ❓ `/api/admin/donations/route.ts` - May need fixing
+- ❓ `/api/admin/donations/export/route.ts` - May need fixing
+- ❓ `/api/admin/conference/export/route.ts` - May need fixing
 
 ---
 
 ## Database Role Values Reference
 
 ```typescript
-// âœ… CORRECT - Use these values
+// ✅ CORRECT - Use these values
 type AdminRole = 'SUPER_ADMIN' | 'ADMIN' | 'EDITOR' | 'FINANCE'
 
-// âŒ WRONG - Don't use these
+// ❌ WRONG - Don't use these
 type AdminRole = 'super_admin' | 'admin' | 'editor' | 'finance'
 ```
 
 ---
 
-## ðŸŽ‰ Result
+## 🎉 Result
 
 The Homepage Manager now works correctly!
 
 **Before:**
 ```
-âŒ Save failed
+❌ Save failed
 Forbidden - Admin access required
 ```
 
 **After:**
 ```
-ðŸ’¾ Saving...
-â†“
-âœ… Saved successfully
+💾 Saving...
+↓
+✅ Saved successfully
 Homepage settings have been updated.
 ```
 
 **Root cause**: Case sensitivity mismatch between database schema (UPPERCASE) and API check (lowercase)  
 **Solution**: Changed API to use UPPERCASE role names to match database  
-**Status**: âœ… FIXED
+**Status**: ✅ FIXED
 
 ---
 
@@ -222,10 +222,10 @@ Homepage settings have been updated.
 
 ## Recommended Next Steps
 
-1. âœ… Test the fix in development
-2. âœ… Verify all admin roles work (SUPER_ADMIN, ADMIN, EDITOR)
-3. ðŸ”„ Search for similar issues in other API routes
-4. ðŸ”„ Create a TypeScript type for AdminRole to prevent future issues
-5. ðŸ”„ Add unit tests for role checking logic
+1. ✅ Test the fix in development
+2. ✅ Verify all admin roles work (SUPER_ADMIN, ADMIN, EDITOR)
+3. 🔄 Search for similar issues in other API routes
+4. 🔄 Create a TypeScript type for AdminRole to prevent future issues
+5. 🔄 Add unit tests for role checking logic
 
-**The issue is now completely resolved!** ðŸš€
+**The issue is now completely resolved!** 🚀

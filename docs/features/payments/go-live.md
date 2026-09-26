@@ -1,5 +1,5 @@
-﻿---
-title: "deessa Foundation â€“ Payments Architecture & Go-Live Guide"
+---
+title: "deessa Foundation – Payments Architecture & Go-Live Guide"
 description: "This document explains how the donation payment system works Stripe + Khalti + eSewa, how to configure it per environ..."
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€“ Payments Architecture & Go-Live Guide
+# deessa Foundation – Payments Architecture & Go-Live Guide
 
 This document explains how the donation payment system works (Stripe + Khalti + eSewa), how to configure it per environment, and how to safely go live.
 
@@ -19,18 +19,18 @@ This document explains how the donation payment system works (Stripe + Khalti + 
   - `app/(public)/donate/page.tsx` renders `DonationForm`.
   - `components/donation-form.tsx`:
     - Lets donors pick **amount**, **frequency** (one-time / monthly), and **payment method** (Stripe / Khalti / eSewa).
-    - Submits to the **server action** `startDonation` and then redirects to the providerâ€™s secure page.
+    - Submits to the **server action** `startDonation` and then redirects to the provider’s secure page.
     - Never handles card numbers or secrets.
 
 - **Server (Next.js + Supabase)**
-  - `lib/actions/donation.ts` â†’ `startDonation`:
+  - `lib/actions/donation.ts` → `startDonation`:
     - Validates inputs.
-    - Reads highâ€‘level settings from `lib/payments/config.ts`.
+    - Reads high‑level settings from `lib/payments/config.ts`.
     - Creates a `donations` row with `payment_status = "pending"`.
     - Delegates to provider helpers to create sessions/transactions:
-      - `lib/payments/stripe.ts` â†’ Stripe Checkout session.
-      - `lib/payments/khalti.ts` â†’ Khalti epayment init.
-      - `lib/payments/esewa.ts` â†’ eSewa redirect URL.
+      - `lib/payments/stripe.ts` → Stripe Checkout session.
+      - `lib/payments/khalti.ts` → Khalti epayment init.
+      - `lib/payments/esewa.ts` → eSewa redirect URL.
     - Stores the provider reference in `donations.payment_id` as `provider:transactionId`.
     - Returns a **redirect URL** to the client.
 
@@ -41,9 +41,9 @@ This document explains how the donation payment system works (Stripe + Khalti + 
     - Success: `app/api/payments/esewa/success/route.ts`.
     - Failure: `app/api/payments/esewa/failure/route.ts`.
   - These handlers:
-    - Verify the providerâ€™s payload (signature, lookup, or `transrec`).
+    - Verify the provider’s payload (signature, lookup, or `transrec`).
     - Look up the matching `donations` row.
-    - Idempotently update `payment_status` from `pending` â†’ `completed` / `failed`.
+    - Idempotently update `payment_status` from `pending` → `completed` / `failed`.
     - **Only webhooks/verification are trusted** to finalize a donation.
 
 - **Admin**
@@ -51,13 +51,13 @@ This document explains how the donation payment system works (Stripe + Khalti + 
   - Payment config UI: `app/admin/settings/payments/page.tsx` with:
     - `components/admin/payment-settings-form.tsx`.
     - `lib/actions/admin-payments.ts`.
-  - Highâ€‘level (non-secret) settings are stored via `site_settings` with key `"payments"`.
+  - High‑level (non-secret) settings are stored via `site_settings` with key `"payments"`.
 
 ---
 
 ## 2. Database: `donations` Table
 
-Defined in `scripts/001-create-tables.sql` and extended by usage:
+Defined in `scripts/db/migrations/001-create-tables.sql` and extended by usage:
 
 - Core columns:
   - `id UUID PRIMARY KEY`
@@ -69,7 +69,7 @@ Defined in `scripts/001-create-tables.sql` and extended by usage:
   - `is_monthly BOOLEAN DEFAULT FALSE`
   - `payment_status TEXT DEFAULT 'pending'`
     - Values used by the app: `"pending" | "completed" | "failed"`.
-  - `payment_id TEXT` â€“ provider reference, in the form:
+  - `payment_id TEXT` – provider reference, in the form:
     - `"stripe:<checkout_session_id>"`
     - `"khalti:<pidx>"`
     - `"esewa:<refId>"`
@@ -96,7 +96,7 @@ Controlled via environment variable:
     - Requires proper live API keys and webhook secrets in env.
     - **Production safety**: the app refuses to start in production unless `PAYMENT_MODE="live"` (guardrail in `lib/payments/config.ts`).
 
-Implementation: `lib/payments/config.ts` â†’ `getPaymentMode()`.
+Implementation: `lib/payments/config.ts` → `getPaymentMode()`.
 
 ### 3.2 High-Level Payment Settings
 
@@ -116,8 +116,8 @@ Storage:
 Loading / filtering:
 
 - `lib/payments/config.ts`:
-  - `getPaymentSettings()` â€“ loads and merges DB settings with defaults.
-  - `isProviderEnvConfigured(provider)` â€“ checks secrets in env (for live mode).
+  - `getPaymentSettings()` – loads and merges DB settings with defaults.
+  - `isProviderEnvConfigured(provider)` – checks secrets in env (for live mode).
   - `getSupportedProviders(settings)`:
     - In `mock` mode: returns all `enabledProviders`.
     - In `live` mode: returns only providers that are both enabled **and** have env keys set.
@@ -129,7 +129,7 @@ Admin UI:
   - Choose primary provider.
   - Change default Stripe currency.
   - Toggle allowing recurring (monthly) donations.
-  - Shows whether each providerâ€™s env keys are configured and whether itâ€™s effectively visible to donors.
+  - Shows whether each provider’s env keys are configured and whether it’s effectively visible to donors.
 
 ---
 
@@ -263,9 +263,9 @@ eSewa callback paths:
    - Returns `session.url` and `session.id`.
 2. `DonationForm` redirects the browser to `session.url`.
 3. Stripe calls `POST /api/webhooks/stripe` on:
-   - `checkout.session.completed` â†’ mark donation `payment_status = "completed"` if still `pending`.
-   - `checkout.session.expired` or `payment_intent.payment_failed` â†’ mark `failed` if still `pending`.
-4. Admins see final status in `Admin â†’ Donations`.
+   - `checkout.session.completed` → mark donation `payment_status = "completed"` if still `pending`.
+   - `checkout.session.expired` or `payment_intent.payment_failed` → mark `failed` if still `pending`.
+4. Admins see final status in `Admin → Donations`.
 
 Security:
 
@@ -301,10 +301,10 @@ Security:
    - Calls `POST {KHALTI_BASE_URL}/epayment/lookup/` with `Authorization: Key <KHALTI_SECRET_KEY>`.
    - Verifies amount matches donation amount (with tolerance).
    - Handles all status codes:
-     - `Completed` â†’ `payment_status = "completed"` (provide service).
-     - `Pending` / `Initiated` â†’ Keep as `pending` (hold, contact Khalti if needed).
-     - `Refunded` / `Partially Refunded` â†’ `payment_status = "failed"` (do not provide service).
-     - `Expired` / `User canceled` â†’ `payment_status = "failed"` (do not provide service).
+     - `Completed` → `payment_status = "completed"` (provide service).
+     - `Pending` / `Initiated` → Keep as `pending` (hold, contact Khalti if needed).
+     - `Refunded` / `Partially Refunded` → `payment_status = "failed"` (do not provide service).
+     - `Expired` / `User canceled` → `payment_status = "failed"` (do not provide service).
    - Updates donation status and redirects user.
 
 Security:
@@ -333,8 +333,8 @@ Security:
 2. `DonationForm` redirects donor to eSewa's payment page.
 3. User completes payment on eSewa's page.
 4. eSewa redirects back to callback URLs:
-   - `ESEWA_SUCCESS_URL` on success â†’ `GET /api/payments/esewa/success?refId=...&pid=...&amt=...`
-   - `ESEWA_FAILURE_URL` on failure â†’ `GET /api/payments/esewa/failure?pid=...`
+   - `ESEWA_SUCCESS_URL` on success → `GET /api/payments/esewa/success?refId=...&pid=...&amt=...`
+   - `ESEWA_FAILURE_URL` on failure → `GET /api/payments/esewa/failure?pid=...`
 5. Success handler (`app/api/payments/esewa/success/route.ts`):
    - Validates all required parameters (`refId`, `pid`, `amt`).
    - Validates UUID format of donation ID.
@@ -374,12 +374,12 @@ Security:
 - Access: roles allowed by `canViewFinance` (e.g. `SUPER_ADMIN`, `ADMIN`, `FINANCE`).
 - Features:
   - Summary cards:
-    - **Total Donations** â€“ sum of amounts where `payment_status = "completed"`.
-    - **Total Donors** â€“ count of completed donations.
-    - **Monthly Donors** â€“ count of completed donations with `is_monthly = true`.
+    - **Total Donations** – sum of amounts where `payment_status = "completed"`.
+    - **Total Donors** – count of completed donations.
+    - **Monthly Donors** – count of completed donations with `is_monthly = true`.
   - Table:
     - Donor name + email.
-    - Amount (currently rendered as â‚¹; can be extended to show actual `currency`).
+    - Amount (currently rendered as ₹; can be extended to show actual `currency`).
     - Type (Monthly vs One-time).
     - Status (`completed`, `pending`, `failed`).
     - Date.
@@ -400,7 +400,7 @@ Security:
 
 ## 7. Go-Live Checklist
 
-### Step 1 â€“ Local / Dev (Mock Mode)
+### Step 1 – Local / Dev (Mock Mode)
 
 1. Create `.env.local` with at minimum:
    - `PAYMENT_MODE="mock"`
@@ -413,7 +413,7 @@ Security:
 3. In `/admin/settings/payments`:
    - Toggle providers and confirm the donation form responds (providers appear/disappear).
 
-### Step 2 â€“ Staging (Live Mode with Test/Sandbox Keys)
+### Step 2 – Staging (Live Mode with Test/Sandbox Keys)
 
 1. Set environment variables on staging:
    - `PAYMENT_MODE="live"`.
@@ -422,16 +422,16 @@ Security:
    - eSewa test merchant ID + base URL + success/failure URLs.
 2. In each provider dashboard:
    - Configure webhooks/callback URLs to hit your staging domain:
-     - Stripe â†’ `https://staging.deessa.org/api/webhooks/stripe`.
-     - Khalti â†’ your front-end return URL that triggers `khalti/verify`.
-     - eSewa â†’ `https://staging.deessa.org/api/payments/esewa/success` and `/failure`.
+     - Stripe → `https://staging.deessa.org/api/webhooks/stripe`.
+     - Khalti → your front-end return URL that triggers `khalti/verify`.
+     - eSewa → `https://staging.deessa.org/api/payments/esewa/success` and `/failure`.
 3. Test flows with small amounts:
    - Stripe test cards.
    - Khalti and eSewa sandbox flows.
 4. Verify in `/admin/donations`:
-   - `payment_status` transitions from `pending` â†’ `completed` or `failed` as expected.
+   - `payment_status` transitions from `pending` → `completed` or `failed` as expected.
 
-### Step 3 â€“ Production
+### Step 3 – Production
 
 1. Repeat Step 2 using **live** credentials and production domain.
 2. Double-check:

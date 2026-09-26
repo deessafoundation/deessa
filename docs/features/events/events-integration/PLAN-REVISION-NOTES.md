@@ -1,5 +1,5 @@
-﻿---
-title: "PLAN.md Revision Notes â€” Post-Review Update"
+---
+title: "PLAN.md Revision Notes — Post-Review Update"
 description: "Based on code review feedback, the plan has been updated to reflect that migration 056 already implemented critical s..."
 owner: "Deesha Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: operator
 last_updated: 2026-09-12
 ---
-# PLAN.md Revision Notes â€” Post-Review Update
+# PLAN.md Revision Notes — Post-Review Update
 
 ## Date: 2025-01-27
 ## Status: Ready for Implementation
@@ -22,7 +22,7 @@ Based on code review feedback, the plan has been updated to reflect that **migra
 
 ## What Changed
 
-### âœ… REMOVED: Unnecessary Schema Fix #1
+### ✅ REMOVED: Unnecessary Schema Fix #1
 
 **Originally Proposed:**
 ```sql
@@ -32,12 +32,12 @@ ALTER TABLE event_registrations ADD CONSTRAINT event_registrations_payment_statu
 ```
 
 **Actual Status:**
-- âœ… **ALREADY DONE** in migration 056 (lines 62-67)
+- ✅ **ALREADY DONE** in migration 056 (lines 62-67)
 - No action needed
 
 ---
 
-### âœ… CONFIRMED: Schema Work Actually Required
+### ✅ CONFIRMED: Schema Work Actually Required
 
 Only **ONE** migration is needed:
 
@@ -50,9 +50,9 @@ Only **ONE** migration is needed:
 - Adds index for event registration lookups
 
 **What's NOT needed:**
-- âŒ Modifying `event_registrations` CHECK constraint (already has 'review')
-- âŒ Adding columns to `payment_events` (already has `event_registration_id`)
-- âŒ Adding provider-specific columns to `event_registrations` (already has `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid`)
+- ❌ Modifying `event_registrations` CHECK constraint (already has 'review')
+- ❌ Adding columns to `payment_events` (already has `event_registration_id`)
+- ❌ Adding provider-specific columns to `event_registrations` (already has `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid`)
 
 ---
 
@@ -65,8 +65,8 @@ Only **ONE** migration is needed:
 - Schema Fix #2: Extend payments table
 
 **After:**
-- âœ… Migration 056 verification checklist
-- âš ï¸ NEW migration: Extend payments table (only required work)
+- ✅ Migration 056 verification checklist
+- ⚠️ NEW migration: Extend payments table (only required work)
 
 ### Section 4.0: Files to Modify
 
@@ -77,7 +77,7 @@ Only **ONE** migration is needed:
 - One migration file (XXX-extend-payments-for-registrations.sql)
 - Added verification queries to test CHECK constraint
 
-### Section 6: Migration Strategy â€” Phase 0
+### Section 6: Migration Strategy — Phase 0
 
 **Before:**
 ```
@@ -108,12 +108,12 @@ Phase 0: Schema Fix
 
 **Before:**
 ```
-| `review` status DB error | High (without fix) | Critical | Fix CHECK constraint in Phase 0 | âœ… Fixed |
+| `review` status DB error | High (without fix) | Critical | Fix CHECK constraint in Phase 0 | ✅ Fixed |
 ```
 
 **After:**
 ```
-| `review` status DB error | N/A | N/A | âœ… ALREADY FIXED in migration 056 | âœ… Complete |
+| `review` status DB error | N/A | N/A | ✅ ALREADY FIXED in migration 056 | ✅ Complete |
 ```
 
 ### Appendix B: Migration Scripts
@@ -133,32 +133,32 @@ Phase 0: Schema Fix
 ## Key Takeaways
 
 ### What Migration 056 Already Did (2024)
-1. âœ… Added `'review'` to `event_registrations.payment_status` CHECK constraint
-2. âœ… Added `event_registration_id` to `payment_events` table
-3. âœ… Added provider-specific columns to `event_registrations`:
+1. ✅ Added `'review'` to `event_registrations.payment_status` CHECK constraint
+2. ✅ Added `event_registration_id` to `payment_events` table
+3. ✅ Added provider-specific columns to `event_registrations`:
    - `stripe_session_id`
    - `khalti_pidx`
    - `esewa_transaction_uuid`
-4. âœ… Added unique constraints on provider-specific columns
-5. âœ… Added performance indexes for webhook lookups
+4. ✅ Added unique constraints on provider-specific columns
+5. ✅ Added performance indexes for webhook lookups
 
 ### What Still Needs to Be Done (2025)
-1. âš ï¸ Add `event_registration_id` to `payments` table
-2. âš ï¸ Add `entity_type` discriminator to `payments` table
-3. âš ï¸ Add CHECK constraint for polymorphic FK integrity
-4. âš ï¸ Add index for event registration payment lookups
+1. ⚠️ Add `event_registration_id` to `payments` table
+2. ⚠️ Add `entity_type` discriminator to `payments` table
+3. ⚠️ Add CHECK constraint for polymorphic FK integrity
+4. ⚠️ Add index for event registration payment lookups
 
 ---
 
 ## Migration 056 Reference
 
-**File:** `scripts/056-event-payment-integration.sql`
+**File:** `scripts/db/migrations/056-event-payment-integration.sql`
 
 **Key Sections:**
 - Lines 13-16: Add provider-specific columns
 - Lines 29-55: Add unique constraints
-- Lines 62-67: Add 'review' to CHECK constraint âœ…
-- Lines 72-76: Add event_registration_id to payment_events âœ…
+- Lines 62-67: Add 'review' to CHECK constraint ✅
+- Lines 72-76: Add event_registration_id to payment_events ✅
 - Lines 83-103: Add performance indexes
 
 **Conclusion:** Migration 056 was comprehensive and handled most of the event payment integration groundwork. Only the `payments` table extension remains.
@@ -167,9 +167,9 @@ Phase 0: Schema Fix
 
 ## Next Steps
 
-1. âœ… Verify migration 056 is deployed in all environments
-2. âš ï¸ Create and run new migration: `scripts/XXX-extend-payments-for-registrations.sql`
-3. âœ… Proceed with PaymentService implementation (all prerequisites met)
+1. ✅ Verify migration 056 is deployed in all environments
+2. ⚠️ Create and run new migration: `scripts/XXX-extend-payments-for-registrations.sql`
+3. ✅ Proceed with PaymentService implementation (all prerequisites met)
 
 ---
 
@@ -194,16 +194,16 @@ Phase 0: Schema Fix
 ## Questions Resolved
 
 1. **Q:** Is 'review' in the CHECK constraint?
-   **A:** âœ… Yes, added by migration 056 (lines 62-67)
+   **A:** ✅ Yes, added by migration 056 (lines 62-67)
 
 2. **Q:** Does payment_events have event_registration_id?
-   **A:** âœ… Yes, added by migration 056 (lines 72-76)
+   **A:** ✅ Yes, added by migration 056 (lines 72-76)
 
 3. **Q:** Do we need to add provider-specific columns?
-   **A:** âœ… No, already added by migration 056 (lines 13-16)
+   **A:** ✅ No, already added by migration 056 (lines 13-16)
 
 4. **Q:** What schema work is actually needed?
-   **A:** âš ï¸ Only the `payments` table extension with polymorphic FK integrity
+   **A:** ⚠️ Only the `payments` table extension with polymorphic FK integrity
 
 ---
 

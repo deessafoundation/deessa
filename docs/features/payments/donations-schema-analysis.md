@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Schema Analysis & Final Professional Solution"
 description: "sql"
 owner: "Deesha Team"
@@ -27,7 +27,7 @@ CREATE TABLE donations (
   
   -- Payment tracking
   payment_status TEXT DEFAULT 'pending',
-  payment_id TEXT,  -- â† Currently stores "provider:session_id" format
+  payment_id TEXT,  -- ← Currently stores "provider:session_id" format
   confirmed_at TIMESTAMPTZ,  -- Added in payments-v2/028
   
   -- Receipt system (added in 011)
@@ -52,7 +52,7 @@ CREATE TABLE payments (
   id UUID PRIMARY KEY,
   donation_id UUID REFERENCES donations(id),
   provider TEXT NOT NULL,  -- 'stripe', 'khalti', 'esewa'
-  transaction_id TEXT NOT NULL,  -- â† Currently stores session_id or subscription_id
+  transaction_id TEXT NOT NULL,  -- ← Currently stores session_id or subscription_id
   amount DECIMAL(10, 2),
   currency TEXT,
   verified_amount DECIMAL(10, 2),
@@ -162,7 +162,7 @@ CREATE INDEX idx_donations_provider ON donations(provider);
 ```sql
 -- ============================================================================
 -- Migration: Enhance Payments Table with Comprehensive Stripe References
--- File: scripts/031-enhance-payments-stripe-references.sql
+-- File: scripts/db/migrations/031-enhance-payments-stripe-references.sql
 -- ============================================================================
 
 -- Add new columns for all Stripe identifiers
@@ -245,7 +245,7 @@ COMMENT ON COLUMN payments.invoice_id IS
 ```sql
 -- ============================================================================
 -- Migration: Add Provider Column to Donations Table
--- File: scripts/032-add-provider-to-donations.sql
+-- File: scripts/db/migrations/032-add-provider-to-donations.sql
 -- ============================================================================
 
 -- Add provider column for convenience queries
@@ -299,10 +299,10 @@ END $$;
 ### Current Flow (Simplified)
 
 ```
-Webhook â†’ StripeAdapter â†’ PaymentService â†’ Database
-                                              â†“
-                                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                                    â†“                   â†“
+Webhook → StripeAdapter → PaymentService → Database
+                                              ↓
+                                    ┌─────────┴─────────┐
+                                    ↓                   ↓
                               donations            payments
                           (business entity)    (technical entity)
 ```
@@ -310,18 +310,18 @@ Webhook â†’ StripeAdapter â†’ PaymentService â†’ Database
 ### Enhanced Flow
 
 ```
-Webhook â†’ StripeAdapter â†’ PaymentService â†’ Database
-          (extracts all IDs)                  â†“
-                                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                                    â†“                   â†“
+Webhook → StripeAdapter → PaymentService → Database
+          (extracts all IDs)                  ↓
+                                    ┌─────────┴─────────┐
+                                    ↓                   ↓
                               donations            payments
-                          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                          â”‚ provider    â”‚      â”‚ payment_intent_idâ”‚
-                          â”‚ payment_id  â”‚      â”‚ session_id       â”‚
-                          â”‚ (legacy)    â”‚      â”‚ subscription_id  â”‚
-                          â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â”‚ customer_id      â”‚
-                                               â”‚ invoice_id       â”‚
-                                               â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                          ┌─────────────┐      ┌──────────────────┐
+                          │ provider    │      │ payment_intent_id│
+                          │ payment_id  │      │ session_id       │
+                          │ (legacy)    │      │ subscription_id  │
+                          └─────────────┘      │ customer_id      │
+                                               │ invoice_id       │
+                                               └──────────────────┘
 ```
 
 ---
@@ -389,30 +389,30 @@ const refund = await stripe.refunds.create({
 ## Benefits of This Architecture
 
 ### 1. Separation of Concerns
-- âœ… Donations table: Business logic, donor info, receipts
-- âœ… Payments table: Technical details, provider-specific IDs
-- âœ… Clear responsibility boundaries
+- ✅ Donations table: Business logic, donor info, receipts
+- ✅ Payments table: Technical details, provider-specific IDs
+- ✅ Clear responsibility boundaries
 
 ### 2. Performance
-- âœ… Donations queries remain fast (no extra columns)
-- âœ… Indexed lookups on all payment identifiers
-- âœ… Optional joins only when needed
+- ✅ Donations queries remain fast (no extra columns)
+- ✅ Indexed lookups on all payment identifiers
+- ✅ Optional joins only when needed
 
 ### 3. Flexibility
-- âœ… Supports multiple payment attempts per donation
-- âœ… Easy to add new providers
-- âœ… Can store provider-specific data without affecting donations
+- ✅ Supports multiple payment attempts per donation
+- ✅ Easy to add new providers
+- ✅ Can store provider-specific data without affecting donations
 
 ### 4. Backward Compatibility
-- âœ… Existing queries continue to work
-- âœ… `donations.payment_id` remains for legacy code
-- âœ… No breaking changes
+- ✅ Existing queries continue to work
+- ✅ `donations.payment_id` remains for legacy code
+- ✅ No breaking changes
 
 ### 5. Future-Proof
-- âœ… Ready for refund operations
-- âœ… Ready for dispute management
-- âœ… Ready for customer portal
-- âœ… Ready for subscription management
+- ✅ Ready for refund operations
+- ✅ Ready for dispute management
+- ✅ Ready for customer portal
+- ✅ Ready for subscription management
 
 ---
 
@@ -452,10 +452,10 @@ const refund = await stripe.refunds.create({
 ## Conclusion
 
 **Recommended Approach:**
-1. âœ… Enhance `payments` table with all Stripe identifiers
-2. âœ… Add `provider` column to `donations` table for convenience
-3. âœ… Keep `donations.payment_id` for backward compatibility
-4. âœ… Maintain clean separation of concerns
+1. ✅ Enhance `payments` table with all Stripe identifiers
+2. ✅ Add `provider` column to `donations` table for convenience
+3. ✅ Keep `donations.payment_id` for backward compatibility
+4. ✅ Maintain clean separation of concerns
 
 **Why This is Better:**
 - No redundancy issues (each field serves a purpose)

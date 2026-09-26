@@ -1,5 +1,5 @@
-﻿---
-title: "V2 PaymentService Events Integration â€” Documentation Hub"
+---
+title: "V2 PaymentService Events Integration — Documentation Hub"
 description: "| Document | Purpose | Audience |"
 owner: "Deesha Team"
 status: active
@@ -7,9 +7,9 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# V2 PaymentService Events Integration â€” Documentation Hub
+# V2 PaymentService Events Integration — Documentation Hub
 
-## ðŸ“‹ Quick Links
+## 📋 Quick Links
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
@@ -20,67 +20,67 @@ last_updated: 2026-09-12
 
 ---
 
-## ðŸŽ¯ Project Overview
+## 🎯 Project Overview
 
 ### Goal
 Wire event registrations through the V2 `PaymentService` to get the same security guarantees as donations:
-- âœ… 3-layer idempotency (SELECT, short-circuit, CAS)
-- âœ… CAS-based race condition prevention
-- âœ… Formal state machine validation
-- âœ… Structured error handling
-- âœ… Centralized logging and monitoring
+- ✅ 3-layer idempotency (SELECT, short-circuit, CAS)
+- ✅ CAS-based race condition prevention
+- ✅ Formal state machine validation
+- ✅ Structured error handling
+- ✅ Centralized logging and monitoring
 
 ### Scope
-- âœ… **IN SCOPE:** Event registrations (Stripe, eSewa, Khalti)
-- âŒ **OUT OF SCOPE:** Donations (already using V2), Conferences (will be deprecated)
+- ✅ **IN SCOPE:** Event registrations (Stripe, eSewa, Khalti)
+- ❌ **OUT OF SCOPE:** Donations (already using V2), Conferences (will be deprecated)
 
 ### Status
-ðŸŸ¡ **Ready for Implementation** â€” Schema prerequisite identified, plan finalized
+🟡 **Ready for Implementation** — Schema prerequisite identified, plan finalized
 
 ---
 
-## ðŸ“Š Current State
+## 📊 Current State
 
 ### What Works Today (V1)
-- âœ… Donations use V2 PaymentService (secure, centralized)
-- âš ï¸ Event registrations use V1 inline logic (duplicated across 6+ handlers)
-- âš ï¸ Conferences use V1 inline logic (out of scope, will be removed)
+- ✅ Donations use V2 PaymentService (secure, centralized)
+- ⚠️ Event registrations use V1 inline logic (duplicated across 6+ handlers)
+- ⚠️ Conferences use V1 inline logic (out of scope, will be removed)
 
 ### What's Broken (V1)
-- âŒ No CAS lock â†’ race conditions possible
-- âŒ No formal state machine â†’ invalid transitions possible
-- âŒ Duplicated code â†’ inconsistent behavior
-- âŒ Inconsistent amount verification â†’ bugs and security issues
+- ❌ No CAS lock → race conditions possible
+- ❌ No formal state machine → invalid transitions possible
+- ❌ Duplicated code → inconsistent behavior
+- ❌ Inconsistent amount verification → bugs and security issues
 
 ---
 
-## ðŸ› ï¸ Implementation Plan
+## 🛠️ Implementation Plan
 
 ### Timeline: 6-7 Days
 
 ```
-Phase 0: Schema Migration       [0.5 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 1: PaymentService Code    [1.5 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 2: Admin Action Fix       [0.5 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 3: Stripe Webhook         [1.5 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 4: eSewa Handler          [1.0 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 5: Khalti Handler         [1.0 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
-                                           â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+Phase 0: Schema Migration       [0.5 days] ━━━━━━━━━━━━━━━━━━━━
+Phase 1: PaymentService Code    [1.5 days] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase 2: Admin Action Fix       [0.5 days] ━━━━━━━━━━━━━━━━━━━━
+Phase 3: Stripe Webhook         [1.5 days] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase 4: eSewa Handler          [1.0 days] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase 5: Khalti Handler         [1.0 days] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase 6: Cleanup (optional)     [0.5 days] ━━━━━━━━━━━━━━━━━━━━
+                                           └─────────────────────┘
                                             Total: 6-7 days
 ```
 
 ### Key Milestones
 
-1. **âœ… Schema Ready** â€” Migration 057 designed and reviewed
-2. **ðŸŸ¡ Code Complete** â€” All PaymentService changes implemented
-3. **ðŸŸ¡ Dark Launch** â€” Stripe webhook using V2 (feature flag)
-4. **ðŸŸ¡ Full Rollout** â€” All providers using V2
-5. **ðŸŸ¡ Monitoring** â€” 7 days of production validation
+1. **✅ Schema Ready** — Migration 057 designed and reviewed
+2. **🟡 Code Complete** — All PaymentService changes implemented
+3. **🟡 Dark Launch** — Stripe webhook using V2 (feature flag)
+4. **🟡 Full Rollout** — All providers using V2
+5. **🟡 Monitoring** — 7 days of production validation
 
 ---
 
-## ðŸš€ Getting Started
+## 🚀 Getting Started
 
 ### For Developers
 
@@ -91,7 +91,7 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 2. **Understand the architecture:**
    - V2 PaymentService: `lib/payments/core/PaymentService.ts`
    - Current event handlers: `app/api/webhooks/stripe/route.ts` (line 384-583)
-   - Migration 056: `scripts/056-event-payment-integration.sql` (already applied)
+   - Migration 056: `scripts/db/migrations/056-event-payment-integration.sql` (already applied)
 
 3. **Start implementing:**
    - Use [IMPLEMENTATION-CHECKLIST.md](./IMPLEMENTATION-CHECKLIST.md) to track progress
@@ -102,7 +102,7 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 1. **Review migration:**
    - Read [MIGRATION-CHECKLIST.md](./MIGRATION-CHECKLIST.md)
-   - Review migration file: `scripts/057-extend-payments-for-registrations.sql`
+   - Review migration file: `scripts/db/migrations/057b-extend-payments-for-registrations.sql`
 
 2. **Run pre-flight checks:**
    - Verify migration 056 ran successfully
@@ -134,15 +134,15 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 ---
 
-## ðŸ” Key Decisions Made
+## 🔍 Key Decisions Made
 
 ### Schema Design
 - **Decision:** Add `event_registration_id` to `payments` table (polymorphic FK)
 - **Rationale:** Enables tracking event payments in V2 payments table
-- **Alternative Considered:** Rename `donation_id` â†’ `entity_id` (breaking change, rejected)
+- **Alternative Considered:** Rename `donation_id` → `entity_id` (breaking change, rejected)
 
 ### State Machine
-- **Decision:** Events use `unpaid â†’ paid/review/failed` (different from donations)
+- **Decision:** Events use `unpaid → paid/review/failed` (different from donations)
 - **Rationale:** Events already use these status values, changing would break existing code
 - **Note:** `'review'` status already in CHECK constraint (migration 056)
 
@@ -163,13 +163,13 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 ---
 
-## ðŸ“š Technical Details
+## 📚 Technical Details
 
 ### Files Modified
 
 | File | Lines Changed | Risk | Phase |
 |------|---------------|------|-------|
-| `scripts/057-extend-payments-for-registrations.sql` | +150 | Low | 0 |
+| `scripts/db/migrations/057b-extend-payments-for-registrations.sql` | +150 | Low | 0 |
 | `lib/payments/core/types.ts` | +30 | Low | 1 |
 | `lib/payments/core/PaymentService.ts` | +200 | Medium | 1 |
 | `lib/actions/events-module/event-registration.ts` | +5 | Low | 2 |
@@ -178,15 +178,15 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 | `app/api/payments/khalti/verify/route.ts` | +80 | Medium | 5 |
 
 **Total:** ~600 lines added, ~515 lines removed = **+85 net lines**  
-**Code Reduction:** 75% (duplicated V1 logic â†’ centralized V2)
+**Code Reduction:** 75% (duplicated V1 logic → centralized V2)
 
 ### Tables Modified
 
 | Table | Change | Migration |
 |-------|--------|-----------|
-| `event_registrations` | âœ… Already has `'review'` in CHECK | 056 (done) |
-| `payment_events` | âœ… Already has `event_registration_id` | 056 (done) |
-| `payments` | âš ï¸ Add `event_registration_id` + `entity_type` | 057 (pending) |
+| `event_registrations` | ✅ Already has `'review'` in CHECK | 056 (done) |
+| `payment_events` | ✅ Already has `event_registration_id` | 056 (done) |
+| `payments` | ⚠️ Add `event_registration_id` + `entity_type` | 057 (pending) |
 
 ### Endpoints Affected
 
@@ -199,7 +199,7 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 ---
 
-## âš ï¸ Risks & Mitigations
+## ⚠️ Risks & Mitigations
 
 ### Top Risks
 
@@ -217,16 +217,16 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 ### Success Criteria
 
-- âœ… Zero regressions in donation flow
-- âœ… Zero regressions in conference flow
-- âœ… Event payments confirmed via V2
-- âœ… sold_count 100% accurate
-- âœ… Webhook success rate >99%
-- âœ… Email delivery >95%
+- ✅ Zero regressions in donation flow
+- ✅ Zero regressions in conference flow
+- ✅ Event payments confirmed via V2
+- ✅ sold_count 100% accurate
+- ✅ Webhook success rate >99%
+- ✅ Email delivery >95%
 
 ---
 
-## ðŸ“ž Support & Questions
+## 📞 Support & Questions
 
 ### During Implementation
 
@@ -247,28 +247,28 @@ Phase 6: Cleanup (optional)     [0.5 days] â”â”â”â”â”â
 
 ---
 
-## ðŸŽ‰ Success State
+## 🎉 Success State
 
 After successful implementation:
 
 ### What Works
-- âœ… Event registrations use V2 PaymentService (secure, centralized)
-- âœ… Donations continue using V2 PaymentService (no changes)
-- âœ… 3-layer idempotency prevents duplicate payments
-- âœ… CAS lock prevents race conditions
-- âœ… State machine enforces valid transitions
-- âœ… sold_count is always accurate
-- âœ… All errors are logged and monitored
+- ✅ Event registrations use V2 PaymentService (secure, centralized)
+- ✅ Donations continue using V2 PaymentService (no changes)
+- ✅ 3-layer idempotency prevents duplicate payments
+- ✅ CAS lock prevents race conditions
+- ✅ State machine enforces valid transitions
+- ✅ sold_count is always accurate
+- ✅ All errors are logged and monitored
 
 ### What's Next
-- ðŸ”œ Conference registrations V2 migration (future work)
-- ðŸ”œ Job queue for receipts and emails (Phase 4+)
-- ðŸ”œ Admin dashboard for payment review status
-- ðŸ”œ sold_count audit UI
+- 🔜 Conference registrations V2 migration (future work)
+- 🔜 Job queue for receipts and emails (Phase 4+)
+- 🔜 Admin dashboard for payment review status
+- 🔜 sold_count audit UI
 
 ---
 
-## ðŸ“ Document History
+## 📝 Document History
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
@@ -278,6 +278,6 @@ After successful implementation:
 
 ---
 
-**Current Status:** ðŸŸ¡ **Ready for Implementation**  
+**Current Status:** 🟡 **Ready for Implementation**  
 **Next Action:** Run migration 057, then start Phase 1  
 **Estimated Completion:** 6-7 days from start

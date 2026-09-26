@@ -1,6 +1,6 @@
-﻿---
+---
 title: "Guest Card Enhancement & Related Episodes Implementation"
-description: "Created: scripts/015-addguestrolesandenhancesocial.sql"
+description: "Created: scripts/db/migrations/015-addguestrolesandenhancesocial.sql"
 owner: "Deesha Team"
 status: active
 category: feature
@@ -9,10 +9,10 @@ last_updated: 2026-09-12
 ---
 # Guest Card Enhancement & Related Episodes Implementation
 
-## âœ… Implementation Complete
+## ✅ Implementation Complete
 
 ### **1. Database Changes**
-Created: `scripts/015-add_guest_roles_and_enhance_social.sql`
+Created: `scripts/db/migrations/015-add-guest-roles-and-enhance-social.sql`
 - Added `guest_roles TEXT[]` field (max 3 roles constraint)
 - Enhanced social links to support 5 platforms
 - Added GIN index for searchability
@@ -53,11 +53,11 @@ Updated: `components/admin/podcast-form.tsx`
 Updated: `app/(public)/podcasts/[slug]/page.tsx`
 
 **Guest Card Improvements:**
-- âœ… Name: Increased from `text-lg` to `text-2xl font-extrabold`
-- âœ… Roles: Display up to 3 roles in brand-colored badges (`text-xs`, half the name size)
-- âœ… Bio: Limited to 35 words with "..." if longer
-- âœ… Social Icons: All 5 platforms (LinkedIn, X, Facebook, Instagram, Email)
-- âœ… Icons: Larger (w-9 h-9) with hover effects
+- ✅ Name: Increased from `text-lg` to `text-2xl font-extrabold`
+- ✅ Roles: Display up to 3 roles in brand-colored badges (`text-xs`, half the name size)
+- ✅ Bio: Limited to 35 words with "..." if longer
+- ✅ Social Icons: All 5 platforms (LinkedIn, X, Facebook, Instagram, Email)
+- ✅ Icons: Larger (w-9 h-9) with hover effects
 
 **Layout Reordering:**
 1. Guest Card (with enhanced design)
@@ -69,12 +69,12 @@ Updated: `app/(public)/podcasts/[slug]/page.tsx`
 - `addGuestRole()` - Validates and adds roles (max 3, no duplicates)
 - `removeGuestRole(index)` - Removes role by index
 
-## ðŸ“‹ Migration Steps
+## 📋 Migration Steps
 
 ### Step 1: Run Database Migration
 ```sql
 -- In Supabase SQL Editor:
--- File: scripts/015-add_guest_roles_and_enhance_social.sql
+-- File: scripts/db/migrations/015-add-guest-roles-and-enhance-social.sql
 
 ALTER TABLE public.podcasts 
 ADD COLUMN IF NOT EXISTS guest_roles TEXT[] DEFAULT '{}';
@@ -110,7 +110,7 @@ pnpm dev
    - All 5 social icons appear if links provided
    - Related episodes show between guest and share cards (max 3)
 
-## ðŸŽ¨ Design Specifications
+## 🎨 Design Specifications
 
 ### Guest Card
 - **Name**: `text-2xl font-extrabold` (gray-900)
@@ -126,7 +126,7 @@ pnpm dev
 - **Hover**: Scale 105% on image
 - **Episode Number**: Brand-primary color
 
-## ðŸ“ Usage Guide
+## 📝 Usage Guide
 
 ### Adding Guest Information
 1. **Name**: Full name of the guest
@@ -141,36 +141,36 @@ pnpm dev
 - System automatically displays them below guest card
 - Shows episode number, title, and duration
 
-## ðŸ”„ Backward Compatibility
+## 🔄 Backward Compatibility
 
-âœ… **Existing podcasts without new fields:**
+✅ **Existing podcasts without new fields:**
 - guest_roles: Empty array []
 - Bio still displays fully if <= 35 words
 - Old social links (LinkedIn, Twitter) still work
 - Related episodes function as before
 
-âœ… **No breaking changes**
+✅ **No breaking changes**
 - All existing data remains intact
 - New fields are optional
 - Graceful fallbacks for missing data
 
-## ðŸš€ Features Summary
+## 🚀 Features Summary
 
-âœ… Guest roles management (max 3)
-âœ… Enhanced social media support (5 platforms)
-âœ… Bio word counter with recommendations
-âœ… Larger, more prominent guest name
-âœ… Professional role badges
-âœ… Limited bio display (35 words)
-âœ… All social media icons
-âœ… Related episodes properly positioned
-âœ… Responsive design
-âœ… Brand color integration
-âœ… Hover effects and transitions
+✅ Guest roles management (max 3)
+✅ Enhanced social media support (5 platforms)
+✅ Bio word counter with recommendations
+✅ Larger, more prominent guest name
+✅ Professional role badges
+✅ Limited bio display (35 words)
+✅ All social media icons
+✅ Related episodes properly positioned
+✅ Responsive design
+✅ Brand color integration
+✅ Hover effects and transitions
 
-## ðŸ“¦ Files Modified
+## 📦 Files Modified
 
-1. `scripts/015-add_guest_roles_and_enhance_social.sql` (NEW)
+1. `scripts/db/migrations/015-add-guest-roles-and-enhance-social.sql` (NEW)
 2. `lib/types/podcast.ts`
 3. `components/admin/podcast-form.tsx`
 4. `app/(public)/podcasts/[slug]/page.tsx`

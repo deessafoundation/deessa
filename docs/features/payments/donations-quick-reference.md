@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Stripe Payment Intent Enhancement - Quick Reference"
 description: "- New optional message field on donation form"
 owner: "Deesha Team"
@@ -27,12 +27,12 @@ last_updated: 2026-09-12
 ### Run Migrations
 ```bash
 # Production
-psql -d production_db -f scripts/031-enhance-payments-stripe-references.sql
-psql -d production_db -f scripts/032-add-provider-and-message-to-donations.sql
+psql -d production_db -f scripts/db/migrations/031-enhance-payments-stripe-references.sql
+psql -d production_db -f scripts/db/migrations/032-add-provider-and-message-to-donations.sql
 
 # Staging
-psql -d staging_db -f scripts/031-enhance-payments-stripe-references.sql
-psql -d staging_db -f scripts/032-add-provider-and-message-to-donations.sql
+psql -d staging_db -f scripts/db/migrations/031-enhance-payments-stripe-references.sql
+psql -d staging_db -f scripts/db/migrations/032-add-provider-and-message-to-donations.sql
 ```
 
 ### Check Migration Status

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Testimonials Image Upload Feature"
 description: "The testimonials manager now supports dual input methods for profile images: URL input and direct file upload with pr..."
 owner: "Deesha Team"
@@ -61,7 +61,7 @@ Response:
 - Service role client for bypassing RLS
 
 ### Storage Bucket
-**Migration**: `scripts/039-testimonials-storage-bucket.sql`
+**Migration**: `scripts/db/migrations/039b-testimonials-storage-bucket.sql`
 
 **Configuration**:
 - Bucket name: `testimonials`
@@ -97,7 +97,7 @@ handleImageUpload(index: number, file: File)
 ## Usage
 
 ### For Admins
-1. Navigate to Homepage Manager â†’ Testimonials section
+1. Navigate to Homepage Manager → Testimonials section
 2. Click on a testimonial card to edit
 3. In the "Profile Image" section:
    - **Option A**: Click "URL" tab and paste an image URL
@@ -126,10 +126,10 @@ handleImageUpload(index: number, file: File)
 - Graceful error responses
 
 ### Error Messages
-- "Invalid file type" â†’ Upload JPG, PNG, or WebP
-- "File too large" â†’ Reduce file size below 2MB
-- "Upload failed" â†’ Try again or contact support
-- "Unauthorized" â†’ Admin session expired, re-login
+- "Invalid file type" → Upload JPG, PNG, or WebP
+- "File too large" → Reduce file size below 2MB
+- "Upload failed" → Try again or contact support
+- "Unauthorized" → Admin session expired, re-login
 
 ## File Naming Convention
 
@@ -243,7 +243,7 @@ The circular testimonials carousel automatically displays uploaded images:
 ### Core Implementation
 - `app/api/upload/route.ts` - Upload API endpoint
 - `components/admin/homepage-manager/components/TestimonialsManager.tsx` - Admin UI
-- `scripts/039-testimonials-storage-bucket.sql` - Storage setup
+- `scripts/db/migrations/039b-testimonials-storage-bucket.sql` - Storage setup
 
 ### Supporting Files
 - `lib/types/homepage-settings.ts` - TypeScript types

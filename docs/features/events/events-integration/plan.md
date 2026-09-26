@@ -1,4 +1,4 @@
-﻿---
+---
 title: "V2 PaymentService Integration for Event Registrations"
 description: "Revision History:"
 owner: "Deesha Team"
@@ -9,12 +9,12 @@ last_updated: 2026-09-12
 ---
 # V2 PaymentService Integration for Event Registrations
 
-## Status: COMPLETE â€” All Phases Implemented (Rev 3)
+## Status: COMPLETE — All Phases Implemented (Rev 3)
 
 **Revision History:**
 - Rev 1: Initial plan
 - Rev 2: Incorporated technical review findings (CHECK constraint issues, polymorphic FK design, race conditions, edge cases)
-- Rev 3: Complete implementation â€” all phases done, conferences migrated, monitoring updated
+- Rev 3: Complete implementation — all phases done, conferences migrated, monitoring updated
 
 ---
 
@@ -24,14 +24,14 @@ The V2 `PaymentService` provides centralized payment confirmation with 3-layer i
 
 **Goal:** Wire event registrations through `PaymentService` to get V2 benefits without touching the donation flow.
 
-**Scope:** Events AND Conferences â€” all now use PaymentService.
+**Scope:** Events AND Conferences — all now use PaymentService.
 
 **Key Risks Addressed in Rev 2:**
-- âœ… `review` status CHECK constraint â€” **ALREADY FIXED** in migration 056
-- âš ï¸ Polymorphic FK integrity in `payments` table â€” **Schema fix required**
-- âœ… Race conditions with admin manual confirmations â€” **Fixed in plan**
-- âœ… Provider-specific field mapping inconsistencies â€” **Documented**
-- âœ… Edge cases: cancelled registrations, Khalti pending status, eSewa signature failures â€” **All handled**
+- ✅ `review` status CHECK constraint — **ALREADY FIXED** in migration 056
+- ⚠️ Polymorphic FK integrity in `payments` table — **Schema fix required**
+- ✅ Race conditions with admin manual confirmations — **Fixed in plan**
+- ✅ Provider-specific field mapping inconsistencies — **Documented**
+- ✅ Edge cases: cancelled registrations, Khalti pending status, eSewa signature failures — **All handled**
 
 ---
 
@@ -41,33 +41,33 @@ The V2 `PaymentService` provides centralized payment confirmation with 3-layer i
 
 ```
 Webhook arrives
-  â†’ Adapter.verify() / processVerifiedEvent()
-  â†’ Returns VerificationResult
-  â†’ PaymentService.confirmDonation()
-    â†’ Fetch donation
-    â†’ Idempotency check (payment_events SELECT)
-    â†’ Short-circuit if already completed
-    â†’ State machine validation (pending â†’ confirmed/review/failed)
-    â†’ Amount verification (minor units)
-    â†’ Currency verification
-    â†’ CAS UPDATE (WHERE payment_status = 'pending')
-    â†’ payments table insert (non-fatal)
-    â†’ payment_events insert (idempotency ledger)
-    â†’ Return result
+  → Adapter.verify() / processVerifiedEvent()
+  → Returns VerificationResult
+  → PaymentService.confirmDonation()
+    → Fetch donation
+    → Idempotency check (payment_events SELECT)
+    → Short-circuit if already completed
+    → State machine validation (pending → confirmed/review/failed)
+    → Amount verification (minor units)
+    → Currency verification
+    → CAS UPDATE (WHERE payment_status = 'pending')
+    → payments table insert (non-fatal)
+    → payment_events insert (idempotency ledger)
+    → Return result
 ```
 
-### 2.2 V1 Inline Flow (Events â€” Current)
+### 2.2 V1 Inline Flow (Events — Current)
 
 ```
 Webhook arrives
-  â†’ Manual signature/amount verification (duplicated per handler)
-  â†’ INSERT INTO payment_events (idempotency via unique constraint)
-  â†’ Fetch event_registrations
-  â†’ Status guard (if paid/confirmed/cancelled, skip)
-  â†’ Amount verification (varies by handler)
-  â†’ UNCONDITIONAL UPDATE (no CAS lock)
-  â†’ sold_count increment (non-fatal)
-  â†’ Email send (non-blocking)
+  → Manual signature/amount verification (duplicated per handler)
+  → INSERT INTO payment_events (idempotency via unique constraint)
+  → Fetch event_registrations
+  → Status guard (if paid/confirmed/cancelled, skip)
+  → Amount verification (varies by handler)
+  → UNCONDITIONAL UPDATE (no CAS lock)
+  → sold_count increment (non-fatal)
+  → Email send (non-blocking)
 ```
 
 ### 2.3 Key Differences
@@ -77,13 +77,13 @@ Webhook arrives
 | Centralization | Single `confirmDonation()` | Duplicated in 6+ handlers |
 | State machine | Formal `validateStateTransition()` | Ad-hoc `if` checks |
 | Idempotency | 3-layer (SELECT, short-circuit, CAS) | INSERT + unique constraint only |
-| Race conditions | CAS lock (`WHERE payment_status = 'pending'`) | No CAS â€” unconditional UPDATE |
+| Race conditions | CAS lock (`WHERE payment_status = 'pending'`) | No CAS — unconditional UPDATE |
 | Amount verification | `verifyAmount()` in minor units | Varies by handler |
 | `payments` table | Inserted with all Stripe IDs | Not written |
 | Error handling | Structured `PaymentError` hierarchy | Generic try/catch |
 | Logging | Dedicated logging functions | console.log/warn/error |
-| Status values | `pending` â†’ `completed` | `unpaid` â†’ `paid` |
-| Review status | DB status, not in state machine | Not in CHECK constraint (âš ï¸ Bug) |
+| Status values | `pending` → `completed` | `unpaid` → `paid` |
+| Review status | DB status, not in state machine | Not in CHECK constraint (⚠️ Bug) |
 
 ---
 
@@ -91,16 +91,16 @@ Webhook arrives
 
 ### 3.0 PREREQUISITE: Schema Status
 
-**âœ… All schema changes already applied (no new migrations needed):**
+**✅ All schema changes already applied (no new migrations needed):**
 
 | Migration | What it does | Status |
 |-----------|-------------|--------|
-| 056 | Adds 'review' to event_registrations CHECK constraint | âœ… Done |
-| 056 | Adds event_registration_id to payment_events | âœ… Done |
-| 057 | Extends payments table with event_registration_id, entity_type, CHECK constraint, indexes | âœ… Done |
-| 059 | Adds review_status, reviewed_at, reviewed_by to event_registrations | âœ… Done |
+| 056 | Adds 'review' to event_registrations CHECK constraint | ✅ Done |
+| 056 | Adds event_registration_id to payment_events | ✅ Done |
+| 057 | Extends payments table with event_registration_id, entity_type, CHECK constraint, indexes | ✅ Done |
+| 059 | Adds review_status, reviewed_at, reviewed_by to event_registrations | ✅ Done |
 
-**âš ï¸ Before implementing, verify these migrations have been run against the live database:**
+**⚠️ Before implementing, verify these migrations have been run against the live database:**
 
 ```sql
 -- Verify 056: 'review' in CHECK constraint
@@ -122,9 +122,9 @@ WHERE table_name = 'event_registrations' AND column_name = 'review_status';
 
 **If all three return results:** No schema changes needed. Proceed to Phase 1.
 
-**If any are missing:** Run the corresponding migration first (`scripts/056-*.sql`, `scripts/057-*.sql`, `scripts/059-*.sql`).
+**If any are missing:** Run the corresponding migration first (`scripts/db/migrations/056-*.sql`, `scripts/db/migrations/057-*.sql`, `scripts/db/migrations/059-*.sql`).
 
-### 3.1 PaymentService.ts â€” Add `confirmRegistration()`
+### 3.1 PaymentService.ts — Add `confirmRegistration()`
 
 **File:** `lib/payments/core/PaymentService.ts`
 
@@ -134,7 +134,7 @@ Add a new method alongside `confirmDonation()`:
 async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegistrationResult> {
   // Same 12-step flow as confirmDonation(), but:
   // - Table: event_registrations (not donations)
-  // - State machine: unpaid â†’ paid (not pending â†’ completed)
+  // - State machine: unpaid → paid (not pending → completed)
   // - CAS: WHERE payment_status = 'unpaid'
   // - Post-payment: sold_count increment, confirmation email
 }
@@ -142,7 +142,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
 
 **DO NOT rename or modify `confirmDonation()`.** The new method is purely additive.
 
-### 3.2 Types â€” Add Registration Types
+### 3.2 Types — Add Registration Types
 
 **File:** `lib/payments/core/types.ts`
 
@@ -165,7 +165,7 @@ interface ConfirmRegistrationResult {
 }
 ```
 
-### 3.3 State Machine â€” Events
+### 3.3 State Machine — Events
 
 **IMPORTANT:** Event registrations have TWO status columns:
 - `status`: registration lifecycle (pending, confirmed, cancelled, expired)
@@ -183,10 +183,10 @@ The state machine controls `payment_status` transitions ONLY.
 | `review` | **MANUAL ONLY** | Admin can resolve to `paid` or `failed` |
 
 **Short-Circuit Conditions (Skip Processing):**
-- `payment_status === 'paid'` â†’ Already processed
-- `status === 'confirmed'` â†’ Already confirmed
-- `status === 'cancelled'` â†’ Registration cancelled, ignore webhook
-- `status === 'expired'` â†’ Registration expired, ignore webhook
+- `payment_status === 'paid'` → Already processed
+- `status === 'confirmed'` → Already confirmed
+- `status === 'cancelled'` → Registration cancelled, ignore webhook
+- `status === 'expired'` → Registration expired, ignore webhook
 
 **Special Handling:**
 - **Khalti "Pending" status:** Return `{ success: true, status: 'processing' }`, do NOT update DB
@@ -197,17 +197,17 @@ The state machine controls `payment_status` transitions ONLY.
 
 After successful CAS update, the `confirmRegistration()` method must:
 
-1. **Increment sold_count** â€” `incrementTicketSoldCount(supabase, ticketTypeId)`
+1. **Increment sold_count** — `incrementTicketSoldCount(supabase, ticketTypeId)`
    - Non-fatal (catch + warn)
    - Only if `ticket_type_id` exists
    - **Idempotency:** Check if already incremented (see Section 7 for admin race condition)
 
-2. **Send confirmation email** â€” fire-and-forget
+2. **Send confirmation email** — fire-and-forget
    - Fetch event details, email template, ticket name
    - Call `sendEventConfirmationEmail()`
    - Update `last_confirmation_email_sent_at` ONLY if email succeeds
 
-3. **Send review alert** â€” if `finalStatus === 'review'`
+3. **Send review alert** — if `finalStatus === 'review'`
    - Import `sendReviewAlert()` dynamically
    - Pass reason (amount_mismatch / currency_mismatch / verification_uncertain)
    - Non-blocking (catch + warn)
@@ -217,14 +217,14 @@ After successful CAS update, the `confirmRegistration()` method must:
 Event registrations have BOTH generic AND provider-specific columns:
 
 **Generic Columns (Used by All Providers):**
-- `payment_provider` â€” 'stripe' | 'khalti' | 'esewa'
-- `payment_id` â€” Composite: `${provider}:${transactionId}`
-- `provider_session_ref` â€” Generic transaction reference
+- `payment_provider` — 'stripe' | 'khalti' | 'esewa'
+- `payment_id` — Composite: `${provider}:${transactionId}`
+- `provider_session_ref` — Generic transaction reference
 
 **Provider-Specific Columns (Backward Compatibility):**
-- `stripe_session_id` â€” Stripe checkout session ID
-- `khalti_pidx` â€” Khalti payment index
-- `esewa_transaction_uuid` â€” eSewa transaction UUID
+- `stripe_session_id` — Stripe checkout session ID
+- `khalti_pidx` — Khalti payment index
+- `esewa_transaction_uuid` — eSewa transaction UUID
 
 **PaymentService MUST write to BOTH:**
 
@@ -277,15 +277,15 @@ const updateData: Record<string, unknown> = {
 **Description:** Add `event_registration_id` FK to `payments` table with polymorphic integrity constraints.
 
 **Note:** Migration 056 already added:
-- âœ… `'review'` to `event_registrations` CHECK constraint
-- âœ… `event_registration_id` to `payment_events` table
-- âœ… Provider-specific columns to `event_registrations`
+- ✅ `'review'` to `event_registrations` CHECK constraint
+- ✅ `event_registration_id` to `payment_events` table
+- ✅ Provider-specific columns to `event_registrations`
 
 This migration ONLY adds the `payments` table extension.
 
 ```sql
 -- ============================================================
--- DEESSA Foundation â€” Extend Payments Table for Event Registrations
+-- DEESSA Foundation — Extend Payments Table for Event Registrations
 -- Migration: XXX-extend-payments-for-registrations.sql
 -- Adds event_registration_id FK with polymorphic integrity constraints
 -- ============================================================
@@ -407,7 +407,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
     // Step 4: Short-circuit checks
     // 4a. Already paid
     if (currentPaymentStatus === 'paid') {
-      console.warn('[PaymentService] Registration already paid â€” returning already_processed', {
+      console.warn('[PaymentService] Registration already paid — returning already_processed', {
         entityId,
         currentPaymentStatus,
       })
@@ -420,7 +420,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
 
     // 4b. Already confirmed
     if (currentStatus === 'confirmed') {
-      console.warn('[PaymentService] Registration already confirmed â€” returning already_processed', {
+      console.warn('[PaymentService] Registration already confirmed — returning already_processed', {
         entityId,
         currentStatus,
       })
@@ -431,9 +431,9 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
       }
     }
 
-    // 4c. Registration cancelled or expired â€” ignore webhook
+    // 4c. Registration cancelled or expired — ignore webhook
     if (currentStatus === 'cancelled' || currentStatus === 'expired') {
-      console.warn('[PaymentService] Registration cancelled/expired â€” ignoring webhook', {
+      console.warn('[PaymentService] Registration cancelled/expired — ignoring webhook', {
         entityId,
         currentStatus,
       })
@@ -446,7 +446,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
 
     // Step 5: Special handling for Khalti "Pending" status
     if (verificationResult.status === 'pending') {
-      console.log('[PaymentService] Payment still pending â€” do not update DB', { entityId, provider })
+      console.log('[PaymentService] Payment still pending — do not update DB', { entityId, provider })
       return {
         success: true,
         status: 'processing', // Custom status for pending payments
@@ -454,7 +454,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
       }
     }
 
-    // Step 6: State machine validation (only unpaid â†’ paid/review/failed)
+    // Step 6: State machine validation (only unpaid → paid/review/failed)
     this.validateRegistrationStateTransition(currentPaymentStatus, entityId)
 
     // Step 7: Amount verification
@@ -561,7 +561,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
 
       // Check if another process already confirmed/paid this registration
       if (refetched?.payment_status === 'paid' || refetched?.status === 'confirmed') {
-        console.warn('[PaymentService] Race condition â€” registration already processed', { entityId })
+        console.warn('[PaymentService] Race condition — registration already processed', { entityId })
         return {
           success: true,
           status: 'already_processed',
@@ -572,7 +572,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
       // Check if another process set this to review (amount mismatch on duplicate webhook)
       // This prevents infinite Stripe retries: return already_processed instead of throwing 500
       if (refetched?.payment_status === 'review') {
-        console.warn('[PaymentService] Registration in review state â€” duplicate webhook ignored', { entityId })
+        console.warn('[PaymentService] Registration in review state — duplicate webhook ignored', { entityId })
         return {
           success: true,
           status: 'already_processed',
@@ -580,9 +580,9 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
         }
       }
 
-      // Registration was cancelled/expired between fetch and CAS â€” ignore webhook
+      // Registration was cancelled/expired between fetch and CAS — ignore webhook
       if (refetched?.status === 'cancelled' || refetched?.status === 'expired') {
-        console.warn('[PaymentService] Registration cancelled/expired during processing â€” ignoring', { entityId })
+        console.warn('[PaymentService] Registration cancelled/expired during processing — ignoring', { entityId })
         return {
           success: true,
           status: 'already_processed',
@@ -651,7 +651,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
         })
 
       if (enhancedErr) {
-        // Column doesn't exist yet â€” try minimal schema
+        // Column doesn't exist yet — try minimal schema
         if (enhancedErr.code === '42703' || enhancedErr.message?.includes('column')) {
           const { error: minimalErr } = await this.supabase
             .from('payment_events')
@@ -668,7 +668,7 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
 
       if (eventInsertError) {
         if (eventInsertError.code === '23505') {
-          // Duplicate event â€” already processed
+          // Duplicate event — already processed
           return {
             success: true,
             status: 'already_processed',
@@ -724,9 +724,9 @@ async confirmRegistration(input: ConfirmRegistrationInput): Promise<ConfirmRegis
       
       // TODO: `ReviewAlert.donationId` should be renamed to `entityId` (with `entityType`) 
       // to properly label event registration alerts vs. donation alerts.
-      // Current workaround: pass entityId as donationId â€” alert will say "Donation {id}" even for events.
+      // Current workaround: pass entityId as donationId — alert will say "Donation {id}" even for events.
       sendReviewAlert({
-        donationId: entityId, // TODO: Make polymorphic â€” should be entityId + entityType
+        donationId: entityId, // TODO: Make polymorphic — should be entityId + entityType
         amount: reg.payment_amount,
         currency: reg.payment_currency,
         provider: provider,
@@ -864,7 +864,7 @@ private async sendEventConfirmationEmail(reg: any): Promise<boolean> {
 
 /**
  * Validate registration state transition
- * Only unpaid â†’ paid/review/failed allowed
+ * Only unpaid → paid/review/failed allowed
  */
 private validateRegistrationStateTransition(
   currentStatus: string,
@@ -1076,7 +1076,7 @@ export async function handleEventVerification(
     return null // Not an event registration
   }
 
-  // â”€â”€ CRITICAL: HMAC signature verification FIRST (before any state changes) â”€â”€
+  // ── CRITICAL: HMAC signature verification FIRST (before any state changes) ──
   if (!isMock) {
     const secretKey = process.env.ESEWA_SECRET_KEY
     if (!secretKey) {
@@ -1106,7 +1106,7 @@ export async function handleEventVerification(
     }
   }
 
-  // â”€â”€ Use EsewaAdapter for verification â”€â”€
+  // ── Use EsewaAdapter for verification ──
   try {
     const adapter = createEsewaAdapter()
     
@@ -1135,7 +1135,7 @@ export async function handleEventVerification(
       )
     }
 
-    // â”€â”€ Use PaymentService for confirmation â”€â”€
+    // ── Use PaymentService for confirmation ──
     const paymentService = getPaymentService()
     const result = await paymentService.confirmRegistration({
       entityType: 'event_registration',
@@ -1206,7 +1206,7 @@ Currently only handles donations (V2) and conferences (V1 inline). Add event reg
 ```typescript
 // After donation lookup fails and conference lookup fails, add event registration:
 
-// â”€â”€ Event registration lookup â”€â”€
+// ── Event registration lookup ──
 const { data: eventReg } = await supabase
   .from('event_registrations')
   .select('*')
@@ -1346,9 +1346,9 @@ return NextResponse.json({
 
 **Change:** Fix admin manual confirmation race condition
 
-**Problem:** Admin clicking "Confirm" while webhook processes â†’ double sold_count increment.
+**Problem:** Admin clicking "Confirm" while webhook processes → double sold_count increment.
 
-**Root Cause:** `incrementTicketSoldCount()` is non-idempotent â€” it unconditionally does `+1` every time it's called. The plan's previous fix (check `payment_status !== 'paid'`) is a TOCTOU race: the check reads `payment_status` at Step 2, but the CAS only guards `payment_status`, not the increment itself. If webhook runs between the check and the CAS, both increment.
+**Root Cause:** `incrementTicketSoldCount()` is non-idempotent — it unconditionally does `+1` every time it's called. The plan's previous fix (check `payment_status !== 'paid'`) is a TOCTOU race: the check reads `payment_status` at Step 2, but the CAS only guards `payment_status`, not the increment itself. If webhook runs between the check and the CAS, both increment.
 
 **Correct Fix:** Make the sold_count increment idempotent at the source. The RPC function from migration 057 already does atomic increment, but needs a guard to prevent double-counting across confirmations.
 
@@ -1401,7 +1401,7 @@ export async function confirmEventRegistration(id: string, options: { force?: bo
   if (!options.force && reg.payment_status !== 'paid') {
     return {
       success: false,
-      error: "Cannot confirm â€” payment has not been received. Use 'Mark as Paid' to override.",
+      error: "Cannot confirm — payment has not been received. Use 'Mark as Paid' to override.",
     }
   }
 
@@ -1421,7 +1421,7 @@ export async function confirmEventRegistration(id: string, options: { force?: bo
     return { success: false, error: updateError.message }
   }
 
-  // â”€â”€ FIX: Only increment sold_count if payment_status was NOT already 'paid' â”€â”€
+  // ── FIX: Only increment sold_count if payment_status was NOT already 'paid' ──
   // Webhook already incremented when it set payment_status='paid'.
   // Admin manual confirmation (cash/bank transfer) should increment.
   // This check + CAS prevents double-increment even under race conditions.
@@ -1434,7 +1434,7 @@ export async function confirmEventRegistration(id: string, options: { force?: bo
 ```
 
 **Why This Works:**
-1. CAS guards `status IN ('pending', 'failed')` â€” prevents confirming cancelled/expired registrations
+1. CAS guards `status IN ('pending', 'failed')` — prevents confirming cancelled/expired registrations
 2. If webhook raced and set `payment_status='paid'`, the admin's CAS still succeeds (webhook only set `payment_status`, not `status`), but the `payment_status !== 'paid'` check prevents double increment
 3. If admin CAS succeeds and webhook CAS later tries, webhook's CAS will fail because `status` is already `'confirmed'`
 4. **Defense in depth:** Even if CAS race happens, only one path increments sold_count
@@ -1453,7 +1453,7 @@ export async function confirmEventRegistration(id: string, options: { force?: bo
 | `components/admin/donations/*` | Donation UI untouched |
 | `lib/actions/admin-payment-actions.ts` | Polymorphic actions already work |
 | `payment_events` table | Already has `event_registration_id` column (migration 056) |
-| `confirmDonation()` method | **NEVER MODIFIED** â€” donations are always safe |
+| `confirmDonation()` method | **NEVER MODIFIED** — donations are always safe |
 | Conference webhook handlers | Routed separately, no conflicts |
 
 ---
@@ -1492,24 +1492,24 @@ export async function confirmEventRegistration(id: string, options: { force?: bo
    ALTER TABLE payments DROP COLUMN IF EXISTS event_registration_id;
    ```
 
-**No rollback needed** for migration 056 changes â€” those are safe and already deployed.
+**No rollback needed** for migration 056 changes — those are safe and already deployed.
 
 ### Phase 1: PaymentService Changes (Safe)
 1. Add `confirmRegistration()` to PaymentService (~200 lines)
 2. Add `ConfirmRegistrationInput`/`ConfirmRegistrationResult` types
 3. Add `validateRegistrationStateTransition()` helper
 4. Add `sendEventConfirmationEmail()` private method
-5. **No existing code is modified** â€” purely additive
+5. **No existing code is modified** — purely additive
 6. Test: Unit test `confirmRegistration()` with mock Supabase client
 7. **Rollback:** Remove added methods (no callers yet)
 
 ### Phase 2: Admin Action Fix (Low Risk)
 1. Update `confirmEventRegistration()` to only increment sold_count if `payment_status !== 'paid'`
-2. Test: Manual confirmation on already-paid registration â†’ should NOT double-increment
+2. Test: Manual confirmation on already-paid registration → should NOT double-increment
 3. **Rollback:** Revert the conditional (will cause double-increment again, but non-fatal)
 
-### Phase 3: Stripe Webhook (CRITICAL PATH â€” Use Dark Launch)
-**âš ï¸ HIGHEST RISK: All event payments flow through this**
+### Phase 3: Stripe Webhook (CRITICAL PATH — Use Dark Launch)
+**⚠️ HIGHEST RISK: All event payments flow through this**
 
 **3a. Dark Launch (Recommended):**
 ```typescript
@@ -1526,7 +1526,7 @@ async function confirmEventRegistrationFromWebhook(...) {
 
 Deploy with `FEATURE_FLAG_V2_EVENTS=false`, then flip to `true` after testing.
 
-**3b. Shadow Mode (Alternative â€” More Cautious):**
+**3b. Shadow Mode (Alternative — More Cautious):**
 ```typescript
 // Run BOTH paths, compare results, but use V1 result
 const v2Result = await confirmEventRegistrationViaPaymentService(...).catch(e => ({ success: false, error: e }))
@@ -1542,9 +1542,9 @@ return v1Result // Use V1 until confident
 **3c. Testing:**
 - Stripe CLI: `stripe trigger checkout.session.completed --add metadata:event_registration_id=<test_id>`
 - Verify: payment_status = 'paid', status = 'confirmed', sold_count incremented, email sent
-- Test idempotency: Send same webhook twice â†’ second returns `already_processed`
-- Test amount mismatch: Modify DB amount â†’ payment_status = 'review'
-- Test race condition: Two simultaneous webhooks â†’ only one wins (CAS lock)
+- Test idempotency: Send same webhook twice → second returns `already_processed`
+- Test amount mismatch: Modify DB amount → payment_status = 'review'
+- Test race condition: Two simultaneous webhooks → only one wins (CAS lock)
 
 **3d. Rollback:**
 - Set `FEATURE_FLAG_V2_EVENTS=false` (instant)
@@ -1600,12 +1600,12 @@ return v1Result // Use V1 until confident
 - [ ] Verify `sold_count` incremented on ticket type
 - [ ] Verify confirmation email sent
 - [ ] Verify `last_confirmation_email_sent_at` updated
-- [ ] Test idempotency: send same webhook twice â†’ second returns `already_processed`
-- [ ] Test amount mismatch: `payment_status` â†’ `review`, `payment_review_at` set
-- [ ] Test currency mismatch: `payment_status` â†’ `review`
-- [ ] Test race condition: two simultaneous webhooks â†’ only one wins (CAS lock)
-- [ ] Test cancelled registration: webhook arrives â†’ returns `already_processed`, no DB changes
-- [ ] Test expired registration: webhook arrives â†’ returns `already_processed`, no DB changes
+- [ ] Test idempotency: send same webhook twice → second returns `already_processed`
+- [ ] Test amount mismatch: `payment_status` → `review`, `payment_review_at` set
+- [ ] Test currency mismatch: `payment_status` → `review`
+- [ ] Test race condition: two simultaneous webhooks → only one wins (CAS lock)
+- [ ] Test cancelled registration: webhook arrives → returns `already_processed`, no DB changes
+- [ ] Test expired registration: webhook arrives → returns `already_processed`, no DB changes
 
 ### eSewa Tests
 - [ ] Test with eSewa sandbox callback
@@ -1614,30 +1614,30 @@ return v1Result // Use V1 until confident
 - [ ] Verify confirmation (payment_status = 'paid', status = 'confirmed')
 - [ ] Verify sold_count incremented
 - [ ] Verify confirmation email sent
-- [ ] Test idempotency: same callback twice â†’ second is no-op
-- [ ] Test amount mismatch: payment_status â†’ 'review'
-- [ ] Test status !== 'COMPLETE': payment_status â†’ 'failed'
+- [ ] Test idempotency: same callback twice → second is no-op
+- [ ] Test amount mismatch: payment_status → 'review'
+- [ ] Test status !== 'COMPLETE': payment_status → 'failed'
 
 ### Khalti Tests
 - [ ] Test with Khalti sandbox
 - [ ] Verify lookup via adapter
 - [ ] Verify "Pending" status: returns `{ status: 'processing' }`, does NOT update DB
-- [ ] Verify "Completed" status: payment_status â†’ 'paid', status â†’ 'confirmed'
+- [ ] Verify "Completed" status: payment_status → 'paid', status → 'confirmed'
 - [ ] Verify amount verification
 - [ ] Verify sold_count incremented
 - [ ] Verify confirmation email sent
-- [ ] Test idempotency: same pidx twice â†’ second returns `already_processed`
-- [ ] Test amount mismatch: payment_status â†’ 'review'
-- [ ] Test "Refunded" status: payment_status â†’ 'failed'
-- [ ] Test "Expired" status: payment_status â†’ 'failed'
+- [ ] Test idempotency: same pidx twice → second returns `already_processed`
+- [ ] Test amount mismatch: payment_status → 'review'
+- [ ] Test "Refunded" status: payment_status → 'failed'
+- [ ] Test "Expired" status: payment_status → 'failed'
 
 ### Admin Action Tests
-- [ ] Admin confirms registration with `payment_status = 'unpaid'` â†’ sold_count incremented
-- [ ] Admin confirms registration with `payment_status = 'paid'` â†’ sold_count NOT incremented (already incremented by webhook)
-- [ ] Admin confirms + webhook arrives simultaneously â†’ no double-increment
+- [ ] Admin confirms registration with `payment_status = 'unpaid'` → sold_count incremented
+- [ ] Admin confirms registration with `payment_status = 'paid'` → sold_count NOT incremented (already incremented by webhook)
+- [ ] Admin confirms + webhook arrives simultaneously → no double-increment
 
 ### Regression Tests
-- [ ] Donation flow still works (Stripe, eSewa, Khalti) â€” **DO NOT BREAK THIS**
+- [ ] Donation flow still works (Stripe, eSewa, Khalti) — **DO NOT BREAK THIS**
 - [ ] Conference flow still works (unchanged)
 - [ ] Admin status change still works
 - [ ] Archive/restore still works
@@ -1714,10 +1714,10 @@ If anything breaks:
 
 ## 10. Future Work (Out of Scope)
 
-- **Conference registration V2 migration** â€” will be removed when events module is complete
-- **Job queue (Phase 4)** â€” receipt generation, email sending via async jobs
-- **PaymentService rename** â€” `confirmDonation()` â†’ `confirmPayment()` (after all entities migrated)
-- **Duplicate HMAC cleanup** â€” remove `verifyEsewaSignature()` from event-handler.ts and conference-handler.ts
+- **Conference registration V2 migration** — will be removed when events module is complete
+- **Job queue (Phase 4)** — receipt generation, email sending via async jobs
+- **PaymentService rename** — `confirmDonation()` → `confirmPayment()` (after all entities migrated)
+- **Duplicate HMAC cleanup** — remove `verifyEsewaSignature()` from event-handler.ts and conference-handler.ts
 
 
 ## 11. Success Criteria
@@ -1730,7 +1730,7 @@ After full implementation, the system must meet these criteria:
 - [ ] All Khalti event payments confirmed successfully
 - [ ] Idempotency: Duplicate webhooks return `already_processed` with no side effects
 - [ ] Race conditions: Concurrent webhooks result in exactly ONE confirmation (CAS lock works)
-- [ ] Amount mismatches: payment_status â†’ 'review', admin alert sent
+- [ ] Amount mismatches: payment_status → 'review', admin alert sent
 - [ ] sold_count: Accurate (matches confirmed registration count)
 - [ ] Emails: Sent for all confirmed payments
 
@@ -1748,7 +1748,7 @@ After full implementation, the system must meet these criteria:
 - [ ] Zero regressions in conference flow
 
 ### Maintainability Requirements
-- [ ] Code duplication reduced by >75% (inline logic â†’ PaymentService)
+- [ ] Code duplication reduced by >75% (inline logic → PaymentService)
 - [ ] All error paths logged with structured logging
 - [ ] Admin dashboard shows sold_count audit trail
 - [ ] Rollback plan tested and documented
@@ -1760,16 +1760,16 @@ After full implementation, the system must meet these criteria:
 The following improvements are NOT part of this plan but should be considered for future iterations:
 
 ### Phase 4+ (Post-V2 Stabilization)
-1. **Conference registration V2 migration** â€” Apply same pattern to conferences (will be removed when events module is complete)
-2. **Job queue implementation** â€” Move receipt generation and email sending to async job queue
-3. **PaymentService method rename** â€” `confirmDonation()` â†’ `confirmPayment()` (after all entities migrated)
-4. **Duplicate HMAC cleanup** â€” Remove `verifyEsewaSignature()` from event-handler.ts and conference-handler.ts (move to adapter)
-5. **Logging refactor** â€” Make logging functions polymorphic (accept `entityId` instead of `donationId`)
-6. **sold_count audit UI** â€” Admin dashboard to detect and fix sold_count mismatches
-7. **Type safety** â€” Remove `<any>` from Supabase client, use generated types
-8. **payment_events cleanup** â€” Add CHECK constraint and discriminator column (same as `payments` table)
-9. **Review status workflow** â€” Add admin UI to resolve payments stuck in 'review' status
-10. **Comprehensive monitoring** â€” Grafana dashboards for payment success rates, race conditions, review rates
+1. **Conference registration V2 migration** — Apply same pattern to conferences (will be removed when events module is complete)
+2. **Job queue implementation** — Move receipt generation and email sending to async job queue
+3. **PaymentService method rename** — `confirmDonation()` → `confirmPayment()` (after all entities migrated)
+4. **Duplicate HMAC cleanup** — Remove `verifyEsewaSignature()` from event-handler.ts and conference-handler.ts (move to adapter)
+5. **Logging refactor** — Make logging functions polymorphic (accept `entityId` instead of `donationId`)
+6. **sold_count audit UI** — Admin dashboard to detect and fix sold_count mismatches
+7. **Type safety** — Remove `<any>` from Supabase client, use generated types
+8. **payment_events cleanup** — Add CHECK constraint and discriminator column (same as `payments` table)
+9. **Review status workflow** — Add admin UI to resolve payments stuck in 'review' status
+10. **Comprehensive monitoring** — Grafana dashboards for payment success rates, race conditions, review rates
 
 ---
 
@@ -1788,14 +1788,14 @@ The following improvements are NOT part of this plan but should be considered fo
 ## Appendix A: Quick Reference
 
 ### Key Files Changed
-1. `scripts/XXX-fix-event-review-status.sql` â€” Schema fix (CHECK constraint)
-2. `scripts/XXX-fix-payments-polymorphic-fk.sql` â€” Schema fix (FK integrity)
-3. `lib/payments/core/PaymentService.ts` â€” Add `confirmRegistration()` method (~200 lines)
-4. `lib/payments/core/types.ts` â€” Add registration types (~30 lines)
-5. `app/api/webhooks/stripe/route.ts` â€” Replace event handler (~50 lines, was 200)
-6. `app/api/payments/esewa/success/event-handler.ts` â€” Replace handler (~80 lines, was 315)
-7. `app/api/payments/khalti/verify/route.ts` â€” Add event path (~80 lines)
-8. `lib/actions/events-module/event-registration.ts` â€” Fix admin race condition (5 lines)
+1. `scripts/XXX-fix-event-review-status.sql` — Schema fix (CHECK constraint)
+2. `scripts/XXX-fix-payments-polymorphic-fk.sql` — Schema fix (FK integrity)
+3. `lib/payments/core/PaymentService.ts` — Add `confirmRegistration()` method (~200 lines)
+4. `lib/payments/core/types.ts` — Add registration types (~30 lines)
+5. `app/api/webhooks/stripe/route.ts` — Replace event handler (~50 lines, was 200)
+6. `app/api/payments/esewa/success/event-handler.ts` — Replace handler (~80 lines, was 315)
+7. `app/api/payments/khalti/verify/route.ts` — Add event path (~80 lines)
+8. `lib/actions/events-module/event-registration.ts` — Fix admin race condition (5 lines)
 
 ### Key Decisions
 | Decision | Rationale |
@@ -1812,7 +1812,7 @@ The following improvements are NOT part of this plan but should be considered fo
 1. Phase 0: Schema fixes (prerequisite)
 2. Phase 1: PaymentService changes (safe, no callers)
 3. Phase 2: Admin action fix (low risk)
-4. Phase 3: Stripe webhook (CRITICAL â€” use dark launch)
+4. Phase 3: Stripe webhook (CRITICAL — use dark launch)
 5. Phase 4: eSewa handler (medium risk)
 6. Phase 5: Khalti handler (medium risk)
 7. Phase 6: Cleanup (optional)
@@ -1831,11 +1831,11 @@ The following improvements are NOT part of this plan but should be considered fo
 **File:** `scripts/XXX-extend-payments-for-registrations.sql`
 
 **Prerequisites:**
-- âœ… Migration 056 must be run first (adds 'review' to CHECK constraint, event_registration_id to payment_events)
+- ✅ Migration 056 must be run first (adds 'review' to CHECK constraint, event_registration_id to payment_events)
 
 ```sql
 -- ============================================================
--- DEESSA Foundation â€” Extend Payments Table for Event Registrations
+-- DEESSA Foundation — Extend Payments Table for Event Registrations
 -- Migration: XXX-extend-payments-for-registrations.sql
 -- Adds event_registration_id FK with polymorphic integrity constraints
 -- ============================================================

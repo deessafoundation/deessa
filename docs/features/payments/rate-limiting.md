@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Rate Limiting Implementation"
 description: "The payment system uses Supabase-backed distributed rate limiting to protect API endpoints from abuse. This implement..."
 owner: "Deesha Team"
@@ -25,10 +25,10 @@ The payment system uses **Supabase-backed distributed rate limiting** to protect
 ### Why Supabase Instead of Redis?
 
 **Current Implementation (MVP):**
-- âœ… Works on Vercel Hobby plan (no additional cost)
-- âœ… No external dependencies
-- âœ… Sufficient for <500 donations/month
-- âœ… Leverages existing Supabase infrastructure
+- ✅ Works on Vercel Hobby plan (no additional cost)
+- ✅ No external dependencies
+- ✅ Sufficient for <500 donations/month
+- ✅ Leverages existing Supabase infrastructure
 
 **Future Scaling (When Needed):**
 - For >1000 requests/second, consider migrating to Redis/Upstash
@@ -286,10 +286,10 @@ To adjust rate limits for an endpoint:
 ## Future Enhancements
 
 ### Phase 1 (Current): Supabase-backed
-- âœ… Distributed rate limiting
-- âœ… Sliding window algorithm
-- âœ… Fail-open strategy
-- âœ… Works on Vercel Hobby plan
+- ✅ Distributed rate limiting
+- ✅ Sliding window algorithm
+- ✅ Fail-open strategy
+- ✅ Works on Vercel Hobby plan
 
 ### Phase 2 (When Scaling): Redis/Upstash
 - Migrate to Redis for higher throughput (>1000 req/s)
@@ -362,7 +362,7 @@ For distributed attacks from many IPs:
 
 ## References
 
-- Migration: `scripts/018-rate-limits.sql`
+- Migration: `scripts/db/migrations/018b-rate-limits.sql`
 - Utility: `lib/rate-limit.ts`
 - Requirements: 14.1, 14.2, 14.3, 14.4, 14.5 (Payment Architecture V2)
 - Design: `docs/payments-v2/design.md` (Security Model section)

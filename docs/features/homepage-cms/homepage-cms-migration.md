@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Homepage CMS Migration Guide"
 description: "This document tracks the migration of hard-coded homepage content into a CMS-managed system. The migration is designe..."
 owner: "Deesha Team"
@@ -9,30 +9,30 @@ last_updated: 2026-09-12
 ---
 # Homepage CMS Migration Guide
 
-## ðŸ“‹ Overview
+## 📋 Overview
 
 This document tracks the migration of hard-coded homepage content into a CMS-managed system. The migration is designed to be **safe, incremental, and reversible** with zero downtime.
 
-## âœ… Phase 1: Database Schema & Types (COMPLETED)
+## ✅ Phase 1: Database Schema & Types (COMPLETED)
 
 ### What Was Created
 
-1. **Database Migration** (`scripts/037-homepage-cms-schema.sql`)
+1. **Database Migration** (`scripts/db/migrations/037-homepage-cms-schema.sql`)
    - Added 8 new keys to `site_settings` table
    - Populated with current hard-coded values as defaults
    - Created helper functions for data access
-   - **Status**: âœ… Ready to run (safe, no breaking changes)
+   - **Status**: ✅ Ready to run (safe, no breaking changes)
 
 2. **TypeScript Types** (`lib/types/homepage-settings.ts`)
    - Complete type definitions for all homepage content
    - Default values and constants
-   - **Status**: âœ… Complete
+   - **Status**: ✅ Complete
 
 3. **Data Loaders** (`lib/data/homepage-settings.ts`)
    - Server-side functions to fetch CMS content
    - Built-in fallbacks to prevent site breakage
    - Follows existing patterns from `site-settings.ts`
-   - **Status**: âœ… Complete
+   - **Status**: ✅ Complete
 
 ### New CMS Keys Added
 
@@ -51,19 +51,19 @@ This document tracks the migration of hard-coded homepage content into a CMS-man
 
 ```bash
 # Connect to your Supabase database and run:
-psql -h your-db-host -U postgres -d your-database -f scripts/037-homepage-cms-schema.sql
+psql -h your-db-host -U postgres -d your-database -f scripts/db/migrations/037-homepage-cms-schema.sql
 ```
 
 Or via Supabase Dashboard:
 1. Go to SQL Editor
-2. Copy contents of `scripts/037-homepage-cms-schema.sql`
+2. Copy contents of `scripts/db/migrations/037-homepage-cms-schema.sql`
 3. Click "Run"
 
 **This is 100% safe** - it only adds new data, doesn't modify existing code.
 
 ---
 
-## ðŸ”„ Phase 2: Code Migration (NEXT STEP)
+## 🔄 Phase 2: Code Migration (NEXT STEP)
 
 ### What Needs to Change
 
@@ -103,7 +103,7 @@ const stats2 = stats.slice(4, 8)
 ```typescript
 const programs = [
   {
-    badge: "ðŸ“š Education",
+    badge: "📚 Education",
     headline: "Building Classrooms, Building Futures",
     // ... more fields
   },
@@ -139,7 +139,7 @@ const { programs } = await getHomepagePrograms()
 
 ---
 
-## ðŸŽ¨ Phase 3: Admin UI (FUTURE)
+## 🎨 Phase 3: Admin UI (FUTURE)
 
 ### Admin Interface Requirements
 
@@ -186,7 +186,7 @@ Create `/admin/homepage-manager` page with sections:
 
 ---
 
-## ðŸ”’ Safety Features
+## 🔒 Safety Features
 
 ### Built-in Fallbacks
 
@@ -211,15 +211,15 @@ DELETE FROM site_settings WHERE key LIKE 'homepage_%';
 
 ---
 
-## ðŸ“Š Current vs Future State
+## 📊 Current vs Future State
 
 ### Before (Current)
 
 ```
 Homepage Component
-    â†“
+    ↓
 Hard-coded arrays in code
-    â†“
+    ↓
 Requires developer + deployment to change
 ```
 
@@ -227,17 +227,17 @@ Requires developer + deployment to change
 
 ```
 Homepage Component
-    â†“
+    ↓
 CMS Loader Functions (with fallbacks)
-    â†“
+    ↓
 Database (site_settings table)
-    â†“
+    ↓
 Admin UI (editors can update)
 ```
 
 ---
 
-## ðŸ§ª Testing Strategy
+## 🧪 Testing Strategy
 
 ### Unit Tests
 - Test each loader function
@@ -257,7 +257,7 @@ Admin UI (editors can update)
 
 ---
 
-## ðŸ“ Notes
+## 📝 Notes
 
 ### Why This Approach?
 
@@ -278,7 +278,7 @@ Only **content** moves to CMS, not **code**.
 
 ---
 
-## ðŸš€ Next Actions
+## 🚀 Next Actions
 
 1. **Run Phase 1 migration** (SQL script)
 2. **Verify data in Supabase** (check site_settings table)
@@ -289,7 +289,7 @@ Only **content** moves to CMS, not **code**.
 
 ---
 
-## ðŸ“ž Questions?
+## 📞 Questions?
 
 - Check existing `site-settings.ts` for similar patterns
 - Review `getHomeHeroSettings()` function as reference
@@ -298,5 +298,5 @@ Only **content** moves to CMS, not **code**.
 ---
 
 **Last Updated**: Phase 1 Complete
-**Status**: âœ… Ready for Phase 2
-**Risk Level**: ðŸŸ¢ Low (all changes are additive with fallbacks)
+**Status**: ✅ Ready for Phase 2
+**Risk Level**: 🟢 Low (all changes are additive with fallbacks)
