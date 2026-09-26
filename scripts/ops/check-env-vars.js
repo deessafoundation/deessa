@@ -6,7 +6,7 @@
  * Run this script to verify all required environment variables are set correctly.
  * 
  * Usage:
- *   node scripts/check-env-vars.js
+ *   node scripts/ops/check-env-vars.js
  * 
  * This helps identify missing or incorrect configuration before deployment.
  */

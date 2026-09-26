@@ -7,7 +7,7 @@
  * Usage:
  *   npm run validate-config
  *   or
- *   npx tsx scripts/validate-payment-config.ts
+ *   npx tsx scripts/ops/validate-payment-config.ts
  * 
  * Exit codes:
  *   0 - All checks passed
