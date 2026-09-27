@@ -55,7 +55,7 @@ const partnerCategories = [
 ]
 
 function SectionHeader({ label, title, sub, level = 2 }: { label: string; title: string; sub?: string; level?: 2 | 3 | 4 }) {
-  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements
+  const HeadingTag = `h${level}` as "h2" | "h3" | "h4"
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
       <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest about-teal-text">
