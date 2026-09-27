@@ -1,0 +1,149 @@
+/**
+ * Outreach Concept Styles
+ * 
+ * Field journal aesthetic for community outreach programs,
+ * with paper postcards and stamp decorations.
+ */
+
+.outreachIntro {
+  display: grid;
+  grid-template-columns: 1.7fr 0.8fr;
+  gap: 60px;
+  align-items: end;
+  padding-block: 48px 35px;
+}
+
+.outreachStamp {
+  display: flex;
+  width: 105px;
+  height: 105px;
+  border: 1px solid rgb(var(--accent-empowerment));
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transform: rotate(12deg);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  line-height: 1.6;
+  color: rgb(var(--accent-empowerment));
+  flex-shrink: 0;
+}
+
+.outreachCover {
+  position: relative;
+}
+
+.paperLabel {
+  position: absolute;
+  left: 24px;
+  top: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgb(var(--bg-white));
+  padding: 12px 17px;
+  font-size: 0.72rem;
+  transform: rotate(-3deg);
+  box-shadow: 1px 3px 6px #0002;
+}
+
+.coverCaption {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  padding-block: 13px;
+}
+
+.outreachRibbon {
+  margin-top: 25px;
+  background: rgb(var(--accent-environment) / 0.14);
+  padding-block: 24px;
+}
+
+.outreachOpening {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 80px;
+  padding-top: 85px;
+}
+
+.postcards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.postcardTop {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #3332;
+  margin-bottom: 26px;
+}
+
+.outreachVoice {
+  text-align: center;
+  padding-block: 90px;
+}
+
+.outreachCta {
+  background: rgb(var(--accent-environment) / 0.14);
+  padding: 50px 70px;
+  display: grid;
+  grid-template-columns: 0.6fr 1.4fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.outreachAsterisk {
+  font-size: 13rem;
+  line-height: 1;
+  color: rgb(var(--accent-environment));
+  text-align: center;
+}
+
+.postcards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.postcards article {
+  background: rgb(var(--brand-yellow) / 0.16);
+  padding: 27px;
+  border: 1px solid rgb(var(--brand-yellow) / 0.4);
+  box-shadow: 3px 4px 0 rgb(var(--brand-yellow) / 0.4);
+  transform: rotate(-1.2deg);
+}
+
+.postcards article:nth-child(2) {
+  background: rgb(var(--accent-environment) / 0.14);
+  transform: rotate(1.3deg);
+}
+
+.postcards article:nth-child(3) {
+  background: rgb(var(--accent-empowerment) / 0.1);
+  transform: rotate(-0.7deg);
+}
+
+.postcardTop {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #3332;
+  margin-bottom: 26px;
+}
+
+.postcards h3 {
+  font-family: "Comic Neue", sans-serif;
+  font-size: 1.9rem;
+  letter-spacing: -0.045em;
+  margin: 15px 0 24px;
+}

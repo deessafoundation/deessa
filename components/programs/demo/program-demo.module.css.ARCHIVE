@@ -1,4 +1,19 @@
-﻿.root {
+﻿/*
+ * ⚠️ ARCHIVED FILE - DO NOT USE IN NEW CODE ⚠️
+ * 
+ * This file was refactored into modular files on 2026-09-27:
+ * - program-base.module.css (shared styles and theme roots)
+ * - service-concept.module.css (service-specific styles)
+ * - outreach-concept.module.css (outreach-specific styles) 
+ * - research-concept.module.css (research-specific styles)
+ * 
+ * This archive is kept temporarily for reference and verification.
+ * Safe to delete after confirming all functionality works correctly.
+ * 
+ * Original size: 3,150 lines → New total: 720 lines (77% reduction)
+ */
+
+.root {
   --ink: rgb(var(--text-main));
   --muted: rgb(var(--text-muted));
   --paper: rgb(var(--bg-soft));

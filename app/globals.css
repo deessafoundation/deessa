@@ -1,5 +1,5 @@
 /* Import Comic Neue and DM Sans from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -13,7 +13,7 @@
    CSS `color` cannot override. Always serve the bundled monochrome TTF. */
 @font-face {
   font-family: "Marissa Font";
-  src: url('/fonts/MarissaFont-Regular.ttf') format('truetype');
+  src: url("/fonts/MarissaFont-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: "Marissa Font";
-  src: url('/fonts/MarissaFont-Regular.ttf') format('truetype');
+  src: url("/fonts/MarissaFont-Regular.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -43,22 +43,22 @@
 
 :root {
   /* Primary Brand Colors */
-  --brand-primary: 63 171 222;           /* #3FABDE - Ocean Blue */
-  --brand-primary-dark: 11 95 138;       /* #0B5F8A - Deep Ocean */
-  --primary-light: 232 246 252;          /* #E8F6FC - Light blue bg */
-  --brand-purple: 111 62 150;           /* #6F3E96 - Logo Purple */
-  --brand-yellow: 247 197 43;           /* #F7C52B - Logo Yellow */
+  --brand-primary: 63 171 222; /* #3FABDE - Ocean Blue */
+  --brand-primary-dark: 11 95 138; /* #0B5F8A - Deep Ocean */
+  --primary-light: 232 246 252; /* #E8F6FC - Light blue bg */
+  --brand-purple: 111 62 150; /* #6F3E96 - Logo Purple */
+  --brand-yellow: 247 197 43; /* #F7C52B - Logo Yellow */
 
   /* Pillar Accent Colors */
-  --accent-empowerment: 214 51 108;      /* #D6336C - Women & Community */
-  --accent-environment: 149 193 31;      /* #95C11F - Sustainability */
-  --accent-education: 245 158 11;        /* #F59E0B - Learning */
+  --accent-empowerment: 214 51 108; /* #D6336C - Women & Community */
+  --accent-environment: 149 193 31; /* #95C11F - Sustainability */
+  --accent-education: 245 158 11; /* #F59E0B - Learning */
 
   /* Semantic Colors */
-  --success: 22 163 74;                  /* #16A34A - green-600 */
-  --warning: 245 158 11;                 /* #F59E0B - amber-500 */
-  --danger: 220 38 38;                   /* #DC2626 - red-600 */
-  --info: 37 99 235;                     /* #2563EB - blue-600 */
+  --success: 22 163 74; /* #16A34A - green-600 */
+  --warning: 245 158 11; /* #F59E0B - amber-500 */
+  --danger: 220 38 38; /* #DC2626 - red-600 */
+  --info: 37 99 235; /* #2563EB - blue-600 */
 
   /* Neutrals */
   --bg-white: 255 255 255;
@@ -75,7 +75,7 @@
   --popover-foreground: oklch(0.15 0.02 20);
 
   /* Primary - Ocean Blue */
-  --primary: oklch(0.68 0.11 230);       /* Ocean Blue #3FABDE */
+  --primary: oklch(0.68 0.11 230); /* Ocean Blue #3FABDE */
   --primary-foreground: oklch(1 0 0);
 
   --secondary: oklch(0.97 0.005 20);
@@ -101,18 +101,18 @@
   --foreground-muted: oklch(0.5 0.05 20);
 
   /* Chart colors */
-  --chart-1: oklch(0.68 0.11 230);       /* Ocean Blue */
-  --chart-2: oklch(0.65 0.15 345);       /* Empowerment Pink */
-  --chart-3: oklch(0.75 0.15 120);       /* Environment Green */
-  --chart-4: oklch(0.75 0.15 75);        /* Education Amber */
-  --chart-5: oklch(0.55 0.22 25);        /* Accent Red */
-  --chart-6: oklch(0.44 0.13 305);       /* Logo Purple */
-  --chart-7: oklch(0.86 0.16 90);        /* Logo Yellow */
+  --chart-1: oklch(0.68 0.11 230); /* Ocean Blue */
+  --chart-2: oklch(0.65 0.15 345); /* Empowerment Pink */
+  --chart-3: oklch(0.75 0.15 120); /* Environment Green */
+  --chart-4: oklch(0.75 0.15 75); /* Education Amber */
+  --chart-5: oklch(0.55 0.22 25); /* Accent Red */
+  --chart-6: oklch(0.44 0.13 305); /* Logo Purple */
+  --chart-7: oklch(0.86 0.16 90); /* Logo Yellow */
 
   /* Sidebar */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.68 0.11 230);     /* Ocean Blue */
+  --sidebar-primary: oklch(0.68 0.11 230); /* Ocean Blue */
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -127,7 +127,7 @@
   --card-foreground: oklch(0.98 0.005 20);
   --popover: oklch(0.22 0.02 20);
   --popover-foreground: oklch(0.98 0.005 20);
-  --primary: oklch(0.65 0.10 230);
+  --primary: oklch(0.65 0.1 230);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.25 0.02 20);
   --secondary-foreground: oklch(0.98 0.005 20);
@@ -139,10 +139,10 @@
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.3 0.02 20);
   --input: oklch(0.3 0.02 20);
-  --ring: oklch(0.65 0.10 230);
+  --ring: oklch(0.65 0.1 230);
   --surface: oklch(0.22 0.02 20);
   --foreground-muted: oklch(0.6 0.02 20);
-  --chart-1: oklch(0.65 0.10 230);
+  --chart-1: oklch(0.65 0.1 230);
   --chart-2: oklch(0.62 0.14 345);
   --chart-3: oklch(0.72 0.14 120);
   --chart-4: oklch(0.72 0.14 75);
@@ -151,7 +151,7 @@
   --chart-7: oklch(0.86 0.16 90);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.65 0.10 230);
+  --sidebar-primary: oklch(0.65 0.1 230);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -231,8 +231,8 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 @layer base {
@@ -317,9 +317,10 @@
 }
 
 .gradient-pillars {
-  background: linear-gradient(135deg, 
-    rgb(var(--accent-empowerment)) 0%, 
-    rgb(var(--accent-education)) 50%, 
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent-empowerment)) 0%,
+    rgb(var(--accent-education)) 50%,
     rgb(var(--accent-environment)) 100%
   );
 }
@@ -338,24 +339,16 @@
   animation: shimmer 2s infinite;
 }
 
-/* Marquee animation for partner strip */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
 /* Count-up fade */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in-up {
@@ -369,7 +362,7 @@
   .animate-fade-in-up {
     animation: none !important;
   }
-  
+
   * {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
@@ -497,19 +490,19 @@ body.link-highlight a:focus-visible {
 /* Sensory-Friendly Mode - V2 Implementation */
 body.sensory-friendly {
   /* Animations already disabled via reduce-motion */
-  
+
   /* Reduce decorative elements */
   .decorative-gradient,
   .decorative-shape,
   .background-pattern {
     opacity: 0.3 !important;
   }
-  
+
   /* Tone down shadows (keep essential ones only) */
   * {
     box-shadow: none !important;
   }
-  
+
   .card,
   .modal,
   .dropdown,
@@ -519,17 +512,17 @@ body.sensory-friendly {
   select {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
   }
-  
+
   /* Reduce image saturation slightly */
   img:not([role="presentation"]) {
     filter: saturate(0.8);
   }
-  
+
   /* Remove background videos */
   video.background-video {
     display: none !important;
   }
-  
+
   /* Simplify borders */
   * {
     border-radius: min(var(--radius, 0.5rem), 0.5rem) !important;
@@ -556,7 +549,7 @@ html[data-a11y-scope="public"][data-text-scale-high="true"] {
     display: block !important;
     overflow: visible !important;
   }
-  
+
   /* Allow truncated text to wrap */
   .truncate {
     overflow: visible !important;
@@ -574,41 +567,61 @@ body.text-large {
   font-size: 18px;
 }
 
-body.text-large h1 { font-size: 3.5rem; }
-body.text-large h2 { font-size: 2.5rem; }
-body.text-large h3 { font-size: 2rem; }
-body.text-large p, body.text-large span { font-size: 1.125rem; }
+body.text-large h1 {
+  font-size: 3.5rem;
+}
+body.text-large h2 {
+  font-size: 2.5rem;
+}
+body.text-large h3 {
+  font-size: 2rem;
+}
+body.text-large p,
+body.text-large span {
+  font-size: 1.125rem;
+}
 
 body.text-xlarge {
   font-size: 20px;
 }
 
-body.text-xlarge h1 { font-size: 4rem; }
-body.text-xlarge h2 { font-size: 3rem; }
-body.text-xlarge h3 { font-size: 2.25rem; }
-body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
+body.text-xlarge h1 {
+  font-size: 4rem;
+}
+body.text-xlarge h2 {
+  font-size: 3rem;
+}
+body.text-xlarge h3 {
+  font-size: 2.25rem;
+}
+body.text-xlarge p,
+body.text-xlarge span {
+  font-size: 1.25rem;
+}
 
 /* ===========================================
    SECTION ANIMATION ENHANCEMENTS
    =========================================== */
 
-/* Ken Burns effect for hero images */
-@keyframes kenburns {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.08) translate(-1%, -1%); }
-  100% { transform: scale(1) translate(0, 0); }
-}
-
-.animate-kenburns {
-  animation: kenburns 12s ease-in-out infinite;
-}
-
 /* Floating particles */
 @keyframes floatParticle {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-  25% { transform: translateY(-15px) translateX(5px); opacity: 0.7; }
-  50% { transform: translateY(-5px) translateX(-5px); opacity: 0.5; }
-  75% { transform: translateY(-20px) translateX(3px); opacity: 0.6; }
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-15px) translateX(5px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-5px) translateX(-5px);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-20px) translateX(3px);
+    opacity: 0.6;
+  }
 }
 
 .animate-float-particle {
@@ -617,8 +630,15 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Scroll indicator bounce */
 @keyframes scrollBounce {
-  0%, 100% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(10px); opacity: 0.5; }
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 0.5;
+  }
 }
 
 .animate-scroll-bounce {
@@ -627,9 +647,17 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* CTA ripple/pulse animation */
 @keyframes ctaRipple {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(63, 171, 222, 0.5); }
-  50% { box-shadow: 0 0 0 12px rgba(63, 171, 222, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(63, 171, 222, 0); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 171, 222, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(63, 171, 222, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(63, 171, 222, 0);
+  }
 }
 
 .animate-cta-ripple {
@@ -638,10 +666,20 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Badge bounce-in */
 @keyframes badgeBounce {
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.15); }
-  70% { transform: scale(0.95); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .animate-badge-bounce {
@@ -650,8 +688,13 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Icon float up-down */
 @keyframes iconFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .animate-icon-float {
@@ -660,19 +703,42 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Glow border effect */
 @keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 5px rgba(63, 171, 222, 0.2); }
-  50% { box-shadow: 0 0 20px rgba(63, 171, 222, 0.5), 0 0 40px rgba(63, 171, 222, 0.2); }
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(63, 171, 222, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(63, 171, 222, 0.5),
+      0 0 40px rgba(63, 171, 222, 0.2);
+  }
 }
 
-.hover-glow-blue:hover { animation: glowPulse 2s ease-in-out infinite; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
-.hover-glow-green:hover { animation: glowPulse 2s ease-in-out infinite; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
-.hover-glow-orange:hover { animation: glowPulse 2s ease-in-out infinite; box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
-.hover-glow-purple:hover { animation: glowPulse 2s ease-in-out infinite; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+.hover-glow-blue:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+.hover-glow-green:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+.hover-glow-orange:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+}
+.hover-glow-purple:hover {
+  animation: glowPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
 
 /* Timeline line draw */
 @keyframes timelineDraw {
-  from { height: 0; }
-  to { height: 100%; }
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
 }
 
 .animate-timeline-draw {
@@ -681,9 +747,15 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Year bubble pulse */
 @keyframes yearPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .animate-year-pulse {
@@ -692,8 +764,15 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Avatar glow ring */
 @keyframes avatarGlow {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(63, 171, 222, 0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(63, 171, 222, 0.15), 0 0 20px rgba(63, 171, 222, 0.2); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(63, 171, 222, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(63, 171, 222, 0.15),
+      0 0 20px rgba(63, 171, 222, 0.2);
+  }
 }
 
 .animate-avatar-glow {
@@ -702,8 +781,14 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Sound wave expanding rings */
 @keyframes soundWave {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 .animate-sound-wave {
@@ -720,29 +805,21 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Waveform bars */
 @keyframes waveBar {
-  0%, 100% { height: 20%; }
-  50% { height: 80%; }
+  0%,
+  100% {
+    height: 20%;
+  }
+  50% {
+    height: 80%;
+  }
 }
-
-/* Heartbeat button pulse */
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  15% { transform: scale(1.05); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.03); }
-}
-
-.animate-heartbeat {
-  animation: heartbeat 1.5s ease-in-out infinite;
-}
-
 /* Underline draw effect */
 .hover-underline-draw {
   position: relative;
 }
 
 .hover-underline-draw::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -758,8 +835,12 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Marquee reverse direction */
 @keyframes marqueeReverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .animate-marquee-reverse {
@@ -791,7 +872,9 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Card hover lift */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
@@ -822,7 +905,8 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
   transform: rotateY(180deg);
 }
 
-.card-flip-front, .card-flip-back {
+.card-flip-front,
+.card-flip-back {
   backface-visibility: hidden;
 }
 
@@ -849,8 +933,15 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Dot pulse for map markers */
 @keyframes dotPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.8); opacity: 0.3; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.3;
+  }
 }
 
 .animate-dot-pulse {
@@ -859,11 +950,15 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Confetti/pattern overlay for shop section */
 .pattern-confetti {
-  background-image: 
+  background-image:
     radial-gradient(circle, rgba(63, 171, 222, 0.08) 1px, transparent 1px),
     radial-gradient(circle, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
-  background-size: 25px 25px, 40px 40px;
-  background-position: 0 0, 12px 12px;
+  background-size:
+    25px 25px,
+    40px 40px;
+  background-position:
+    0 0,
+    12px 12px;
 }
 
 /* Diagonal stripe texture */
@@ -879,8 +974,13 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Gentle shimmer for new badges */
 @keyframes badgeShimmer {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .animate-badge-shimmer {
@@ -889,8 +989,13 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Shopping cart bounce */
 @keyframes cartBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 .group:hover .animate-cart-bounce {
@@ -903,7 +1008,7 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 }
 
 .connecting-line::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 28px;
   top: 72px;
@@ -914,7 +1019,7 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
 
 /* Star rating */
 .star-rating {
-  color: #F59E0B;
+  color: #f59e0b;
   letter-spacing: 2px;
 }
 
@@ -945,7 +1050,7 @@ body.text-xlarge p, body.text-xlarge span { font-size: 1.25rem; }
   .animate-cart-bounce {
     animation: none !important;
   }
-  
+
   .hover-lift:hover {
     transform: none !important;
   }
@@ -1074,7 +1179,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes scroll-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
     opacity: 0.5;
   }
@@ -1119,7 +1225,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes wave-bar {
-  0%, 100% {
+  0%,
+  100% {
     height: 4px;
   }
   50% {
@@ -1128,7 +1235,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes float-particle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) translateX(0);
   }
   25% {
@@ -1152,7 +1260,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes dot-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -1163,7 +1272,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes badge-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -1172,7 +1282,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes icon-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -1190,7 +1301,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 @keyframes heartbeat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   14% {
@@ -1300,7 +1412,9 @@ body.sensory-friendly .hover-lift:hover {
 
 /* Hover lift effect */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
@@ -1370,7 +1484,8 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 .gradient-pillars {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgb(var(--accent-empowerment)) 0%,
     rgb(var(--accent-education)) 50%,
     rgb(var(--accent-environment)) 100%
@@ -1467,7 +1582,7 @@ body.sensory-friendly .hover-lift:hover {
 .tiptap pre {
   background: oklch(0.22 0.02 20);
   color: oklch(0.98 0.005 20);
-  font-family: 'JetBrainsMono', monospace;
+  font-family: "JetBrainsMono", monospace;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }
@@ -1517,7 +1632,7 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 .dark .tiptap blockquote {
-  border-left-color: oklch(0.65 0.10 230);
+  border-left-color: oklch(0.65 0.1 230);
 }
 
 .dark .tiptap hr {
@@ -1525,11 +1640,11 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 .dark .tiptap a {
-  color: oklch(0.65 0.10 230);
+  color: oklch(0.65 0.1 230);
 }
 
 .dark .tiptap a:hover {
-  color: oklch(0.75 0.10 230);
+  color: oklch(0.75 0.1 230);
 }
 
 /* Image wrapper styling */
@@ -1725,7 +1840,7 @@ body.sensory-friendly .hover-lift:hover {
 }
 
 .dark .tiptap .callout[data-callout-type="info"] {
-  border-left-color: oklch(0.65 0.10 230);
+  border-left-color: oklch(0.65 0.1 230);
   background: oklch(0.22 0.02 230);
 }
 
@@ -1957,7 +2072,6 @@ body.sensory-friendly .hover-lift:hover {
   display: none;
 }
 
-
 /* ============================================================================
    ACCESSIBILITY SYSTEM - CSS Variables & Body Classes
    ============================================================================ */
@@ -1970,9 +2084,9 @@ body.sensory-friendly .hover-lift:hover {
   --a11y-animation-duration: 1;
   --a11y-transition-duration: 200ms;
   --a11y-contrast-multiplier: 1;
-  
+
   /* Dyslexia font (loaded separately) */
-  --font-dyslexic: 'OpenDyslexic', Arial, sans-serif;
+  --font-dyslexic: "OpenDyslexic", Arial, sans-serif;
 }
 
 /* Apply font scaling to body */
@@ -1987,14 +2101,14 @@ body {
    ============================================================================ */
 
 body.high-contrast {
-  --background: var(--a11y-paper);  /* Pure white */
-  --foreground: var(--a11y-ink);  /* Pure black */
+  --background: var(--a11y-paper); /* Pure white */
+  --foreground: var(--a11y-ink); /* Pure black */
   --card: var(--a11y-paper);
   --card-foreground: var(--a11y-ink);
   --border: var(--a11y-ink);
   --primary: var(--a11y-ink);
   --primary-foreground: var(--a11y-paper);
-  
+
   /* Muted / surface / foreground-muted → high contrast */
   --muted: var(--a11y-paper);
   --muted-foreground: var(--a11y-ink);
@@ -2004,14 +2118,14 @@ body.high-contrast {
   --accent-foreground: var(--a11y-ink);
   --secondary: var(--a11y-paper);
   --secondary-foreground: var(--a11y-ink);
-  
+
   /* Brand colors → black for text, white for bg */
   --brand-primary: 0 0 0;
   --brand-primary-dark: 0 0 0;
   --accent-empowerment: 0 0 0;
   --accent-environment: 0 0 0;
   --accent-education: 0 0 0;
-  
+
   /* Chart colors → black */
   --chart-1: var(--a11y-ink);
   --chart-2: var(--a11y-ink);
@@ -2020,7 +2134,7 @@ body.high-contrast {
   --chart-5: var(--a11y-ink);
   --chart-6: var(--a11y-ink);
   --chart-7: var(--a11y-ink);
-  
+
   /* Input / ring */
   --input: var(--a11y-ink);
   --ring: var(--a11y-ink);
@@ -2054,7 +2168,7 @@ body.high-contrast {
     color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Primary colors (blues, brand colors) -> Black background */
   .bg-primary,
   [class*="bg-blue-"],
@@ -2068,7 +2182,7 @@ body.high-contrast {
   [class*="bg-[#f0f8fc]"] {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Ensure text on dark backgrounds is white */
   .bg-primary *,
   [class*="bg-blue-"] *,
@@ -2076,7 +2190,7 @@ body.high-contrast {
   [class*="bg-[#2F9BCA]"] * {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Success/info backgrounds -> White with black border */
   [class*="bg-green-"],
   [class*="bg-emerald-"] {
@@ -2084,7 +2198,7 @@ body.high-contrast {
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Error/warning backgrounds -> White with black border */
   [class*="bg-red-"],
   [class*="bg-yellow-"],
@@ -2094,14 +2208,14 @@ body.high-contrast {
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Purple backgrounds -> White with black border */
   [class*="bg-purple-"] {
     background-color: var(--a11y-paper) !important;
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Dark backgrounds (800-950) -> Stay BLACK with WHITE text */
   [class*="bg-slate-8"],
   [class*="bg-slate-9"],
@@ -2114,7 +2228,7 @@ body.high-contrast {
   .bg-foreground {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Force all children of dark backgrounds to have WHITE text */
   [class*="bg-slate-8"] *,
   [class*="bg-slate-9"] *,
@@ -2125,13 +2239,13 @@ body.high-contrast {
   .bg-foreground * {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Contact section - force darker text */
   section[class*="bg-background"] [class*="text-foreground/70"],
   section[class*="bg-background"] [class*="text-foreground/50"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Light neutral gray backgrounds (50-300) -> WHITE with BLACK text */
   [class*="bg-slate-"]:not([class*="bg-slate-8"]):not([class*="bg-slate-9"]),
   [class*="bg-gray-"]:not([class*="bg-gray-8"]):not([class*="bg-gray-9"]),
@@ -2142,20 +2256,38 @@ body.high-contrast {
     background-color: var(--a11y-paper) !important;
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Text colors -> Black ONLY if not inside dark backgrounds or footer */
-  [class*="text-[#"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-primary"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-blue-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-slate-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-gray-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-green-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-red-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-yellow-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *),
-  [class*="text-orange-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not([class*="bg-gray-8"] *):not([class*="bg-gray-9"] *):not(footer *) {
+  [class*="text-[#"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-primary"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-blue-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-slate-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-gray-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-green-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-red-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-yellow-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *),
+  [class*="text-orange-"]:not(.bg-foreground *):not([class*="bg-slate-8"] *):not([class*="bg-slate-9"] *):not(
+      [class*="bg-gray-8"] *
+    ):not([class*="bg-gray-9"] *):not(footer *) {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* CRITICAL: Keep text-white WHITE when inside buttons/dark backgrounds */
   .bg-primary [class*="text-white"],
   [class*="bg-blue-"] [class*="text-white"],
@@ -2170,7 +2302,7 @@ body.high-contrast {
   a[class*="bg-"] * {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Keep text on primary buttons and their children white */
   button.bg-primary,
   button.bg-primary *,
@@ -2178,7 +2310,7 @@ body.high-contrast {
   .bg-primary button * {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Hero carousel and other sections with gradient overlays - keep text white */
   section[class*="bg-slate-9"] *[class*="text-white"],
   [class*="bg-gradient"] *[class*="text-white"],
@@ -2186,7 +2318,7 @@ body.high-contrast {
   section[aria-roledescription="carousel"] *[class*="text-white"] {
     color: rgb(255, 255, 255) !important;
   }
-  
+
   /* Buttons with primary colors -> Black background (except footer/header) */
   button[class*="bg-[#"]:not(footer *):not(header *),
   a[class*="bg-[#"]:not(footer *):not(header *) {
@@ -2194,23 +2326,25 @@ body.high-contrast {
     color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Remove gradient backgrounds (preserve dark sections that need text contrast) */
   [class*="bg-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
   [class*="from-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
   [class*="via-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
   [class*="to-"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *),
-  [class*="bg-[linear-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(header *) {
+  [class*="bg-[linear-gradient"]:not(section[aria-roledescription="carousel"] *):not(footer):not(footer *):not(
+      header *
+    ) {
     background: var(--a11y-paper) !important;
     background-image: none !important;
   }
-  
+
   /* Fix: Gradient overlays on images must be transparent, not white */
   [class*="absolute"][class*="inset-0"][class*="bg-gradient"] {
     background: transparent !important;
     background-image: none !important;
   }
-  
+
   /* Form elements */
   input:not([type="checkbox"]):not([type="radio"]),
   textarea,
@@ -2219,26 +2353,28 @@ body.high-contrast {
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   input::placeholder,
   textarea::placeholder {
     color: var(--a11y-ink) !important;
     opacity: 0.7 !important;
   }
-  
+
   /* Modals and overlays -> White with strong border (except footer) */
   [role="dialog"],
-  [class*="backdrop-blur"]:not(footer *):not(header *):not([class*="bg-black"]):not([class*="bg-slate-"]):not([class*="bg-gray-"]) {
+  [class*="backdrop-blur"]:not(footer *):not(header *):not([class*="bg-black"]):not([class*="bg-slate-"]):not(
+      [class*="bg-gray-"]
+    ) {
     background-color: var(--a11y-paper) !important;
     border: 3px solid var(--a11y-ink) !important;
   }
-  
+
   /* Focus states -> Strong black outline */
   *:focus-visible {
     outline: 3px solid var(--a11y-ink) !important;
     outline-offset: 2px !important;
   }
-  
+
   /* Links -> Black with underline (except footer which has dark bg) */
   a:not([class*="bg-"]):not(footer a):not(footer *) {
     color: var(--a11y-ink) !important;
@@ -2246,13 +2382,13 @@ body.high-contrast {
     text-decoration-thickness: 2px !important;
     text-underline-offset: 3px !important;
   }
-  
+
   /* Shadows -> Remove (not needed in high contrast) */
   * {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   /* ── CARD ICONS: Black bg + white icon (overrides all colored bg rules) ── */
   /* These icon containers use inline-colored bg classes that need to be uniform in HC mode */
   .w-16.h-16[class*="bg-"] {
@@ -2262,9 +2398,9 @@ body.high-contrast {
   .w-16.h-16[class*="bg-"] svg {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* ── FIX: Restore dark backgrounds where white text is required ── */
-  
+
   /* ── NAVBAR: Ensure white bg with black readable text ── */
   header {
     background-color: var(--a11y-paper) !important;
@@ -2353,7 +2489,7 @@ body.high-contrast {
     color: var(--a11y-ink) !important;
     border-color: var(--a11y-ink) !important;
   }
-  
+
   /* Mobile drawer overlay - keep dark overlay visible */
   header [class*="bg-black/60"] {
     background-color: rgba(0, 0, 0, 0.7) !important;
@@ -2386,7 +2522,7 @@ body.high-contrast {
   header [role="dialog"] [class*="border-slate-200"] {
     border-color: var(--a11y-ink) !important;
   }
-  
+
   /* Hero carousel - restore dark section and gradient overlays for white text */
   section[aria-roledescription="carousel"] {
     background-color: rgb(0, 0, 0) !important;
@@ -2413,9 +2549,9 @@ body.high-contrast {
   section[aria-roledescription="carousel"] [class*="backdrop-blur"] {
     background-color: transparent !important;
   }
-  
+
   /* ── FOOTER: Pure black bg + white text for maximum contrast ── */
-  
+
   footer,
   footer > div,
   footer > div > div,
@@ -2427,7 +2563,7 @@ body.high-contrast {
     border-color: rgba(255, 255, 255, 0.2) !important;
     box-shadow: none !important;
   }
-  
+
   /* Newsletter form and trust builder cards - white border for visibility */
   footer [class*="bg-white/5"],
   footer [class*="bg-white/10"],
@@ -2435,7 +2571,7 @@ body.high-contrast {
     background-color: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
   }
-  
+
   /* Social icon buttons */
   footer .size-10 {
     background-color: rgba(255, 255, 255, 0.1) !important;
@@ -2444,20 +2580,20 @@ body.high-contrast {
   footer .size-10 svg {
     color: rgb(255, 255, 255) !important;
   }
-  
+
   /* Primary accent color - bright teal on black */
   footer [class*="text-primary"],
   footer [class*="text-[#3FABDE]"] {
     color: rgb(100, 200, 255) !important;
   }
-  
+
   /* "Stay Connected" gradient text - solid white instead */
   footer [class*="bg-clip-text"] {
     background: none !important;
     -webkit-text-fill-color: rgb(255, 255, 255) !important;
     color: rgb(255, 255, 255) !important;
   }
-  
+
   /* Links - white, no underline (high contrast doesn't need underline on dark bg) */
   footer a {
     color: rgb(255, 255, 255) !important;
@@ -2467,7 +2603,7 @@ body.high-contrast {
     color: rgb(100, 200, 255) !important;
     text-decoration: underline !important;
   }
-  
+
   /* Divider lines */
   footer [class*="border-t"],
   footer [class*="border-b"],
@@ -2477,23 +2613,23 @@ body.high-contrast {
   footer [class*="bg-gray-700"] {
     background-color: rgba(255, 255, 255, 0.2) !important;
   }
-  
+
   /* Avatar circles - white border */
   footer [class*="rounded-full"][class*="border-2"] {
     border-color: rgb(0, 0, 0) !important;
   }
-  
+
   /* Admin link - keep subtle */
   footer a[class*="opacity-30"] {
     color: rgba(255, 255, 255, 0.4) !important;
   }
-  
+
   /* Timeline section - restore subtle background */
   section[class*="bg-[linear-gradient"] {
     background: rgb(246, 243, 237) !important;
     background-image: none !important;
   }
-  
+
   /* Timeline section - high contrast: black & white cards */
   section[class*="bg-[linear-gradient"] .bg-white {
     background-color: var(--a11y-paper) !important;
@@ -2535,7 +2671,7 @@ body.high-contrast {
     background: var(--a11y-ink) !important;
     background-image: none !important;
   }
-  
+
   /* ── ABOUT PAGE: High contrast overrides ── */
 
   /* ── ABOUT HERO: Visible grayscale photo with readable white text ── */
@@ -2631,7 +2767,7 @@ body.high-contrast {
   [class*="bg-[#f6f3ed]"] {
     background-color: var(--a11y-paper) !important;
   }
-  
+
   /* Gray body text - force black on light backgrounds only */
   [class*="text-[#6b7280]"],
   [class*="text-[#4a4a4a]"] {
@@ -2651,25 +2787,66 @@ body.high-contrast {
   .dark-section a {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* ── Class-based about page selectors ── */
-  .about-heading-dark, .about-step-title { color: var(--a11y-ink) !important; }
-  .about-teal-text, .about-step-number, .about-timeline-year { color: var(--a11y-ink) !important; }
-  .about-quote-block { border-left-color: var(--a11y-ink) !important; background-color: rgb(240, 240, 240) !important; }
-  .about-flow-pill { border-color: var(--a11y-ink) !important; color: var(--a11y-ink) !important; }
-  .about-dashed-line, .about-connector, .about-timeline-track { border-color: var(--a11y-ink) !important; background-color: var(--a11y-ink) !important; }
-  .about-timeline-marker { background-color: var(--a11y-ink) !important; }
-  .about-timeline-progress { background: var(--a11y-ink) !important; background-image: none !important; }
-  .about-partner-icon { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; }
-  .about-partner-icon svg { color: var(--a11y-ink) !important; }
-  .about-resource-icon { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; }
-  .about-resource-icon svg { color: var(--a11y-ink) !important; }
-  .about-download-btn { background-color: var(--a11y-paper) !important; border: 2px solid var(--a11y-ink) !important; color: var(--a11y-ink) !important; }
-  .about-closing-text { color: var(--a11y-ink) !important; }
-  
+  .about-heading-dark,
+  .about-step-title {
+    color: var(--a11y-ink) !important;
+  }
+  .about-teal-text,
+  .about-step-number,
+  .about-timeline-year {
+    color: var(--a11y-ink) !important;
+  }
+  .about-quote-block {
+    border-left-color: var(--a11y-ink) !important;
+    background-color: rgb(240, 240, 240) !important;
+  }
+  .about-flow-pill {
+    border-color: var(--a11y-ink) !important;
+    color: var(--a11y-ink) !important;
+  }
+  .about-dashed-line,
+  .about-connector,
+  .about-timeline-track {
+    border-color: var(--a11y-ink) !important;
+    background-color: var(--a11y-ink) !important;
+  }
+  .about-timeline-marker {
+    background-color: var(--a11y-ink) !important;
+  }
+  .about-timeline-progress {
+    background: var(--a11y-ink) !important;
+    background-image: none !important;
+  }
+  .about-partner-icon {
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
+  }
+  .about-partner-icon svg {
+    color: var(--a11y-ink) !important;
+  }
+  .about-resource-icon {
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
+  }
+  .about-resource-icon svg {
+    color: var(--a11y-ink) !important;
+  }
+  .about-download-btn {
+    background-color: var(--a11y-paper) !important;
+    border: 2px solid var(--a11y-ink) !important;
+    color: var(--a11y-ink) !important;
+  }
+  .about-closing-text {
+    color: var(--a11y-ink) !important;
+  }
+
   /* Partner card borders (Tailwind class is stable) */
-  [class*="border-[#eee]"] { border-color: var(--a11y-ink) !important; }
-  
+  [class*="border-[#eee]"] {
+    border-color: var(--a11y-ink) !important;
+  }
+
   /* Team cards */
   .team-card {
     background-color: var(--a11y-paper) !important;
@@ -2706,7 +2883,7 @@ body.high-contrast {
     color: rgb(255, 255, 255) !important;
     opacity: 1 !important;
   }
-  
+
   /* About hero & CTA - semi-transparent text to solid white */
   [style*="rgba(255,255,255,0.55)"],
   [style*="rgba(255,255,255,0.5)"],
@@ -2717,72 +2894,81 @@ body.high-contrast {
     color: var(--a11y-paper) !important;
     border-color: var(--a11y-paper) !important;
   }
-  
+
   /* CTA donate button - darker teal for contrast */
   [style*="background-color: #29b6c8"],
   [style*="background-color:#29b6c8"] {
     background-color: rgb(0, 100, 100) !important;
   }
-  
+
   /* ── OUR STORY PAGE: Inline style overrides ── */
-  
+
   /* Hero badge - teal text on dark bg → white text */
   [style*="color: #29b6c8"][style*="background-color: rgba(41"],
   [style*="color:#29b6c8"][style*="background-color:rgba(41"] {
     color: var(--a11y-paper) !important;
     background-color: rgba(255, 255, 255, 0.15) !important;
   }
-  
+
   /* Hero subtitle - semi-transparent white → solid white */
   [style*="color: rgba(255, 255, 255, 0.82)"],
   [style*="color:rgba(255, 255, 255, 0.82)"] {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Timeline colored circle icons - white text on colored bg → white on black */
-  .bg-primary, .bg-empowerment, [class*="bg-chart-"] {
+  .bg-primary,
+  .bg-empowerment,
+  [class*="bg-chart-"] {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Timeline colored text labels */
-  .text-primary, .text-empowerment, [class*="text-chart-"] {
+  .text-primary,
+  .text-empowerment,
+  [class*="text-chart-"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Remove all shadows */
-  .shadow-sm, .shadow-lg, .shadow-xl, .shadow-2xl, [class*="shadow-"] {
+  .shadow-sm,
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl,
+  [class*="shadow-"] {
     box-shadow: none !important;
   }
-  
+
   /* Remove gradients */
   [style*="linear-gradient"] {
     background-image: none !important;
   }
-  
+
   /* Mission/Vision card top borders - force black */
   .border-t-8 {
     border-top-color: var(--a11y-ink) !important;
   }
-  
+
   /* Impact icon circles - force white bg, black border */
-  .size-28, .size-32 {
+  .size-28,
+  .size-32 {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Direction badge icon circle */
   .bg-primary\/25 {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* ── STORIES PAGE: High contrast overrides ── */
-  
+
   /* Hard-coded dark headings - force black */
   [class*="text-[#1a1a2e]"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Slate text colors - force black */
   [class*="text-slate-950"],
   [class*="text-slate-900"],
@@ -2793,12 +2979,12 @@ body.high-contrast {
   [class*="text-slate-300"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Teal text - force black */
   .text-teal {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Preserve white text on category badges and image overlays */
   [class*="rounded-full"][class*="text-white"] {
     color: var(--a11y-paper) !important;
@@ -2807,13 +2993,13 @@ body.high-contrast {
   [class*="absolute"][class*="text-white/"] {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Ensure story card titles are visible (black on white) */
   article h3[class*="text-[#1a1a2e]"],
   article h2[class*="text-[#1a1a2e]"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Partner icons - white icon on black bg (bg-*50 forced to black, icon needs to be white) */
   .about-partner-icon {
     background-color: var(--a11y-ink) !important;
@@ -2823,12 +3009,12 @@ body.high-contrast {
   .about-partner-icon i {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Light background sections - force white */
   [class*="bg-[#faf9f6]"] {
     background-color: var(--a11y-paper) !important;
   }
-  
+
   /* Decorative blobs - force to white instead of hiding */
   [class*="bg-primary/10"],
   [class*="bg-secondary/10"],
@@ -2838,7 +3024,7 @@ body.high-contrast {
   [class*="bg-teal/8"] {
     background-color: var(--a11y-paper) !important;
   }
-  
+
   /* Stats card */
   [class*="bg-white/85"],
   [class*="bg-white/80"],
@@ -2846,7 +3032,7 @@ body.high-contrast {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Stat number boxes */
   [class*="bg-primary/8"],
   [class*="bg-secondary/8"],
@@ -2854,12 +3040,12 @@ body.high-contrast {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Secondary text - force black */
   .text-secondary {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Primary buttons - black bg, white text */
   .bg-primary {
     background-color: var(--a11y-ink) !important;
@@ -2868,51 +3054,55 @@ body.high-contrast {
   [class*="bg-primary"][class*="text-white"] {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Secondary buttons */
   .bg-secondary {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Category badges on stories */
-  .bg-violet-600, .bg-emerald-600, .bg-rose-600,
-  .bg-amber-600, .bg-sky-600, .bg-teal-600,
+  .bg-violet-600,
+  .bg-emerald-600,
+  .bg-rose-600,
+  .bg-amber-600,
+  .bg-sky-600,
+  .bg-teal-600,
   .bg-indigo-600 {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Featured story blockquote */
   blockquote {
     background-color: var(--a11y-paper) !important;
     border-left: 4px solid var(--a11y-ink) !important;
   }
-  
+
   /* Tag borders */
   [class*="border-slate-200"] {
     border-color: var(--a11y-ink) !important;
   }
-  
+
   /* Filter tabs - active */
   [class*="bg-[#1a1a2e]"] {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Story cards - white bg, black border, remove shadows */
   article[class*="bg-white"] {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
     box-shadow: none !important;
   }
-  
+
   /* Ring borders on cards - replace with border */
   [class*="ring-1"][class*="ring-slate"] {
     --tw-ring-color: transparent !important;
     box-shadow: none !important;
     border: 1px solid var(--a11y-ink) !important;
   }
-  
+
   /* ── EVENTS PAGE: High contrast overrides ── */
-  
+
   /* Event category chips - preserve white text on colored hex backgrounds */
   [class*="bg-[#0B5F8A]"][class*="text-white"],
   [class*="bg-[#6F3E96]"][class*="text-white"],
@@ -2921,7 +3111,7 @@ body.high-contrast {
   [class*="bg-[#1a1a2e]"][class*="text-white"] {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Event category colored bars and accents - force black */
   [class*="bg-[#0B5F8A]"],
   [class*="bg-[#6F3E96]"],
@@ -2929,7 +3119,7 @@ body.high-contrast {
   [class*="bg-[#D6336C]"] {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Event category text colors - force black */
   [class*="text-[#0B5F8A]"],
   [class*="text-[#6F3E96]"],
@@ -2937,33 +3127,33 @@ body.high-contrast {
   [class*="text-[#D6336C]"] {
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Event urgency badges - white bg with black text and border */
   [class*="bg-[rgba(247,197,43"] {
     background-color: var(--a11y-paper) !important;
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Event icon circles - white bg with black border */
   [class*="bg-[#eaf5fb]"] {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Event detail hero - keep dark overlay for white text */
   [class*="from-black/95"][class*="via-black/60"] {
     background: var(--a11y-ink) !important;
     background-image: none !important;
   }
-  
+
   /* Event stat boxes - white bg with black border */
   [class*="bg-[rgba(111,62,150,0.1)"],
   [class*="bg-[rgba(247,197,43,0.18)"] {
     background-color: var(--a11y-paper) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Event payment method icons & credential icons - white icon on black bg */
   [class*="bg-blue-100"][class*="text-blue-600"],
   [class*="bg-amber-100"][class*="text-amber-600"],
@@ -2986,19 +3176,19 @@ body.high-contrast {
   [class*="bg-teal-100"][class*="text-teal-600"] svg {
     color: var(--a11y-paper) !important;
   }
-  
+
   /* Event success/verification check circle - black with white icon */
   [class*="bg-green-500"] {
     background-color: var(--a11y-ink) !important;
   }
-  
+
   /* Event past event badge - white bg with black text */
   [class*="bg-slate-100"][class*="text-slate-500"] {
     background-color: var(--a11y-paper) !important;
     color: var(--a11y-ink) !important;
     border: 2px solid var(--a11y-ink) !important;
   }
-  
+
   /* Event gradient text - force solid color (bg-clip:text makes text invisible) */
   [class*="bg-clip-text"][class*="text-transparent"] {
     background-image: none !important;
@@ -3006,7 +3196,7 @@ body.high-contrast {
     background-clip: unset !important;
     color: var(--a11y-ink) !important;
   }
-  
+
   /* Event hero pill with backdrop-blur - keep readable */
   [class*="rounded-full"][class*="backdrop-blur"] {
     background-color: rgba(255, 255, 255, 0.9) !important;
@@ -3035,15 +3225,15 @@ body.reduce-motion *::after {
 body.sensory-friendly {
   /* DO NOT apply filter to body - it breaks position:fixed! */
   /* We'll apply filter to specific elements instead */
-  
+
   /* Increase line height for better readability */
   --a11y-line-height: 1.7;
-  
+
   /* Softer shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
-  
+
   /* Reduce spacing intensity */
   letter-spacing: 0.01em;
 }
@@ -3082,9 +3272,18 @@ body.sensory-friendly .accessibility-panel {
 }
 
 /* Kill all animations and transitions (except accessibility widgets and their children) */
-body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *),
-body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *)::before,
-body.sensory-friendly *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not([aria-label="Accessibility options"]):not([aria-label="Accessibility options"] *)::after {
+body.sensory-friendly
+  *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not(
+    [aria-label="Accessibility options"]
+  ):not([aria-label="Accessibility options"] *),
+body.sensory-friendly
+  *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not(
+    [aria-label="Accessibility options"]
+  ):not([aria-label="Accessibility options"] *)::before,
+body.sensory-friendly
+  *:not(.accessibility-button):not(.accessibility-button *):not(.accessibility-panel):not(.accessibility-panel *):not(
+    [aria-label="Accessibility options"]
+  ):not([aria-label="Accessibility options"] *)::after {
   animation-duration: 0s !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0s !important;
@@ -3211,7 +3410,8 @@ body.sensory-friendly [class*="texture-"] {
 }
 
 /* Simplify hover effects - remove transforms (except accessibility widgets) */
-body.sensory-friendly *:not(.accessibility-button):not(.accessibility-panel):not([aria-label="Accessibility options"]):hover {
+body.sensory-friendly
+  *:not(.accessibility-button):not(.accessibility-panel):not([aria-label="Accessibility options"]):hover {
   transform: none !important;
 }
 
@@ -3289,7 +3489,7 @@ body.sensory-friendly [class*="spin"] {
 
 /* Show static alternative for loading state */
 body.sensory-friendly .spinner::after {
-  content: '⏳';
+  content: "⏳";
   font-size: 1.5rem;
 }
 
@@ -3471,24 +3671,24 @@ body.reading-mode main {
     animation: none !important;
     transition: none !important;
   }
-  
+
   /* Preserve high contrast */
   body.high-contrast {
     background: white;
     color: black;
   }
-  
+
   body.high-contrast a {
     color: black;
     text-decoration: underline;
   }
-  
+
   /* Preserve dyslexia font */
   body.dyslexia-font,
   body.dyslexia-font * {
     font-family: var(--font-dyslexic) !important;
   }
-  
+
   /* Hide accessibility controls */
   .accessibility-button,
   .accessibility-toolbar,
