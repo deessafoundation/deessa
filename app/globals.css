@@ -1,5 +1,5 @@
 /* Import Comic Neue and DM Sans from Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Shantell+Sans:ital,wght@0,400..800;1,400..800&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -35,11 +35,16 @@
 
 /* Force Comic Neue on numbers and ampersands inside headings */
 .font-comic-num {
-  font-family: "Comic Neue", sans-serif !important;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif !important;
   font-weight: 700;
 }
 
 @custom-variant dark (&:is(.dark *));
+
+.website-layout {
+  --font-sans: var(--font-comic-neue, "Comic Neue"), sans-serif;
+  --font-comic: var(--font-comic-neue, "Comic Neue"), sans-serif;
+}
 
 :root {
   /* Primary Brand Colors */
@@ -48,6 +53,27 @@
   --primary-light: 232 246 252; /* #E8F6FC - Light blue bg */
   --brand-purple: 111 62 150; /* #6F3E96 - Logo Purple */
   --brand-yellow: 247 197 43; /* #F7C52B - Logo Yellow */
+
+  /* ---- CTA banner / newsletter / footer (sampled from reference design) ---- */
+  --cta-banner: #1a6a9e;                /* Deep-blue band fill */
+  --cta-brush: #3f9fd4;                 /* Sky-blue dry-brush stroke */
+  --cta-brush-pale: #64b6e0;            /* Lightest bristle streaks */
+  --newsletter-bg: #f2f8fc;             /* Very light blue-white strip */
+  --newsletter-rule: #dce8f0;           /* Thin column dividers */
+  --newsletter-heading: #2f9bd7;        /* "Stay Connected" sky blue */
+  --newsletter-navy: #12547e;           /* Bold navy titles + labels */
+  --newsletter-body: #6b7b88;           /* Gray body copy */
+  --newsletter-label: #40505e;          /* Benefit row text */
+  --newsletter-input-border: #cfdde8;
+  --newsletter-placeholder: #9bacb9;
+  --newsletter-subscribe: #1565a0;      /* Solid deep-blue Subscribe fill */
+  --shield-green: #4caf50;              /* Two-tone shield, left half */
+  --shield-blue: #1e88c7;               /* Two-tone shield, right half */
+  --footer-blue: #1c6b9d;               /* Solid footer fill */
+  --footer-muted: #dce9f3;              /* Footer secondary text (lightened from
+                                           reference #c9dcea to clear WCAG AA 4.5:1
+                                           against --footer-blue) */
+  --footer-rule: #3d84b1;               /* Footer hairline dividers */
 
   /* Pillar Accent Colors */
   --accent-empowerment: 214 51 108; /* #D6336C - Women & Community */
@@ -162,7 +188,7 @@
 @theme inline {
   --font-sans: "Comic Neue", sans-serif;
   --font-heading: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
-  --font-comic: "Comic Neue", sans-serif;
+  --font-comic: var(--font-comic-neue, "Comic Neue"), sans-serif;
   --font-marissa: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
   --font-dm-sans: "DM Sans", system-ui, sans-serif;
 
@@ -215,6 +241,24 @@
   --color-chart-7: var(--chart-7);
   --color-brand-purple: rgb(var(--brand-purple));
   --color-brand-yellow: rgb(var(--brand-yellow));
+  --font-brush: "Shantell Sans", "Comic Neue", ui-rounded, sans-serif;
+  --color-cta-banner: var(--cta-banner);
+  --color-cta-brush: var(--cta-brush);
+  --color-cta-brush-pale: var(--cta-brush-pale);
+  --color-newsletter-bg: var(--newsletter-bg);
+  --color-newsletter-rule: var(--newsletter-rule);
+  --color-newsletter-heading: var(--newsletter-heading);
+  --color-newsletter-navy: var(--newsletter-navy);
+  --color-newsletter-body: var(--newsletter-body);
+  --color-newsletter-label: var(--newsletter-label);
+  --color-newsletter-input-border: var(--newsletter-input-border);
+  --color-newsletter-placeholder: var(--newsletter-placeholder);
+  --color-newsletter-subscribe: var(--newsletter-subscribe);
+  --color-shield-green: var(--shield-green);
+  --color-shield-blue: var(--shield-blue);
+  --color-footer-blue: var(--footer-blue);
+  --color-footer-muted: var(--footer-muted);
+  --color-footer-rule: var(--footer-rule);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
@@ -253,6 +297,20 @@
     font-family: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
     font-weight: 500;
   }
+}
+
+/* Newsletter strip input: kill the browser autofill tint so the field keeps the
+   flat white fill the design calls for. */
+.newsletter-input:-webkit-autofill,
+.newsletter-input:-webkit-autofill:hover,
+.newsletter-input:-webkit-autofill:focus,
+.newsletter-input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--newsletter-navy);
+  -webkit-box-shadow: 0 0 0 100vw #ffffff inset;
+  box-shadow: 0 0 0 100vw #ffffff inset;
+  caret-color: var(--newsletter-navy);
+  /* Defers the UA's yellow background repaint indefinitely. */
+  transition: background-color 8000s ease-in-out 0s;
 }
 
 /* Custom utility classes */
@@ -1499,7 +1557,7 @@ body.sensory-friendly .hover-lift:hover {
 
 /* Comic Neue font for numbers */
 .font-comic-num {
-  font-family: "Comic Neue", sans-serif;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif;
   font-weight: 700;
 }
 
@@ -3882,4 +3940,152 @@ body.high-contrast .group button[aria-label*="Play"] > div {
 
 body.high-contrast .group button[aria-label*="Play"] svg {
   color: rgb(0, 0, 0) !important;
+}
+
+/* ===========================================
+   ACCESSIBILITY: TEXT-TO-SPEECH & PREFERENCES
+   =========================================== */
+
+/* ── Spoken section highlight ──────────────────────────────────────────────
+   Applied as an attribute so CMS HTML is never rewritten. Uses an outline plus
+   a background tint so the cue survives high-contrast and forced-colors modes
+   where background colours are overridden. */
+[data-tts-active="true"] {
+  /* Cue the active section with an outline + soft glow only. A background tint
+     was repainting sections that have their own imagery/dark backgrounds
+     (e.g. the podcast banner), washing out their text and visuals. The outline
+     alone is a clear cue and does not alter the section's actual UI. */
+  outline: 2px solid rgb(11 95 138);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgb(63 171 222 / 0.25);
+  scroll-margin-block: 25vh;
+  /* Keep the cue above decorative section backgrounds. */
+  position: relative;
+  z-index: 1;
+}
+
+/* The hero sits on a dark photograph. Highlight its spoken copy rather than
+   the full-bleed section, whose outline falls outside the visible viewport. */
+[aria-roledescription="carousel"] [data-tts-highlight-target][data-tts-active="true"] {
+  outline: 3px solid rgb(125 211 252);
+  outline-offset: 8px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 5px rgb(56 189 248 / 0.25);
+}
+
+body.high-contrast [data-tts-active="true"] {
+  background-color: rgb(255 243 176);
+  outline-color: rgb(0 0 0);
+  outline-width: 3px;
+}
+
+@media (forced-colors: active) {
+  [data-tts-active="true"] {
+    outline: 3px solid Highlight;
+    background-color: Canvas;
+  }
+}
+
+/* ── Reduce motion ────────────────────────────────────────────────────────
+   Opt-in mirror of prefers-reduced-motion for visitors whose OS setting does
+   not match what they want on this site. */
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+body.reduce-motion [class*="animate-"] {
+  animation: none !important;
+}
+
+body.reduce-motion {
+  scroll-behavior: auto !important;
+}
+
+/* ── Calming mode ─────────────────────────────────────────────────────────
+   Lowers visual intensity for visitors with sensory sensitivity, migraine or
+   attention-related needs: desaturated colour, no motion, softer contrast. */
+body.calming-mode {
+  --brand-yellow: 214 200 160;
+}
+
+body.calming-mode img,
+body.calming-mode video,
+body.calming-mode [class*="gradient"] {
+  filter: saturate(0.55) contrast(0.95);
+}
+
+body.calming-mode *,
+body.calming-mode *::before,
+body.calming-mode *::after {
+  animation: none !important;
+  transition-duration: 0.001ms !important;
+  text-shadow: none !important;
+}
+
+body.calming-mode * {
+  box-shadow: none !important;
+}
+
+/* ── Accessibility panel range inputs ─────────────────────────────────────
+   Native <input type="range"> needs per-engine styling. Track and thumb sizes
+   keep the 44px touch target from the wrapper while staying visually compact. */
+.a11y-range {
+  --a11y-range-track: rgb(226 232 240);
+  --a11y-range-fill: rgb(63 171 222);
+}
+
+.a11y-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--a11y-range-track);
+}
+
+.a11y-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  margin-top: -6px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid var(--a11y-range-fill);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+  cursor: pointer;
+}
+
+.a11y-range::-moz-range-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--a11y-range-track);
+}
+
+.a11y-range::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid var(--a11y-range-fill);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+  cursor: pointer;
+}
+
+.a11y-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--a11y-range-fill);
+  outline-offset: 2px;
+}
+
+.a11y-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--a11y-range-fill);
+  outline-offset: 2px;
+}
+
+body.high-contrast .a11y-range {
+  --a11y-range-track: rgb(120 120 120);
+  --a11y-range-fill: rgb(0 0 0);
 }

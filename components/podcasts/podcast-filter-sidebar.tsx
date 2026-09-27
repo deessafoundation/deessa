@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Video, Music, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 
@@ -13,7 +12,6 @@ interface PodcastFilterSidebarProps {
 }
 
 export default function PodcastFilterSidebar({ topics, totalCount }: PodcastFilterSidebarProps) {
-  const [selectedFormat, setSelectedFormat] = useState<'all' | 'video' | 'audio'>('all');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
   const handleTopicToggle = (topic: string) => {
@@ -36,28 +34,6 @@ export default function PodcastFilterSidebar({ topics, totalCount }: PodcastFilt
         <p className="text-sm text-text-muted mb-6">
           {totalCount} episode{totalCount !== 1 ? 's' : ''} available
         </p>
-
-        {/* Format Filter */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-text-main mb-3">
-            Format
-          </label>
-          <Tabs value={selectedFormat} onValueChange={(value: any) => setSelectedFormat(value)}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="all" className="text-xs">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="video" className="text-xs">
-                <Video className="w-3 h-3 mr-1" />
-                Video
-              </TabsTrigger>
-              <TabsTrigger value="audio" className="text-xs">
-                <Music className="w-3 h-3 mr-1" />
-                Audio
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
 
         {/* Topics Filter */}
         {topics.length > 0 && (
@@ -87,12 +63,11 @@ export default function PodcastFilterSidebar({ topics, totalCount }: PodcastFilt
         )}
 
         {/* Clear Filters */}
-        {(selectedFormat !== 'all' || selectedTopics.length > 0) && (
+        {(selectedTopics.length > 0) && (
           <Button
             variant="outline"
             size="sm"
             onClick={() => {
-              setSelectedFormat('all');
               setSelectedTopics([]);
             }}
             className="w-full mt-6"

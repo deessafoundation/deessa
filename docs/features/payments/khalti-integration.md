@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Khalti Payment Gateway Integration Guide"
-description: "This document provides a comprehensive guide for integrating and managing Khalti payments in the Deesha Foundation ap..."
-owner: "Deesha Team"
+description: "This document provides a comprehensive guide for integrating and managing Khalti payments in the Deessa Foundation ap..."
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Khalti Payment Gateway Integration Guide
 
-This document provides a comprehensive guide for integrating and managing Khalti payments in the Deesha Foundation application.
+This document provides a comprehensive guide for integrating and managing Khalti payments in the Deessa Foundation application.
 
 ## Table of Contents
 
@@ -190,7 +190,7 @@ Content-Type: application/json
   "website_url": "https://yoursite.com",
   "amount": 1000,
   "purchase_order_id": "donation-uuid",
-  "purchase_order_name": "Donation to Deesha Foundation",
+  "purchase_order_name": "Donation to Deessa Foundation",
   "customer_info": {
     "name": "John Doe",
     "email": "john@example.com",
@@ -205,7 +205,7 @@ Content-Type: application/json
   "product_details": [
     {
       "identity": "donation-uuid",
-      "name": "Donation to Deesha Foundation",
+      "name": "Donation to Deessa Foundation",
       "total_price": 1000,
       "quantity": 1,
       "unit_price": 1000
@@ -459,4 +459,4 @@ For issues or questions:
 1. Check this documentation
 2. Review server logs
 3. Contact Khalti support
-4. Contact Deesha Foundation technical team
+4. Contact Deessa Foundation technical team

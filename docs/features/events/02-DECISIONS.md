@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Architectural Decisions & Rationale"
 description: "Version: 1.1"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

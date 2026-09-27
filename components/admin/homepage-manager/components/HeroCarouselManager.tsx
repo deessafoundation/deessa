@@ -8,8 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { FancySelect } from "@/components/ui/fancy-select"
-import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Plus, Trash2, GripVertical, Eye, EyeOff, Upload, Link as LinkIcon, X } from "lucide-react"
 import type { HomepageHeroCarouselSettings, HeroCarouselSlide } from "@/lib/types/homepage-settings"
+import { notifications } from "@/lib/notifications"
 
 interface HeroCarouselManagerProps {
   heroCarousel: HomepageHeroCarouselSettings
@@ -18,6 +20,7 @@ interface HeroCarouselManagerProps {
 
 export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCarouselManagerProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
 
   const updateSettings = (updates: Partial<HomepageHeroCarouselSettings>) => {
     onChange({ ...heroCarousel, ...updates })
@@ -51,6 +54,64 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
 
   const toggleVisibility = (index: number) => {
     updateSlide(index, { visible: !heroCarousel.slides[index].visible })
+  }
+
+  const handleImageUpload = async (index: number, file: File) => {
+    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+    if (!validTypes.includes(file.type)) {
+      notifications.showError({
+        title: "Invalid file type",
+        description: "Please upload a JPG, PNG, or WebP image.",
+      })
+      return
+    }
+
+    const maxSize = 5 * 1024 * 1024 // 5MB (hero images are full-screen)
+    if (file.size > maxSize) {
+      notifications.showError({
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB.",
+      })
+      return
+    }
+
+    setUploadingIndex(index)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      formData.append("folder", "homepage-hero")
+      formData.append("customName", `hero-slide-${index + 1}`)
+
+      const currentImage = heroCarousel.slides[index].image
+      if (currentImage?.includes("/storage/v1/object/public/")) {
+        const urlParts = currentImage.split("/storage/v1/object/public/")[1]
+        if (urlParts) {
+          formData.append("oldFilePath", urlParts.split("/").slice(1).join("/"))
+        }
+      }
+
+      const response = await fetch("/api/upload", { method: "POST", body: formData })
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Upload failed")
+      }
+
+      const data = await response.json()
+      updateSlide(index, { image: data.url })
+
+      notifications.showSuccess({
+        title: "Image uploaded",
+        description: `Slide ${index + 1} image has been uploaded successfully.`,
+      })
+    } catch (error) {
+      console.error("Upload error:", error)
+      notifications.showError({
+        title: "Upload failed",
+        description: error instanceof Error ? error.message : "Could not upload image. Please try again.",
+      })
+    } finally {
+      setUploadingIndex(null)
+    }
   }
 
   const handleDragStart = (index: number) => {
@@ -164,15 +225,65 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Image URL */}
+                  {/* Slide Image — upload directly or paste a URL */}
                   <div>
-                    <Label>Image URL</Label>
-                    <Input
-                      value={slide.image}
-                      onChange={(e) => updateSlide(index, { image: e.target.value })}
-                      placeholder="https://... or /image.jpg"
-                      className="mt-1"
-                    />
+                    <Label>Slide Image</Label>
+                    <Tabs defaultValue="upload" className="mt-2">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="upload" className="flex items-center gap-2">
+                          <Upload className="w-4 h-4" />
+                          Upload
+                        </TabsTrigger>
+                        <TabsTrigger value="url" className="flex items-center gap-2">
+                          <LinkIcon className="w-4 h-4" />
+                          URL
+                        </TabsTrigger>
+                      </TabsList>
+
+                      <TabsContent value="upload" className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) handleImageUpload(index, file)
+                              e.target.value = ""
+                            }}
+                            disabled={uploadingIndex === index}
+                            className="block w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-600 transition file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-gradient-to-r file:from-cyan-500 file:to-sky-500 file:px-4 file:py-2 file:text-sm file:font-bold file:text-white file:shadow-lg file:shadow-cyan-500/25 hover:border-gray-400 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+                          {slide.image && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => updateSlide(index, { image: "" })}
+                              title="Remove image"
+                              className="shrink-0"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">Max 5MB • JPG, PNG, or WebP • landscape works best (1920x1080px+)</p>
+                        {uploadingIndex === index && (
+                          <div className="flex items-center gap-2 text-xs text-primary">
+                            <div className="h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                            <span>Uploading...</span>
+                          </div>
+                        )}
+                      </TabsContent>
+
+                      <TabsContent value="url" className="space-y-2">
+                        <Input
+                          value={slide.image}
+                          onChange={(e) => updateSlide(index, { image: e.target.value })}
+                          placeholder="https://... or /image.jpg"
+                        />
+                        <p className="text-xs text-gray-500">Enter a direct URL to an image, or a path from the public folder</p>
+                      </TabsContent>
+                    </Tabs>
+
                     {slide.image && (
                       <div className="mt-2 relative h-32 rounded-lg overflow-hidden border">
                         <img

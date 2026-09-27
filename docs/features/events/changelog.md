@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Management Module - Changelog"
 description: "All notable changes to this project will be documented in this file."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

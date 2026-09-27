@@ -11,7 +11,7 @@
 
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import type {
   HomepageStatsSettings,
   HomepageStorySettings,
@@ -48,7 +48,11 @@ import {
 
 async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
   try {
-    const supabase = await createClient()
+    // Homepage settings are public content, but the site_settings table may be
+    // protected by RLS for anonymous visitors. Read it on the server with the
+    // service client so a logged-out homepage never falls back to stale
+    // hard-coded content while the admin correctly shows the database value.
+    const supabase = createServiceRoleClient()
     const { data, error } = await supabase
       .from("site_settings")
       .select("value")
@@ -58,10 +62,16 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       .maybeSingle()
 
     if (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[homepage settings] Falling back for ${key}:`, error)
+      }
       return defaultValue
     }
 
     if (!data || !data.value) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[homepage settings] Falling back for ${key}: no data`)
+      }
       return defaultValue
     }
 
@@ -70,7 +80,10 @@ async function getHomepageSetting<T>(key: string, defaultValue: T): Promise<T> {
       ...defaultValue,
       ...data.value,
     } as T
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[homepage settings] Falling back for ${key}:`, error)
+    }
     return defaultValue
   }
 }
@@ -98,10 +111,18 @@ export async function getHomepageStats(): Promise<HomepageStatsSettings> {
  * Get homepage "How deessa Started" story section with fallback
  */
 export async function getHomepageStory(): Promise<HomepageStorySettings> {
-  return getHomepageSetting<HomepageStorySettings>(
+  const settings = await getHomepageSetting<HomepageStorySettings>(
     HOMEPAGE_SETTINGS_KEYS.STORY,
     DEFAULT_HOMEPAGE_STORY
   )
+  return {
+    ...settings,
+    paragraphs: settings.paragraphs.map((paragraph) =>
+      paragraph
+        .replace("two little girls — our twin daughters", "two little girls, our twin daughters")
+        .replace('their story — "Dee"', 'their story: "Dee"')
+    ),
+  }
 }
 
 // ============================================================================
@@ -112,10 +133,24 @@ export async function getHomepageStory(): Promise<HomepageStorySettings> {
  * Get homepage "What We Do" core pillars section with fallback
  */
 export async function getHomepageWhatWeDo(): Promise<HomepageWhatWeDoSettings> {
-  return getHomepageSetting<HomepageWhatWeDoSettings>(
+  const settings = await getHomepageSetting<HomepageWhatWeDoSettings>(
     HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO,
     DEFAULT_WHAT_WE_DO
   )
+  return {
+    ...settings,
+    title: settings.title.replace(
+      "We turn understanding into action — for children, families, and communities.",
+      "We turn understanding into action for children, families, and communities."
+    ),
+    pillars: settings.pillars.map((pillar) => ({
+      ...pillar,
+      description: pillar.description.replace(
+        "child's rights — so inclusion",
+        "child's rights, so inclusion"
+      ),
+    })),
+  }
 }
 
 // ============================================================================
@@ -133,7 +168,7 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
         id: "education",
         badge: "📚 Education",
         headline: "Building Classrooms, Building Futures",
-        body: "Since 2015, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities, ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+        body: "Since 2022, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities, ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
         bullets: [
           "50+ schools built & renovated from Humla to Dang",
           "500+ teachers trained in child-centered pedagogy",
@@ -192,10 +227,20 @@ export async function getHomepagePrograms(): Promise<HomepageProgramsSettings> {
     ],
   }
 
-  return getHomepageSetting<HomepageProgramsSettings>(
+  const settings = await getHomepageSetting<HomepageProgramsSettings>(
     HOMEPAGE_SETTINGS_KEYS.PROGRAMS,
     defaultPrograms
   )
+  return {
+    ...settings,
+    programs: settings.programs.map((program) => ({
+      ...program,
+      body: program.body
+        .replace("communities — ensuring", "communities, ensuring")
+        .replace("maternal care — meeting", "maternal care, meeting")
+        .replace("leadership workshops — creating", "leadership workshops, creating"),
+    })),
+  }
 }
 
 // ============================================================================
@@ -313,10 +358,17 @@ export async function getHomepageBanners(): Promise<HomepageBannersSettings> {
     ],
   }
 
-  return getHomepageSetting<HomepageBannersSettings>(
+  const settings = await getHomepageSetting<HomepageBannersSettings>(
     HOMEPAGE_SETTINGS_KEYS.BANNERS,
     defaultBanners
   )
+  return {
+    ...settings,
+    banners: settings.banners.map((banner) => ({
+      ...banner,
+      body: banner.body?.replace("we award — these are", "we award. These are"),
+    })),
+  }
 }
 
 // ============================================================================
@@ -365,7 +417,7 @@ export async function getHomepageMarqueeSettings(): Promise<HomepageMarqueeSetti
 export async function getHomepageSEO(): Promise<HomepageSEOSettings> {
   const defaultSEO: HomepageSEOSettings = {
     title: "deessa Foundation - Empowering Communities Across Nepal",
-    description: "Since 2015, deessa Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
+    description: "Since 2022, deessa Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
     ogImage: "/og-image-home.jpg",
     keywords: ["Nepal NGO", "education Nepal", "healthcare Nepal", "community development", "rural empowerment"],
   }
@@ -426,10 +478,20 @@ export async function getHomepageFeaturedStoriesRules(): Promise<HomepageFeature
  * Get homepage hero carousel slides
  */
 export async function getHomepageHeroCarousel(): Promise<HomepageHeroCarouselSettings> {
-  return getHomepageSetting<HomepageHeroCarouselSettings>(
+  const settings = await getHomepageSetting<HomepageHeroCarouselSettings>(
     HOMEPAGE_SETTINGS_KEYS.HERO_CAROUSEL,
     DEFAULT_HERO_CAROUSEL
   )
+  return {
+    ...settings,
+    slides: settings.slides.map((slide) => ({
+      ...slide,
+      subtitle: slide.subtitle.replace(
+        "Real voices, real stories — honest conversations",
+        "Real voices, real stories. Honest conversations"
+      ),
+    })),
+  }
 }
 
 // ============================================================================
@@ -440,10 +502,23 @@ export async function getHomepageHeroCarousel(): Promise<HomepageHeroCarouselSet
  * Get homepage testimonials
  */
 export async function getHomepageTestimonials(): Promise<HomepageTestimonialsSettings> {
-  return getHomepageSetting<HomepageTestimonialsSettings>(
+  const settings = await getHomepageSetting<HomepageTestimonialsSettings>(
     HOMEPAGE_SETTINGS_KEYS.TESTIMONIALS,
     DEFAULT_TESTIMONIALS
   )
+
+  // Replace only the original placeholder testimonials (including the User 1,
+  // User 2 style records). This makes the new Global Voices section available
+  // in production without overwriting administrators' real CMS entries.
+  const legacyNames = new Set(['Sita Sharma', 'Ram Bahadur Thapa', 'Maya Gurung'])
+  const isPlaceholderName = (name: string) =>
+    legacyNames.has(name.trim()) || /^User\s+\d+$/i.test(name.trim())
+  const isLegacyPlaceholder =
+    settings.testimonials.length > 0 &&
+    settings.testimonials.length <= DEFAULT_TESTIMONIALS.testimonials.length &&
+    settings.testimonials.every((testimonial) => isPlaceholderName(testimonial.name))
+
+  return isLegacyPlaceholder ? DEFAULT_TESTIMONIALS : settings
 }
 
 // ============================================================================

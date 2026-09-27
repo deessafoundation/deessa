@@ -1,7 +1,7 @@
 ---
 title: "V2 PaymentService Events Integration — Post-Implementation Review"
 description: "Result: ✅ SUCCESSFUL IMPLEMENTATION"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

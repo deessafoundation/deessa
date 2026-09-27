@@ -2,14 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB default
+// Hero carousel images are displayed full-screen, so they get a higher
+// limit to allow high-resolution (1920px+) photos.
+const MAX_FILE_SIZE_BY_FOLDER: Record<string, number> = {
+  'homepage-hero': 5 * 1024 * 1024, // 5MB
+}
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
-// Bucket configuration for different upload types
+// Bucket configuration for different upload types.
+// Homepage images need a public bucket because their saved URL is rendered on
+// the public site. Do not send them to the private, 2 MB support bucket.
 const BUCKET_CONFIG: Record<string, string> = {
   testimonials: 'testimonials',
   'support-screenshots': 'support-screenshots',
-  media: 'media',
+  'homepage-hero': 'hero-images',
+  media: 'support-screenshots', // Temporarily using support-screenshots bucket
 }
 
 export async function POST(request: NextRequest) {
@@ -45,10 +53,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
+    // Validate file size (per-folder limits, e.g. hero images allow more)
+    const maxFileSize = MAX_FILE_SIZE_BY_FOLDER[folder] ?? MAX_FILE_SIZE
+    if (file.size > maxFileSize) {
+      const maxMb = Math.round(maxFileSize / (1024 * 1024))
       return NextResponse.json(
-        { error: 'File too large. Maximum size is 2MB.' },
+        { error: `File too large. Maximum size is ${maxMb}MB.` },
         { status: 400 }
       )
     }
@@ -92,8 +102,9 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Upload error:', uploadError)
+      console.error('Upload details:', { bucketName, filePath, fileType: file.type, fileSize: file.size })
       return NextResponse.json(
-        { error: 'Failed to upload file. Please try again.' },
+        { error: `Failed to upload file: ${uploadError.message || 'Unknown error'}` },
         { status: 500 }
       )
     }

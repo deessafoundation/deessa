@@ -1,7 +1,7 @@
-﻿---
+---
 title: "V1 Code Cleanup Guide - Payment Architecture V2"
 description: "This guide provides instructions for removing V1 payment code and feature flags after V2 has been successfully runnin..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: developer

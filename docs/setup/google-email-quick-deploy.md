@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Receipt System - Quick Deployment Guide (Google Email)"
 description: "File: scripts/db/migrations/010-receipt-system.sql"
 owner: "Deesha Team"

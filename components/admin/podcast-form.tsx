@@ -51,7 +51,7 @@ export default function PodcastForm({ podcast, mode }: PodcastFormProps) {
     youtube_id: podcast?.youtube_id || '',
     thumbnail_url: podcast?.thumbnail_url || '',
     duration: podcast?.duration || '',
-    format: podcast?.format || 'video',
+    format: 'video',
     episode_number: podcast?.episode_number || '',
     topics: podcast?.topics || [],
     show_notes: podcast?.show_notes || '',
@@ -441,33 +441,7 @@ export default function PodcastForm({ podcast, mode }: PodcastFormProps) {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label>Format</Label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="video"
-                      checked={formData.format === 'video'}
-                      onChange={(e) =>
-                        setFormData({ ...formData, format: e.target.value })
-                      }
-                    />
-                    <span>Video</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="audio"
-                      checked={formData.format === 'audio'}
-                      onChange={(e) =>
-                        setFormData({ ...formData, format: e.target.value })
-                      }
-                    />
-                    <span>Audio</span>
-                  </label>
-                </div>
-              </div>
+              <p className="text-sm text-text-muted">Format: Video</p>
 
               <div className="space-y-2">
                 <Label>Topics</Label>

@@ -1,6 +1,26 @@
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createStaticClient } from "@/lib/supabase/static"
 
+const excerptEdits: Array<[string, string]> = [
+  ["silence would last forever — until", "silence would last forever until"],
+  ["classroom — and changed", "classroom and changed"],
+  ["her son — and herself", "her son and herself"],
+  ["children turned two — and see", "children turned two and see"],
+  ["that question — on their own terms", "that question on their own terms"],
+  ["ours was built — and why", "ours was built and why"],
+]
+
+function polishStoryExcerpt<T extends { excerpt?: string | null }>(story: T): T {
+  if (!story.excerpt) return story
+  return {
+    ...story,
+    excerpt: excerptEdits.reduce(
+      (excerpt, [oldText, newText]) => excerpt.replace(oldText, newText),
+      story.excerpt
+    ),
+  }
+}
+
 export async function getPublishedStories() {
   const supabase = await createClient()
   const { data, error } = await supabase
@@ -13,7 +33,7 @@ export async function getPublishedStories() {
     console.error("Error fetching stories:", error)
     return []
   }
-  return data || []
+  return (data || []).map(polishStoryExcerpt)
 }
 
 export function getPublishedStoriesStatic() {
@@ -51,9 +71,9 @@ export async function getFeaturedStory() {
       .order("published_at", { ascending: false })
       .limit(1)
       .single()
-    return fallback
+    return fallback ? polishStoryExcerpt(fallback) : fallback
   }
-  return data
+  return data ? polishStoryExcerpt(data) : data
 }
 
 export async function getStoryBySlug(slug: string) {
@@ -76,5 +96,5 @@ export async function getStoryBySlug(slug: string) {
     return null
   }
 
-  return data
+  return data ? polishStoryExcerpt(data) : data
 }

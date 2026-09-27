@@ -7,7 +7,7 @@ import styles from "@/components/page-hero-contrast.module.css"
 
 export const metadata: Metadata = {
   title: "What We Do - deessa Foundation",
-  description: "From classrooms in Karnali to clinics in the Terai — our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
+  description: "From classrooms in Karnali to clinics in the Terai, our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
 }
 
 const categoryMeta: Record<string, { label: string; color: string }> = {
@@ -121,7 +121,7 @@ export default async function ProgramsPage() {
 
           {/* Subtitle */}
           <p className="mb-8 text-[17px] font-dm-sans text-white/76 max-w-[460px] leading-[1.7]">
-            From classrooms in Karnali to clinics in the Terai — sustainable education, healthcare, and empowerment
+            From classrooms in Karnali to clinics in the Terai, our work brings sustainable education, healthcare, and empowerment
             reaching Nepal&apos;s most remote communities.
           </p>
 
@@ -172,10 +172,10 @@ export default async function ProgramsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="text-center mb-14 md:mb-20">
-            <div className="mb-4 text-[11px] font-comic tracking-widest text-[#29b6c8] uppercase">
+            <div className="mb-4 text-[11px] font-comic tracking-widest text-[#15151c] uppercase">
               What We Do
             </div>
-            <h2 className="text-[32px] sm:text-[40px] md:text-[52px] font-marissa leading-[1.15] text-[#1a1a2e] mb-5 px-4">
+            <h2 className="text-[32px] sm:text-[40px] md:text-[52px] font-marissa leading-[1.15] text-[#0b76b7] mb-5 px-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               We turn understanding into action for children, families, and communities.
             </h2>
             <p className="text-[16px] md:text-[18px] font-dm-sans text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
@@ -186,7 +186,8 @@ export default async function ProgramsPage() {
           {/* 4 Pillars Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {/* Pillar 1: Awareness */}
-            <div className="group relative rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
+            <Link href="/whatwedo/awareness" aria-label="Explore Awareness and Community Engagement" className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200">
+            <div className="relative h-full rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-t-2xl" />
               
               <div className="flex flex-col items-center text-center h-full">
@@ -198,7 +199,7 @@ export default async function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Awareness & Community Engagement
                 </h3>
 
@@ -206,11 +207,14 @@ export default async function ProgramsPage() {
                 <p className="text-[14px] font-dm-sans text-slate-600 leading-relaxed">
                   We break the silence. Through community campaigns, social media, podcasts, and public conversations, we challenge myths and replace stigma with understanding.
                 </p>
+                <span className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-bold text-blue-600">Explore this area →</span>
               </div>
             </div>
+            </Link>
 
             {/* Pillar 2: Training */}
-            <div className="group relative rounded-2xl bg-gradient-to-br from-green-50 to-green-100/50 border border-green-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
+            <Link href="/whatwedo/training" aria-label="Explore Training" className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-green-200">
+            <div className="relative h-full rounded-2xl bg-gradient-to-br from-green-50 to-green-100/50 border border-green-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-t-2xl" />
               
               <div className="flex flex-col items-center text-center h-full">
@@ -222,7 +226,7 @@ export default async function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Training
                 </h3>
 
@@ -230,11 +234,14 @@ export default async function ProgramsPage() {
                 <p className="text-[14px] font-dm-sans text-slate-600 leading-relaxed">
                   We equip parents, teachers, health workers, and caregivers with the skills to spot autism early and support every child, the right way.
                 </p>
+                <span className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-bold text-green-700">Explore this area →</span>
               </div>
             </div>
+            </Link>
 
             {/* Pillar 3: Resources */}
-            <div className="group relative rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
+            <Link href="/whatwedo/resources" aria-label="Explore Resources" className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200">
+            <div className="relative h-full rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t-2xl" />
               
               <div className="flex flex-col items-center text-center h-full">
@@ -246,7 +253,7 @@ export default async function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Resources
                 </h3>
 
@@ -254,11 +261,14 @@ export default async function ProgramsPage() {
                 <p className="text-[14px] font-dm-sans text-slate-600 leading-relaxed">
                   No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.
                 </p>
+                <span className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-700">Explore this area →</span>
               </div>
             </div>
+            </Link>
 
             {/* Pillar 4: Advocacy */}
-            <div className="group relative rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
+            <Link href="/whatwedo/advocacy" aria-label="Explore Advocacy" className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-200">
+            <div className="relative h-full rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200/50 p-6 md:p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-500">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-t-2xl" />
               
               <div className="flex flex-col items-center text-center h-full">
@@ -270,7 +280,7 @@ export default async function ProgramsPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3">
+                <h3 className="text-[20px] md:text-[22px] font-marissa text-[#1a1a2e] mb-3" style={{ WebkitTextStroke: "0.45px currentColor" }}>
                   Advocacy
                 </h3>
 
@@ -278,22 +288,12 @@ export default async function ProgramsPage() {
                 <p className="text-[14px] font-dm-sans text-slate-600 leading-relaxed">
                   We push for inclusive schools and stronger policies that protect every child&apos;s rights, so inclusion becomes a right, not a privilege.
                 </p>
+                <span className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-bold text-purple-700">Explore this area →</span>
               </div>
             </div>
-          </div>
-
-          {/* Bottom CTA */}
-          <div className="text-center mt-12 md:mt-16">
-            <Link
-              href="/impact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[15px] hover:bg-[#1a8fa0] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
-            >
-              See Our Full Impact
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
             </Link>
           </div>
+
         </div>
       </section>
 

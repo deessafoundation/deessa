@@ -95,6 +95,12 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data: https://fonts.gstatic.com",
+              // The accessibility reader plays server-synthesized speech as a
+              // data: URL (lib/tts/providers/cloud-tts-provider.ts), and the
+              // site serves its own video/audio files. 'self' does NOT cover
+              // the data:/blob: schemes, so they must be listed explicitly —
+              // without this, media is blocked and nothing is spoken aloud.
+              "media-src 'self' data: blob: https:",
               "connect-src 'self' https://*.supabase.co https://api.stripe.com",
               // blob: is required because the app frames its own receipt PDF
               // preview in a blob: iframe (components/receipt-preview.tsx,

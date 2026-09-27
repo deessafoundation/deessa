@@ -6,9 +6,9 @@ export interface TimelineItem {
 
 export const timeline: TimelineItem[] = [
   {
-    year: "2015",
+    year: "2022",
     title: "Foundation Established",
-    description: "Following the devastating earthquake, a group of volunteers formalized deessa to aid reconstruction.",
+    description: "A group of volunteers formalized deessa to serve communities that are often left behind.",
   },
   {
     year: "2017",

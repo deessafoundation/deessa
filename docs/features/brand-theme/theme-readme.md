@@ -1,7 +1,7 @@
-﻿---
+---
 title: "ðŸŽ¨ New Brand Theme - Ocean Blue"
 description: "This folder contains all resources for the new deessa Foundation brand theme transition from red to ocean blue."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: operator

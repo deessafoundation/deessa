@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Play, Radio, Podcast as PodcastIcon } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { Youtube } from '@/components/social-icons';
 import { Button } from '@/components/ui/button';
 import { Podcast } from '@/lib/types/podcast';
@@ -31,18 +31,6 @@ export default function PodcastMainHero({ episodes }: PodcastMainHeroProps) {
     return () => clearInterval(interval);
   }, [episodes.length, hasMultipleEpisodes, isPaused]);
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + episodes.length) % episodes.length);
-    setIsPaused(true);
-    setTimeout(() => setIsPaused(false), 15000); // Resume after 15s
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % episodes.length);
-    setIsPaused(true);
-    setTimeout(() => setIsPaused(false), 15000); // Resume after 15s
-  };
-
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
     setIsPaused(true);
@@ -51,18 +39,15 @@ export default function PodcastMainHero({ episodes }: PodcastMainHeroProps) {
 
   return (
     <>
-      <section className="py-12 relative">
+      <section id="episodes" className="scroll-mt-28 py-8 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Text Content */}
           <div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-main mb-6">
-              DEESSA Voices: <span className="text-brand-primary">Stories of Resilience</span>
-            </h1>
+            <p className="text-sm font-bold uppercase tracking-widest text-brand-primary mb-4">Featured conversations</p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-main mb-6">Real experiences. Shared understanding.</h2>
             
             <p className="text-lg text-text-muted leading-relaxed mb-8">
-              Join us as we explore powerful stories, amplify diverse voices, and spark
-              conversations that matter. Each episode brings you closer to the heart of our
-              mission for inclusion and community empowerment.
+              Hear from parents, professionals, and advocates sharing lived experiences and insights about autism, acceptance, and inclusion.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -72,35 +57,10 @@ export default function PodcastMainHero({ episodes }: PodcastMainHeroProps) {
                 className="bg-brand-primary hover:bg-brand-primary-dark text-white px-8 py-6 text-lg font-semibold"
               >
                 <Play className="w-5 h-5 mr-2" fill="currentColor" />
-                {hasMultipleEpisodes ? 'Play Featured' : 'Play Latest'}
+                Watch Episode {episode.episodeNumber}
               </Button>
 
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-semibold text-text-muted uppercase tracking-wide">
-                  Listen On:
-                </span>
-                <div className="flex items-center gap-3">
-                  <button
-                    className="w-10 h-10 rounded-full bg-bg-soft hover:bg-brand-primary/10 flex items-center justify-center transition-colors"
-                    aria-label="Listen on Podcast"
-                  >
-                    <PodcastIcon className="w-5 h-5 text-text-main" />
-                  </button>
-                  <button
-                    className="w-10 h-10 rounded-full bg-bg-soft hover:bg-brand-primary/10 flex items-center justify-center transition-colors"
-                    aria-label="Listen on Radio"
-                  >
-                    <Radio className="w-5 h-5 text-text-main" />
-                  </button>
-                  <button
-                    onClick={() => openVideoModal(episode.youtubeId, episode.title)}
-                    className="w-10 h-10 rounded-full bg-bg-soft hover:bg-brand-primary/10 flex items-center justify-center transition-colors"
-                    aria-label="Watch on YouTube"
-                  >
-                    <Youtube className="w-5 h-5 text-text-main" />
-                  </button>
-                </div>
-              </div>
+              <a href="https://www.youtube.com/@deessaFoundation/videos" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-brand-primary font-semibold"><Youtube className="w-5 h-5" />Watch on YouTube</a>
             </div>
           </div>
 
@@ -141,7 +101,7 @@ export default function PodcastMainHero({ episodes }: PodcastMainHeroProps) {
                         ? 'w-8 bg-brand-primary'
                         : 'w-2 bg-border hover:bg-text-muted'
                     }`}
-                    aria-label={`Go to episode ${index + 1}`}
+                    aria-label={`Go to episode ${episodes[index].episodeNumber}`}
                   />
                 ))}
               </div>

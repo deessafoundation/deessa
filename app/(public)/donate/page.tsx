@@ -73,7 +73,7 @@ const faqs = [
   },
   {
     question: "How do I cancel a recurring donation?",
-    answer: "Contact us anytime at donate@dessafoundation.org and we'll process your request within 24 hours.",
+    answer: "Contact us anytime at deessa.social@gmail.com and we'll process your request within 24 hours.",
   },
 ]
 

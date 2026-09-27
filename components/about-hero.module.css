@@ -1,0 +1,100 @@
+.hero {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 32px 0 40px calc(clamp(24px, 4vw, 72px) + 20px);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-family: var(--font-dm-sans);
+  font-size: 13px;
+  color: #0B5F8A;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-comic);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .07em;
+  line-height: 1.5;
+  color: #15151c;
+}
+
+.title {
+  margin: 0 0 20px;
+  font-family: var(--font-marissa);
+  font-size: clamp(36px, 3.5vw, 56px);
+  font-weight: 700;
+  -webkit-text-stroke: 0.35px currentColor;
+  line-height: 1.12;
+  color: #0B5F8A;
+}
+.title span { display: block; }
+.description {
+  max-width: 48ch;
+  margin: 0 0 24px;
+  font-family: var(--font-dm-sans);
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.65;
+  color: #52606b;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.primary, .secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-family: var(--font-comic);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  transition: background-color .2s, border-color .2s;
+}
+.primary { background: #0B5F8A; color: #fff; border: 1.5px solid #0B5F8A; }
+.primary:hover { background: #08496a; border-color: #08496a; }
+.secondary { border: 1.5px solid #3FABDE; color: #0B5F8A; background: #fff; }
+.secondary:hover { background: #E8F6FC; }
+.hero a:focus-visible { outline: 3px solid #0B5F8A; outline-offset: 4px; }
+.artwork { position: relative; min-width: 0; align-self: stretch; display: flex; align-items: center; }
+.artwork img { width: 100%; height: auto; display: block; }
+/* Feather the prepared image's white edge without obscuring its printed headline. */
+.artwork::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 7%; background: linear-gradient(to right, #fff, transparent); pointer-events: none; }
+@media (max-width: 1100px) {
+  .content { padding-top: 24px; padding-bottom: 24px; }
+  .title { font-size: 38px; }
+  .actions { gap: 10px; }
+  .primary, .secondary { padding: 10px 14px; font-size: 14px; }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .content { padding: 28px 24px; }
+  .title { font-size: clamp(36px, 6vw, 48px); }
+  .description { max-width: 60ch; font-size: 16px; }
+  .artwork::after { inset: 0 0 auto; width: 100%; height: 12px; background: linear-gradient(to bottom, #fff, transparent); }
+}
+@media (max-width: 420px) {
+  .content { padding: 24px 20px; }
+  .actions { flex-direction: column; align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) { .primary, .secondary { transition: none; } }
+
+
+.trust { display: flex; flex-wrap: wrap; gap: 20px 28px; margin-top: 26px; }
+.trustItem { display: flex; align-items: center; gap: 10px; color: #0B5F8A; font-family: var(--font-comic); font-size: 14px; font-weight: 700; }
+.trustItem svg { color: #3FABDE; flex-shrink: 0; }
+.trustItem:first-child svg { color: #489451; }

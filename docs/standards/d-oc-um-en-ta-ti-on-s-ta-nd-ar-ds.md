@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Documentation Standards"
 description: " Status: active"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: standards
 audience: admin

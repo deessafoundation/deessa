@@ -6,7 +6,6 @@ import {
   OurStorySection,
   MissionVisionSection,
   ProgramsSection,
-  TimelineSection,
   PodcastSection,
   TestimonialsSection,
   ContactSection,
@@ -17,14 +16,17 @@ import {
   getHomepageWhatWeDo,
   getHomepageHeroCarousel,
   getHomepageTestimonials,
-  getHomepageTimeline,
 } from "@/lib/data/homepage-settings"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+
+// Homepage content comes from the shared CMS. Always render it from the
+// current database value so admin updates appear on both localhost and live.
+export const dynamic = "force-dynamic"
 
 /* ──────────────────  METADATA  ────────────────── */
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Deesha Foundation - Empowering Nepal Through Education & Social Development",
+  title: "Deessa Foundation - Empowering Nepal Through Education & Social Development",
   description: "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for vulnerable communities in Nepal. Focused on autism support and disability rights.",
   path: "/",
   keywords: [
@@ -49,14 +51,32 @@ export default async function HomePage() {
   const whatWeDoSettings = await getHomepageWhatWeDo()
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
-  const timelineSettings = await getHomepageTimeline()
 
   // Convert hero carousel settings to slides format
+  // Normalize CMS image paths: fix Windows backslashes and ensure leading
+  // slash so next/image never crashes on values like "home\hero\img.jpg".
+  const normalizeSlideImage = (src: string, fallback: string) => {
+    if (!src || typeof src !== "string") return fallback
+    const trimmed = src.trim()
+    if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) return trimmed
+    const forward = trimmed.replace(/\\/g, "/")
+    let withSlash = forward.startsWith("/") ? forward : `/${forward}`
+    // Point the old slide-2 filename at the refreshed photo. The file was
+    // replaced under the same name, so this rename busts browser + Next
+    // image caches (query strings are rejected on local images).
+    // Matches both the CMS backslash variant and the clean default path.
+    if (withSlash.split("?")[0].endsWith("home/hero/inclusion-begins-at-home.jpg")) {
+      withSlash = "/home/hero/inclusion-begins-at-home-v2.jpg"
+    }
+    return withSlash
+  }
+
   const heroSlides: HeroSlide[] = heroCarouselSettings.slides
     .filter(slide => slide.visible)
     .sort((a, b) => a.order - b.order)
-    .map(slide => ({
-      image: slide.image,
+    .map((slide) => ({
+      id: slide.id,
+      image: normalizeSlideImage(slide.image, "/home/hero/real-voices-young-speaker.jpg"),
       title: slide.title,
       subtitle: slide.subtitle,
       cta: slide.cta,
@@ -66,9 +86,12 @@ export default async function HomePage() {
 
   return (
     <SecretKeyListener>
+      {/* The accessibility launcher is mounted once for every public page in
+          app/(public)/layout.tsx — see components/accessibility. */}
+
       {/* 1. HERO BANNER CAROUSEL - CMS POWERED */}
       <HeroCarousel 
-        slides={heroSlides.length > 0 ? heroSlides : heroSlides} 
+        slides={heroSlides}
         interval={heroCarouselSettings.interval}
       />
 
@@ -80,9 +103,6 @@ export default async function HomePage() {
 
       {/* 5. WHAT WE DO - CMS POWERED */}
       <ProgramsSection whatWeDo={whatWeDoSettings} />
-
-      {/* 6. TIMELINE - CMS POWERED */}
-      <TimelineSection timeline={timelineSettings} />
 
       {/* 7. PODCAST FEATURE */}
       <PodcastSection />

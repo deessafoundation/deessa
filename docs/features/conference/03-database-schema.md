@@ -1,7 +1,7 @@
 ---
 title: "DEESSA Foundation — Conference Module: Database Schema"
 description: " Version: 1.0.0"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

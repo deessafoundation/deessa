@@ -1,7 +1,7 @@
 ---
 title: "Production Deployment Checklist - Payment Architecture V2"
 description: "This checklist is for deploying Payment Architecture V2 to PRODUCTION with real financial transactions. Follow every ..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: developer

@@ -122,7 +122,7 @@ type Place = {
 }
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-const ORGANIZATION_NAME = 'Deesha Foundation'
+const ORGANIZATION_NAME = 'Deessa Foundation'
 
 /**
  * Organization structured data for the main website
@@ -137,7 +137,7 @@ export function getOrganizationStructuredData(): WithContext<Organization> {
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.png`,
     description: 'A non-profit organization dedicated to sustainable development, quality education, and social upliftment for the most vulnerable in Nepal, with a special focus on children with disabilities and autism.',
-    foundingDate: '2015',
+    foundingDate: '2022',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'NP',

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="paint" x1="36" y1="116" x2="720" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C7E9F9" stop-opacity="0.08"/>
+      <stop offset="0.22" stop-color="#9ED5F0" stop-opacity="0.44"/>
+      <stop offset="0.62" stop-color="#CDECF9" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#B4DFF3" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="softEdge" x="-8%" y="-40%" width="116%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.055" numOctaves="3" seed="8" result="texture"/>
+      <feDisplacementMap in="SourceGraphic" in2="texture" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.4"/>
+    </filter>
+  </defs>
+  <g filter="url(#softEdge)">
+    <path d="M40 139C161 85 280 89 396 116c111 25 217 9 330-32" stroke="url(#paint)" stroke-width="83" stroke-linecap="round"/>
+    <path d="M61 151c122-37 228-29 339-4 118 27 207 5 302-22" stroke="#72BDE4" stroke-opacity="0.12" stroke-width="24" stroke-linecap="round"/>
+    <path d="M110 77c128-20 231-2 330 19 74 15 139 8 204-9" stroke="#3FABDE" stroke-opacity="0.12" stroke-width="5" stroke-linecap="round" stroke-dasharray="115 20 67 32"/>
+    <path d="M94 187c127-26 242-13 321 4 94 18 168-1 247-18" stroke="#7DC5E8" stroke-opacity="0.15" stroke-width="4" stroke-linecap="round" stroke-dasharray="94 31 140 28"/>
+  </g>
+  <g fill="#78C4E8" opacity="0.22">
+    <circle cx="70" cy="64" r="4"/><circle cx="92" cy="48" r="2.5"/>
+    <circle cx="659" cy="57" r="3"/><circle cx="693" cy="67" r="2"/>
+    <circle cx="675" cy="195" r="3.5"/><circle cx="712" cy="211" r="2"/>
+  </g>
+</svg>

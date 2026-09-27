@@ -1,6 +1,7 @@
 "use client"
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { notifyMediaPlaying } from '@/lib/tts/media-coordinator'
 
 interface VideoModalState {
   youtubeId: string | null
@@ -34,6 +35,9 @@ export function VideoModalProvider({ children }: VideoModalProviderProps) {
   const openVideoModal = (youtubeId: string, title: string) => {
     // Stop any inline card that is playing
     setActiveInlineId(null)
+    // Iframe players emit no DOM `play` event, so announce it explicitly.
+    // Text-to-speech listens for this and stops, keeping one audio source.
+    notifyMediaPlaying()
     setVideoModal({ youtubeId, title, isOpen: true })
   }
 
@@ -41,8 +45,13 @@ export function VideoModalProvider({ children }: VideoModalProviderProps) {
     setVideoModal({ youtubeId: null, title: null, isOpen: false })
   }
 
+  const handleSetActiveInlineId = useCallback((id: string | null) => {
+    if (id !== null) notifyMediaPlaying()
+    setActiveInlineId(id)
+  }, [])
+
   return (
-    <VideoModalContext.Provider value={{ videoModal, openVideoModal, closeVideoModal, activeInlineId, setActiveInlineId }}>
+    <VideoModalContext.Provider value={{ videoModal, openVideoModal, closeVideoModal, activeInlineId, setActiveInlineId: handleSetActiveInlineId }}>
       {children}
     </VideoModalContext.Provider>
   )

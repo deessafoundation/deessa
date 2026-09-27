@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Podcast System Implementation - Setup Guide"
 description: "Complete podcast management system with dedicated pages, database integration, search functionality, and Ocean Blue b..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

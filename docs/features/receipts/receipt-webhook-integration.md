@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Receipt System - Webhook Integration Guide"
 description: "This guide shows how to integrate receipt generation with your payment webhook handlers for Stripe, Khalti, and eSewa."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

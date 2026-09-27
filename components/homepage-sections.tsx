@@ -25,14 +25,14 @@ import {
   Leaf,
   ArrowUpRight,
   Star,
-  Play,
+ 
   Quote,
   Award,
   Building2,
   Globe,
   Megaphone,
   FileText,
-  Scale,
+  Scale,, Mic2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal, CountUp, BackToTop } from "@/components/scroll-animations"
@@ -45,7 +45,7 @@ import type {
   HomepageStorySettings,
   HomepageWhatWeDoSettings,
 } from "@/lib/types/homepage-settings"
-import { DEFAULT_HOMEPAGE_STORY, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
+import { DEFAULT_HOMEPAGE_STORY, DEFAULT_TESTIMONIALS, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
 
@@ -94,28 +94,37 @@ interface OurStorySectionProps {
 
 export function OurStorySection({ story }: OurStorySectionProps) {
   const s = story || DEFAULT_HOMEPAGE_STORY
-  const imageSrc = s.image || "/image_coming_soon.png"
+  const storyIllustration = "/home/story/two-paths-one-purpose.png"
+  const useStoryIllustration = !s.image || [
+    "/ourStory.png",
+    "/home/story/deessa-foundation-origin-story.jpg",
+    storyIllustration,
+  ].includes(s.image)
+  const imageSrc = useStoryIllustration ? storyIllustration : s.image
+  const imageAlt = useStoryIllustration
+    ? "Illustration of two sisters following paths toward a welcoming school in Nepal"
+    : s.imageAlt
 
   return (
-    <section className="py-20 md:py-28 bg-white relative overflow-hidden">
+    <section className="py-10 sm:py-16 md:py-24 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 gap-7 sm:gap-9 md:grid-cols-2 md:gap-12 lg:gap-16 items-center">
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="relative aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4] rounded-2xl md:rounded-3xl overflow-hidden shadow-xl">
                 <HomepageImage
                   src={imageSrc}
-                  alt={s.imageAlt}
-                  width={700}
-                  height={500}
-                  className="w-full h-auto object-cover"
+                  alt={imageAlt}
+                  fill
+                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) 45vw, 560px"
+                  className="object-cover object-center"
                 />
                 <div className={`${styles.storyOverlay} absolute inset-0`} />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
-                <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
+                <div className="absolute bottom-3 right-3 md:-bottom-5 md:-right-5 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl">
                   <p className="text-2xl md:text-4xl font-black font-comic-num">{s.founded}</p>
                   <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
@@ -125,7 +134,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
 
           <ScrollReveal animation="fade-left" delay={200}>
             <div>
-              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">{s.eyebrow}</span>
+              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-3 sm:mb-4 block">{s.eyebrow}</span>
               <div className="mx-auto w-fit max-w-[92vw] mb-5 md:mb-6">
                 <BrushStroke
                   variant="calligraphy"
@@ -151,7 +160,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
               {s.paragraphs.map((p, i) => (
                 <p
                   key={i}
-                  className={`text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-8" : "mb-6"}`}
+                  className={`text-base sm:text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-6 sm:mb-8" : "mb-4 sm:mb-6"}`}
                 >
                   {p}
                 </p>
@@ -174,88 +183,130 @@ export function OurStorySection({ story }: OurStorySectionProps) {
 /* ──────────────────  MISSION, VISION & OBJECTIVES  ────────────────── */
 
 export function MissionVisionSection() {
-  const cards = [
-    {
-      icon: Target,
-      title: "Our Mission",
-      description: "Integrated development of the social sector in Nepal.",
-      color: "border-l-4 border-l-primary",
-      iconBg: "bg-primary/10",
-      iconColor: "text-primary",
-    },
-    {
-      icon: Eye,
-      title: "Our Vision",
-      description:
-        "Work for social sector development through the combined effort of national and international community stakeholders.",
-      color: "border-l-4 border-l-blue-500",
-      iconBg: "bg-blue-500/10",
-      iconColor: "text-blue-500",
-    },
-    {
-      icon: Flag,
-      title: "Our Objectives",
-      description: "To focus on the social and economic problems at the grassroots level of poor people in Nepal.",
-      color: "border-l-4 border-l-green-500",
-      iconBg: "bg-green-500/10",
-      iconColor: "text-green-500",
-    },
+  // Shared card chrome so the three panels read as one family and match the
+  // pillar cards in ProgramsSection. Shadow is applied per card so the dark
+  // Mission panel can carry a heavier one without class conflicts.
+  const cardShell =
+    "group relative flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-1"
+  const lightCard = `${cardShell} border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-xl`
+
+  // Targets, not achievements — the numbers come straight from the objectives
+  // statement, so they stay labelled as goals to avoid reading as impact data.
+  const targets = [
+    { value: 100, suffix: "+", label: "Schools to build" },
+    { value: 50000, suffix: "+", label: "Lives to reach through healthcare" },
+    { value: 10000, suffix: "+", label: "Women to empower with new skills" },
   ]
 
   return (
-    <section className="py-20 md:py-28 bg-muted relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
+      <div className="pointer-events-none absolute top-0 left-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 bottom-0 size-96 translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-50"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(41,182,200,0.12) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Direction</span>
-            <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight mb-4">
+          <div className="mb-9 text-center sm:mb-14 md:mb-16">
+            <span className="mb-4 block text-sm font-bold tracking-widest text-[#15151c] uppercase">Our Direction</span>
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-[#0b76b7] md:text-5xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
               Mission, Vision <span className="font-normal">&</span> Objectives
             </h2>
-            <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-lg">
               Guided by clear values and a bold vision for Nepal&apos;s future.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <ScrollReveal animation="scale-in">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              <Image
-                src="/missionVisionObjectives.png"
-                alt="Mission, Vision and Objectives"
-                width={700}
-                height={500}
-                className="w-full h-auto object-cover"
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
+          {/* MISSION — the anchor statement, so it carries the section as a
+              solid deep-ocean panel rather than competing as a third white box */}
+          <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
+            <article
+              className={`${cardShell} bg-linear-to-br from-[#0e2d40] via-[#11405a] to-[#0e2d40] shadow-[0_18px_50px_-18px_rgba(14,45,64,0.55)] hover:shadow-[0_26px_60px_-18px_rgba(14,45,64,0.6)]`}
+            >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-primary/25 blur-3xl"
               />
-            </div>
+              <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
+                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
+                  <Target aria-hidden="true" className="size-8 text-white" />
+                </div>
+                <h3 className="mb-4 text-2xl font-black text-white md:text-[30px]">Our Mission</h3>
+                <p className="text-base leading-relaxed text-white/80 sm:text-lg md:text-xl">
+                  To empower marginalized communities in Nepal through education, healthcare, and sustainable
+                  development, ensuring every individual has the opportunity to live with dignity and purpose.
+                </p>
+              </div>
+            </article>
           </ScrollReveal>
 
-          <div className="space-y-8 connecting-line">
-            {cards.map((card, i) => {
-              const IconComp = card.icon
-              return (
-                <ScrollReveal key={card.title} animation="fade-right" delay={i * 200}>
-                  <div
-                    className={`group ${card.color} rounded-xl bg-background/50 p-4 hover:scale-[1.02] transition-transform duration-300`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={`w-14 h-14 rounded-2xl ${card.iconBg} flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors`}
-                      >
-                        <IconComp
-                          className={`size-7 ${card.iconColor} group-hover:rotate-[15deg] transition-transform duration-300`}
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground mb-2">{card.title}</h3>
-                        <p className="text-foreground/70 leading-relaxed">{card.description}</p>
-                      </div>
-                    </div>
+          {/* VISION */}
+          <ScrollReveal animation="fade-left" delay={150} className="h-full lg:col-span-5">
+            <article className={lightCard}>
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-primary via-sky-400 to-indigo-400"
+              />
+              <div className="flex flex-1 flex-col p-5 sm:p-8 md:p-10">
+                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
+                  <Eye aria-hidden="true" className="size-8 text-primary" />
+                </div>
+                <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Vision</h3>
+                <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
+                  A Nepal where every community thrives. Children dream freely, families are healthy, and
+                  opportunities are within everyone&apos;s reach.
+                </p>
+              </div>
+            </article>
+          </ScrollReveal>
+
+          {/* OBJECTIVES — full width base, with the goals broken out as figures */}
+          <ScrollReveal animation="fade-up" delay={300} className="lg:col-span-12">
+            <article className={lightCard}>
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-indigo-400 via-sky-400 to-primary"
+              />
+              <div className="grid grid-cols-1 items-center gap-6 p-5 sm:gap-8 sm:p-8 md:p-10 lg:grid-cols-12 lg:gap-14">
+                <div className="lg:col-span-5">
+                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
+                    <Flag aria-hidden="true" className="size-8 text-primary" />
                   </div>
-                </ScrollReveal>
-              )
-            })}
-          </div>
+                  <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Objectives</h3>
+                  <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
+                    Concrete goals that turn our mission into measurable change, district by district, until every
+                    community we serve feels the difference.
+                  </p>
+                </div>
+
+                <div className="lg:col-span-7">
+                  <p className="mb-5 text-xs font-bold tracking-widest text-primary uppercase">
+                    What we are working toward
+                  </p>
+                  <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+                    {targets.map((target) => (
+                      <li
+                        key={target.label}
+                        className="rounded-2xl border border-primary/10 bg-primary/[0.04] p-4 transition-colors duration-300 group-hover:border-primary/25 sm:p-5"
+                      >
+                        <p className="mb-1.5 text-3xl font-black text-primary md:text-[34px]">
+                          <CountUp end={target.value} suffix={target.suffix} />
+                        </p>
+                        <p className="text-sm leading-snug font-medium text-slate-600">{target.label}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </ScrollReveal>
         </div>
       </div>
     </section>
@@ -290,26 +341,28 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
   const corePillars = [...w.pillars].filter((p) => p.visible).sort((a, b) => a.order - b.order)
 
   return (
-    <section id="what-we-do" className="py-20 md:py-28 bg-foreground text-white relative overflow-hidden scroll-mt-24">
+    <section id="what-we-do" className="py-12 sm:py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       <div
-        className="absolute inset-0 opacity-[0.07]"
+        className="absolute inset-0 opacity-[0.5]"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(41,182,200,0.12) 1px, transparent 1px)",
           backgroundSize: "30px 30px",
         }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-16">
-            <span className={`${styles.darkLabel} text-primary font-bold tracking-widest uppercase text-sm mb-4 block`}>
+          <div className="mb-9 text-center sm:mb-16">
+            <span className={`${styles.darkLabel} text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block`}>
               {w.eyebrow}
             </span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{w.title}</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">{w.subtitle}</p>
+            <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">{w.subtitle}</p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {corePillars.map((pillar, idx) => {
             const IconComp = pillarIconMap[pillar.icon] || Megaphone
             return (
@@ -319,20 +372,35 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 delay={idx * 150}
                 className="h-full"
               >
-                <div
-                  className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}
+                <Link
+                  href={`/whatwedo/${pillar.id}`}
+                  aria-label={`Explore ${pillar.title}`}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
                 >
-                  <div className="p-8 text-center flex flex-col flex-1">
-                    <p className="text-xs text-white/50 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div
-                      className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}
-                    >
+                  <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
+                    <div className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
-                    <h3 className="text-xl font-black mb-3">{pillar.title}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">{pillar.description}</p>
+                    <h3 className="text-xl font-black mb-3 text-[#1a1a2e]" style={{ WebkitTextStroke: "0.5px currentColor" }}>
+                      {pillar.title.split("&").map((part, i, arr) =>
+                        i === arr.length - 1 ? (
+                          <span key={i}>{part}</span>
+                        ) : (
+                          <span key={i}>
+                            {part}
+                            <span className="font-normal">&</span>
+                          </span>
+                        )
+                      )}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">{pillar.description}</p>
+                    <span className="mt-auto inline-flex items-center justify-center gap-2 pt-6 text-sm font-bold text-sky-600">
+                      Explore this area
+                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
                   </div>
-                </div>
+                </Link>
               </ScrollReveal>
             )
           })}
@@ -593,56 +661,97 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
 /* ──────────────────  PODCAST FEATURE  ────────────────── */
 
 export function PodcastSection() {
+  const hosts = [
+    { name: "Merina Panthii", role: "President & Host", image: "/Merina Panthii.jpg" },
+    { name: "Sarita Sapkota", role: "Parent & Host", image: "/Sarita Sapkota.jpg" },
+  ]
+
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
-      <div className="absolute -left-28 top-12 size-80 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute -right-24 bottom-0 size-96 rounded-full bg-[#F7C52B]/15 blur-3xl" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section
+      aria-labelledby="home-podcast-title"
+      className="relative overflow-hidden bg-[#005581]"
+      data-tts-section=""
+      data-tts-priority="heading"
+      data-tts-text="The Deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
+    >
+      {/* Keep the backdrop on the full-width section so it has no container seams. */}
+      <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
+        <path d="M640 0 C545 160 400 238 190 240 H640 Z" fill="#3FABDE" opacity="0.36" />
+      </svg>
+      <div className="relative mx-auto max-w-[1320px]">
         <ScrollReveal animation="fade-up">
-          <Link
-            href="/podcasts"
-            className="group block overflow-hidden rounded-3xl border border-primary/15 bg-slate-950 shadow-2xl transition-transform duration-500 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-            aria-label="Explore the Living With Autism podcast"
-          >
-            <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="relative min-h-72 overflow-hidden sm:min-h-96 lg:min-h-full">
+          <div className="isolate overflow-hidden">
+            <div className="grid lg:grid-cols-[48%_52%]">
+              <Link
+                href="/podcasts"
+                aria-label="Explore Living With Autism episodes"
+                className="relative block aspect-[1521/1034] overflow-hidden bg-[#005581] lg:self-center focus-visible:z-10 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-white"
+              >
                 <Image
-                  src="/podcast_banner.png"
-                  alt="Living With Autism podcast with Sarita and Merina"
+                  src="/home/podcast/deessa-podcast-studio.png"
+                  alt="Living With Autism: Real Voices, Real Stories. Sarita and Merina seated at microphones in the podcast studio, with Deessa Foundation and SDG Studio branding."
                   fill
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(min-width: 1320px) 634px, (min-width: 1024px) 48vw, 100vw"
+                  className="object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span
-                    className={`${styles.podcastPlay} flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <Play className="ml-1 size-7 fill-current" aria-hidden="true" />
-                  </span>
-                </div>
-              </div>
+                {/* Feather only the perimeter; keep the hosts and embedded branding sharp. */}
+                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
+              </Link>
 
-              <div className="flex flex-col justify-center p-8 text-white sm:p-12 lg:p-14">
-                <h2 className="mb-5 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">Living With Autism</h2>
-                <p className="mb-8 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
-                  Real voices and real stories. Listen to honest conversations about autism, inclusion, and the
+              <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-7 font-comic text-white sm:px-8 lg:py-6 lg:pl-8 lg:pr-10">
+                <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
+                  <Mic2 className="size-4 shrink-0" aria-hidden="true" />
+                  THE DEESSA PODCAST
+                </div>
+
+                <h2 id="home-podcast-title" className="font-marissa text-[30px] font-normal leading-[1.2] text-white sm:text-[34px]">Living With Autism</h2>
+                <p className="mt-2 text-xl leading-snug text-white sm:text-[22px]">
+                  Real voices. Real stories.
+                </p>
+                <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-white/85">
+                  Honest conversations about autism, inclusion, and the
                   experiences that shape our communities.
                 </p>
-                <span className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors group-hover:text-white">
+
+                <div className="mt-4">
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#72d4f5]">Hosted by</p>
+                  <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 185px), 1fr))" }}>
+                    {hosts.map((host) => (
+                      <div key={host.name} className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/30 bg-white/[0.04] p-2.5">
+                        <Image
+                          src={host.image}
+                          alt=""
+                          width={40}
+                          height={40}
+                          sizes="40px"
+                          className="size-10 shrink-0 rounded-full object-cover ring-2 ring-white/30"
+                        />
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold leading-snug text-white">{host.name}</p>
+                          <p className="mt-0.5 text-xs leading-snug text-white/80">{host.role}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Link
+                  href="/podcasts"
+                  className="group mt-5 inline-flex min-h-12 w-full items-center justify-center gap-3 self-start rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-primary-dark shadow-sm transition-colors hover:bg-[#E8F6FC] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto"
+                >
                   Explore the podcast
-                  <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-2" />
-                </span>
+                  <ArrowRight className="size-5 shrink-0 motion-safe:transition-transform motion-safe:group-hover:translate-x-1" aria-hidden="true" />
+                </Link>
               </div>
             </div>
-          </Link>
+          </div>
         </ScrollReveal>
       </div>
     </section>
   )
 }
-
 /* ──────────────────  TESTIMONIALS SECTION  ────────────────── */
 
 import { CircularTestimonials } from "@/components/circular-testimonials"
@@ -652,67 +761,62 @@ interface TestimonialsSectionProps {
 }
 
 export function TestimonialsSection({ testimonials: testimonialsSettings }: TestimonialsSectionProps) {
-  // Default testimonials if not provided from CMS
-  const defaultTestimonials = [
-    {
-      name: "Sita Sharma",
-      role: "Parent",
-      location: "Kathmandu",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-      quote:
-        "deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
-      rating: 5,
-    },
-    {
-      name: "Ram Bahadur Thapa",
-      role: "Village Elder",
-      location: "Gorkha",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      quote:
-        "The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
-      rating: 5,
-    },
-    {
-      name: "Maya Gurung",
-      role: "Volunteer",
-      location: "Pokhara",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-      quote:
-        "Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
-      rating: 5,
-    },
-  ]
-
   // Use CMS testimonials if provided, otherwise use defaults
   const testimonials =
     testimonialsSettings?.testimonials?.filter((t) => t.visible).sort((a, b) => a.order - b.order) ||
-    defaultTestimonials
+    DEFAULT_TESTIMONIALS.testimonials
 
   // Transform testimonials to match CircularTestimonials format
   const circularTestimonials = testimonials.map((t) => ({
     name: t.name,
     designation: `${t.role}, ${t.location}`,
     quote: t.quote,
-    src: t.image || "/image_coming_soon.png",
+    src: t.image || "",
+    video: t.video,
+    topic: t.topic,
+    caption: t.caption,
   }))
 
+  // The circular carousel only ever shows one active card in the accessibility
+  // tree (the rest sit at opacity 0 as decorative side previews), so reading
+  // the live DOM would speak just one testimonial and call it done. Read a
+  // spoken digest of every visible testimonial instead, in display order.
+  const testimonialsSpokenText = [
+    "Global Voices. Inclusion Begins with Acceptance.",
+    ...testimonials.map((t) => {
+      const role = [t.role, t.location].filter(Boolean).join(", ")
+      const message = t.caption || t.quote
+      return `${t.name}${role ? `, ${role}` : ""}. ${message}`
+    }),
+  ].join(" ")
+
   return (
-    <section className="py-16 md:py-24 bg-muted relative overflow-hidden">
+    <section
+      className="relative overflow-hidden bg-muted py-10 md:py-12"
+      data-tts-section=""
+      data-tts-priority="heading"
+      data-tts-text={testimonialsSpokenText}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-12">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Testimonials</span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">Voices of Impact</h2>
-            <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Hear from the people whose lives have been touched by our work
-            </p>
+          <div className="mb-8 text-center">
+            <span className="mb-4 block text-sm font-bold uppercase tracking-widest text-[#15151c]">Global Voices</span>
+            <h2
+              className="font-marissa mb-4 text-3xl tracking-tight text-[#0b76b7] md:text-4xl"
+              style={{ WebkitTextStroke: "0.7px currentColor" }}
+            >
+              Inclusion Begins with Acceptance
+            </h2>
+
           </div>
         </ScrollReveal>
 
         <div className={`${styles.testimonials} flex justify-center`}>
           <CircularTestimonials
             testimonials={circularTestimonials}
-            autoplay={true}
+            nameTextStroke="0.55px currentColor"
+            autoplay={false}
+            videoAutoplay={true}
             colors={{
               name: "var(--foreground)",
               designation: "var(--muted-foreground)",
@@ -1067,16 +1171,19 @@ export function ContactSection() {
   ]
 
   return (
-    <section className="py-20 md:py-28 bg-background">
+    <section
+      className="bg-background pt-8 pb-12 sm:pb-20 md:pt-12 md:pb-28"
+      data-tts-section=""
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal animation="fade-up">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
-            <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight mb-4">Visit Our Office</h2>
+          <div className="mb-9 text-center sm:mb-16">
+            <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>Visit Our Office</h2>
           </div>
         </ScrollReveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2">
+          <div className="space-y-6 sm:space-y-8">
             {contactItems.map((item, i) => {
               const IconComp = item.icon
               return (
@@ -1096,7 +1203,7 @@ export function ContactSection() {
             })}
           </div>
           <ScrollReveal animation="scale-in" delay={200}>
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]" data-tts-ignore="">
               <iframe
                 src={`https://www.google.com/maps?q=${encodeURIComponent("Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal")}&output=embed&z=16`}
                 width="100%"

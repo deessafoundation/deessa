@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Field Types Reference"
 description: "Version: 2.0"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

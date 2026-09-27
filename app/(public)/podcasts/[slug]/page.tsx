@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from '@/lib/seo/metadata-utils';
 import { StructuredData } from '@/components/seo/structured-data';
 import { getBreadcrumbStructuredData } from '@/lib/seo/structured-data';
+import styles from './episode.module.css';
 
 interface PodcastDetailPageProps {
   params: Promise<{
@@ -91,17 +92,20 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.page}>
       <StructuredData data={breadcrumbStructuredData} />
       
       {/* Sticky Player - Initially hidden, shows on scroll */}
       <PodcastStickyPlayer podcast={podcast} />
 
       {/* Episode Header - Centered Layout */}
-      <header className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-12 text-center">
+      <header className={styles.intro}>
+        <div className={styles.container}>
+          <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
+            <Link href="/podcasts">Podcasts</Link><span aria-hidden="true">/</span><span>Episode {podcast.episodeNumber || 'details'}</span>
+          </nav>
           {/* Episode Number and Date */}
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className={styles.introMeta}>
             {podcast.episodeNumber && (
               <span className="inline-flex items-center px-4 py-1.5 rounded-md bg-brand-primary/10 text-brand-primary font-semibold uppercase text-xs tracking-wider">
                 Episode {podcast.episodeNumber}
@@ -113,13 +117,13 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-brand-primary mb-6 leading-tight">
+          <h1 className={styles.title}>
             {podcast.title}
           </h1>
 
           {/* Guest Info */}
           {hasGuest && (
-            <p className="text-lg text-gray-600">
+            <p className={styles.byline}>
               Featuring <span className="font-semibold text-gray-900">{podcast.guestName}</span>
               {podcast.guestTitle && ` • ${podcast.guestTitle}`}
               <span className="mx-2">•</span>
@@ -130,36 +134,36 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
       </header>
 
       {/* Video Player with Key Topics */}
-      <section className="bg-gray-50 py-12">
-        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+      <section className={styles.mediaSection} aria-label="Episode video and topics">
+        <div className={styles.container}>
+          <div className={styles.mediaGrid}>
             {/* Video Player - Left Side */}
-            <div className="lg:col-span-5">
-              <div className="aspect-video w-full">
+            <div className={styles.videoWrap}>
+              <div className={styles.videoFrame}>
                 <iframe
                   src={`https://www.youtube.com/embed/${podcast.youtubeId}?rel=0`}
                   title={podcast.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  className="w-full h-full rounded-lg shadow-xl"
+                  className="h-full w-full"
                 />
               </div>
             </div>
 
             {/* Key Topics & Timestamps - Right Side */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg border p-6 h-full flex flex-col">
+            <div className={styles.topicsCard}>
+              <div className="flex h-full flex-col">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-6 h-6 bg-brand-primary/10 rounded flex items-center justify-center">
                     <div className="w-3 h-3 border-2 border-brand-primary rounded"></div>
                   </div>
-                  <h2 className="text-lg font-extrabold text-gray-900">
+                  <h2 className={styles.topicsTitle}>
                     Key Topics & Timestamps
                   </h2>
                 </div>
                 
                 {/* Scrollable container */}
-                <div className="space-y-4 overflow-y-auto flex-1 pr-2" style={{ maxHeight: '400px' }}>
+                <div className={styles.topicsList}>
                   {podcast.keyTopics && podcast.keyTopics.length > 0 ? (
                     podcast.keyTopics.map((item, index) => (
                       <div key={index} className="flex gap-3">
@@ -178,13 +182,13 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
       </section>
 
       {/* Main Content Grid */}
-      <section className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section className={`${styles.container} ${styles.contentSection}`}>
+        <div className={styles.contentGrid}>
           {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className={styles.articleColumn}>
             {/* Description */}
-            <div className="bg-white rounded-lg border p-8">
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-4">
+            <div className={styles.articleCard}>
+              <h2 className={styles.sectionTitle}>
                 Description
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
@@ -197,10 +201,10 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
             </div>
 
             {/* Highlights Section - YouTube Shorts */}
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8 shadow-sm">
+            <div className={styles.articleCard}>
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-extrabold text-gray-900 mb-1">
+                  <h2 className={styles.sectionTitle}>
                     Episode Highlights
                   </h2>
                   <p className="text-sm text-gray-600">
@@ -232,12 +236,12 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
             </div>
 
             {/* Show Notes */}
-            <div className="bg-white rounded-lg border p-8">
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-6">
+            <div className={styles.articleCard}>
+              <h2 className={styles.sectionTitle}>
                 Show Notes
               </h2>
               {podcast.showNotes && podcast.showNotes.length > 0 ? (
-                <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2">
+                <div className="space-y-6">
                   {podcast.showNotes.map((note, index) => (
                     <div key={index} className="space-y-2">
                       <h3 className="text-lg font-bold text-brand-primary">
@@ -255,8 +259,8 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
             </div>
 
             {/* Transcript */}
-            <div className="bg-white rounded-lg border p-8">
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-4">
+            <div className={styles.articleCard}>
+              <h2 className={styles.sectionTitle}>
                 Full Transcript
               </h2>
               {podcast.transcript ? (
@@ -268,11 +272,11 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
           </div>
 
           {/* Right Sidebar */}
-          <aside className="lg:col-span-1 space-y-6">
-            <div className="lg:sticky lg:top-28 space-y-6">
+          <aside className={styles.sidebar}>
+            <div className="space-y-6">
               {/* Guest Card */}
-              <div className="bg-white rounded-lg border p-6">
-                <h3 className="font-extrabold text-lg text-gray-900 mb-6">
+              <div className={styles.sideCard}>
+                <h3 className={styles.sideTitle}>
                   Meet the Guest
                 </h3>
                 
@@ -416,8 +420,8 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
 
               {/* Related Episodes - Between Guest and Share */}
               {relatedPodcasts.length > 0 && (
-                <div className="bg-white rounded-lg border p-6">
-                  <h3 className="font-extrabold text-sm text-gray-500 uppercase tracking-wider mb-4">
+                <div className={styles.sideCard}>
+                  <h3 className={styles.sideTitle}>
                     Related Episodes
                   </h3>
                   <div className="space-y-4">
@@ -459,19 +463,19 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
       </section>
 
       {/* Bottom CTA Section - Story Submission */}
-      <section className="bg-purple-600 py-16">
+      <section className={styles.cta}>
         <div className="max-w-3xl mx-auto px-3 sm:px-4 lg:px-6 text-center">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center">
+            <div className={styles.ctaIcon}>
               <Megaphone className="w-8 h-8 text-white" />
             </div>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className={styles.ctaTitle}>
             Have a story that needs to be heard?
           </h2>
           
-          <p className="text-lg text-purple-100 mb-8">
+          <p className={styles.ctaDescription}>
             We are always looking for new voices and perspectives from the community. Suggest a topic or share your personal journey with us.
           </p>
           
@@ -479,11 +483,11 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
             <Input
               type="email"
               placeholder="Your email address"
-              className="flex-1 px-4 py-3 rounded-lg border-0 text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-purple-300"
+              className="flex-1 px-4 py-3 rounded-lg border-0 text-gray-900 placeholder:text-gray-500"
             />
             <Button 
               type="submit"
-              className="px-8 py-3 bg-purple-800 hover:bg-purple-900 text-white font-semibold rounded-lg transition-colors"
+              className={styles.ctaButton}
             >
               Share Story
             </Button>

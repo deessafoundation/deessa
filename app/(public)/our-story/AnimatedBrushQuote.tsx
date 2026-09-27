@@ -39,7 +39,6 @@ export function AnimatedBrushQuote() {
           >
             <h3
               style={{
-                fontFamily: "'Georgia', serif",
                 fontSize: "clamp(26px, 3.5vw, 34px)",
                 fontWeight: 800,
                 color: "#ffffff",
@@ -53,7 +52,6 @@ export function AnimatedBrushQuote() {
             </h3>
             <p
               style={{
-                fontFamily: "'DM Sans', system-ui, sans-serif",
                 fontSize: "clamp(16px, 2vw, 18px)",
                 fontWeight: 400,
                 color: "#ffffff",
@@ -62,7 +60,7 @@ export function AnimatedBrushQuote() {
                 maxWidth: 580,
                 margin: "0 auto",
               }}
-              className="font-dm"
+              className="font-comic"
             >
               We wanted to do everything for her , but didn't know where to start.”
             </p>

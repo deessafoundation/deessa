@@ -9,11 +9,11 @@ import Link from "next/link"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Contact Us - Get in Touch with Deesha Foundation",
-  description: "Get in touch with Deesha Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
+  title: "Contact Us - Get in Touch with Deessa Foundation",
+  description: "Get in touch with Deessa Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
   path: "/contact",
   keywords: [
-    "contact Deesha Foundation",
+    "contact Deessa Foundation",
     "Nepal NGO contact",
     "volunteer Nepal",
     "donate to Nepal",
@@ -26,12 +26,12 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Our Office",
-    lines: ["Thamel, Kathmandu", "Nepal, 44600"],
+    lines: ["Dhobighat Nayabato, Sanepa", "Lalitpur 44600, Nepal"],
   },
   {
     icon: Mail,
     title: "Email Us",
-    lines: ["info@dessafoundation.org", "support@dessafoundation.org"],
+    lines: ["deessa.social@gmail.com"],
   },
   {
     icon: Phone,
@@ -125,7 +125,7 @@ export default async function ContactPage() {
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url("https://maps.googleapis.com/maps/api/staticmap?center=Thamel,Kathmandu,Nepal&zoom=15&size=600x400&maptype=roadmap&key=placeholder")`,
+                backgroundImage: `url("https://maps.googleapis.com/maps/api/staticmap?center=Sanepa,Lalitpur,Nepal&zoom=15&size=600x400&maptype=roadmap&key=placeholder")`,
               }}
               aria-hidden="true"
             />
@@ -133,9 +133,9 @@ export default async function ContactPage() {
               <div className="text-center p-8">
                 <MapPin className="size-12 text-primary mx-auto mb-4" aria-hidden="true" />
                 <h3 className="font-bold text-foreground mb-2">Visit Our Office</h3>
-                <p className="text-foreground-muted text-sm">Thamel, Kathmandu, Nepal</p>
+                <p className="text-foreground-muted text-sm">Dhobighat Nayabato, Sanepa, Lalitpur, Nepal</p>
                 <Button asChild variant="outline" className="mt-4 rounded-full bg-transparent">
-                  <a href="https://maps.google.com/?q=Thamel,Kathmandu,Nepal" target="_blank" rel="noopener noreferrer" aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)">
+                  <a href="https://maps.google.com/?q=Sanepa,Lalitpur,Nepal" target="_blank" rel="noopener noreferrer" aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)">
                     Open in Maps
                   </a>
                 </Button>

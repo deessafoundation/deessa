@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Receipt Download URL Fix - ERR_BLOCKED_BY_CLIENT"
 description: "Receipt download URLs are using localhost:3000 instead of the production domain, causing browser to block the request..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Donation System Documentation"
 description: "This folder contains all documentation related to the donation and payment system."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

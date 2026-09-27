@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Timeline Section - CMS Integration Verification âœ…"
 description: "The Timeline section on the homepage is fully integrated with the CMS and working correctly."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin
@@ -229,7 +229,7 @@ DEFAULT_TIMELINE = {
   title: "Together, We Are Changing Lives",
   subtitle: "Every year added a new layer of impact...",
   milestones: [
-    { year: "2015", milestone: "Founded in Kathmandu", ... },
+    { year: "2022", milestone: "Founded in Kathmandu", ... },
     { year: "2016", milestone: "First education program", ... },
     { year: "2018", milestone: "Health camps expanded", ... },
     { year: "2020", milestone: "COVID-19 relief", ... },

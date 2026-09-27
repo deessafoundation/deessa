@@ -39,25 +39,32 @@ const challengeCards = [
 
 const timelineItems = [
   {
-    year: "2021: The Realization",
-    text: "The seed of deessa was planted during late-night discussions about the lack of accessible resources in Nepal's remote regions.",
+    year: "2022: deessa Foundation begins",
+    text: "deessa began with a commitment to help every child be understood, accepted, and valued.",
     icon: Lightbulb,
     color: "bg-primary",
     textColor: "text-primary",
   },
   {
-    year: "2022: Building Community",
-    text: "We began connecting with specialists and parents, realizing that a unified platform for advocacy was essential.",
+    year: "2024: Building understanding",
+    text: "We brought autism and neurodiversity into conversations with families, educators, and communities.",
     icon: HandHeart,
     color: "bg-empowerment",
     textColor: "text-empowerment",
   },
   {
-    year: "2023: Official Launch",
-    text: "deessa Foundation was officially established, focusing on education, health equity, and social inclusion.",
+    year: "2025: Belonging through participation",
+    text: "Sport and youth-centred activities celebrated confidence, teamwork, and the belief that every child belongs.",
     icon: Rocket,
     color: "bg-chart-4",
     textColor: "text-chart-4",
+  },
+  {
+    year: "2026: Advocacy for inclusive support",
+    text: "We called for accessible services, inclusive education, and disability-inclusive support during crises.",
+    icon: Flag,
+    color: "bg-primary",
+    textColor: "text-primary",
   },
 ]
 
@@ -230,11 +237,11 @@ export default function OurStoryPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl bg-muted p-6">
-                <p className="text-3xl font-bold text-primary">D</p>
+                <p data-tts-ignore="" className="text-3xl font-bold text-primary">D</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Deetya</p>
               </div>
               <div className="rounded-2xl bg-muted p-6">
-                <p className="text-3xl font-bold text-empowerment">M</p>
+                <p data-tts-ignore="" className="text-3xl font-bold text-empowerment">M</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Marissa</p>
               </div>
             </div>
@@ -337,11 +344,11 @@ export default function OurStoryPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="border-primary/25 rounded-3xl border p-7 text-center">
-                <p className="text-5xl font-extrabold text-primary">dee</p>
+                <p data-tts-ignore="" className="text-5xl font-extrabold text-primary">dee</p>
                 <p className="text-muted-foreground mt-2 text-xs uppercase tracking-[0.2em]">Deetya</p>
               </div>
               <div className="border-empowerment/35 rounded-3xl border p-7 text-center">
-                <p className="text-5xl font-extrabold text-empowerment">ssa</p>
+                <p data-tts-ignore="" className="text-5xl font-extrabold text-empowerment">ssa</p>
                 <p className="text-muted-foreground mt-2 text-xs uppercase tracking-[0.2em]">Marissa</p>
               </div>
             </div>

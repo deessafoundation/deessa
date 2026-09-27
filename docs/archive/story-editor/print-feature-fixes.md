@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Print Feature Bug Fixes"
 description: " Date: April 5, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

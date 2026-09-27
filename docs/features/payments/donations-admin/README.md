@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Transaction Detail Page Documentation"
 description: "The Transaction Detail page provides a comprehensive view of individual donation transactions for admin users with fi..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

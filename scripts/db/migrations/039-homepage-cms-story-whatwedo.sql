@@ -12,15 +12,15 @@ VALUES (
     "eyebrow": "Our Story",
     "badgeText": "How deessa Started",
     "paragraphs": [
-      "deessa began with two little girls — our twin daughters, Deetya and Marissa. Deetya was born with bilateral clubfoot and has gone through years of treatment and physiotherapy. Marissa was later diagnosed with autism. Their journeys, so different yet intertwined, showed us the invisible walls that children with disabilities and their families face every day.",
-      "From that personal experience came a mission: to ensure every child in Nepal has access to the support, resources, and opportunity they deserve. The name deessa carries their story — \"Dee\" from Deetya, \"essa\" from Marissa."
+      "deessa began with two little girls, our twin daughters, Deetya and Marissa. Deetya was born with bilateral clubfoot and has gone through years of treatment and physiotherapy. Marissa was later diagnosed with autism. Their journeys, so different yet intertwined, showed us the invisible walls that children with disabilities and their families face every day.",
+      "From that personal experience came a mission: to ensure every child in Nepal has access to the support, resources, and opportunity they deserve. The name deessa carries their story: \"Dee\" from Deetya, \"essa\" from Marissa."
     ],
     "linkText": "Read Our Full Story",
     "linkUrl": "/our-story",
-    "founded": "2015",
+    "founded": "2022",
     "foundedLabel": "Founded",
-    "image": "/ourStory.png",
-    "imageAlt": "How deessa started - our origin story"
+    "image": "/home/story/two-paths-one-purpose.png",
+    "imageAlt": "Illustration of two sisters following paths toward a welcoming school in Nepal"
   }'::jsonb,
   NOW()
 )
@@ -35,7 +35,7 @@ VALUES (
   'homepage_what_we_do',
   '{
     "eyebrow": "What We Do",
-    "title": "We turn understanding into action — for children, families, and communities.",
+    "title": "We turn understanding into action for children, families, and communities.",
     "subtitle": "Our work supports children with disabilities, their families, educators, and communities through four areas.",
     "pillars": [
       {
@@ -78,7 +78,7 @@ VALUES (
         "id": "advocacy",
         "icon": "Scale",
         "title": "Advocacy",
-        "description": "We push for inclusive schools and stronger policies that protect every child''s rights — so inclusion becomes a right, not a privilege.",
+        "description": "We push for inclusive schools and stronger policies that protect every child''s rights, so inclusion becomes a right, not a privilege.",
         "color": "bg-purple-500",
         "glowClass": "hover-glow-purple",
         "statLabel": "Policies",

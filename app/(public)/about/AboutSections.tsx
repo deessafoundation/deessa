@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useRef, useState } from "react"
+import { Fragment, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
@@ -10,15 +10,19 @@ import {
   Globe,
   GraduationCap,
   Handshake,
-  Heart,
   HeartPulse,
   Droplet,
   Trees,
+  Eye,
+  MessageCircle,
+  Heart,
+  Sprout,
+  Quote,
 } from "lucide-react"
-import { timeline } from "@/data/timeline"
-import { allResources } from "@/components/resource-downloads"
-import type { AboutIntroSettings, AboutHowWeDoItSettings } from "@/lib/types/about-settings"
+import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
+import { OrgStructure } from "./OrgStructure"
+import introStyles from "./about-intro.module.css"
 
 const TEAL = "#29b6c8"
 const DARK = "#1a1a2e"
@@ -64,7 +68,7 @@ function SectionHeader({ label, title, sub, level = 2 }: { label: string; title:
       <HeadingTag className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px] about-heading-dark">
         {title}
       </HeadingTag>
-      {sub && <p className="font-dm-sans mt-4 text-lg text-[#6b7280]">{sub}</p>}
+      {sub && <p className="font-dm-sans mt-4 text-base leading-relaxed text-[#6b7280] sm:text-lg">{sub}</p>}
     </motion.div>
   )
 }
@@ -73,11 +77,13 @@ interface AboutSectionsProps {
   teamMembers?: TeamMember[]
   intro?: AboutIntroSettings
   howWeDoIt?: AboutHowWeDoItSettings
+  journey?: AboutJourneySettings
 }
 
-export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSectionsProps) {
+export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: AboutSectionsProps) {
   const introContent = intro || DEFAULT_ABOUT_PAGE_SETTINGS.intro
   const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
+  const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
   const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
   const { preferences } = useAccessibility()
@@ -89,97 +95,58 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
   return (
     <>
       {/* SECTION 2: WHO WE ARE */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="Who We Are">
-        <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 md:px-8 lg:grid-cols-[35fr_65fr] lg:gap-16">
-          {/* Left, sticky visual anchor */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-            className="lg:sticky lg:top-28"
-          >
-            <div className="relative -rotate-2">
-              <video
-                autoPlay
-                controls
-                muted
-                playsInline
-                preload="metadata"
-                aria-label="Every child has potential"
-                className="h-auto w-full rounded-2xl shadow-[0_20px_40px_rgba(26,26,46,0.14)]"
-              >
-                <source src="/every_child.mp4" type="video/mp4" />
-                Your browser does not support embedded videos.
-              </video>
-            </div>
-          </motion.div>
-
-          {/* Right, text content, left-aligned */}
-          <div>
-            <motion.div {...reveal} transition={{ duration: 0.5 }}>
-              <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest about-teal-text">
-                {introContent.label}
-              </span>
-              <h2
-                className="font-marissa mb-8 text-3xl font-medium leading-[1.25] md:text-[44px] about-heading-dark"
-              >
-                {introContent.headline}
-              </h2>
-            </motion.div>
-
-            <motion.div
-              {...reveal}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-dm-sans space-y-5 text-[17px] leading-[1.8] text-[#4a4a4a]"
+      <section className={introStyles.section} aria-labelledby="about-intro-title">
+        <div className={introStyles.layout}>
+          <div className={introStyles.media}>
+            <video
+              autoPlay
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              aria-label="Every child has potential"
+              className={introStyles.video}
             >
-              {introContent.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-              <p
-                className="about-quote-block rounded-r-xl py-4 pl-5 pr-6 font-semibold"
-                style={{
-                  backgroundColor: "rgba(41,182,200,0.08)",
-                  borderLeft: `3px solid ${TEAL}`,
-                  color: DARK,
-                }}
-              >
-                {introContent.quote}
-              </p>
-            </motion.div>
-
-            {/* Understood → Accepted → Valued → Thrive flow */}
-            <div className="mt-10 flex flex-wrap items-center gap-2">
-              {introContent.flowSteps.map((step, i) => (
-                <div key={step} className="flex items-center gap-2">
-                  <motion.span
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    className="about-flow-pill font-comic rounded-full border bg-white px-4 py-1.5 text-sm font-bold"
-                    style={{ borderColor: "rgba(41,182,200,0.3)", color: TEAL }}
-                  >
-                    {step}
-                  </motion.span>
-                  {i < introContent.flowSteps.length - 1 && (
-                    <motion.span
-                      animate={preferences.reduceMotion ? false : { x: [0, 5, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      aria-hidden
-                    >
-                      <ArrowRight className="size-4" style={{ color: TEAL }} />
-                    </motion.span>
-                  )}
-                </div>
-              ))}
+              <source src="/every_child.mp4" type="video/mp4" />
+              Your browser does not support embedded videos.
+            </video>
+          </div>
+          <div className={introStyles.content}>
+            <p className={introStyles.label}>{introContent.label}</p>
+            <h2 id="about-intro-title" className={introStyles.title}>{introContent.headline}</h2>
+            <div className={introStyles.paragraphs}>
+              {introContent.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
             </div>
+            <blockquote className={introStyles.quote}>
+              <Quote size={28} aria-hidden="true" />
+              <p>{introContent.quote}</p>
+            </blockquote>
+            <ol className={introStyles.flow}>
+              {introContent.flowSteps.map((step, index) => {
+                const Icon = [Eye, MessageCircle, Heart, Sprout][index] || Heart
+                return (
+                  <Fragment key={step}>
+                    <li className={introStyles.step}>
+                      <div className={introStyles.stepContent}>
+                        <span className={introStyles.icon}><Icon size={25} aria-hidden="true" /></span>
+                        <span>{step}</span>
+                      </div>
+                    </li>
+                    {index < introContent.flowSteps.length - 1 && (
+                      <li className={introStyles.arrowItem} aria-hidden="true">
+                        <ArrowRight size={17} className={introStyles.arrow} />
+                      </li>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </ol>
           </div>
         </div>
       </section>
 
       {/* SECTION 4: HOW WE DO IT */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="How We Do It">
+      <section className="bg-white py-10 sm:py-14 lg:py-16" aria-label="How We Do It">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
@@ -198,7 +165,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
               style={{ borderColor: "rgba(41,182,200,0.4)" }}
               aria-hidden
             />
-            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+            <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-10 md:grid-cols-4 md:gap-6">
               {howWeDoItContent.steps.map((step, i) => (
                 <motion.div
                   key={step.id}
@@ -214,7 +181,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                     style={{ borderColor: step.color }}
                     aria-hidden
                   />
-                  <p className="about-step-number font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
+                  <p data-tts-ignore="" className="about-step-number font-marissa mb-3 text-5xl leading-none" style={{ color: step.color }}>
                     {String(i + 1).padStart(2, "0")}
                   </p>
                   <h3 className="about-step-title font-comic mb-3 text-[17px] font-bold" style={{ color: DARK }}>
@@ -229,7 +196,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
           <motion.p
             {...reveal}
             transition={{ duration: 0.6 }}
-            className="about-closing-text font-marissa mx-auto mt-16 max-w-[700px] text-center text-2xl italic leading-snug"
+            className="about-closing-text font-marissa mx-auto mt-8 max-w-[700px] text-center text-2xl italic leading-snug sm:mt-10"
             style={{ color: DARK }}
           >
             {howWeDoItContent.closingLine}
@@ -238,9 +205,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 5: OUR JOURNEY TIMELINE */}
-      <section className="bg-white py-20 lg:py-[90px]" id="journey" aria-label="Our Journey">
+      <section className="bg-white py-12 sm:py-20 lg:py-[90px]" id="journey" aria-label="Our Journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
-          <SectionHeader label="Our Journey" title="Milestones that defined our path." />
+          <SectionHeader
+            label={journeyContent.label}
+            title={journeyContent.title}
+            sub={journeyContent.subtitle}
+          />
 
           <div ref={timelineRef} className="relative">
             {/* Track + scroll-drawn line */}
@@ -258,11 +229,11 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
               aria-hidden
             />
 
-            <div className="space-y-12 md:space-y-20">
-              {timeline.map((item, index) => {
+            <div className="space-y-8 sm:space-y-12 md:space-y-20">
+              {journeyContent.milestones.map((item, index) => {
                 const onLeft = index % 2 === 0
                 return (
-                  <div key={item.year} className="relative md:grid md:grid-cols-2 md:items-center md:gap-x-16">
+                  <div key={item.id} className="relative md:grid md:grid-cols-2 md:items-center md:gap-x-16">
                     {/* Circle marker */}
                     <motion.div
                       initial={{ scale: 0 }}
@@ -288,19 +259,31 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                       viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5 }}
                       aria-label={`${item.year} - ${item.title}`}
-                      className={`ml-12 min-h-[140px] rounded-2xl border border-black/[0.04] bg-[#f8f6f1] px-7 py-6 shadow-sm md:ml-0 ${
+                      className={`ml-10 min-h-[140px] overflow-hidden rounded-2xl border border-black/[0.04] bg-[#f8f6f1] shadow-sm sm:ml-12 md:ml-0 ${
                         onLeft ? "md:col-start-1 md:mr-6" : "md:col-start-2 md:ml-6"
                       }`}
                     >
-                      <p className="about-timeline-year font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
-                        {item.year}
-                      </p>
-                      <h3 className="about-heading-dark font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
-                        {item.title}
-                      </h3>
-                      <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
-                        {item.description}
-                      </p>
+                      {item.image && (
+                        <div className="relative aspect-[16/9] overflow-hidden bg-[#eaf5f6]">
+                          <img
+                            src={item.image}
+                            alt={item.imageAlt || item.title}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <div className="px-5 py-5 sm:px-7 sm:py-6">
+                        <p className="about-timeline-year font-marissa text-[32px] leading-none" style={{ color: TEAL }}>
+                          {item.year}
+                        </p>
+                        <h3 className="about-heading-dark font-comic mt-2 text-lg font-bold" style={{ color: DARK }}>
+                          {item.title}
+                        </h3>
+                        <p className="font-dm-sans mt-2 text-[15px] leading-relaxed text-[#6b7280]">
+                          {item.description}
+                        </p>
+                      </div>
                     </motion.article>
                   </div>
                 )
@@ -310,15 +293,18 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
         </div>
       </section>
 
+      {/* SECTION 5.5: HOW THE FOUNDATION IS ORGANIZED (GOVERNANCE) */}
+      <OrgStructure />
+
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" id="team" aria-label="Meet the Team">
+      <section className="bg-white py-10 sm:py-14 lg:py-16" id="team" aria-label="Meet the Team">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
             title="Meet the Changemakers"
             sub="Our diverse team of passionate individuals working tirelessly on the ground and behind the scenes."
           />
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
             {teamMembers.length === 0 ? (
               <div className="col-span-full py-12 text-center">
                 <p className="font-dm-sans text-[#6b7280]">Team members coming soon.</p>
@@ -363,7 +349,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
 
                     {/* Bottom overlay, name & role + bio + social */}
                     <div
-                      className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"}`}
+                      className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${activeCard === i ? "translate-y-0" : "translate-y-full"} max-sm:translate-y-0`}
                       style={{ background: "linear-gradient(to top, rgba(10,15,35,0.92) 0%, rgba(10,15,35,0.7) 70%, transparent 100%)" }}
                     >
                       <div className="p-4 pt-6">
@@ -422,26 +408,30 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 7: PARTNERS & SUPPORTERS */}
-      <section className="bg-white py-20 lg:py-[90px]" id="partners" aria-label="Partners and Supporters">
-        <div className="mx-auto max-w-5xl px-4 md:px-8">
+      <section className="bg-white py-12 sm:py-16 lg:py-20" id="partners" aria-label="Partners and Supporters">
+        <div className="mx-auto max-w-[1500px] px-5 sm:px-14 lg:px-[8%]">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
+            className="flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:text-left"
           >
-            <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="font-comic mb-2 block text-xs font-bold uppercase tracking-widest about-teal-text">
+            {/* Left: Heading block */}
+            <div className="max-w-[38rem] lg:shrink-0">
+              <span className="font-comic mb-1 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
                 Collaboration
               </span>
-              <h2 className="font-marissa text-2xl font-medium md:text-3xl about-heading-dark">
+              <h2 className="font-marissa text-2xl font-medium text-[#0b76b7] md:text-3xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
                 Our Partners <span className="font-comic-num">&</span> Supporters
               </h2>
-              <p className="font-dm-sans mt-3 text-[15px] text-[#6b7280]">
+              <p className="font-dm-sans mt-2 text-[15px] text-[#6b7280]">
                 Working across sectors with organizations who share our vision.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
+
+            {/* Right: Horizontal icon row */}
+            <div className="flex w-full flex-wrap items-stretch justify-center gap-3 sm:gap-4 lg:w-auto lg:flex-nowrap lg:justify-end">
               {partnerCategories.map((partner) => {
                 const Icon = partner.icon
                 return (
@@ -449,14 +439,14 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
                     key={partner.label}
                     role="article"
                     aria-label={partner.label}
-                    className="group flex min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border border-[#eee] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#29b6c8] hover:shadow-lg"
+                    className="group flex min-w-[86px] flex-1 basis-[28%] flex-col items-center justify-center gap-2 rounded-2xl border border-[#e2eef6] bg-[#f7fbfe] p-3 text-center shadow-[0_4px_18px_rgba(25,100,145,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#bfe1f4] hover:shadow-[0_10px_26px_rgba(25,100,145,0.1)] sm:basis-auto sm:px-4 sm:py-4 lg:min-w-[92px]"
                   >
                     <div
-                      className={`about-partner-icon flex size-12 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110`}
+                      className={`about-partner-icon flex size-11 items-center justify-center rounded-xl ${partner.bg} ${partner.iconColor} transition-transform duration-300 group-hover:scale-110 sm:size-12`}
                     >
                       <Icon className="size-6" aria-hidden="true" />
                     </div>
-                    <span className="about-heading-dark font-comic text-[13px] font-bold uppercase tracking-wide">
+                    <span className="about-heading-dark font-comic text-[12px] font-bold uppercase tracking-wide sm:text-[13px]">
                       {partner.label}
                     </span>
                   </div>
@@ -516,77 +506,98 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt }: AboutSecti
       </section>
 
       {/* SECTION 9: FINAL CTA */}
-      <section className="relative overflow-hidden pb-20 pt-32 dark-section" style={{ backgroundColor: DARK }} aria-label="Get Involved">
-        {/* Brush stroke transition from previous section */}
-        <div className="pointer-events-none absolute left-0 top-0 w-full rotate-180" style={{ lineHeight: 0 }} aria-hidden>
+      <section className="relative isolate pt-5 sm:pt-7" style={{ background: "linear-gradient(to bottom, #fff 0 50%, var(--newsletter-bg) 50% 100%)" }} aria-labelledby="about-final-cta-heading">
+        <div className="relative w-full">
           <svg
-            viewBox="0 0 1440 100"
+            className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+            viewBox="0 0 1440 190"
             preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ display: "block", width: "100%", height: "clamp(50px, 6vw, 90px)" }}
+            aria-hidden="true"
           >
+            <defs>
+              <linearGradient id="about-cta-paint" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#329bd0" />
+                <stop offset="13%" stopColor="#1a6a9e" />
+                <stop offset="82%" stopColor="#155f91" />
+                <stop offset="100%" stopColor="#2e9bce" />
+              </linearGradient>
+            </defs>
             <path
-              d="M0,38 C120,72 240,18 380,52 C500,80 620,12 760,44 C880,70 1000,8 1140,38 C1260,62 1360,22 1440,42 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
+              fill="#59afe0"
+              opacity="0.82"
+              d="M0 76 C72 52 163 38 295 36 C482 32 628 39 806 36 C1015 32 1260 27 1440 22 L1440 190 C1274 188 1110 190 918 190 C702 190 501 187 319 190 C192 190 85 187 0 190 Z"
             />
             <path
-              d="M0,55 C150,28 300,68 440,38 C570,10 700,62 840,35 C970,10 1100,58 1240,30 C1330,12 1400,48 1440,32 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
-              opacity="0.55"
+              fill="url(#about-cta-paint)"
+              d="M0 91 C68 61 150 37 281 29 C398 22 508 26 634 25 C775 24 885 31 1013 25 C1190 17 1338 24 1440 28 L1440 183 C1368 187 1269 185 1149 188 C982 190 855 186 717 188 C544 190 436 185 299 188 C178 190 74 186 0 188 Z"
             />
+            <g fill="none" strokeLinecap="round" opacity="0.32">
+              <path d="M0 66 C68 52 129 48 216 46" stroke="#75c3e7" strokeWidth="3" />
+              <path d="M0 75 C46 68 105 62 178 58" stroke="#75c3e7" strokeWidth="2" />
+              <path d="M0 150 C76 155 119 153 210 151" stroke="#70bee5" strokeWidth="2" />
+              <path d="M1260 37 C1328 39 1381 39 1440 43" stroke="#82c9e9" strokeWidth="2" />
+              <path d="M1305 146 C1362 148 1409 150 1440 149" stroke="#82c9e9" strokeWidth="3" />
+            </g>
+            <g fill="none" stroke="#9bd3ed" strokeLinecap="round" opacity="0.12">
+              <path d="M150 60 C381 48 653 56 890 51 C1074 47 1241 49 1375 47" strokeWidth="3" />
+              <path d="M200 118 C438 112 638 118 842 115 C1066 111 1202 116 1350 112" strokeWidth="2" />
+              <path d="M62 137 C299 133 539 137 731 134 C910 132 1142 137 1380 131" strokeWidth="2" />
+            </g>
           </svg>
-        </div>
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full lg:hidden"
+            viewBox="0 0 390 360"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="about-cta-mobile-paint" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#329bd0" />
+                <stop offset="20%" stopColor="#1a6a9e" />
+                <stop offset="85%" stopColor="#155f91" />
+                <stop offset="100%" stopColor="#329bd0" />
+              </linearGradient>
+            </defs>
+            <path fill="#6ab9e1" opacity="0.7" d="M0 34 C64 20 144 18 218 19 C289 20 341 17 390 30 L390 360 C328 358 260 360 191 360 C117 360 50 358 0 360 Z" />
+            <path fill="url(#about-cta-mobile-paint)" d="M0 45 C52 27 113 30 178 24 C244 20 322 26 390 36 L390 350 C325 356 258 350 190 354 C118 357 49 351 0 352 Z" />
+            <g fill="none" stroke="#a0d5ee" strokeLinecap="round" opacity="0.13">
+              <path d="M20 49 C118 39 247 44 366 43" strokeWidth="2" />
+              <path d="M16 308 C104 303 255 309 370 304" strokeWidth="3" />
+            </g>
+          </svg>
 
-        {/* Dot-grid texture */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-          aria-hidden
-        />
-        {/* Radial teal glow */}
-        <div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(circle at center, rgba(41,182,200,0.12) 0%, transparent 60%)" }}
-          aria-hidden
-        />
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.6 }}
+            className="relative z-10 mx-auto flex max-w-[1500px] flex-col items-center justify-center gap-5 px-5 py-10 text-center sm:min-h-[290px] sm:px-14 sm:py-12 lg:min-h-[174px] lg:flex-row lg:justify-between lg:gap-10 lg:px-[8%] lg:py-7 lg:text-left"
+          >
+            <div className="max-w-[38rem]">
+              <h2 id="about-final-cta-heading" className="font-brush text-[1.7rem] font-bold italic leading-tight text-white sm:text-[1.9rem]">
+                Ready to Make a Difference?
+              </h2>
+              <p className="font-dm-sans mt-2 max-w-[34rem] text-sm leading-relaxed text-white/95 sm:text-[0.95rem]">
+                Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
+                mission.
+              </p>
+            </div>
 
-        <motion.div
-          {...reveal}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 mx-auto max-w-3xl px-4 text-center md:px-8"
-        >
-          <h2 className="font-marissa mb-4 text-3xl font-medium text-white md:text-4xl">
-            Ready to Make a Difference?
-          </h2>
-          <p className="font-dm-sans mx-auto mb-8 max-w-2xl text-gray-400">
-            Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
-            mission.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <motion.div
-              animate={preferences.reduceMotion ? false : { scale: [1, 1.045, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            >
+            <div className="flex w-full max-w-[21rem] flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center lg:w-auto lg:shrink-0">
               <Link
                 href="/donate"
-                className="font-comic inline-flex h-12 items-center gap-2 rounded-full px-8 font-bold text-white shadow-lg transition-colors hover:bg-[#1a8fa0]"
-                style={{ backgroundColor: TEAL }}
+                className="font-comic inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-7 text-[0.95rem] font-bold text-cta-banner shadow-sm transition-colors duration-200 hover:bg-newsletter-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
               >
-                <Heart className="size-4 fill-current" />
                 Donate Now
+                <ArrowRight className="size-4" strokeWidth={2.5} aria-hidden="true" />
               </Link>
-            </motion.div>
-            <Link
-              href="/get-involved"
-              className="font-comic inline-flex h-12 items-center rounded-full border border-gray-600 bg-transparent px-8 font-bold text-white transition-colors hover:bg-white/10"
-            >
-              Join Our Team
-            </Link>
-          </div>
-        </motion.div>
+              <Link
+                href="/get-involved"
+                className="font-comic inline-flex min-h-11 items-center justify-center rounded-lg border-[1.5px] border-white bg-white/5 px-7 text-[0.95rem] font-bold text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
+              >
+                Join Our Team
+              </Link>
+            </div>
+          </motion.div>
+        </div>
       </section>
     </>
   )

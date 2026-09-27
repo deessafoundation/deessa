@@ -4,6 +4,8 @@ import { getPublishedProgramBySlug, getRelatedPrograms } from "@/lib/programs/da
 import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
 import { CmsProgramRenderer } from "@/components/programs/CmsProgramRenderer"
 import type { ProgramDocument } from "@/lib/programs/content"
+import { WhatWeDoAreaDetail } from "@/components/what-we-do-area-detail"
+import { getWhatWeDoArea, WHAT_WE_DO_AREA_IDS } from "@/lib/data/what-we-do-areas"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -35,6 +37,17 @@ async function sanitizeDocument(doc: ProgramDocument): Promise<ProgramDocument> 
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const area = getWhatWeDoArea(slug)
+
+  if (area) {
+    return generateSEOMetadata({
+      title: `${area.label} | What We Do`,
+      description: area.subtitle,
+      path: `/whatwedo/${area.id}`,
+      keywords: [area.label, "autism support Nepal", "inclusive education", "Deessa Foundation"],
+    })
+  }
+
   const program = await getPublishedProgramBySlug(slug)
 
   if (!program) {
@@ -46,6 +59,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProgramDetailPage({ params }: PageProps) {
   const { slug } = await params
+  const area = getWhatWeDoArea(slug)
+
+  if (area) {
+    return <WhatWeDoAreaDetail area={area} />
+  }
+
   const program = await getPublishedProgramBySlug(slug)
   if (!program) notFound()
   const sanitizedDoc = await sanitizeDocument(program.document)

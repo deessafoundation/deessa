@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArchiveThumbnailImage } from './archive-thumbnail-image';
 import styles from './archive-thumbnail.module.css';
-import { Calendar, Clock, ArrowRight, Heart, Play, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Calendar, ArrowRight, Heart, Play, Share2, SlidersHorizontal } from 'lucide-react';
+import styles from './podcasts-page.module.css';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Podcast } from '@/lib/types/podcast';
 import { formatDistanceToNow } from 'date-fns';
@@ -16,8 +16,9 @@ interface PodcastArchiveSectionProps {
 }
 
 export default function PodcastArchiveSection({ episodes, totalCount }: PodcastArchiveSectionProps) {
-  const [selectedFormat, setSelectedFormat] = useState<'all' | 'video' | 'audio'>('all');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [shareStatus, setShareStatus] = useState('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [displayCount, setDisplayCount] = useState(12);
 
   // Get unique topics from all episodes
@@ -27,12 +28,6 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
 
   // Filter episodes
   const filteredEpisodes = episodes.filter((episode) => {
-    // Format filter
-    if (selectedFormat !== 'all') {
-      if (selectedFormat === 'video' && episode.format !== 'video') return false;
-      if (selectedFormat === 'audio' && episode.format !== 'audio') return false;
-    }
-
     // Topics filter
     if (selectedTopics.length > 0) {
       if (!episode.topics.some((topic) => selectedTopics.includes(topic))) {
@@ -47,6 +42,7 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
   const hasMore = displayCount < filteredEpisodes.length;
 
   const handleTopicToggle = (topic: string) => {
+    setDisplayCount(12);
     setSelectedTopics((prev) =>
       prev.includes(topic)
         ? prev.filter((t) => t !== topic)
@@ -54,225 +50,67 @@ export default function PodcastArchiveSection({ episodes, totalCount }: PodcastA
     );
   };
 
+  const shareEpisode = async (episode: Podcast) => {
+    const url = `${window.location.origin}/podcasts/${episode.slug}`;
+    try {
+      if (navigator.share) await navigator.share({ title: episode.title, text: episode.description, url });
+      else { await navigator.clipboard.writeText(url); setShareStatus('Episode link copied.'); }
+    } catch (error) {
+      if (!(error instanceof Error && error.name === 'AbortError')) setShareStatus('Unable to share. Open the episode and copy its address.');
+    }
+  };
+
   return (
     <div>
-      {/* Section Header with Browse All Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-main">Episode Archive</h2>
-        <Link
-          href="/podcasts/episodes"
-          className="text-brand-primary hover:text-brand-primary-dark font-semibold text-sm transition-colors duration-200"
-        >
-          Browse All Episodes →
-        </Link>
+      <div className={styles.sectionHeader}>
+        <h2 className={`${styles.sectionTitle} ${styles.underlined}`}>Episode Archive</h2>
+        <Link href="/podcasts/episodes" className={styles.textLink}>Browse All Episodes<ArrowRight size={16} aria-hidden="true" /></Link>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left Sidebar - Filters */}
-        <aside className="lg:col-span-1">
-          <div className="sticky top-24 space-y-6">
-            <div>
-              <h3 className="text-sm font-bold text-text-main uppercase tracking-wider mb-4">
-                Filter Library
-              </h3>
-
-            {/* Format Filter */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-text-main mb-3">FORMAT</h4>
-              <div className="space-y-2">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <Checkbox
-                    checked={selectedFormat === 'video'}
-                    onCheckedChange={() => setSelectedFormat(selectedFormat === 'video' ? 'all' : 'video')}
-                  />
-                  <span className="text-sm text-text-muted">Video</span>
-                </label>
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <Checkbox
-                    checked={selectedFormat === 'audio'}
-                    onCheckedChange={() => setSelectedFormat(selectedFormat === 'audio' ? 'all' : 'audio')}
-                  />
-                  <span className="text-sm text-text-muted">Audio</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Topics Filter */}
-            <div>
-              <h4 className="text-sm font-semibold text-text-main mb-3">TOPICS</h4>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {allTopics.map((topic) => (
-                  <label key={topic} className="flex items-center space-x-2 cursor-pointer">
-                    <Checkbox
-                      checked={selectedTopics.includes(topic)}
-                      onCheckedChange={() => handleTopicToggle(topic)}
-                    />
-                    <span className="text-sm text-text-muted capitalize">{topic}</span>
-                  </label>
-                ))}
-              </div>
+      <div className={styles.archiveLayout}>
+        <aside className={styles.sidebar}>
+          <div className={styles.filterPanel}>
+            <button className={styles.filterToggle} aria-expanded={filtersOpen} aria-controls="podcast-topics" onClick={() => setFiltersOpen(!filtersOpen)}><SlidersHorizontal size={18} aria-hidden="true" />Filter Library{selectedTopics.length > 0 && ` (${selectedTopics.length})`}</button>
+            <h3 className={styles.desktopFilterTitle}>Filter Library</h3>
+            <div id="podcast-topics" className={`${styles.filterOptions} ${filtersOpen ? styles.filterOptionsOpen : ''}`}>
+              <p className={styles.filterLabel}>Topics</p>
+              {allTopics.map(topic => <label key={topic} className={styles.topic}><Checkbox checked={selectedTopics.includes(topic)} onCheckedChange={() => handleTopicToggle(topic)} /><span>{topic}</span></label>)}
+              {selectedTopics.length > 0 && <button className={styles.textLink} onClick={() => { setSelectedTopics([]); setDisplayCount(12); }}>Clear filters</button>}
             </div>
           </div>
-
-          {/* Support CTA Card */}
-          <div className="bg-white border-2 border-brand-primary rounded-xl p-6 shadow-md">
-            <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4">
-              <Heart className="w-6 h-6 text-brand-primary" />
-            </div>
-            <h4 className="font-heading font-bold text-xl text-text-main mb-2">
-              Support Our Mission
-            </h4>
-            <p className="text-sm text-text-muted leading-relaxed mb-4">
-              Help us amplify voices and create positive change in our community.
-            </p>
-            <Button
-              asChild
-              size="sm"
-              className="w-full bg-brand-primary hover:bg-brand-primary-dark text-white"
-            >
-              <Link href="/donate">Donate Now</Link>
-            </Button>
+          <div className={styles.supportCard}>
+            <Heart size={24} aria-hidden="true" /><h3>Support Our Mission</h3>
+            <p>Help us amplify voices and create positive change in our community.</p>
+            <Link href="/donate" className={styles.primary}><Heart size={16} fill="currentColor" aria-hidden="true" />Donate Now</Link>
           </div>
-        </div>
-      </aside>
-
-      {/* Right - Episode Grid */}
-      <div className="lg:col-span-3">
-        {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-text-main">Episode Archive</h2>
-          <p className="text-sm text-text-muted mt-1">
-            Showing {displayedEpisodes.length} of {filteredEpisodes.length} episodes
-          </p>
-        </div>
-
-        {/* Episodes Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {displayedEpisodes.map((episode) => {
-            const publishedDate = new Date(episode.publishedAt);
-
-            return (
-              <Link
-                key={episode.id}
-                href={`/podcasts/${episode.slug}`}
-                className="podcast-card flex flex-col bg-white rounded-xl border border-border/40 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-brand-primary/20 hover:border-brand-primary/50 hover:-translate-y-1.5 hover:scale-[1.02] transition-all duration-500 group h-full"
-              >
-                {/* Thumbnail with Play Button */}
-                <div className={`${styles.thumbnail} relative aspect-video overflow-hidden bg-gray-900`}>
-                  <ArchiveThumbnailImage
-                    key={`${episode.thumbnailUrl}:${episode.youtubeId}`}
-                    src={episode.thumbnailUrl}
-                    youtubeId={episode.youtubeId}
-                    alt={episode.title}
-                  />
-                  
-                  {/* Episode Badge - Always show, use index as fallback if episodeNumber missing */}
-                  <div className="absolute top-3 left-3 z-10">
-                    <span className="bg-brand-primary text-white px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider shadow-lg">
-                      EP {episode.episodeNumber || (episodes.findIndex(e => e.id === episode.id) + 1)}
-                    </span>
-                  </div>
-                  
-                  {/* Duration Badge - Top Right */}
-                  <div className="absolute top-3 right-3 z-10">
-                    <span className="bg-black/75 backdrop-blur-sm text-white px-2.5 py-1 rounded text-xs font-semibold">
-                      {episode.duration} min
-                    </span>
-                  </div>
-                  
-                  {/* Play Button Overlay */}
-                  <div className={`${styles.playOverlay} absolute inset-0 flex items-center justify-center transition-all`}>
-                    <div className={`${styles.playCircle} w-14 h-14 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                      <Play className={`${styles.playIcon} w-6 h-6 text-brand-primary ml-0.5`} fill="currentColor" />
-                    </div>
-                  </div>
-                  
-                  {/* Gradient Overlay */}
-                  <div className={`${styles.gradient} absolute inset-x-0 bottom-0 h-20 pointer-events-none`} />
-                </div>
-
-                {/* Content */}
-                <div className="p-5 flex flex-col flex-1">
-                  {/* Meta */}
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    {episode.topics[0] && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide text-brand-primary">
-                        {episode.topics[0]}
-                      </span>
-                    )}
-                    <span className="flex items-center text-xs text-text-muted">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {formatDistanceToNow(publishedDate, { addSuffix: true })}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-lg font-heading font-bold text-text-main mb-2 group-hover:text-brand-primary transition-colors line-clamp-2">
-                    {episode.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-text-muted leading-relaxed mb-4 line-clamp-2">
-                    {episode.description}
-                  </p>
-
-                  {/* Action Buttons */}
-                  <div className="mt-auto flex items-center gap-2">
-                    {/* Watch Button */}
-                    <div className="flex-1 inline-flex items-center justify-center text-xs font-semibold text-white bg-brand-primary px-3 py-2 rounded-lg hover:bg-brand-primary-dark hover:shadow-lg hover:scale-105 transition-all duration-300 h-9 cursor-pointer">
-                      Watch Episode
-                      <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                    
-                    {/* Share Button */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const url = `${window.location.origin}/podcasts/${episode.slug}`;
-                        if (navigator.share) {
-                          navigator.share({
-                            title: episode.title,
-                            text: episode.description,
-                            url: url,
-                          }).catch(() => {});
-                        } else {
-                          navigator.clipboard.writeText(url);
-                        }
-                      }}
-                      className="flex items-center justify-center w-9 h-9 rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white hover:shadow-lg hover:scale-110 transition-all duration-300 flex-shrink-0"
-                      title="Share episode"
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </button>
+        </aside>
+        <div className={styles.archiveResults}>
+          <p className={styles.resultCount} aria-live="polite">Showing {displayedEpisodes.length} of {selectedTopics.length ? filteredEpisodes.length : totalCount} episodes</p>
+          <p className="sr-only" role="status">{shareStatus}</p>
+          <div className={styles.episodeGrid}>
+            {displayedEpisodes.map(episode => {
+              const publishedDate = new Date(episode.publishedAt);
+              const validDate = !Number.isNaN(publishedDate.getTime());
+              return <article key={episode.id} className={styles.episodeCard}>
+                <Link href={`/podcasts/${episode.slug}`} className={styles.episodeImage} aria-label={`Watch ${episode.title}`}>
+                  <Image src={episode.thumbnailUrl || '/podcast_banner.png'} alt="" fill sizes="(max-width: 639px) 85vw, 150px" className="object-cover" />
+                  <span className={styles.thumbnailPlay}><Play size={18} fill="currentColor" aria-hidden="true" /></span>
+                </Link>
+                <div className={styles.episodeContent}>
+                  <div className={styles.episodeMeta}><strong>EP {episode.episodeNumber || (episodes.findIndex(item => item.id === episode.id) + 1)}</strong>{episode.duration && <span>{episode.duration}{episode.duration.includes(':') ? '' : ' min'}</span>}{episode.topics[0] && <span className={styles.topicBadge}>{episode.topics[0]}</span>}</div>
+                  {validDate && <time className={styles.date} dateTime={publishedDate.toISOString()}><Calendar size={11} aria-hidden="true" />{formatDistanceToNow(publishedDate, { addSuffix: true })}</time>}
+                  <h3 className={styles.episodeTitle}><Link href={`/podcasts/${episode.slug}`}>{episode.title}</Link></h3>
+                  <p className={styles.episodeDescription}>{episode.description}</p>
+                  <div className={styles.episodeActions}>
+                    <Link href={`/podcasts/${episode.slug}`} className={styles.primary}><Play size={13} fill="currentColor" aria-hidden="true" />Watch Episode</Link>
+                    <button onClick={() => shareEpisode(episode)} className={styles.secondary} aria-label={`Share ${episode.title}`}><Share2 size={14} aria-hidden="true" />Share</button>
                   </div>
                 </div>
-              </Link>
-            );
-          })}
+              </article>;
+            })}
+          </div>
+          {hasMore && <div className={styles.loadMore}><button onClick={() => setDisplayCount(prev => prev + 12)} className={styles.secondary}>Load More Stories</button></div>}
+          {filteredEpisodes.length === 0 && <p className={styles.empty}>No episodes found matching your filters.</p>}
         </div>
-
-        {/* Load More Button */}
-        {hasMore && (
-          <div className="mt-12 text-center">
-            <Button
-              onClick={() => setDisplayCount((prev) => prev + 12)}
-              size="lg"
-              variant="outline"
-              className="min-w-[200px] border-border hover:bg-bg-soft"
-            >
-              Load More Stories
-            </Button>
-          </div>
-        )}
-
-        {/* No Results */}
-        {filteredEpisodes.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-text-muted">No episodes found matching your filters.</p>
-          </div>
-        )}
-      </div>
       </div>
     </div>
   );

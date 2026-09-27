@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Image Cleanup & Deletion Feature"
 description: "Implemented automatic cleanup of old images when uploading new ones, plus a confirmation dialog for manual image dele..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

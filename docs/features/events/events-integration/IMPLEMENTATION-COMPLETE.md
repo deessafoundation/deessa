@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 — Complete Implementation Report"
 description: "Date: July 27, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

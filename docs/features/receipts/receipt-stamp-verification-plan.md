@@ -1,7 +1,7 @@
 ---
 title: "Receipt: Stamp, Signature & Verification System — Implementation Plan"
 description: "Date: March 3, 2026"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

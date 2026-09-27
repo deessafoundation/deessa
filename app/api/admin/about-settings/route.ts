@@ -32,12 +32,12 @@ export async function POST(request: NextRequest) {
 
     const { error } = await supabase
       .from("site_settings")
-      .update({
+      .upsert({
+        key: ABOUT_PAGE_SETTINGS_KEY,
         value: settings,
         updated_by: currentAdmin.id,
         updated_at: new Date().toISOString(),
-      })
-      .eq("key", ABOUT_PAGE_SETTINGS_KEY)
+      }, { onConflict: "key" })
 
     if (error) {
       console.error("Error updating about_page_content:", error)

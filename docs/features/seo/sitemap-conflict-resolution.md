@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Sitemap Conflict Resolution"
 description: "Documentation for sitemap conflict resolution"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

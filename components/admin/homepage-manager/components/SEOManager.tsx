@@ -6,6 +6,11 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type { HomepageSEOSettings } from "@/lib/types/homepage-settings"
 
+// Read from env rather than hardcoding: this preview previously showed a stale
+// domain long after the site moved, which is exactly what a hardcoded URL does.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://deessafoundation.com"
+
 interface SEOManagerProps {
   seo: HomepageSEOSettings
   onChange: (seo: HomepageSEOSettings) => void
@@ -95,7 +100,7 @@ export default function SEOManager({ seo, onChange }: SEOManagerProps) {
                   {seo.title}
                 </p>
                 <p className="text-green-700 text-sm">
-                  https://deeshafoundation.org
+                  {SITE_URL}
                 </p>
                 <p className="text-gray-600 text-sm">
                   {seo.description}

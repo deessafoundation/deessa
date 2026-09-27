@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Admin - Donations API"
 description: "| Method | Endpoint | Description |"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: reference
 category: reference
 audience: admin

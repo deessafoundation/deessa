@@ -1,7 +1,7 @@
 ---
 title: "Stripe Payment Intent Enhancement - Implementation Summary"
 description: "This implementation enhances the payment system with comprehensive Stripe reference tracking and donor messaging capa..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

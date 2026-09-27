@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Credential Rotation Checklist"
 description: "Quick reference checklist for quarterly credential rotation."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

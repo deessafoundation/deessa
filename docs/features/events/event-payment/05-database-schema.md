@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” Database Schema"
 description: "Core table for event registrations. Payment-related columns are documented here."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

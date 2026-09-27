@@ -1,7 +1,7 @@
 ---
 title: "Manual Storage Bucket Setup Guide"
 description: "If you encounter ERROR: 42501: must be owner of table buckets when running the SQL script, follow this manual setup g..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: setup
 audience: admin

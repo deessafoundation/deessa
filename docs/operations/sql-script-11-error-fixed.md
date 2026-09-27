@@ -1,7 +1,7 @@
 ---
 title: "✅ SQL Script 11 - Error Fixed"
 description: "You got this error:"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "SQL Script 11 - Fixed Version"
 description: "Documentation for sql script 11 - fixed version"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” Troubleshooting"
 description: "Cause: No payment providers are configured or their env vars are missing."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { HOMEPAGE_SETTINGS_KEYS } from "@/lib/types/homepage-settings"
@@ -170,6 +171,11 @@ export async function POST(request: NextRequest) {
       ip_address: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip"),
     })
 
+    // The public homepage reads these CMS values. Clear its route cache right
+    // after a save so the next visit receives the updated carousel.
+    revalidatePath("/")
+    revalidatePath("/admin/homepage")
+
     return NextResponse.json({
       success: true,
       message: "Homepage settings updated successfully",
@@ -183,7 +189,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check authentication using the standard admin auth pattern
     const currentAdmin = await getCurrentAdmin()

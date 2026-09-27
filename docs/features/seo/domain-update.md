@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Domain Update Summary"
-description: "Updated all references from deeshafoundation.org to deessafoundation.com the official domain."
-owner: "Deesha Team"
+description: "Updated all references from deessafoundation.org to deessafoundation.com the official domain."
+owner: "Deessa Team"
 status: active
 category: feature
 audience: operator
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Changes Made
 
-Updated all references from `deeshafoundation.org` to `deessafoundation.com` (the official domain).
+Updated all references from `deessafoundation.org` to `deessafoundation.com` (the official domain).
 
 ## Files Updated
 

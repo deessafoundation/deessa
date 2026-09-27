@@ -1,7 +1,7 @@
 ---
 title: "Schema Analysis & Final Professional Solution"
 description: "sql"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

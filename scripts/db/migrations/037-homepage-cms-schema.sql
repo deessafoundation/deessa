@@ -59,7 +59,7 @@ VALUES (
         "value": 3000,
         "suffix": "+",
         "label": "Scholarships Awarded",
-        "sublabel": "Since 2015",
+        "sublabel": "Since 2022",
         "order": 6,
         "highlight": false
       },
@@ -96,7 +96,7 @@ VALUES (
         "id": "education",
         "badge": "📚 Education",
         "headline": "Building Classrooms, Building Futures",
-        "body": "Since 2015, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities — ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
+        "body": "Since 2022, deessa Foundation has constructed and renovated 50+ schools across remote Himalayan and Terai communities, ensuring every child has a safe space to learn, grow, and dream. Our education initiatives combine infrastructure with holistic teacher training programs.",
         "bullets": [
           "50+ schools built & renovated from Humla to Dang",
           "500+ teachers trained in child-centered pedagogy",
@@ -116,7 +116,7 @@ VALUES (
         "id": "healthcare",
         "badge": "🏥 Healthcare",
         "headline": "Bringing Medicine to the Mountains",
-        "body": "200+ free health camps have reached villages where the nearest hospital is a full day''s walk away. Our mobile health units carry everything from basic diagnostics to maternal care — meeting communities where they are, not where is convenient.",
+        "body": "200+ free health camps have reached villages where the nearest hospital is a full day''s walk away. Our mobile health units carry everything from basic diagnostics to maternal care, meeting communities where they are, not where is convenient.",
         "bullets": [
           "200+ free health camps across 25 districts",
           "Maternal & child health care for 5,000+ women",
@@ -136,7 +136,7 @@ VALUES (
         "id": "empowerment",
         "badge": "👩 Women Empowerment",
         "headline": "Women Who Lead",
-        "body": "When women rise, communities transform. Our women''s empowerment programs provide vocational training, microfinance access, and leadership workshops — creating 500+ self-sufficient entrepreneurs and community advocates across Nepal''s remotest corners.",
+        "body": "When women rise, communities transform. Our women''s empowerment programs provide vocational training, microfinance access, and leadership workshops, creating 500+ self-sufficient entrepreneurs and community advocates across Nepal''s remotest corners.",
         "bullets": [
           "500+ women trained in vocational skills",
           "Microfinance access for rural women entrepreneurs",
@@ -247,7 +247,7 @@ VALUES (
         "type": "brush-quote",
         "color": "#8B8DD4",
         "headline": "Education is not preparation for life; education is life itself.",
-        "body": "Every classroom we build, every teacher we train, every scholarship we award — these are not just programs. They are promises kept.",
+        "body": "Every classroom we build, every teacher we train, every scholarship we award. These are not just programs. They are promises kept.",
         "ctaLabel": null,
         "ctaUrl": null,
         "order": 1,
@@ -313,7 +313,7 @@ VALUES (
   'homepage_seo',
   '{
     "title": "deessa Foundation - Empowering Communities Across Nepal",
-    "description": "Since 2015, deessa Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
+    "description": "Since 2022, deessa Foundation has been transforming lives through education, healthcare, and community empowerment in rural Nepal. Join us in making a difference.",
     "ogImage": "/og-image-home.jpg",
     "keywords": ["Nepal NGO", "education Nepal", "healthcare Nepal", "community development", "rural empowerment"]
   }'::jsonb,
@@ -360,7 +360,7 @@ VALUES (
         "id": "registered",
         "icon": "verified",
         "text": "Registered NGO",
-        "subtext": "Est. 2015",
+        "subtext": "Est. 2022",
         "order": 2,
         "visible": true
       },

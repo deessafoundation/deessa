@@ -21,7 +21,6 @@ const ITEMS_PER_PAGE = 12;
 
 export default function EpisodesPageContent({ episodes }: EpisodesPageContentProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState<'all' | 'video' | 'audio'>('all');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
@@ -43,11 +42,6 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
         ep.description.toLowerCase().includes(query) ||
         ep.guestName?.toLowerCase().includes(query)
       );
-    }
-
-    // Format filter
-    if (selectedFormat !== 'all') {
-      filtered = filtered.filter((ep) => ep.format === selectedFormat);
     }
 
     // Topics filter
@@ -74,7 +68,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
     });
 
     return filtered;
-  }, [episodes, searchQuery, selectedFormat, selectedTopics, sortBy]);
+  }, [episodes, searchQuery, selectedTopics, sortBy]);
 
   const visibleEpisodes = useMemo(() => {
     return filteredEpisodes.slice(0, displayCount);
@@ -98,7 +92,6 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
   };
 
   const activeFiltersCount = 
-    (selectedFormat !== 'all' ? 1 : 0) + 
     selectedTopics.length + 
     (searchQuery ? 1 : 0);
 
@@ -151,45 +144,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                   size="sm"
                 />
               </div>
-
-              {/* Format Filter */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-text-main mb-3">FORMAT</h4>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <Checkbox
-                      checked={selectedFormat === 'all'}
-                      onCheckedChange={() => {
-                        setSelectedFormat('all');
-                        handleFilterChange();
-                      }}
-                    />
-                    <span className="text-sm text-text-muted">All</span>
-                  </label>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <Checkbox
-                      checked={selectedFormat === 'video'}
-                      onCheckedChange={() => {
-                        setSelectedFormat(selectedFormat === 'video' ? 'all' : 'video');
-                        handleFilterChange();
-                      }}
-                    />
-                    <span className="text-sm text-text-muted">Video</span>
-                  </label>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <Checkbox
-                      checked={selectedFormat === 'audio'}
-                      onCheckedChange={() => {
-                        setSelectedFormat(selectedFormat === 'audio' ? 'all' : 'audio');
-                        handleFilterChange();
-                      }}
-                    />
-                    <span className="text-sm text-text-muted">Audio</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Topics */}
+            {/* Topics */}
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-text-main mb-3">TOPICS</h4>
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
@@ -210,7 +165,6 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                 <button
                   onClick={() => {
                     setSearchQuery('');
-                    setSelectedFormat('all');
                     setSelectedTopics([]);
                     handleFilterChange();
                   }}
@@ -381,7 +335,6 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
           <button
             onClick={() => {
               setSearchQuery('');
-              setSelectedFormat('all');
               setSelectedTopics([]);
               handleFilterChange();
             }}

@@ -1,7 +1,7 @@
 ---
 title: "🎉 Receipt System with Google Email - COMPLETE & READY"
 description: "- Automatic receipt generation after payment"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: setup
 audience: admin

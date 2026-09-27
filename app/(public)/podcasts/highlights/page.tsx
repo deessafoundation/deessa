@@ -2,7 +2,10 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getAllPodcastHighlights } from '@/lib/data/podcasts';
 import HighlightsPageContent from '@/components/podcasts/highlights-page-content';
-import { Sparkles } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import shared from '@/components/podcasts/podcasts-page.module.css';
+import styles from '@/components/podcasts/highlights-page.module.css';
 
 export const metadata: Metadata = {
   title: 'Podcast Highlights - All Shorts | deessa Foundation',
@@ -21,43 +24,22 @@ export default async function HighlightsPage() {
   const allHighlights = await getAllPodcastHighlights();
 
   return (
-    <div className="min-h-screen bg-bg-main">
-      {/* Simple Clean Header */}
-      <div className="bg-white border-b-4 border-brand-primary">
-        <div className="container max-w-7xl mx-auto px-2 py-12 md:py-16">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 text-brand-primary rounded-lg mb-4">
-              <Sparkles className="w-5 h-5" />
-              <span className="font-bold text-sm uppercase tracking-wider">Key Moments</span>
-            </div>
-            
-            <h1 className="font-heading font-black text-4xl md:text-5xl lg:text-6xl mb-4 text-text-main leading-tight">
-              Podcast Highlights
-            </h1>
-            
-            <p className="text-lg md:text-xl text-text-muted leading-relaxed">
-              Discover {allHighlights.length} impactful insights and inspiring stories from our podcast episodes. Each short captures the essence of meaningful conversations about autism, inclusion, and community impact.
-            </p>
+    <div className={shared.page}>
+      <div className={`${shared.main} ${styles.layout}`}>
+        <header className={styles.hero}>
+          <Link href="/podcasts" className={shared.textLink}><ArrowLeft size={16} aria-hidden="true" />Back to Podcasts</Link>
+          <div className={styles.heroHeading}>
+            <div><p className={shared.eyebrow}><Sparkles size={16} aria-hidden="true" />Key Moments</p><h1 className={shared.heroTitle}>Podcast Highlights</h1></div>
+            <span className={styles.collectionCount}>{allHighlights.length}<span>highlights</span></span>
           </div>
-        </div>
-      </div>
-
-      {/* Highlights Content */}
-      <div className="container max-w-7xl mx-auto px-2 py-12">
+          <p className={styles.introduction}>Discover {allHighlights.length} impactful insights and inspiring stories from our podcast episodes. Each short captures the essence of meaningful conversations about autism, inclusion, and community impact.</p>
+        </header>
         {allHighlights.length > 0 ? (
-          <Suspense fallback={<div className="text-center py-12">Loading highlights...</div>}>
+          <Suspense fallback={<div className={styles.empty}>Loading highlights...</div>}>
             <HighlightsPageContent highlights={allHighlights} />
           </Suspense>
         ) : (
-          <div className="text-center py-20">
-            <Sparkles className="w-16 h-16 text-text-muted mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-text-main mb-2">
-              No Highlights Available Yet
-            </h2>
-            <p className="text-text-muted">
-              Check back soon for exciting highlights from our podcast episodes!
-            </p>
-          </div>
+          <div className={styles.empty}><Sparkles size={32} aria-hidden="true" /><h2 className={shared.sectionTitle}>No Highlights Available Yet</h2><p>Check back soon for exciting highlights from our podcast episodes!</p></div>
         )}
       </div>
     </div>

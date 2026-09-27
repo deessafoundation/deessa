@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Authentication"
-description: "Deesha Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authen..."
-owner: "Deesha Team"
+description: "Deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authen..."
+owner: "Deessa Team"
 status: reference
 category: reference
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Overview
 
-Deesha Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authentication methods depending on the endpoint.
+Deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authentication methods depending on the endpoint.
 
 ## Authentication Methods
 

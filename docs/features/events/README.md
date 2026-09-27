@@ -1,7 +1,7 @@
 ---
 title: "Event Management Module"
 description: "Status: Production Ready"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

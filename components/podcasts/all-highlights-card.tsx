@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ExternalLink, Play } from 'lucide-react';
+import { ArrowRight, ExternalLink, Play, X } from 'lucide-react';
 import Link from 'next/link';
+import shared from './podcasts-page.module.css';
+import styles from './highlights-page.module.css';
 import { useVideoModal } from '@/contexts/VideoModalContext';
 
 interface AllHighlightsCardProps {
@@ -35,6 +37,7 @@ export default function AllHighlightsCard({
     const patterns = [
       /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
       /youtu\.be\/([a-zA-Z0-9_-]+)/,
+      /[?&]v=([a-zA-Z0-9_-]+)/,
     ];
     for (const pattern of patterns) {
       const match = url.match(pattern);

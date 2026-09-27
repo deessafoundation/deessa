@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” Security"
 description: "| Threat | Mitigation |"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

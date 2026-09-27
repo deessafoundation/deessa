@@ -1,7 +1,7 @@
 ---
 title: "Podcast Highlights Feature - Implementation Summary"
 description: "Added YouTube Shorts highlights section to podcast detail pages with full admin management."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

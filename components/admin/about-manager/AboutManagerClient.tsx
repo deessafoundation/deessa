@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { notifications } from "@/lib/notifications"
-import { Save, RotateCcw, Eye, Users, Heart, Footprints, Plus, Trash2 } from "lucide-react"
+import { Save, RotateCcw, Eye, Users, Heart, Footprints, Plus, Trash2, Milestone } from "lucide-react"
 import type { AboutPageSettings } from "@/lib/types/about-settings"
 
 interface AboutManagerClientProps {
@@ -81,7 +81,7 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
             <div>
               <h1 className="text-xl font-bold text-slate-900">About Page Manager</h1>
               <p className="text-sm text-slate-600">
-                Manage the "Who We Are" page — Hero, Intro, and How We Do It sections
+                Manage the "Who We Are" page — Hero, Intro, How We Do It, and Journey sections
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -120,7 +120,7 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
         </Card>
 
         <Tabs defaultValue="hero">
-          <TabsList className="w-full grid grid-cols-3 gap-2 bg-transparent h-auto p-0 mb-6">
+          <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 gap-2 bg-transparent h-auto p-0 mb-6">
             <TabsTrigger value="hero" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               Hero
@@ -132,6 +132,10 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
             <TabsTrigger value="howWeDoIt" className="flex items-center gap-2">
               <Footprints className="w-4 h-4" />
               How We Do It
+            </TabsTrigger>
+            <TabsTrigger value="journey" className="flex items-center gap-2">
+              <Milestone className="w-4 h-4" />
+              Our Journey
             </TabsTrigger>
           </TabsList>
 
@@ -411,6 +415,176 @@ export default function AboutManagerClient({ initialSettings, userId }: AboutMan
                     className="mt-1"
                   />
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="journey" className="mt-0">
+            <Card>
+              <CardHeader>
+                <CardTitle>Our Journey</CardTitle>
+                <CardDescription>Manage the milestones displayed on the About page.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>Eyebrow Label</Label>
+                    <Input
+                      value={settings.journey.label}
+                      onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, label: e.target.value } }))}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Section Title</Label>
+                    <Input
+                      value={settings.journey.title}
+                      onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, title: e.target.value } }))}
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Section Subtitle</Label>
+                  <Textarea
+                    value={settings.journey.subtitle}
+                    onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, subtitle: e.target.value } }))}
+                    rows={2}
+                    className="mt-1"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  {settings.journey.milestones.map((milestone, index) => (
+                    <Card key={milestone.id} className="border-slate-200">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between gap-4">
+                          <CardTitle className="text-base">Milestone {index + 1}</CardTitle>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            aria-label={`Remove milestone ${index + 1}`}
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => update((p) => ({
+                              ...p,
+                              journey: { ...p.journey, milestones: p.journey.milestones.filter((_, itemIndex) => itemIndex !== index) },
+                            }))}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid gap-4 md:grid-cols-[140px_1fr]">
+                          <div>
+                            <Label>Year</Label>
+                            <Input
+                              value={milestone.year}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], year: e.target.value }
+                                return { ...p, journey: { ...p.journey, milestones } }
+                              })}
+                              className="mt-1"
+                            />
+                          </div>
+                          <div>
+                            <Label>Milestone Title</Label>
+                            <Input
+                              value={milestone.title}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], title: e.target.value }
+                                return { ...p, journey: { ...p, milestones } }
+                              })}
+                              className="mt-1"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Description</Label>
+                          <Textarea
+                            value={milestone.description}
+                            onChange={(e) => update((p) => {
+                              const milestones = [...p.journey.milestones]
+                              milestones[index] = { ...milestones[index], description: e.target.value }
+                              return { ...p, journey: { ...p.journey, milestones } }
+                            })}
+                            rows={3}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <Label>Image URL</Label>
+                            <Input
+                              value={milestone.image || ""}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], image: e.target.value }
+                                return { ...p, journey: { ...p.journey, milestones } }
+                              })}
+                              placeholder="/about/journey/milestone.jpg"
+                              className="mt-1"
+                            />
+                          </div>
+                          <div>
+                            <Label>Image Alt Text</Label>
+                            <Input
+                              value={milestone.imageAlt || ""}
+                              onChange={(e) => update((p) => {
+                                const milestones = [...p.journey.milestones]
+                                milestones[index] = { ...milestones[index], imageAlt: e.target.value }
+                                return { ...p, journey: { ...p.journey, milestones } }
+                              })}
+                              placeholder="Describe the image for accessibility"
+                              className="mt-1"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label>Source URL</Label>
+                          <Input
+                            value={milestone.sourceUrl || ""}
+                            onChange={(e) => update((p) => {
+                              const milestones = [...p.journey.milestones]
+                              milestones[index] = { ...milestones[index], sourceUrl: e.target.value }
+                              return { ...p, journey: { ...p.journey, milestones } }
+                            })}
+                            placeholder="https://www.facebook.com/..."
+                            className="mt-1"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => update((p) => ({
+                    ...p,
+                    journey: {
+                      ...p.journey,
+                      milestones: [
+                        ...p.journey.milestones,
+                        {
+                          id: `journey-${Date.now()}`,
+                          year: new Date().getFullYear().toString(),
+                          title: "New milestone",
+                          description: "Describe this milestone.",
+                          image: "",
+                          imageAlt: "",
+                          sourceUrl: "",
+                        },
+                      ],
+                    },
+                  }))}
+                >
+                  <Plus className="mr-2 w-4 h-4" />
+                  Add Milestone
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

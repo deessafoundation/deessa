@@ -1,7 +1,7 @@
 ---
 title: "Stripe Payment Intent Enhancement - Quick Reference"
 description: "- New optional message field on donation form"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

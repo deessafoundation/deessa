@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” API Reference"
 description: "All endpoints return JSON with { ok: boolean } shape. Errors include error: string."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: developer

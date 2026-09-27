@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Select Replacement â€” FancySelect Migration"
 description: "All native <select elements and Radix UI Select components have been replaced with a custom FancySelect component com..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

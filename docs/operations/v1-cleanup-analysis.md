@@ -1,7 +1,7 @@
 ---
 title: "Payment V1 Code Cleanup Analysis"
 description: "This document analyzes the current state of the payment system to determine what V1 code can be safely removed now th..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

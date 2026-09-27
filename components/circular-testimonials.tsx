@@ -4,12 +4,16 @@ import React, { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallba
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
+import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
 
 interface Testimonial {
   quote: string
   name: string
   designation: string
   src: string
+  video?: string
+  topic?: string
+  caption?: string
 }
 
 interface Colors {
@@ -32,10 +36,13 @@ interface CircularTestimonialsProps {
   autoplay?: boolean
   colors?: Colors
   fontSizes?: FontSizes
+  nameTextStroke?: string
   /** When false, hides the name/quote column and shows just the photo carousel. Defaults to true. */
   showContent?: boolean
   /** Height of the image stack. Defaults to "24rem". */
   imageHeight?: string
+  /** Automatically start the active video once the section enters the viewport. */
+  videoAutoplay?: boolean
 }
 
 function calculateGap(width: number) {
@@ -54,9 +61,22 @@ export const CircularTestimonials = ({
   autoplay = true,
   colors = {},
   fontSizes = {},
+  nameTextStroke,
   showContent = true,
   imageHeight = "24rem",
+  videoAutoplay = true,
 }: CircularTestimonialsProps) => {
+  // While the screen reader (TTS) is reading, the testimonial video must stay
+  // silent so it never talks over the spoken text. Read the shared TTS status;
+  // the hook is optional so the carousel still works outside the provider.
+  const accessibility = useOptionalAccessibility()
+  const ttsStatus = accessibility?.status
+  const isTtsActive =
+    ttsStatus === "loading" ||
+    ttsStatus === "translating" ||
+    ttsStatus === "speaking" ||
+    ttsStatus === "paused"
+
   const { preferences } = useAccessibility()
   
   // Color & font config
@@ -76,7 +96,10 @@ export const CircularTestimonials = ({
   const [hoverNext, setHoverNext] = useState(false)
   const [containerWidth, setContainerWidth] = useState(1200)
   const [isReady, setIsReady] = useState(false)
+  const [isInViewport, setIsInViewport] = useState(false)
+  const testimonialContainerRef = useRef<HTMLDivElement>(null)
   const imageContainerRef = useRef<HTMLDivElement>(null)
+  const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
   const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const resumeAutoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -93,10 +116,29 @@ export const CircularTestimonials = ({
         setContainerWidth(imageContainerRef.current.offsetWidth)
       }
     }
-    handleResize()
-    setIsReady(true)
+    const animationFrame = window.requestAnimationFrame(() => {
+      handleResize()
+      setIsReady(true)
+    })
     window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  // Wait to start the active video until this section is actually visible.
+  useEffect(() => {
+    const container = testimonialContainerRef.current
+    if (!container) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInViewport(entry.isIntersecting),
+      { threshold: 0.45 }
+    )
+
+    observer.observe(container)
+    return () => observer.disconnect()
   }, [])
 
   // Autoplay
@@ -145,16 +187,35 @@ export const CircularTestimonials = ({
     }
   }, [startAutoplay])
 
-  // Keyboard navigation
+  // Keep testimonial videos mutually exclusive. This also stops a video when
+  // carousel autoplay moves to the next speaker.
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") handlePrev()
-      if (e.key === "ArrowRight") handleNext()
+    Object.entries(videoRefs.current).forEach(([index, video]) => {
+      if (video && Number(index) !== activeIndex && !video.paused) {
+        video.pause()
+      }
+    })
+  }, [activeIndex])
+
+  // Start the active speaker video only when this section is in view. Audio is
+  // explicitly enabled, and every other video remains paused. While TTS is
+  // reading, autoplay is suppressed and any playing video is paused so speech
+  // is the only audio source.
+  useEffect(() => {
+    if (!isInViewport || isTtsActive) {
+      Object.values(videoRefs.current).forEach((video) => video?.pause())
+      return
     }
-    window.addEventListener("keydown", handleKey)
-    return () => window.removeEventListener("keydown", handleKey)
-    // eslint-disable-next-line
-  }, [activeIndex, testimonialsLength])
+
+    if (!videoAutoplay) return
+
+    const activeVideo = videoRefs.current[activeIndex]
+    if (!activeVideo) return
+
+    activeVideo.muted = false
+    const playPromise = activeVideo.play()
+    playPromise?.catch(() => undefined)
+  }, [activeIndex, isInViewport, videoAutoplay, isTtsActive])
 
   // Navigation handlers
   const handleNext = useCallback(() => {
@@ -166,6 +227,16 @@ export const CircularTestimonials = ({
     setActiveIndex((prev) => (prev - 1 + testimonialsLength) % testimonialsLength)
     pauseAutoplayTemporarily()
   }, [testimonialsLength, pauseAutoplayTemporarily])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") handlePrev()
+      if (e.key === "ArrowRight") handleNext()
+    }
+    window.addEventListener("keydown", handleKey)
+    return () => window.removeEventListener("keydown", handleKey)
+  }, [handleNext, handlePrev])
 
   // Compute transforms for each image (always show 3: left, center, right)
   function getImageStyle(index: number): React.CSSProperties {
@@ -228,7 +299,7 @@ export const CircularTestimonials = ({
   }
 
   return (
-    <div className="testimonial-container">
+    <div className="testimonial-container" ref={testimonialContainerRef}>
       <div className={"testimonial-grid" + (showContent ? "" : " photo-only")}>
         {/* Images */}
         <div className="image-container" ref={imageContainerRef} style={{ height: imageHeight }}>
@@ -238,24 +309,57 @@ export const CircularTestimonials = ({
             const isRight = (activeIndex + 1) % testimonialsLength === index
             
             return (
-              <img
-                key={index}
-                src={testimonial.src}
-                alt={testimonial.name}
-                className="testimonial-image"
-                data-index={index}
-                style={{
-                  ...getImageStyle(index),
-                  cursor: (isLeft || isRight) ? 'pointer' : 'default',
-                }}
-                loading="eager"
-                width={400}
-                height={400}
-                onClick={() => {
-                  if (isLeft) handlePrev()
-                  if (isRight) handleNext()
-                }}
-              />
+              testimonial.video ? (
+                <video
+                  key={index}
+                  src={testimonial.video}
+                  poster={testimonial.src || undefined}
+                  aria-label={`${testimonial.name}'s video message`}
+                  className="testimonial-media"
+                  data-index={index}
+                  ref={(video) => {
+                    videoRefs.current[index] = video
+                  }}
+                  controls={isActive}
+                  playsInline
+                  preload="metadata"
+                  style={{
+                    ...getImageStyle(index),
+                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
+                  }}
+                  onClick={() => {
+                    if (isLeft) handlePrev()
+                    if (isRight) handleNext()
+                  }}
+                  onPlay={() => {
+                    setActiveIndex(index)
+                    Object.entries(videoRefs.current).forEach(([otherIndex, otherVideo]) => {
+                      if (otherVideo && Number(otherIndex) !== index && !otherVideo.paused) {
+                        otherVideo.pause()
+                      }
+                    })
+                  }}
+                />
+              ) : (
+                <img
+                  key={index}
+                  src={testimonial.src}
+                  alt={testimonial.name}
+                  className="testimonial-media"
+                  data-index={index}
+                  style={{
+                    ...getImageStyle(index),
+                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
+                  }}
+                  loading="eager"
+                  width={400}
+                  height={400}
+                  onClick={() => {
+                    if (isLeft) handlePrev()
+                    if (isRight) handleNext()
+                  }}
+                />
+              )
             )
           })}
           
@@ -300,9 +404,14 @@ export const CircularTestimonials = ({
               exit="exit"
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
+              {activeTestimonial.topic && (
+                <p className="topic" style={{ color: colorDesignation }}>
+                  {activeTestimonial.topic}
+                </p>
+              )}
               <h3
                 className="name"
-                style={{ color: colorName, fontSize: fontSizeName }}
+                style={{ color: colorName, fontSize: fontSizeName, WebkitTextStroke: nameTextStroke }}
               >
                 {activeTestimonial.name}
               </h3>
@@ -316,7 +425,7 @@ export const CircularTestimonials = ({
                 className="quote"
                 style={{ color: colorTestimony, fontSize: fontSizeQuote }}
               >
-                {activeTestimonial.quote.split(" ").map((word, i) => (
+                {(activeTestimonial.caption || activeTestimonial.quote).split(" ").map((word, i) => (
                   <motion.span
                     key={i}
                     initial={{
@@ -420,7 +529,7 @@ export const CircularTestimonials = ({
         .image-arrow-button:active {
           transform: scale(0.95);
         }
-        .testimonial-image {
+        .testimonial-media {
           position: absolute;
           width: 100%;
           height: 100%;
@@ -429,6 +538,25 @@ export const CircularTestimonials = ({
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           will-change: transform, opacity;
           backface-visibility: hidden;
+          background: #0f172a;
+        }
+        @media (min-width: 768px) {
+          video.testimonial-media:fullscreen,
+          video.testimonial-media:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            border-radius: 0;
+            box-shadow: none;
+            background: #000;
+          }
+        }
+        .topic {
+          margin: 0 0 0.5rem;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
         .testimonial-content {
           display: flex;

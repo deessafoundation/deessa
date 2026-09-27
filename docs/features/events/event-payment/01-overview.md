@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Event Payment Integration â€” Overview"
 description: "The Event Payment System enables paid event registrations on the DEESSA Foundation platform. It supports three paymen..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

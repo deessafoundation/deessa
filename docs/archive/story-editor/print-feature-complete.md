@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Print Feature - Complete Implementation Summary"
 description: " Status: âœ… FULLY IMPLEMENTED"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: archived
 category: archived
 audience: admin

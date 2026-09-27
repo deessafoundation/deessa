@@ -252,23 +252,49 @@ export async function POST(req: Request) {
       await supabase.from('contact_submissions').update({ archived: false }).eq('id', id)
     }
 
-    if (action === 'send-reply' && payload?.to && payload?.subject && payload?.message) {
-      await sendSupportReplyEmail({
-        to: payload.to,
-        toName: payload.toName,
-        subject: payload.subject,
-        message: payload.message,
-        reportId: id,
-        reportStatus: payload.reportStatus ?? null,
-        performed_by: record.performed_by,
-      })
-      // record that a reply was sent
-      await supabase.from('contact_submissions').update({ last_reply_sent_at: new Date().toISOString() }).eq('id', id)
+    if (action === 'send-reply') {
+      if (!payload?.to || !payload?.subject || !payload?.message) {
+        return NextResponse.json(
+          { error: 'A recipient, subject, and message are required to send a reply.' },
+          { status: 400 }
+        )
+      }
+
+      try {
+        await sendSupportReplyEmail({
+          to: payload.to,
+          toName: payload.toName,
+          subject: payload.subject,
+          message: payload.message,
+          reportId: id,
+          reportStatus: payload.reportStatus ?? null,
+          performed_by: record.performed_by,
+        })
+      } catch (emailError) {
+        console.error('Failed to send support reply email:', emailError)
+        const message =
+          emailError instanceof Error && emailError.message.includes('not configured')
+            ? 'Email is not configured on the server (missing GOOGLE_EMAIL / GOOGLE_APP_PASSWORD).'
+            : emailError instanceof Error
+              ? `Could not send the reply email: ${emailError.message}`
+              : 'Could not send the reply email.'
+        return NextResponse.json({ error: message }, { status: 502 })
+      }
+
+      // record that a reply was sent (non-fatal — the email already went out)
+      const { error: updateError } = await supabase
+        .from('contact_submissions')
+        .update({ last_reply_sent_at: new Date().toISOString() })
+        .eq('id', id)
+      if (updateError) {
+        console.error('Reply sent but failed to update last_reply_sent_at:', updateError)
+      }
     }
 
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Admin support action error:', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    const message = err instanceof Error ? err.message : 'Server error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

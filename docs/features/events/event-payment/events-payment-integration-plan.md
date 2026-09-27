@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Events Module â€” Payment Integration Plan"
 description: " Status: Approved, pending implementation"
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: active
 category: feature
 audience: admin

@@ -45,6 +45,9 @@ export default function TestimonialsManager({ testimonials, onChange }: Testimon
       role: 'Role',
       location: 'Location',
       image: '',
+      video: '',
+      topic: '',
+      caption: '',
       quote: 'Add testimonial quote here...',
       rating: 5,
       order: testimonials.testimonials.length + 1,
@@ -431,15 +434,37 @@ export default function TestimonialsManager({ testimonials, onChange }: Testimon
 
                   {/* Quote */}
                   <div>
-                    <Label>Testimonial Quote</Label>
+                    <Label>Video Caption / Key Message</Label>
                     <Textarea
-                      value={testimonial.quote}
-                      onChange={(e) => updateTestimonial(index, { quote: e.target.value })}
-                      placeholder="What they said about us..."
+                      value={testimonial.caption ?? testimonial.quote}
+                      onChange={(e) => updateTestimonial(index, { caption: e.target.value, quote: e.target.value })}
+                      placeholder="Summarise what the speaker says..."
                       rows={3}
                       className="mt-1"
                     />
-                    <p className="text-xs text-gray-500 mt-1">{testimonial.quote.length} characters</p>
+                    <p className="text-xs text-gray-500 mt-1">{(testimonial.caption ?? testimonial.quote).length} characters</p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>Topic</Label>
+                      <Input
+                        value={testimonial.topic ?? ''}
+                        onChange={(e) => updateTestimonial(index, { topic: e.target.value })}
+                        placeholder="Autism awareness, education, inclusion..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>Video URL</Label>
+                      <Input
+                        value={testimonial.video ?? ''}
+                        onChange={(e) => updateTestimonial(index, { video: e.target.value })}
+                        placeholder="https://…/speaker-message.mp4"
+                        className="mt-1"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Use a direct MP4 or a public Supabase Storage link.</p>
+                    </div>
                   </div>
 
                   {/* Preview */}

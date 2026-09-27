@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Payment Architecture V2 - Operations Runbook"
 description: "This runbook provides operational procedures for managing the Payment Architecture V2 system, including reconciliatio..."
-owner: "Deesha Team"
+owner: "Deessa Team"
 status: operational
 category: operations
 audience: admin

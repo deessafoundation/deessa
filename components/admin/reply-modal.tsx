@@ -151,11 +151,21 @@ export default function ReplyModal({ id, to, toName, reportStatus, issueType, su
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, action: 'send-reply', payload }),
       })
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) {
+        let serverMessage = ''
+        try {
+          const data = await res.json()
+          serverMessage = data?.error || ''
+        } catch {
+          serverMessage = await res.text().catch(() => '')
+        }
+        throw new Error(serverMessage || `Request failed (${res.status})`)
+      }
       setOpen(false)
       router.refresh()
     } catch (err) {
-      alert('Failed to send reply')
+      const message = err instanceof Error ? err.message : 'Failed to send reply'
+      alert(`Failed to send reply: ${message}`)
     } finally { setLoading(false) }
   }
 

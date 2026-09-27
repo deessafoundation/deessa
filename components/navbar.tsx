@@ -3,9 +3,9 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { RegisterButtonConfig } from "@/lib/support/settings"
-import { Comic_Neue } from "next/font/google"
+import { comicNeue } from "@/lib/fonts"
 import {
   Heart,
   Menu,
@@ -18,13 +18,11 @@ import {
   Mail,
   ClipboardList,
   Headphones,
-  LifeBuoy,
+  MessageSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import styles from "./navbar.module.css"
-
-const comicNeue = Comic_Neue({ subsets: ["latin"], weight: ["400", "700"] })
 
 interface NavbarProps {
   supportEnabled?: boolean
@@ -44,7 +42,7 @@ const primaryNavLinks = [
 const secondaryNavLinks = [
   // { href: "/impact", label: "Impact", icon: Award },
   { href: "/podcasts", label: "Podcasts", icon: Headphones },
-  { href: "/support", label: "Support", icon: LifeBuoy },
+  { href: "/support", label: "Site Feedback", icon: MessageSquare },
   { href: "/contact", label: "Contact", icon: Mail },
 ] as const
 
@@ -53,7 +51,7 @@ const tabletQuickLinks = [
   { href: "/events", label: "Events", icon: Calendar },
   { href: "/stories", label: "Stories", icon: FileText },
   { href: "/contact", label: "Contact", icon: Mail },
-  { href: "/support", label: "Support", icon: LifeBuoy },
+  { href: "/support", label: "Site Feedback", icon: MessageSquare },
 ] as const
 
 function isNavLinkActive(pathname: string, href: string) {
@@ -68,6 +66,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hideNavbarLogo, setHideNavbarLogo] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const scrolledRef = useRef(false)
   const LOGO_ZONE_WIDTH = 220
 
   // Filter nav links based on support status
@@ -93,11 +92,39 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+    let animationFrame: number | null = null
+
+    const updateScrollState = () => {
+      animationFrame = null
+      const scrollPosition = Math.max(0, window.scrollY)
+
+      // The secondary row is about 50px tall, so collapsing it can reduce the
+      // reported scroll position by the same amount. Keep the hide and reveal
+      // thresholds farther apart than that layout shift to prevent flickering.
+      const nextScrolled = scrolledRef.current
+        ? scrollPosition > 16
+        : scrollPosition > 120
+
+      if (nextScrolled !== scrolledRef.current) {
+        scrolledRef.current = nextScrolled
+        setScrolled(nextScrolled)
+      }
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+
+    const handleScroll = () => {
+      if (animationFrame === null) {
+        animationFrame = window.requestAnimationFrame(updateScrollState)
+      }
+    }
+
+    updateScrollState()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame)
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -264,7 +291,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                 type="button"
                 className={cn(
                   styles.mobileToggle,
-                  "relative z-50 rounded-lg p-2 transition-colors duration-200 lg:hidden",
+                  "relative z-50 flex size-11 items-center justify-center rounded-lg transition-colors duration-200 lg:hidden",
                   mobileMenuOpen
                     ? "bg-primary text-white"
                     : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
@@ -341,6 +368,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
 
           {/* Layer 2 (middle): Sub-nav tucked under the curve */}
           <div
+            data-secondary-nav
             className={cn(
               styles.secondaryRow,
               "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 dark:bg-slate-900 lg:block",
@@ -519,7 +547,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                 </h3>
                 <div className="space-y-1">
                   {[
-                    ...(supportEnabled ? [{ href: "/support", label: "Support", icon: LifeBuoy }] : []),
+                    ...(supportEnabled ? [{ href: "/support", label: "Site Feedback", icon: MessageSquare }] : []),
                     { href: "/contact", label: "Contact", icon: Mail },
                   ].map((link) => {
                     const IconComponent = link.icon
@@ -565,8 +593,8 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]")}
                   >
-                    <LifeBuoy className="size-4" strokeWidth={2.5} />
-                    Support us
+                    <MessageSquare className="size-4" strokeWidth={2.5} />
+                    Report an Issue
                   </Link>
                 )}
 
