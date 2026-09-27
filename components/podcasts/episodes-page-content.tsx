@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ArchiveThumbnailImage } from './archive-thumbnail-image';
+import thumbnailStyles from './archive-thumbnail.module.css';
 import { Podcast } from '@/lib/types/podcast';
 import { Calendar, Search, Play, ArrowRight, Share2, Heart, Filter } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -119,7 +120,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                 <label className="block text-sm font-semibold text-text-main mb-2">SEARCH</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
+                  <input aria-label="Search episodes"
                     type="text"
                     placeholder="Search episodes..."
                     value={searchQuery}
@@ -135,7 +136,7 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
               {/* Sort */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-text-main mb-2">SORT BY</label>
-                <FancySelect
+                <FancySelect aria-label="Sort episodes"
                   value={sortBy}
                   onValueChange={(val) => {
                     setSortBy(val as SortOption);
@@ -255,17 +256,17 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                   const publishedDate = new Date(episode.publishedAt);
 
                   return (
-                    <Link
+                    <article
                       key={episode.id}
-                      href={`/podcasts/${episode.slug}`}
-                      className="podcast-card flex flex-col bg-white rounded-xl border-2 border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:border-brand-primary hover:-translate-y-1 transition-all duration-300 group h-full"
+                      className="podcast-card relative flex flex-col bg-white rounded-xl border-2 border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:border-brand-primary hover:-translate-y-1 transition-all duration-300 group h-full"
                     >
                   {/* Thumbnail */}
-                  <div className="relative aspect-video overflow-hidden bg-gray-900">
-                    <Image
+                  <div className={`${thumbnailStyles.thumbnail} relative aspect-video overflow-hidden bg-gray-900`}>
+                    <ArchiveThumbnailImage
                       src={episode.thumbnailUrl}
+                      youtubeId={episode.youtubeId}
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       alt={episode.title}
-                      fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     
@@ -284,14 +285,14 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                     </div>
                     
                     {/* Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
-                      <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
-                        <Play className="w-7 h-7 text-brand-primary ml-0.5" fill="currentColor" />
+                    <div className={`${thumbnailStyles.playOverlay} absolute inset-0 flex items-center justify-center transition-all`}>
+                      <div className={`${thumbnailStyles.playCircle} w-16 h-16 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform`}>
+                        <Play className={`${thumbnailStyles.playIcon} w-7 h-7 text-brand-primary ml-0.5`} fill="currentColor" />
                       </div>
                     </div>
                     
                     {/* Gradient */}
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className={`${thumbnailStyles.gradient} absolute inset-x-0 bottom-0 h-24`} />
                   </div>
 
                   {/* Content */}
@@ -321,10 +322,10 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
 
                     {/* Actions */}
                     <div className="mt-auto flex items-center gap-2">
-                      <div className="flex-1 inline-flex items-center justify-center text-xs font-bold text-white bg-brand-primary px-4 py-2.5 rounded-lg hover:bg-brand-primary-dark hover:shadow-lg hover:scale-105 transition-all duration-300 h-10 cursor-pointer">
-                        Watch Episode
+                      <Link href={`/podcasts/${episode.slug}`} className="after:absolute after:inset-0 flex-1 inline-flex items-center justify-center text-xs font-bold text-white bg-brand-primary px-4 py-2.5 rounded-lg hover:bg-brand-primary-dark hover:shadow-lg transition-all duration-300 h-10 cursor-pointer">
+                        Watch Episode<span className="sr-only">: {episode.title}</span>
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </div>
+                      </Link>
                       
                       <button
                         onClick={(e) => {
@@ -341,14 +342,15 @@ export default function EpisodesPageContent({ episodes }: EpisodesPageContentPro
                             navigator.clipboard.writeText(url);
                           }
                         }}
-                        className="flex items-center justify-center w-10 h-10 rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white hover:shadow-lg hover:scale-110 transition-all duration-300 flex-shrink-0"
+                        className="relative z-10 flex items-center justify-center w-10 h-10 rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white hover:shadow-lg hover:scale-110 transition-all duration-300 flex-shrink-0"
+                        aria-label={`Share ${episode.title}`}
                         title="Share episode"
                       >
                         <Share2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                </Link>
+                </article>
               );
             })}
           </div>

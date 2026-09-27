@@ -66,7 +66,7 @@ export default function PodcastHighlightCard({ shortUrl, index }: PodcastHighlig
   if (!shortId) return null;
 
   return (
-    <div className="group relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-900 shadow-lg hover:shadow-2xl transition-all duration-300">
+    <div data-a11y-video-card className="group relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-900 shadow-lg hover:shadow-2xl transition-all duration-300">
       {!isPlaying ? (
         <>
           {/* Thumbnail */}
@@ -93,7 +93,7 @@ export default function PodcastHighlightCard({ shortUrl, index }: PodcastHighlig
           </button>
           
           {/* Info Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
+          <div data-a11y-video-caption className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
             {metadata.title && (
               <p className="text-white text-xs font-medium line-clamp-2 leading-tight">
                 {metadata.title}

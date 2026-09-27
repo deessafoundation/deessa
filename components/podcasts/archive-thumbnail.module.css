@@ -26,3 +26,8 @@
   fill: #000 !important;
   stroke: #000 !important;
 }
+
+/* The generic 64px icon-container rule must not turn the play circle black. */
+:global(body.high-contrast) .thumbnail .playCircle.playCircle {
+  background-color: #fff !important;
+}

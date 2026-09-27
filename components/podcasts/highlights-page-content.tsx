@@ -101,7 +101,7 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
             </label>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
+              <input aria-label="Search episodes"
                 type="text"
                 placeholder="Search by episode title..."
                 value={searchQuery}
@@ -119,7 +119,7 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Filter by Episode
             </label>
-            <FancySelect
+            <FancySelect aria-label="Filter by episode"
               value={selectedEpisode}
               onValueChange={(val) => {
                 setSelectedEpisode(val);
@@ -141,7 +141,7 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
               <ArrowUpDown className="w-4 h-4 inline mr-1" />
               Sort By
             </label>
-            <FancySelect
+            <FancySelect aria-label="Sort highlights"
               value={sortBy}
               onValueChange={(val) => {
                 setSortBy(val as SortOption);
@@ -248,7 +248,7 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
               No Highlights Found
             </h3>
             <p className="text-gray-500 mb-6 text-lg">
-              Try adjusting your filters or search terms to find what you're looking for
+              Try adjusting your filters or search terms to find what you&apos;re looking for
             </p>
             <button
               onClick={() => {
