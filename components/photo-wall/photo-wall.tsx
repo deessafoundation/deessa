@@ -48,17 +48,17 @@ export default function PhotoWall({
   const shellClassName = hasHeroCopy ? "relative min-h-[581px] sm:min-h-[658px] lg:min-h-[704px]" : "relative"
 
   return (
-    <div className={className}>
+    <div data-a11y-photo-wall className={className}>
       <div className={`${shellClassName} overflow-hidden bg-transparent shadow-none p-0 ${hasHeroCopy ? "rounded-none" : wallCardClass}`}>
         {hasHeroCopy && (
           <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,20,33,0.82)_0%,rgba(12,20,33,0.72)_18%,rgba(12,20,33,0.44)_40%,rgba(12,20,33,0.18)_62%,rgba(12,20,33,0.08)_78%,rgba(12,20,33,0.03)_90%,rgba(12,20,33,0)_100%)]" />
+            <div data-a11y-shade className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,20,33,0.82)_0%,rgba(12,20,33,0.72)_18%,rgba(12,20,33,0.44)_40%,rgba(12,20,33,0.18)_62%,rgba(12,20,33,0.08)_78%,rgba(12,20,33,0.03)_90%,rgba(12,20,33,0)_100%)]" />
             <div className="absolute -left-24 top-8 h-72 w-72 rounded-full bg-[#29b6c8]/22 blur-3xl" />
             <div className="absolute right-[-4rem] top-24 h-80 w-80 rounded-full bg-white/18 blur-3xl" />
             <div className="absolute inset-y-0 right-0 w-[50%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.4),rgba(255,255,255,0.1)_42%,transparent_74%)] opacity-80" />
             <div className="absolute inset-0 flex items-center">
               <div className="w-full px-5 sm:px-7 lg:px-10">
-                <div className="max-w-2xl text-white">
+                <div data-a11y-hero-copy className="max-w-2xl text-white">
                   {eyebrow && (
                     <div className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/80 backdrop-blur-sm">
                       {eyebrow}
@@ -88,7 +88,7 @@ export default function PhotoWall({
             </div>
           </div>
         )}
-        <div className={`relative z-10 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasHeroCopy ? "pt-8 sm:pt-[85px]" : ""}`}>
+        <div tabIndex={0} role="region" aria-label="Photo gallery; scroll horizontally to explore" className={`relative z-10 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${hasHeroCopy ? "pt-8 sm:pt-[85px]" : ""}`}>
           <div className={`flex min-w-max items-center justify-center gap-3 sm:gap-4 ${hasHeroCopy ? "justify-end pr-3 sm:pr-8 lg:pr-12" : ""}`}>
             {panels.map((panel, index) => (
               <div
@@ -183,7 +183,7 @@ export default function PhotoWall({
                   )}
 
                   {(panel?.label || panel?.title || panel?.caption) && (
-                    <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 via-black/30 to-transparent px-4 pb-4 pt-12 text-white transition-all duration-300 ease-out ${activeMobilePanel === index ? "opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-2" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"}`}>
+                    <div data-a11y-video-caption className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 via-black/30 to-transparent px-4 pb-4 pt-12 text-white transition-all duration-300 ease-out ${activeMobilePanel === index ? "opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-2" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"}`}>
                       {panel?.label && <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80">{panel.label}</div>}
                       {panel?.title && <div className="mt-1 text-sm font-semibold leading-tight sm:text-base">{panel.title}</div>}
                       {panel?.caption && <div className="mt-1 text-[11px] leading-relaxed text-white/80 sm:text-xs">{panel.caption}</div>}

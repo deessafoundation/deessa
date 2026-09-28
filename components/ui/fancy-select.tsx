@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, useId } from "react"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -14,6 +14,12 @@ type FancySelectSize = "sm" | "default" | "lg"
 type FancySelectVariant = "default" | "toolbar"
 
 interface FancySelectProps {
+  id?: string
+  'aria-required'?: boolean
+  'aria-invalid'?: boolean
+  'aria-describedby'?: string
+  'aria-label'?: string
+  'aria-labelledby'?: string
   value?: string
   onValueChange?: (value: string) => void
   placeholder?: string
@@ -50,6 +56,12 @@ const iconStyles: Record<FancySelectSize, string> = {
 }
 
 export function FancySelect({
+  id,
+  'aria-required': ariaRequired,
+  'aria-invalid': ariaInvalid,
+  'aria-describedby': ariaDescribedBy,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   value,
   onValueChange,
   placeholder = "Select an option...",
@@ -61,6 +73,7 @@ export function FancySelect({
   name,
   defaultValue,
 }: FancySelectProps) {
+  const listId = useId()
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -100,8 +113,6 @@ export function FancySelect({
     if (!isOpen) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const enabledOptions = options.filter((o) => !o.disabled)
-
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault()
@@ -169,12 +180,30 @@ export function FancySelect({
     <div className={cn("relative", className)}>
       {name && <input type="hidden" name={name} value={currentValue} />}
       <button
+        id={id}
+        aria-required={ariaRequired}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedBy}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        aria-controls={isOpen ? listId : undefined}
+        aria-activedescendant={isOpen && highlightedIndex >= 0 ? `${listId}-${highlightedIndex}` : undefined}
         ref={triggerRef}
         type="button"
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         disabled={disabled}
+        onKeyDown={(event) => {
+          if (!isOpen && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            event.preventDefault()
+            setIsOpen(true)
+            const index = event.key === "ArrowDown"
+              ? options.findIndex(option => !option.disabled)
+              : options.findLastIndex(option => !option.disabled)
+            setHighlightedIndex(index)
+          }
+        }}
         onClick={() => {
           if (!disabled) setIsOpen(!isOpen)
         }}
@@ -203,6 +232,7 @@ export function FancySelect({
       {isOpen && (
         <div
           ref={listRef}
+          id={listId}
           role="listbox"
           aria-label="Options"
           className={cn(
@@ -223,6 +253,8 @@ export function FancySelect({
               return (
                 <div
                   key={option.value}
+                  id={`${listId}-${index}`}
+                  data-highlighted={isHighlighted}
                   ref={(el) => { itemsRef.current[index] = el }}
                   role="option"
                   aria-selected={isSelected}
