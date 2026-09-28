@@ -97,7 +97,7 @@ const impact = [
 
 export default function OurStoryPage() {
   return (
-    <main className="bg-background text-foreground">
+    <div className="bg-background text-foreground">
       <section id="our-story-hero" className={`${styles.hero} dark-section relative flex min-h-[82svh] items-center justify-center overflow-hidden px-6 pb-24 pt-20 md:px-8`}>
         {/* BACKGROUND IMAGE WITH FILTER */}
         <div className="absolute inset-0 z-0">
@@ -463,7 +463,7 @@ export default function OurStoryPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }
 

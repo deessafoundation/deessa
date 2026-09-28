@@ -70,15 +70,16 @@ export default function GetInvolvedPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative">
-        <div className="w-full h-[400px] relative overflow-hidden">
+      <section data-a11y-hero="photo" className="relative">
+        <div className="w-full min-h-[400px] relative overflow-hidden">
           <div
+            data-a11y-photo
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBIbSVU06T05e97h5HGkLrHkYStnbYQkwzmRg7ALv-ZL5hNuclSRAIiEtnFyuI9cRH-YMtR-pZure02gYDVPziahnspKrlKVKaXMbZwUUn87yG0Efk7pm2WexkU4XJGmqjWZamzPnj45Hun2vsvOwqa0lUsvGBO1uGIZ796D8JQqWkcR3tIdmjcm6xeqh8ifKgxRXTvLl4uX2mp4jPYf579vKODNowVZQ9m6SJr6u6huslju1OStRG3SpoUa0QzyBJa-hz5q4oOb7M")`,
             }}
           />
-          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
+          <div data-a11y-hero-copy className="relative z-10 min-h-[inherit] py-12 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
             <span className="bg-primary/90 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
               Join the Movement
             </span>
