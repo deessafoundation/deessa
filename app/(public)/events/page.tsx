@@ -759,7 +759,7 @@ function EventCard({
 
 function EmptyUpcoming({ hasPast }: { hasPast: boolean }) {
   return (
-    <div className="rounded-[2rem] border border-dashed border-primary/20 bg-white/70 px-6 py-16 text-center shadow-sm">
+    <div data-a11y-surface="content" className="rounded-[2rem] border border-dashed border-primary/20 bg-white/70 px-6 py-16 text-center shadow-sm">
       <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10">
         <Calendar className="size-8 text-primary" aria-hidden="true" />
       </div>

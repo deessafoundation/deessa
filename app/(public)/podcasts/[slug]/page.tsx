@@ -91,7 +91,7 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
   };
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <StructuredData data={breadcrumbStructuredData} />
       
       {/* Sticky Player - Initially hidden, shows on scroll */}
@@ -490,6 +490,6 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
           </form>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

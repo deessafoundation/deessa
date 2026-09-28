@@ -226,18 +226,18 @@ export default async function EventDetailPage({
       {/* ═══════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════ */}
-      <section className="relative isolate overflow-hidden">
-        <div className="relative h-[480px] w-full md:h-[560px]">
+      <section data-a11y-hero="photo" className="relative isolate overflow-hidden">
+        <div className="relative min-h-[480px] w-full md:min-h-[560px]">
           {bannerImage ? (
             <>
               <SafeImage src={bannerImage} alt={event.title} fill priority quality={90} sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} className="absolute inset-0" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/40" />
+              <div data-a11y-shade className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/40" />
             </>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0B5F8A] via-[#29b6c8] to-[#6F3E96]" />
+            <div data-a11y-shade className="absolute inset-0 bg-gradient-to-br from-[#0B5F8A] via-[#29b6c8] to-[#6F3E96]" />
           )}
 
-          <div className="absolute inset-0 flex items-end">
+          <div data-a11y-hero-copy className="relative min-h-[inherit] pt-16 flex items-end">
             <div className="w-full px-4 pb-8 md:px-8 md:pb-12">
               <div className="mx-auto max-w-7xl">
                 <Link href="/events" className="group mb-8 inline-flex items-center gap-2 text-white/70 transition-colors hover:text-white">

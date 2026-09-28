@@ -53,7 +53,7 @@ export default async function PodcastsPage() {
   if (!allPodcasts || allPodcasts.length === 0) {
     return (
       <div className="min-h-screen bg-bg-main">
-        <main className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center py-20">
             <h1 className="text-4xl font-heading font-bold text-text-main mb-4">
               DEESSA Voices: Stories of Resilience
@@ -65,14 +65,14 @@ export default async function PodcastsPage() {
               <Link href="/">Return Home</Link>
             </Button>
           </div>
-        </main>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-bg-main">
-      <main className="container mx-auto px-4 py-8 space-y-12">
+      <div className="container mx-auto px-4 py-8 space-y-12">
         {/* Hero Section */}
         {heroEpisodes.length > 0 && <PodcastMainHero episodes={heroEpisodes} />}
 
@@ -104,7 +104,7 @@ export default async function PodcastsPage() {
             </p>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }
