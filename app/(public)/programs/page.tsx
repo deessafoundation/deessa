@@ -15,7 +15,7 @@ export default function ProgramsPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       {/* Hero */}
-      <section className="relative py-20 bg-gradient-to-br from-[#3FABDE] to-[#0B5F8A] text-white">
+      <section data-a11y-region="neutral" className="relative py-20 bg-gradient-to-br from-[#3FABDE] to-[#0B5F8A] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="mb-4 text-sm font-comic tracking-widest uppercase">
@@ -94,7 +94,7 @@ export default function ProgramsPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-br from-purple-900 to-purple-700 text-white">
+      <section data-a11y-region="neutral" className="py-16 bg-gradient-to-br from-purple-900 to-purple-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="mb-6 text-4xl md:text-5xl font-marissa">
             Want to Get Involved?

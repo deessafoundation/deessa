@@ -145,7 +145,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
         <div className="url">www.deessafoundation.org</div>
       </div>
 
-      <section className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
+      <section data-a11y-region="neutral" className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
         <div className="absolute inset-0">
           <Image src={story.image || "/placeholder.svg"} alt={story.title} fill className="object-cover opacity-60" priority />
           <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(18,53,80,0.15)_0%,rgba(2,6,23,0.78)_55%,rgba(2,6,23,0.96)_100%)]" />
