@@ -78,11 +78,10 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
   return (
     <>
       {/* Filter Tabs */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12" role="tablist" aria-label="Program categories">
+      <div className="flex flex-wrap justify-center gap-3 mb-12" role="group" aria-label="Program categories">
         {categories.map((cat) => (
           <button
             key={cat.id}
-            role="tab"
             aria-pressed={activeCategory === cat.id}
             onClick={() => setCategory(cat.id)}
             disabled={isPending}

@@ -47,13 +47,13 @@ export default function VerifyPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[rgb(11,95,138)] mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
             Receipt Verification Portal
           </h1>
-          <p className="text-base sm:text-lg text-[rgb(108,117,125)] max-w-xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-foreground-muted max-w-xl mx-auto leading-relaxed">
             Securely verify the authenticity of your transaction or donation.
             <br className="hidden sm:inline" />
-            Please enter the <span className="text-[rgb(63,171,222)] font-semibold">unique identifier</span> found on your official document.
+            Please enter the <span className="text-primary font-semibold">unique identifier</span> found on your official document.
           </p>
         </div>
       </section>
@@ -64,7 +64,7 @@ export default function VerifyPage() {
           {/* Label */}
           <label 
             htmlFor="verification-input" 
-            className="block text-sm font-bold text-[rgb(11,95,138)] uppercase tracking-wider mb-3"
+            className="block text-sm font-bold text-foreground uppercase tracking-wider mb-3"
           >
             Receipt Number / Unique ID
           </label>
@@ -73,7 +73,7 @@ export default function VerifyPage() {
           <form onSubmit={handleVerify} className="space-y-5">
             {/* Input with search icon */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[rgb(108,117,125)]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground-muted" />
               <input
                 id="verification-input"
                 type="text"
@@ -87,7 +87,7 @@ export default function VerifyPage() {
             </div>
 
             {/* Submit Button */}
-            <button
+            <button data-a11y-control
               type="submit"
               disabled={!verificationId.trim() || isLoading}
               className="group w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl text-white font-bold text-base sm:text-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-[rgb(63,171,222)] to-[rgb(11,95,138)] hover:from-[rgb(11,95,138)] hover:to-[rgb(63,171,222)] shadow-lg shadow-[rgb(63,171,222)]/25 hover:shadow-xl hover:shadow-[rgb(63,171,222)]/30 active:scale-[0.98]"
@@ -102,17 +102,17 @@ export default function VerifyPage() {
           </form>
 
           {/* Trust Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-xs sm:text-sm text-[rgb(108,117,125)]">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-xs sm:text-sm text-foreground-muted">
             <span className="inline-flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-[rgb(63,171,222)]" />
+              <Lock className="w-3.5 h-3.5 text-primary" />
               Secure SSL
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-[rgb(63,171,222)]" />
+              <Shield className="w-3.5 h-3.5 text-primary" />
               Official Portal
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[rgb(63,171,222)]" />
+              <Clock className="w-3.5 h-3.5 text-primary" />
               Real-time Check
             </span>
           </div>
@@ -125,12 +125,12 @@ export default function VerifyPage() {
           {/* Instant Validation */}
           <div className="group text-center p-6 rounded-2xl bg-white border border-gray-100 hover:border-[rgb(63,171,222)]/20 hover:shadow-lg hover:shadow-[rgb(63,171,222)]/5 transition-all duration-300">
             <div className="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-xl bg-[rgb(232,246,252)] group-hover:bg-gradient-to-br group-hover:from-[rgb(63,171,222)]/10 group-hover:to-[rgb(11,95,138)]/10 transition-colors duration-300">
-              <FileCheck className="w-7 h-7 text-[rgb(63,171,222)]" />
+              <FileCheck className="w-7 h-7 text-primary" />
             </div>
-            <h3 className="text-lg font-bold text-[rgb(11,95,138)] mb-2">
+            <h3 className="text-lg font-bold text-foreground mb-2">
               Instant Validation
             </h3>
-            <p className="text-sm text-[rgb(108,117,125)] leading-relaxed">
+            <p className="text-sm text-foreground-muted leading-relaxed">
               Immediate cross-reference with our secure global database.
             </p>
           </div>
@@ -138,12 +138,12 @@ export default function VerifyPage() {
           {/* Data Protection */}
           <div className="group text-center p-6 rounded-2xl bg-white border border-gray-100 hover:border-[rgb(63,171,222)]/20 hover:shadow-lg hover:shadow-[rgb(63,171,222)]/5 transition-all duration-300">
             <div className="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-xl bg-[rgb(232,246,252)] group-hover:bg-gradient-to-br group-hover:from-[rgb(63,171,222)]/10 group-hover:to-[rgb(11,95,138)]/10 transition-colors duration-300">
-              <Shield className="w-7 h-7 text-[rgb(63,171,222)]" />
+              <Shield className="w-7 h-7 text-primary" />
             </div>
-            <h3 className="text-lg font-bold text-[rgb(11,95,138)] mb-2">
+            <h3 className="text-lg font-bold text-foreground mb-2">
               Data Protection
             </h3>
-            <p className="text-sm text-[rgb(108,117,125)] leading-relaxed">
+            <p className="text-sm text-foreground-muted leading-relaxed">
               Your information is protected by industry-standard encryption.
             </p>
           </div>
@@ -151,12 +151,12 @@ export default function VerifyPage() {
           {/* Expert Support */}
           <div className="group text-center p-6 rounded-2xl bg-white border border-gray-100 hover:border-[rgb(63,171,222)]/20 hover:shadow-lg hover:shadow-[rgb(63,171,222)]/5 transition-all duration-300">
             <div className="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-xl bg-[rgb(232,246,252)] group-hover:bg-gradient-to-br group-hover:from-[rgb(63,171,222)]/10 group-hover:to-[rgb(11,95,138)]/10 transition-colors duration-300">
-              <ShieldCheck className="w-7 h-7 text-[rgb(63,171,222)]" />
+              <ShieldCheck className="w-7 h-7 text-primary" />
             </div>
-            <h3 className="text-lg font-bold text-[rgb(11,95,138)] mb-2">
+            <h3 className="text-lg font-bold text-foreground mb-2">
               Expert Support
             </h3>
-            <p className="text-sm text-[rgb(108,117,125)] leading-relaxed">
+            <p className="text-sm text-foreground-muted leading-relaxed">
               Direct assistance for any verification discrepancies found.
             </p>
           </div>
@@ -170,30 +170,30 @@ export default function VerifyPage() {
             {/* Help Info */}
             <div className="flex items-start gap-3">
               <div className="mt-0.5 flex items-center justify-center w-8 h-8 rounded-full bg-[rgb(63,171,222)]/10">
-                <Phone className="w-4 h-4 text-[rgb(63,171,222)]" />
+                <Phone className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-[rgb(11,95,138)] mb-1">Verification Help</h4>
-                <p className="text-xs text-[rgb(108,117,125)] leading-relaxed">
+                <h4 className="text-sm font-bold text-foreground mb-1">Verification Help</h4>
+                <p className="text-xs text-foreground-muted leading-relaxed">
                   Having trouble verifying your receipt?
                   <br />
                   <span className="inline-flex items-center gap-1">
                     <Mail className="w-3 h-3" />
-                    Email: <a href="mailto:deessa.social@gmail.com" className="text-[rgb(63,171,222)] hover:underline">deessa.social@gmail.com</a>
+                    Email: <a href="mailto:deessa.social@gmail.com" className="text-primary hover:underline">deessa.social@gmail.com</a>
                   </span>
                 </p>
               </div>
             </div>
 
             {/* Footer Links */}
-            <div className="flex items-center gap-6 text-xs text-[rgb(108,117,125)]">
-              <Link href="/privacy" className="hover:text-[rgb(63,171,222)] transition-colors">
+            <div className="flex items-center gap-6 text-xs text-foreground-muted">
+              <Link href="/privacy" className="hover:text-primary transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-[rgb(63,171,222)] transition-colors">
+              <Link href="/terms" className="hover:text-primary transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/contact" className="hover:text-[rgb(63,171,222)] transition-colors">
+              <Link href="/contact" className="hover:text-primary transition-colors">
                 Contact Us
               </Link>
             </div>
@@ -201,7 +201,7 @@ export default function VerifyPage() {
 
           {/* Copyright */}
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <p className="text-xs text-[rgb(108,117,125)]">
+            <p className="text-xs text-foreground-muted">
               &copy; {new Date().getFullYear()} deessa Foundation. All rights reserved.
             </p>
           </div>
