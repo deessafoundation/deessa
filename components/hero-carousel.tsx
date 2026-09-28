@@ -125,6 +125,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
           aria-roledescription="slide"
           aria-label={`${i + 1} of ${slides.length}: ${slide.title}`}
           aria-hidden={i !== current}
+          inert={i !== current}
           className={cn(
             "absolute inset-0 transition-all duration-700 ease-in-out will-change-transform",
             getSlidePositionClass(i),

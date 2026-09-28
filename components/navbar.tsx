@@ -263,12 +263,14 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
               <button
                 type="button"
                 className={cn(
+                  styles.mobileToggle,
                   "relative z-50 rounded-lg p-2 transition-colors duration-200 lg:hidden",
                   mobileMenuOpen
                     ? "bg-primary text-white"
                     : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 )}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -361,6 +363,8 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
           "fixed inset-0 z-40 lg:hidden transition-opacity duration-300",
           mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         )}
+        aria-hidden={!mobileMenuOpen}
+        inert={!mobileMenuOpen}
       >
         {/* Dimmed dark overlay */}
         <div

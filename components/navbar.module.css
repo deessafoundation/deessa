@@ -1,21 +1,33 @@
 /* The secondary row's dark-mode utility also matches broad accessibility
    selectors. Set both the surface and its foreground explicitly here. */
 :global(body.high-contrast) .secondaryRow.secondaryRow {
-  background-color: #fff !important;
+  background-color: var(--a11y-paper) !important;
   background-image: none !important;
 }
 
 :global(body.high-contrast) .secondaryRow a.secondaryLink,
 :global(body.high-contrast) .secondaryRow a.secondaryLink * {
-  color: #000 !important;
+  color: var(--a11y-ink) !important;
 }
 
 :global(body.high-contrast) .secondaryRow a.secondaryLink {
-  background-color: #fff !important;
-  border-color: #000 !important;
+  background-color: var(--a11y-paper) !important;
+  border-color: var(--a11y-ink) !important;
 }
 
 :global(body.high-contrast) .secondaryRow a.secondaryLink[aria-current="page"] {
   text-decoration: underline !important;
   text-underline-offset: 4px;
+}
+
+:global(body.high-contrast) .mobileToggle.mobileToggle {
+  background: var(--a11y-paper) !important;
+  color: var(--a11y-ink) !important;
+  border-color: var(--a11y-ink) !important;
+}
+
+:global(body.high-contrast) .mobileToggle.mobileToggle svg,
+:global(body.high-contrast) .mobileToggle.mobileToggle svg * {
+  color: var(--a11y-ink) !important;
+  stroke: var(--a11y-ink) !important;
 }
