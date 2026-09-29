@@ -1025,7 +1025,7 @@ export function EventRegistrationForm({
                         <span className="text-sm text-foreground-muted">
                           I agree to the{" "}
                           <a
-                            href="https://deessa.org/terms"
+                            href="https://deessafoundation.com/terms"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-semibold text-primary hover:underline"
@@ -1034,7 +1034,7 @@ export function EventRegistrationForm({
                           </a>{" "}
                           and the{" "}
                           <a
-                            href="https://deessa.org/privacy"
+                            href="https://deessafoundation.com/privacy"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-semibold text-primary hover:underline"
