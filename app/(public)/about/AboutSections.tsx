@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { Fragment, useRef, useState } from "react"
 import Link from "next/link"
@@ -22,7 +22,9 @@ import {
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { OrgStructure } from "./OrgStructure"
+import { allResources } from "@/components/resource-downloads"
 import introStyles from "./about-intro.module.css"
+import aboutSectionStyles from "./about-sections.module.css"
 
 const TEAL = "#29b6c8"
 const DARK = "#1a1a2e"
@@ -458,7 +460,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
-      <section className="bg-[#f8f6f1] py-20 lg:py-[90px]" aria-label="Official Documents and Materials">
+      <section data-about-resources className={aboutSectionStyles.resourcesSection} aria-label="Official Documents and Materials">
         <div className="mx-auto max-w-4xl px-4 md:px-8">
           <SectionHeader
             label="Resources"
@@ -473,29 +475,31 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                   key={resource.title}
                   {...reveal}
                   transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="flex flex-col rounded-2xl bg-white p-7 shadow-sm"
+                  className={aboutSectionStyles.resourceCard}
                 >
                   <div className="mb-4 flex items-start gap-4">
                     <div
-                      className="about-resource-icon flex size-11 shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: "rgba(41,182,200,0.1)", color: TEAL }}
+                      className={aboutSectionStyles.resourceIcon}
+                      aria-hidden="true"
                     >
-                      <Icon className="size-5" aria-hidden="true" />
+                      <Icon className="size-5" />
                     </div>
                     <div>
-                      <h3 className="about-heading-dark font-comic mb-1 text-base font-bold">
+                      <h3 className={aboutSectionStyles.resourceTitle}>
                         {resource.title}
                       </h3>
-                      <p className="font-dm-sans text-sm leading-relaxed text-[#6b7280]">{resource.description}</p>
+                      <p className={aboutSectionStyles.resourceDesc}>{resource.description}</p>
                     </div>
                   </div>
                   <a
                     href={resource.file}
                     download
                     aria-label={`Download ${resource.title} (${resource.type?.toUpperCase()})`}
-                    className="about-download-btn font-comic group mt-auto flex w-full items-center justify-center gap-2 rounded-xl border border-[#eee] bg-[#f8f6f1] px-4 py-2.5 text-sm font-bold text-[#4a4a4a] transition-colors hover:border-[#29b6c8] hover:bg-[#29b6c8]/10 hover:text-[#1a8fa0]"
+                    className={aboutSectionStyles.resourceBtn}
+                    data-slot="button"
+                    data-variant="outline"
                   >
-                    <Download className="size-4 transition-colors group-hover:text-[#29b6c8]" aria-hidden="true" />
+                    <Download className="size-4" aria-hidden="true" />
                     Download {resource.type?.toUpperCase()}
                   </a>
                 </motion.article>
@@ -506,10 +510,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       </section>
 
       {/* SECTION 9: FINAL CTA */}
-      <section className="relative isolate pt-5 sm:pt-7" style={{ background: "linear-gradient(to bottom, #fff 0 50%, var(--newsletter-bg) 50% 100%)" }} aria-labelledby="about-final-cta-heading">
+      <section data-about-cta className={aboutSectionStyles.ctaSection} aria-labelledby="about-final-cta-heading">
         <div className="relative w-full">
           <svg
-            className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+            className={`${aboutSectionStyles.ctaWave} hidden lg:block`}
             viewBox="0 0 1440 190"
             preserveAspectRatio="none"
             aria-hidden="true"
@@ -545,7 +549,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
             </g>
           </svg>
           <svg
-            className="pointer-events-none absolute inset-0 h-full w-full lg:hidden"
+            className={`${aboutSectionStyles.ctaWave} lg:hidden`}
             viewBox="0 0 390 360"
             preserveAspectRatio="none"
             aria-hidden="true"
@@ -572,10 +576,10 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
             className="relative z-10 mx-auto flex max-w-[1500px] flex-col items-center justify-center gap-5 px-5 py-10 text-center sm:min-h-[290px] sm:px-14 sm:py-12 lg:min-h-[174px] lg:flex-row lg:justify-between lg:gap-10 lg:px-[8%] lg:py-7 lg:text-left"
           >
             <div className="max-w-[38rem]">
-              <h2 id="about-final-cta-heading" className="font-brush text-[1.7rem] font-bold italic leading-tight text-white sm:text-[1.9rem]">
+              <h2 id="about-final-cta-heading" className={aboutSectionStyles.ctaHeading}>
                 Ready to Make a Difference?
               </h2>
-              <p className="font-dm-sans mt-2 max-w-[34rem] text-sm leading-relaxed text-white/95 sm:text-[0.95rem]">
+              <p className={aboutSectionStyles.ctaSub}>
                 Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our
                 mission.
               </p>
@@ -584,14 +588,14 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
             <div className="flex w-full max-w-[21rem] flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center lg:w-auto lg:shrink-0">
               <Link
                 href="/donate"
-                className="font-comic inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-7 text-[0.95rem] font-bold text-cta-banner shadow-sm transition-colors duration-200 hover:bg-newsletter-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
+                className={aboutSectionStyles.ctaPrimaryBtn}
               >
                 Donate Now
                 <ArrowRight className="size-4" strokeWidth={2.5} aria-hidden="true" />
               </Link>
               <Link
                 href="/get-involved"
-                className="font-comic inline-flex min-h-11 items-center justify-center rounded-lg border-[1.5px] border-white bg-white/5 px-7 text-[0.95rem] font-bold text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-cta-banner"
+                className={aboutSectionStyles.ctaSecondaryBtn}
               >
                 Join Our Team
               </Link>

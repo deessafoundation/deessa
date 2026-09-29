@@ -4,6 +4,7 @@ import { Suspense } from "react"
 import { WhatWeDoClient } from "./whatwedo-client"
 import { getPublishedProgramCards } from "@/lib/programs/data"
 import styles from "@/components/page-hero-contrast.module.css"
+import programsStyles from "./whatwedo-programs.module.css"
 
 export const metadata: Metadata = {
   title: "What We Do - deessa Foundation",
@@ -28,7 +29,7 @@ async function getPrograms() {
         category: card.category,
         categoryLabel: meta.label,
         categoryColor: meta.color,
-        image: (cardData?.image as string) || "",
+        image: (cardData?.image as string) || null,
         title: card.title,
         description: card.short_description,
         slug: card.slug,
@@ -318,14 +319,14 @@ export default async function ProgramsPage() {
       </div>
 
       {/* Programs Grid Section */}
-      <section id="programs" className="bg-[#f8f6f1] py-12 md:py-18">
+      <section id="programs" className={`${programsStyles.section} py-12 md:py-18`}>
         <div className="max-w-6xl mx-auto px-4">
           {/* Section Title */}
           <div className="text-center mb-10 md:mb-14">
-            <h2 className="text-[28px] sm:text-[36px] md:text-[44px] font-marissa leading-[1.15] text-[#1a1a2e] mb-4 px-4">
+            <h2 className={programsStyles.sectionTitle}>
               Our Programs in Action
             </h2>
-            <p className="text-[15px] md:text-[17px] font-dm-sans text-slate-600 max-w-2xl mx-auto px-4">
+            <p className={programsStyles.sectionDesc}>
               From autism support to women&apos;s empowerment and creative training, explore the programs bringing inclusion and opportunity to life.
             </p>
           </div>
@@ -337,7 +338,7 @@ export default async function ProgramsPage() {
       </section>
 
       {/* CTA Banner Section */}
-      <section className="relative bg-[#1a1a2e] overflow-hidden">
+      <section className={`${programsStyles.ctaSection} relative overflow-hidden`}>
         {/* Top Brush Stroke Transition */}
         <div className="absolute top-0 left-0 right-0 h-20 z-10">
           <svg
@@ -348,61 +349,67 @@ export default async function ProgramsPage() {
           >
             <path
               d="M0,40 Q150,10 300,35 T600,40 T900,30 T1200,45 L1200,80 L0,80 Z"
-              fill="#f8f6f1"
+              className={programsStyles.ctaBrushPath}
             />
           </svg>
         </div>
 
         <div className="relative z-20 py-16 md:py-20 px-4 text-center">
-          <h2 className="text-[36px] sm:text-[44px] md:text-[52px] font-marissa text-white mb-3 md:mb-4 leading-tight px-4">
+          <h2 className={programsStyles.ctaHeading}>
             Want to Support a Specific Program?
           </h2>
-          <p className="text-[16px] md:text-[18px] font-dm-sans text-white/72 max-w-2xl mx-auto mb-10 md:mb-12 px-4">
+          <p className={programsStyles.ctaSubheading}>
             Your targeted donation ensures maximum impact in the area you care about most.
           </p>
 
           {/* 3 CTA Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 max-w-5xl mx-auto">
             {/* Card 1 */}
-            <div className="bg-white/6 border border-white/12 rounded-2xl p-6 md:p-8 hover:border-[#29b6c8] hover:-translate-y-1 transition-all duration-300">
-              <div className="text-4xl mb-3 md:mb-4">❤️</div>
-              <h3 className="text-[22px] md:text-[24px] font-marissa text-white mb-2 md:mb-3">Make a Donation</h3>
-              <p className="text-[13px] md:text-[14px] font-dm-sans text-white/60 mb-5 md:mb-6 leading-relaxed">
+            <div className={programsStyles.ctaCard}>
+              <div className={programsStyles.ctaCardEmojiWrapper}>
+                <span role="img" aria-label="Heart" className={programsStyles.ctaCardEmoji}>❤️</span>
+              </div>
+              <h3 className={programsStyles.ctaCardTitle}>Make a Donation</h3>
+              <p className={programsStyles.ctaCardDesc}>
                 Fund education, healthcare, or autism support directly.
               </p>
               <Link
                 href="/donate"
-                className="inline-block px-5 md:px-6 py-2.5 md:py-3 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[13px] md:text-[14px] hover:bg-[#1a8fa0] transition-colors"
+                className={programsStyles.ctaPrimaryBtn}
               >
                 Donate Now
               </Link>
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white/6 border border-white/12 rounded-2xl p-6 md:p-8 hover:border-[#29b6c8] hover:-translate-y-1 transition-all duration-300">
-              <div className="text-4xl mb-3 md:mb-4">🤝</div>
-              <h3 className="text-[22px] md:text-[24px] font-marissa text-white mb-2 md:mb-3">Become a Partner</h3>
-              <p className="text-[13px] md:text-[14px] font-dm-sans text-white/60 mb-5 md:mb-6 leading-relaxed">
+            <div className={programsStyles.ctaCard}>
+              <div className={programsStyles.ctaCardEmojiWrapper}>
+                <span role="img" aria-label="Handshake" className={programsStyles.ctaCardEmoji}>🤝</span>
+              </div>
+              <h3 className={programsStyles.ctaCardTitle}>Become a Partner</h3>
+              <p className={programsStyles.ctaCardDesc}>
                 Organizations partnering with us multiply impact across Nepal.
               </p>
               <Link
                 href="/contact"
-                className="inline-block px-5 md:px-6 py-2.5 md:py-3 rounded-full border-2 border-white text-white font-comic font-bold text-[13px] md:text-[14px] hover:bg-white/10 transition-colors"
+                className={programsStyles.ctaSecondaryBtn}
               >
                 Partner With Us
               </Link>
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white/6 border border-white/12 rounded-2xl p-6 md:p-8 hover:border-[#29b6c8] hover:-translate-y-1 transition-all duration-300">
-              <div className="text-4xl mb-3 md:mb-4">🙌</div>
-              <h3 className="text-[22px] md:text-[24px] font-marissa text-white mb-2 md:mb-3">Volunteer Your Skills</h3>
-              <p className="text-[13px] md:text-[14px] font-dm-sans text-white/60 mb-5 md:mb-6 leading-relaxed">
+            <div className={programsStyles.ctaCard}>
+              <div className={programsStyles.ctaCardEmojiWrapper}>
+                <span role="img" aria-label="Hands raised" className={programsStyles.ctaCardEmoji}>🙌</span>
+              </div>
+              <h3 className={programsStyles.ctaCardTitle}>Volunteer Your Skills</h3>
+              <p className={programsStyles.ctaCardDesc}>
                 Join our team on the ground or offer remote support to our programs.
               </p>
               <Link
                 href="/get-involved"
-                className="inline-block px-5 md:px-6 py-2.5 md:py-3 rounded-full border-2 border-white text-white font-comic font-bold text-[13px] md:text-[14px] hover:bg-white/10 transition-colors"
+                className={programsStyles.ctaSecondaryBtn}
               >
                 Get Involved
               </Link>

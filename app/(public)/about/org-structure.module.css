@@ -1,0 +1,371 @@
+/* =====================================================
+   ORG STRUCTURE — STYLES & CONTRAST MODES
+   Scoped module for "How the Foundation Is Organized"
+   ===================================================== */
+
+.section {
+  background: #fff;
+  scroll-margin-top: 6rem;
+  padding: 3.5rem 0;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding: 5rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding: 5.625rem 0;
+  }
+}
+
+.headerLabel {
+  font-family: var(--font-comic);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.12;
+  color: #15151c;
+}
+
+.headerTitle {
+  font-family: var(--font-marissa);
+  margin-top: 0.25rem;
+  font-size: 1.875rem;
+  line-height: 1.25;
+  color: #0b76b7;
+  -webkit-text-stroke: 0.7px currentColor;
+}
+
+@media (min-width: 768px) {
+  .headerTitle {
+    font-size: 2.5rem;
+  }
+}
+
+.headerSub {
+  font-family: var(--font-dm-sans);
+  margin-top: 0.5rem;
+  max-width: 56rem;
+  font-size: 0.9375rem;
+  line-height: 1.625;
+  color: #495a70;
+}
+
+@media (min-width: 640px) {
+  .headerSub {
+    font-size: 1rem;
+  }
+}
+
+.tierCard {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border-radius: 0.75rem;
+  border: 1px solid #e2eef6;
+  background: #f7fbfe;
+  padding: 1.25rem;
+  box-shadow: 0 4px 18px rgba(25, 100, 145, 0.05);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .tierCard {
+    padding: 1.5rem;
+  }
+}
+
+.tierCard:hover {
+  transform: translateY(-4px);
+  border-color: #bfe1f4;
+  box-shadow: 0 10px 26px rgba(25, 100, 145, 0.1);
+}
+
+.tierIcon {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .tierIcon {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.tierTitle {
+  font-family: var(--font-comic);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #134b76;
+}
+
+.tierSubtitle {
+  font-family: var(--font-comic);
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.35;
+  color: #276c9f;
+}
+
+.tierDesc {
+  font-family: var(--font-dm-sans);
+  margin-top: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #354b60;
+}
+
+.opContainer {
+  margin-top: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2eef6;
+  background: #f7fbfe;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .opContainer {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .opContainer {
+    margin-top: 1.5rem;
+  }
+}
+
+.opHeader {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: #1889c7;
+}
+
+.opHeaderText {
+  font-family: var(--font-comic);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #134b76;
+}
+
+@media (min-width: 640px) {
+  .opHeaderText {
+    font-size: 1.25rem;
+  }
+}
+
+.opCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #eaf2f8;
+  background: #fff;
+  padding: 1.25rem;
+  box-shadow: 0 3px 12px rgba(25, 100, 145, 0.04);
+}
+
+@media (min-width: 640px) {
+  .opCard {
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
+
+.opIcon {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  background: #e8f5fc;
+  color: #168ac8;
+}
+
+.opTitle {
+  font-family: var(--font-comic);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #134b76;
+}
+
+.opDesc {
+  font-family: var(--font-dm-sans);
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #354b60;
+}
+
+/* ══════════════════════════════════════════════════════
+   HIGH CONTRAST MODE (STANDARDS.md §3, §25)
+   ══════════════════════════════════════════════════════ */
+:global(body.high-contrast) .section {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .headerLabel {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .headerTitle {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .headerSub {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .tierCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .tierIcon {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .tierIcon svg,
+:global(body.high-contrast) .tierIcon svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .tierTitle,
+:global(body.high-contrast) .tierSubtitle,
+:global(body.high-contrast) .tierDesc {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .opContainer {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .opHeader,
+:global(body.high-contrast) .opHeaderText {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .opHeader svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .opCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .opIcon {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .opIcon svg,
+:global(body.high-contrast) .opIcon svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .opTitle,
+:global(body.high-contrast) .opDesc {
+  color: #000 !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   INVERTED CONTRAST MODE (STANDARDS.md §21)
+   ══════════════════════════════════════════════════════ */
+:global(body.inverted-contrast) .section {
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .headerLabel,
+:global(body.inverted-contrast) .headerTitle,
+:global(body.inverted-contrast) .headerSub {
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .tierCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .tierIcon {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .tierIcon svg,
+:global(body.inverted-contrast) .tierIcon svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.inverted-contrast) .tierTitle,
+:global(body.inverted-contrast) .tierSubtitle,
+:global(body.inverted-contrast) .tierDesc {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .opContainer {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .opHeader,
+:global(body.inverted-contrast) .opHeaderText {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .opHeader svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.inverted-contrast) .opCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .opIcon {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .opIcon svg,
+:global(body.inverted-contrast) .opIcon svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.inverted-contrast) .opTitle,
+:global(body.inverted-contrast) .opDesc {
+  color: #fff !important;
+}

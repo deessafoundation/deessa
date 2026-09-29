@@ -4,13 +4,15 @@ import { useState, useCallback, useTransition } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { SafeImage } from "@/components/programs/SafeImage"
+import styles from "./whatwedo-programs.module.css"
 
 interface Program {
   id: string
   category: string
   categoryLabel: string
   categoryColor: string
-  image: string
+  image: string | null
   title: string
   description: string
   slug: string
@@ -85,11 +87,7 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
             aria-pressed={activeCategory === cat.id}
             onClick={() => setCategory(cat.id)}
             disabled={isPending}
-            className={`px-5 py-2.5 rounded-full font-comic font-bold text-[14px] transition-all duration-300 disabled:opacity-60 ${
-              activeCategory === cat.id
-                ? "bg-[#29b6c8] text-white shadow-lg"
-                : "bg-white text-[#1a1a2e] border-[1.5px] border-[#1a1a2e] hover:border-[#29b6c8]"
-            }`}
+            className={`${activeCategory === cat.id ? styles.tabActive : styles.tabInactive} disabled:opacity-60`}
           >
             {cat.label}
           </button>
@@ -113,31 +111,39 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08, duration: 0.4 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
+                  className={styles.card}
                 >
-                  <div className="relative h-[200px] overflow-hidden">
-                    <img
-                      src={program.image}
-                      alt={program.title}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className={styles.cardImage}>
+                    {program.image ? (
+                      <SafeImage
+                        src={program.image}
+                        alt={program.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className={styles.cardImagePlaceholder} aria-hidden="true">
+                        <span className={styles.cardImagePlaceholderIcon}>📷</span>
+                      </div>
+                    )}
                     <div
-                      className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-comic font-bold tracking-wide shadow-lg`}
+                      className={`${styles.cardBadge} ${program.categoryColor}`}
                     >
                       {program.categoryLabel}
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-[22px] font-marissa text-[#1a1a2e] mb-3 leading-tight">
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.cardTitle}>
                       {program.title}
                     </h3>
-                    <p className="text-[15px] font-dm-sans text-[#1a1a2e]/70 mb-4 leading-relaxed line-clamp-2">
+                    <p className={styles.cardDesc}>
                       {program.description}
                     </p>
                     <Link
                       href={`/whatwedo/${program.slug}`}
-                      className="inline-flex items-center text-[14px] font-comic font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-colors"
+                      className={styles.cardLink}
                     >
                       Learn More →
                     </Link>
@@ -152,7 +158,7 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
                 <button
                   onClick={() => setPage(safePage - 1)}
                   disabled={safePage <= 1 || isPending}
-                  className="px-4 py-2 rounded-full font-comic font-bold text-sm border border-[#1a1a2e]/20 hover:border-[#29b6c8] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className={styles.paginationBtn}
                 >
                   ← Previous
                 </button>
@@ -161,11 +167,7 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
                     key={page}
                     onClick={() => setPage(page)}
                     disabled={isPending}
-                    className={`w-10 h-10 rounded-full font-comic font-bold text-sm transition-all duration-200 ${
-                      page === safePage
-                        ? "bg-[#29b6c8] text-white shadow-md"
-                        : "border border-[#1a1a2e]/20 hover:border-[#29b6c8]"
-                    }`}
+                    className={`${styles.paginationPage} ${page === safePage ? styles.paginationPageActive : ""}`}
                   >
                     {page}
                   </button>
@@ -173,7 +175,7 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
                 <button
                   onClick={() => setPage(safePage + 1)}
                   disabled={safePage >= totalPages || isPending}
-                  className="px-4 py-2 rounded-full font-comic font-bold text-sm border border-[#1a1a2e]/20 hover:border-[#29b6c8] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className={styles.paginationBtn}
                 >
                   Next →
                 </button>
@@ -187,18 +189,18 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="text-center py-16"
+            className={styles.emptyState}
           >
             <div className="text-6xl mb-6">🔍</div>
-            <h3 className="text-[28px] font-marissa text-[#1a1a2e] mb-3">
+            <h3 className={styles.emptyTitle}>
               No programs in this category yet.
             </h3>
-            <p className="text-[16px] font-dm-sans text-[#1a1a2e]/60 mb-6">
+            <p className={styles.emptyDesc}>
               Check back soon or explore all programs.
             </p>
             <button
               onClick={() => setCategory("all")}
-              className="px-6 py-3 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[14px] hover:bg-[#1a8fa0] transition-colors"
+              className={styles.emptyBtn}
             >
               View All Programs
             </button>

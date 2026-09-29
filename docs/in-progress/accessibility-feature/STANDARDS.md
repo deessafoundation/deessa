@@ -777,3 +777,188 @@ Current behavior (supersedes earlier band designs):
 - Guides remain click-through; contrast/negative/system-color styling and public-route cleanup remain in place.
 
 Verification history remains as documented: nine preference tests and targeted lint passed for the implemented features; earlier browser checks covered persistence, reset, marker choices and prior layouts. The latest horizontal-guide live test was interrupted/blocked by unavailable routes, so it is not recorded as an automated pass. Existing broader audit limitations remain follow-up work and do not change the user-requested closure of this task. No application code changed during closure.
+
+---
+
+## 25. Homepage High Contrast Audit & Reusable Patterns (2026-09-29)
+
+**Last Updated:** 2026-09-29  
+**Scope:** Homepage sections (Programs/Pillars, Mission/Vision, Podcast Banner, Contact Map). These patterns apply across any other pages containing hardcoded color classes, colored icon badges, dark gradient cards, or embedded maps.
+
+### 25.1 Summary of Failures Found & Resolutions
+
+| Area / Component | Issue Observed | Root Cause | Implemented Resolution |
+|---|---|---|---|
+| **What We Do / Pillars Section** (`#what-we-do`) | Pillar icons (e.g. Resources & Policies) were invisible or lacked contrast | Icon wrappers used dynamic Tailwind utility colors (`${pillar.color}` like `bg-blue-500`, `bg-green-500`) with `text-white`. Broad global high-contrast rules treated blue/green/orange/purple inconsistently, washing out white SVGs against white backgrounds. | Added `data-pillar-icon` attribute to icon container. Scoped CSS in `homepage-sections.module.css` forces high contrast background to `#000 !important` and icon SVGs (`color`, `stroke`) to `#fff !important` uniformly. |
+| **Mission, Vision & Objectives** | "Our Mission" card was completely invisible | Mission card used Tailwind gradient classes `from-[#0e2d40] via-[#11405a] to-[#0e2d40]`. Global rule `body.high-contrast [class*="from-"]` (line 2390 in `globals.css`) matches with higher specificity [0, 3, 3] and forces `background: var(--a11y-paper) !important` (#fff). Paired with `text-white` and no border, the entire card turned into an invisible white box on a white background with white text. | Replaced inline Tailwind gradient classes with scoped `.missionCard` in `homepage-sections.module.css` (bypassing `[class*="from-"]`). Scoped CSS sets card background to solid `#000 !important` with `border: 2px solid #000 !important`, forces all text to `#fff !important` with `opacity: 1 !important`, sets icon container to white with black icon, and hides decorative blur elements (`blur-3xl`). |
+| **Podcast Feature Banner** | Podcast banner remained fully colorful (`#005581`) in high contrast | Hardcoded Tailwind class `bg-[#005581]` escaped CSS token variables. Decorative teal wave SVG and feather-gradient fade overlays remained colored. Host cards lacked high-contrast boundary. | Added `data-podcast-section`, `data-podcast-feather`, `data-podcast-badge`, `data-podcast-hosted-label`, `data-podcast-host-card`, and `data-podcast-cta` hooks. Scoped CSS makes the section background solid `#000`, hides feather overlays and teal wave SVG, grayscales the studio photo, styles pill badges and host cards with crisp high-contrast borders and text, and inverts the CTA button to white background with black text. |
+| **Homepage Visit Office / Contact Map** | Bare `<iframe>` map with no theme, bad framing, and missing high-contrast treatment | Iframe lacked the editorial card styling, floating location badge, and high-contrast / inverted-contrast styling established on the Contact page. | Replaced bare iframe with the height-matched, floating-badge map card pattern from `(public)/contact`. Used CSS Module classes (`mapCard`, `mapIframe`, `mapOverlay`, `mapPill`, `mapName`, `mapAddr`, `mapBtn`) with complete high contrast (grayscale + contrast boost, black/white badges and CTA button) and inverted contrast rules. |
+
+### 25.2 Reusable Best Practices for Other Pages
+
+1. **Explicit Data-Attribute Hooks over Brittle Utility Overrides**
+   - Never rely on generic `.group`, `[class*="bg-"]`, or descendant selectors for high-contrast remediation.
+   - Attach targeted semantic hooks: `data-*-card`, `data-*-icon`, `data-*-feather`, `data-*-cta`.
+   - Co-locate rules in component-scoped `*.module.css` under `:global(body.high-contrast)`.
+
+2. **Colored Icon Badges with White Icons (`bg-*-500` + `text-white`)**
+   - When cards have colored icon circles/squares, do not let global Tailwind color overrides turn some into black and others into white.
+   - Normalize with a hook like `[data-pillar-icon]` or `[data-icon-box]`:
+     ```css
+     :global(body.high-contrast) [data-icon-box] {
+       background: #000 !important;
+       box-shadow: none !important;
+     }
+     :global(body.high-contrast) [data-icon-box] svg,
+     :global(body.high-contrast) [data-icon-box] svg * {
+       color: #fff !important;
+       stroke: #fff !important;
+     }
+     ```
+
+3. **Dark Gradient & Navy Cards (Avoid Tailwind `from-...` / `to-...` Classes)**
+   - **Crucial trap:** Never use Tailwind's `from-[#...]`, `via-[#...]`, or `to-[#...]` on a dark card that has `text-white`. Line 2390 in `globals.css` contains `body.high-contrast [class*="from-"]` which has high specificity `[0, 3, 3]` and overrides the background to `white !important`. Combined with `text-white`, the card becomes an invisible white square with invisible white text.
+   - **Fix:** Move the gradient background and box-shadow to a scoped CSS Module class (e.g. `.missionCard`).
+   - In high contrast, dark cards must have an explicit `2px solid #000` border against light sections (or `2px solid #fff` in inverted contrast) and solid `background: #000 !important`.
+   - Text with reduced opacity (`text-white/80`, `text-white/70`) must be reset: `opacity: 1 !important; color: #fff !important`.
+   - Decorative background glow/blur elements (`blur-3xl`, `bg-primary/25`) must be hidden: `display: none !important`.
+
+4. **Hardcoded Color Sections (`bg-[#...]`)**
+   - Hardcoded hex backgrounds do not automatically respond to CSS variable re-theming (`--background`, `--foreground`).
+   - Sections with custom brand backgrounds (like Podcast `#005581`) must be explicitly targeted to become `#000` (or `#fff` depending on surface intent) with corresponding text and CTA inversions.
+   - Decorative feather overlays and wave SVGs must be suppressed under `body.high-contrast`.
+
+5. **Map / Embed Widget Accessibility Pattern**
+   - Iframes cannot have their inner styles altered by parent CSS; apply CSS filter to the iframe itself:
+     ```css
+     :global(body.high-contrast) .mapIframe {
+       filter: grayscale(1) contrast(1.2) !important;
+     }
+     :global(body.inverted-contrast) .mapIframe {
+       filter: invert(0.9) hue-rotate(180deg) contrast(1.1);
+     }
+     ```
+   - Pair the map with an accessible overlay badge containing office title, full address, and an external "Open in Maps" button with focus states and high-contrast borders.
+
+### 25.3 Updated File Reference
+
+| File | Changes Made |
+|---|---|
+| `components/homepage-sections.tsx` | Added `data-mission-card`, `data-mission-icon`, `data-pillar-icon`, `data-podcast-section`, `data-podcast-feather`, `data-podcast-badge`, `data-podcast-hosted-label`, `data-podcast-host-card`, `data-podcast-cta`. Redesigned Contact section map iframe with floating overlay card, location badge, and external map button. |
+| `components/homepage-sections.module.css` | Added scoped `:global(body.high-contrast)` and `:global(body.inverted-contrast)` styles for all newly added data hooks and map card components. |
+| `docs/in-progress/accessibility-feature/STANDARDS.md` | Documented Section 25 (audit findings, failure causes, solutions, and cross-page reusable architectural patterns). |
+
+---
+
+## 26. "Who We Are" (About) Page High Contrast Audit & Remediation (2026-09-29)
+
+**Last Updated:** 2026-09-29  
+**Scope:** "Who We Are" (`/about`) page sections: About Hero, Who We Are Intro, Org Structure (How the Foundation Is Organized), Official Documents & Materials, and the Bottom Donate CTA.
+
+### 26.1 Summary of Failures Found & Resolutions
+
+| Component / Section | Issue Observed | Root Cause | Implemented Resolution |
+|---|---|---|---|
+| **About Hero** (`components/about-hero.tsx`) | Title remained blue with text-stroke; secondary CTA was invisible in normal mode (white text on white bg); primary CTA text was invisible in high contrast (black text on dark button) | Secondary CTA had legacy inline style `color: "#fff", backgroundColor: "transparent"`; primary CTA lacked `a.primary` and `data-a11y-control` so global `body.high-contrast a { color: black }` turned the text black on a dark background. | In `about-hero.tsx`, attached `data-a11y-control` to primary CTA and `data-slot="button" data-variant="outline"` to secondary CTA. In `about-hero.module.css`, forced `.secondary` normal mode to `#0B5F8A` on `#fff`, and high contrast `a.primary` to `#fff` on `#000` with 2px black border, and `a.secondary` to `#000` on `#fff` with 2px black border. |
+| **Who We Are Intro** (`app/(public)/about/AboutSections.tsx`) | Video intro headline remained blue; quote banner pastel blue with teal icon; flow icons (Seen, Heard, Supported) remained colorful (blue, pink, green) | `about-intro.module.css` had rules `.step:nth-child(3) .icon { color: #D6336C }` and `.step:nth-child(4) .icon { color: #65a844 }` with higher specificity `[0,3,0]` that beat generic `.icon` rules; quote container had hardcoded pastel blue. | In `about-intro.module.css`, added `:global(body.high-contrast)` rules explicitly overriding `.step:nth-child(n) .icon` to solid black boxes with pure white SVGs; headline forced to `#000` with text-stroke stripped; quote container styled with white bg / 2px solid black border and monochrome SVG. |
+| **How the Foundation Is Organized** (`app/(public)/about/OrgStructure.tsx`) | Governance title and subtitles remained blue; tier cards and operational boxes had light blue backgrounds without contrast borders; tier icons used dynamic inline pastel colors | Styles were hardcoded inline Tailwind classes without high-contrast overrides. | Created `org-structure.module.css` and replaced inline classes. In high contrast mode: cards receive white background with `2px solid #000` borders and no shadows; tier and operational icon boxes normalized to black background with crisp white SVGs; all text forced to solid `#000`. Full inverted-contrast rules included. |
+| **Official Documents & Materials** (`app/(public)/about/AboutSections.tsx`) | "Download PDF / JPG" button was invisible in high contrast; cards had no border | Anchor button had black background while global `body.high-contrast a` set text to black, creating black text on a black button; cards lacked borders on a white page. | In `about-sections.module.css`, styled high-contrast `a.resourceBtn` as a crisp white button with black text, black icon, and `2px solid #000` border (preventing black-on-black text trap), and added `data-slot="button" data-variant="outline"`. Cards receive `2px solid #000` high-contrast borders. |
+| **Bottom Donate Section** (`app/(public)/about/AboutSections.tsx`) | Section retained colorful blue gradient SVG wave backdrops; "Donate Now" had blue text on a white button | SVG wave paths used hardcoded blue fill/gradient URLs without high-contrast suppression. | Integrated into `about-sections.module.css`. In high contrast: section background set to solid `#000`, decorative SVG waves hidden with `display: none !important`, text set to `#fff`, "Donate Now" button styled as solid white with black text and underline, and "Join Our Team" as solid black with white border and text. |
+
+### 26.2 Updated File Reference
+
+| File | Changes Made |
+|---|---|
+| `components/about-hero.tsx` | Fixed secondary CTA link to use `styles.secondary` instead of broken inline styling; added `data-about-hero` hook. |
+| `components/about-hero.module.css` | Added comprehensive high-contrast and inverted-contrast rules for title, buttons, breadcrumbs, trust badges, and artwork. |
+| `app/(public)/about/about-intro.module.css` | Added high-contrast and inverted-contrast rules for the intro headline, quote container, and flow step icons. |
+| `app/(public)/about/org-structure.module.css` | Created scoped CSS module with normal, high-contrast, and inverted-contrast rules for all tiers and operational teams. |
+| `app/(public)/about/OrgStructure.tsx` | Wired up `org-structure.module.css` classes across `SectionHeader`, tier cards, and operational team cards. |
+| `app/(public)/about/about-sections.module.css` | Created scoped module for Section 8 (Official Documents) and Section 9 (Final CTA / Donate) with high-contrast and inverted-contrast modes. |
+| `app/(public)/about/AboutSections.tsx` | Applied `aboutSectionStyles` classes to Official Documents and Final CTA sections. |
+| `docs/in-progress/accessibility-feature/STANDARDS.md` | Documented Section 26 with findings and remediation patterns for the "Who We Are" page. |
+
+---
+
+## 27. "What We Do" Page High Contrast Audit & Remediation (2026-09-29)
+
+**Last Updated:** 2026-09-29  
+**Scope:** "What We Do" (`/whatwedo`) page: "Our Programs in Action" section (`#programs`), including category filter tabs, program cards, image category badges, "Learn More →" card links, pagination controls, and empty filter states.
+
+### 27.1 Summary of Failures Found & Root Causes
+
+1. **The `[class*="bg-[#"]` Wildcard Ancestor Cascade Trap:**
+   - **Symptom:** In high-contrast mode, all filter tab buttons (e.g., "Services", "Outreach", "Research", "Campaigns") rendered as solid black pills with black text. The "Learn More →" links on cards rendered as solid black rectangles with black text.
+   - **Root Cause:** In `app/globals.css` (lines 2223–2228):
+     ```css
+     [class*="bg-[#"] button,
+     [class*="bg-[#"] a {
+       background-color: var(--a11y-ink) !important;
+       color: var(--a11y-paper) !important;
+       border: 2px solid var(--a11y-ink) !important;
+     }
+     ```
+     Because the parent section had `className="bg-[#f8f6f1] ..."`, **every descendant `<button>` and `<a>`** matched this wildcard selector, forcing their background to solid black (`#000 !important`). Simultaneously, descendant utility classes like `text-[#1a1a2e]` on tabs and `text-[#29b6c8]` on links matched `globals.css` rule `[class*="text-[#"]`, forcing their text color to `#000 !important`. This produced black-on-black completely unreadable elements.
+2. **Category Badge Inversion and Inconsistency:**
+   - **Symptom:** Category badges overlaid on card photos (e.g., "SERVICE", "CAMPAIGN", "OUTREACH") became black boxes with lost text or inverted colors conflicting with grayscale image backgrounds.
+   - **Root Cause:** Badges were styled with utility classes like `bg-blue-500`, `bg-purple-500`, `bg-orange-500`. In `globals.css`, `[class*="bg-orange-"]` and `[class*="bg-purple-"]` force `background-color: var(--a11y-paper) !important` (white), while `[class*="bg-blue-"]` forces black. Direct text color was overridden, creating erratic badge rendering across card categories.
+3. **Card Links as Solid Buttons:**
+   - **Symptom:** Text links ("Learn More →") styled as inline flex anchors were turned into black button-like rectangular blocks due to `[class*="bg-[#"] a`.
+
+### 27.2 Implemented Resolutions
+
+1. **Eliminate Ancestor Wildcard Match:**
+   - In `app/(public)/whatwedo/page.tsx`, removed `bg-[#f8f6f1]` from `<section id="programs">` and replaced it with `programsStyles.section` from the new scoped CSS module `whatwedo-programs.module.css`. This immediately breaks the ancestor `[class*="bg-[#"]` match for all child buttons and links.
+2. **Category Filter Tabs:**
+   - In `whatwedo-programs.module.css`, defined `.tabActive` and `.tabInactive`.
+   - In high-contrast mode:
+     - Active tab: `#000` background, `#fff` text, `2px solid #000` border, underlined text.
+     - Inactive tab: `#fff` background, `#000` text, `2px solid #000` border, `#e5e5e5` hover state.
+3. **Program Cards & Image Badges:**
+   - Cards receive `styles.card` with `2px solid #000` border and `box-shadow: none` in high-contrast mode.
+   - Images are normalized with `filter: grayscale(1) contrast(1.2)`.
+   - Category badges receive `.cardBadge`:
+     ```css
+     :global(body.high-contrast) .card .cardBadge,
+     :global(body.high-contrast) .cardBadge {
+       background: #000 !important;
+       background-color: #000 !important;
+       color: #fff !important;
+       border: 2px solid #fff !important;
+       box-shadow: none !important;
+     }
+     :global(body.high-contrast) .card .cardBadge *,
+     :global(body.high-contrast) .cardBadge * {
+       color: #fff !important;
+     }
+     ```
+     The higher specificity `[0,3,0]` beats all utility-based background rules (`[class*="bg-orange-"]`), ensuring badges consistently render as high-visibility black pills with crisp white text and a 2px white border that separates them cleanly from both light and dark photo backgrounds.
+4. **Card Links:**
+   - "Learn More →" uses `.cardLink`:
+     ```css
+     :global(body.high-contrast) .cardLink,
+     :global(body.high-contrast) a.cardLink,
+     :global(body.high-contrast) .card a.cardLink {
+       background: transparent !important;
+       background-color: transparent !important;
+       color: #000 !important;
+       border: none !important;
+       text-decoration: underline !important;
+       font-weight: 800 !important;
+     }
+     ```
+     This completely prevents the link from ever rendering as a black rectangular box, restoring it as a cleanly underlined text link.
+5. **Pagination & Empty State:**
+   - Scoped `.paginationBtn`, `.paginationPage`, `.paginationPageActive`, and `.emptyBtn` styles ensure active pages are black pills with white text, inactive pages are white with 2px black borders, and empty states have accessible, high-contrast action controls.
+6. **Inverted-Contrast Mode:**
+   - Full reverse polarity implemented: `#000` background, `#fff` text and card borders, `#fff` active tabs with black text, and inverted grayscale photo filters.
+
+### 27.3 Updated File Reference
+
+| File | Changes Made |
+|---|---|
+| `app/(public)/whatwedo/whatwedo-programs.module.css` | Created scoped CSS module with complete normal, high-contrast, and inverted-contrast rules for section, title, tabs, cards, badges, links, pagination, and empty state. |
+| `app/(public)/whatwedo/page.tsx` | Imported `programsStyles`; replaced `bg-[#f8f6f1]` and inline text classes with `programsStyles.section`, `programsStyles.sectionTitle`, and `programsStyles.sectionDesc`. |
+| `app/(public)/whatwedo/whatwedo-client.tsx` | Applied scoped `styles` for filter tabs, program cards, category badges, "Learn More →" links, pagination buttons, and empty filter state. |
+| `docs/in-progress/accessibility-feature/STANDARDS.md` | Documented Section 27 detailing the ancestor wildcard cascade trap, badge specificity fixes, and implementation patterns. |
+

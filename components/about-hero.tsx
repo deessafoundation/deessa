@@ -15,7 +15,7 @@ export function AboutHero({ settings }: AboutHeroProps) {
   const s = settings || DEFAULT_ABOUT_PAGE_SETTINGS.hero
 
   return (
-    <section className={styles.hero} aria-labelledby="about-hero-title">
+    <section data-about-hero className={styles.hero} aria-labelledby="about-hero-title">
       <div className={styles.content}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
           <Link href="/">Home</Link>
@@ -28,35 +28,18 @@ export function AboutHero({ settings }: AboutHeroProps) {
         </h1>
         <p className={styles.description}>{s.subtitle}</p>
         <div className={styles.actions}>
-          <Link href={s.primaryCtaUrl} className={styles.primary}>
+          <Link
+            href={s.primaryCtaUrl}
+            className={styles.primary}
+            data-a11y-control
+          >
             {s.primaryCtaLabel}<ArrowRight size={17} aria-hidden="true" />
           </Link>
           <Link
             href={s.secondaryCtaUrl}
-            className="font-comic about-hero-cta-secondary"
-            role="button"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "transparent",
-              color: "#fff",
-              fontSize: 15,
-              fontWeight: 700,
-              padding: "14px 28px",
-              borderRadius: 999,
-              border: "1.5px solid rgba(255,255,255,0.6)",
-              textDecoration: "none",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#fff"
-              e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"
-              e.currentTarget.style.backgroundColor = "transparent"
-            }}
+            className={styles.secondary}
+            data-slot="button"
+            data-variant="outline"
           >
             {s.secondaryCtaLabel}
           </Link>

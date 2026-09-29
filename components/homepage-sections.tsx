@@ -32,7 +32,8 @@ import {
   Globe,
   Megaphone,
   FileText,
-  Scale,, Mic2
+  Scale,
+  Mic2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal, CountUp, BackToTop } from "@/components/scroll-animations"
@@ -199,7 +200,7 @@ export function MissionVisionSection() {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
+    <section data-mission-section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
       <div className="pointer-events-none absolute top-0 left-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute right-0 bottom-0 size-96 translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
       <div
@@ -228,14 +229,15 @@ export function MissionVisionSection() {
               solid deep-ocean panel rather than competing as a third white box */}
           <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
             <article
-              className={`${cardShell} bg-linear-to-br from-[#0e2d40] via-[#11405a] to-[#0e2d40] shadow-[0_18px_50px_-18px_rgba(14,45,64,0.55)] hover:shadow-[0_26px_60px_-18px_rgba(14,45,64,0.6)]`}
+              data-mission-card
+              className={`${cardShell} ${styles.missionCard}`}
             >
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-primary/25 blur-3xl"
               />
               <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
-                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
+                <div data-mission-icon className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
                   <Target aria-hidden="true" className="size-8 text-white" />
                 </div>
                 <h3 className="mb-4 text-2xl font-black text-white md:text-[30px]">Our Mission</h3>
@@ -379,7 +381,7 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 >
                   <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
+                    <div data-pillar-icon className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
                     <h3 className="text-xl font-black mb-3 text-[#1a1a2e]" style={{ WebkitTextStroke: "0.5px currentColor" }}>
@@ -669,13 +671,14 @@ export function PodcastSection() {
   return (
     <section
       aria-labelledby="home-podcast-title"
+      data-podcast-section
       className="relative overflow-hidden bg-[#005581]"
       data-tts-section=""
       data-tts-priority="heading"
       data-tts-text="The Deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
     >
       {/* Keep the backdrop on the full-width section so it has no container seams. */}
-      <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
+      <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
         <path d="M640 0 C545 160 400 238 190 240 H640 Z" fill="#3FABDE" opacity="0.36" />
       </svg>
       <div className="relative mx-auto max-w-[1320px]">
@@ -695,13 +698,13 @@ export function PodcastSection() {
                   className="object-cover object-center"
                 />
                 {/* Feather only the perimeter; keep the hosts and embedded branding sharp. */}
-                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
               </Link>
 
               <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-7 font-comic text-white sm:px-8 lg:py-6 lg:pl-8 lg:pr-10">
-                <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
+                <div data-podcast-badge className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
                   <Mic2 className="size-4 shrink-0" aria-hidden="true" />
                   THE DEESSA PODCAST
                 </div>
@@ -716,10 +719,10 @@ export function PodcastSection() {
                 </p>
 
                 <div className="mt-4">
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#72d4f5]">Hosted by</p>
+                  <p data-podcast-hosted-label className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#72d4f5]">Hosted by</p>
                   <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 185px), 1fr))" }}>
                     {hosts.map((host) => (
-                      <div key={host.name} className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/30 bg-white/[0.04] p-2.5">
+                      <div key={host.name} data-podcast-host-card className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/30 bg-white/[0.04] p-2.5">
                         <Image
                           src={host.image}
                           alt=""
@@ -739,6 +742,7 @@ export function PodcastSection() {
 
                 <Link
                   href="/podcasts"
+                  data-podcast-cta
                   className="group mt-5 inline-flex min-h-12 w-full items-center justify-center gap-3 self-start rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-primary-dark shadow-sm transition-colors hover:bg-[#E8F6FC] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto"
                 >
                   Explore the podcast
@@ -1203,17 +1207,42 @@ export function ContactSection() {
             })}
           </div>
           <ScrollReveal animation="scale-in" delay={200}>
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]" data-tts-ignore="">
+            <div
+              className={`${styles.mapCard} h-[300px] md:h-[420px] lg:h-[520px]`}
+              role="region"
+              aria-label="Interactive map showing Deesha Foundation office location"
+              data-tts-ignore=""
+            >
               <iframe
                 src={`https://www.google.com/maps?q=${encodeURIComponent("Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal")}&output=embed&z=16`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
+                className={styles.mapIframe}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="deessa Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
+                title="Deesha Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
               />
+
+              {/* Floating info badge */}
+              <div className={styles.mapOverlay}>
+                <div className={styles.mapOverlayContent}>
+                  <span className={styles.mapPill}>
+                    <MapPin className="size-2.5 shrink-0" aria-hidden="true" />
+                    Lalitpur, Nepal
+                  </span>
+                  <p className={styles.mapName}>Deesha Foundation HQ</p>
+                  <p className={styles.mapAddr}>Dhobighat Nayabato, Sanepa, Lalitpur 44600</p>
+                </div>
+                <a
+                  href="https://maps.google.com/?q=Sanepa,Lalitpur,Nepal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mapBtn}
+                  aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)"
+                >
+                  <span>Open in Maps</span>
+                  <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
+                </a>
+              </div>
             </div>
           </ScrollReveal>
         </div>
