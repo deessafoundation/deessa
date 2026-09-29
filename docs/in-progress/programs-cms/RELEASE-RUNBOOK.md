@@ -34,6 +34,21 @@ psql -f scripts/db/programs-migrations/P06-programs-phase12-hardening.sql
 
 # 7. Test fixtures (OPTIONAL — skip in production)
 # psql -f scripts/db/programs-migrations/P07-programs-test-fixtures.sql
+
+# 8. Publish grants (program_versions insert, program_publications insert/update)
+psql -f scripts/db/programs-migrations/P08-grant-program-versions-insert.sql
+
+# 9. last_published_revision column
+psql -f scripts/db/programs-migrations/P09-add-last-published-revision.sql
+
+# 10. Hero document constraint fix
+psql -f scripts/db/programs-migrations/P10-fix-program-drafts-hero-constraint.sql
+
+# 11. Audit-log helper hardening
+psql -f scripts/db/programs-migrations/P11-program-audit-log-security.sql
+
+# 12. Delete grants for archive/unpublish/delete
+psql -f scripts/db/programs-migrations/P12-program-lifecycle-delete-grants.sql
 ```
 
 **Verify:**

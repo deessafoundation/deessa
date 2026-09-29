@@ -403,8 +403,17 @@ export async function unpublishProgram(
     if (program.status !== "published") return { ok: false, error: "Program is not published" }
 
     // Remove publication
-    const { error: removalError } = await supabase.from("program_publications").delete().eq("program_id", programId)
+    const { data: removed, error: removalError } = await supabase
+      .from("program_publications")
+      .delete()
+      .eq("program_id", programId)
+      .select("id")
     if (removalError) return { ok: false, error: removalError.message }
+    if (!removed?.length)
+      return {
+        ok: false,
+        error: "Publication row could not be removed (missing database permission). Apply P12 migration.",
+      }
 
     // Update status
     const { data: changed, error: statusError } = await supabase
@@ -452,8 +461,17 @@ export async function archiveProgram(
 
     // Unpublish first if published
     if (program.status === "published") {
-      const { error } = await supabase.from("program_publications").delete().eq("program_id", programId)
+      const { data: removed, error } = await supabase
+        .from("program_publications")
+        .delete()
+        .eq("program_id", programId)
+        .select("id")
       if (error) return { ok: false, error: error.message }
+      if (!removed?.length)
+        return {
+          ok: false,
+          error: "Publication row could not be removed (missing database permission). Apply P12 migration.",
+        }
     }
 
     const { data: changed, error: statusError } = await supabase
@@ -565,8 +583,10 @@ export async function deleteProgram(
     }
 
     // Hard delete (cascade removes drafts, versions, assets, sections)
-    const { error } = await supabase.from("programs").delete().eq("id", programId)
+    const { data: deleted, error } = await supabase.from("programs").delete().eq("id", programId).select("id")
     if (error) return { ok: false, error: error.message }
+    if (!deleted?.length)
+      return { ok: false, error: "Program could not be deleted (missing database permission). Apply P12 migration." }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,

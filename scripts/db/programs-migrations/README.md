@@ -1,6 +1,6 @@
 # Programs CMS migrations and test fixtures
 
-Apply the schema migrations P01–P06 and P08–P11 in order. **P07 is an optional test seed, not a schema migration. Run it after P10**, which permits the current hero document format. P11 restricts the audit-log helper to active program administrators and prevents callers from impersonating another audit actor. It must be applied separately in each database; adding this file does not deploy it.
+Apply the schema migrations P01–P06 and P08–P12 in order. **P07 is an optional test seed, not a schema migration. Run it after P10**, which permits the current hero document format. P11 restricts the audit-log helper to active program administrators and prevents callers from impersonating another audit actor. P12 grants the `DELETE` privilege and matching RLS policies on `program_publications` and `programs` that `archiveProgram`, `unpublishProgram` and `deleteProgram` require; without it those actions fail with `permission denied for table program_publications`. It must be applied separately in each database; adding this file does not deploy it.
 
 ## Refresh the design fixtures
 
