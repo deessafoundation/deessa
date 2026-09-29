@@ -1,0 +1,1637 @@
+/* =====================================================
+   CONTACT PAGE — PREMIUM REDESIGN v5
+   CSS Module: hero preserved · all other sections
+   rebuilt with editorial / luxury NGO aesthetic
+   + full height-match two-column form/map layout
+   + interactive Google Maps integration
+   + exhaustive High Contrast & Inverted Contrast rules
+     guaranteeing zero invisible text and 100% black/white
+   ===================================================== */
+
+/* ══════════════════════════════════════════════════════
+   HERO  (preserved)
+   ══════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 480px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  transition: transform 8s ease-out;
+}
+
+.hero:hover .heroBg {
+  transform: scale(1);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(11, 95, 138, 0.68) 0%, rgba(7, 40, 70, 0.82) 55%, rgba(0, 0, 0, 0.66) 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 80px 24px 100px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(63, 171, 222, 0.2);
+  border: 1px solid rgba(63, 171, 222, 0.4);
+  backdrop-filter: blur(8px);
+  color: #7dd3f7;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  animation: badgeFadeIn 0.6s ease-out both;
+}
+
+.heroBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3fabde;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  animation: slideUp 0.7s ease-out 0.1s both;
+}
+
+.heroTitleAccent {
+  color: #3fabde;
+  display: block;
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 520px;
+  line-height: 1.7;
+  animation: slideUp 0.7s ease-out 0.2s both;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.waveDivider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  line-height: 0;
+  z-index: 11;
+}
+
+.waveDivider svg {
+  display: block;
+  width: 100%;
+}
+
+/* ══════════════════════════════════════════════════════
+   CONTACT CHANNELS — bold horizontal band
+   ══════════════════════════════════════════════════════ */
+.channelsBand {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 12;
+}
+
+.channelsInner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1023px) {
+  .channelsInner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .channelsInner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.channelItem {
+  padding: 36px 28px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+
+.channelItem:last-child {
+  border-right: none;
+}
+
+@media (max-width: 1023px) {
+  .channelItem:nth-child(2) {
+    border-right: none;
+  }
+
+  .channelItem:nth-child(1),
+  .channelItem:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 639px) {
+  .channelItem:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .channelItem:nth-child(even) {
+    border-right: none;
+  }
+
+  .channelItem:nth-child(1),
+  .channelItem:nth-child(2),
+  .channelItem:nth-child(3) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .channelItem:nth-child(4) {
+    border-bottom: none;
+  }
+}
+
+.channelItem::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 100%;
+  height: 2px;
+  background: #3fabde;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.channelItem:hover::after {
+  right: 0;
+}
+
+.channelItem:hover {
+  background: oklch(0.975 0.005 230);
+}
+
+.dark .channelItem:hover {
+  background: oklch(0.2 0.015 230);
+}
+
+.channelIconRing {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(63, 171, 222, 0.3);
+  background: rgba(63, 171, 222, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #3fabde;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.channelItem:hover .channelIconRing {
+  background: #3fabde;
+  border-color: #3fabde;
+  color: #ffffff;
+  transform: rotate(-6deg) scale(1.05);
+}
+
+.channelMeta {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3fabde;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.channelLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.channelValue {
+  font-size: 0.82rem;
+  color: var(--foreground-muted);
+  font-family: "DM Sans", system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.channelLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.channelLink:hover {
+  color: #3fabde;
+  text-decoration: underline;
+}
+
+/* ══════════════════════════════════════════════════════
+   FORM + LOCATION — height-matched two-column
+   ══════════════════════════════════════════════════════ */
+.formSection {
+  background: var(--background);
+  padding: 96px 0;
+}
+
+.formSectionInner {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 64px;
+  align-items: stretch; /* both columns equal height */
+}
+
+@media (max-width: 1023px) {
+  .formSectionInner {
+    grid-template-columns: 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+/* Consistent header block across both columns for baseline alignment */
+.columnHeader {
+  margin-bottom: 28px;
+}
+
+@media (min-width: 1024px) {
+  .columnHeader {
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+/* — Form side — */
+.formSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.formShell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.04),
+    0 1px 4px rgba(0, 0, 0, 0.03);
+  flex: 1; /* stretches to match full column height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* — Location side — */
+.locationSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.locationContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.locationCard {
+  flex: 1;
+  min-height: 320px;
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 16px 40px rgba(7, 40, 70, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.locationCard:hover {
+  box-shadow:
+    0 24px 50px rgba(7, 40, 70, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.mapIframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  z-index: 1;
+}
+
+/* Floating overlay over map */
+.locationOverlay {
+  position: relative;
+  z-index: 2;
+  margin: 16px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(4, 24, 48, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 639px) {
+  .locationOverlay {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 12px;
+    padding: 14px 16px;
+  }
+}
+
+.locationOverlayContent {
+  flex: 1;
+  min-width: 160px;
+}
+
+.locationPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(63, 171, 222, 0.2);
+  border: 1px solid rgba(63, 171, 222, 0.35);
+  color: #7dd3f7;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.locationName {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.locationAddr {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  margin-bottom: 0;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.locationMapBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #3fabde;
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 44px;
+  flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.locationMapBtn:hover {
+  background: #0b5f8a;
+  transform: translateY(-2px);
+}
+
+/* Stat pills below location card */
+.locationStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.locationStatPill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-height: 44px;
+  transition: border-color 0.2s ease;
+}
+
+.locationStatPill:hover {
+  border-color: rgba(63, 171, 222, 0.4);
+}
+
+.locationStatIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(63, 171, 222, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3fabde;
+  flex-shrink: 0;
+}
+
+.locationStatText {
+  flex: 1;
+  min-width: 0;
+}
+
+.locationStatLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.locationStatValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-family: "DM Sans", system-ui, sans-serif;
+  word-break: break-word;
+}
+
+.locationStatLink {
+  color: var(--foreground);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.locationStatLink:hover {
+  color: #3fabde;
+  text-decoration: underline;
+}
+
+/* ── Shared eyebrow / heading / lead ── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3fabde;
+  margin-bottom: 12px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.eyebrowLine {
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  background: #3fabde;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.sectionHeading {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--foreground);
+  margin-bottom: 10px;
+}
+
+.sectionLead {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--foreground-muted);
+  margin-bottom: 0;
+  font-family: "DM Sans", system-ui, sans-serif;
+  max-width: 48ch;
+}
+
+/* ══════════════════════════════════════════════════════
+   CREDENTIALS — horizontal card row on deep dark bg
+   ══════════════════════════════════════════════════════ */
+.credSection {
+  background: oklch(0.08 0.018 230);
+  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.credBg {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -55deg,
+    rgba(63, 171, 222, 0.025) 0px,
+    rgba(63, 171, 222, 0.025) 1px,
+    transparent 1px,
+    transparent 52px
+  );
+  pointer-events: none;
+}
+
+.credGlow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(63, 171, 222, 0.06) 0%, transparent 70%);
+  top: -200px;
+  right: -100px;
+  pointer-events: none;
+}
+
+.credHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 52px;
+  flex-wrap: wrap;
+}
+
+.credHeaderLeft {
+  flex: 1;
+  min-width: 260px;
+}
+
+.credEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3fabde;
+  margin-bottom: 14px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.credEyebrowLine {
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  background: #3fabde;
+  border-radius: 2px;
+}
+
+.credHeading {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 0;
+}
+
+.credSubtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  font-family: "DM Sans", system-ui, sans-serif;
+  max-width: 36ch;
+  flex-shrink: 0;
+}
+
+.credCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1023px) {
+  .credCards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .credCards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.credCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 32px 26px 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.credCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.credCard:hover {
+  background: rgba(63, 171, 222, 0.06);
+  border-color: rgba(63, 171, 222, 0.25);
+  transform: translateY(-5px);
+}
+
+.credCard:hover::before {
+  opacity: 1;
+}
+
+.credCardAccent {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  border-radius: 0 0 4px 4px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.credCard:hover .credCardAccent {
+  opacity: 1;
+}
+
+.credIconBox {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  transition: transform 0.25s ease;
+}
+
+.credCard:hover .credIconBox {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.credCardNum {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: "DM Sans", system-ui, sans-serif;
+  margin-bottom: 8px;
+}
+
+.credCardTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.credCardDesc {
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 22px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.credCardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 0;
+  min-height: 28px;
+  transition:
+    gap 0.2s ease,
+    color 0.2s ease;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.credCardLink:hover {
+  gap: 12px;
+}
+
+/* ══════════════════════════════════════════════════════
+   CTA FINAL BAND — editorial split with large quote
+   ══════════════════════════════════════════════════════ */
+.ctaBand {
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaBandGlow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(63, 171, 222, 0.07) 0%, transparent 70%);
+  top: 50%;
+  left: -150px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.ctaInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+@media (max-width: 1023px) {
+  .ctaInner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+.ctaLeft {
+  /* intentionally empty */
+}
+
+.ctaQuoteBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ctaQuoteBarLine {
+  width: 36px;
+  height: 3px;
+  background: #3fabde;
+  border-radius: 2px;
+}
+
+.ctaQuoteTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3fabde;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.ctaStatement {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.12;
+  color: var(--foreground);
+  margin-bottom: 20px;
+}
+
+.ctaStatementAccent {
+  color: #3fabde;
+}
+
+.ctaBody {
+  font-size: 1rem;
+  color: var(--foreground-muted);
+  line-height: 1.75;
+  font-family: "DM Sans", system-ui, sans-serif;
+  max-width: 48ch;
+}
+
+.ctaRight {
+  background: oklch(0.08 0.018 230);
+  border-radius: 24px;
+  padding: 44px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .ctaRight {
+    padding: 32px 24px;
+  }
+}
+
+.ctaRightBg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 90% 10%, rgba(63, 171, 222, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(63, 171, 222, 0.06) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.ctaEmailLabel {
+  display: block;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.ctaEmailVal {
+  display: block;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 28px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  word-break: break-all;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.ctaEmailVal:hover {
+  color: #7dd3f7;
+}
+
+.ctaDivider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 28px;
+}
+
+.ctaActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ctaActionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.ctaActionPrimary {
+  background: #3fabde;
+  color: #ffffff;
+}
+
+.ctaActionPrimary:hover {
+  background: #0b5f8a;
+  transform: translateX(3px);
+}
+
+.ctaActionSecondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ctaActionSecondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.ctaActionIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.ctaActionBtn:hover .ctaActionIcon {
+  transform: translateX(4px);
+}
+
+/* ══════════════════════════════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════════════════════════════ */
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.65);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HIGH-CONTRAST MODE  (STANDARDS.md §3, §20)
+   Ensures ALL text, borders, icons, and buttons are
+   strictly BLACK & WHITE with guaranteed high contrast
+   and zero invisible text.
+   ══════════════════════════════════════════════════════ */
+
+/* Hero */
+:global(body.high-contrast) :global([data-a11y-hero="photo"]).hero [data-a11y-photo] {
+  filter: grayscale(1) !important;
+}
+
+:global(body.high-contrast) :global([data-a11y-hero="photo"]).hero [data-a11y-shade] {
+  background: linear-gradient(to right, rgb(0 0 0 / 75%), rgb(0 0 0 / 65%) 60%, rgb(0 0 0 / 30%)) !important;
+}
+
+:global(body.high-contrast) :global([data-a11y-hero="photo"]).hero [data-a11y-hero-copy],
+:global(body.high-contrast) :global([data-a11y-hero="photo"]).hero [data-a11y-hero-copy] :is(h1, p, span) {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .heroBadge {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .heroBadgeDot {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .heroTitleAccent {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
+
+@media (max-width: 767px) {
+  :global(body.high-contrast) :global([data-a11y-hero="photo"]).hero [data-a11y-shade] {
+    background: rgb(0 0 0 / 60%) !important;
+  }
+}
+
+/* Channels Band (Black & White) */
+:global(body.high-contrast) .channelsBand {
+  background: #fff !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .channelItem {
+  background: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.high-contrast) .channelItem:hover {
+  background: #ededed !important;
+}
+
+:global(body.high-contrast) .channelItem::after {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .channelMeta {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .channelLabel {
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+:global(body.high-contrast) .channelValue,
+:global(body.high-contrast) .channelValue * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .channelLink {
+  color: #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .channelIconRing {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .channelIconRing svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .channelItem:hover .channelIconRing {
+  background: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .channelItem:hover .channelIconRing svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+/* Form & Location Section */
+:global(body.high-contrast) .formSection {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .eyebrow {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .eyebrowLine {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .sectionHeading {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .sectionLead {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .formShell {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+/* Map Card */
+:global(body.high-contrast) .locationCard {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .mapIframe {
+  filter: grayscale(1) contrast(1.2) !important;
+}
+
+:global(body.high-contrast) .locationOverlay {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .locationPill {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+}
+
+:global(body.high-contrast) .locationPill * {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .locationName {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .locationAddr {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .locationMapBtn,
+:global(body.high-contrast) a.locationMapBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .locationMapBtn *,
+:global(body.high-contrast) a.locationMapBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .locationMapBtn:focus-visible {
+  outline: 3px solid #000 !important;
+  outline-offset: 2px !important;
+}
+
+/* Location Stats Info Pills */
+:global(body.high-contrast) .locationStatPill {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .locationStatIcon {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .locationStatIcon svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .locationStatLabel {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .locationStatValue {
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+
+:global(body.high-contrast) .locationStatLink,
+:global(body.high-contrast) a.locationStatLink {
+  color: #000 !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+}
+
+/* Credentials Section */
+:global(body.high-contrast) .credSection {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .credEyebrow {
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .credEyebrowLine {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .credHeading {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .credSubtitle {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .credCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .credCardAccent {
+  background: #fff !important;
+  opacity: 1 !important;
+}
+
+:global(body.high-contrast) .credIconBox {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .credIconBox svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .credCardNum {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+:global(body.high-contrast) .credCardTitle {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .credCardDesc {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .credCardLink,
+:global(body.high-contrast) a.credCardLink,
+:global(body.high-contrast) .credCardLink * {
+  color: #fff !important;
+  stroke: #fff !important;
+  text-decoration: underline !important;
+}
+
+/* CTA Band - Quick Contact Section */
+:global(body.high-contrast) .ctaBand {
+  background: #fff !important;
+  border-top: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .ctaQuoteBarLine {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .ctaQuoteTag {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .ctaStatement {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .ctaStatementAccent {
+  color: #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .ctaBody {
+  color: #000 !important;
+}
+
+/* CTA Right Card: strictly black surface with pure white text and controls */
+:global(body.high-contrast) .ctaRight {
+  background: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .ctaEmailLabel {
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .ctaEmailVal,
+:global(body.high-contrast) a.ctaEmailVal {
+  color: #fff !important;
+  text-decoration: underline !important;
+  font-weight: 700 !important;
+}
+
+:global(body.high-contrast) .ctaDivider {
+  background: #fff !important;
+  opacity: 0.4 !important;
+}
+
+/* Primary Button in Quick Contact: White button with black text */
+:global(body.high-contrast) .ctaActionPrimary,
+:global(body.high-contrast) a.ctaActionPrimary {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .ctaActionPrimary *,
+:global(body.high-contrast) a.ctaActionPrimary * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .ctaActionPrimary .ctaActionIcon {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .ctaActionPrimary .ctaActionIcon svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+/* Secondary Button in Quick Contact: Black button with white text and white border */
+:global(body.high-contrast) .ctaActionSecondary,
+:global(body.high-contrast) a.ctaActionSecondary {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .ctaActionSecondary *,
+:global(body.high-contrast) a.ctaActionSecondary * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .ctaActionSecondary .ctaActionIcon {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .ctaActionSecondary .ctaActionIcon svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Hover & Focus states */
+:global(body.high-contrast) .ctaActionPrimary:hover {
+  background: #ededed !important;
+}
+
+:global(body.high-contrast) .ctaActionSecondary:hover {
+  background: #222 !important;
+}
+
+:global(body.high-contrast) .ctaActionPrimary:focus-visible,
+:global(body.high-contrast) .ctaActionSecondary:focus-visible,
+:global(body.high-contrast) .ctaEmailVal:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 3px !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   INVERTED CONTRAST MODE (STANDARDS.md §21)
+   ══════════════════════════════════════════════════════ */
+:global(body.inverted-contrast) .eyebrow {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .eyebrowLine {
+  background: #fff !important;
+}
+
+:global(body.inverted-contrast) .channelMeta {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .channelIconRing {
+  border-color: #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaQuoteBarLine {
+  background: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaQuoteTag {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaStatementAccent {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .locationCard {
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .mapIframe {
+  filter: invert(0.9) hue-rotate(180deg) contrast(1.1);
+}
+
+:global(body.inverted-contrast) .locationOverlay {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .locationPill {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .locationName,
+:global(body.inverted-contrast) .locationAddr {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .locationMapBtn,
+:global(body.inverted-contrast) a.locationMapBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .locationStatPill {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .locationStatIcon {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .locationStatLabel {
+  color: #ddd !important;
+}
+
+:global(body.inverted-contrast) .locationStatValue,
+:global(body.inverted-contrast) .locationStatLink {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .ctaRight {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaEmailVal,
+:global(body.inverted-contrast) a.ctaEmailVal {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaEmailLabel {
+  color: #ddd !important;
+}
+
+:global(body.inverted-contrast) .ctaActionPrimary,
+:global(body.inverted-contrast) a.ctaActionPrimary {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .ctaActionSecondary,
+:global(body.inverted-contrast) a.ctaActionSecondary {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   REDUCED MOTION  (STANDARDS.md §8)
+   ══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .heroBg,
+  .heroBadge,
+  .heroTitle,
+  .heroSubtitle,
+  .heroBadgeDot {
+    animation: none !important;
+  }
+
+  .hero:hover .heroBg {
+    transform: none;
+  }
+
+  .channelItem,
+  .channelItem::after,
+  .channelIconRing,
+  .locationCard,
+  .locationMapBtn,
+  .credCard,
+  .credIconBox,
+  .credCardAccent,
+  .credCardLink,
+  .ctaActionBtn,
+  .ctaActionIcon {
+    transition: none !important;
+  }
+}
+
+/* App-level reduced motion (body.reduce-motion) */
+:global(body.reduce-motion) .heroBg,
+:global(body.reduce-motion) .heroBadge,
+:global(body.reduce-motion) .heroTitle,
+:global(body.reduce-motion) .heroSubtitle,
+:global(body.reduce-motion) .heroBadgeDot {
+  animation: none !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   FORCED COLORS (Windows HCM)  (STANDARDS.md §10)
+   ══════════════════════════════════════════════════════ */
+@media (forced-colors: active) {
+  .heroBadge,
+  .locationPill,
+  .ctaActionBtn,
+  .locationCard,
+  .locationOverlay,
+  .locationStatPill {
+    border: 2px solid ButtonText !important;
+  }
+
+  .locationMapBtn,
+  .credCardLink,
+  .ctaEmailVal {
+    forced-color-adjust: none;
+  }
+
+  .credCard {
+    border: 1px solid ButtonText;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   PRINT  (STANDARDS.md §16)
+   ══════════════════════════════════════════════════════ */
+@media print {
+  .hero {
+    background: white !important;
+    color: black !important;
+    min-height: auto;
+  }
+
+  .heroBg,
+  .heroOverlay,
+  .waveDivider,
+  .ctaBandGlow,
+  .credBg,
+  .credGlow {
+    display: none;
+  }
+
+  .credSection,
+  .ctaRight {
+    background: #f5f5f5 !important;
+    color: black !important;
+  }
+
+  .credCardTitle,
+  .credHeading,
+  .locationName,
+  .ctaEmailVal {
+    color: black !important;
+  }
+
+  .locationCard,
+  .locationOverlay,
+  .locationStatPill {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+
+  .mapIframe {
+    filter: grayscale(1);
+  }
+}
