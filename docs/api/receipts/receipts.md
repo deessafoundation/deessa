@@ -1,7 +1,7 @@
 ---
 title: "Receipts API"
 description: "The Receipts API handles receipt downloading and resending for confirmed donations."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

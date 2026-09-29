@@ -1,7 +1,7 @@
 ---
 title: "Admin Guide: Uploading Testimonial Images"
 description: "1. Login to admin panel"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -291,5 +291,5 @@ Include:
 ---
 
 **Last Updated**: June 1, 2026  
-**For**: Deessa Foundation Admin Users  
+**For**: deessa Foundation Admin Users  
 **Support**: Contact development team for assistance

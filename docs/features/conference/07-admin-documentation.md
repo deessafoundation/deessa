@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Admin Documentation"
+title: "deessa Foundation â€” Conference Module: Admin Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Admin Documentation
+# deessa Foundation â€” Conference Module: Admin Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -30,7 +30,7 @@ last_updated: 2026-09-12
 
 ### 1.1 Accessing Admin Dashboard
 
-**URL**: `https://deessa.org/admin/conference`
+**URL**: `https://deessafoundation.com/admin/conference`
 
 **Authentication**:
 
@@ -49,7 +49,7 @@ last_updated: 2026-09-12
 
 ```
 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ DEESSA Foundation Admin                         â”‚
+â”‚ deessa Foundation Admin                         â”‚
 â”‚ [Home] [Conference] [Settings] [Logout]         â”‚
 â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
 â”‚                                                  â”‚
@@ -262,7 +262,7 @@ last_updated: 2026-09-12
 **Best Practices**:
 
 - Keep subject concise (< 50 characters)
-- Sign with "DEESSA Foundation Team"
+- Sign with "deessa Foundation Team"
 - Include action items clearly
 - Provide contact info for follow-up
 
@@ -449,7 +449,7 @@ WHERE id = 'registration-id';
 
 | Field                     | Type     | Description                                  | Example                         |
 | ------------------------- | -------- | -------------------------------------------- | ------------------------------- |
-| **Conference Name**       | Text     | Event title                                  | "DEESSA Global Conference 2026" |
+| **Conference Name**       | Text     | Event title                                  | "deessa Global Conference 2026" |
 | **Conference Date**       | Date     | Event start date                             | "2026-06-15"                    |
 | **Conference End Date**   | Date     | Event end date (optional)                    | "2026-06-17"                    |
 | **Location**              | Text     | Physical address (for in-person)             | "Kathmandu, Nepal"              |

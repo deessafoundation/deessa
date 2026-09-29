@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Security Architecture"
+title: "deessa Foundation â€” Conference Module: Security Architecture"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Security Architecture
+# deessa Foundation â€” Conference Module: Security Architecture
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -72,7 +72,7 @@ This system follows these core security principles:
 |---|---|---|
 | **Infrastructure Security** | Vercel, Supabase | Physical security, network security, patching |
 | **Application Security** | Development Partner | Code security, authentication, authorization |
-| **Data Security** | DEESSA Foundation | Access control, data retention, backup |
+| **Data Security** | deessa Foundation | Access control, data retention, backup |
 | **Endpoint Security** | Stripe, Khalti, eSewa | Payment processing, PCI compliance, fraud detection |
 | **User Security** | End Users | Strong passwords, email security, phishing awareness |
 
@@ -162,7 +162,7 @@ export default async function AdminPage() {
 **Example Request**:
 
 ```bash
-curl -X POST https://deessa.org/api/conference/status \
+curl -X POST https://deessafoundation.com/api/conference/status \
   -H "Content-Type: application/json" \
   -d '{
     "registrationId": "550e8400-e29b-41d4-a716-446655440000",
@@ -205,7 +205,7 @@ CRON_SECRET=your-secure-random-string-here
 **Request**:
 
 ```bash
-curl -X GET https://deessa.org/api/cron/expire-conference-registrations \
+curl -X GET https://deessafoundation.com/api/cron/expire-conference-registrations \
   -H "Authorization: Bearer your-secure-random-string-here"
 ```
 
@@ -240,7 +240,7 @@ export async function GET(req: Request) {
 **What is RLS**:
 PostgreSQL feature that restricts database rows visible to a query based on user role/session.
 
-**DEESSA Implementation**:
+**deessa Implementation**:
 
 ```sql
 -- Enable RLS on table
@@ -293,7 +293,7 @@ WITH CHECK (true);
 
 - Manual: Supabase dashboard â†’ Authentication â†’ Users â†’ Invite user
 - No self-registration (closed system)
-- Only DEESSA staff have accounts
+- Only deessa staff have accounts
 
 **Permission Escalation Protection**:
 
@@ -366,11 +366,11 @@ grep -r "SUPABASE_SERVICE_ROLE_KEY" app/
 
 ```bash
 # Check TLS version
-curl -I https://deessa.org | grep -i "strict-transport"
+curl -I https://deessafoundation.com | grep -i "strict-transport"
 # Should return: strict-transport-security: max-age=31536000
 
 # Test TLS connection
-openssl s_client -connect deessa.org:443 -tls1_3
+openssl s_client -connect deessafoundation.com:443 -tls1_3
 # Should succeed (TLS 1.3 supported)
 ```
 
@@ -534,7 +534,7 @@ module.exports = {
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Origin', value: 'https://deessa.org' },
+          { key: 'Access-Control-Allow-Origin', value: 'https://deessafoundation.com' },
           { key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' }
         ]
@@ -544,7 +544,7 @@ module.exports = {
 };
 ```
 
-**Effect**: Only `https://deessa.org` can call APIs from browser (blocks 3rd-party sites)
+**Effect**: Only `https://deessafoundation.com` can call APIs from browser (blocks 3rd-party sites)
 
 ---
 
@@ -554,19 +554,19 @@ module.exports = {
 
 **Who Handles Card Data**:
 
-- âŒ DEESSA system does NOT store, process, or transmit card data
+- âŒ deessa system does NOT store, process, or transmit card data
 - âœ… Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
 
 **Compliance Status**:
 
 | Entity | PCI DSS Level | Responsibility |
 |---|---|---|
-| **DEESSA Foundation** | SAQ A (simplest) | No card data handling |
+| **deessa Foundation** | SAQ A (simplest) | No card data handling |
 | **Stripe** | Level 1 Service Provider | Card processing, storage, transmission |
 | **Khalti** | Level 1 Service Provider | Card processing (via partner banks) |
-| **eSewa** | Wallet provider | Wallet balance processing (no cards stored by DEESSA) |
+| **eSewa** | Wallet provider | Wallet balance processing (no cards stored by deessa) |
 
-**What DEESSA Stores** (payment-related):
+**What deessa Stores** (payment-related):
 
 - `payment_provider`: "stripe" / "khalti" / "esewa"
 - `payment_id`: Gateway transaction ID (e.g., "cs_live_abc123")
@@ -850,18 +850,18 @@ ORDER BY created_at DESC;
 
 ```bash
 # Test SQL injection
-curl -X POST https://deessa.org/api/conference/status \
+curl -X POST https://deessafoundation.com/api/conference/status \
   -d '{"email":"'; DROP TABLE conference_registrations; --"}'
 # Should return validation error (not execute SQL)
 
 # Test XSS
-curl -X POST https://deessa.org/api/conference/start-payment \
+curl -X POST https://deessafoundation.com/api/conference/start-payment \
   -d '{"fullName":"<script>alert(1)</script>"}'
 # Should be escaped in HTML (not execute script)
 
 # Test rate limiting
 for i in {1..20}; do
-  curl https://deessa.org/api/conference/status -d '{"registrationId":"...","email":"..."}'
+  curl https://deessafoundation.com/api/conference/status -d '{"registrationId":"...","email":"..."}'
 done
 # Should return 429 after 10 requests
 ```
@@ -960,4 +960,4 @@ done
 3. Implement additional security controls
 4. Train team on new procedures
 
-**Contact**: Incident response should be led by development partner in coordination with DEESSA IT team.
+**Contact**: Incident response should be led by development partner in coordination with deessa IT team.

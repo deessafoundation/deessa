@@ -1,7 +1,7 @@
 ---
 title: "Receipt System - Implementation Checklist & Deployment Guide"
 description: "- x Create migration script: scripts/db/migrations/010-receipt-system.sql"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

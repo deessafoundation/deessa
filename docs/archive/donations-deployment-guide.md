@@ -1,7 +1,7 @@
 ---
 title: "Stripe Payment Intent Enhancement - Deployment Guide"
 description: "This deployment enhances the payment system to:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin

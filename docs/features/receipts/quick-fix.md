@@ -1,7 +1,7 @@
 ---
 title: "Receipt Generation Quick Fix Guide"
 description: "1. Check if webhooks are being received:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer

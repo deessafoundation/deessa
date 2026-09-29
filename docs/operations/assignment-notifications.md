@@ -1,7 +1,7 @@
 ---
 title: "Assignment Notification System - Implementation Summary"
 description: "Comprehensive email and in-app notification system for support report assignments, reassignments, and unassignments."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin

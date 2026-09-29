@@ -1,7 +1,7 @@
 ---
 title: "admin guide"
 description: "Documentation for admin guide"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

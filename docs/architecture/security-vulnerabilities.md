@@ -1,7 +1,7 @@
 ---
 title: "Security Vulnerability Report"
-description: "Project: Deessa Foundation Next.js 16 / Supabase"
-owner: "Deessa Team"
+description: "Project: deessa Foundation Next.js 16 / Supabase"
+owner: "deessa Team"
 status: active
 category: architecture
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Security Vulnerability Report
 
-**Project:** Deessa Foundation (Next.js 16 / Supabase)  
+**Project:** deessa Foundation (Next.js 16 / Supabase)  
 **Audit Date:** 2026-06-27  
 **Scope:** Full codebase â€” API routes, server actions, middleware, configuration, database scripts  
 

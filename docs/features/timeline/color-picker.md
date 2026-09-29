@@ -1,7 +1,7 @@
 ---
 title: "Timeline Manager - Color Picker Feature âœ…"
 description: "Replaced technical Tailwind class inputs with user-friendly color pickers for the Timeline Manager."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

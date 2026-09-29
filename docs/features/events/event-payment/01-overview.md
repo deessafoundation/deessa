@@ -1,7 +1,7 @@
 ---
 title: "Event Payment Integration â€” Overview"
-description: "The Event Payment System enables paid event registrations on the DEESSA Foundation platform. It supports three paymen..."
-owner: "Deessa Team"
+description: "The Event Payment System enables paid event registrations on the deessa Foundation platform. It supports three paymen..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Purpose
 
-The Event Payment System enables paid event registrations on the DEESSA Foundation platform. It supports three payment providers â€” **Stripe** (international cards), **Khalti** (Nepal mobile wallets/banks), and **eSewa** (Nepal digital wallet) â€” with a unified flow that handles session creation, verification, webhook processing, and confirmation emails.
+The Event Payment System enables paid event registrations on the deessa Foundation platform. It supports three payment providers â€” **Stripe** (international cards), **Khalti** (Nepal mobile wallets/banks), and **eSewa** (Nepal digital wallet) â€” with a unified flow that handles session creation, verification, webhook processing, and confirmation emails.
 
 This system is **self-contained within the events module**. It shares only the low-level payment libraries (`lib/payments/`) with the donation and conference modules. No payment logic is borrowed from or coupled to other modules.
 

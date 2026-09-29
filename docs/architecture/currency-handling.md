@@ -1,7 +1,7 @@
 ---
 title: "Currency Handling Documentation"
-description: "This document explains how multi-currency donations are handled in the Deessa Foundation platform, particularly for S..."
-owner: "Deessa Team"
+description: "This document explains how multi-currency donations are handled in the deessa Foundation platform, particularly for S..."
+owner: "deessa Team"
 status: active
 category: architecture
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Overview
 
-This document explains how multi-currency donations are handled in the Deessa Foundation platform, particularly for Stripe (USD) and local payment gateways (NPR).
+This document explains how multi-currency donations are handled in the deessa Foundation platform, particularly for Stripe (USD) and local payment gateways (NPR).
 
 ## Problem Statement
 

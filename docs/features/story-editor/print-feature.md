@@ -1,7 +1,7 @@
 ---
 title: "Story Print Feature"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -37,7 +37,7 @@ The print feature allows users to print stories in a clean, professional format 
    - Proper margins (1.5cm)
 
 3. **Print Header**
-   - DEESSA Foundation logo
+   - deessa Foundation logo
    - Website URL
    - Only visible when printing
 
@@ -71,7 +71,7 @@ The print feature allows users to print stories in a clean, professional format 
 
 1. **Navigate to a story:**
    - Go to any published story page
-   - Example: `https://deessafoundation.org/stories/story-slug`
+   - Example: `https://deessafoundation.com/stories/story-slug`
 
 2. **Click the Print button:**
    - Located in the right sidebar
@@ -205,7 +205,7 @@ The print styles handle:
 ### What's Included
 
 âœ… **Printed:**
-- DEESSA Foundation header
+- deessa Foundation header
 - Story title
 - Published date, category, read time
 - Story excerpt
@@ -229,7 +229,7 @@ The print styles handle:
 
 ```
 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  DEESSA Foundation                  â”‚
+â”‚  deessa Foundation                  â”‚
 â”‚  www.deessafoundation.org           â”‚
 â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
 â”‚                                     â”‚

@@ -1,7 +1,7 @@
 ---
 title: "Conference Dynamic Form Builder â€” Documentation"
 description: "This folder contains all documentation for the Conference Dynamic Form Builder project."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

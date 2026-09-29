@@ -1,5 +1,5 @@
 -- ============================================================
--- DEESSA Foundation — Conference Dynamic Form Schema
+-- deessa Foundation — Conference Dynamic Form Schema
 -- Migration: 040-conference-form-schema.sql
 -- Phase 1: Foundation & Dynamic Renderer
 --

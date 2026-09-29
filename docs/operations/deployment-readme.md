@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 - Deployment Documentation"
 description: "This directory contains all documentation and guides for deploying Payment Architecture V2 to staging and production ..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: operator

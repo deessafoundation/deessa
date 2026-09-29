@@ -1,7 +1,7 @@
 ---
 title: "Stripe Webhook Troubleshooting Guide"
 description: "This guide helps you diagnose and fix issues with Stripe webhooks in production Vercel deployment."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer

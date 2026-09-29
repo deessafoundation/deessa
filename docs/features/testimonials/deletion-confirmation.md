@@ -1,7 +1,7 @@
 ---
 title: "Testimonial Deletion Confirmation Dialog"
 description: "Added confirmation dialog for deleting entire testimonials to prevent accidental data loss and provide clear feedback..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

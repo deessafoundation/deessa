@@ -1,7 +1,7 @@
 ---
 title: "Receipt System Implementation Guide"
 description: "The receipt system enables automatic generation, storage, and delivery of tax-deductible donation receipts to donors...."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

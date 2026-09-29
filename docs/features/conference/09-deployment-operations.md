@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation — Conference Module: Deployment & Operations Manual"
+title: "deessa Foundation — Conference Module: Deployment & Operations Manual"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation — Conference Module: Deployment & Operations Manual
+# deessa Foundation — Conference Module: Deployment & Operations Manual
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -35,7 +35,7 @@ last_updated: 2026-09-12
 # Next.js
 # ============================================
 NODE_ENV=production
-NEXT_PUBLIC_SITE_URL=https://deessa.org
+NEXT_PUBLIC_SITE_URL=https://deessafoundation.com
 
 # ============================================
 # Supabase (Database + Auth)
@@ -191,7 +191,7 @@ vercel env pull .env.local
 
 **Post-Deployment**:
 
-- [ ] Verify homepage loads (`https://deessa.org`)
+- [ ] Verify homepage loads (`https://deessafoundation.com`)
 - [ ] Test conference landing page (`/conference`)
 - [ ] Test registration form (submit one test registration)
 - [ ] Verify admin dashboard loads (`/admin/conference`)
@@ -460,7 +460,7 @@ vercel logs --since 24h | grep "/api/cron/"
     "schedule": "0 2 * * *"
   }]
 }# Test cron endpoint manually
-curl https://deessa.org/api/cron/expire-conference-registrations \
+curl https://deessafoundation.com/api/cron/expire-conference-registrations \
   -H "Authorization: Bearer $CRON_SECRET"
 
 # Should return:
@@ -576,7 +576,7 @@ vercel log-drains add <webhook-url>
 **Uptime Monitoring** (external):
 
 - Use UptimeRobot or Pingdom
-- Monitor: `https://deessa.org/conference`
+- Monitor: `https://deessafoundation.com/conference`
 - Alert if down >2 minutes
 
 ### 4.3 Log Analysis Queries

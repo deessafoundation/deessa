@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2"
 description: "Payment Architecture V2 is a complete refactor of the payment processing system, designed for reliability, security, ..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

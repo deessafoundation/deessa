@@ -1,7 +1,7 @@
 ---
 title: "Staging Deployment Checklist - Payment Architecture V2"
 description: "- All tests passing locally npm test -- --run"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin

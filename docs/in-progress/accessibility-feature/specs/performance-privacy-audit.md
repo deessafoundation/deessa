@@ -1,7 +1,7 @@
 # Performance and Privacy Audit Report
 
 **Date:** 2026-09-16  
-**Scope:** Deesha Foundation Accessibility Features  
+**Scope:** deessa Foundation Accessibility Features  
 **Version:** 2.0  
 **Status:** Code Analysis Complete
 
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document audits the performance impact and privacy implications of the accessibility features implemented for the Deesha Foundation website. The audit covers:
+This document audits the performance impact and privacy implications of the accessibility features implemented for the deessa Foundation website. The audit covers:
 
 ✅ **Performance:** Bundle size, load time, runtime overhead, memory usage  
 ✅ **Privacy:** Data collection, storage, third-party access, user tracking  
@@ -445,7 +445,7 @@ npx @next/bundle-analyzer
 #### Storage Location
 
 **Primary Storage:** `localStorage`
-- Scope: Origin-specific (`https://deeshafoundation.org`)
+- Scope: Origin-specific (`https://deessafoundation.com`)
 - Persistence: Until manually cleared by user
 - Access: JavaScript only (same origin)
 - Size limit: ~5-10 MB (browser-dependent)
@@ -465,7 +465,7 @@ npx @next/bundle-analyzer
 
 ```typescript
 // ✅ Data never leaves the device
-localStorage.setItem('deesha-a11y-preferences', data)
+localStorage.setItem('deessa-a11y-preferences', data)
 
 // ❌ NOT doing this:
 fetch('/api/track-preferences', { body: data }) // NO
@@ -474,7 +474,7 @@ analytics.track('preference_changed', data)     // NO
 
 **Storage Inspection (User Control):**
 1. Browser DevTools > Application > Local Storage
-2. Key: `deesha-a11y-preferences`
+2. Key: `deessa-a11y-preferences`
 3. User can inspect/modify/delete anytime ✅
 
 **Privacy Assessment:** ✅ **EXCELLENT** - Full user control, no server transmission
@@ -486,7 +486,7 @@ analytics.track('preference_changed', data)     // NO
 #### Cross-Site Access
 
 **Same-Origin Policy Enforcement:**
-- ✅ localStorage accessible **only** from `deeshafoundation.org`
+- ✅ localStorage accessible **only** from `deessafoundation.com`
 - ✅ Other websites **cannot** read this data
 - ✅ Subdomains **cannot** access unless explicitly set (not set)
 - ✅ HTTP vs HTTPS isolated (HTTPS only)
@@ -494,7 +494,7 @@ analytics.track('preference_changed', data)     // NO
 **Verification:**
 ```javascript
 // Try from different origin (will fail):
-// console.log(localStorage.getItem('deesha-a11y-preferences'))
+// console.log(localStorage.getItem('deessa-a11y-preferences'))
 // Error: Cannot access localStorage from different origin ✅
 ```
 
@@ -622,7 +622,7 @@ When you adjust accessibility settings (such as text size, contrast, or motion p
 ### Your Control
 You can view, modify, or delete your accessibility preferences at any time:
 - **Reset in App:** Click "Reset All" in the accessibility panel
-- **Browser Settings:** Clear site data for deeshafoundation.org
+- **Browser Settings:** Clear site data for deessafoundation.com
 - **Privacy:** Your settings are not linked to your identity
 
 ### Legal Basis
@@ -711,7 +711,7 @@ Could a malicious script inject harmful data into localStorage?
 **Scenario:**
 ```javascript
 // Attacker tries to inject malicious code
-localStorage.setItem('deesha-a11y-preferences', JSON.stringify({
+localStorage.setItem('deessa-a11y-preferences', JSON.stringify({
   version: 2,
   preferences: {
     textScale: '<script>alert("XSS")</script>', // Attempt
@@ -923,7 +923,7 @@ const handleEscape = (e) => {
 3. 🔷 **User Data Export** - Provide "Download My Data" feature
    ```typescript
    function exportPreferences() {
-     const data = localStorage.getItem('deesha-a11y-preferences')
+     const data = localStorage.getItem('deessa-a11y-preferences')
      const blob = new Blob([data], { type: 'application/json' })
      // Download as file
    }

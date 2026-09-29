@@ -1,7 +1,7 @@
 ---
 title: "Payment System Forensic Audit Report"
-description: "Project: Deessa Foundation â€” Donation System"
-owner: "Deessa Team"
+description: "Project: deessa Foundation â€” Donation System"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Payment System Forensic Audit Report
 
-**Project:** Deessa Foundation â€” Donation System  
+**Project:** deessa Foundation â€” Donation System  
 **Date:** March 2, 2026  
 **Scope:** Stripe Â· Khalti Â· eSewa â€” End-to-End Donation Lifecycle  
 **Classification:** INTERNAL â€” CTO REVIEW  

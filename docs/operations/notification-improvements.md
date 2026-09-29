@@ -1,7 +1,7 @@
 ---
 title: "🔔 Notification System - Improvements & Recommendations"
 description: "- ✅ Database schema with RLS policies"
-owner: "Deesha Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin

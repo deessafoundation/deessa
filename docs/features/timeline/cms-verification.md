@@ -1,7 +1,7 @@
 ---
 title: "Timeline Section - CMS Integration Verification âœ…"
 description: "The Timeline section on the homepage is fully integrated with the CMS and working correctly."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

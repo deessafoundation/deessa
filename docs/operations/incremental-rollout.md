@@ -1,7 +1,7 @@
 ---
 title: "Incremental V2 Rollout Guide - Payment Architecture V2"
 description: "This guide provides step-by-step instructions for incrementally enabling Payment Architecture V2 in production. The i..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer

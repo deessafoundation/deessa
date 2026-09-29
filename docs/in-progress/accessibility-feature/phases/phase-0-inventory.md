@@ -115,7 +115,7 @@ interface AccessibilityPreferences {
 }
 ```
 
-**Storage Key:** `deesha-a11y-preferences`  
+**Storage Key:** `deessa-a11y-preferences`  
 **Version:** `1.0`  
 **Max Size:** 5000 characters
 

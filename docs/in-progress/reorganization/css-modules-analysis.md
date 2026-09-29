@@ -1,6 +1,6 @@
 # CSS Architecture Audit & Refactor Plan
 
-**Deesha Foundation Project**
+**deessa Foundation Project**
 
 **Date**: September 27, 2026 (Revision 2 — supersedes the Sep 26 draft)
 **Status**: Analysed — ready for execution pending go-ahead

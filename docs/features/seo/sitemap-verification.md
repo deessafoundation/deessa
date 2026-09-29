@@ -1,7 +1,7 @@
 ---
 title: "Sitemap & Robots.txt Verification Checklist"
 description: "bash"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

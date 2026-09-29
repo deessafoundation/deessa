@@ -1,7 +1,7 @@
 ---
 title: "Events Module â€” Admin User Guide"
 description: "The Events Module allows you to create, manage, and publish events with custom registration forms. This guide covers ..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

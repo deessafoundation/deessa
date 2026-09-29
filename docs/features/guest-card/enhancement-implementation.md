@@ -1,7 +1,7 @@
 ---
 title: "Guest Card Enhancement & Related Episodes Implementation"
 description: "Created: scripts/db/migrations/015-addguestrolesandenhancesocial.sql"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

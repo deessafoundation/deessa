@@ -1,7 +1,7 @@
 ---
 title: "Support API"
 description: "The Support API handles public support ticket submissions from the website's contact/support page."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

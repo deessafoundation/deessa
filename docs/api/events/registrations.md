@@ -1,7 +1,7 @@
 ---
 title: "Events - Registrations API"
 description: "The Events Registrations API handles event registration, payment initiation, and status checking."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

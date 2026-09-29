@@ -1,5 +1,5 @@
 -- ============================================================
--- DEESSA Foundation — Conference Registration: Payment Columns
+-- deessa Foundation — Conference Registration: Payment Columns
 -- Migration: 017-conference-payment-columns.sql
 -- Run in Supabase SQL Editor. Safe to run multiple times (IF NOT EXISTS).
 -- ============================================================

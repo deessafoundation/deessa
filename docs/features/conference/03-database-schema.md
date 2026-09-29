@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation — Conference Module: Database Schema"
+title: "deessa Foundation — Conference Module: Database Schema"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation — Conference Module: Database Schema
+# deessa Foundation — Conference Module: Database Schema
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -347,7 +347,7 @@ CREATE TABLE site_settings (
 INSERT INTO site_settings (key, value) VALUES (
   'conference_settings',
   '{
-    "conferenceName": "DEESSA Global Conference 2026",
+    "conferenceName": "deessa Global Conference 2026",
     "conferenceDate": "2026-06-15",
     "conferenceEndDate": "2026-06-17",
     "location": "Kathmandu, Nepal",

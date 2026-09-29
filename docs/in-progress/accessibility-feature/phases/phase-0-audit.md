@@ -15,15 +15,15 @@
 | `accessibility-seen` | `components/accessibility-toolbar.tsx` | First-time instructions banner | ⚠️ **MEDIUM** - Should migrate to new system |
 | `introShown` | `components/intro-video.tsx` | Track if intro video was shown | ✅ **LOW** - No conflict |
 | `introLastShown` | `components/intro-video.tsx` | Timestamp of last intro show | ✅ **LOW** - No conflict |
-| `deesha-editor-backup-{storyId}` | `components/admin/rich-text-editor` | Auto-save editor content | ✅ **LOW** - No conflict |
+| `deessa-editor-backup-{storyId}` | `components/admin/rich-text-editor` | Auto-save editor content | ✅ **LOW** - No conflict |
 | `photo-wall-demo-override` | `app/demo/photo-wall/page.tsx` | Demo panel configuration | ✅ **LOW** - No conflict |
 
 ### Proposed New Keys
 
 | Key | Purpose | Conflicts |
 |-----|---------|-----------|
-| `deesha-a11y-preferences` | Store all accessibility preferences | ✅ **NONE** - Unique prefix |
-| `deesha-a11y-version` | Track schema version for migrations | ✅ **NONE** - Unique prefix |
+| `deessa-a11y-preferences` | Store all accessibility preferences | ✅ **NONE** - Unique prefix |
+| `deessa-a11y-version` | Track schema version for migrations | ✅ **NONE** - Unique prefix |
 
 ### Migration Plan for `accessibility-seen`
 
@@ -39,7 +39,7 @@ const migrateOldSettings = () => {
 }
 ```
 
-**Decision:** ✅ Safe to proceed with `deesha-a11y-preferences` key
+**Decision:** ✅ Safe to proceed with `deessa-a11y-preferences` key
 
 ---
 
@@ -328,7 +328,7 @@ git checkout -b feature/accessibility-system-phase-2
 
 | Item | Reason |
 |------|--------|
-| localStorage key conflicts | Using unique `deesha-a11y-` prefix |
+| localStorage key conflicts | Using unique `deessa-a11y-` prefix |
 | Font loading issues | Using font-display: swap |
 | Browser compatibility | Modern CSS features with fallbacks |
 

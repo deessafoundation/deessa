@@ -1,7 +1,7 @@
 ---
 title: "Event Payment Integration â€” Configuration"
 description: "| Variable | Description | Example |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer

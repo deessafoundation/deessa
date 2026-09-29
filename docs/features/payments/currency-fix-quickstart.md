@@ -1,7 +1,7 @@
 ---
 title: "Currency Handling Fix - Quick Start"
 description: "- Stripe donations in USD $250 were displaying as \"Rs 250\" in admin dashboard"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

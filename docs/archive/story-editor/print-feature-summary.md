@@ -1,7 +1,7 @@
 ---
 title: "Print Feature Implementation Summary"
 description: " Status: âœ… COMPLETE"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -45,7 +45,7 @@ The print feature allows users to print stories in a clean, professional format 
 
 3. **Public Story Page** (`app/(public)/stories/[slug]/page.tsx`)
    - Print button in sidebar
-   - Print-only header with DEESSA Foundation logo
+   - Print-only header with deessa Foundation logo
    - Print-only metadata section
    - Hides navigation and sidebars when printing
 
@@ -73,7 +73,7 @@ The print feature allows users to print stories in a clean, professional format 
 ### Admin Page Print
 - âœ… "Print Draft" button in action bar
 - âœ… DRAFT watermark for unpublished stories (diagonal, semi-transparent)
-- âœ… Admin header with "DEESSA Foundation - Admin Preview"
+- âœ… Admin header with "deessa Foundation - Admin Preview"
 - âœ… Story metadata
 - âœ… Full editor content
 - âœ… Form controls hidden

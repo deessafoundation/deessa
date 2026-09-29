@@ -1,7 +1,7 @@
 ---
 title: "ðŸš€ Event Management Module - Get Started"
 description: "Welcome This is your starting point for the Event Management Module project."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -145,7 +145,7 @@ docs/event-management-module/
 ```
 
 ### Why?
-The conference system is production-ready for DEESSA 2026 Conference. We're building a separate, reusable platform for all future events.
+The conference system is production-ready for deessa 2026 Conference. We're building a separate, reusable platform for all future events.
 
 **Safe:** Read-only imports from conference components  
 **Forbidden:** Editing or refactoring conference files

@@ -1,7 +1,7 @@
 ---
 title: "Receipt Generation Troubleshooting Guide"
 description: "This guide helps diagnose and fix issues where receipts are not being generated after successful payments in producti..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

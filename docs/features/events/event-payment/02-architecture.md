@@ -1,7 +1,7 @@
 ---
 title: "Event Payment Integration â€” Architecture"
 description: "Documentation for event payment integration â€” architecture"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

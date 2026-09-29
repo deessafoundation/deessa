@@ -1,7 +1,7 @@
 ---
 title: "Site Settings Enhancement - Setup Guide"
 description: "The admin site settings have been significantly expanded to give you full control over all images and content display..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin

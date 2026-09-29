@@ -258,7 +258,7 @@ export function validatePreferences(prefs) {
 
 ```javascript
 // Malicious user could try:
-localStorage.setItem('deesha-a11y-preferences', '{"version": 999, ...}')
+localStorage.setItem('deessa-a11y-preferences', '{"version": 999, ...}')
 ```
 
 **Mitigation Already in Place:** ✅

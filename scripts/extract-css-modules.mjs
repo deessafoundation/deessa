@@ -219,7 +219,7 @@ async function extract() {
       header: `/**
  * Research Concept Styles
  * 
- * Technical notebook styling for DEESSA Companion research
+ * Technical notebook styling for deessa Companion research
  * demonstration, featuring interactive communication boards.
  */`,
     },

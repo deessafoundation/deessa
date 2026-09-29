@@ -1,7 +1,7 @@
 ---
 title: "Story Editor Modernization â€” Implementation Status"
 description: " Last Updated: April 4, 2026"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -428,7 +428,7 @@ The Story Editor Modernization project is 85% complete with all core functionali
 
 ### For Issues
 - See [Troubleshooting Guide](troubleshooting-guide.md)
-- Contact DEESSA Foundation IT team
+- Contact deessa Foundation IT team
 - Check browser console for errors
 
 ### For Enhancements

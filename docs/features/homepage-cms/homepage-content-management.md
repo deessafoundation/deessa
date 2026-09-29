@@ -1,7 +1,7 @@
 ---
 title: "Homepage Content Management System - Implementation Guide"
-description: "We've successfully implemented a comprehensive, professional Homepage Content Management System for the Deessa Founda..."
-owner: "Deessa Team"
+description: "We've successfully implemented a comprehensive, professional Homepage Content Management System for the deessa Founda..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## 🎉 Overview
 
-We've successfully implemented a **comprehensive, professional Homepage Content Management System** for the Deessa Foundation website! This system includes:
+We've successfully implemented a **comprehensive, professional Homepage Content Management System** for the deessa Foundation website! This system includes:
 
 ✅ **Media Library** - Central hub for all media assets  
 ✅ **Homepage Manager** - Dedicated page for managing homepage content  

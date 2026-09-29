@@ -1,7 +1,7 @@
 ---
 title: "Form Schema Refresh Issue - Complete Fix"
 description: "When users applied a template, made changes, saved as draft, published, and then refreshed the page â€” the form buil..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Credential Rotation Guide"
 description: "This guide provides step-by-step instructions for rotating all payment system credentials. Credential rotation is a c..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin

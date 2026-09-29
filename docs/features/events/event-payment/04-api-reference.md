@@ -1,7 +1,7 @@
 ---
 title: "Event Payment Integration â€” API Reference"
 description: "All endpoints return JSON with { ok: boolean } shape. Errors include error: string."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
@@ -206,7 +206,7 @@ Resends the payment link email. Returns the link in the response even if email f
 {
   "ok": true,
   "message": "Payment link has been sent to user@example.com.",
-  "paymentLink": "https://deessa.org/events/my-event/register/pending-payment?rid=xxx&email=xxx"
+  "paymentLink": "https://deessafoundation.com/events/my-event/register/pending-payment?rid=xxx&email=xxx"
 }
 ```
 

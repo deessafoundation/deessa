@@ -1,5 +1,5 @@
 -- ============================================================
--- DEESSA Foundation — Seed Default Form Schema (Version 1)
+-- deessa Foundation — Seed Default Form Schema (Version 1)
 -- Run AFTER 040-conference-form-schema.sql
 --
 -- Creates the initial form schema that exactly mirrors the
@@ -31,7 +31,7 @@ BEGIN
   IF v_event_id IS NULL THEN
     INSERT INTO events (title, slug, description, event_date, location, category, type, is_published)
     VALUES (
-      'DEESSA National Conference 2026',
+      'deessa National Conference 2026',
       'deessa-national-conference-2026',
       'Three days of innovation, connection, and hands-on learning.',
       '2026-10-15',
@@ -97,7 +97,7 @@ BEGIN
             'id', 'organization',
             'type', 'text',
             'label', 'Organization',
-            'placeholder', 'e.g. DEESSA Inc.',
+            'placeholder', 'e.g. deessa Inc.',
             'required', false,
             'storage', 'core',
             'coreColumn', 'organization',

@@ -1,7 +1,7 @@
 ---
 title: "Stripe Payment Intent Enhancement - Verification Checklist"
 description: "- Migration files exist:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin

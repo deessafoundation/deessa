@@ -1,7 +1,7 @@
 ---
 title: "Testimonials Image Upload Feature"
 description: "The testimonials manager now supports dual input methods for profile images: URL input and direct file upload with pr..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

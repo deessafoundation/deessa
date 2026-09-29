@@ -1,7 +1,7 @@
 ---
 title: "Payment Reconciliation System"
 description: "The reconciliation system automatically checks and resolves stuck/pending donations by verifying their status with pa..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 - Deployment Guide"
 description: "This guide provides step-by-step instructions for deploying the Payment Architecture V2 system to staging and product..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin

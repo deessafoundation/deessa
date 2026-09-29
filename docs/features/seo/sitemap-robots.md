@@ -1,7 +1,7 @@
 ---
 title: "SEO: Sitemap & Robots.txt Implementation Summary"
-description: "This document summarizes the dynamic sitemap and robots.txt implementation for the Deessa Foundation website, serving..."
-owner: "Deessa Team"
+description: "This document summarizes the dynamic sitemap and robots.txt implementation for the deessa Foundation website, serving..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Implementation Overview
 
-This document summarizes the dynamic sitemap and robots.txt implementation for the Deessa Foundation website, serving both public marketing content and an admin panel from a single domain.
+This document summarizes the dynamic sitemap and robots.txt implementation for the deessa Foundation website, serving both public marketing content and an admin panel from a single domain.
 
 ## Files Created/Modified
 

@@ -339,7 +339,7 @@ return (
 ### Storage Location
 ```typescript
 // localStorage key
-const key = 'deesha-a11y-preferences'
+const key = 'deessa-a11y-preferences'
 
 // Stored data structure
 {

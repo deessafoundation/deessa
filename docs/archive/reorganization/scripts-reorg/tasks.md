@@ -1,7 +1,7 @@
 ---
 title: "Scripts Folder Reorganization Plan"
 description: " Status: Planning only â€” no files moved or renamed yet."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin

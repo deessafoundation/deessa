@@ -1,7 +1,7 @@
 ---
 title: "Admin - Settings API"
 description: "| Method | Endpoint | Description |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin
@@ -141,7 +141,7 @@ Authorization: Bearer <token>
 {
   "success": true,
   "data": {
-    "hero_title": "Deessa Foundation",
+    "hero_title": "deessa Foundation",
     "hero_subtitle": "Empowering communities",
     "sections": [
       {

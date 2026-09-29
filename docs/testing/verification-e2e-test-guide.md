@@ -1,7 +1,7 @@
 ---
 title: "Verification System End-to-End Test Guide"
 description: "This guide provides step-by-step instructions for testing the complete verification system from receipt generation to..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: reference
 audience: admin

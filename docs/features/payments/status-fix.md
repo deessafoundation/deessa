@@ -1,7 +1,7 @@
 ---
 title: "Payment Status Update Fix"
 description: "After successful Stripe payments, donation status remained \"pending\" instead of updating to \"completed\"."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

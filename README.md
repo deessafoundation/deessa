@@ -376,7 +376,7 @@ When reviewing PRs:
 |-------------|-----|---------|---------|
 | **Development** | `localhost:3000` | Manual | Local development |
 | **Preview** | `*.vercel.app` | Every PR | Testing before merge |
-| **Production** | `deessa.org` | Merge to `main` | Live website |
+| **Production** | `deessafoundation.com` | Merge to `main` | Live website |
 
 ## 🤝 Contributing
 

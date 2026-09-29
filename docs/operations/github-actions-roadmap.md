@@ -1,7 +1,7 @@
 ---
 title: "GitHub Actions Roadmap"
 description: " Purpose: document the current workflows, the gaps we want to close, and the rollout plan before we make the workflow..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: operator

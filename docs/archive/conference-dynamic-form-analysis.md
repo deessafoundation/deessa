@@ -1,7 +1,7 @@
 ---
 title: "Conference Dynamic Form System - Analysis & Proposal"
 description: "Located at: /conference/register"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin

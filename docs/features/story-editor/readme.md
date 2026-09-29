@@ -1,7 +1,7 @@
 ---
 title: "Story Editor Modernization â€” Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -17,7 +17,7 @@ last_updated: 2026-09-12
 
 ## ðŸ“š Documentation Index
 
-This comprehensive documentation suite covers the DEESSA Foundation Story Editor Modernization from user guides to technical implementation details.
+This comprehensive documentation suite covers the deessa Foundation Story Editor Modernization from user guides to technical implementation details.
 
 ### Quick Navigation by Role
 
@@ -92,7 +92,7 @@ This comprehensive documentation suite covers the DEESSA Foundation Story Editor
 ### For New Content Editors
 
 1. Read [Admin User Guide](admin-user-guide.md) sections 1-3
-2. Log in to admin panel: `https://deessa.org/admin/stories`
+2. Log in to admin panel: `https://deessafoundation.com/admin/stories`
 3. Click "Add Story" to create your first story
 4. Practice using formatting toolbar
 5. Try uploading an image
@@ -220,7 +220,7 @@ This comprehensive documentation suite covers the DEESSA Foundation Story Editor
 ## ðŸ“ž Support & Contact
 
 ### For User Issues
-- **Admin Support**: Contact DEESSA Foundation IT team
+- **Admin Support**: Contact deessa Foundation IT team
 - **Content Questions**: Contact editorial team lead
 
 ### For Technical Issues
@@ -237,11 +237,11 @@ This comprehensive documentation suite covers the DEESSA Foundation Story Editor
 
 ## ðŸ“„ License & Copyright
 
-**System**: Developed for DEESSA Foundation  
-**Documentation**: Â© 2026 DEESSA Foundation  
+**System**: Developed for deessa Foundation  
+**Documentation**: Â© 2026 deessa Foundation  
 **Maintainer**: Development Partner
 
-This documentation is proprietary to DEESSA Foundation. Do not distribute without permission.
+This documentation is proprietary to deessa Foundation. Do not distribute without permission.
 
 ---
 

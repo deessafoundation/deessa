@@ -1,5 +1,5 @@
 -- ============================================================
--- DEESSA Foundation — Extend Payments Table for Event Registrations
+-- deessa Foundation — Extend Payments Table for Event Registrations
 -- Migration: 057-extend-payments-for-registrations.sql
 -- Run in Supabase SQL Editor. Safe to run multiple times (IF NOT EXISTS).
 -- ============================================================

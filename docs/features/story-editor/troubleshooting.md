@@ -1,7 +1,7 @@
 ---
 title: "Story Editor â€” Troubleshooting Guide"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -705,7 +705,7 @@ When reporting issues, include:
 ### 10.3 Contact Information
 
 **For urgent issues:**
-- Contact DEESSA Foundation IT team
+- Contact deessa Foundation IT team
 - Email: [IT support email]
 - Phone: [Support phone number]
 

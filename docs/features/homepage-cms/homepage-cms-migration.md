@@ -1,7 +1,7 @@
 ---
 title: "Homepage CMS Migration Guide"
 description: "This document tracks the migration of hard-coded homepage content into a CMS-managed system. The migration is designe..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

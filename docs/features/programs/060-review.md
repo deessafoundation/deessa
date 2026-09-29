@@ -313,7 +313,7 @@ Public sees new content
   short_description: 'Supporting children...',
   tags: ['autism', 'communication'],
   status: 'published',
-  meta_title: 'AAC Support | DEESSA'
+  meta_title: 'AAC Support | deessa'
 }
 ```
 

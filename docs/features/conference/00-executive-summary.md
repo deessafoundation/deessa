@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Executive Summary"
+title: "deessa Foundation â€” Conference Module: Executive Summary"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Executive Summary
+# deessa Foundation â€” Conference Module: Executive Summary
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -18,7 +18,7 @@ last_updated: 2026-09-12
 
 ## What This System Does
 
-The DEESSA Foundation Conference Management System is a complete digital solution for managing event registrations, payments, and attendee communications. It allows the organization to:
+The deessa Foundation Conference Management System is a complete digital solution for managing event registrations, payments, and attendee communications. It allows the organization to:
 
 - **Accept registrations** for conferences through a user-friendly online form
 - **Collect payments** from attendees across multiple payment methods (credit cards internationally, Khalti and eSewa within Nepal)
@@ -39,7 +39,7 @@ The DEESSA Foundation Conference Management System is a complete digital solutio
 - Clear expiry timelines for payment completion
 - Ability to register for in-person or virtual attendance
 
-### For DEESSA Foundation Staff
+### For deessa Foundation Staff
 
 - Complete visibility into all registrations
 - Dashboard showing registration statistics and payment status
@@ -188,16 +188,16 @@ The system is designed for **content control** by staff and **technical control*
 
 | Responsibility                 | Owner                                                 |
 | ------------------------------ | ----------------------------------------------------- |
-| **Event Configuration**        | DEESSA Program Staff                                  |
-| **Registration Monitoring**    | DEESSA Program Staff                                  |
-| **Payment Verification**       | DEESSA Finance Team                                   |
-| **Attendee Communication**     | DEESSA Program Staff                                  |
+| **Event Configuration**        | deessa Program Staff                                  |
+| **Registration Monitoring**    | deessa Program Staff                                  |
+| **Payment Verification**       | deessa Finance Team                                   |
+| **Attendee Communication**     | deessa Program Staff                                  |
 | **System Hosting & Uptime**    | Vercel (third-party provider)                         |
 | **Database Backups**           | Supabase (third-party provider)                       |
-| **Payment Gateway Accounts**   | DEESSA Foundation (owns Stripe/Khalti/eSewa accounts) |
+| **Payment Gateway Accounts**   | deessa Foundation (owns Stripe/Khalti/eSewa accounts) |
 | **Code Maintenance & Updates** | Development Partner / IT Consultant                   |
-| **Security & Access Control**  | Development Partner + DEESSA IT Admin                 |
-| **Email Service**              | Google Workspace (DEESSA-owned account)               |
+| **Security & Access Control**  | Development Partner + deessa IT Admin                 |
+| **Email Service**              | Google Workspace (deessa-owned account)               |
 
 ---
 
@@ -245,7 +245,7 @@ This system is:
 - No built-in waitlist feature for sold-out events
 - System designed for one conference at a time (can be adapted for multiple events)
 
-These limitations are **intentional design choices** that simplify the system for DEESSA's core use case. All can be added in future phases if needed.
+These limitations are **intentional design choices** that simplify the system for deessa's core use case. All can be added in future phases if needed.
 
 ---
 
@@ -358,7 +358,7 @@ These limitations are **intentional design choices** that simplify the system fo
 
 ## Conclusion
 
-The DEESSA Foundation Conference Management System transforms event registration from a labor-intensive manual process into a streamlined, automated workflow. It reduces administrative burden, provides real-time financial tracking, and creates a professional attendee experience.
+The deessa Foundation Conference Management System transforms event registration from a labor-intensive manual process into a streamlined, automated workflow. It reduces administrative burden, provides real-time financial tracking, and creates a professional attendee experience.
 
 **The system is production-ready, secure, and designed for operational independence** - allowing program staff to run successful events without technical expertise, while maintaining complete transparency and control.
 
@@ -371,7 +371,7 @@ For detailed technical information, see the companion technical documentation fi
 - **Maintained by**: Development Partner
 - **Review frequency**: After each major conference or system update
 - **Next review**: After May 2026 Annual Conference
-- **Questions**: Contact DEESSA IT Coordinator or Development Partner
+- **Questions**: Contact deessa IT Coordinator or Development Partner
 
 ---
 

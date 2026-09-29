@@ -1,7 +1,7 @@
 ---
 title: "ðŸ—„ï¸ Database Migration Guide"
 description: "Before using the new Homepage Content Management System, you MUST run this database migration."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin
@@ -21,7 +21,7 @@ Before using the new Homepage Content Management System, you **MUST** run this d
 
 1. **Open Supabase Dashboard**
    - Go to: <https://supabase.com/dashboard>
-   - Select your project: "Deessa Foundation"
+   - Select your project: "deessa Foundation"
 
 2. **Open SQL Editor**
    - Click "SQL Editor" in the left sidebar
@@ -58,7 +58,7 @@ supabase login
 
 ```bash
 # From project root directory
-cd "d:\Web Codes\Projects\Deessa Foundation"
+cd "d:\Web Codes\Projects\deessa Foundation"
 
 # Link to your project (first time only)
 supabase link --project-ref YOUR_PROJECT_REF

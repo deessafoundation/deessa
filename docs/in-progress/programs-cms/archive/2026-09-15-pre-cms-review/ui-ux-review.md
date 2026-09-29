@@ -6,7 +6,7 @@ Reviewed September 14, 2026. Scope: the Service and Campaign static demos, their
 
 The user confirmed that all prototype content is dummy content drawn from the planning documents. Dates, figures, testimonials and program wording are not being proposed as publishable facts. The content-accuracy observations below are future publishing considerations, not blockers or priorities for this design phase. The initial review placed too much emphasis on them.
 
-The current objective is to establish four distinct category templates on a shared DEESSA foundation. Evaluate visual hierarchy, composition, section treatments, responsive behavior and visitor journeys with sample content. Service and Campaign are the first two experiments; Outreach and Research remain part of the intended system.
+The current objective is to establish four distinct category templates on a shared deessa foundation. Evaluate visual hierarchy, composition, section treatments, responsive behavior and visitor journeys with sample content. Service and Campaign are the first two experiments; Outreach and Research remain part of the intended system.
 
 | Category | Intended visitor experience | Distinct composition |
 | --- | --- | --- |

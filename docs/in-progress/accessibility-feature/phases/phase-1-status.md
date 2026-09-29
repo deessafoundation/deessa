@@ -358,7 +358,7 @@ All changes compile work as expected**
 - [ ] Test with V1 data (migration)
 
 ### V2 Schema Verification:
-- localStorage key: `deesha-a11y-preferences`
+- localStorage key: `deessa-a11y-preferences`
 - `version: 2` (integer, not string)
 - `fontFamily: 'default' | 'system' | 'opendyslexic'` (no `dyslexiaFont`)
 - Text scale: 1.0-2.0 range

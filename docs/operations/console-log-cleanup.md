@@ -1,7 +1,7 @@
 ---
 title: "Console Log Cleanup Summary"
 description: "Cleaned up unnecessary console logs in the Stripe webhook handler while keeping essential logging for production moni..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer

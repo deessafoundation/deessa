@@ -1,7 +1,7 @@
 ---
 title: "Transaction Detail Page - User Guide"
 description: "1. Getting Startedgetting-started"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

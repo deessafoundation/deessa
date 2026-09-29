@@ -1,7 +1,7 @@
 ---
 title: "Documentation Architecture â€” Complete Rewrite"
 description: " Status: Planning only â€” no files moved or renamed yet."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -756,7 +756,7 @@ Every folder with 3+ documents gets a `README.md` that serves as a local index. 
 ```markdown
 # Documentation
 
-> Deessa Foundation â€” Technical Documentation
+> deessa Foundation â€” Technical Documentation
 
 ## Quick Links
 

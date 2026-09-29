@@ -1,7 +1,7 @@
 ---
 title: "Payment System: Stripe Webhook Fix & PAYMENT_MODE Removal"
 description: " Date: 2026-03-07"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: planning
 category: planning
 audience: admin

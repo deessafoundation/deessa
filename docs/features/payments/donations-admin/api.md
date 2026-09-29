@@ -1,7 +1,7 @@
 ---
 title: "Transaction Detail API Documentation"
 description: "This document describes the server actions available for the Transaction Detail page. All actions require authenticat..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

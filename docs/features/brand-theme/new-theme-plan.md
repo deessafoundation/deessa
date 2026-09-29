@@ -1,7 +1,7 @@
 ---
 title: "deessa Foundation - New Brand Theme Implementation Plan"
 description: "From: Red-based theme EA2A33"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

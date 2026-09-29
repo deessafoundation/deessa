@@ -1,7 +1,7 @@
 ---
 title: "Fix Sitemap Domain in Vercel Production"
 description: "Google Search Console shows this error when submitting the sitemap:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer

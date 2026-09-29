@@ -1,7 +1,7 @@
 ---
 title: "Homepage CMS - Quick Reference Guide"
 description: "Documentation for homepage cms - quick reference guide"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

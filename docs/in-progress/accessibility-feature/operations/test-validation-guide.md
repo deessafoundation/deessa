@@ -9,7 +9,7 @@
 
 ## Document Purpose
 
-This guide provides step-by-step test scenarios for validating the Deesha Foundation accessibility features. It covers:
+This guide provides step-by-step test scenarios for validating the deessa Foundation accessibility features. It covers:
 - Manual testing procedures
 - Automated testing recommendations
 - Acceptance criteria for each feature
@@ -67,14 +67,14 @@ https://[preview-url].vercel.app
 
 **Production (when deployed):**
 ```
-https://deeshafoundation.org
+https://deessafoundation.com
 ```
 
 ### 1.3 Test Data Preparation
 
 **localStorage Key:**
 ```
-deesha-a11y-preferences
+deessa-a11y-preferences
 ```
 
 **Test Preference JSON:**
@@ -94,7 +94,7 @@ deesha-a11y-preferences
 **Reset State:**
 ```javascript
 // In browser console
-localStorage.removeItem('deesha-a11y-preferences')
+localStorage.removeItem('deessa-a11y-preferences')
 location.reload()
 ```
 

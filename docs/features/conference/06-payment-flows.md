@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Payment Flows & State Machines"
+title: "deessa Foundation â€” Conference Module: Payment Flows & State Machines"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Payment Flows & State Machines
+# deessa Foundation â€” Conference Module: Payment Flows & State Machines
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -569,7 +569,7 @@ return { redirectUrl: session.url, requiresFormSubmit: false };
 **Step 5: Stripe Redirects Back**
 
 ```
-https://deessa.org/conference/register/payment-success?rid=abc&session_id=cs_live_123
+https://deessafoundation.com/conference/register/payment-success?rid=abc&session_id=cs_live_123
 ```
 
 **Step 6: Direct Verification**
@@ -648,7 +648,7 @@ return { redirectUrl: data.payment_url, requiresFormSubmit: false };
 **Step 4: Khalti Redirects Back**
 
 ```
-https://deessa.org/conference/register/payment-success?rid=abc&pidx=kdZJqDr...
+https://deessafoundation.com/conference/register/payment-success?rid=abc&pidx=kdZJqDr...
 ```
 
 **Step 5: Direct Verification (Lookup)**

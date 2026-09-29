@@ -1,7 +1,7 @@
 ---
 title: "Events Module â€” Payment Integration Plan"
 description: " Status: Approved, pending implementation"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -242,8 +242,8 @@ Copy from `conference/register/payment-options/page.tsx`, adapt:
 | Back link | `/conference` | `/events/${slug}` |
 | Resend email API | `/api/conference/resend-payment-link` | `/api/events/resend-payment-link` |
 | Pending payment URL | `/conference/register/pending-payment?...` | `/events/${slug}/register/pending-payment?...` |
-| Event name | Hardcoded "DEESSA National Conference 2026" | Dynamic from `eventName` search param |
-| Short ID format | `DEESSA-2026-{rid.slice(0,6)}` | `{eventName} - {rid.slice(0,6)}` |
+| Event name | Hardcoded "deessa National Conference 2026" | Dynamic from `eventName` search param |
+| Short ID format | `deessa-2026-{rid.slice(0,6)}` | `{eventName} - {rid.slice(0,6)}` |
 
 ### 5b. `events/[slug]/register/pending-payment/page.tsx` (REWRITE)
 
@@ -269,7 +269,7 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 | Status polling API | `/api/conference/status` | `/api/events/status` |
 | Back link | `/conference` | `/events/${slug}` |
 | Confirmation display | `attendanceMode` | `eventName` + `ticketName` |
-| Registration ID format | `DEESSA-2026-{rid.slice(0,6)}` | Dynamic event prefix |
+| Registration ID format | `deessa-2026-{rid.slice(0,6)}` | Dynamic event prefix |
 
 ### 5d. `events/[slug]/register/failure/page.tsx` (MINOR EDIT)
 
@@ -358,7 +358,7 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 |--------|-----------|--------|
 | Table | `conference_registrations` | `event_registrations` |
 | Fee source | `getConferenceSettings()` â†’ `registrationFeeByMode` | `event_ticket_types.price` (already in `payment_amount`) |
-| Name format | `DEESSA-2026-{rid.slice(0,6)}` | Dynamic from event title |
+| Name format | `deessa-2026-{rid.slice(0,6)}` | Dynamic from event title |
 | URL pattern | `/conference/register/...` | `/events/[slug]/register/...` |
 | Metadata key | `conference_registration_id` | `event_registration_id` |
 | Webhook function | `confirmConferenceRegistrationFromWebhook()` | `confirmEventRegistrationFromWebhook()` |

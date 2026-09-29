@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Technical Overview"
+title: "deessa Foundation â€” Conference Module: Technical Overview"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Technical Overview
+# deessa Foundation â€” Conference Module: Technical Overview
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  

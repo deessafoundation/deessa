@@ -1,7 +1,7 @@
 ---
 title: "Stripe Payment Intent ID - Professional Solution with Database Migration"
 description: "Problem: Current system stores Stripe Checkout Session IDs instead of Payment Intent IDs, limiting financial operatio..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

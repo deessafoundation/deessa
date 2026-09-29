@@ -1,7 +1,7 @@
 ---
 title: "V2 PaymentService Events Integration — Implementation Checklist"
 description: "This checklist tracks the complete implementation of V2 PaymentService for event registrations."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

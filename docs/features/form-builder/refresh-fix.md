@@ -1,7 +1,7 @@
 ---
 title: "Form Builder Refresh Fix - Complete Solution"
 description: "When admins applied a template, made changes, saved as draft, and refreshed the page â€” the form builder reverted to..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

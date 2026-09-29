@@ -1,7 +1,7 @@
 ---
 title: "Receipt Access Control Implementation Summary"
 description: "This document summarizes the implementation of Task 14 - Receipt Access Control from the Payment Architecture V2 spec..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

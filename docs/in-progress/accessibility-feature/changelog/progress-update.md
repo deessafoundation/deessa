@@ -237,7 +237,7 @@ import { FormField, TextareaField } from "@/components/form"
 
 ## 📞 Support Info
 
-**Storage Key:** `deesha-a11y-preferences`  
+**Storage Key:** `deessa-a11y-preferences`  
 **Schema Version:** 2 (integer)  
 **Build Command:** `pnpm build`  
 **Test Command:** `pnpm dev` then manual testing

@@ -1,7 +1,7 @@
 ---
 title: "Toast Notification System - Integration Complete âœ…"
 description: "The notification system has been successfully integrated into the deessa Foundation project"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

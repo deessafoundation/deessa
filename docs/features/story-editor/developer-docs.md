@@ -1,7 +1,7 @@
 ---
 title: "Story Editor â€” Developer Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

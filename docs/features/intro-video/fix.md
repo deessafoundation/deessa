@@ -1,7 +1,7 @@
 ---
 title: "Intro Video Component - Bug Fixes"
 description: "The intro video component had several critical issues preventing proper functionality, especially on mobile devices:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer

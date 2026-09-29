@@ -1,7 +1,7 @@
 ---
 title: "ðŸš€ Quick Integration Guide - Adding More CMS Sections"
 description: "Follow this 3-step pattern to integrate any section that already has a CMS loader:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

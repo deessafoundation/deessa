@@ -94,7 +94,7 @@ VALUES (
           {"id": "full_name", "type": "text", "label": "Full Name", "placeholder": "e.g. Sarah Johnson", "required": true, "storage": "core", "coreColumn": "full_name", "width": "full", "order": 0},
           {"id": "email", "type": "email", "label": "Email Address", "placeholder": "e.g. sarah@example.com", "required": true, "storage": "core", "coreColumn": "email", "width": "full", "order": 1},
           {"id": "phone", "type": "tel", "label": "Phone Number", "placeholder": "+1 (555) 000-0000", "required": false, "storage": "core", "coreColumn": "phone", "width": "half", "order": 2},
-          {"id": "organization", "type": "text", "label": "Organization", "placeholder": "e.g. DEESSA Inc.", "required": false, "storage": "core", "coreColumn": "organization", "width": "half", "order": 3}
+          {"id": "organization", "type": "text", "label": "Organization", "placeholder": "e.g. deessa Inc.", "required": false, "storage": "core", "coreColumn": "organization", "width": "half", "order": 3}
         ]
       },
       {

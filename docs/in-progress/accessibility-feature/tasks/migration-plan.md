@@ -85,7 +85,7 @@ interface StoredAccessibilityDataV2 {
 ```typescript
 function loadPreferences(): AccessibilityPreferencesV2 {
   try {
-    const stored = localStorage.getItem('deesha-a11y-preferences')
+    const stored = localStorage.getItem('deessa-a11y-preferences')
     if (!stored) {
       return DEFAULT_PREFERENCES_V2
     }
@@ -167,7 +167,7 @@ function savePreferences(prefs: AccessibilityPreferencesV2) {
     lastUpdated: new Date().toISOString(),
   }
   
-  localStorage.setItem('deesha-a11y-preferences', JSON.stringify(dataToStore))
+  localStorage.setItem('deessa-a11y-preferences', JSON.stringify(dataToStore))
   console.log('✅ Preferences saved as V2')
 }
 ```

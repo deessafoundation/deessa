@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document provides technical details about the accessibility feature implementation in the Deesha Foundation website. It covers architecture, code organization, integration patterns, and maintenance guidelines.
+This document provides technical details about the accessibility feature implementation in the deessa Foundation website. It covers architecture, code organization, integration patterns, and maintenance guidelines.
 
 ---
 
@@ -102,7 +102,7 @@ export const DEFAULT_ACCESSIBILITY_PREFERENCES: AccessibilityPreferences = {
 
 ```typescript
 export const STORAGE_CONFIG = {
-  KEY: 'deesha-a11y-preferences',
+  KEY: 'deessa-a11y-preferences',
   VERSION: 2,
   MAX_SIZE: 4096, // 4 KB limit
 } as const
@@ -397,7 +397,7 @@ export function validatePreferences(prefs: unknown): AccessibilityPreferences {
 
 describe('AccessibilityProvider', () => {
   it('loads preferences from localStorage', () => {
-    localStorage.setItem('deesha-a11y-preferences', JSON.stringify({
+    localStorage.setItem('deessa-a11y-preferences', JSON.stringify({
       version: 2,
       preferences: { textScale: 1.5, /* ... */ }
     }))
@@ -410,7 +410,7 @@ describe('AccessibilityProvider', () => {
   })
   
   it('migrates V1 to V2', () => {
-    localStorage.setItem('deesha-a11y-preferences', JSON.stringify({
+    localStorage.setItem('deessa-a11y-preferences', JSON.stringify({
       version: 1,
       preferences: { dyslexiaFont: true, /* ... */ }
     }))
@@ -601,7 +601,7 @@ export function migrateV2toV3(v2: PreferencesV2): PreferencesV3 {
 **Solution:** Check fallback to sessionStorage is working  
 **Debug:**
 ```javascript
-console.log(localStorage.getItem('deesha-a11y-preferences'))
+console.log(localStorage.getItem('deessa-a11y-preferences'))
 ```
 
 ---

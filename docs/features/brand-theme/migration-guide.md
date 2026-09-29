@@ -1,7 +1,7 @@
 ---
 title: "ðŸŽ¨ Theme Migration Quick Reference"
 description: "| Old Theme | New Theme | Purpose |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer

@@ -1,7 +1,7 @@
 ---
 title: "Homepage Manager - Toast Notification Fix âœ…"
 description: "The Homepage Manager had the following problems:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

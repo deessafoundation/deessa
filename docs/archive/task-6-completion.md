@@ -1,7 +1,7 @@
 ---
 title: "Task 6: Testimonials Image Upload - Completion Summary"
 description: "Successfully implemented dual input method URL + Upload for testimonial profile images in the Homepage Manager CMS wi..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin

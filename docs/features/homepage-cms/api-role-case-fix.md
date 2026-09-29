@@ -1,7 +1,7 @@
 ---
 title: "Homepage Settings API - Role Case Sensitivity Fix ✅"
 description: "The API was checking for lowercase role names, but the database stores UPPERCASE role names"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Event Management Module — Implementation Plan"
 description: " Goal: Build a professional, CMS-like event management system that allows admins to create, customize, and manage eve..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -1120,7 +1120,7 @@ Admin edits form → Save Draft / Publish
 
 ```
 Read docs/event-management-module/tasks.md in full before writing any code.
-It is the spec for a new "Events Module" feature for Deessa Foundation.
+It is the spec for a new "Events Module" feature for deessa Foundation.
 
 Section 2 lists files you must never modify — treat that as a hard constraint.
 Section 3 has the 7 decisions already approved — follow them.

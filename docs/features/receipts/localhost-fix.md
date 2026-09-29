@@ -1,7 +1,7 @@
 ---
 title: "URGENT FIX: Receipt URLs Using Localhost Instead of Production Domain"
 description: "Error: Failed to load resource: net::ERRBLOCKEDBYCLIENT"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Event Management Module"
 description: "Status: Production Ready"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -65,7 +65,7 @@ npm run dev
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    DEESSA Foundation Platform                │
+│                    deessa Foundation Platform                │
 │                                                              │
 │  ┌──────────────────────┐      ┌──────────────────────┐    │
 │  │  Conference System   │      │  Event Management    │    │

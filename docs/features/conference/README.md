@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module Documentation"
+title: "deessa Foundation â€” Conference Module Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module Documentation
+# deessa Foundation â€” Conference Module Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -17,7 +17,7 @@ last_updated: 2026-09-12
 
 ## ðŸ“š Documentation Index
 
-This comprehensive documentation suite covers the DEESSA Foundation Conference Registration & Payment System from executive overview to technical implementation details.
+This comprehensive documentation suite covers the deessa Foundation Conference Registration & Payment System from executive overview to technical implementation details.
 
 ### Quick Navigation by Role
 
@@ -277,7 +277,7 @@ This comprehensive documentation suite covers the DEESSA Foundation Conference R
 
 1. Read [00: Executive Summary](00-executive-summary.md) for system overview
 2. Read [07: Admin Documentation](07-admin-documentation.md) for admin features
-3. Log in to admin dashboard: `https://deessa.org/admin/conference`
+3. Log in to admin dashboard: `https://deessafoundation.com/admin/conference`
 4. Practice on test registration (create test entry first)
 5. Bookmark common workflows (confirm payment, export CSV, send email)
 
@@ -467,7 +467,7 @@ Content...
 
 ### For Technical Issues
 
-- **Developer Support**: Contact development partner via DEESSA Foundation
+- **Developer Support**: Contact development partner via deessa Foundation
 - **Hosting Issues**: [Vercel Support](https://vercel.com/support)
 - **Database Issues**: [Supabase Support](https://supabase.com/support)
 - **Payment Issues**: Stripe/Khalti/eSewa merchant support
@@ -482,11 +482,11 @@ Content...
 
 ## ðŸ“„ License & Copyright
 
-**System**: Developed for DEESSA Foundation  
-**Documentation**: Â© 2026 DEESSA Foundation  
+**System**: Developed for deessa Foundation  
+**Documentation**: Â© 2026 deessa Foundation  
 **Maintainer**: Development Partner
 
-This documentation is proprietary to DEESSA Foundation. Do not distribute without permission.
+This documentation is proprietary to deessa Foundation. Do not distribute without permission.
 
 ---
 
@@ -494,7 +494,7 @@ This documentation is proprietary to DEESSA Foundation. Do not distribute withou
 
 Special thanks to:
 
-- DEESSA Foundation program team for requirements and testing
+- deessa Foundation program team for requirements and testing
 - Finance team for payment gateway setup
 - Open-source community (Next.js, Supabase, Stripe, Tailwind CSS)
 

@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Architecture & System Responsibilities"
+title: "deessa Foundation â€” Conference Module: Architecture & System Responsibilities"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Architecture & System Responsibilities
+# deessa Foundation â€” Conference Module: Architecture & System Responsibilities
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -295,21 +295,21 @@ Indexes:
 
 | Component                             | Owner                               | Responsibility                               | Access Level                             |
 | ------------------------------------- | ----------------------------------- | -------------------------------------------- | ---------------------------------------- |
-| **Conference Settings Configuration** | DEESSA Program Staff                | Update event details, pricing, emails        | Admin dashboard                          |
-| **Registration Approval**             | DEESSA Program Staff                | Confirm, cancel, extend expiry               | Admin dashboard                          |
-| **Payment Verification**              | DEESSA Finance Team                 | Review flagged payments, reconcile           | Admin dashboard                          |
-| **CSV Data Export**                   | DEESSA Program/Finance              | Download for reporting                       | Admin dashboard                          |
-| **Attendee Support**                  | DEESSA Program Staff                | Answer questions, resend links               | Admin dashboard                          |
+| **Conference Settings Configuration** | deessa Program Staff                | Update event details, pricing, emails        | Admin dashboard                          |
+| **Registration Approval**             | deessa Program Staff                | Confirm, cancel, extend expiry               | Admin dashboard                          |
+| **Payment Verification**              | deessa Finance Team                 | Review flagged payments, reconcile           | Admin dashboard                          |
+| **CSV Data Export**                   | deessa Program/Finance              | Download for reporting                       | Admin dashboard                          |
+| **Attendee Support**                  | deessa Program Staff                | Answer questions, resend links               | Admin dashboard                          |
 | **Code & Features**                   | Development Partner                 | Implement new features, fix bugs             | Git repository, production deploy access |
 | **Database Management**               | Development Partner                 | Schema changes, migrations, backups          | Supabase project admin                   |
 | **Hosting & Uptime**                  | Vercel (Third-Party SaaS)           | Server availability, scaling, edge network   | Vercel account owner                     |
 | **Database Hosting**                  | Supabase (Third-Party SaaS)         | Database availability, backups, replication  | Supabase project owner                   |
 | **Email Delivery**                    | Google Workspace (Third-Party SaaS) | SMTP relay, anti-spam, delivery              | Google Workspace admin                   |
-| **Payment Processing**                | Stripe/Khalti/eSewa                 | Gateway uptime, fraud detection, settlements | Gateway account owner (DEESSA)           |
+| **Payment Processing**                | Stripe/Khalti/eSewa                 | Gateway uptime, fraud detection, settlements | Gateway account owner (deessa)           |
 | **Security Monitoring**               | Development Partner                 | Vulnerability scanning, dependency updates   | Git repo, CI/CD                          |
-| **Access Control**                    | DEESSA IT Admin                     | Add/remove admin users, manage permissions   | Supabase Auth dashboard                  |
+| **Access Control**                    | deessa IT Admin                     | Add/remove admin users, manage permissions   | Supabase Auth dashboard                  |
 
-### 3.2 What DEESSA Controls Directly
+### 3.2 What deessa Controls Directly
 
 **Through Admin Dashboard** (No Developer Needed):
 
@@ -328,7 +328,7 @@ Indexes:
 - âœ… Custom email sends to individual registrants
 - âœ… CSV export
 
-**DEESSA Does NOT Control** (Requires Developer):
+**deessa Does NOT Control** (Requires Developer):
 
 - âŒ Adding new payment gateways
 - âŒ Changing registration form fields
@@ -728,7 +728,7 @@ const transporter = nodemailer.createTransport({
 ```typescript
 await transporter
   .sendMail({
-    from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+    from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
     to: email,
     subject: "...",
     html: "...",

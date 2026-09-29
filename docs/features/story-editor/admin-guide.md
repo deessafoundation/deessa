@@ -1,7 +1,7 @@
 ---
 title: "Story Editor â€” Admin User Guide"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -35,7 +35,7 @@ last_updated: 2026-09-12
 
 ### 1.1 Accessing the Story Editor
 
-1. Log in to the admin panel at `https://deessa.org/admin`
+1. Log in to the admin panel at `https://deessafoundation.com/admin`
 2. Navigate to **Stories** in the sidebar
 3. Click **Add Story** to create a new story, or click **Edit** on an existing story
 

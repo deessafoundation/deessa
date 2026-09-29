@@ -1,17 +1,17 @@
 ---
-title: "SEO Implementation Guide - Deessa Foundation Website"
-description: "This guide documents the SEO improvements implemented for the Deessa Foundation website, following Google's SEO Start..."
-owner: "Deessa Team"
+title: "SEO Implementation Guide - deessa Foundation Website"
+description: "This guide documents the SEO improvements implemented for the deessa Foundation website, following Google's SEO Start..."
+owner: "deessa Team"
 status: active
 category: standards
 audience: admin
 last_updated: 2026-09-12
 ---
-# SEO Implementation Guide - Deessa Foundation Website
+# SEO Implementation Guide - deessa Foundation Website
 
 ## Overview
 
-This guide documents the SEO improvements implemented for the Deessa Foundation website, following Google's SEO Starter Guide best practices. The implementation focuses on making the site more discoverable, understandable, and valuable to both users and search engines.
+This guide documents the SEO improvements implemented for the deessa Foundation website, following Google's SEO Starter Guide best practices. The implementation focuses on making the site more discoverable, understandable, and valuable to both users and search engines.
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ Defines the organization's basic information, contact points, and social media p
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Deessa Foundation",
+  "name": "deessa Foundation",
   "url": "https://deessafoundation.com",
   "logo": "https://deessafoundation.com/favicon.png",
   "description": "A non-profit organization dedicated to...",
@@ -92,7 +92,7 @@ const structuredData = getArticleStructuredData({
 
 #### Title Tags
 - **Length**: 50-60 characters (including site name)
-- **Format**: `Page Title | Deessa Foundation`
+- **Format**: `Page Title | deessa Foundation`
 - **Guidelines**:
   - Be descriptive and concise
   - Include primary keyword naturally

@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Appendix & Reference"
+title: "deessa Foundation â€” Conference Module: Appendix & Reference"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Appendix & Reference
+# deessa Foundation â€” Conference Module: Appendix & Reference
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -86,7 +86,7 @@ Third-party service that processes online payments (Stripe, Khalti, eSewa). Hand
 Same as Payment Gateway. Service that facilitates money transfer from user to merchant.
 
 **PCI Compliance**  
-Payment Card Industry security standard. Ensures card data is handled securely. (DEESSA does NOT store card data locally.)
+Payment Card Industry security standard. Ensures card data is handled securely. (deessa does NOT store card data locally.)
 
 **Polling**  
 Repeatedly checking status by making API requests at intervals (e.g., every 5 seconds for 90 seconds).
@@ -274,7 +274,7 @@ TypeScript-first schema validation library. Used to validate user input before p
 **Contributors**:
 
 - Architecture & Implementation: Development Partner
-- Requirements & Testing: DEESSA Program Team
+- Requirements & Testing: deessa Program Team
 - Payment Gateway Setup: Finance Team
 
 ---
@@ -437,9 +437,9 @@ cancelled   expired       (final state)
 
 **Lead Developer**: Development Partner  
 **Role**: System architecture, implementation, documentation  
-**Contact**: [via DEESSA Foundation]
+**Contact**: [via deessa Foundation]
 
-**DEESSA Foundation Team**:
+**deessa Foundation Team**:
 
 - **Program Manager**: Requirements, user acceptance testing
 - **Finance Officer**: Payment gateway setup, reconciliation

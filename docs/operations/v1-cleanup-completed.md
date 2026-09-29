@@ -1,7 +1,7 @@
 ---
 title: "V1 Code Cleanup - Completion Report"
 description: "Date: 2026-03-06"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer
