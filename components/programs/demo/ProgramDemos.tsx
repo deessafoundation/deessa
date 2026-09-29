@@ -32,7 +32,7 @@ import { CampaignConcept } from "./CampaignConcept"
 
 const photos = {
   children: "/twins-together.jpg",
-  family: "/deesa-resources/IMG_8102.JPG",
+  family: "/deessa-resources/IMG_8102.JPG",
   community: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&q=85",
   learning: "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1200&q=85",
   hands: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1800&q=85",

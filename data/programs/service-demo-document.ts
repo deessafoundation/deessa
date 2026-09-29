@@ -2,7 +2,7 @@ import type { ProgramDocument } from '@/lib/programs/content'
 import { serviceSupport, serviceSteps, serviceFaqs } from '@/components/programs/demo/demo-content'
 
 const children = { url: '/twins-together.jpg', alt: 'Two children sharing a moment outdoors; illustrative photograph' }
-const family = { url: '/deesa-resources/IMG_8102.JPG', alt: 'Two children together near bookshelves; illustrative photograph' }
+const family = { url: '/deessa-resources/IMG_8102.JPG', alt: 'Two children together near bookshelves; illustrative photograph' }
 
 export const serviceDemoDocument: ProgramDocument = {
   schemaVersion: 1, category: 'service', title: 'AAC Support Services', eyebrow: 'SERVICES & PROGRAMS',

@@ -170,7 +170,7 @@ begin
             "role": "Illustrative story",
             "location": "Lalitpur",
             "image": {
-              "url": "/deesa-resources/IMG_8102.JPG",
+              "url": "/deessa-resources/IMG_8102.JPG",
               "alt": "Two children together near bookshelves; illustrative photograph"
             },
             "stats": [
@@ -274,7 +274,7 @@ begin
                 "caption": "A moment of connection."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Learning alongside each other."
               },
@@ -284,7 +284,7 @@ begin
                 "caption": "Every expression matters."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Small steps, together."
               }
@@ -408,7 +408,7 @@ begin
                 "caption": "Space for curiosity. Space for questions."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Connection is where understanding begins."
               }
@@ -501,7 +501,7 @@ begin
                 "caption": "Working things out together."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Taking the idea home."
               }
@@ -728,7 +728,7 @@ begin
                 "caption": "Feedback belongs in the room."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Design follows real life."
               }
@@ -871,7 +871,7 @@ begin
             "description": "At a community session, a parent tries a picture board for the first time. A small choice becomes a conversation, and a new possibility to take home.",
             "person": "Illustrative family story and quote",
             "image": {
-              "url": "/deesa-resources/IMG_8102.JPG",
+              "url": "/deessa-resources/IMG_8102.JPG",
               "alt": "Two children together near bookshelves; illustrative photograph",
               "caption": "THE PEOPLE BEHIND THE PROGRESS"
             },
@@ -919,7 +919,7 @@ begin
                 "caption": "Connection begins with being together."
               },
               {
-                "url": "/deesa-resources/IMG_8102.JPG",
+                "url": "/deessa-resources/IMG_8102.JPG",
                 "alt": "Two children together near bookshelves; illustrative photograph",
                 "caption": "Everyday moments. New possibilities."
               },

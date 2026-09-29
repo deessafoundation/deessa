@@ -107,7 +107,7 @@ export default function PressPage() {
                 Social Welfare Council registration certificate - Official NGO registration in Nepal.
               </p>
               <Button asChild variant="outline" className="w-full">
-                <a href="/deesa-resources/SWC.jpg" download>
+                <a href="/deessa-resources/SWC.jpg" download>
                   <Download className="size-4 mr-2" />
                   Download Certificate
                 </a>
@@ -128,7 +128,7 @@ export default function PressPage() {
                 Permanent Account Number certificate - Tax registration documentation.
               </p>
               <Button asChild variant="outline" className="w-full">
-                <a href="/deesa-resources/PAN.pdf" download>
+                <a href="/deessa-resources/PAN.pdf" download>
                   <Download className="size-4 mr-2" />
                   Download PAN
                 </a>

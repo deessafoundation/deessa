@@ -36,9 +36,9 @@ const footerLinks = {
   ],
   resources: [
     { label: "Accessibility", href: "#accessibility", icon: Accessibility, isAccessibility: true },
-    { label: "Brand Guidelines", href: "/deesa-resources/Deessa Brand Guidelines.pdf", download: true, icon: Download },
-    { label: "Organization Bio", href: "/deesa-resources/deessa Foundation_ Short Bio -2.pdf", download: true, icon: Download },
-    { label: "SWC Certificate", href: "/deesa-resources/SWC.jpg", download: true, icon: Download },
+    { label: "Brand Guidelines", href: "/deessa-resources/Deessa Brand Guidelines.pdf", download: true, icon: Download },
+    { label: "Organization Bio", href: "/deessa-resources/deessa Foundation_ Short Bio -2.pdf", download: true, icon: Download },
+    { label: "SWC Certificate", href: "/deessa-resources/SWC.jpg", download: true, icon: Download },
     { label: "Contact Us", href: "/contact", icon: Mail },
     { label: "Photo Gallery", href: "/impact#gallery", icon: Camera },
     { label: "Newsletter Archive", href: "/newsletter-archive", icon: Archive },
