@@ -6,9 +6,8 @@ import styles from "./homepage-sections.module.css"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
+import { useAccessibility, useOptionalAccessibility } from "@/lib/hooks/use-accessibility"
 import { cn } from "@/lib/utils"
-import { useAccessibility } from "@/lib/hooks/use-accessibility"
 import { TTS_ATTRIBUTES, TTS_EVENTS } from "@/lib/tts/types"
 
 export interface HeroSlide {
@@ -86,10 +85,14 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
 
   // Check for reduced motion preference (system OR app preference)
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-    // Combine system preference with app preference
-    const shouldReduceMotion = mediaQuery.matches || preferences.reduceMotion || preferences.sensoryFriendly
-    setPrefersReducedMotion(shouldReduceMotion)
+    // Check if we're in the browser environment
+    if (typeof window === 'undefined') return
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    
+    const timer = setTimeout(() => {
+      setPrefersReducedMotion(mediaQuery.matches || preferences.reduceMotion || preferences.sensoryFriendly)
+    }, 0)
 
     const handleChange = (e: MediaQueryListEvent) => {
       // Re-check app preferences when system preference changes
@@ -98,7 +101,10 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
     }
 
     mediaQuery.addEventListener("change", handleChange)
-    return () => mediaQuery.removeEventListener("change", handleChange)
+    return () => {
+      clearTimeout(timer)
+      mediaQuery.removeEventListener("change", handleChange)
+    }
   }, [preferences.reduceMotion, preferences.sensoryFriendly])
 
   const goTo = useCallback(
@@ -210,7 +216,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
               className={cn(
                 "object-cover",
                 getHeroImagePositionClass(slide),
-                !prefersReducedMotion && i === current && "animate-kenburns"
+                !prefersReducedMotion && i === current && "animate-kenburns",
               )}
               priority={i === 0}
               sizes="100vw"

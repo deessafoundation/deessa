@@ -18,6 +18,8 @@ import {
   MousePointer2,
 } from "lucide-react"
 import { ReadingGuideSticker } from "./reading-guide-sticker"
+import { TtsControls } from "./tts-controls"
+import { TtsMiniPlayer } from "./tts-mini-player"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
@@ -186,7 +188,8 @@ export function AccessibilityPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const dictionaryAllowed = dictionaryAllowedOnPath(usePathname())
   const mounted = useSyncExternalStore(subscribeToMount, clientMounted, serverMounted)
-  const { preferences, updatePreference, resetAll, resetPreference, isModified } = useAccessibility()
+  const { preferences, updatePreference, resetAll, resetPreference, isModified, ttsStatus } = useAccessibility()
+  const isTtsActive = ttsStatus === "speaking" || ttsStatus === "loading" || ttsStatus === "translating"
 
   const buttonRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -315,6 +318,7 @@ export function AccessibilityPanel() {
       <button
         ref={buttonRef}
         type="button"
+        data-tts-ignore=""
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "accessibility-button fixed z-50 w-14 h-14 rounded-full shadow-lg transition-transform duration-300 flex items-center justify-center group",
@@ -326,6 +330,12 @@ export function AccessibilityPanel() {
         aria-expanded={isOpen}
       >
         <Accessibility className="w-6 h-6 stroke-[2.5]" />
+        {isTtsActive && (
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border-2 border-white" />
+          </span>
+        )}
       </button>
 
       {isOpen && (
@@ -338,8 +348,10 @@ export function AccessibilityPanel() {
           <div
             ref={panelRef}
             id="accessibility-panel"
+            data-tts-panel=""
+            data-tts-ignore=""
             className={cn(
-              "accessibility-panel fixed z-50 rounded-3xl p-4 sm:p-5 w-[340px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto overflow-x-hidden transition-colors",
+              "accessibility-panel fixed z-50 rounded-3xl p-4 sm:p-5 w-[360px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto overflow-x-hidden transition-colors",
               "bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl",
               !preferences.sensoryFriendly && "animate-in fade-in slide-in-from-bottom-6 duration-300 zoom-in-95",
             )}
@@ -379,6 +391,11 @@ export function AccessibilityPanel() {
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* 0. LISTEN TO THIS PAGE (TTS) */}
+            <div className="mb-6 pb-6 border-b border-slate-100">
+              <TtsControls />
             </div>
 
             <div className="space-y-6 pb-2">
@@ -742,5 +759,10 @@ export function AccessibilityPanel() {
   )
 
   if (!mounted) return null
-  return createPortal(buttonContent, document.body)
+  return (
+    <>
+      {createPortal(buttonContent, document.body)}
+      <TtsMiniPlayer />
+    </>
+  )
 }

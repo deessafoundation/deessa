@@ -3,8 +3,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useAccessibility } from "@/lib/hooks/use-accessibility"
-import { useOptionalAccessibility } from "@/contexts/AccessibilityContext"
+import { useAccessibility, useOptionalAccessibility } from "@/lib/hooks/use-accessibility"
 
 interface Testimonial {
   quote: string
@@ -51,8 +50,7 @@ function calculateGap(width: number) {
   const minGap = 60
   const maxGap = 86
   if (width <= minWidth) return minGap
-  if (width >= maxWidth)
-    return Math.max(minGap, maxGap + 0.06018 * (width - maxWidth))
+  if (width >= maxWidth) return Math.max(minGap, maxGap + 0.06018 * (width - maxWidth))
   return minGap + (maxGap - minGap) * ((width - minWidth) / (maxWidth - minWidth))
 }
 
@@ -72,13 +70,10 @@ export const CircularTestimonials = ({
   const accessibility = useOptionalAccessibility()
   const ttsStatus = accessibility?.status
   const isTtsActive =
-    ttsStatus === "loading" ||
-    ttsStatus === "translating" ||
-    ttsStatus === "speaking" ||
-    ttsStatus === "paused"
+    ttsStatus === "loading" || ttsStatus === "translating" || ttsStatus === "speaking" || ttsStatus === "paused"
 
   const { preferences } = useAccessibility()
-  
+
   // Color & font config
   const colorName = colors.name ?? "#000"
   const colorDesignation = colors.designation ?? "#6b7280"
@@ -104,10 +99,7 @@ export const CircularTestimonials = ({
   const resumeAutoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const testimonialsLength = useMemo(() => testimonials.length, [testimonials])
-  const activeTestimonial = useMemo(
-    () => testimonials[activeIndex],
-    [activeIndex, testimonials]
-  )
+  const activeTestimonial = useMemo(() => testimonials[activeIndex], [activeIndex, testimonials])
 
   // Responsive gap calculation
   useLayoutEffect(() => {
@@ -132,10 +124,7 @@ export const CircularTestimonials = ({
     const container = testimonialContainerRef.current
     if (!container) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsInViewport(entry.isIntersecting),
-      { threshold: 0.45 }
-    )
+    const observer = new IntersectionObserver(([entry]) => setIsInViewport(entry.isIntersecting), { threshold: 0.45 })
 
     observer.observe(container)
     return () => observer.disconnect()
@@ -307,62 +296,60 @@ export const CircularTestimonials = ({
             const isActive = index === activeIndex
             const isLeft = (activeIndex - 1 + testimonialsLength) % testimonialsLength === index
             const isRight = (activeIndex + 1) % testimonialsLength === index
-            
-            return (
-              testimonial.video ? (
-                <video
-                  key={index}
-                  src={testimonial.video}
-                  poster={testimonial.src || undefined}
-                  aria-label={`${testimonial.name}'s video message`}
-                  className="testimonial-media"
-                  data-index={index}
-                  ref={(video) => {
-                    videoRefs.current[index] = video
-                  }}
-                  controls={isActive}
-                  playsInline
-                  preload="metadata"
-                  style={{
-                    ...getImageStyle(index),
-                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
-                  }}
-                  onClick={() => {
-                    if (isLeft) handlePrev()
-                    if (isRight) handleNext()
-                  }}
-                  onPlay={() => {
-                    setActiveIndex(index)
-                    Object.entries(videoRefs.current).forEach(([otherIndex, otherVideo]) => {
-                      if (otherVideo && Number(otherIndex) !== index && !otherVideo.paused) {
-                        otherVideo.pause()
-                      }
-                    })
-                  }}
-                />
-              ) : (
-                <img
-                  key={index}
-                  src={testimonial.src}
-                  alt={testimonial.name}
-                  className="testimonial-media"
-                  data-index={index}
-                  style={{
-                    ...getImageStyle(index),
-                    cursor: (isLeft || isRight) ? 'pointer' : 'default',
-                  }}
-                  loading="eager"
-                  width={400}
-                  height={400}
-                  onClick={() => {
-                    if (isLeft) handlePrev()
-                    if (isRight) handleNext()
-                  }}
-                />
-              )
+
+            return testimonial.video ? (
+              <video
+                key={index}
+                src={testimonial.video}
+                poster={testimonial.src || undefined}
+                aria-label={`${testimonial.name}'s video message`}
+                className="testimonial-media"
+                data-index={index}
+                ref={(video) => {
+                  videoRefs.current[index] = video
+                }}
+                controls={isActive}
+                playsInline
+                preload="metadata"
+                style={{
+                  ...getImageStyle(index),
+                  cursor: isLeft || isRight ? "pointer" : "default",
+                }}
+                onClick={() => {
+                  if (isLeft) handlePrev()
+                  if (isRight) handleNext()
+                }}
+                onPlay={() => {
+                  setActiveIndex(index)
+                  Object.entries(videoRefs.current).forEach(([otherIndex, otherVideo]) => {
+                    if (otherVideo && Number(otherIndex) !== index && !otherVideo.paused) {
+                      otherVideo.pause()
+                    }
+                  })
+                }}
+              />
+            ) : (
+              <img
+                key={index}
+                src={testimonial.src}
+                alt={testimonial.name}
+                className="testimonial-media"
+                data-index={index}
+                style={{
+                  ...getImageStyle(index),
+                  cursor: isLeft || isRight ? "pointer" : "default",
+                }}
+                loading="eager"
+                width={400}
+                height={400}
+                onClick={() => {
+                  if (isLeft) handlePrev()
+                  if (isRight) handleNext()
+                }}
+              />
             )
           })}
-          
+
           {/* Arrow Buttons Overlay */}
           <div className="image-arrows">
             <button
@@ -394,91 +381,85 @@ export const CircularTestimonials = ({
 
         {/* Content */}
         {showContent && (
-        <div className="testimonial-content">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              variants={quoteVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              {activeTestimonial.topic && (
-                <p className="topic" style={{ color: colorDesignation }}>
-                  {activeTestimonial.topic}
+          <div className="testimonial-content">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                variants={quoteVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                {activeTestimonial.topic && (
+                  <p className="topic" style={{ color: colorDesignation }}>
+                    {activeTestimonial.topic}
+                  </p>
+                )}
+                <h3
+                  className="name"
+                  style={{ color: colorName, fontSize: fontSizeName, WebkitTextStroke: nameTextStroke }}
+                >
+                  {activeTestimonial.name}
+                </h3>
+                <p className="designation" style={{ color: colorDesignation, fontSize: fontSizeDesignation }}>
+                  {activeTestimonial.designation}
                 </p>
-              )}
-              <h3
-                className="name"
-                style={{ color: colorName, fontSize: fontSizeName, WebkitTextStroke: nameTextStroke }}
-              >
-                {activeTestimonial.name}
-              </h3>
-              <p
-                className="designation"
-                style={{ color: colorDesignation, fontSize: fontSizeDesignation }}
-              >
-                {activeTestimonial.designation}
-              </p>
-              <motion.p
-                className="quote"
-                style={{ color: colorTestimony, fontSize: fontSizeQuote }}
-              >
-                {(activeTestimonial.caption || activeTestimonial.quote).split(" ").map((word, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{
-                      filter: "blur(10px)",
-                      opacity: 0,
-                      y: 5,
-                    }}
-                    animate={{
-                      filter: "blur(0px)",
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    transition={{
-                      duration: 0.22,
-                      ease: "easeInOut",
-                      delay: 0.025 * i,
-                    }}
-                    style={{ display: "inline-block" }}
-                  >
-                    {word}&nbsp;
-                  </motion.span>
-                ))}
-              </motion.p>
-            </motion.div>
-          </AnimatePresence>
+                <motion.p className="quote" style={{ color: colorTestimony, fontSize: fontSizeQuote }}>
+                  {(activeTestimonial.caption || activeTestimonial.quote).split(" ").map((word, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{
+                        filter: "blur(10px)",
+                        opacity: 0,
+                        y: 5,
+                      }}
+                      animate={{
+                        filter: "blur(0px)",
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      transition={{
+                        duration: 0.22,
+                        ease: "easeInOut",
+                        delay: 0.025 * i,
+                      }}
+                      style={{ display: "inline-block" }}
+                    >
+                      {word}&nbsp;
+                    </motion.span>
+                  ))}
+                </motion.p>
+              </motion.div>
+            </AnimatePresence>
 
-          <div className="arrow-buttons">
-            <button
-              className="arrow-button prev-button"
-              onClick={handlePrev}
-              style={{
-                backgroundColor: hoverPrev ? colorArrowHoverBg : colorArrowBg,
-              }}
-              onMouseEnter={() => setHoverPrev(true)}
-              onMouseLeave={() => setHoverPrev(false)}
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft size={28} color={colorArrowFg} />
-            </button>
-            <button
-              className="arrow-button next-button"
-              onClick={handleNext}
-              style={{
-                backgroundColor: hoverNext ? colorArrowHoverBg : colorArrowBg,
-              }}
-              onMouseEnter={() => setHoverNext(true)}
-              onMouseLeave={() => setHoverNext(false)}
-              aria-label="Next testimonial"
-            >
-              <ChevronRight size={28} color={colorArrowFg} />
-            </button>
+            <div className="arrow-buttons">
+              <button
+                className="arrow-button prev-button"
+                onClick={handlePrev}
+                style={{
+                  backgroundColor: hoverPrev ? colorArrowHoverBg : colorArrowBg,
+                }}
+                onMouseEnter={() => setHoverPrev(true)}
+                onMouseLeave={() => setHoverPrev(false)}
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft size={28} color={colorArrowFg} />
+              </button>
+              <button
+                className="arrow-button next-button"
+                onClick={handleNext}
+                style={{
+                  backgroundColor: hoverNext ? colorArrowHoverBg : colorArrowBg,
+                }}
+                onMouseEnter={() => setHoverNext(true)}
+                onMouseLeave={() => setHoverNext(false)}
+                aria-label="Next testimonial"
+              >
+                <ChevronRight size={28} color={colorArrowFg} />
+              </button>
+            </div>
           </div>
-        </div>
         )}
       </div>
 
