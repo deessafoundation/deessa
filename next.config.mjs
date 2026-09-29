@@ -21,10 +21,16 @@ const nextConfig = {
   },
   allowedDevOrigins: ["http://172.31.112.1:3000"],
   images: {
+    // Keep in sync with ALLOWED_HOSTS in components/programs/SafeImage.tsx —
+    // SafeImage renders plain <img> for hosts not listed here.
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'plus.unsplash.com',
       },
       {
         protocol: 'https',
@@ -37,6 +43,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'img.youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.gstatic.com',
       },
     ],
     formats: ['image/avif', 'image/webp'], // Modern image formats for better performance
