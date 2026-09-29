@@ -33,6 +33,27 @@ function isOptimizable(src: string): boolean {
   )
 }
 
+/**
+ * For external URLs that aren't on the next/image allowlist, route them
+ * through our server-side proxy so hotlink-blocking headers are bypassed.
+ * Allow-listed hosts (Supabase, Unsplash, etc.) go through next/image directly.
+ */
+function getProxiedSrc(src: string): string {
+  let url: URL
+  try {
+    url = new URL(src)
+  } catch {
+    return src // relative path — leave as-is
+  }
+  if (
+    (url.protocol === "http:" || url.protocol === "https:") &&
+    !isOptimizable(src)
+  ) {
+    return `/api/img-proxy?url=${encodeURIComponent(src)}`
+  }
+  return src
+}
+
 interface SafeImageProps {
   src: string
   alt: string
@@ -48,7 +69,8 @@ interface SafeImageProps {
 /**
  * Renders nothing if the image is missing or fails to load, instead of
  * crashing the page. Uses next/image for allowlisted hosts, plain <img>
- * for any other remote host.
+ * (via server-side proxy) for any other remote host — so any URL the admin
+ * pastes will work regardless of hotlink protection on the source server.
  */
 export function SafeImage({ src, alt, fill, sizes, priority, className, style, onLoad, onError }: SafeImageProps) {
   const [failed, setFailed] = useState(false)
@@ -66,6 +88,7 @@ export function SafeImage({ src, alt, fill, sizes, priority, className, style, o
 
   if (!src || failed) return null
 
+  // Allow-listed hosts → next/image (optimized, cached by Next.js)
   if (isOptimizable(src)) {
     return (
       <Image
@@ -83,15 +106,17 @@ export function SafeImage({ src, alt, fill, sizes, priority, className, style, o
     )
   }
 
+  // All other external URLs → proxy through /api/img-proxy
+  const proxied = getProxiedSrc(src)
+
   if (fill) {
     return (
       <img
         ref={ref}
-        src={src}
+        src={proxied}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
-        referrerPolicy="no-referrer"
         className={className}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", ...style }}
         onLoad={onLoad}
@@ -103,11 +128,10 @@ export function SafeImage({ src, alt, fill, sizes, priority, className, style, o
   return (
     <img
       ref={ref}
-      src={src}
+      src={proxied}
       alt={alt}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      referrerPolicy="no-referrer"
       className={className}
       style={style}
       onLoad={onLoad}
