@@ -353,7 +353,7 @@ export const STORAGE_CONFIG = {
   /**
    * localStorage key for accessibility preferences
    */
-  KEY: "deesha-a11y-preferences",
+  KEY: "deessa-a11y-preferences",
 
   /**
    * Current schema version (V3 - integer)
