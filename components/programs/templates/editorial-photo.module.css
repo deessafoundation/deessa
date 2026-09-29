@@ -1,0 +1,7 @@
+.photo {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    overflow: hidden;
+    border-radius: 12px;
+}

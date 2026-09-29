@@ -2,21 +2,50 @@
 
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
+import { HomepageImage } from "./homepage-image"
+import styles from "./homepage-sections.module.css"
 import Link from "next/link"
 import {
-  Heart, ArrowRight, GraduationCap, MapPin, Stethoscope,
-  BookOpen, ChevronRight, Phone, Clock, Mail, Shield, Home as HomeIcon,
-  Target, Eye, Flag, Users, Leaf, ArrowUpRight, Star,
-  Quote, Award, Building2, Globe, Megaphone, FileText, Scale, Mic2
+  Heart,
+  ArrowRight,
+  GraduationCap,
+  MapPin,
+  Stethoscope,
+  BookOpen,
+  ChevronRight,
+  Phone,
+  Clock,
+  Mail,
+  Shield,
+  Home as HomeIcon,
+  Target,
+  Eye,
+  Flag,
+  Users,
+  Leaf,
+  ArrowUpRight,
+  Star,
+ 
+  Quote,
+  Award,
+  Building2,
+  Globe,
+  Megaphone,
+  FileText,
+  Scale,
+  Mic2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  ScrollReveal,
-  CountUp,
-  BackToTop,
-} from "@/components/scroll-animations"
+import { ScrollReveal, CountUp, BackToTop } from "@/components/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
-import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings, HomepageStorySettings, HomepageWhatWeDoSettings } from "@/lib/types/homepage-settings"
+import type {
+  HomepageStat,
+  HomepageMarqueeSettings,
+  HomepageTestimonialsSettings,
+  HomepageTimelineSettings,
+  HomepageStorySettings,
+  HomepageWhatWeDoSettings,
+} from "@/lib/types/homepage-settings"
 import { DEFAULT_HOMEPAGE_STORY, DEFAULT_TESTIMONIALS, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
@@ -35,7 +64,7 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
   ]
 
   const displayStats = stats || defaultStats
-  
+
   // Sort by order and take first 4 for homepage display
   const sortedStats = [...displayStats].sort((a, b) => a.order - b.order).slice(0, 4)
 
@@ -49,9 +78,7 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
                 <CountUp end={stat.value} suffix={stat.suffix || ""} />
               </p>
               <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
-              {stat.sublabel && (
-                <p className="text-xs text-slate-500">{stat.sublabel}</p>
-              )}
+              {stat.sublabel && <p className="text-xs text-slate-500">{stat.sublabel}</p>}
             </div>
           ))}
         </div>
@@ -88,19 +115,18 @@ export function OurStorySection({ story }: OurStorySectionProps) {
           <ScrollReveal animation="fade-up" duration={700}>
             <div className="relative">
               <div className="relative aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4] rounded-2xl md:rounded-3xl overflow-hidden shadow-xl">
-                <Image
+                <HomepageImage
                   src={imageSrc}
                   alt={imageAlt}
                   fill
                   sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) 45vw, 560px"
                   className="object-cover object-center"
                 />
+                <div className={`${styles.storyOverlay} absolute inset-0`} />
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute bottom-3 right-3 md:-bottom-5 md:-right-5 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl">
-                  <p className="text-2xl md:text-4xl font-black font-comic-num">
-                    {s.founded}
-                  </p>
+                  <p className="text-2xl md:text-4xl font-black font-comic-num">{s.founded}</p>
                   <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
               </ScrollReveal>
@@ -123,7 +149,10 @@ export function OurStorySection({ story }: OurStorySectionProps) {
                   className="w-fit mx-auto"
                 >
                   <div className="py-0 px-1.5">
-                    <h2 className="font-marissa text-2xl md:text-[34px] text-white text-center" style={{ lineHeight: 1.15 }}>
+                    <h2
+                      className="font-marissa text-2xl md:text-[34px] text-white text-center"
+                      style={{ lineHeight: 1.15 }}
+                    >
                       {s.badgeText}
                     </h2>
                   </div>
@@ -171,7 +200,7 @@ export function MissionVisionSection() {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
+    <section data-mission-section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
       <div className="pointer-events-none absolute top-0 left-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute right-0 bottom-0 size-96 translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
       <div
@@ -200,14 +229,15 @@ export function MissionVisionSection() {
               solid deep-ocean panel rather than competing as a third white box */}
           <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
             <article
-              className={`${cardShell} bg-linear-to-br from-[#0e2d40] via-[#11405a] to-[#0e2d40] shadow-[0_18px_50px_-18px_rgba(14,45,64,0.55)] hover:shadow-[0_26px_60px_-18px_rgba(14,45,64,0.6)]`}
+              data-mission-card
+              className={`${cardShell} ${styles.missionCard}`}
             >
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-primary/25 blur-3xl"
               />
               <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
-                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
+                <div data-mission-icon className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
                   <Target aria-hidden="true" className="size-8 text-white" />
                 </div>
                 <h3 className="mb-4 text-2xl font-black text-white md:text-[30px]">Our Mission</h3>
@@ -288,8 +318,20 @@ export function MissionVisionSection() {
 /* ──────────────────  PROGRAMS SECTION  ────────────────── */
 
 const pillarIconMap: Record<string, any> = {
-  Megaphone, BookOpen, FileText, Scale, GraduationCap, Stethoscope,
-  Shield, HomeIcon, Heart, Globe, Users, Award, Building2, Star,
+  Megaphone,
+  BookOpen,
+  FileText,
+  Scale,
+  GraduationCap,
+  Stethoscope,
+  Shield,
+  HomeIcon,
+  Heart,
+  Globe,
+  Users,
+  Award,
+  Building2,
+  Star,
 }
 
 interface ProgramsSectionProps {
@@ -298,9 +340,7 @@ interface ProgramsSectionProps {
 
 export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
   const w = whatWeDo || DEFAULT_WHAT_WE_DO
-  const corePillars = [...w.pillars]
-    .filter((p) => p.visible)
-    .sort((a, b) => a.order - b.order)
+  const corePillars = [...w.pillars].filter((p) => p.visible).sort((a, b) => a.order - b.order)
 
   return (
     <section id="what-we-do" className="py-12 sm:py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
@@ -316,11 +356,11 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="mb-9 text-center sm:mb-16">
-            <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">{w.eyebrow}</span>
+            <span className={`${styles.darkLabel} text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block`}>
+              {w.eyebrow}
+            </span>
             <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
-              {w.subtitle}
-            </p>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">{w.subtitle}</p>
           </div>
         </ScrollReveal>
 
@@ -341,7 +381,7 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 >
                   <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
                     <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
+                    <div data-pillar-icon className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
                     <h3 className="text-xl font-black mb-3 text-[#1a1a2e]" style={{ WebkitTextStroke: "0.5px currentColor" }}>
@@ -381,24 +421,34 @@ interface TimelineSectionProps {
 export function TimelineSection({ timeline: timelineSettings }: TimelineSectionProps) {
   // Icon mapping
   const iconMap: Record<string, any> = {
-    MapPin, GraduationCap, Stethoscope, Heart, Globe, BookOpen,
-    Users, Star, Award, Building2, Leaf, Shield
+    MapPin,
+    GraduationCap,
+    Stethoscope,
+    Heart,
+    Globe,
+    BookOpen,
+    Users,
+    Star,
+    Award,
+    Building2,
+    Leaf,
+    Shield,
   }
 
   // Helper function to parse color classes and convert to inline styles
-  const parseColorToStyle = (colorClass: string, type: 'gradient' | 'solid') => {
-    if (type === 'gradient') {
+  const parseColorToStyle = (colorClass: string, type: "gradient" | "solid") => {
+    if (type === "gradient") {
       // Parse gradient: extract all hex colors
       const colors = colorClass.match(/#[0-9A-Fa-f]{3,6}/g)
-      
+
       if (colors && colors.length >= 2) {
         return {
-          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`
+          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`,
         }
       } else if (colors && colors.length === 1) {
         // Single color gradient (fallback)
         return {
-          background: colors[0]
+          background: colors[0],
         }
       }
     } else {
@@ -406,11 +456,11 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
       const match = colorClass.match(/#[0-9A-Fa-f]{3,6}/)
       if (match) {
         return {
-          backgroundColor: match[0]
+          backgroundColor: match[0],
         }
       }
     }
-    
+
     // Fallback: return empty object (will use Tailwind classes)
     return {}
   }
@@ -428,7 +478,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2016",
       milestone: "First education program",
-      description: "Our scholarship initiative opened classroom doors for 200+ students with limited access to learning.",
+      description:
+        "Our scholarship initiative opened classroom doors for 200+ students with limited access to learning.",
       icon: GraduationCap,
       badgeClass: "from-[rgb(var(--accent-education))] to-amber-500",
       yearClass: "bg-[rgb(var(--accent-education))]",
@@ -436,7 +487,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2018",
       milestone: "Health camps expanded",
-      description: "Medical outreach scaled to 50+ remote villages, bringing care closer to families who needed it most.",
+      description:
+        "Medical outreach scaled to 50+ remote villages, bringing care closer to families who needed it most.",
       icon: Stethoscope,
       badgeClass: "from-[rgb(var(--accent-empowerment))] to-pink-500",
       yearClass: "bg-[rgb(var(--accent-empowerment))]",
@@ -444,7 +496,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2020",
       milestone: "COVID-19 relief",
-      description: "Emergency food, hygiene kits, and support reached 5,000+ families during Nepal's most urgent months.",
+      description:
+        "Emergency food, hygiene kits, and support reached 5,000+ families during Nepal's most urgent months.",
       icon: Heart,
       badgeClass: "from-[rgb(var(--accent-environment))] to-lime-500",
       yearClass: "bg-[rgb(var(--accent-environment))]",
@@ -470,20 +523,28 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
   // Use CMS milestones if provided, otherwise use defaults
   const milestones = timelineSettings?.milestones
     ? timelineSettings.milestones
-        .filter(m => m.visible)
+        .filter((m) => m.visible)
         .sort((a, b) => a.order - b.order)
-        .map(m => ({
+        .map((m) => ({
           ...m,
-          icon: iconMap[m.icon] || MapPin
+          icon: iconMap[m.icon] || MapPin,
         }))
     : defaultMilestones
 
   const title = timelineSettings?.title || "Our Impact through the Years"
-  const subtitle = timelineSettings?.subtitle || "For over a decade and counting, we have been transforming lives, building stronger communities, and creating lasting change."
+  const subtitle =
+    timelineSettings?.subtitle ||
+    "For over a decade and counting, we have been transforming lives, building stronger communities, and creating lasting change."
 
   return (
     <section className="py-20 md:py-24 relative overflow-hidden bg-[linear-gradient(180deg,#f6f3ed_0%,#fbfaf7_100%)]">
-      <div className="absolute inset-0 pointer-events-none opacity-30" style={{ backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.22) 2px, transparent 2px)", backgroundSize: "42px 42px" }} />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.22) 2px, transparent 2px)",
+          backgroundSize: "42px 42px",
+        }}
+      />
       <div className="absolute -left-28 top-8 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
@@ -494,9 +555,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
               Our <span className="text-primary">Impact through the Years</span>
             </h2>
-            <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">
-              {subtitle}
-            </p>
+            <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">{subtitle}</p>
           </div>
         </ScrollReveal>
 
@@ -512,43 +571,35 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
               const isLeft = i % 2 === 0
 
               return (
-                <ScrollReveal 
-                  key={item.year} 
-                  animation={isLeft ? "fade-right" : "fade-left"} 
-                  delay={i * 100}
-                >
-                  <div className={`relative flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-8`}>
+                <ScrollReveal key={`${item.year}-${i}`} animation={isLeft ? "fade-right" : "fade-left"} delay={i * 100}>
+                  <div className={`relative flex items-center ${isLeft ? "flex-row" : "flex-row-reverse"} gap-8`}>
                     {/* Card */}
-                    <div className={`w-[calc(50%-2rem)] ${isLeft ? 'text-right' : 'text-left'}`}>
+                    <div className={`w-[calc(50%-2rem)] ${isLeft ? "text-right" : "text-left"}`}>
                       <article className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                        <div className={`flex items-center gap-3 mb-4 ${isLeft ? 'flex-row-reverse' : 'flex-row'}`}>
-                          <div 
+                        <div className={`flex items-center gap-3 mb-4 ${isLeft ? "flex-row-reverse" : "flex-row"}`}>
+                          <div
                             className="size-14 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
-                            style={parseColorToStyle(item.badgeClass, 'gradient')}
+                            style={parseColorToStyle(item.badgeClass, "gradient")}
                           >
                             <IconComp className="size-7" />
                           </div>
-                          <span 
+                          <span
                             className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
-                            style={parseColorToStyle(item.yearClass, 'solid')}
+                            style={parseColorToStyle(item.yearClass, "solid")}
                           >
                             {item.year}
                           </span>
                         </div>
-                        <h4 className="text-xl font-bold text-slate-800 mb-2">
-                          {item.milestone}
-                        </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          {item.description}
-                        </p>
+                        <h4 className="text-xl font-bold text-slate-800 mb-2">{item.milestone}</h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
                       </article>
                     </div>
 
                     {/* Center dot */}
                     <div className="absolute left-1/2 -translate-x-1/2 z-10">
-                      <div 
+                      <div
                         className="size-4 rounded-full ring-4 ring-white shadow-md"
-                        style={parseColorToStyle(item.yearClass, 'solid')}
+                        style={parseColorToStyle(item.yearClass, "solid")}
                       />
                     </div>
 
@@ -570,38 +621,34 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
             const IconComp = item.icon
 
             return (
-              <ScrollReveal key={item.year} animation="fade-left" delay={i * 100}>
+              <ScrollReveal key={`${item.year}-${i}`} animation="fade-left" delay={i * 100}>
                 <div className="relative">
                   {/* Dot on the line */}
                   <div className="absolute -left-8 top-6">
-                    <div 
+                    <div
                       className="size-4 rounded-full ring-4 ring-white shadow-md"
-                      style={parseColorToStyle(item.yearClass, 'solid')}
+                      style={parseColorToStyle(item.yearClass, "solid")}
                     />
                   </div>
 
                   {/* Card */}
                   <article className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-3">
-                      <div 
+                      <div
                         className="size-12 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
-                        style={parseColorToStyle(item.badgeClass, 'gradient')}
+                        style={parseColorToStyle(item.badgeClass, "gradient")}
                       >
                         <IconComp className="size-6" />
                       </div>
-                      <span 
+                      <span
                         className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
-                        style={parseColorToStyle(item.yearClass, 'solid')}
+                        style={parseColorToStyle(item.yearClass, "solid")}
                       >
                         {item.year}
                       </span>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-800 mb-2">
-                      {item.milestone}
-                    </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      {item.description}
-                    </p>
+                    <h4 className="text-lg font-bold text-slate-800 mb-2">{item.milestone}</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
                   </article>
                 </div>
               </ScrollReveal>
@@ -624,13 +671,14 @@ export function PodcastSection() {
   return (
     <section
       aria-labelledby="home-podcast-title"
+      data-podcast-section
       className="relative overflow-hidden bg-[#005581]"
       data-tts-section=""
       data-tts-priority="heading"
       data-tts-text="The Deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
     >
       {/* Keep the backdrop on the full-width section so it has no container seams. */}
-      <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
+      <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
         <path d="M640 0 C545 160 400 238 190 240 H640 Z" fill="#3FABDE" opacity="0.36" />
       </svg>
       <div className="relative mx-auto max-w-[1320px]">
@@ -650,32 +698,31 @@ export function PodcastSection() {
                   className="object-cover object-center"
                 />
                 {/* Feather only the perimeter; keep the hosts and embedded branding sharp. */}
-                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
+                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
               </Link>
 
               <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-7 font-comic text-white sm:px-8 lg:py-6 lg:pl-8 lg:pr-10">
-                <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
+                <div data-podcast-badge className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
                   <Mic2 className="size-4 shrink-0" aria-hidden="true" />
                   THE DEESSA PODCAST
                 </div>
 
-                <h2 id="home-podcast-title" className="font-marissa text-[30px] font-normal leading-[1.2] text-white sm:text-[34px]">
-                  Living With Autism
-                </h2>
+                <h2 id="home-podcast-title" className="font-marissa text-[30px] font-normal leading-[1.2] text-white sm:text-[34px]">Living With Autism</h2>
                 <p className="mt-2 text-xl leading-snug text-white sm:text-[22px]">
                   Real voices. Real stories.
                 </p>
                 <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-white/85">
-                  Honest conversations about autism, inclusion, and the experiences that shape our communities.
+                  Honest conversations about autism, inclusion, and the
+                  experiences that shape our communities.
                 </p>
 
                 <div className="mt-4">
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#72d4f5]">Hosted by</p>
+                  <p data-podcast-hosted-label className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#72d4f5]">Hosted by</p>
                   <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 185px), 1fr))" }}>
                     {hosts.map((host) => (
-                      <div key={host.name} className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/30 bg-white/[0.04] p-2.5">
+                      <div key={host.name} data-podcast-host-card className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/30 bg-white/[0.04] p-2.5">
                         <Image
                           src={host.image}
                           alt=""
@@ -695,6 +742,7 @@ export function PodcastSection() {
 
                 <Link
                   href="/podcasts"
+                  data-podcast-cta
                   className="group mt-5 inline-flex min-h-12 w-full items-center justify-center gap-3 self-start rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-primary-dark shadow-sm transition-colors hover:bg-[#E8F6FC] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto"
                 >
                   Explore the podcast
@@ -718,12 +766,12 @@ interface TestimonialsSectionProps {
 
 export function TestimonialsSection({ testimonials: testimonialsSettings }: TestimonialsSectionProps) {
   // Use CMS testimonials if provided, otherwise use defaults
-  const testimonials = testimonialsSettings?.testimonials
-    ?.filter(t => t.visible)
-    .sort((a, b) => a.order - b.order) || DEFAULT_TESTIMONIALS.testimonials
+  const testimonials =
+    testimonialsSettings?.testimonials?.filter((t) => t.visible).sort((a, b) => a.order - b.order) ||
+    DEFAULT_TESTIMONIALS.testimonials
 
   // Transform testimonials to match CircularTestimonials format
-  const circularTestimonials = testimonials.map(t => ({
+  const circularTestimonials = testimonials.map((t) => ({
     name: t.name,
     designation: `${t.role}, ${t.location}`,
     quote: t.quote,
@@ -767,19 +815,19 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
           </div>
         </ScrollReveal>
 
-        <div className="flex justify-center">
+        <div className={`${styles.testimonials} flex justify-center`}>
           <CircularTestimonials
             testimonials={circularTestimonials}
             nameTextStroke="0.55px currentColor"
             autoplay={false}
             videoAutoplay={true}
             colors={{
-              name: "#0b76b7",
-              designation: "hsl(var(--muted-foreground))",
-              testimony: "hsl(var(--foreground) / 0.8)",
-              arrowBackground: "hsl(var(--primary))",
-              arrowForeground: "hsl(var(--primary-foreground))",
-              arrowHoverBackground: "hsl(var(--primary) / 0.8)",
+              name: "var(--foreground)",
+              designation: "var(--muted-foreground)",
+              testimony: "color-mix(in srgb, var(--foreground) 80%, transparent)",
+              arrowBackground: "var(--primary)",
+              arrowForeground: "var(--primary-foreground)",
+              arrowHoverBackground: "color-mix(in srgb, var(--primary) 80%, transparent)",
             }}
             fontSizes={{
               name: "1.75rem",
@@ -799,34 +847,44 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
 const WorldVisionLogo = () => (
   <svg viewBox="0 0 120 50" className="h-12 md:h-14 w-auto" fill="currentColor">
     <circle cx="15" cy="25" r="8" className="text-blue-600" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">World Vision</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      World Vision
+    </text>
   </svg>
 )
 
 const SaaltLogo = () => (
   <svg viewBox="0 0 80 50" className="h-12 md:h-14 w-auto" fill="currentColor">
-    <text x="5" y="30" className="text-xl font-bold lowercase" fill="#2D5F3F">saalt</text>
+    <text x="5" y="30" className="text-xl font-bold lowercase" fill="#2D5F3F">
+      saalt
+    </text>
   </svg>
 )
 
 const ActionAidLogo = () => (
   <svg viewBox="0 0 110 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="10" fill="#E63946" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">ActionAid</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      ActionAid
+    </text>
   </svg>
 )
 
 const RealMedicineLogo = () => (
   <svg viewBox="0 0 180 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="18" height="18" rx="3" fill="#8B4513" />
-    <text x="28" y="30" className="text-[10px] font-bold" fill="currentColor">Real Medicine Foundation</text>
+    <text x="28" y="30" className="text-[10px] font-bold" fill="currentColor">
+      Real Medicine Foundation
+    </text>
   </svg>
 )
 
 const PedalHealthLogo = () => (
   <svg viewBox="0 0 120 50" className="h-12 md:h-14 w-auto">
     <path d="M15 25 L22 18 L22 32 Z" fill="#4CAF50" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">PedalHealth</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      PedalHealth
+    </text>
   </svg>
 )
 
@@ -834,14 +892,18 @@ const WorldBicycleLogo = () => (
   <svg viewBox="0 0 160 50" className="h-12 md:h-14 w-auto">
     <circle cx="12" cy="30" r="7" stroke="#FF6B35" strokeWidth="2" fill="none" />
     <circle cx="28" cy="30" r="7" stroke="#FF6B35" strokeWidth="2" fill="none" />
-    <text x="40" y="30" className="text-[10px] font-bold" fill="currentColor">World Bicycle Relief</text>
+    <text x="40" y="30" className="text-[10px] font-bold" fill="currentColor">
+      World Bicycle Relief
+    </text>
   </svg>
 )
 
 const UBCLogo = () => (
   <svg viewBox="0 0 80 50" className="h-14 md:h-16 w-auto">
     <rect x="10" y="10" width="35" height="30" rx="2" fill="#003366" />
-    <text x="18" y="30" className="text-base font-bold" fill="white">UBC</text>
+    <text x="18" y="30" className="text-base font-bold" fill="white">
+      UBC
+    </text>
   </svg>
 )
 
@@ -849,14 +911,18 @@ const BuildingEqualityLogo = () => (
   <svg viewBox="0 0 180 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="12" height="18" fill="#6A4C93" />
     <rect x="19" y="12" width="12" height="21" fill="#6A4C93" />
-    <text x="36" y="30" className="text-[10px] font-bold" fill="currentColor">Building Equality</text>
+    <text x="36" y="30" className="text-[10px] font-bold" fill="currentColor">
+      Building Equality
+    </text>
   </svg>
 )
 
 const LSSLogo = () => (
   <svg viewBox="0 0 80 50" className="h-14 md:h-16 w-auto">
     <rect x="10" y="10" width="38" height="28" rx="3" fill="#2E7D32" />
-    <text x="18" y="30" className="text-base font-bold" fill="white">LSS</text>
+    <text x="18" y="30" className="text-base font-bold" fill="white">
+      LSS
+    </text>
   </svg>
 )
 
@@ -864,7 +930,9 @@ const RedCrossLogo = () => (
   <svg viewBox="0 0 100 50" className="h-12 md:h-14 w-auto">
     <rect x="15" y="15" width="7" height="18" fill="#E63946" />
     <rect x="11" y="19" width="15" height="7" fill="#E63946" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">Red Cross</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      Red Cross
+    </text>
   </svg>
 )
 
@@ -872,42 +940,54 @@ const UNICEFLogo = () => (
   <svg viewBox="0 0 90 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="20" r="9" fill="#00AEEF" />
     <path d="M11 25 L15 29 L19 25" stroke="white" strokeWidth="2" fill="none" />
-    <text x="8" y="43" className="text-[10px] font-bold" fill="currentColor">UNICEF</text>
+    <text x="8" y="43" className="text-[10px] font-bold" fill="currentColor">
+      UNICEF
+    </text>
   </svg>
 )
 
 const WorldBankLogo = () => (
   <svg viewBox="0 0 110 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="10" fill="#009FDA" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">World Bank</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      World Bank
+    </text>
   </svg>
 )
 
 const SaveChildrenLogo = () => (
   <svg viewBox="0 0 140 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#E2231A" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Save the Children</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Save the Children
+    </text>
   </svg>
 )
 
 const OxfamLogo = () => (
   <svg viewBox="0 0 90 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#61A534" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Oxfam</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Oxfam
+    </text>
   </svg>
 )
 
 const RotaryLogo = () => (
   <svg viewBox="0 0 150 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#17458F" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Rotary International</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Rotary International
+    </text>
   </svg>
 )
 
 const CareInternationalLogo = () => (
   <svg viewBox="0 0 140 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="18" height="18" rx="3" fill="#0066A6" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Care International</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Care International
+    </text>
   </svg>
 )
 
@@ -963,7 +1043,13 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
   return (
     <section className="relative overflow-hidden py-16 md:py-24 bg-[linear-gradient(180deg,#fffaf4_0%,#f7fbff_100%)]">
-      <div className="absolute inset-0 pointer-events-none opacity-55" style={{ backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.08) 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-55"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.08) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+        }}
+      />
       <div className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-[#F7C52B]/10 blur-3xl" />
 
@@ -977,7 +1063,9 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
             <div className="max-w-3xl mx-auto mb-8">
               <h3 className="text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
               <p className="text-foreground/70 leading-relaxed">
-                We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and creating lasting opportunities for communities in need. Thank you to our partners who believe in our mission and help us build a brighter future.
+                We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and
+                creating lasting opportunities for communities in need. Thank you to our partners who believe in our
+                mission and help us build a brighter future.
               </p>
             </div>
           </div>
@@ -986,98 +1074,95 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
       <div className="relative mx-auto max-w-[1600px] px-0 sm:px-0 lg:px-0">
         <div className="relative overflow-hidden py-6 md:py-8">
-            <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
 
-            {/* Responsive marquee: CMS-controlled settings */}
-            <MarqueeContainer 
-              partners={partners} 
-              settings={marqueeSettings}
-            />
-          </div>
+          {/* Responsive marquee: CMS-controlled settings */}
+          <MarqueeContainer partners={partners} settings={marqueeSettings} />
+        </div>
       </div>
     </section>
   )
 }
 
-  function MarqueeContainer({ 
-    partners, 
-    settings 
-  }: { 
-    partners: { name: string; Component: React.FC }[]
-    settings: HomepageMarqueeSettings
-  }) {
-    const [isPaused, setIsPaused] = useState(false)
-    const [repeatCount, setRepeatCount] = useState(3)
-    const [duration, setDuration] = useState(settings.speed || 30)
+function MarqueeContainer({
+  partners,
+  settings,
+}: {
+  partners: { name: string; Component: React.FC }[]
+  settings: HomepageMarqueeSettings
+}) {
+  const [isPaused, setIsPaused] = useState(false)
+  const [repeatCount, setRepeatCount] = useState(3)
+  const [duration, setDuration] = useState(settings.speed || 30)
 
-    useEffect(() => {
-      const calc = () => {
-        const w = typeof window !== 'undefined' ? window.innerWidth : 1200
-        if (w < 640) {
-          setRepeatCount(settings.repeatOnMobile ? 2 : 1)
-          setDuration((settings.speed || 30) * 0.6)
-        } else if (w < 1024) {
-          setRepeatCount(3)
-          setDuration((settings.speed || 30) * 0.9)
-        } else if (w < 1280) {
-          setRepeatCount(4)
-          setDuration((settings.speed || 30) * 1.1)
-        } else {
-          setRepeatCount(6)
-          setDuration((settings.speed || 30) * 1.4)
-        }
+  useEffect(() => {
+    const calc = () => {
+      const w = typeof window !== "undefined" ? window.innerWidth : 1200
+      if (w < 640) {
+        setRepeatCount(settings.repeatOnMobile ? 2 : 1)
+        setDuration((settings.speed || 30) * 0.6)
+      } else if (w < 1024) {
+        setRepeatCount(3)
+        setDuration((settings.speed || 30) * 0.9)
+      } else if (w < 1280) {
+        setRepeatCount(4)
+        setDuration((settings.speed || 30) * 1.1)
+      } else {
+        setRepeatCount(6)
+        setDuration((settings.speed || 30) * 1.4)
       }
-      calc()
-      window.addEventListener('resize', calc)
-      return () => window.removeEventListener('resize', calc)
-    }, [settings.speed, settings.repeatOnMobile])
-
-    const marqueePartners = Array.from({ length: repeatCount }).flatMap(() => partners)
-
-    // Get spacing based on CMS setting
-    const spacing = settings.spacingPresets[settings.spacing] || settings.spacingPresets.comfortable
-
-    const animationStyle: React.CSSProperties = {
-      width: 'max-content',
-      animationName: 'marquee',
-      animationDuration: `${duration}s`,
-      animationTimingFunction: 'linear',
-      animationIterationCount: 'infinite',
-      animationPlayState: isPaused ? 'paused' : 'running',
     }
+    calc()
+    window.addEventListener("resize", calc)
+    return () => window.removeEventListener("resize", calc)
+  }, [settings.speed, settings.repeatOnMobile])
 
-    return (
-      <div className="relative">
-        <div
-          className="flex items-center py-3 animate-marquee"
-          style={{
-            ...animationStyle,
-            gap: `${spacing}px`,
-          }}
-          onMouseEnter={() => settings.pauseOnHover && setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          aria-hidden="true"
-        >
-          {marqueePartners.map((partner, i) => {
-            const LogoComponent = partner.Component
-            return (
-              <div
-                key={`partner-${i}`}
-                className="group flex-none flex items-center justify-center px-2 py-1 md:px-3 md:py-2 transition-transform duration-300 hover:scale-105"
-                title={partner.name}
-                style={{ maxHeight: `${settings.maxLogoHeight}px` }}
-              >
-                <div className="flex items-center justify-center text-slate-800/95 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
-                  <LogoComponent />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    )
+  const marqueePartners = Array.from({ length: repeatCount }).flatMap(() => partners)
+
+  // Get spacing based on CMS setting
+  const spacing = settings.spacingPresets[settings.spacing] || settings.spacingPresets.comfortable
+
+  const animationStyle: React.CSSProperties = {
+    width: "max-content",
+    animationName: "marquee",
+    animationDuration: `${duration}s`,
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+    animationPlayState: isPaused ? "paused" : "running",
   }
+
+  return (
+    <div className="relative">
+      <div
+        className="flex items-center py-3 animate-marquee"
+        style={{
+          ...animationStyle,
+          gap: `${spacing}px`,
+        }}
+        onMouseEnter={() => settings.pauseOnHover && setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        aria-hidden="true"
+      >
+        {marqueePartners.map((partner, i) => {
+          const LogoComponent = partner.Component
+          return (
+            <div
+              key={`partner-${i}`}
+              className="group flex-none flex items-center justify-center px-2 py-1 md:px-3 md:py-2 transition-transform duration-300 hover:scale-105"
+              title={partner.name}
+              style={{ maxHeight: `${settings.maxLogoHeight}px` }}
+            >
+              <div className="flex items-center justify-center text-slate-800/95 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
+                <LogoComponent />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 /* ──────────────────  CONTACT SECTION (RESTORED)  ────────────────── */
 
@@ -1098,9 +1183,7 @@ export function ContactSection() {
         <ScrollReveal animation="fade-up">
           <div className="mb-9 text-center sm:mb-16">
             <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
-            <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-              Visit Our Office
-            </h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>Visit Our Office</h2>
           </div>
         </ScrollReveal>
         <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2">
@@ -1124,17 +1207,42 @@ export function ContactSection() {
             })}
           </div>
           <ScrollReveal animation="scale-in" delay={200}>
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border h-[300px] md:h-[420px] lg:h-[520px]" data-tts-ignore="">
+            <div
+              className={`${styles.mapCard} h-[300px] md:h-[420px] lg:h-[520px]`}
+              role="region"
+              aria-label="Interactive map showing Deesha Foundation office location"
+              data-tts-ignore=""
+            >
               <iframe
                 src={`https://www.google.com/maps?q=${encodeURIComponent("Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal")}&output=embed&z=16`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
+                className={styles.mapIframe}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="deessa Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
+                title="Deesha Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
               />
+
+              {/* Floating info badge */}
+              <div className={styles.mapOverlay}>
+                <div className={styles.mapOverlayContent}>
+                  <span className={styles.mapPill}>
+                    <MapPin className="size-2.5 shrink-0" aria-hidden="true" />
+                    Lalitpur, Nepal
+                  </span>
+                  <p className={styles.mapName}>Deesha Foundation HQ</p>
+                  <p className={styles.mapAddr}>Dhobighat Nayabato, Sanepa, Lalitpur 44600</p>
+                </div>
+                <a
+                  href="https://maps.google.com/?q=Sanepa,Lalitpur,Nepal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mapBtn}
+                  aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)"
+                >
+                  <span>Open in Maps</span>
+                  <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
+                </a>
+              </div>
             </div>
           </ScrollReveal>
         </div>

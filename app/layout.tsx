@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/sonner"
 import { StructuredData } from "@/components/seo/structured-data"
 import { getOrganizationStructuredData, getWebSiteStructuredData } from "@/lib/seo/structured-data"
 import "./globals.css"
+import "./public-accessibility.css"
+import "./print-styles.css"
 
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" })
 

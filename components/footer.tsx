@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, ArrowRight } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter-form"
 import { Facebook, Twitter, Instagram, Youtube } from "@/components/social-icons"
 
@@ -35,6 +35,7 @@ const footerLinks = {
     { label: "Corporate Partnership", href: "/get-involved#corporate", icon: Handshake },
   ],
   resources: [
+    { label: "Accessibility", href: "#accessibility", icon: Accessibility, isAccessibility: true },
     { label: "Brand Guidelines", href: "/deesa-resources/Deessa Brand Guidelines.pdf", download: true, icon: Download },
     { label: "Organization Bio", href: "/deesa-resources/deessa Foundation_ Short Bio -2.pdf", download: true, icon: Download },
     { label: "SWC Certificate", href: "/deesa-resources/SWC.jpg", download: true, icon: Download },
@@ -161,6 +162,14 @@ const legalLinks = [
 export function Footer() {
   const [clickCount, setClickCount] = useState(0)
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Handler for opening accessibility panel
+  const handleAccessibilityClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    // Dispatch custom event to open accessibility panel
+    const event = new CustomEvent('openAccessibilityPanel')
+    window.dispatchEvent(event)
+  }
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -320,7 +329,16 @@ export function Footer() {
               <ul className="mt-4 space-y-2">
                 {column.links.map((link) => (
                   <li key={link.href}>
-                    {"download" in link && link.download ? (
+                    {"download" in link && link.isAccessibility ? (
+                      <button
+                        onClick={handleAccessibilityClick}
+                        className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group w-full text-left"
+                        aria-label="Open Accessibility Settings"
+                      >
+                        <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
+                        <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
+                      </button>
+                    ) : link.download ? (
                       <a
                         href={link.href}
                         download
@@ -355,6 +373,10 @@ export function Footer() {
         <p className="font-comic mt-5 text-center text-[11px] text-footer-muted">
           © {new Date().getFullYear()} deessa Foundation. All rights reserved.
         </p>
+              <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
+              <p className="text-gray-500 text-xs text-center sm:text-left">
+                Accessibility powered by <a href="https://opendyslexic.org/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors underline">OpenDyslexic</a>
+              </p>
 
         {/* Socials + legal */}
         <div className="mt-4 grid grid-cols-1 items-center justify-items-center gap-5 md:grid-cols-[1fr_auto_1fr]">

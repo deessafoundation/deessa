@@ -22,19 +22,19 @@ This directory contains all documentation and guides for deploying Payment Archi
 
 2. **Deploy to staging:**
    - Follow [`STAGING_DEPLOYMENT_CHECKLIST.md`](./STAGING_DEPLOYMENT_CHECKLIST.md)
-   - Run `scripts/deploy-staging.ps1` or `.sh`
+   - Run `scripts/deploy/deploy-staging.ps1` or `.sh`
 
 3. **Run smoke tests:**
    - Follow [`SMOKE_TEST_GUIDE.md`](./SMOKE_TEST_GUIDE.md)
-   - Run `scripts/smoke-tests-staging.ps1` or `.sh`
+   - Run `scripts/deploy/smoke-tests-staging.ps1` or `.sh`
 
 4. **Deploy to production:**
    - Follow [`PRODUCTION_DEPLOYMENT_CHECKLIST.md`](./PRODUCTION_DEPLOYMENT_CHECKLIST.md)
-   - Run `scripts/deploy-production.ps1`
+   - Run `scripts/deploy/deploy-production.ps1`
 
 5. **Enable V2 incrementally:**
    - Follow [`INCREMENTAL_ROLLOUT_GUIDE.md`](./INCREMENTAL_ROLLOUT_GUIDE.md)
-   - Run `scripts/enable-v2-staging.ps1` or `.sh`
+   - Run `scripts/deploy/enable-v2-staging.ps1` or `.sh`
 
 6. **Clean up V1 code:**
    - Follow [`V1_CLEANUP_GUIDE.md`](./V1_CLEANUP_GUIDE.md)
@@ -102,23 +102,23 @@ This directory contains all documentation and guides for deploying Payment Archi
 
 ## Scripts
 
-All deployment scripts are located in the `scripts/` directory:
+All deployment scripts are located in the `scripts/deploy/` directory:
 
 ### Staging
-- `scripts/deploy-staging.ps1` - PowerShell staging deployment
-- `scripts/deploy-staging.sh` - Bash staging deployment
-- `scripts/smoke-tests-staging.ps1` - PowerShell smoke tests
-- `scripts/smoke-tests-staging.sh` - Bash smoke tests
-- `scripts/enable-v2-staging.ps1` - PowerShell V2 enablement
-- `scripts/enable-v2-staging.sh` - Bash V2 enablement
-- `scripts/monitor-staging.ps1` - PowerShell monitoring
+- `scripts/deploy/deploy-staging.ps1` - PowerShell staging deployment
+- `scripts/deploy/deploy-staging.sh` - Bash staging deployment
+- `scripts/deploy/smoke-tests-staging.ps1` - PowerShell smoke tests
+- `scripts/deploy/smoke-tests-staging.sh` - Bash smoke tests
+- `scripts/deploy/enable-v2-staging.ps1` - PowerShell V2 enablement
+- `scripts/deploy/enable-v2-staging.sh` - Bash V2 enablement
+- `scripts/deploy/monitor-staging.ps1` - PowerShell monitoring
 
 ### Production
-- `scripts/deploy-production.ps1` - PowerShell production deployment
+- `scripts/deploy/deploy-production.ps1` - PowerShell production deployment
 
 ## Database Migrations
 
-All migration scripts are located in `scripts/payments-v2/`:
+All migration scripts are located in `scripts/db/payments-v2/`:
 
 1. `020-create-payments-table.sql`
 2. `021-create-receipts-table.sql`
@@ -128,7 +128,7 @@ All migration scripts are located in `scripts/payments-v2/`:
 6. `026-create-receipt-failures-table.sql`
 7. `027-create-email-failures-table.sql`
 
-See `scripts/payments-v2/README.md` for detailed migration documentation.
+See `scripts/db/payments-v2/README.md` for detailed migration documentation.
 
 ## Deployment Workflow
 
@@ -173,44 +173,44 @@ See `scripts/payments-v2/README.md` for detailed migration documentation.
 
 ```bash
 # PowerShell
-.\scripts\deploy-staging.ps1 -StagingUrl https://staging.vercel.app
+.\scripts\deploy\deploy-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/deploy-staging.sh https://staging.vercel.app
+./scripts/deploy/deploy-staging.sh https://staging.vercel.app
 ```
 
 ### Smoke Tests
 
 ```bash
 # PowerShell
-.\scripts\smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.app
+.\scripts\deploy\smoke-tests-staging.ps1 -StagingUrl https://staging.vercel.app
 
 # Bash
-./scripts/smoke-tests-staging.sh https://staging.vercel.app
+./scripts/deploy/smoke-tests-staging.sh https://staging.vercel.app
 ```
 
 ### Enable V2
 
 ```bash
 # PowerShell
-.\scripts\enable-v2-staging.ps1
+.\scripts\deploy\enable-v2-staging.ps1
 
 # Bash
-./scripts/enable-v2-staging.sh
+./scripts/deploy/enable-v2-staging.sh
 ```
 
 ### Production Deployment
 
 ```bash
 # PowerShell
-.\scripts\deploy-production.ps1 -ProductionUrl https://production.com
+.\scripts\deploy\deploy-production.ps1 -ProductionUrl https://production.com
 ```
 
 ### Monitoring
 
 ```bash
 # PowerShell
-.\scripts\monitor-staging.ps1 -StagingUrl https://staging.vercel.app -Once
+.\scripts\deploy\monitor-staging.ps1 -StagingUrl https://staging.vercel.app -Once
 ```
 
 ## Environment Variables
@@ -259,7 +259,7 @@ vercel --prod
 
 ### Database Rollback
 
-See `scripts/payments-v2/README.md` for rollback commands.
+See `scripts/db/payments-v2/README.md` for rollback commands.
 
 ## Monitoring
 
@@ -344,9 +344,9 @@ See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed troubleshooting.
 
 ### Migration Documentation
 
-- `scripts/payments-v2/README.md`
-- `scripts/payments-v2/QUICK_START.md`
-- `scripts/payments-v2/MIGRATION_ORDER.md`
+- `scripts/db/payments-v2/README.md`
+- `scripts/db/payments-v2/QUICK_START.md`
+- `scripts/db/payments-v2/MIGRATION_ORDER.md`
 
 ## Success Criteria
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import styles from "@/components/page-hero-contrast.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
@@ -113,14 +114,15 @@ export default async function StoriesPage(props: StoriesPageProps) {
       {/* ═══════════════════════════════════════════
           SECTION 1, HERO (Original Design - UNCHANGED)
       ═══════════════════════════════════════════ */}
-      <section className="relative isolate flex min-h-[100svh] overflow-hidden bg-[linear-gradient(180deg,#fbf8f2_0%,#f4efe5_100%)]">
+      <section id="stories-hero" className={`${styles.hero} relative isolate flex min-h-[100svh] overflow-hidden bg-[linear-gradient(180deg,#fbf8f2_0%,#f4efe5_100%)]`}>
         <div
+          data-hero-photo
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{ backgroundImage: 'url("/StoriesSectionImage.png")' }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(251,191,119,0.32),transparent_22%),radial-gradient(circle_at_85%_15%,rgba(54,69,122,0.18),transparent_20%),linear-gradient(180deg,rgba(251,248,242,0.35),rgba(251,248,242,0.95)_70%,rgba(251,248,242,1))]" />
-        <div className="absolute -left-24 top-20 h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
-        <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        <div data-hero-shade className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(251,191,119,0.32),transparent_22%),radial-gradient(circle_at_85%_15%,rgba(54,69,122,0.18),transparent_20%),linear-gradient(180deg,rgba(251,248,242,0.35),rgba(251,248,242,0.95)_70%,rgba(251,248,242,1))]" />
+        <div data-hero-decoration className="absolute -left-24 top-20 h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
+        <div data-hero-decoration className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
 
         <div className="relative mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 md:px-8 md:py-12 lg:grid-cols-12 lg:items-center lg:py-16">
           <div className="lg:col-span-7">
@@ -209,7 +211,7 @@ export default async function StoriesPage(props: StoriesPageProps) {
       />
 
       {/* CTA Section */}
-      <section className="bg-[linear-gradient(180deg,#f7f4ef_0%,#fbf8f4_100%)] py-12 md:py-16">
+      <section className="dark-section bg-[linear-gradient(180deg,#f7f4ef_0%,#fbf8f4_100%)] py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div className="rounded-[2.25rem] bg-primary px-6 py-10 text-center text-white shadow-[0_22px_60px_-40px_rgba(54,69,122,0.85)] md:px-10 md:py-14">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/70">Take action</p>
@@ -237,6 +239,3 @@ export default async function StoriesPage(props: StoriesPageProps) {
     </>
   )
 }
-
-
-

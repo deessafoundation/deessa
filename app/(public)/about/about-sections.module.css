@@ -1,0 +1,329 @@
+/* =====================================================
+   ABOUT SECTIONS — RESOURCES & FINAL CTA
+   Scoped styles and full High-Contrast / Inverted-Contrast modes
+   ===================================================== */
+
+/* ── Section 8: Resources / Official Documents ── */
+.resourcesSection {
+  background: #f8f6f1;
+  padding: 5rem 0;
+}
+
+@media (min-width: 1024px) {
+  .resourcesSection {
+    padding: 5.625rem 0;
+  }
+}
+
+.resourceCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid transparent;
+}
+
+.resourceIcon {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: rgba(41, 182, 200, 0.1);
+  color: #29b6c8;
+}
+
+.resourceTitle {
+  font-family: var(--font-comic);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.resourceDesc {
+  font-family: var(--font-dm-sans);
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: #6b7280;
+}
+
+.resourceBtn {
+  font-family: var(--font-comic);
+  margin-top: auto;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #eee;
+  background: #f8f6f1;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.resourceBtn:hover {
+  border-color: #29b6c8;
+  background-color: rgba(41, 182, 200, 0.1);
+  color: #1a8fa0;
+}
+
+/* ── Section 9: Final CTA / Donate Section ── */
+.ctaSection {
+  position: relative;
+  isolation: isolate;
+  padding-top: 1.25rem;
+  background: linear-gradient(to bottom, #fff 0 50%, var(--newsletter-bg) 50% 100%);
+}
+
+@media (min-width: 640px) {
+  .ctaSection {
+    padding-top: 1.75rem;
+  }
+}
+
+.ctaWave {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ctaHeading {
+  font-family: var(--font-brush, cursive);
+  font-size: 1.7rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.2;
+  color: #fff;
+}
+
+@media (min-width: 640px) {
+  .ctaHeading {
+    font-size: 1.9rem;
+  }
+}
+
+.ctaSub {
+  font-family: var(--font-dm-sans);
+  margin-top: 0.5rem;
+  max-width: 34rem;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+@media (min-width: 640px) {
+  .ctaSub {
+    font-size: 0.95rem;
+  }
+}
+
+.ctaPrimaryBtn {
+  font-family: var(--font-comic);
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 0 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cta-banner);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.ctaPrimaryBtn:hover {
+  background-color: var(--newsletter-bg);
+}
+
+.ctaSecondaryBtn {
+  font-family: var(--font-comic);
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: 1.5px solid #fff;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.ctaSecondaryBtn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ══════════════════════════════════════════════════════
+   HIGH CONTRAST MODE (STANDARDS.md §3, §25)
+   ══════════════════════════════════════════════════════ */
+
+/* Resources Section */
+:global(body.high-contrast) .resourcesSection {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .resourceCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .resourceIcon {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .resourceIcon svg,
+:global(body.high-contrast) .resourceIcon svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .resourceTitle,
+:global(body.high-contrast) .resourceDesc {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) a.resourceBtn,
+:global(body.high-contrast) .resourceBtn,
+:global(body.high-contrast) .resourceBtn * {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .resourceBtn:hover {
+  background: #e5e5e5 !important;
+}
+
+:global(body.high-contrast) .resourceBtn svg,
+:global(body.high-contrast) .resourceBtn svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+  border: none !important;
+}
+
+/* Final CTA / Donate Section */
+:global(body.high-contrast) .ctaSection {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .ctaWave {
+  display: none !important;
+}
+
+:global(body.high-contrast) .ctaHeading {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .ctaSub {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+:global(body.high-contrast) .ctaPrimaryBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .ctaPrimaryBtn svg,
+:global(body.high-contrast) .ctaPrimaryBtn svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .ctaSecondaryBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   INVERTED CONTRAST MODE (STANDARDS.md §21)
+   ══════════════════════════════════════════════════════ */
+:global(body.inverted-contrast) .resourcesSection {
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .resourceCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .resourceIcon {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .resourceIcon svg,
+:global(body.inverted-contrast) .resourceIcon svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.inverted-contrast) .resourceTitle,
+:global(body.inverted-contrast) .resourceDesc {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .resourceBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .resourceBtn svg,
+:global(body.inverted-contrast) .resourceBtn svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.inverted-contrast) .ctaSection {
+  background: #000 !important;
+  border-top: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaWave {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .ctaHeading,
+:global(body.inverted-contrast) .ctaSub {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaPrimaryBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaSecondaryBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}

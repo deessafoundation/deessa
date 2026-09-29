@@ -1,30 +1,30 @@
 ---
-title: "ðŸ”” Notification System - Improvements & Recommendations"
-description: "- âœ… Database schema with RLS policies"
-owner: "Deessa Team"
+title: "🔔 Notification System - Improvements & Recommendations"
+description: "- ✅ Database schema with RLS policies"
+owner: "Deesha Team"
 status: operational
 category: operations
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸ”” Notification System - Improvements & Recommendations
+# 🔔 Notification System - Improvements & Recommendations
 
-## âœ… Current Implementation Status
+## ✅ Current Implementation Status
 
 ### What's Working Well:
-- âœ… Database schema with RLS policies
-- âœ… Full CRUD API endpoints
-- âœ… Beautiful UI components (bell + center page)
-- âœ… Email notifications
-- âœ… In-app notifications
-- âœ… Polling every 30 seconds
-- âœ… Mark as read/delete functionality
-- âœ… Filter by type/status
-- âœ… Integration with support assignment
+- ✅ Database schema with RLS policies
+- ✅ Full CRUD API endpoints
+- ✅ Beautiful UI components (bell + center page)
+- ✅ Email notifications
+- ✅ In-app notifications
+- ✅ Polling every 30 seconds
+- ✅ Mark as read/delete functionality
+- ✅ Filter by type/status
+- ✅ Integration with support assignment
 
 ---
 
-## ðŸš€ Recommended Improvements
+## 🚀 Recommended Improvements
 
 ### 1. **Real-Time Updates (HIGH PRIORITY)**
 
@@ -38,7 +38,7 @@ last_updated: 2026-09-12
 - Browser notifications support
 
 **Implementation:**
-- âœ… Created `notification-bell-realtime.tsx`
+- ✅ Created `notification-bell-realtime.tsx`
 - Uses Supabase Realtime channels
 - Subscribes to `admin_notifications` table changes
 - Supports browser notifications (with permission)
@@ -276,27 +276,27 @@ export const NotificationTemplates = {
 
 ---
 
-## ðŸ“‹ Implementation Priority
+## 📋 Implementation Priority
 
 ### Phase 1 (Immediate - High Impact)
-1. âœ… Real-time updates (Supabase Realtime)
-2. âœ… Helper functions for creating notifications
-3. â³ Add status change notifications
-4. â³ Add reply notifications
+1. ✅ Real-time updates (Supabase Realtime)
+2. ✅ Helper functions for creating notifications
+3. ⏳ Add status change notifications
+4. ⏳ Add reply notifications
 
 ### Phase 2 (Short-term - Medium Impact)
-5. â³ Notification preferences
-6. â³ Notification grouping
-7. â³ Quick actions in notifications
+5. ⏳ Notification preferences
+6. ⏳ Notification grouping
+7. ⏳ Quick actions in notifications
 
 ### Phase 3 (Long-term - Nice to Have)
-8. â³ Notification analytics
-9. â³ Advanced caching
-10. â³ Mobile optimizations
+8. ⏳ Notification analytics
+9. ⏳ Advanced caching
+10. ⏳ Mobile optimizations
 
 ---
 
-## ðŸ”§ Quick Wins (Can Implement Now)
+## 🔧 Quick Wins (Can Implement Now)
 
 ### 1. Add Sound Notification
 ```typescript
@@ -337,7 +337,7 @@ useEffect(() => {
 
 ---
 
-## ðŸ“Š Metrics to Track
+## 📊 Metrics to Track
 
 1. **Notification Delivery Rate**
    - How many notifications are successfully created
@@ -355,17 +355,17 @@ useEffect(() => {
 
 ---
 
-## ðŸŽ¯ Success Criteria
+## 🎯 Success Criteria
 
-- âœ… Notifications delivered in < 1 second (real-time)
-- âœ… 90%+ notification open rate
-- âœ… Zero missed critical notifications
-- âœ… < 5% notification fatigue (too many notifications)
-- âœ… Positive admin feedback
+- ✅ Notifications delivered in < 1 second (real-time)
+- ✅ 90%+ notification open rate
+- ✅ Zero missed critical notifications
+- ✅ < 5% notification fatigue (too many notifications)
+- ✅ Positive admin feedback
 
 ---
 
-## ðŸ“ Notes
+## 📝 Notes
 
 - Keep notifications actionable and relevant
 - Don't over-notify (causes fatigue)
@@ -376,9 +376,9 @@ useEffect(() => {
 
 ---
 
-## ðŸ”— Related Files
+## 🔗 Related Files
 
-- `scripts/036-admin-notifications.sql` - Database schema
+- `scripts/db/migrations/036-admin-notifications.sql` - Database schema
 - `components/admin/notification-bell.tsx` - Current bell component
 - `components/admin/notification-bell-realtime.tsx` - Real-time version
 - `components/admin/notification-center-client.tsx` - Full page view

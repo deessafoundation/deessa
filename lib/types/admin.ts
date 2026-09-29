@@ -221,6 +221,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
   SUPER_ADMIN: ["*"],
   ADMIN: [
     "projects",
+    "programs",
     "events",
     "stories",
     "team",
@@ -233,7 +234,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     "newsletters",
     "donations",
   ],
-  EDITOR: ["projects", "events", "stories", "team", "partners", "stats"],
+  EDITOR: ["projects", "programs", "events", "stories", "team", "partners", "stats"],
   FINANCE: ["donations", "stats", "reports"],
 }
 

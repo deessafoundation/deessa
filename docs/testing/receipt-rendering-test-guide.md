@@ -20,12 +20,12 @@ pnpm test receipt-rendering.test.ts
 ```
 
 **Test Coverage:**
-- âœ… 21 tests covering all scenarios
-- âœ… Stamp and signature URL combinations
-- âœ… URL validation (HTTPS, relative, invalid)
-- âœ… Verification QR code rendering
-- âœ… Backward compatibility
-- âœ… Edge cases (special characters, large amounts, etc.)
+- ✅ 21 tests covering all scenarios
+- ✅ Stamp and signature URL combinations
+- ✅ URL validation (HTTPS, relative, invalid)
+- ✅ Verification QR code rendering
+- ✅ Backward compatibility
+- ✅ Edge cases (special characters, large amounts, etc.)
 
 ## Manual Testing Scenarios
 
@@ -33,7 +33,7 @@ pnpm test receipt-rendering.test.ts
 
 1. Ensure database migration 029 is applied:
    ```bash
-   psql $POSTGRES_URL -f scripts/payments-v2/029-add-verification-id-to-donations.sql
+   psql $POSTGRES_URL -f scripts/db/payments-v2/029-add-verification-id-to-donations.sql
    ```
 
 2. Set environment variable:
@@ -42,13 +42,13 @@ pnpm test receipt-rendering.test.ts
    ```
 
 3. Have test images ready:
-   - Official stamp image (recommended: 200Ã—200px PNG with transparency)
-   - Digital signature image (recommended: 300Ã—100px PNG with transparency)
+   - Official stamp image (recommended: 200×200px PNG with transparency)
+   - Digital signature image (recommended: 300×100px PNG with transparency)
 
 ### Test Scenario 1: Both Stamp and Signature URLs
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Add stamp URL: `https://example.com/stamp.png`
 3. Add signature URL: `https://example.com/signature.png`
 4. Save settings
@@ -59,15 +59,15 @@ pnpm test receipt-rendering.test.ts
 3. Download PDF
 
 **Expected Result:**
-- âœ… Signature image appears on left side of footer (120Ã—40px)
-- âœ… Stamp image appears on right side of footer (80Ã—80px)
-- âœ… Both images render clearly
-- âœ… No console warnings
+- ✅ Signature image appears on left side of footer (120×40px)
+- ✅ Stamp image appears on right side of footer (80×80px)
+- ✅ Both images render clearly
+- ✅ No console warnings
 
 ### Test Scenario 2: Only Stamp URL
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Add stamp URL: `https://example.com/stamp.png`
 3. Leave signature URL empty
 4. Save settings
@@ -78,15 +78,15 @@ pnpm test receipt-rendering.test.ts
 3. Download PDF
 
 **Expected Result:**
-- âœ… Stamp image appears on right side of footer
-- âœ… Signature line appears (no image) on left side
-- âœ… "Authorized Signatory" text displays
-- âœ… No console errors
+- ✅ Stamp image appears on right side of footer
+- ✅ Signature line appears (no image) on left side
+- ✅ "Authorized Signatory" text displays
+- ✅ No console errors
 
 ### Test Scenario 3: Only Signature URL
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Leave stamp URL empty
 3. Add signature URL: `https://example.com/signature.png`
 4. Save settings
@@ -97,15 +97,15 @@ pnpm test receipt-rendering.test.ts
 3. Download PDF
 
 **Expected Result:**
-- âœ… Signature image appears on left side of footer
-- âœ… No stamp image on right side
-- âœ… Receipt metadata displays correctly
-- âœ… No console errors
+- ✅ Signature image appears on left side of footer
+- ✅ No stamp image on right side
+- ✅ Receipt metadata displays correctly
+- ✅ No console errors
 
 ### Test Scenario 4: No URLs (Backward Compatibility)
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Leave both stamp URL and signature URL empty
 3. Save settings
 
@@ -115,16 +115,16 @@ pnpm test receipt-rendering.test.ts
 3. Download PDF
 
 **Expected Result:**
-- âœ… Receipt generates successfully
-- âœ… Signature line appears (no image)
-- âœ… No stamp section
-- âœ… All other receipt elements display correctly
-- âœ… No console errors
+- ✅ Receipt generates successfully
+- ✅ Signature line appears (no image)
+- ✅ No stamp section
+- ✅ All other receipt elements display correctly
+- ✅ No console errors
 
 ### Test Scenario 5: Relative URLs (Should Skip)
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Add stamp URL: `/images/stamp.png` (relative path)
 3. Add signature URL: `./signature.png` (relative path)
 4. Save settings
@@ -135,16 +135,16 @@ pnpm test receipt-rendering.test.ts
 3. Check browser console
 
 **Expected Result:**
-- âœ… Receipt generates successfully
-- âœ… Images do NOT render (skipped)
-- âš ï¸ Console warning: "Invalid or relative URL for stamp_url"
-- âš ï¸ Console warning: "Invalid or relative URL for signature_url"
-- âœ… Receipt falls back to text-only footer
+- ✅ Receipt generates successfully
+- ✅ Images do NOT render (skipped)
+- ⚠️ Console warning: "Invalid or relative URL for stamp_url"
+- ⚠️ Console warning: "Invalid or relative URL for signature_url"
+- ✅ Receipt falls back to text-only footer
 
 ### Test Scenario 6: Invalid URLs (Should Skip)
 
 **Setup:**
-1. Navigate to Admin â†’ Organization Settings
+1. Navigate to Admin → Organization Settings
 2. Add stamp URL: `ftp://example.com/stamp.png` (invalid protocol)
 3. Add signature URL: `not-a-url` (invalid format)
 4. Save settings
@@ -155,10 +155,10 @@ pnpm test receipt-rendering.test.ts
 3. Check browser console
 
 **Expected Result:**
-- âœ… Receipt generates successfully
-- âœ… Images do NOT render (skipped)
-- âš ï¸ Console warnings for invalid URLs
-- âœ… Receipt falls back to text-only footer
+- ✅ Receipt generates successfully
+- ✅ Images do NOT render (skipped)
+- ⚠️ Console warnings for invalid URLs
+- ✅ Receipt falls back to text-only footer
 
 ### Test Scenario 7: Verification QR Code
 
@@ -172,12 +172,12 @@ pnpm test receipt-rendering.test.ts
 3. Check verification bar at bottom
 
 **Expected Result:**
-- âœ… Verification bar appears at bottom of receipt
-- âœ… QR code (56Ã—56pt) displays on left
-- âœ… "Scan to verify authenticity" label displays
-- âœ… Verification ID displays on right
-- âœ… Verification URL displays
-- âœ… QR code scans correctly to verification page
+- ✅ Verification bar appears at bottom of receipt
+- ✅ QR code (56×56pt) displays on left
+- ✅ "Scan to verify authenticity" label displays
+- ✅ Verification ID displays on right
+- ✅ Verification URL displays
+- ✅ QR code scans correctly to verification page
 
 ### Test Scenario 8: Legacy Receipt (No Verification)
 
@@ -190,10 +190,10 @@ pnpm test receipt-rendering.test.ts
 2. Download PDF
 
 **Expected Result:**
-- âœ… Receipt generates successfully
-- âœ… No verification bar appears
-- âœ… All other receipt elements display correctly
-- âœ… Backward compatible with old receipts
+- ✅ Receipt generates successfully
+- ✅ No verification bar appears
+- ✅ All other receipt elements display correctly
+- ✅ Backward compatible with old receipts
 
 ### Test Scenario 9: Supabase Storage URLs
 
@@ -209,10 +209,10 @@ pnpm test receipt-rendering.test.ts
 3. Download PDF
 
 **Expected Result:**
-- âœ… Images load from Supabase Storage
-- âœ… Images render correctly in PDF
-- âœ… No CORS errors
-- âœ… No console warnings
+- ✅ Images load from Supabase Storage
+- ✅ Images render correctly in PDF
+- ✅ No CORS errors
+- ✅ No console warnings
 
 ### Test Scenario 10: Private Supabase URLs (Should Fail)
 
@@ -227,10 +227,10 @@ pnpm test receipt-rendering.test.ts
 3. Check browser console
 
 **Expected Result:**
-- âš ï¸ Images may fail to load (authentication required)
-- âœ… Receipt still generates (graceful fallback)
-- âš ï¸ Console errors about image loading
-- âœ… Receipt falls back to text-only footer
+- ⚠️ Images may fail to load (authentication required)
+- ✅ Receipt still generates (graceful fallback)
+- ⚠️ Console errors about image loading
+- ✅ Receipt falls back to text-only footer
 
 ## Verification Page Testing
 
@@ -242,13 +242,13 @@ pnpm test receipt-rendering.test.ts
 3. Navigate to `/verify/[verification-id]`
 
 **Expected Result:**
-- âœ… "Receipt Verified" success message
-- âœ… Receipt number displays
-- âœ… Masked donor name (e.g., "J*** S***")
-- âœ… Amount and currency display
-- âœ… Donation type displays
-- âœ… Date displays
-- âœ… Verification ID displays
+- ✅ "Receipt Verified" success message
+- ✅ Receipt number displays
+- ✅ Masked donor name (e.g., "J*** S***")
+- ✅ Amount and currency display
+- ✅ Donation type displays
+- ✅ Date displays
+- ✅ Verification ID displays
 
 ### Test Scenario 12: Invalid Verification ID
 
@@ -256,9 +256,9 @@ pnpm test receipt-rendering.test.ts
 1. Navigate to `/verify/invalid-uuid-here`
 
 **Expected Result:**
-- âœ… "Receipt Not Found" error message
-- âœ… Helpful error text
-- âœ… No sensitive data exposed
+- ✅ "Receipt Not Found" error message
+- ✅ Helpful error text
+- ✅ No sensitive data exposed
 
 ### Test Scenario 13: Rate Limiting
 
@@ -266,10 +266,10 @@ pnpm test receipt-rendering.test.ts
 1. Make 21+ requests to `/verify/[id]` within 1 minute
 
 **Expected Result:**
-- âœ… First 20 requests succeed
-- âœ… 21st request returns "Rate Limit Exceeded"
-- âœ… Retry-After header present
-- âœ… Reset time displays
+- ✅ First 20 requests succeed
+- ✅ 21st request returns "Rate Limit Exceeded"
+- ✅ Retry-After header present
+- ✅ Reset time displays
 
 ### Test Scenario 14: QR Code Scanning
 
@@ -279,10 +279,10 @@ pnpm test receipt-rendering.test.ts
 3. Scan QR code with mobile device
 
 **Expected Result:**
-- âœ… QR code scans successfully
-- âœ… Opens verification page in browser
-- âœ… Displays receipt details
-- âœ… Works on iOS and Android
+- ✅ QR code scans successfully
+- ✅ Opens verification page in browser
+- ✅ Displays receipt details
+- ✅ Works on iOS and Android
 
 ## Performance Testing
 
@@ -294,11 +294,11 @@ pnpm test receipt-rendering.test.ts
 3. Check all PDFs
 
 **Expected Result:**
-- âœ… All receipts generate successfully
-- âœ… No race conditions
-- âœ… Verification IDs are unique
-- âœ… Receipt numbers are sequential
-- âœ… No database deadlocks
+- ✅ All receipts generate successfully
+- ✅ No race conditions
+- ✅ Verification IDs are unique
+- ✅ Receipt numbers are sequential
+- ✅ No database deadlocks
 
 ### Test Scenario 16: Large Image Files
 
@@ -308,40 +308,40 @@ pnpm test receipt-rendering.test.ts
 3. Generate receipt
 
 **Expected Result:**
-- âš ï¸ PDF generation may be slow
-- âœ… Receipt still generates
-- âš ï¸ Consider image optimization warning
-- âœ… Recommend max 500KB per image
+- ⚠️ PDF generation may be slow
+- ✅ Receipt still generates
+- ⚠️ Consider image optimization warning
+- ✅ Recommend max 500KB per image
 
 ## Browser Compatibility
 
 Test receipt download and verification page in:
-- âœ… Chrome/Edge (Chromium)
-- âœ… Firefox
-- âœ… Safari (macOS/iOS)
-- âœ… Mobile browsers (iOS Safari, Chrome Android)
+- ✅ Chrome/Edge (Chromium)
+- ✅ Firefox
+- ✅ Safari (macOS/iOS)
+- ✅ Mobile browsers (iOS Safari, Chrome Android)
 
 ## Checklist
 
 Before marking task 30.4 complete, verify:
 
 - [x] Automated tests pass (21/21)
-- [ ] Manual test scenario 1 (both URLs) âœ…
-- [ ] Manual test scenario 2 (stamp only) âœ…
-- [ ] Manual test scenario 3 (signature only) âœ…
-- [ ] Manual test scenario 4 (no URLs) âœ…
-- [ ] Manual test scenario 5 (relative URLs) âš ï¸
-- [ ] Manual test scenario 6 (invalid URLs) âš ï¸
-- [ ] Manual test scenario 7 (verification QR) âœ…
-- [ ] Manual test scenario 8 (legacy receipt) âœ…
-- [ ] Manual test scenario 9 (Supabase URLs) âœ…
-- [ ] Manual test scenario 10 (private URLs) âš ï¸
-- [ ] Manual test scenario 11 (valid verification) âœ…
-- [ ] Manual test scenario 12 (invalid verification) âœ…
-- [ ] Manual test scenario 13 (rate limiting) âœ…
-- [ ] Manual test scenario 14 (QR scanning) âœ…
-- [ ] Manual test scenario 15 (concurrent) âœ…
-- [ ] Manual test scenario 16 (large images) âš ï¸
+- [ ] Manual test scenario 1 (both URLs) ✅
+- [ ] Manual test scenario 2 (stamp only) ✅
+- [ ] Manual test scenario 3 (signature only) ✅
+- [ ] Manual test scenario 4 (no URLs) ✅
+- [ ] Manual test scenario 5 (relative URLs) ⚠️
+- [ ] Manual test scenario 6 (invalid URLs) ⚠️
+- [ ] Manual test scenario 7 (verification QR) ✅
+- [ ] Manual test scenario 8 (legacy receipt) ✅
+- [ ] Manual test scenario 9 (Supabase URLs) ✅
+- [ ] Manual test scenario 10 (private URLs) ⚠️
+- [ ] Manual test scenario 11 (valid verification) ✅
+- [ ] Manual test scenario 12 (invalid verification) ✅
+- [ ] Manual test scenario 13 (rate limiting) ✅
+- [ ] Manual test scenario 14 (QR scanning) ✅
+- [ ] Manual test scenario 15 (concurrent) ✅
+- [ ] Manual test scenario 16 (large images) ⚠️
 
 ## Known Issues
 

@@ -49,19 +49,19 @@ Run migrations in order:
 
 ```bash
 # 1. Core schema
-psql -f scripts/050-events-module-schema.sql
+psql -f scripts/db/migrations/050-events-module-schema.sql
 
 # 2. Registration enhancements
-psql -f scripts/051-event-registration-enhancements.sql
+psql -f scripts/db/migrations/051-event-registration-enhancements.sql
 
 # 3. Agenda highlighted column
-psql -f scripts/052-agenda-highlighted.sql
+psql -f scripts/db/migrations/052-agenda-highlighted.sql
 
 # 4. Ticket sold_count
-psql -f scripts/053-ticket-sold-count.sql
+psql -f scripts/db/migrations/053-ticket-sold-count.sql
 
 # 5. Form template seeds (15 templates)
-psql -f scripts/055-event-form-template-seeds.sql
+psql -f scripts/db/migrations/055-event-form-template-seeds.sql
 ```
 
 Or via Supabase Dashboard â†’ SQL Editor.

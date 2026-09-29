@@ -9,14 +9,17 @@ export function FieldNumber({ field, value, error, onChange, onBlur }: FieldProp
       {field.label && (
         <label htmlFor={field.id} className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
           {field.label}
-          {field.required && <span className="text-red-500">*</span>}
+          {field.required && <span aria-hidden="true" className="text-red-500">*</span>}
         </label>
       )}
       {field.helpText && (
-        <p className="text-xs text-foreground-muted">{field.helpText}</p>
+        <p id={`${field.id}-help`} className="text-xs text-foreground-muted">{field.helpText}</p>
       )}
       <input
         id={field.id}
+        aria-required={field.required}
+        aria-invalid={!!error}
+        aria-describedby={[field.helpText ? `${field.id}-help` : null, error ? `${field.id}-error` : null].filter(Boolean).join(" ") || undefined}
         type="number"
         value={numVal}
         onChange={(e) => onChange(e.target.value)}
@@ -31,7 +34,7 @@ export function FieldNumber({ field, value, error, onChange, onBlur }: FieldProp
             : "border-border focus:border-primary focus:ring-primary/20"
         }`}
       />
-      {error && <p className="text-xs text-destructive font-medium">{error}</p>}
+      {error && <p id={`${field.id}-error`} role="alert" className="text-xs text-destructive font-medium">{error}</p>}
     </div>
   )
 }

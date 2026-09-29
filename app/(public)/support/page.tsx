@@ -82,7 +82,7 @@ export default async function SupportPage() {
   return (
     <>
       {/* Hero Section - light */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-sky-50 via-white to-slate-50 py-16 sm:py-20 lg:py-24">
+      <section data-a11y-region="neutral" className="relative overflow-hidden bg-gradient-to-b from-sky-50 via-white to-slate-50 py-16 sm:py-20 lg:py-24">
         <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_15%_20%,_rgba(56,189,248,0.12),_transparent_45%),radial-gradient(circle_at_85%_10%,_rgba(167,139,250,0.10),_transparent_45%)]" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Receipt System - Google Email Setup - Complete Index
 
-## ðŸŽ¯ START HERE
+## 🎯 START HERE
 
 **File:** `START_HERE_GOOGLE_EMAIL.md`
 
@@ -17,7 +17,7 @@ This is your main entry point. Read this first for a complete overview.
 
 ---
 
-## ðŸ“‹ Quick Reference
+## 📋 Quick Reference
 
 ### For Quick Overview
 - `START_HERE_GOOGLE_EMAIL.md` - Main entry point
@@ -26,7 +26,7 @@ This is your main entry point. Read this first for a complete overview.
 
 ### For SQL Setup
 - `SQL_SCRIPT_11_COPY_PASTE.md` - Copy & paste ready SQL
-- `scripts/011-receipt-system-complete.sql` - SQL file
+- `scripts/db/migrations/010-receipt-system.sql` - SQL file
 
 ### For Email Configuration
 - `docs/GOOGLE_EMAIL_SETUP.md` - Complete email setup guide
@@ -42,7 +42,7 @@ This is your main entry point. Read this first for a complete overview.
 
 ---
 
-## ðŸš€ 4-Step Setup
+## 🚀 4-Step Setup
 
 ### Step 1: Run SQL Script (5 min)
 **File:** `SQL_SCRIPT_11_COPY_PASTE.md`
@@ -64,10 +64,10 @@ Add receipt generation to payment webhooks
 
 ---
 
-## ðŸ“ All Files
+## 📁 All Files
 
 ### Documentation Files (In Root)
-1. `START_HERE_GOOGLE_EMAIL.md` - Main entry point â­
+1. `START_HERE_GOOGLE_EMAIL.md` - Main entry point ⭐
 2. `GOOGLE_EMAIL_SETUP_SUMMARY.md` - Quick summary
 3. `VISUAL_SETUP_GUIDE.md` - Visual guide
 4. `SQL_SCRIPT_11_COPY_PASTE.md` - Copy & paste SQL
@@ -84,7 +84,7 @@ Add receipt generation to payment webhooks
 7. `docs/RECEIPT_DEPLOYMENT_GUIDE.md` - Deployment guide
 
 ### Code Files
-1. `scripts/011-receipt-system-complete.sql` - SQL setup
+1. `scripts/db/migrations/010-receipt-system.sql` - SQL setup
 2. `lib/email/receipt-mailer.ts` - Google email integration
 3. `lib/receipts/generator.ts` - Receipt generation
 4. `lib/receipts/service.ts` - Receipt service
@@ -98,7 +98,7 @@ Add receipt generation to payment webhooks
 
 ---
 
-## ðŸŽ¯ Choose Your Path
+## 🎯 Choose Your Path
 
 ### Path 1: Quick Setup (Recommended)
 1. Read: `START_HERE_GOOGLE_EMAIL.md`
@@ -125,7 +125,7 @@ Add receipt generation to payment webhooks
 
 ---
 
-## âœ… Setup Checklist
+## ✅ Setup Checklist
 
 - [ ] Read `START_HERE_GOOGLE_EMAIL.md`
 - [ ] Copy SQL from `SQL_SCRIPT_11_COPY_PASTE.md`
@@ -142,35 +142,35 @@ Add receipt generation to payment webhooks
 
 ---
 
-## ðŸ” Find What You Need
+## 🔍 Find What You Need
 
 ### "How do I run the SQL?"
-â†’ `SQL_SCRIPT_11_COPY_PASTE.md`
+→ `SQL_SCRIPT_11_COPY_PASTE.md`
 
 ### "How do I set up Google email?"
-â†’ `docs/GOOGLE_EMAIL_SETUP.md`
+→ `docs/GOOGLE_EMAIL_SETUP.md`
 
 ### "How do I deploy the system?"
-â†’ `docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md`
+→ `docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md`
 
 ### "How do I integrate with webhooks?"
-â†’ `docs/RECEIPT_WEBHOOK_INTEGRATION.md`
+→ `docs/RECEIPT_WEBHOOK_INTEGRATION.md`
 
 ### "What's the complete system?"
-â†’ `docs/RECEIPT_SYSTEM.md`
+→ `docs/RECEIPT_SYSTEM.md`
 
 ### "I need a visual guide"
-â†’ `VISUAL_SETUP_GUIDE.md`
+→ `VISUAL_SETUP_GUIDE.md`
 
 ### "I need a quick summary"
-â†’ `GOOGLE_EMAIL_SETUP_SUMMARY.md`
+→ `GOOGLE_EMAIL_SETUP_SUMMARY.md`
 
 ### "I need everything"
-â†’ `START_HERE_GOOGLE_EMAIL.md`
+→ `START_HERE_GOOGLE_EMAIL.md`
 
 ---
 
-## ðŸ“Š File Statistics
+## 📊 File Statistics
 
 - **Total Files:** 20+
 - **Documentation Files:** 13
@@ -181,7 +181,7 @@ Add receipt generation to payment webhooks
 
 ---
 
-## â±ï¸ Setup Timeline
+## ⏱️ Setup Timeline
 
 | Step | Time |
 |------|------|
@@ -195,7 +195,7 @@ Add receipt generation to payment webhooks
 
 ---
 
-## ðŸŽ‰ You're Ready!
+## 🎉 You're Ready!
 
 Everything is set up and documented.
 
@@ -203,7 +203,7 @@ Everything is set up and documented.
 
 ---
 
-## ðŸ“ž Support
+## 📞 Support
 
 All documentation is included. Check the files above for:
 - Setup instructions
@@ -213,4 +213,4 @@ All documentation is included. Check the files above for:
 
 ---
 
-**Happy receipting!** ðŸ“„âœ¨
+**Happy receipting!** 📄✨

@@ -1,15 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback, useTransition } from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { SafeImage } from "@/components/programs/SafeImage"
+import styles from "./whatwedo-programs.module.css"
 
 interface Program {
   id: string
   category: string
   categoryLabel: string
   categoryColor: string
-  image: string
+  image: string | null
   title: string
   description: string
   slug: string
@@ -21,34 +24,71 @@ interface WhatWeDoClientProps {
 
 const categories = [
   { id: "all", label: "All Programs" },
-  { id: "autism", label: "Autism Support" },
-  { id: "empowerment", label: "Empowerment" },
-  { id: "training", label: "Training" },
+  { id: "service", label: "Services" },
+  { id: "outreach", label: "Outreach" },
+  { id: "research", label: "Research" },
+  { id: "campaign", label: "Campaigns" },
 ]
 
+const PAGE_SIZE = 9
+
 export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
-  const [activeCategory, setActiveCategory] = useState("all")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+
+  const activeCategory = searchParams.get("category") || "all"
+  const currentPage = Number(searchParams.get("page") || "1")
+
+  const setCategory = useCallback((cat: string) => {
+    const sp = new URLSearchParams(searchParams.toString())
+    if (cat === "all") {
+      sp.delete("category")
+    } else {
+      sp.set("category", cat)
+    }
+    sp.delete("page")
+    startTransition(() => {
+      router.push(`?${sp.toString()}`, { scroll: false })
+    })
+  }, [router, searchParams, startTransition])
+
+  const setPage = useCallback((page: number) => {
+    const sp = new URLSearchParams(searchParams.toString())
+    if (page <= 1) {
+      sp.delete("page")
+    } else {
+      sp.set("page", String(page))
+    }
+    startTransition(() => {
+      router.push(`?${sp.toString()}`, { scroll: false })
+    })
+  }, [router, searchParams, startTransition])
 
   const filteredPrograms =
     activeCategory === "all"
       ? programs
       : programs.filter((program) => program.category === activeCategory)
 
+  const totalPages = Math.ceil(filteredPrograms.length / PAGE_SIZE)
+  const safePage = Math.max(1, Math.min(currentPage, totalPages || 1))
+  const pagedPrograms = filteredPrograms.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE
+  )
+
   return (
     <>
       {/* Filter Tabs */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12">
+      <div className="flex flex-wrap justify-center gap-3 mb-12" role="group" aria-label="Program categories">
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`px-5 py-2.5 rounded-full font-comic font-bold text-[14px] transition-all duration-300 ${
-              activeCategory === cat.id
-                ? "bg-[#29b6c8] text-white shadow-lg"
-                : "bg-white text-[#1a1a2e] border-[1.5px] border-[#1a1a2e] hover:border-[#29b6c8]"
-            }`}
+            aria-pressed={activeCategory === cat.id}
+            onClick={() => setCategory(cat.id)}
+            disabled={isPending}
+            className={`${activeCategory === cat.id ? styles.tabActive : styles.tabInactive} disabled:opacity-60`}
           >
-            {cat.id === "autism" && "🧩 "}
             {cat.label}
           </button>
         ))}
@@ -56,57 +96,91 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
 
       {/* Programs Grid */}
       <AnimatePresence mode="wait">
-        {filteredPrograms.length > 0 ? (
+        {pagedPrograms.length > 0 ? (
           <motion.div
-            key={activeCategory}
+            key={`${activeCategory}-${safePage}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {filteredPrograms.map((program, index) => (
-              <motion.div
-                key={program.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.4 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
-              >
-                {/* Image with Category Badge */}
-                <div className="relative h-[200px] overflow-hidden">
-                  <img
-                    src={program.image}
-                    alt={program.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Category Badge */}
-                  <div
-                    className={`absolute bottom-3 left-3 px-3 py-1.5 rounded-full ${program.categoryColor} text-white text-[11px] font-comic font-bold tracking-wide shadow-lg`}
-                  >
-                    {program.categoryLabel}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pagedPrograms.map((program, index) => (
+                <motion.div
+                  key={program.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.08, duration: 0.4 }}
+                  className={styles.card}
+                >
+                  <div className={styles.cardImage}>
+                    {program.image ? (
+                      <SafeImage
+                        src={program.image}
+                        alt={program.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className={styles.cardImagePlaceholder} aria-hidden="true">
+                        <span className={styles.cardImagePlaceholderIcon}>📷</span>
+                      </div>
+                    )}
+                    <div
+                      className={`${styles.cardBadge} ${program.categoryColor}`}
+                    >
+                      {program.categoryLabel}
+                    </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-[22px] font-marissa text-[#1a1a2e] mb-3 leading-tight">
-                    {program.title}
-                  </h3>
-                  <p className="text-[15px] font-dm-sans text-[#1a1a2e]/70 mb-4 leading-relaxed line-clamp-2">
-                    {program.description}
-                  </p>
-                  
-                  {/* Learn More Link */}
-                  <Link
-                    href={`/whatwedo/${program.slug}`}
-                    className="inline-flex items-center text-[14px] font-comic font-bold text-[#29b6c8] hover:text-[#1a8fa0] transition-colors"
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.cardTitle}>
+                      {program.title}
+                    </h3>
+                    <p className={styles.cardDesc}>
+                      {program.description}
+                    </p>
+                    <Link
+                      href={`/whatwedo/${program.slug}`}
+                      className={styles.cardLink}
+                    >
+                      Learn More →
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-12">
+                <button
+                  onClick={() => setPage(safePage - 1)}
+                  disabled={safePage <= 1 || isPending}
+                  className={styles.paginationBtn}
+                >
+                  ← Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setPage(page)}
+                    disabled={isPending}
+                    className={`${styles.paginationPage} ${page === safePage ? styles.paginationPageActive : ""}`}
                   >
-                    Learn More →
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setPage(safePage + 1)}
+                  disabled={safePage >= totalPages || isPending}
+                  className={styles.paginationBtn}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
           </motion.div>
         ) : (
           <motion.div
@@ -115,18 +189,18 @@ export function WhatWeDoClient({ programs }: WhatWeDoClientProps) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="text-center py-16"
+            className={styles.emptyState}
           >
             <div className="text-6xl mb-6">🔍</div>
-            <h3 className="text-[28px] font-marissa text-[#1a1a2e] mb-3">
+            <h3 className={styles.emptyTitle}>
               No programs in this category yet.
             </h3>
-            <p className="text-[16px] font-dm-sans text-[#1a1a2e]/60 mb-6">
+            <p className={styles.emptyDesc}>
               Check back soon or explore all programs.
             </p>
             <button
-              onClick={() => setActiveCategory("all")}
-              className="px-6 py-3 rounded-full bg-[#29b6c8] text-white font-comic font-bold text-[14px] hover:bg-[#1a8fa0] transition-colors"
+              onClick={() => setCategory("all")}
+              className={styles.emptyBtn}
             >
               View All Programs
             </button>

@@ -11,12 +11,27 @@ const nextConfig = {
     "html-encoding-sniffer",
     "@exodus/bytes",
   ],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
   allowedDevOrigins: ["http://172.31.112.1:3000"],
   images: {
+    // Keep in sync with ALLOWED_HOSTS in components/programs/SafeImage.tsx —
+    // SafeImage renders plain <img> for hosts not listed here.
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'plus.unsplash.com',
+      },
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
@@ -27,7 +42,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**', // Allow all HTTPS domains for flexibility
+        hostname: 'img.youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.gstatic.com',
       },
     ],
     formats: ['image/avif', 'image/webp'], // Modern image formats for better performance

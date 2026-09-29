@@ -28,7 +28,7 @@ Before using the new Homepage Content Management System, you **MUST** run this d
    - Click "+ New Query"
 
 3. **Copy Migration SQL**
-   - Open file: `scripts/006-media-assets.sql`
+   - Open file: `scripts/db/migrations/006-media-assets.sql`
    - Copy ALL content (Ctrl+A, Ctrl+C)
 
 4. **Paste and Run**
@@ -67,7 +67,7 @@ supabase link --project-ref YOUR_PROJECT_REF
 supabase db push
 
 # Or apply specific migration
-psql -h YOUR_DB_HOST -U postgres -d postgres -f scripts/006-media-assets.sql
+psql -h YOUR_DB_HOST -U postgres -d postgres -f scripts/db/migrations/006-media-assets.sql
 ```
 
 ---
@@ -81,7 +81,7 @@ If running locally for testing:
 psql -U postgres -d deessa_foundation
 
 # Run the migration
-\i scripts/006-media-assets.sql
+\i scripts/db/migrations/006-media-assets.sql
 
 # Verify table was created
 \dt media_assets
@@ -202,7 +202,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ## ðŸ“ Migration Details
 
-**File**: `scripts/006-media-assets.sql`  
+**File**: `scripts/db/migrations/006-media-assets.sql`  
 **Lines**: ~150  
 **Time**: < 1 second  
 **Destructive**: No (only creates, doesn't modify existing tables)  

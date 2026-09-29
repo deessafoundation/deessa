@@ -234,7 +234,9 @@ export class LiveAnnouncer {
   private announcer: HTMLElement | null = null
   
   constructor() {
-    this.createAnnouncer()
+    if (typeof document !== "undefined") {
+      this.createAnnouncer()
+    }
   }
   
   private createAnnouncer(): void {

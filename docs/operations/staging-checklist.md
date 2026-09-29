@@ -29,7 +29,7 @@ last_updated: 2026-09-12
 ### Database Preparation
 - [ ] Backup staging database (optional but recommended)
 - [ ] Verify database connection from local machine
-- [ ] Review migration scripts in `scripts/payments-v2/`
+- [ ] Review migration scripts in `scripts/db/payments-v2/`
 
 ## Deployment Execution (30-60 minutes)
 
@@ -261,12 +261,12 @@ Run smoke tests (see task 28.2):
 
 ### Database Rollback (Only if absolutely necessary)
 
-âš ï¸ **Warning:** Database rollback should be last resort
+⚠️ **Warning:** Database rollback should be last resort
 
 - [ ] Restore database backup (if taken)
 - [ ] Or execute rollback script:
   ```sql
-  -- See scripts/payments-v2/README.md for rollback commands
+  -- See scripts/db/payments-v2/README.md for rollback commands
   ```
 
 ## Sign-Off

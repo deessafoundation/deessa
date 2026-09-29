@@ -1,0 +1,63 @@
+OpenDyslexic Font License
+===========================
+
+This file is a PLACEHOLDER. 
+
+When you download OpenDyslexic fonts, the actual LICENSE.txt file will be 
+included in the download. Please replace this placeholder with the official 
+license file.
+
+---
+
+Expected License Information:
+-----------------------------
+
+OpenDyslexic Font
+Copyright (c) 2019, Abelardo Gonzalez (http://opendyslexic.org)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+
+This license is also available at: https://scripts.sil.org/OFL
+
+---
+
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+[... Full license text would continue here ...]
+
+---
+
+For the complete official license, please:
+1. Download fonts from https://opendyslexic.org/
+2. Replace this placeholder with the included LICENSE.txt
+3. Or visit: https://github.com/antijingoist/opendyslexic/blob/master/LICENSE.txt
+
+---
+
+Attribution Required:
+--------------------
+When using OpenDyslexic fonts, please include attribution in your application:
+
+"This website uses OpenDyslexic font by Abelardo Gonzalez,
+licensed under the SIL Open Font License."

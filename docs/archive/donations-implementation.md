@@ -17,7 +17,7 @@ This implementation enhances the payment system with comprehensive Stripe refere
 
 ### 1. Database Migrations
 
-**File: `scripts/031-enhance-payments-stripe-references.sql`**
+**File: `scripts/db/migrations/031-enhance-payments-stripe-references.sql`**
 - Added 5 new columns to `payments` table:
   - `payment_intent_id` - Primary reference for refunds/disputes
   - `session_id` - Checkout flow tracking
@@ -28,7 +28,7 @@ This implementation enhances the payment system with comprehensive Stripe refere
 - Created indexes for performance
 - Added check constraints for data integrity
 
-**File: `scripts/032-add-provider-and-message-to-donations.sql`**
+**File: `scripts/db/migrations/032-add-provider-and-message-to-donations.sql`**
 - Added `provider` column to `donations` table (denormalized for convenience)
 - Added `donor_message` column to `donations` table
 - Backfilled provider from payments table
@@ -175,8 +175,8 @@ This implementation enhances the payment system with comprehensive Stripe refere
 ## Files Changed
 
 ### Database
-- `scripts/031-enhance-payments-stripe-references.sql` (new)
-- `scripts/032-add-provider-and-message-to-donations.sql` (new)
+- `scripts/db/migrations/031-enhance-payments-stripe-references.sql` (new)
+- `scripts/db/migrations/032-add-provider-and-message-to-donations.sql` (new)
 
 ### Backend
 - `lib/payments/adapters/StripeAdapter.ts` (modified)
@@ -211,11 +211,11 @@ This implementation enhances the payment system with comprehensive Stripe refere
 
 ## Success Metrics
 
-- âœ… 100% of new Stripe payments have payment_intent_id
-- âœ… Dashboard links work for all new payments
-- âœ… Donor messages captured and displayed
-- âœ… Zero increase in error rates
-- âœ… Admin team reports improved workflow
+- ✅ 100% of new Stripe payments have payment_intent_id
+- ✅ Dashboard links work for all new payments
+- ✅ Donor messages captured and displayed
+- ✅ Zero increase in error rates
+- ✅ Admin team reports improved workflow
 
 ---
 
@@ -231,4 +231,4 @@ This implementation enhances the payment system with comprehensive Stripe refere
 
 ---
 
-**Implementation Status: Complete and Ready for Deployment** âœ…
+**Implementation Status: Complete and Ready for Deployment** ✅

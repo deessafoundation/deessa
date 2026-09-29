@@ -15,7 +15,7 @@ This guide provides step-by-step instructions for testing the complete verificat
 
 1. **Database Migration Applied:**
    ```bash
-   psql $POSTGRES_URL -f scripts/payments-v2/029-add-verification-id-to-donations.sql
+   psql $POSTGRES_URL -f scripts/db/payments-v2/029-add-verification-id-to-donations.sql
    ```
 
 2. **Environment Variables Set:**
@@ -38,7 +38,7 @@ Run the automated test suite first:
 pnpm test verification-e2e.test.ts
 ```
 
-**Expected Result:** âœ… All 24 tests pass
+**Expected Result:** ✅ All 24 tests pass
 
 ## Manual Test Scenarios
 
@@ -56,10 +56,10 @@ pnpm test verification-e2e.test.ts
 5. Check email for receipt or download from confirmation page
 
 **Expected Result:**
-- âœ… Payment completes successfully
-- âœ… Receipt email received
-- âœ… Receipt PDF downloads successfully
-- âœ… Receipt contains all donation details
+- ✅ Payment completes successfully
+- ✅ Receipt email received
+- ✅ Receipt PDF downloads successfully
+- ✅ Receipt contains all donation details
 
 ### Test 2: Verify PDF Includes QR Code and Verification ID
 
@@ -69,20 +69,20 @@ pnpm test verification-e2e.test.ts
 3. Look for verification bar
 
 **Expected Result:**
-- âœ… Verification bar appears at bottom of receipt
-- âœ… QR code (56Ã—56pt) visible on left side
-- âœ… "Scan to verify authenticity" label present
-- âœ… Verification ID (UUID format) displayed on right
-- âœ… Verification URL displayed below ID
-- âœ… QR code is clear and scannable
+- ✅ Verification bar appears at bottom of receipt
+- ✅ QR code (56×56pt) visible on left side
+- ✅ "Scan to verify authenticity" label present
+- ✅ Verification ID (UUID format) displayed on right
+- ✅ Verification URL displayed below ID
+- ✅ QR code is clear and scannable
 
 **Visual Check:**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ [QR CODE]  Scan to verify    Verification ID:      â”‚
-â”‚            authenticity       123e4567-e89b-12d3... â”‚
-â”‚                              dessafoundation.org/... â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────┐
+│ [QR CODE]  Scan to verify    Verification ID:      │
+│            authenticity       123e4567-e89b-12d3... │
+│                              dessafoundation.org/... │
+└─────────────────────────────────────────────────────┘
 ```
 
 ### Test 3: Scan QR Code with Mobile Device
@@ -93,11 +93,11 @@ pnpm test verification-e2e.test.ts
 3. Tap notification/link that appears
 
 **Expected Result:**
-- âœ… QR code scans successfully
-- âœ… Mobile browser opens automatically
-- âœ… Redirects to `/verify/[verification-id]` page
-- âœ… Page loads without errors
-- âœ… Works on both iOS and Android
+- ✅ QR code scans successfully
+- ✅ Mobile browser opens automatically
+- ✅ Redirects to `/verify/[verification-id]` page
+- ✅ Page loads without errors
+- ✅ Works on both iOS and Android
 
 **Troubleshooting:**
 - If QR doesn't scan: Check PDF zoom level (should be 100%)
@@ -110,32 +110,32 @@ pnpm test verification-e2e.test.ts
 2. Check all displayed information
 
 **Expected Result:**
-- âœ… Page shows "Receipt Verified" heading with green checkmark
-- âœ… Success message: "This is a valid donation receipt issued by Dessa Foundation"
-- âœ… Receipt number displays correctly
-- âœ… Donor name is masked (e.g., "T*** D***")
-- âœ… Privacy note: "(Name masked for privacy)"
-- âœ… Amount displays with currency
-- âœ… Donation type shows (One-Time or Monthly Recurring)
-- âœ… Date displays in readable format
-- âœ… Verification ID shows at bottom
-- âœ… "Verified by Dessa Foundation" badge displays
+- ✅ Page shows "Receipt Verified" heading with green checkmark
+- ✅ Success message: "This is a valid donation receipt issued by Dessa Foundation"
+- ✅ Receipt number displays correctly
+- ✅ Donor name is masked (e.g., "T*** D***")
+- ✅ Privacy note: "(Name masked for privacy)"
+- ✅ Amount displays with currency
+- ✅ Donation type shows (One-Time or Monthly Recurring)
+- ✅ Date displays in readable format
+- ✅ Verification ID shows at bottom
+- ✅ "Verified by Dessa Foundation" badge displays
 
 **Visual Check:**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚         âœ“ Receipt Verified          â”‚
-â”‚                                     â”‚
-â”‚ Receipt Number: DF-2026-00001       â”‚
-â”‚ Donor Name: T*** D***               â”‚
-â”‚ (Name masked for privacy)           â”‚
-â”‚ Amount: NPR 5,000.00                â”‚
-â”‚ Type: One-Time                      â”‚
-â”‚ Date: March 3, 2026                 â”‚
-â”‚ Verification ID: 123e4567...        â”‚
-â”‚                                     â”‚
-â”‚ ðŸ›¡ï¸ Verified by Dessa Foundation    â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│         ✓ Receipt Verified          │
+│                                     │
+│ Receipt Number: DF-2026-00001       │
+│ Donor Name: T*** D***               │
+│ (Name masked for privacy)           │
+│ Amount: NPR 5,000.00                │
+│ Type: One-Time                      │
+│ Date: March 3, 2026                 │
+│ Verification ID: 123e4567...        │
+│                                     │
+│ 🛡️ Verified by Dessa Foundation    │
+└─────────────────────────────────────┘
 ```
 
 ### Test 5: Test with Invalid UUID
@@ -145,12 +145,12 @@ pnpm test verification-e2e.test.ts
 2. Observe the error page
 
 **Expected Result:**
-- âœ… Page shows "Receipt Not Found" heading
-- âœ… Error icon displays (document with X)
-- âœ… Error message: "The verification ID you provided is invalid or the receipt does not exist"
-- âœ… Help text: "Please check the verification ID and try again"
-- âœ… No sensitive data exposed
-- âœ… No server errors in console
+- ✅ Page shows "Receipt Not Found" heading
+- ✅ Error icon displays (document with X)
+- ✅ Error message: "The verification ID you provided is invalid or the receipt does not exist"
+- ✅ Help text: "Please check the verification ID and try again"
+- ✅ No sensitive data exposed
+- ✅ No server errors in console
 
 ### Test 6: Test with Non-Existent UUID
 
@@ -160,10 +160,10 @@ pnpm test verification-e2e.test.ts
 3. Observe the error page
 
 **Expected Result:**
-- âœ… Page shows "Receipt Not Found" heading
-- âœ… Same error handling as invalid UUID
-- âœ… No database errors
-- âœ… No sensitive data exposed
+- ✅ Page shows "Receipt Not Found" heading
+- ✅ Same error handling as invalid UUID
+- ✅ No database errors
+- ✅ No sensitive data exposed
 
 ### Test 7: Test Rate Limiting (25 Rapid Requests)
 
@@ -183,16 +183,16 @@ async function testRateLimit() {
       const status = response.status;
       
       if (status === 200) {
-        console.log(`Request ${i}: âœ… Success (200)`);
+        console.log(`Request ${i}: ✅ Success (200)`);
       } else if (status === 429) {
-        console.log(`Request ${i}: âš ï¸  Rate Limited (429)`);
+        console.log(`Request ${i}: ⚠️  Rate Limited (429)`);
         const retryAfter = response.headers.get('Retry-After');
         console.log(`   Retry-After: ${retryAfter} seconds`);
       } else {
-        console.log(`Request ${i}: âŒ Error (${status})`);
+        console.log(`Request ${i}: ❌ Error (${status})`);
       }
     } catch (error) {
-      console.log(`Request ${i}: âŒ Failed - ${error.message}`);
+      console.log(`Request ${i}: ❌ Failed - ${error.message}`);
     }
     
     // Small delay to avoid overwhelming the server
@@ -209,13 +209,13 @@ testRateLimit();
 3. Observe the output
 
 **Expected Result:**
-- âœ… Requests 1-20: Success (200)
-- âœ… Requests 21-25: Rate Limited (429)
-- âœ… Rate limit response includes:
+- ✅ Requests 1-20: Success (200)
+- ✅ Requests 21-25: Rate Limited (429)
+- ✅ Rate limit response includes:
   - Error message: "Rate limit exceeded. Please try again later."
   - `Retry-After` header with seconds
   - Reset time in response body
-- âœ… After 1 minute, requests work again
+- ✅ After 1 minute, requests work again
 
 **Alternative Manual Test:**
 1. Open browser DevTools (Network tab)
@@ -226,16 +226,16 @@ testRateLimit();
 
 **Steps:**
 1. Find an old donation (created before verification system)
-2. Navigate to admin panel â†’ Donations
+2. Navigate to admin panel → Donations
 3. Click "Download Receipt" for old donation
 4. Open the PDF
 
 **Expected Result:**
-- âœ… Receipt downloads successfully
-- âœ… PDF opens without errors
-- âœ… All donation details display correctly
-- âœ… No verification bar (backward compatible)
-- âœ… Receipt is valid and complete
+- ✅ Receipt downloads successfully
+- ✅ PDF opens without errors
+- ✅ All donation details display correctly
+- ✅ No verification bar (backward compatible)
+- ✅ Receipt is valid and complete
 
 ### Test 9: Test Backfilled verification_id on Old Donations
 
@@ -262,11 +262,11 @@ testRateLimit();
    - Navigate to `/verify/[verification-id]`
 
 **Expected Result:**
-- âœ… All donations with receipts have `verification_id`
-- âœ… `total` equals `with_verification` in count query
-- âœ… Old donation verification page works
-- âœ… Shows correct receipt details
-- âœ… Donor name is masked
+- ✅ All donations with receipts have `verification_id`
+- ✅ `total` equals `with_verification` in count query
+- ✅ Old donation verification page works
+- ✅ Shows correct receipt details
+- ✅ Donor name is masked
 
 ### Test 10: Cross-Browser Testing
 
@@ -283,11 +283,11 @@ testRateLimit();
 4. Test responsive design (resize window)
 
 **Expected Result:**
-- âœ… Page displays correctly in all browsers
-- âœ… No layout issues
-- âœ… QR code visible and scannable
-- âœ… Responsive design works on mobile
-- âœ… No console errors
+- ✅ Page displays correctly in all browsers
+- ✅ No layout issues
+- ✅ QR code visible and scannable
+- ✅ Responsive design works on mobile
+- ✅ No console errors
 
 ### Test 11: Security Testing
 
@@ -295,35 +295,35 @@ testRateLimit();
 ```
 Navigate to: /verify/'; DROP TABLE donations; --
 ```
-**Expected:** âœ… Shows "Receipt Not Found" (no SQL injection)
+**Expected:** ✅ Shows "Receipt Not Found" (no SQL injection)
 
 **Test B: XSS Attempt**
 ```
 Navigate to: /verify/<script>alert('xss')</script>
 ```
-**Expected:** âœ… Shows "Receipt Not Found" (no XSS execution)
+**Expected:** ✅ Shows "Receipt Not Found" (no XSS execution)
 
 **Test C: Path Traversal**
 ```
 Navigate to: /verify/../../../etc/passwd
 ```
-**Expected:** âœ… Shows "Receipt Not Found" (no path traversal)
+**Expected:** ✅ Shows "Receipt Not Found" (no path traversal)
 
 **Test D: Donor Name Privacy**
 1. Verify a receipt
-2. Check page source (View â†’ Page Source)
+2. Check page source (View → Page Source)
 3. Search for full donor name
 
-**Expected:** âœ… Full name not present in HTML (only masked version)
+**Expected:** ✅ Full name not present in HTML (only masked version)
 
 ### Test 12: Performance Testing
 
 **Test A: Page Load Time**
-1. Open DevTools â†’ Network tab
+1. Open DevTools → Network tab
 2. Navigate to verification page
 3. Check "Load" time
 
-**Expected:** âœ… Page loads in < 2 seconds
+**Expected:** ✅ Page loads in < 2 seconds
 
 **Test B: Database Query Performance**
 ```sql
@@ -336,9 +336,9 @@ WHERE verification_id = '123e4567-e89b-12d3-a456-426614174000'
 ```
 
 **Expected:** 
-- âœ… Uses index on `verification_id`
-- âœ… Execution time < 10ms
-- âœ… Index Scan (not Seq Scan)
+- ✅ Uses index on `verification_id`
+- ✅ Execution time < 10ms
+- ✅ Index Scan (not Seq Scan)
 
 ### Test 13: Error Recovery Testing
 
@@ -348,35 +348,35 @@ WHERE verification_id = '123e4567-e89b-12d3-a456-426614174000'
 3. Restart database
 
 **Expected:**
-- âœ… Shows user-friendly error message
-- âœ… No stack traces exposed
-- âœ… Works again after database restart
+- ✅ Shows user-friendly error message
+- ✅ No stack traces exposed
+- ✅ Works again after database restart
 
 **Test B: Invalid QR Code Data**
 1. Manually edit QR code URL to invalid format
 2. Scan edited QR code
 
 **Expected:**
-- âœ… Shows "Receipt Not Found"
-- âœ… No server errors
+- ✅ Shows "Receipt Not Found"
+- ✅ No server errors
 
 ## Test Results Checklist
 
 Mark each test as complete:
 
-- [ ] âœ… Test 1: Complete donation and generate receipt
-- [ ] âœ… Test 2: Verify PDF includes QR code and verification ID
-- [ ] âœ… Test 3: Scan QR code with mobile device
-- [ ] âœ… Test 4: Verify landing on verification page
-- [ ] âœ… Test 5: Test with invalid UUID
-- [ ] âœ… Test 6: Test with non-existent UUID
-- [ ] âœ… Test 7: Test rate limiting (25 requests)
-- [ ] âœ… Test 8: Verify existing receipts still download
-- [ ] âœ… Test 9: Test backfilled verification_id
-- [ ] âœ… Test 10: Cross-browser testing
-- [ ] âœ… Test 11: Security testing
-- [ ] âœ… Test 12: Performance testing
-- [ ] âœ… Test 13: Error recovery testing
+- [ ] ✅ Test 1: Complete donation and generate receipt
+- [ ] ✅ Test 2: Verify PDF includes QR code and verification ID
+- [ ] ✅ Test 3: Scan QR code with mobile device
+- [ ] ✅ Test 4: Verify landing on verification page
+- [ ] ✅ Test 5: Test with invalid UUID
+- [ ] ✅ Test 6: Test with non-existent UUID
+- [ ] ✅ Test 7: Test rate limiting (25 requests)
+- [ ] ✅ Test 8: Verify existing receipts still download
+- [ ] ✅ Test 9: Test backfilled verification_id
+- [ ] ✅ Test 10: Cross-browser testing
+- [ ] ✅ Test 11: Security testing
+- [ ] ✅ Test 12: Performance testing
+- [ ] ✅ Test 13: Error recovery testing
 
 ## Known Issues
 
@@ -404,8 +404,8 @@ _______________________________________________________
 ## Next Steps
 
 After all tests pass:
-1. âœ… Mark task 31.10 as complete
-2. âœ… Document any issues in GitHub/issue tracker
-3. âœ… Proceed to production migration (task 31.11)
-4. âœ… Schedule production testing window
-5. âœ… Prepare rollback plan if needed
+1. ✅ Mark task 31.10 as complete
+2. ✅ Document any issues in GitHub/issue tracker
+3. ✅ Proceed to production migration (task 31.11)
+4. ✅ Schedule production testing window
+5. ✅ Prepare rollback plan if needed

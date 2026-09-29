@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Loader2, CheckCircle, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FormField, TextareaField } from "@/components/form"
 import { submitVolunteerApplication } from "@/lib/actions/volunteer"
 
 interface VolunteerFormProps {
@@ -149,64 +150,68 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" aria-label="Volunteer application form">
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-red-700 text-sm">{error}</div>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-red-700 text-sm" role="alert">
+                  {error}
+                </div>
               )}
 
               {/* Personal Info */}
               <div className="space-y-4">
                 <h3 className="font-bold text-foreground">Personal Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Full Name *</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Email *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Phone *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Occupation</label>
-                    <input
-                      type="text"
-                      name="occupation"
-                      value={formData.occupation}
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
+                  <FormField
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    label="Full Name"
+                    required
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="h-11 rounded-xl"
+                  />
+                  
+                  <FormField
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="Email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="h-11 rounded-xl"
+                  />
+                  
+                  <FormField
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    label="Phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="h-11 rounded-xl"
+                  />
+                  
+                  <FormField
+                    id="occupation"
+                    name="occupation"
+                    type="text"
+                    label="Occupation"
+                    value={formData.occupation}
+                    onChange={handleChange}
+                    className="h-11 rounded-xl"
+                  />
                 </div>
               </div>
 
               {/* Skills */}
-              <div>
-                <h3 className="font-bold text-foreground mb-3">Skills <span className="font-normal">&</span> Expertise *</h3>
+              <div role="group" aria-labelledby="skills-heading">
+                <h3 id="skills-heading" className="font-bold text-foreground mb-3">
+                  Skills <span className="font-normal">&</span> Expertise
+                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {skillOptions.map((skill) => (
                     <label key={skill} className="flex items-center gap-2 cursor-pointer">
@@ -215,6 +220,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
                         checked={formData.skills.includes(skill)}
                         onChange={() => handleCheckboxChange("skills", skill)}
                         className="size-4 rounded border-border text-primary focus:ring-primary"
+                        aria-required="true"
                       />
                       <span className="text-sm text-foreground-muted">{skill}</span>
                     </label>
@@ -223,14 +229,19 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               </div>
 
               {/* Availability */}
-              <div>
-                <label className="block text-sm font-bold text-foreground mb-2">Availability *</label>
+              <div className="space-y-1.5">
+                <label htmlFor="availability" className="block text-sm font-medium text-foreground">
+                  Availability
+                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                </label>
                 <select
+                  id="availability"
                   name="availability"
                   required
                   value={formData.availability}
                   onChange={handleChange}
-                  className="w-full h-11 px-4 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  aria-required="true"
+                  className="w-full h-11 px-4 rounded-lg border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">Select your availability</option>
                   <option value="weekdays">Weekdays only</option>
@@ -242,8 +253,11 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               </div>
 
               {/* Interests */}
-              <div>
-                <h3 className="font-bold text-foreground mb-3">Areas of Interest *</h3>
+              <div role="group" aria-labelledby="interests-heading">
+                <h3 id="interests-heading" className="font-bold text-foreground mb-3">
+                  Areas of Interest
+                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {interestOptions.map((interest) => (
                     <label key={interest} className="flex items-center gap-2 cursor-pointer">
@@ -252,6 +266,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
                         checked={formData.interests.includes(interest)}
                         onChange={() => handleCheckboxChange("interests", interest)}
                         className="size-4 rounded border-border text-primary focus:ring-primary"
+                        aria-required="true"
                       />
                       <span className="text-sm text-foreground-muted">{interest}</span>
                     </label>
@@ -260,17 +275,16 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               </div>
 
               {/* Message */}
-              <div>
-                <label className="block text-sm font-bold text-foreground mb-2">Why do you want to volunteer?</label>
-                <textarea
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your motivation and what you hope to contribute..."
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-                />
-              </div>
+              <TextareaField
+                id="message"
+                name="message"
+                label="Why do you want to volunteer?"
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell us about your motivation and what you hope to contribute..."
+                className="rounded-xl"
+              />
 
               <Button type="submit" className="w-full rounded-full h-11" disabled={isLoading}>
                 {isLoading ? (

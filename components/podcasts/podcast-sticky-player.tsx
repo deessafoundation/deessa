@@ -42,6 +42,7 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
   return (
     <div
       ref={playerRef}
+      inert={!isVisible}
       className={`fixed top-0 left-0 right-0 z-40 bg-white border-b shadow-lg transition-transform duration-300 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
@@ -54,6 +55,8 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
         />
         <input
           type="range"
+          aria-label="Episode playback position"
+          aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
           min="0"
           max={duration}
           value={currentTime}
@@ -90,6 +93,7 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
               variant="ghost"
               size="sm"
               className="hidden sm:flex"
+              aria-label="Rewind 10 seconds"
               onClick={() => setCurrentTime(Math.max(0, currentTime - 10))}
             >
               <SkipBack className="w-4 h-4" />
@@ -99,6 +103,7 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
             <Button
               variant="default"
               size="sm"
+              aria-label={isPlaying ? "Pause episode" : "Play episode"}
               onClick={() => setIsPlaying(!isPlaying)}
               className="bg-brand-primary hover:bg-brand-primary-dark"
             >
@@ -113,6 +118,7 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
               variant="ghost"
               size="sm"
               className="hidden sm:flex"
+              aria-label="Forward 10 seconds"
               onClick={() => setCurrentTime(Math.min(duration, currentTime + 10))}
             >
               <span className="mr-1 text-xs">10s</span>
@@ -136,6 +142,7 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
               asChild
             >
               <a
+                aria-label="Open episode on YouTube (opens in a new tab)"
                 href={`https://www.youtube.com/watch?v=${podcast.youtubeId}`}
                 target="_blank"
                 rel="noopener noreferrer"

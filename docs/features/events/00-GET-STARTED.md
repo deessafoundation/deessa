@@ -101,7 +101,7 @@ docs/event-management-module/
 
 ```bash
 # Phase 1: Create database migration
-# File: scripts/050-events-module-schema.sql
+# File: scripts/db/migrations/050-events-module-schema.sql
 # Follow: 04-DATABASE-SCHEMA.md (when created)
 
 # Phase 2: Create types & actions
@@ -141,7 +141,7 @@ docs/event-management-module/
 âŒ components/admin/conference-form-builder/**
 âŒ lib/actions/conference-*.ts
 âŒ lib/types/conference.ts
-âŒ scripts/001-043-*.sql (existing migrations)
+âŒ scripts/db/migrations/001-043-*.sql (existing migrations)
 ```
 
 ### Why?

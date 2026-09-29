@@ -1,6 +1,6 @@
 ---
 title: "ðŸš€ Homepage CMS Deployment Checklist"
-description: "- x SQL migration file created scripts/037-homepage-cms-schema.sql"
+description: "- x SQL migration file created scripts/db/migrations/037-homepage-cms-schema.sql"
 owner: "Deessa Team"
 status: operational
 category: operations
@@ -12,7 +12,7 @@ last_updated: 2026-09-12
 ## Pre-Deployment Verification
 
 ### âœ… Phase 1 & 2 Complete
-- [x] SQL migration file created (`scripts/037-homepage-cms-schema.sql`)
+- [x] SQL migration file created (`scripts/db/migrations/037-homepage-cms-schema.sql`)
 - [x] TypeScript types defined (`lib/types/homepage-settings.ts`)
 - [x] Data loaders created (`lib/data/homepage-settings.ts`)
 - [x] Impact page migrated (`app/(public)/impact/page.tsx`)
@@ -56,7 +56,7 @@ npm run dev
 1. Open Supabase Dashboard
 2. Go to SQL Editor
 3. Create new query
-4. Copy entire contents of `scripts/037-homepage-cms-schema.sql`
+4. Copy entire contents of `scripts/db/migrations/037-homepage-cms-schema.sql`
 5. Click "Run"
 6. Wait for success message
 
@@ -67,7 +67,7 @@ npm run dev
 psql -h db.your-project.supabase.co \
      -U postgres \
      -d postgres \
-     -f scripts/037-homepage-cms-schema.sql
+     -f scripts/db/migrations/037-homepage-cms-schema.sql
 ```
 
 **Expected Output:**
@@ -190,7 +190,7 @@ git status
 git diff
 
 # Stage changes
-git add scripts/037-homepage-cms-schema.sql
+git add scripts/db/migrations/037-homepage-cms-schema.sql
 git add lib/types/homepage-settings.ts
 git add lib/data/homepage-settings.ts
 git add app/(public)/impact/page.tsx

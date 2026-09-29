@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next"
 import Image from "next/image"
+import styles from "@/components/page-hero-contrast.module.css"
 import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
@@ -103,8 +104,8 @@ const impact = [
 
 export default function OurStoryPage() {
   return (
-    <main className="bg-background text-foreground">
-      <section className="relative flex min-h-[82svh] items-center justify-center overflow-hidden px-6 pb-24 pt-20 md:px-8">
+    <div className="bg-background text-foreground">
+      <section id="our-story-hero" className={`${styles.hero} dark-section relative flex min-h-[82svh] items-center justify-center overflow-hidden px-6 pb-24 pt-20 md:px-8`}>
         {/* BACKGROUND IMAGE WITH FILTER */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -120,6 +121,7 @@ export default function OurStoryPage() {
           />
           {/* DARK GRADIENT SCRIM OVERLAY */}
           <div
+            data-hero-shade
             className="absolute inset-0"
             style={{
               background: "linear-gradient(to bottom, rgba(10, 15, 35, 0.55) 0%, rgba(10, 15, 35, 0.35) 50%, rgba(10, 15, 35, 0.70) 100%)"
@@ -468,9 +470,8 @@ export default function OurStoryPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }
-
 
 

@@ -36,10 +36,10 @@ This deployment enhances the payment system to:
 
 ```bash
 # 1. Enhance payments table with Stripe references
-psql -d your_database -f scripts/031-enhance-payments-stripe-references.sql
+psql -d your_database -f scripts/db/migrations/031-enhance-payments-stripe-references.sql
 
 # 2. Add provider and message to donations table
-psql -d your_database -f scripts/032-add-provider-and-message-to-donations.sql
+psql -d your_database -f scripts/db/migrations/032-add-provider-and-message-to-donations.sql
 ```
 
 **Expected Output:**
@@ -106,7 +106,7 @@ If you have existing Stripe payments without payment_intent_id, you can backfill
 **Create backfill script:**
 
 ```typescript
-// scripts/backfill-stripe-payment-intents.ts
+// scripts/archive/backfill-stripe-payment-intents.ts
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
@@ -156,7 +156,7 @@ async function backfillPaymentIntents() {
           })
           .eq('id', payment.id)
         
-        console.log(`âœ“ Updated payment ${payment.id} with intent ${paymentIntentId}`)
+        console.log(`✓ Updated payment ${payment.id} with intent ${paymentIntentId}`)
       }
       
       // Rate limiting
@@ -173,7 +173,7 @@ backfillPaymentIntents()
 
 **Run the backfill:**
 ```bash
-npx tsx scripts/backfill-stripe-payment-intents.ts
+npx tsx scripts/archive/backfill-stripe-payment-intents.ts
 ```
 
 ---
@@ -318,12 +318,12 @@ ALTER TABLE payments DROP CONSTRAINT IF EXISTS check_stripe_payment_references;
 
 ## Success Criteria
 
-- âœ… All new Stripe payments have `payment_intent_id`
-- âœ… Dashboard links work for new payments
-- âœ… Donor message field works in donation form
-- âœ… Admin panel displays all new fields correctly
-- âœ… No increase in webhook error rate
-- âœ… Existing functionality unchanged
+- ✅ All new Stripe payments have `payment_intent_id`
+- ✅ Dashboard links work for new payments
+- ✅ Donor message field works in donation form
+- ✅ Admin panel displays all new fields correctly
+- ✅ No increase in webhook error rate
+- ✅ Existing functionality unchanged
 
 ---
 
@@ -382,7 +382,7 @@ ORDER BY p.created_at DESC;
 
 ---
 
-**Deployment Complete!** ðŸŽ‰
+**Deployment Complete!** 🎉
 
 The system now has:
 - Complete Stripe reference tracking

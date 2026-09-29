@@ -1,156 +1,1108 @@
 /* Scoped to the podcast landing page; shared navigation and footer retain their styles. */
-.page { background: #fff; color: #212529; font-family: var(--font-comic); }
-.main { max-width: 1320px; margin: 0 auto; padding: 32px 32px 72px; display: flex; flex-direction: column; gap: 64px; }
-.page :is(a, button, input):focus-visible { outline: 3px solid #0B5F8A; outline-offset: 4px; }
-.hero { position: relative; padding: 40px 32px 0; border-radius: 24px; background: linear-gradient(115deg, #E8F6FC, #f7fcfe 70%, #fff); }
-.heroGrid { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 32px; }
-.eyebrow { display: flex; align-items: center; gap: 8px; color: #0B5F8A; font-weight: 700; font-size: 15px; margin: 0 0 12px; }
-.heroTitle { font-size: clamp(34px, 3.5vw, 48px); font-weight: 400; line-height: 1.18; color: #000000; margin: 0; }
-.heroTitle span { display: block; color: #000000; margin-top: 8px; }
-.heroDescription { max-width: 48ch; font-size: 17px; line-height: 1.65; margin: 20px 0; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.primary, .secondary { display: inline-flex; min-height: 44px; justify-content: center; align-items: center; gap: 8px; border-radius: 9px; padding: 10px 16px; font-weight: 700; font-size: 15px; line-height: 1.3; text-decoration: none; cursor: pointer; transition: background .2s, border-color .2s; }
-.primary { background: #0B5F8A; border: 1px solid #0B5F8A; color: white; }
-.primary:hover { background: #08496a; border-color: #08496a; }
-.secondary { border: 1px solid #a3d4ea; color: #0B5F8A; background: white; }
-.secondary:hover { background: #E8F6FC; border-color: #3FABDE; }
-.credits { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 24px; }
-.credits > div { display: flex; flex-direction: column; gap: 5px; }
-.credits > div + div { border-left: 1px solid #b9dced; padding-left: 20px; }
-.credits span { font-size: 12px; color: #526571; }
-.credits strong { color: #0B5F8A; font-size: 21px; }
-.sdgLogo { display: inline-flex; align-items: center; gap: 3px; font-family: var(--font-comic) !important; }
-.sdgLetter { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; color: #fff !important; font-size: 13px; font-weight: 700; line-height: 1; }
-.sdgStudioWord { margin-left: 6px; color: #000; }
-.credits img { width: 138px; height: auto; }
-.banner { overflow: hidden; border-radius: 16px; }
-.banner img { width: 100%; height: auto; }
-.conversationStrip { display: flex; align-items: center; gap: 20px; background: linear-gradient(90deg, #FBF2DF, #FDF8ED 55%, #FCF4E4); border: 1px solid #F1E4C9; border-radius: 14px; padding: 14px 22px; margin-top: 28px; box-shadow: 0 6px 20px #0b5f8a0a; transform: translateY(16px); }
-.latest { display: flex; align-items: center; gap: 14px; text-align: left; flex: 1; min-width: 0; cursor: pointer; }
-.playCircle { width: 44px; height: 44px; display: grid; place-items: center; background: #0B5F8A; color: white; border-radius: 50%; flex-shrink: 0; }
-.latestLabel { display: block; font-size: 12px; font-weight: 700; color: #0B5F8A; }
-.latestTitle { display: block; font-size: 14px; font-weight: 700; line-height: 1.45; margin-top: 3px; }
-.stripDivider { display: grid; place-items: center; flex-shrink: 0; color: #D2A93A; }
-.themes { display: flex; align-items: center; gap: 22px; list-style: none; padding: 0; margin: 0; }
-.themes li { display: flex; align-items: center; gap: 9px; max-width: 132px; font-size: 12px; color: #0B5F8A; font-weight: 700; line-height: 1.35; }
-.themeIcon { display: grid; place-items: center; flex-shrink: 0; }
-.storyAndHosts { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-.sectionTitle { font-size: 32px; line-height: 1.3; font-weight: 400; color: #0B5F8A; -webkit-text-stroke: 0.7px currentColor; margin: 0; }
-.story { padding: 16px 0; }
-.story > p:not(.eyebrow) { font-size: 17px; line-height: 1.75; color: #52606b; margin: 20px 0; }
-.story > .eyebrow { color: #6F3E96; }
-.hosts { position: relative; isolation: isolate; padding: 34px 32px 32px; }
-.hosts::before, .hosts::after { content: ''; position: absolute; z-index: -1; width: min(100%, 580px); aspect-ratio: 760 / 260; background: url('/podcasts/hosts-watercolor-accent.svg') no-repeat center / contain; pointer-events: none; }
-.hosts::before { top: -30px; left: -12px; }
-.hosts::after { right: -8px; bottom: -30px; width: min(72%, 420px); transform: rotate(180deg); opacity: .65; }
-.hosts .sectionTitle { font-size: 28px; }
-.hostGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
-.hostCard { min-width: 0; background: white; border: 1px solid #d7eaf4; border-radius: 12px; overflow: hidden; }
-.hostPhoto { position: relative; aspect-ratio: 1.65; }
-.hostBio { padding: 0 14px 16px; }
-.hostLabel { display: inline-block; position: relative; margin-top: -8px; margin-bottom: 8px; padding: 2px 8px; border-radius: 5px; background: #E8F6FC; color: #0B5F8A; font-size: 11px; font-weight: 700; }
-.hostBio h3 { font-family: var(--font-comic) !important; font-size: 18px; font-weight: 700; color: #0B5F8A; line-height: 1.25; }
-.hostBio p { font-size: 14px; line-height: 1.6; margin-top: 8px; color: #52606b; }
-.hostBio .hostRole { color: #0B5F8A; font-weight: 700; font-size: 12px; }
-.hostQuote { display: flex; align-items: start; gap: 8px; font-size: 14px; line-height: 1.6; color: #0B5F8A; margin: 20px 0 0; }
-.hostQuote svg { flex-shrink: 0; margin-top: 4px; }
-.sectionHeader { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 28px; }
-.underlined { position: relative; padding-bottom: 10px; }
-.underlined::after { content: ''; position: absolute; height: 3px; bottom: 0; left: 0; width: 78%; background: #F7C52B; border-radius: 50%; transform: rotate(-1deg); }
-.textLink { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: #0B5F8A; font-size: 14px; font-weight: 700; cursor: pointer; }
-.textLink:hover { text-decoration: underline; text-underline-offset: 4px; }
-.archiveLayout { display: grid; grid-template-columns: 215px minmax(0, 1fr); gap: 24px; }
-.sidebar { align-self: start; display: grid; gap: 20px; }
-.filterPanel, .supportCard { background: #f1f9fd; padding: 20px; border-radius: 14px; }
-.desktopFilterTitle, .supportCard h3 { font-family: var(--font-comic) !important; font-size: 18px; font-weight: 700; color: #0B5F8A; }
-.filterLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #52606b; margin: 16px 0 8px; }
-.topic { display: flex; align-items: center; gap: 8px; min-height: 36px; cursor: pointer; font-size: 14px; line-height: 1.3; }
-.filterToggle { display: none; }
-.supportCard { border: 1px solid #d7eaf4; color: #0B5F8A; }
-.supportCard h3 { margin-top: 12px; }
-.supportCard p { color: #52606b; font-size: 15px; line-height: 1.6; margin: 12px 0 16px; }
-.supportCard .primary { width: 100%; }
-.archiveResults { min-width: 0; }
-.resultCount { color: #52606b; font-size: 14px; margin: 0 0 16px; }
-.episodeGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.episodeCard { display: grid; grid-template-columns: 30% minmax(0, 1fr); align-items: start; padding: 12px; gap: 12px; border: 1px solid #d7eaf4; border-radius: 14px; background: white; transition: border-color .2s, box-shadow .2s; }
-.episodeCard:hover { border-color: #3FABDE; box-shadow: 0 6px 20px #0b5f8a0d; }
-.episodeImage { display: block; position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: #E8F6FC; }
-.thumbnailPlay { position: absolute; bottom: 8px; left: 8px; width: 30px; height: 30px; display: grid; place-items: center; color: #0B5F8A; background: #fffffff2; border-radius: 50%; box-shadow: 0 2px 10px #0002; }
-.episodeContent { min-width: 0; }
-.episodeMeta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; color: #52606b; font-size: 11px; }
-.episodeMeta strong { color: #0B5F8A; }
-.topicBadge { background: #E8F6FC; color: #0B5F8A; border-radius: 4px; padding: 2px 5px; font-weight: 700; }
-.date { display: flex; gap: 4px; align-items: center; color: #52606b; font-size: 11px; margin-top: 4px; }
-.episodeTitle { font-family: var(--font-comic) !important; font-size: 15px; font-weight: 700; line-height: 1.4; margin: 8px 0 6px; }
-.episodeTitle a:hover { color: #0B5F8A; text-decoration: underline; }
-.episodeDescription { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; color: #52606b; font-size: 13px; line-height: 1.55; }
-.episodeActions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.episodeActions :is(.primary, .secondary) { font-size: 12px; padding: 8px 10px; min-height: 44px; gap: 5px; border-radius: 7px; }
-.loadMore { display: flex; justify-content: center; margin-top: 24px; }
-.empty { padding: 40px 20px; border-radius: 14px; background: #E8F6FC; text-align: center; }
-.highlightTrack { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 14px; scrollbar-width: thin; scrollbar-color: #a3d4ea transparent; }
-.highlightCard { flex: 0 0 calc((100% - 48px) / 4); min-width: 255px; display: flex; gap: 12px; padding: 12px; border: 1px solid #d7eaf4; border-radius: 12px; scroll-snap-align: start; background: white; }
-.highlightImage { display: grid; place-items: center; flex-shrink: 0; position: relative; width: 80px; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 7px; background: #E8F6FC; cursor: pointer; }
-.highlightContent { display: flex; flex-direction: column; align-items: start; gap: 8px; min-width: 0; }
-.highlightTitle { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; line-height: 1.45; font-weight: 700; }
-.highlightTitle:hover { color: #0B5F8A; }
-.highlightLinks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; margin-top: auto; }
-.highlightLinks > span { color: #6F3E96; background: #6f3e960d; border-radius: 4px; padding: 2px 5px; }
-.highlightLinks a { display: flex; gap: 4px; align-items: center; min-height: 44px; color: #0B5F8A; }
-.carouselControls { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 12px; color: #52606b; font-size: 13px; }
-.carouselArrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #c6e4f2; border-radius: 50%; color: #0B5F8A; background: white; cursor: pointer; }
-.carouselArrow:hover { background: #E8F6FC; }
-@media (max-width: 1100px) {
-  .storyAndHosts { gap: 24px; }
-  .archiveLayout { grid-template-columns: 190px minmax(0, 1fr); gap: 16px; }
-  .episodeCard { grid-template-columns: 1fr; }
-  .episodeImage { aspect-ratio: 16 / 9; }
-  .themes { gap: 16px; }
+.page {
+  background: #fff;
+  color: #212529;
+  font-family: var(--font-comic);
+  width: 100%;
 }
+
+/* Full-width Hero Wrapper spanning 100% across the top */
+.heroWrapper {
+  width: 100%;
+  background: linear-gradient(115deg, #e8f6fc 0%, #f4fbfd 50%, #ffffff 100%);
+  border-bottom: 1px solid #d7eaf4;
+  padding: 48px 0 32px;
+}
+
+.heroInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.page :is(a, button, input):focus-visible {
+  outline: 3px solid #0b5f8a;
+  outline-offset: 4px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  align-items: center;
+  gap: 36px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0b5f8a;
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.heroTitle {
+  font-size: clamp(34px, 3.5vw, 48px);
+  font-weight: 400;
+  line-height: 1.18;
+  color: #000000;
+  margin: 0;
+}
+
+.heroTitle span {
+  display: block;
+  color: #000000;
+  margin-top: 8px;
+}
+
+.heroDescription {
+  max-width: 48ch;
+  font-size: 17px;
+  line-height: 1.65;
+  margin: 20px 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  min-height: 44px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.primary {
+  background: #0b5f8a;
+  border: 1px solid #0b5f8a;
+  color: white;
+}
+
+.primary:hover {
+  background: #08496a;
+  border-color: #08496a;
+}
+
+.secondary {
+  border: 1px solid #a3d4ea;
+  color: #0b5f8a;
+  background: white;
+}
+
+.secondary:hover {
+  background: #e8f6fc;
+  border-color: #3fabde;
+}
+
+.credits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.credits > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.credits > div + div {
+  border-left: 1px solid #b9dced;
+  padding-left: 20px;
+}
+
+.credits span {
+  font-size: 12px;
+  color: #526571;
+}
+
+.credits strong {
+  color: #0b5f8a;
+  font-size: 21px;
+}
+
+.sdgLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-comic) !important;
+}
+
+.sdgLetter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  color: #fff !important;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sdgStudioWord {
+  margin-left: 6px;
+  color: #000;
+}
+
+.credits img {
+  width: 138px;
+  height: auto;
+}
+
+.banner {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+}
+
+.conversationStrip {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(90deg, #fbf2df, #fdf8ed 55%, #fcf4e4);
+  border: 1px solid #f1e4c9;
+  border-radius: 14px;
+  padding: 14px 22px;
+  margin-top: 28px;
+  box-shadow: 0 6px 20px #0b5f8a0a;
+}
+
+.latest {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.playCircle {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #0b5f8a;
+  color: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.latestLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b5f8a;
+}
+
+.latestTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-top: 3px;
+}
+
+.stripDivider {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #d2a93a;
+}
+
+.themes {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.themes li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 132px;
+  font-size: 12px;
+  color: #0b5f8a;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.themeIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.storyAndHosts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 48px 24px 0;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  line-height: 1.3;
+  font-weight: 400;
+  color: #0b5f8a;
+  -webkit-text-stroke: 0.7px currentColor;
+  margin: 0;
+}
+
+.story {
+  padding: 16px 0;
+}
+
+.story > p:not(.eyebrow) {
+  font-size: 17px;
+  line-height: 1.75;
+  color: #52606b;
+  margin: 20px 0;
+}
+
+.story > .eyebrow {
+  color: #6f3e96;
+}
+
+.hosts {
+  position: relative;
+  isolation: isolate;
+  padding: 34px 32px 32px;
+}
+
+.hosts::before,
+.hosts::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(100%, 580px);
+  aspect-ratio: 760 / 260;
+  background: url("/podcasts/hosts-watercolor-accent.svg") no-repeat center / contain;
+  pointer-events: none;
+}
+
+.hosts::before {
+  top: -30px;
+  left: -12px;
+}
+
+.hosts::after {
+  right: -8px;
+  bottom: -30px;
+  width: min(72%, 420px);
+  transform: rotate(180deg);
+  opacity: 0.65;
+}
+
+.hosts .sectionTitle {
+  font-size: 28px;
+}
+
+.hostGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.hostCard {
+  min-width: 0;
+  background: white;
+  border: 1px solid #d7eaf4;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hostPhoto {
+  position: relative;
+  aspect-ratio: 1.65;
+}
+
+.hostBio {
+  padding: 0 14px 16px;
+}
+
+.hostLabel {
+  display: inline-block;
+  position: relative;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: #e8f6fc;
+  color: #0b5f8a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.hostBio h3 {
+  font-family: var(--font-comic) !important;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0b5f8a;
+  line-height: 1.25;
+}
+
+.hostBio p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 8px;
+  color: #52606b;
+}
+
+.hostBio .hostRole {
+  color: #0b5f8a;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.hostQuote {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #0b5f8a;
+  margin: 20px 0 0;
+}
+
+.hostQuote svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.underlined {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.underlined::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  bottom: 0;
+  left: 0;
+  width: 78%;
+  background: #f7c52b;
+  border-radius: 50%;
+  transform: rotate(-1deg);
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #0b5f8a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.textLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Sidebar moved more to the left with compact 220px width */
+.archiveLayout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.sidebar {
+  align-self: start;
+  display: grid;
+  gap: 16px;
+}
+
+.filterPanel,
+.supportCard {
+  background: #f1f9fd;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #d7eaf4;
+}
+
+.desktopFilterTitle,
+.supportCard h3 {
+  font-family: var(--font-comic) !important;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0b5f8a;
+}
+
+.filterLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #52606b;
+  margin: 12px 0 6px;
+}
+
+.topic {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.filterToggle {
+  display: none;
+}
+
+.supportCard {
+  color: #0b5f8a;
+}
+
+.supportCard p {
+  color: #52606b;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0 12px;
+}
+
+.supportCard .primary {
+  width: 100%;
+}
+
+.archiveResults {
+  min-width: 0;
+}
+
+.resultCount {
+  color: #52606b;
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.empty {
+  padding: 40px 20px;
+  border-radius: 14px;
+  background: #e8f6fc;
+  text-align: center;
+}
+
+.highlightTrack {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: #a3d4ea transparent;
+}
+
+.highlightCard {
+  flex: 0 0 calc((100% - 48px) / 4);
+  min-width: 255px;
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #d7eaf4;
+  border-radius: 12px;
+  scroll-snap-align: start;
+  background: white;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.highlightCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(11, 95, 138, 0.08);
+}
+
+.highlightImage {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  position: relative;
+  width: 80px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 7px;
+  background: #e8f6fc;
+  cursor: pointer;
+}
+
+.highlightContent {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.highlightTitle {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.highlightTitle:hover {
+  color: #0b5f8a;
+}
+
+.highlightLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-top: auto;
+}
+
+.highlightLinks > span {
+  color: #6f3e96;
+  background: #6f3e960d;
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+.highlightLinks a {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  min-height: 44px;
+  color: #0b5f8a;
+}
+
+.carouselControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  color: #52606b;
+  font-size: 13px;
+}
+
+.carouselArrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #c6e4f2;
+  border-radius: 50%;
+  color: #0b5f8a;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.carouselArrow:hover {
+  background: #e8f6fc;
+}
+
+@media (max-width: 1023px) {
+  .storyAndHosts {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .archiveLayout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .sidebar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .filterToggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-weight: 700;
+    color: #0b5f8a;
+    width: 100%;
+    cursor: pointer;
+  }
+  .desktopFilterTitle,
+  .filterOptions {
+    display: none;
+  }
+  .filterOptionsOpen {
+    display: block;
+  }
+  .topic {
+    min-height: 44px;
+  }
+  .supportCard h3 {
+    margin-top: 0;
+  }
+  .supportCard > svg {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
-  .heroGrid, .storyAndHosts { grid-template-columns: 1fr; }
-  .heroGrid { gap: 28px; }
-  .heroDescription { max-width: 62ch; }
-  .conversationStrip { flex-direction: column; align-items: stretch; gap: 16px; }
-  .themes { border-top: 1px solid #F1E4C9; padding: 14px 0 0; width: 100%; justify-content: space-between; }
-  .stripDivider { display: none; }
-  .storyAndHosts { gap: 24px; }
-  .archiveLayout { grid-template-columns: 1fr; }
-  .sidebar { grid-template-columns: 1fr 1fr; }
-  .filterToggle { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 700; color: #0B5F8A; width: 100%; cursor: pointer; }
-  .desktopFilterTitle, .filterOptions { display: none; }
-  .filterOptionsOpen { display: block; }
-  .topic { min-height: 44px; }
-  .supportCard h3 { margin-top: 0; }
-  .supportCard > svg { display: none; }
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .heroDescription {
+    max-width: 62ch;
+  }
+  .conversationStrip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .themes {
+    border-top: 1px solid #f1e4c9;
+    padding: 14px 0 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .stripDivider {
+    display: none;
+  }
 }
+
 @media (max-width: 639px) {
-  .main { padding: 20px 16px 48px; gap: 44px; }
-  .hero { padding: 24px 18px 0; border-radius: 16px; }
-  .heroTitle { font-size: 34px; }
-  .heroTitle br { display: initial; }
-  .heroDescription { font-size: 16px; }
-  .actions { flex-direction: column; }
-  .conversationStrip { padding: 16px; margin-left: -8px; margin-right: -8px; }
-  .themes { gap: 10px; }
-  .themes li { font-size: 11px; gap: 6px; max-width: 96px; }
-  .sectionTitle { font-size: 28px; }
-  .hosts { padding: 28px 22px 26px; }
-  .hosts::before { top: -20px; left: -10px; width: min(100%, 390px); }
-  .hosts::after { right: -6px; bottom: -18px; width: min(80%, 300px); }
-  .hostGrid, .sidebar, .episodeGrid { grid-template-columns: 1fr; }
-  .hostPhoto { aspect-ratio: 1.8; }
-  .hostBio { padding: 0 16px 20px; }
-  .hostBio p { font-size: 15px; }
-  .episodeCard { padding: 16px; }
-  .episodeTitle { font-size: 17px; }
-  .episodeDescription { font-size: 15px; }
-  .episodeMeta, .date { font-size: 12px; }
-  .episodeActions :is(.primary, .secondary) { font-size: 14px; padding: 10px 14px; }
-  .sectionHeader { gap: 8px; margin-bottom: 20px; }
-  .highlightCard { flex-basis: 85%; }
+  .main {
+    padding: 20px 16px 48px;
+    gap: 40px;
+  }
+  .heroWrapper {
+    padding: 32px 0 20px;
+  }
+  .heroInner {
+    padding: 0 16px;
+  }
+  .heroTitle {
+    font-size: 34px;
+  }
+  .heroTitle br {
+    display: initial;
+  }
+  .heroDescription {
+    font-size: 16px;
+  }
+  .actions {
+    flex-direction: column;
+  }
+  .conversationStrip {
+    padding: 16px;
+  }
+  .themes {
+    gap: 10px;
+  }
+  .themes li {
+    font-size: 11px;
+    gap: 6px;
+    max-width: 96px;
+  }
+  .sectionTitle {
+    font-size: 28px;
+  }
+  .hosts {
+    padding: 28px 22px 26px;
+  }
+  .hosts::before {
+    top: -20px;
+    left: -10px;
+    width: min(100%, 390px);
+  }
+  .hosts::after {
+    right: -6px;
+    bottom: -18px;
+    width: min(80%, 300px);
+  }
+  .hostGrid,
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+  .hostPhoto {
+    aspect-ratio: 1.8;
+  }
+  .hostBio {
+    padding: 0 16px 20px;
+  }
+  .hostBio p {
+    font-size: 15px;
+  }
+  .sectionHeader {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .highlightCard {
+    flex-basis: 85%;
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .page * { transition: none !important; scroll-behavior: auto !important; }
+  .page * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   HIGH-CONTRAST MODE OVERRIDES (STANDARDS.md §3, §20)
+   ══════════════════════════════════════════════════════ */
+:global(body.high-contrast) .heroWrapper {
+  background: #ededed !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .heroTitle,
+:global(body.high-contrast) .heroTitle span,
+:global(body.high-contrast) .heroDescription,
+:global(body.high-contrast) .eyebrow {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .primary,
+:global(body.high-contrast) a.primary {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+/*
+ * SPECIFICITY FIX — do not remove this rule.
+ *
+ * globals.css contains:
+ *   body.high-contrast a:not([class*="bg-"]):not(footer a):not(footer *) { color: var(--a11y-ink) !important; }
+ * That selector has specificity (0,2,5) and beats the `a.primary` rule above
+ * which is only (0,2,2), even though both use !important.
+ *
+ * Adding :not([hidden]) raises this module selector to (0,3,2).
+ * Since 3 > 2 in the B (class) column, this rule wins and keeps the
+ * button text white. :not([hidden]) is always true for any displayed element
+ * — it exists purely to increase specificity without any behavioural effect.
+ *
+ * Affects only: <a class={styles.primary}> inside this module in high-contrast
+ * mode. No other elements on any other page are impacted.
+ */
+:global(body.high-contrast) a.primary:not([hidden]) {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .primary:hover {
+  background: #222 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .secondary,
+:global(body.high-contrast) a.secondary {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .secondary:hover {
+  background: #ededed !important;
+}
+
+:global(body.high-contrast) .sdgLetter {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+}
+
+:global(body.high-contrast) .sdgStudioWord {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .conversationStrip {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .latestLabel,
+:global(body.high-contrast) .latestTitle,
+:global(body.high-contrast) .themes li {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .themeIcon svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .playCircle {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .sectionTitle {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .underlined::after {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .filterPanel,
+:global(body.high-contrast) .supportCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .supportCard h3,
+:global(body.high-contrast) .desktopFilterTitle {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .topic span {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .hostCard {
+  border: 2px solid #000 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .hostBio h3,
+:global(body.high-contrast) .hostBio p,
+:global(body.high-contrast) .hostRole {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .hostLabel {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) h3,
+:global(body.high-contrast) :global(.podcast-card) p,
+:global(body.high-contrast) :global(.podcast-card) span {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) a {
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) [class*="bg-brand-primary"] {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) button[aria-label*="Share"] {
+  border: 2px solid #000 !important;
+  color: #000 !important;
+  background: #fff !important;
+}
+
+:global(body.high-contrast) :global(.podcast-card) button[aria-label*="Share"]:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .highlightCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .highlightTitle {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .carouselArrow {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   INVERTED CONTRAST MODE (STANDARDS.md §21)
+   ══════════════════════════════════════════════════════ */
+:global(body.inverted-contrast) .heroWrapper {
+  background: #111 !important;
+  border-bottom: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .heroTitle,
+:global(body.inverted-contrast) .heroTitle span,
+:global(body.inverted-contrast) .heroDescription,
+:global(body.inverted-contrast) .eyebrow {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .conversationStrip {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .latestLabel,
+:global(body.inverted-contrast) .latestTitle,
+:global(body.inverted-contrast) .themes li {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .themeIcon svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.inverted-contrast) .filterPanel,
+:global(body.inverted-contrast) .supportCard {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .supportCard h3,
+:global(body.inverted-contrast) .desktopFilterTitle,
+:global(body.inverted-contrast) .topic span {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) :global(.podcast-card) {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) :global(.podcast-card) h3,
+:global(body.inverted-contrast) :global(.podcast-card) p {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) :global(.podcast-card) [class*="bg-brand-primary"] {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) :global(.podcast-card) button[aria-label*="Share"] {
+  border: 2px solid #fff !important;
+  color: #fff !important;
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .hostCard {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .hostBio h3,
+:global(body.inverted-contrast) .hostBio p,
+:global(body.inverted-contrast) .hostRole {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .hostLabel {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .highlightCard {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .highlightTitle {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .carouselArrow {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   FORCED COLORS (Windows HCM)
+   ══════════════════════════════════════════════════════ */
+@media (forced-colors: active) {
+  .heroWrapper,
+  .conversationStrip,
+  .filterPanel,
+  .supportCard,
+  .hostCard,
+  .highlightCard {
+    border: 2px solid ButtonText !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   PRINT
+   ══════════════════════════════════════════════════════ */
+@media print {
+  .heroWrapper {
+    background: white !important;
+    color: black !important;
+    border-bottom: 1px solid black !important;
+  }
+  .conversationStrip,
+  .actions {
+    display: none !important;
+  }
 }

@@ -14,18 +14,18 @@ Added YouTube Shorts highlights section to podcast detail pages with full admin 
 
 ## What Was Implemented
 
-### 1. **Database Schema** âœ…
-- **File**: `scripts/016-add_podcast_highlights.sql`
+### 1. **Database Schema** ✅
+- **File**: `scripts/db/migrations/016-add-podcast-highlights.sql`
 - **Column**: `highlights TEXT[]` - stores array of YouTube Shorts URLs
 - **Constraint**: Maximum 10 highlights per episode
 - **Index**: GIN index for efficient searching
 
-### 2. **TypeScript Types** âœ…
+### 2. **TypeScript Types** ✅
 - Updated `Podcast` interface to include `highlights: string[]`
 - Updated `PodcastRow` interface for database mapping
 - Updated `transformPodcastRow` function to include highlights
 
-### 3. **Frontend Display** âœ…
+### 3. **Frontend Display** ✅
 - **Location**: After description, before show notes
 - **Layout**: Responsive grid (2-4 columns based on screen size)
 - **Features**:
@@ -34,7 +34,7 @@ Added YouTube Shorts highlights section to podcast detail pages with full admin 
   - Play button overlay with hover effects
   - Opens in new tab when clicked
 
-### 4. **Admin Management** âœ…
+### 4. **Admin Management** ✅
 - **Location**: Content tab in podcast form
 - **Features**:
   - Add up to 10 YouTube Shorts URLs
@@ -47,7 +47,7 @@ Added YouTube Shorts highlights section to podcast detail pages with full admin 
 
 ### Step 1: Run Database Migration
 
-Copy and paste this SQL into **Supabase Dashboard â†’ SQL Editor**:
+Copy and paste this SQL into **Supabase Dashboard → SQL Editor**:
 
 ```sql
 -- Add highlights column
@@ -67,7 +67,7 @@ CREATE INDEX IF NOT EXISTS idx_podcasts_highlights ON public.podcasts USING GIN(
 
 ### Step 2: Test the Feature
 
-1. **Go to Admin Panel** â†’ Podcasts â†’ Edit a podcast
+1. **Go to Admin Panel** → Podcasts → Edit a podcast
 2. **Navigate to Content tab**
 3. **Scroll to "Episode Highlights" section**
 4. **Add YouTube Shorts URLs**:
@@ -85,24 +85,24 @@ CREATE INDEX IF NOT EXISTS idx_podcasts_highlights ON public.podcasts USING GIN(
 ## Features
 
 ### User-Facing
-- âœ… Grid layout with responsive columns
-- âœ… Thumbnail previews with play button
-- âœ… Hover effects (scale, ring, overlay)
-- âœ… Opens Shorts in new tab
-- âœ… Numbered highlights (#1, #2, etc.)
-- âœ… Only shows section if highlights exist
+- ✅ Grid layout with responsive columns
+- ✅ Thumbnail previews with play button
+- ✅ Hover effects (scale, ring, overlay)
+- ✅ Opens Shorts in new tab
+- ✅ Numbered highlights (#1, #2, etc.)
+- ✅ Only shows section if highlights exist
 
 ### Admin Panel
-- âœ… Up to 10 highlights per episode
-- âœ… URL validation
-- âœ… Add/remove individual highlights
-- âœ… Progress counter (X/10)
-- âœ… Keyboard support (Enter to add)
-- âœ… Visual feedback with notifications
+- ✅ Up to 10 highlights per episode
+- ✅ URL validation
+- ✅ Add/remove individual highlights
+- ✅ Progress counter (X/10)
+- ✅ Keyboard support (Enter to add)
+- ✅ Visual feedback with notifications
 
 ## Files Modified
 
-1. `scripts/016-add_podcast_highlights.sql` - Database migration
+1. `scripts/db/migrations/016-add-podcast-highlights.sql` - Database migration
 2. `lib/types/podcast.ts` - Type definitions
 3. `app/(public)/podcasts/[slug]/page.tsx` - Display highlights section
 4. `components/admin/podcast-form.tsx` - Admin management UI
@@ -118,6 +118,6 @@ CREATE INDEX IF NOT EXISTS idx_podcasts_highlights ON public.podcasts USING GIN(
 
 ---
 
-**Status**: âœ… Fully Implemented and Ready to Use
+**Status**: ✅ Fully Implemented and Ready to Use
 
 Run the migration SQL above and start adding YouTube Shorts highlights to your podcast episodes!

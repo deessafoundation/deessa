@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import styles from "./navbar.module.css"
 
 interface NavbarProps {
   supportEnabled?: boolean
@@ -54,7 +55,8 @@ const tabletQuickLinks = [
 ] as const
 
 function isNavLinkActive(pathname: string, href: string) {
-  return pathname === href
+  if (href === "/") return pathname === "/"
+  return pathname === href || pathname.startsWith(href + "/")
 }
 
 export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
@@ -156,8 +158,10 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
         )}
         <Link
           href={link.href}
+          aria-current={active ? "page" : undefined}
           className={cn(
             comicNeue.className,
+            isSecondary && styles.secondaryLink,
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
               ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"
@@ -286,12 +290,14 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
               <button
                 type="button"
                 className={cn(
+                  styles.mobileToggle,
                   "relative z-50 flex size-11 items-center justify-center rounded-lg transition-colors duration-200 lg:hidden",
                   mobileMenuOpen
                     ? "bg-primary text-white"
                     : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 )}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -364,6 +370,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
           <div
             data-secondary-nav
             className={cn(
+              styles.secondaryRow,
               "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 dark:bg-slate-900 lg:block",
               scrolled ? "max-h-0 translate-y-[-8px] py-0 pt-0 pb-0 opacity-0" : "max-h-24 translate-y-0 opacity-100"
             )}
@@ -384,6 +391,8 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
           "fixed inset-0 z-40 lg:hidden transition-opacity duration-300",
           mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         )}
+        aria-hidden={!mobileMenuOpen}
+        inert={!mobileMenuOpen}
       >
         {/* Dimmed dark overlay */}
         <div

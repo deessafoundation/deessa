@@ -1,0 +1,431 @@
+/* Pair foregrounds and surfaces explicitly; never infer contrast from utilities. */
+/* Use one shade instead of stacking two 85% black overlays over the photo. */
+:global(body.high-contrast) :global(#home-hero).hero img {
+  filter: grayscale(1);
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+  background: linear-gradient(to right, rgb(0 0 0 / 68%), rgb(0 0 0 / 60%) 60%, rgb(0 0 0 / 25%)) !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="vertical"] {
+  background: transparent !important;
+}
+
+@media (max-width: 767px) {
+  :global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+    background: rgb(0 0 0 / 60%) !important;
+  }
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control],
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  opacity: 1;
+}
+
+:global(body.high-contrast) section.hero button[data-hero-control]:hover,
+:global(body.high-contrast) section.hero a[data-hero-control]:hover {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+:global(body.high-contrast) section.hero [data-hero-control]:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 4px !important;
+}
+
+.storyOverlay {
+  background: linear-gradient(to top, rgb(0 0 0 / 30%), transparent);
+}
+
+:global(body.high-contrast) .storyOverlay {
+  background: transparent;
+}
+
+:global(body.high-contrast) .podcastPlay.podcastPlay,
+:global(body.high-contrast) .podcastPlay.podcastPlay * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(#what-we-do) .darkLabel {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .podcastPlay {
+  background-color: #fff !important;
+}
+
+:global(body.high-contrast) .testimonials button {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .testimonials button svg,
+:global(body.high-contrast) .testimonials button svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   MISSION CARD — normal & high-contrast  (STANDARDS.md §3)
+   The deep-navy gradient card is scoped to .missionCard so
+   it does not use Tailwind "from-", "via-", "to-" classes
+   which get globally stripped by globals.css.
+   In high contrast: solid black background with black border
+   against the white section, white text, and white icon box.
+   ══════════════════════════════════════════════════════ */
+.missionCard {
+  background: linear-gradient(135deg, #0e2d40 0%, #11405a 50%, #0e2d40 100%);
+  box-shadow: 0 18px 50px -18px rgba(14, 45, 64, 0.55);
+}
+
+.missionCard:hover {
+  box-shadow: 0 26px 60px -18px rgba(14, 45, 64, 0.6);
+}
+
+:global(body.high-contrast) .missionCard {
+  background: #000 !important;
+  background-image: none !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .missionCard h3,
+:global(body.high-contrast) [data-mission-card] h3 {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .missionCard p,
+:global(body.high-contrast) [data-mission-card] p {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+:global(body.high-contrast) .missionCard [data-mission-icon],
+:global(body.high-contrast) [data-mission-icon] {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .missionCard [data-mission-icon] svg,
+:global(body.high-contrast) .missionCard [data-mission-icon] svg *,
+:global(body.high-contrast) [data-mission-icon] svg,
+:global(body.high-contrast) [data-mission-icon] svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Remove decorative glow blobs and blur elements in high contrast */
+:global(body.high-contrast) .missionCard > span[aria-hidden="true"],
+:global(body.high-contrast) [data-mission-card] > span[aria-hidden="true"],
+:global(body.high-contrast) [data-mission-section] [class*="blur-3xl"] {
+  display: none !important;
+}
+
+/* Inverted contrast mode for mission card */
+:global(body.inverted-contrast) .missionCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .missionCard h3,
+:global(body.inverted-contrast) .missionCard p {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   PROGRAMS PILLAR ICONS — high-contrast  (STANDARDS.md §3)
+   Coloured icon boxes (bg-blue-500, bg-green-500, etc.)
+   use text-white icons — both become invisible on a white
+   card in high-contrast mode. Flip to black bg + white icon.
+   ══════════════════════════════════════════════════════ */
+:global(body.high-contrast) [data-pillar-icon] {
+  background: #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) [data-pillar-icon] svg,
+:global(body.high-contrast) [data-pillar-icon] svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   PODCAST BANNER — high-contrast  (STANDARDS.md §3)
+   The deep-blue (#005581) section becomes a strict black
+   surface with white text and a visible border. The studio
+   photo gets grayscale. Decorative SVG/div feather elements
+   and the teal wave are hidden. Host cards get a white border
+   and dark surface. The CTA button flips to white-on-black.
+   ══════════════════════════════════════════════════════ */
+:global(body.high-contrast) [data-podcast-section] {
+  background: #000 !important;
+}
+
+/* Studio photo — grayscale */
+:global(body.high-contrast) [data-podcast-section] img {
+  filter: grayscale(1) !important;
+}
+
+/* Hide the decorative teal wave SVG and feather gradient divs */
+:global(body.high-contrast) [data-podcast-feather] {
+  display: none !important;
+}
+
+/* Pill badge above the title — white bg, black text */
+:global(body.high-contrast) [data-podcast-badge] {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) [data-podcast-badge] svg,
+:global(body.high-contrast) [data-podcast-badge] svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+/* Heading and body copy */
+:global(body.high-contrast) [data-podcast-section] h2 {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) [data-podcast-section] p {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* "Hosted by" label */
+:global(body.high-contrast) [data-podcast-hosted-label] {
+  color: #fff !important;
+}
+
+/* Host cards — dark surface with white border */
+:global(body.high-contrast) [data-podcast-host-card] {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+:global(body.high-contrast) [data-podcast-host-card] p {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* CTA button — white bg, black text, underline */
+:global(body.high-contrast) [data-podcast-cta] {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) [data-podcast-cta] svg,
+:global(body.high-contrast) [data-podcast-cta] svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+/* ── Homepage map section (ContactSection) ── */
+/* These classes are applied directly in the JSX; see homepage-sections.tsx */
+.mapCard {
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 16px 40px rgba(7, 40, 70, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  background: var(--surface, #fff);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.mapCard:hover {
+  box-shadow:
+    0 24px 50px rgba(7, 40, 70, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.mapIframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  z-index: 1;
+}
+
+.mapOverlay {
+  position: relative;
+  z-index: 2;
+  margin: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(4, 24, 48, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  flex-wrap: wrap;
+}
+
+.mapOverlayContent {
+  flex: 1;
+  min-width: 140px;
+}
+
+.mapPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(63, 171, 222, 0.2);
+  border: 1px solid rgba(63, 171, 222, 0.35);
+  color: #7dd3f7;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.mapName {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.mapAddr {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  margin-bottom: 0;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.mapBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #3fabde;
+  color: #ffffff;
+  padding: 9px 16px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 40px;
+  flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+.mapBtn:hover {
+  background: #0b5f8a;
+  transform: translateY(-2px);
+}
+
+/* High-contrast for the homepage map card */
+:global(body.high-contrast) .mapCard {
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .mapIframe {
+  filter: grayscale(1) contrast(1.2) !important;
+}
+
+:global(body.high-contrast) .mapOverlay {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+:global(body.high-contrast) .mapPill {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.high-contrast) .mapPill * {
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .mapName {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .mapAddr {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .mapBtn,
+:global(body.high-contrast) a.mapBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .mapBtn *,
+:global(body.high-contrast) a.mapBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .mapBtn:focus-visible {
+  outline: 3px solid #000 !important;
+  outline-offset: 2px !important;
+}
+
+/* Inverted contrast for homepage map */
+:global(body.inverted-contrast) .mapCard {
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .mapIframe {
+  filter: invert(0.9) hue-rotate(180deg) contrast(1.1);
+}
+
+:global(body.inverted-contrast) .mapOverlay {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .mapPill {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .mapName,
+:global(body.inverted-contrast) .mapAddr {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .mapBtn,
+:global(body.inverted-contrast) a.mapBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}

@@ -7,19 +7,31 @@ import { Facebook, Linkedin } from "@/components/social-icons"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { PrintButton } from "@/components/ui/print-button"
-import { getPublishedStories, getStoryBySlug } from "@/lib/data/stories"
+import { getPublishedStoriesStatic, getPublishedStories, getStoryBySlug } from "@/lib/data/stories"
 import { sanitizeStoryContent } from "@/lib/sanitize/story-content"
 import { processStoryContent } from "@/lib/utils/legacy-story"
 import { StructuredData } from "@/components/seo/structured-data"
 import { getArticleStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
 import "@/app/print-styles.css"
 
-// Story content changes frequently in CMS workflows; keep this route runtime-rendered
-// so new/updated slugs always resolve on Vercel without waiting for rebuilds.
-export const dynamic = "force-dynamic"
+// Use ISR (Incremental Static Regeneration) for better SEO and performance
+// Pages are generated at build time and revalidated periodically
+export const revalidate = 3600 // Revalidate every hour (3600 seconds)
 
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+// Generate static params for all published stories at build time
+// This ensures stories are pre-rendered and included in sitemap
+export async function generateStaticParams() {
+  const stories = await getPublishedStoriesStatic()
+  
+  // Pre-generate the first 50 stories at build time
+  // Remaining stories will be generated on-demand and cached
+  return stories.slice(0, 50).map((story) => ({
+    slug: story.slug,
+  }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -133,7 +145,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
         <div className="url">www.deessafoundation.org</div>
       </div>
 
-      <section className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
+      <section data-a11y-region="neutral" className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
         <div className="absolute inset-0">
           <Image src={story.image || "/placeholder.svg"} alt={story.title} fill className="object-cover opacity-60" priority />
           <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(18,53,80,0.15)_0%,rgba(2,6,23,0.78)_55%,rgba(2,6,23,0.96)_100%)]" />

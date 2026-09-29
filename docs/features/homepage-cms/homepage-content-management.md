@@ -9,32 +9,32 @@ last_updated: 2026-09-12
 ---
 # Homepage Content Management System - Implementation Guide
 
-## ðŸŽ‰ Overview
+## 🎉 Overview
 
 We've successfully implemented a **comprehensive, professional Homepage Content Management System** for the Deessa Foundation website! This system includes:
 
-âœ… **Media Library** - Central hub for all media assets  
-âœ… **Homepage Manager** - Dedicated page for managing homepage content  
-âœ… **Reusable Components** - MediaPicker, VideoPicker for easy media selection  
-âœ… **Database Tracking** - Full media asset tracking with usage information  
-âœ… **No Breaking Changes** - All existing functionality remains intact
+✅ **Media Library** - Central hub for all media assets  
+✅ **Homepage Manager** - Dedicated page for managing homepage content  
+✅ **Reusable Components** - MediaPicker, VideoPicker for easy media selection  
+✅ **Database Tracking** - Full media asset tracking with usage information  
+✅ **No Breaking Changes** - All existing functionality remains intact
 
 ---
 
-## ðŸ“‹ What's New
+## 📋 What's New
 
 ### 1. **Media Library** (`/admin/media`)
 
 A comprehensive media management system with:
 
-- ðŸ“Š Dashboard with statistics (total files, images, videos, storage used)
-- ðŸ” Search and filter by type, bucket, date
-- ðŸ“ Grid and List view modes
-- ðŸ—‘ï¸ Bulk delete operations
-- ðŸ“‹ Copy URL to clipboard
-- ðŸ“ Usage tracking (shows where each media is used)
-- ðŸ–¼ï¸ Image previews with thumbnails
-- âš¡ Fast loading and responsive design
+- 📊 Dashboard with statistics (total files, images, videos, storage used)
+- 🔍 Search and filter by type, bucket, date
+- 📁 Grid and List view modes
+- 🗑️ Bulk delete operations
+- 📋 Copy URL to clipboard
+- 📍 Usage tracking (shows where each media is used)
+- 🖼️ Image previews with thumbnails
+- ⚡ Fast loading and responsive design
 
 ### 2. **Homepage Manager** (`/admin/homepage`)
 
@@ -42,17 +42,17 @@ Professional content management for the homepage with:
 
 #### **Hero Section Management**
 
-- ðŸŽ¬ Background video configuration (upload, URL, or select from library)
-- âš™ï¸ Video settings (autoplay, loop, muted, controls)
-- ðŸ–¼ï¸ Multiple hero images (main, classroom, donor images)
-- âœï¸ Content editing (title, subtitle, badge)
-- ðŸ”˜ Call-to-action buttons (primary & secondary)
+- 🎬 Background video configuration (upload, URL, or select from library)
+- ⚙️ Video settings (autoplay, loop, muted, controls)
+- 🖼️ Multiple hero images (main, classroom, donor images)
+- ✍️ Content editing (title, subtitle, badge)
+- 🔘 Call-to-action buttons (primary & secondary)
 
 #### **Initiative Cards Management**
 
-- ðŸ“š Education initiative
-- ðŸ’ª Women's empowerment initiative
-- ðŸ¥ Healthcare initiative
+- 📚 Education initiative
+- 💪 Women's empowerment initiative
+- 🏥 Healthcare initiative
 - Each with:
   - Image selection from library
   - Title, description, link
@@ -86,7 +86,7 @@ Specialized component for video management:
 
 ---
 
-## ðŸ—„ï¸ Database Changes
+## 🗄️ Database Changes
 
 ### New Table: `media_assets`
 
@@ -112,11 +112,11 @@ CREATE TABLE media_assets (
 );
 ```
 
-**Migration File**: `scripts/006-media-assets.sql`
+**Migration File**: `scripts/db/migrations/006-media-assets.sql`
 
 ---
 
-## ðŸ“ New Files Created
+## 📁 New Files Created
 
 ### **Components**
 
@@ -153,17 +153,17 @@ CREATE TABLE media_assets (
 
 ### **Database**
 
-1. `scripts/006-media-assets.sql` - Database migration
+1. `scripts/db/migrations/006-media-assets.sql` - Database migration
 
 ---
 
-## ðŸš€ Setup Instructions
+## 🚀 Setup Instructions
 
 ### Step 1: Run Database Migration
 
 ```sql
 -- In Supabase SQL Editor, run:
--- Copy and paste the content from scripts/006-media-assets.sql
+-- Copy and paste the content from scripts/db/migrations/006-media-assets.sql
 ```
 
 Or use Supabase CLI:
@@ -205,28 +205,28 @@ Make sure these buckets exist in Supabase Storage:
 
 ---
 
-## ðŸŽ¯ Key Features
+## 🎯 Key Features
 
-### **Media Reusability** âœ…
+### **Media Reusability** ✅
 
 - Upload once, use anywhere
 - Select from existing media library
 - No need to re-upload files
 
-### **Smart Deletion** âœ…
+### **Smart Deletion** ✅
 
 - Soft delete (moves to trash)
 - Hard delete (removes file from storage)
 - Warning if media is in use
 - Bulk delete support
 
-### **Usage Tracking** ðŸ”„
+### **Usage Tracking** 🔄
 
 - Future feature: Track where each media is used
 - Prevent accidental deletion of in-use media
 - Visual indicators in media library
 
-### **Professional UX** âœ¨
+### **Professional UX** ✨
 
 - Grid and list views
 - Search and filter
@@ -237,7 +237,7 @@ Make sure these buckets exist in Supabase Storage:
 
 ---
 
-## ðŸ”§ How to Use
+## 🔧 How to Use
 
 ### **For Homepage Video**
 
@@ -286,14 +286,14 @@ Make sure these buckets exist in Supabase Storage:
 
 ---
 
-## ðŸŽ¨ Navigation
+## 🎨 Navigation
 
 ### **Sidebar Links** (Updated)
 
-- ðŸ  Homepage Manager
-- ðŸ–¼ï¸ Media Library
-- âš™ï¸ Site Settings
-- ðŸ‘¥ Admin Users
+- 🏠 Homepage Manager
+- 🖼️ Media Library
+- ⚙️ Site Settings
+- 👥 Admin Users
 
 ### **Site Settings Page** (Updated)
 
@@ -304,7 +304,7 @@ Two new buttons added:
 
 ---
 
-## ðŸ”’ Permissions
+## 🔒 Permissions
 
 All new pages require **`settings`** permission:
 
@@ -315,25 +315,25 @@ Only admins with `settings` permission can access these pages.
 
 ---
 
-## ðŸ“Š Database Schema Visualization
+## 📊 Database Schema Visualization
 
 ```
 media_assets
-â”œâ”€â”€ id (UUID)
-â”œâ”€â”€ filename (TEXT)
-â”œâ”€â”€ bucket (TEXT)
-â”œâ”€â”€ url (TEXT)
-â”œâ”€â”€ type (image|video|document)
-â”œâ”€â”€ size_bytes (BIGINT)
-â”œâ”€â”€ dimensions (JSONB)
-â”œâ”€â”€ usage_locations (JSONB[])
-â”œâ”€â”€ uploaded_by (UUID â†’ admins)
-â””â”€â”€ timestamps
+├── id (UUID)
+├── filename (TEXT)
+├── bucket (TEXT)
+├── url (TEXT)
+├── type (image|video|document)
+├── size_bytes (BIGINT)
+├── dimensions (JSONB)
+├── usage_locations (JSONB[])
+├── uploaded_by (UUID → admins)
+└── timestamps
 ```
 
 ---
 
-## âš¡ Performance Optimizations
+## ⚡ Performance Optimizations
 
 1. **Lazy Loading**: Images load only when visible
 2. **Pagination**: Ready for future implementation
@@ -343,7 +343,7 @@ media_assets
 
 ---
 
-## ðŸ”® Future Enhancements
+## 🔮 Future Enhancements
 
 ### **Phase 2** (Coming Soon)
 
@@ -365,7 +365,7 @@ media_assets
 
 ---
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 ### **Issue**: Media not loading in picker
 
@@ -385,17 +385,17 @@ media_assets
 
 ---
 
-## ðŸ“ Notes
+## 📝 Notes
 
-- âœ… All existing features remain functional
-- âœ… Homepage tab in Site Settings still works (for backward compatibility)
-- âœ… No breaking changes to existing code
-- âœ… Database migration is required before use
-- âœ… All components are fully typed with TypeScript
+- ✅ All existing features remain functional
+- ✅ Homepage tab in Site Settings still works (for backward compatibility)
+- ✅ No breaking changes to existing code
+- ✅ Database migration is required before use
+- ✅ All components are fully typed with TypeScript
 
 ---
 
-## ðŸŽ“ Best Practices
+## 🎓 Best Practices
 
 1. **Always use Media Library** for uploads (not direct URLs when possible)
 2. **Delete unused media** regularly to save storage
@@ -406,7 +406,7 @@ media_assets
 
 ---
 
-## ðŸ™ Credits
+## 🙏 Credits
 
 Built with:
 
@@ -419,7 +419,7 @@ Built with:
 
 ---
 
-## ðŸ“ž Support
+## 📞 Support
 
 If you encounter any issues or have questions:
 
@@ -432,4 +432,4 @@ If you encounter any issues or have questions:
 
 **Last Updated**: January 2, 2026  
 **Version**: 1.0.0  
-**Status**: âœ… Production Ready
+**Status**: ✅ Production Ready

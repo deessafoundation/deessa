@@ -204,7 +204,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
+    <form aria-label="Support report" aria-busy={isLoading} onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 via-white to-sky-50 px-6 py-6 sm:px-8 sm:py-7">
         <div className="flex items-start gap-4">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 shadow-sm">
@@ -230,7 +230,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
 
       <div className="space-y-6 p-6 sm:p-8">
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700 shadow-sm">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700 shadow-sm" role="alert">
             {error}
           </div>
         )}
@@ -272,6 +272,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
               What Best Describes It?
             </label>
             <FancySelect
+              id="issueType"
               value={formData.issueType}
               onValueChange={(val) => setFormData((prev) => ({ ...prev, issueType: val }))}
               options={ISSUE_TYPE_OPTIONS}

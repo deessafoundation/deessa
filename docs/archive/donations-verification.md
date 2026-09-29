@@ -13,8 +13,8 @@ last_updated: 2026-09-12
 
 ### Database Migrations
 - [ ] Migration files exist:
-  - [ ] `scripts/031-enhance-payments-stripe-references.sql`
-  - [ ] `scripts/032-add-provider-and-message-to-donations.sql`
+  - [ ] `scripts/db/migrations/031-enhance-payments-stripe-references.sql`
+  - [ ] `scripts/db/migrations/032-add-provider-and-message-to-donations.sql`
 - [ ] Migration scripts have been reviewed
 - [ ] Database backup has been created
 - [ ] Migrations tested in staging environment

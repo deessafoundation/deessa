@@ -9,14 +9,14 @@ last_updated: 2026-09-12
 ---
 # Supabase Storage Setup Guide
 
-## âœ… Implementation Complete
+## ✅ Implementation Complete
 
 File upload functionality has been successfully integrated into your admin panel. Here's what was done:
 
-### ðŸ“ Files Created/Modified
+### 📁 Files Created/Modified
 
 1. **Created:**
-   - `scripts/003-storage-setup.sql` - Storage buckets and policies
+   - `scripts/db/migrations/003-storage-setup.sql` - Storage buckets and policies
    - `components/admin/file-upload.tsx` - Reusable upload component
 
 2. **Updated:**
@@ -28,14 +28,14 @@ File upload functionality has been successfully integrated into your admin panel
 
 ---
 
-## ðŸš€ Setup Steps (Required)
+## 🚀 Setup Steps (Required)
 
 ### Step 1: Run SQL Script in Supabase
 
 1. Go to your [Supabase Dashboard](https://supabase.com/dashboard)
 2. Select your project
 3. Navigate to **SQL Editor** (left sidebar)
-4. Copy the contents of `scripts/003-storage-setup.sql`
+4. Copy the contents of `scripts/db/migrations/003-storage-setup.sql`
 5. Paste and click **Run**
 
 This creates:
@@ -56,7 +56,7 @@ This creates:
    - `partner-logos`
    - `videos`
 
-3. Each bucket should be marked as **Public** âœ…
+3. Each bucket should be marked as **Public** ✅
 
 ### Step 3: Test the Upload Functionality
 
@@ -72,31 +72,31 @@ This creates:
 
 ---
 
-## ðŸŽ¨ Features Implemented
+## 🎨 Features Implemented
 
 ### FileUpload Component Features
 
-- âœ… **Drag & Drop** - Easy file uploads
-- âœ… **Click to Upload** - Traditional file picker
-- âœ… **URL Fallback** - Can still use external image URLs
-- âœ… **Image Preview** - See uploaded images immediately
-- âœ… **File Validation** - Size limits and MIME type checking
-- âœ… **Error Handling** - Clear error messages
-- âœ… **Loading States** - Visual feedback during upload
-- âœ… **Remove Option** - Delete uploaded files easily
+- ✅ **Drag & Drop** - Easy file uploads
+- ✅ **Click to Upload** - Traditional file picker
+- ✅ **URL Fallback** - Can still use external image URLs
+- ✅ **Image Preview** - See uploaded images immediately
+- ✅ **File Validation** - Size limits and MIME type checking
+- ✅ **Error Handling** - Clear error messages
+- ✅ **Loading States** - Visual feedback during upload
+- ✅ **Remove Option** - Delete uploaded files easily
 
 ### Security Features
 
-- âœ… User authentication required for uploads
-- âœ… File size limits enforced (5MB images, 100MB videos)
-- âœ… MIME type restrictions (only valid formats)
-- âœ… Per-user folders (files stored under user ID)
-- âœ… Public read access (for displaying on website)
-- âœ… Only uploader can delete their files
+- ✅ User authentication required for uploads
+- ✅ File size limits enforced (5MB images, 100MB videos)
+- ✅ MIME type restrictions (only valid formats)
+- ✅ Per-user folders (files stored under user ID)
+- ✅ Public read access (for displaying on website)
+- ✅ Only uploader can delete their files
 
 ---
 
-## ðŸŽ¯ How to Use (Admin Users)
+## 🎯 How to Use (Admin Users)
 
 ### Uploading Images
 
@@ -120,7 +120,7 @@ This creates:
 
 ---
 
-## ðŸ’° Storage Costs
+## 💰 Storage Costs
 
 ### Supabase Free Tier
 
@@ -133,7 +133,7 @@ This creates:
 - Each image: ~500KB average
 - 1GB = ~2,000 images
 - Your current needs: ~100-200 images
-- **Usage:** ~5-10% of free tier âœ…
+- **Usage:** ~5-10% of free tier ✅
 
 ### After Free Tier
 
@@ -143,7 +143,7 @@ This creates:
 
 ---
 
-## ðŸ”§ Troubleshooting
+## 🔧 Troubleshooting
 
 ### Issue: "Upload failed" error
 
@@ -167,7 +167,7 @@ This creates:
 
 ---
 
-## ðŸ“ Code Examples
+## 📝 Code Examples
 
 ### Using FileUpload Component
 
@@ -199,23 +199,23 @@ const [imageUrl, setImageUrl] = useState("")
 
 ---
 
-## ðŸŽ‰ What's Preserved
+## 🎉 What's Preserved
 
 All existing functionality remains intact:
 
-- âœ… Form validation
-- âœ… Submit/cancel buttons
-- âœ… Error handling
-- âœ… Loading states
-- âœ… External URL support (backward compatible)
-- âœ… All other form fields
-- âœ… Create/update operations
-- âœ… Navigation after save
-- âœ… Role-based permissions
+- ✅ Form validation
+- ✅ Submit/cancel buttons
+- ✅ Error handling
+- ✅ Loading states
+- ✅ External URL support (backward compatible)
+- ✅ All other form fields
+- ✅ Create/update operations
+- ✅ Navigation after save
+- ✅ Role-based permissions
 
 ---
 
-## ðŸš¨ Important Notes
+## 🚨 Important Notes
 
 1. **Run the SQL script FIRST** - Upload won't work without storage buckets
 2. **Test in dev environment** - Make sure everything works before production
@@ -225,7 +225,7 @@ All existing functionality remains intact:
 
 ---
 
-## ðŸ“Š Storage Bucket Details
+## 📊 Storage Bucket Details
 
 | Bucket | Purpose | Max Size | Allowed Types |
 |--------|---------|----------|---------------|
@@ -238,7 +238,7 @@ All existing functionality remains intact:
 
 ---
 
-## âœ… Testing Checklist
+## ✅ Testing Checklist
 
 - [ ] SQL script executed successfully
 - [ ] 6 storage buckets visible in Supabase
@@ -254,7 +254,7 @@ All existing functionality remains intact:
 
 ---
 
-## ðŸŽ¯ Next Steps (Optional Enhancements)
+## 🎯 Next Steps (Optional Enhancements)
 
 Future improvements you can add:
 
@@ -269,19 +269,19 @@ Future improvements you can add:
 
 ---
 
-## ðŸ“ž Support
+## 📞 Support
 
 If you encounter issues:
 
 1. Check the troubleshooting section above
 2. Verify SQL script ran without errors
-3. Check Supabase logs (Dashboard â†’ Logs)
+3. Check Supabase logs (Dashboard → Logs)
 4. Ensure you're logged in as admin user
 5. Try different image formats/sizes
 
 ---
 
-## ðŸŽŠ Success
+## 🎊 Success
 
 Your NGO now has a professional, secure, and free file upload system! Admins can easily upload images without relying on external hosting services.
 

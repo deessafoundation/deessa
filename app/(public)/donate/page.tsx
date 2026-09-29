@@ -85,15 +85,16 @@ export default async function DonatePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative">
-        <div className="w-full h-[400px] relative overflow-hidden">
+      <section data-a11y-hero="photo" className="relative">
+        <div className="w-full min-h-[400px] relative overflow-hidden">
           <div
+            data-a11y-photo
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7QgNEezbRHOt2MsvhmSehLCgOGp-3Um_oszh8418RlOSNyKzKOAhE5NsQkDGMiBytNLDU2yZh9PPHBg-AYg6BmnCa9iG8LQBC0_lkUqCrL4pJFU_So2-85IGkW34ZrQ6498mPet2J-ZYQLaHBN8o5wxwRN8c0jN5NXm81cUsCLvJIGZ-VL3p_FnKi-Nyw5LH9A9KrRzWbDzOsq255qtzgFx6N2X4ExaQ3QQWfCMH4LB-YcibEcm4plH8CXVi_GIywspD8opz3dl4")`,
             }}
           />
-          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
+          <div data-a11y-hero-copy className="relative z-10 min-h-[inherit] py-12 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
             <Heart className="size-14 text-primary mb-4 fill-primary" />
             <h1 className="text-white text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">
               Your Generosity Changes Lives

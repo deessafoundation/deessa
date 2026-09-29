@@ -68,7 +68,7 @@ export default async function ConferencePage() {
       {/* ── Hero Section ── */}
       <section className="w-full px-4 py-6 sm:px-10">
         <div className="mx-auto w-full max-w-[1200px]">
-          <div className="relative overflow-hidden rounded-3xl gradient-ocean px-6 py-16 text-center shadow-xl sm:px-12 sm:py-24 md:text-left">
+          <div data-a11y-region="neutral" className="relative overflow-hidden rounded-3xl gradient-ocean px-6 py-16 text-center shadow-xl sm:px-12 sm:py-24 md:text-left">
             {/* Pattern overlay */}
             <div
               className="absolute inset-0 opacity-10 mix-blend-overlay"

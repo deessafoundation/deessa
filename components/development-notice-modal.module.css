@@ -1,0 +1,47 @@
+/* The dialog is fixed and centred, so on short viewports (landscape phones,
+   320px screens, small windows) it must cap its own height and scroll rather
+   than spill outside the screen. `dvh` keeps it clear of mobile browser chrome. */
+.content {
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Site high-contrast mode strips gradient backgrounds (`[class*="bg-gradient"]`)
+   and forces white text onto `rounded-full` badges, which leaves the report
+   button white text on white paper. These selectors out-specify those rules. */
+:global(body.high-contrast) .content .actions .report {
+  background: var(--a11y-ink, #000) !important;
+  color: var(--a11y-paper, #fff) !important;
+  border: 2px solid var(--a11y-ink, #000) !important;
+}
+
+:global(body.high-contrast) .content .actions .dismiss {
+  background: var(--a11y-paper, #fff) !important;
+  color: var(--a11y-ink, #000) !important;
+  border-color: var(--a11y-ink, #000) !important;
+}
+
+/* Header glows are decorative; once backgrounds are forced flat they only
+   read as stray rings. */
+:global(body.high-contrast) .decoration {
+  display: none !important;
+}
+
+@media (forced-colors: active) {
+  /* Gradients, gradients' shadows and brand colours are all removed by the
+     user agent, which turns both actions into bare text. System colours plus
+     a real border keep them recognisable as buttons. */
+  .content .actions .report,
+  .content .actions .dismiss {
+    background-color: ButtonFace;
+    color: ButtonText;
+    border: 2px solid ButtonText;
+    box-shadow: none;
+  }
+
+  .content .decoration {
+    display: none;
+  }
+}

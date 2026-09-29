@@ -6,6 +6,13 @@ import { Palette, Bell, AlertCircle, CheckCircle2, Info, Zap, Receipt, ImageIcon
 export default function DemoIndex() {
   const demos = [
     {
+      title: "Program Page Concepts",
+      description: "Compare Service, Outreach, Research and Campaign page designs with sample content",
+      icon: Palette,
+      href: "/demo/programs",
+      status: "ready"
+    },
+    {
       title: "Brand Toolkit",
       description: "Colors, typography, buttons, and all design system components",
       icon: Palette,
@@ -91,7 +98,34 @@ export default function DemoIndex() {
                     : "opacity-60"
                 }`}
               >
-                {isReady ? (
+                {demo.href === "/demo/programs" ? (
+                  <>
+                    <CardHeader>
+                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                        <Palette className="h-6 w-6 text-primary" aria-hidden="true" />
+                      </div>
+                      <CardTitle className="text-xl">Program Page Previews</CardTitle>
+                      <CardDescription>Explore the four full page designs with sample stories, impact stats and galleries.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          ["Services", "/demo/aac-support"],
+                          ["Campaign", "/demo/1000-families"],
+                          ["Outreach", "/demo/community-outreach"],
+                          ["Research", "/demo/deessa-companion"],
+                        ].map(([label, href]) => (
+                          <Button key={href} asChild variant="outline" className="rounded-full">
+                            <Link href={href}>{label} →</Link>
+                          </Button>
+                        ))}
+                      </div>
+                      <Button asChild variant="ghost" className="w-full rounded-full">
+                        <Link href="/demo/programs">Compare all four designs →</Link>
+                      </Button>
+                    </CardContent>
+                  </>
+                ) : isReady ? (
                   <Link href={demo.href} className="block">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">

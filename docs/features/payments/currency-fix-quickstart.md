@@ -17,17 +17,17 @@ last_updated: 2026-09-12
 
 ## Solution Applied
 
-âœ… Multi-currency support with proper symbols ($, â‚¨, â‚¹)
-âœ… Separate totals by currency in admin dashboard
-âœ… Reusable currency utility functions
-âœ… Database migration for enhanced currency support
+✅ Multi-currency support with proper symbols ($, ₨, ₹)
+✅ Separate totals by currency in admin dashboard
+✅ Reusable currency utility functions
+✅ Database migration for enhanced currency support
 
 ## Files Changed
 
 ### 1. New Files Created
 
 - `lib/utils/currency.ts` - Currency formatting utilities
-- `scripts/008-currency-support.sql` - Database migration
+- `scripts/db/migrations/008-currency-support.sql` - Database migration
 - `docs/CURRENCY_HANDLING.md` - Complete documentation
 
 ### 2. Files Modified
@@ -39,11 +39,11 @@ last_updated: 2026-09-12
 
 ### Step 1: Apply Database Migration
 
-Go to your Supabase dashboard â†’ SQL Editor and run:
+Go to your Supabase dashboard → SQL Editor and run:
 
 ```sql
 -- Run the complete migration script
--- File: scripts/008-currency-support.sql
+-- File: scripts/db/migrations/008-currency-support.sql
 
 -- This will:
 -- 1. Add currency column if missing
@@ -53,7 +53,7 @@ Go to your Supabase dashboard â†’ SQL Editor and run:
 -- 5. Add currency symbol function
 ```
 
-Or copy and paste the contents of `scripts/008-currency-support.sql` into Supabase SQL Editor.
+Or copy and paste the contents of `scripts/db/migrations/008-currency-support.sql` into Supabase SQL Editor.
 
 ### Step 2: Test the Changes
 
@@ -66,7 +66,7 @@ Or copy and paste the contents of `scripts/008-currency-support.sql` into Supaba
    - Total Donations card shows amounts grouped by currency
    - Example: 
      $5,250.00 USD
-     â‚¨125,000.00 NPR
+     ₨125,000.00 NPR
    - Table shows each donation with correct currency symbol
    ```
 
@@ -92,8 +92,8 @@ Or copy and paste the contents of `scripts/008-currency-support.sql` into Supaba
    Complete payment
    
    Expected result:
-   - Admin dashboard shows: â‚¨2,500.00 NPR
-   - Success page shows: â‚¨2,500.00 NPR
+   - Admin dashboard shows: ₨2,500.00 NPR
+   - Success page shows: ₨2,500.00 NPR
    ```
 
 ## What You'll See
@@ -102,11 +102,11 @@ Or copy and paste the contents of `scripts/008-currency-support.sql` into Supaba
 
 ```bash
 Admin Dashboard:
-Total Donations: â‚¹5,500  â† Wrong! Mixed currencies
+Total Donations: ₹5,500  ← Wrong! Mixed currencies
 
 Donation Table:
-â‚¹250  â† USD donation shown as INR
-â‚¹2,500  â† NPR donation shown as INR
+₹250  ← USD donation shown as INR
+₹2,500  ← NPR donation shown as INR
 ```
 
 ### After (New Behavior)
@@ -114,12 +114,12 @@ Donation Table:
 ```bash
 Admin Dashboard:
 Total Donations:
-$250.00 USD  â† Correct!
-â‚¨2,500.00 NPR  â† Correct!
+$250.00 USD  ← Correct!
+₨2,500.00 NPR  ← Correct!
 
 Donation Table:
-$250.00 USD  â† Correctly identified
-â‚¨2,500.00 NPR  â† Correctly identified
+$250.00 USD  ← Correctly identified
+₨2,500.00 NPR  ← Correctly identified
 ```
 
 ## Utility Functions Available
@@ -129,23 +129,23 @@ import { formatCurrency, getCurrencySymbol } from "@/lib/utils/currency"
 
 // Format with symbol
 formatCurrency(250, "USD") // "$250.00"
-formatCurrency(250, "NPR") // "â‚¨250.00"
+formatCurrency(250, "NPR") // "₨250.00"
 
 // Format with currency code
 formatCurrency(250, "USD", { showCode: true }) // "$250.00 USD"
 
 // Get just the symbol
 getCurrencySymbol("USD") // "$"
-getCurrencySymbol("NPR") // "â‚¨"
+getCurrencySymbol("NPR") // "₨"
 ```
 
 ## Supported Currencies
 
-- ðŸ‡ºðŸ‡¸ USD - US Dollar ($)
-- ðŸ‡³ðŸ‡µ NPR - Nepali Rupee (â‚¨)
-- ðŸ‡®ðŸ‡³ INR - Indian Rupee (â‚¹)
-- ðŸ‡ªðŸ‡º EUR - Euro (â‚¬)
-- ðŸ‡¬ðŸ‡§ GBP - British Pound (Â£)
+- 🇺🇸 USD - US Dollar ($)
+- 🇳🇵 NPR - Nepali Rupee (₨)
+- 🇮🇳 INR - Indian Rupee (₹)
+- 🇪🇺 EUR - Euro (€)
+- 🇬🇧 GBP - British Pound (£)
 
 ## Database Queries
 
@@ -188,7 +188,7 @@ const currency = input.provider === "stripe"
 
 1. **Add currency conversion display**
    - Show converted amounts in admin dashboard
-   - Example: "â‚¨125,000.00 NPR (â‰ˆ$943.40 USD)"
+   - Example: "₨125,000.00 NPR (≈$943.40 USD)"
 
 2. **Add export with currency breakdown**
    - Export donations grouped by currency
@@ -206,6 +206,6 @@ const currency = input.provider === "stripe"
 
 ---
 
-**Status:** âœ… Ready to deploy
+**Status:** ✅ Ready to deploy
 **Breaking Changes:** None (backwards compatible)
 **Database Migration:** Required

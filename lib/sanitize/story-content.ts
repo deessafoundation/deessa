@@ -3,7 +3,7 @@
 // have caused ESM/CJS interop failures during Next.js page-data collection.
 // To keep the page module evaluable without loading JSDOM at import time we
 // load DOMPurify lazily on first use.
-type DOMPurifyInstance = {
+export type DOMPurifyInstance = {
   sanitize: (html: string, config?: Record<string, unknown>) => string
   addHook: (name: string, cb: (node: any) => void) => void
 }

@@ -45,7 +45,7 @@ This document provides a complete analysis of the conference registration system
 ### 1.1 Core Tables
 
 #### Table: `events`
-**Location:** `scripts/002-admin-schema.sql`
+**Location:** `scripts/db/migrations/002-admin-schema.sql`
 **Purpose:** Stores event information (conferences, workshops, etc.)
 
 ```sql
@@ -75,7 +75,7 @@ CREATE TABLE events (
 
 
 #### Table: `conference_registrations`
-**Location:** `scripts/migrations/conference_registrations.sql`
+**Location:** `scripts/db/migrations/017b-conference-registrations.sql`
 **Purpose:** Stores individual conference registrations
 
 ```sql
@@ -153,7 +153,7 @@ uq_conf_reg_active_email_per_event (event_id, email) WHERE status NOT IN ('cance
 
 
 #### Table: `conference_form_schemas`
-**Location:** `scripts/040-conference-form-schema.sql`
+**Location:** `scripts/db/migrations/040-conference-form-schema.sql`
 **Purpose:** Stores versioned form schemas per event
 
 ```sql
@@ -189,7 +189,7 @@ uq_conf_form_schema_active_per_event (event_id, is_active) WHERE is_active = tru
 
 
 #### Table: `conference_form_templates`
-**Location:** `scripts/042-conference-form-templates.sql`
+**Location:** `scripts/db/migrations/042-conference-form-templates.sql`
 **Purpose:** Reusable form templates (optional)
 
 ```sql
@@ -221,10 +221,10 @@ CREATE TABLE conference_form_templates (
 6. **Script 043** - Added `event_id` to `conference_registrations`
 
 **Current State:**
-- âœ… Dynamic forms supported
-- âœ… Multi-event architecture in place
-- âš ï¸ Mixed paradigm (some data in columns, some in JSONB)
-- âš ï¸ event_id nullable (backward compatibility)
+- ✅ Dynamic forms supported
+- ✅ Multi-event architecture in place
+- ⚠️ Mixed paradigm (some data in columns, some in JSONB)
+- ⚠️ event_id nullable (backward compatibility)
 
 
 ### 1.3 Views & Helper Functions
@@ -262,14 +262,14 @@ CREATE FUNCTION get_current_conference_event_id() RETURNS UUID
 
 ```
 app/(public)/conference/
-â”œâ”€â”€ page.tsx                           # Conference landing page
-â”œâ”€â”€ register/
-â”‚   â”œâ”€â”€ page.tsx                       # Main registration form
-â”‚   â”œâ”€â”€ payment-options/page.tsx       # Choose payment method
-â”‚   â”œâ”€â”€ pending-payment/page.tsx       # Awaiting payment
-â”‚   â”œâ”€â”€ payment-success/page.tsx       # Payment confirmed
-â”‚   â”œâ”€â”€ success/page.tsx               # Registration success
-â”‚   â””â”€â”€ failure/page.tsx               # Registration failed
+├── page.tsx                           # Conference landing page
+├── register/
+│   ├── page.tsx                       # Main registration form
+│   ├── payment-options/page.tsx       # Choose payment method
+│   ├── pending-payment/page.tsx       # Awaiting payment
+│   ├── payment-success/page.tsx       # Payment confirmed
+│   ├── success/page.tsx               # Registration success
+│   └── failure/page.tsx               # Registration failed
 ```
 
 **Key Characteristics:**
@@ -282,13 +282,13 @@ app/(public)/conference/
 
 ```
 app/admin/conference/
-â”œâ”€â”€ page.tsx                           # Registrations table/dashboard
-â”œâ”€â”€ [id]/page.tsx                      # Single registration detail
-â”œâ”€â”€ forms/page.tsx                     # Forms overview (all events)
-â””â”€â”€ settings/
-    â”œâ”€â”€ layout.tsx
-    â”œâ”€â”€ page.tsx                       # General conference settings
-    â””â”€â”€ form-builder/page.tsx          # Dynamic form builder
+├── page.tsx                           # Registrations table/dashboard
+├── [id]/page.tsx                      # Single registration detail
+├── forms/page.tsx                     # Forms overview (all events)
+└── settings/
+    ├── layout.tsx
+    ├── page.tsx                       # General conference settings
+    └── form-builder/page.tsx          # Dynamic form builder
 ```
 
 **Key Characteristics:**
@@ -302,30 +302,30 @@ app/admin/conference/
 
 ```
 components/conference/
-â”œâ”€â”€ conference-registration-form.tsx   # Main form wrapper
-â”œâ”€â”€ dynamic-form-renderer.tsx          # Renders form from schema
-â”œâ”€â”€ dynamic-step.tsx                   # Single step renderer
-â”œâ”€â”€ step-progress-bar.tsx              # Progress indicator
-â”œâ”€â”€ step1-personal-details.tsx         # Legacy hardcoded step
-â”œâ”€â”€ step2-participation.tsx            # Legacy hardcoded step
-â”œâ”€â”€ step3-additional-info.tsx          # Legacy hardcoded step
-â”œâ”€â”€ step4-review.tsx                   # Review & submit step
-â””â”€â”€ fields/                            # 14 field type components
-    â”œâ”€â”€ field-text.tsx
-    â”œâ”€â”€ field-email.tsx
-    â”œâ”€â”€ field-tel.tsx
-    â”œâ”€â”€ field-number.tsx
-    â”œâ”€â”€ field-select.tsx
-    â”œâ”€â”€ field-radio.tsx
-    â”œâ”€â”€ field-checkbox.tsx
-    â”œâ”€â”€ field-toggle.tsx
-    â”œâ”€â”€ field-textarea.tsx
-    â”œâ”€â”€ field-date.tsx
-    â”œâ”€â”€ field-url.tsx
-    â”œâ”€â”€ field-file.tsx
-    â”œâ”€â”€ field-heading.tsx
-    â”œâ”€â”€ field-paragraph.tsx
-    â””â”€â”€ index.ts                       # Field registry
+├── conference-registration-form.tsx   # Main form wrapper
+├── dynamic-form-renderer.tsx          # Renders form from schema
+├── dynamic-step.tsx                   # Single step renderer
+├── step-progress-bar.tsx              # Progress indicator
+├── step1-personal-details.tsx         # Legacy hardcoded step
+├── step2-participation.tsx            # Legacy hardcoded step
+├── step3-additional-info.tsx          # Legacy hardcoded step
+├── step4-review.tsx                   # Review & submit step
+└── fields/                            # 14 field type components
+    ├── field-text.tsx
+    ├── field-email.tsx
+    ├── field-tel.tsx
+    ├── field-number.tsx
+    ├── field-select.tsx
+    ├── field-radio.tsx
+    ├── field-checkbox.tsx
+    ├── field-toggle.tsx
+    ├── field-textarea.tsx
+    ├── field-date.tsx
+    ├── field-url.tsx
+    ├── field-file.tsx
+    ├── field-heading.tsx
+    ├── field-paragraph.tsx
+    └── index.ts                       # Field registry
 ```
 
 **Key Characteristics:**
@@ -337,12 +337,12 @@ components/conference/
 
 ```
 components/admin/
-â”œâ”€â”€ conference-form-builder.tsx        # Main form builder UI
-â””â”€â”€ conference-form-builder/
-    â”œâ”€â”€ EventSelector.tsx              # Dropdown to select event
-    â”œâ”€â”€ FormSchemaViewer.tsx           # Read-only form viewer
-    â”œâ”€â”€ FormTemplateChooser.tsx        # Select from templates
-    â””â”€â”€ EnhancedConditionalEditor.tsx  # Conditional logic editor
+├── conference-form-builder.tsx        # Main form builder UI
+└── conference-form-builder/
+    ├── EventSelector.tsx              # Dropdown to select event
+    ├── FormSchemaViewer.tsx           # Read-only form viewer
+    ├── FormTemplateChooser.tsx        # Select from templates
+    └── EnhancedConditionalEditor.tsx  # Conditional logic editor
 ```
 
 **Key Characteristics:**
@@ -356,10 +356,10 @@ components/admin/
 
 ```
 lib/actions/
-â”œâ”€â”€ conference-registration.ts         # Registration CRUD
-â”œâ”€â”€ conference-form-schema.ts          # Schema CRUD
-â”œâ”€â”€ conference-settings.ts             # Conference config
-â””â”€â”€ events.ts                          # Event CRUD
+├── conference-registration.ts         # Registration CRUD
+├── conference-form-schema.ts          # Schema CRUD
+├── conference-settings.ts             # Conference config
+└── events.ts                          # Event CRUD
 ```
 
 **Key Characteristics:**
@@ -373,8 +373,8 @@ lib/actions/
 
 ```
 lib/types/
-â”œâ”€â”€ conference.ts                      # ConferenceRegistration type
-â””â”€â”€ conference-form-schema.ts          # FormSchema, FormStep, FormField types
+├── conference.ts                      # ConferenceRegistration type
+└── conference-form-schema.ts          # FormSchema, FormStep, FormField types
 ```
 
 **Key Types:**
@@ -471,13 +471,13 @@ const FIELD_REGISTRY = {
 
 **Layout:**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ EventSelector (which event to edit)             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Field       â”‚ Canvas            â”‚ Properties    â”‚
-â”‚ Palette     â”‚ (Drop fields)     â”‚ Editor        â”‚
-â”‚ (Left 3col) â”‚ (Center 6col)     â”‚ (Right 3col)  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────┐
+│ EventSelector (which event to edit)             │
+├─────────────┬───────────────────┬───────────────┤
+│ Field       │ Canvas            │ Properties    │
+│ Palette     │ (Drop fields)     │ Editor        │
+│ (Left 3col) │ (Center 6col)     │ (Right 3col)  │
+└─────────────┴───────────────────┴───────────────┘
 ```
 
 
@@ -488,21 +488,21 @@ const FIELD_REGISTRY = {
 ### 4.1 Registration Submission Flow
 
 ```
-User fills form â†’ handleSubmit() â†’ extractCustomFields()
-                       â†“
+User fills form → handleSubmit() → extractCustomFields()
+                       ↓
               registerForConference()
-                       â†“
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â†“                                      â†“
+                       ↓
+    ┌──────────────────┴──────────────────┐
+    ↓                                      ↓
 Core Fields                         custom_fields JSONB
 (fixed columns)                     (dynamic data)
-    â†“                                      â†“
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                       â†“
+    ↓                                      ↓
+    └──────────────────┬──────────────────┘
+                       ↓
          INSERT into conference_registrations
-                       â†“
+                       ↓
          Return { success, registrationId }
-                       â†“
+                       ↓
          Redirect to payment or success page
 ```
 
@@ -516,17 +516,17 @@ Core Fields                         custom_fields JSONB
 
 ```
 User visits /conference/register
-           â†“
+           ↓
 Page fetches: getActiveFormSchema()
-           â†“
+           ↓
 Server queries conference_form_schemas
   WHERE is_active = true
   ORDER BY version DESC
-           â†“
+           ↓
 Returns form_config JSONB
-           â†“
+           ↓
 Passed to <ConferenceRegistrationForm schema={...} />
-           â†“
+           ↓
 Dynamic renderer builds form from schema
 ```
 
@@ -538,16 +538,16 @@ Dynamic renderer builds form from schema
 ### 4.3 Form Builder Save Flow
 
 ```
-Admin edits form â†’ Save/Publish button
-                       â†“
+Admin edits form → Save/Publish button
+                       ↓
               updateFormSchema(schema, eventId, publish)
-                       â†“
+                       ↓
     Get next version number for this event
-                       â†“
+                       ↓
     If publish: Deactivate all other schemas for this event
-                       â†“
+                       ↓
     INSERT new schema version with is_active=publish
-                       â†“
+                       ↓
     Revalidate cache
 ```
 
@@ -565,7 +565,7 @@ Admin edits form â†’ Save/Publish button
    - No event selection
    - No indication which event they're registering for
 4. Fills multi-step form
-5. Submits â†’ redirected to payment or success
+5. Submits → redirected to payment or success
 
 **Missing:**
 - Event selection UI
@@ -600,43 +600,43 @@ Admin edits form â†’ Save/Publish button
 
 ## 6. Current Implementation Status
 
-### 6.1 Completed Features âœ…
+### 6.1 Completed Features ✅
 
 1. **Dynamic Form System**
-   - âœ… JSONB schema storage
-   - âœ… 14 field types
-   - âœ… Validation rules
-   - âœ… Conditional logic
-   - âœ… Drag-and-drop form builder
+   - ✅ JSONB schema storage
+   - ✅ 14 field types
+   - ✅ Validation rules
+   - ✅ Conditional logic
+   - ✅ Drag-and-drop form builder
 
 2. **Multi-Event Backend**
-   - âœ… event_id column in registrations
-   - âœ… Per-event form schemas
-   - âœ… Unique constraint per event+email
-   - âœ… Event selector in admin
+   - ✅ event_id column in registrations
+   - ✅ Per-event form schemas
+   - ✅ Unique constraint per event+email
+   - ✅ Event selector in admin
 
 3. **Payment Integration**
-   - âœ… Stripe, Khalti, eSewa support
-   - âœ… Payment tracking
-   - âœ… Expiry management
+   - ✅ Stripe, Khalti, eSewa support
+   - ✅ Payment tracking
+   - ✅ Expiry management
 
 4. **Admin Dashboard**
-   - âœ… Registration table with event column
-   - âœ… Form builder with event context
-   - âœ… Forms overview page
+   - ✅ Registration table with event column
+   - ✅ Form builder with event context
+   - ✅ Forms overview page
 
-### 6.2 Missing/Incomplete Features âš ï¸
+### 6.2 Missing/Incomplete Features ⚠️
 
 1. **Public Event Selection**
-   - âŒ No event selection UI on registration page
-   - âŒ No list of available conferences
-   - âŒ URL param ?event=xxx not handled properly
-   - âŒ Event context not shown to users
+   - ❌ No event selection UI on registration page
+   - ❌ No list of available conferences
+   - ❌ URL param ?event=xxx not handled properly
+   - ❌ Event context not shown to users
 
 2. **Event Management**
-   - âŒ No dedicated conference event creation flow
-   - âŒ Events table is generic (all event types mixed)
-   - âŒ No conference-specific event attributes
+   - ❌ No dedicated conference event creation flow
+   - ❌ Events table is generic (all event types mixed)
+   - ❌ No conference-specific event attributes
 
 
 ---
@@ -837,12 +837,12 @@ conferences (
 
 **Option A - Explicit Selection:**
 ```
-/conference â†’ List of events â†’ /conference/register?event=xxx
+/conference → List of events → /conference/register?event=xxx
 ```
 
 **Option B - Smart Default:**
 ```
-/conference/register â†’ Auto-select current event â†’ Show event context
+/conference/register → Auto-select current event → Show event context
 ```
 
 **Recommendation:** Option A for clarity and flexibility
@@ -900,24 +900,24 @@ conferences (
 
 | Script | Status | Purpose |
 |--------|--------|---------|
-| 001-040 | âœ… Run | Base tables, features up to form schemas |
-| 041 | âš ï¸ Had errors | Conference file upload bucket |
-| 042 | âš ï¸ Had errors | Form templates seeding |
-| 043 | âœ… Run | Multi-event support (event_id) |
+| 001-040 | ✅ Run | Base tables, features up to form schemas |
+| 041 | ⚠️ Had errors | Conference file upload bucket |
+| 042 | ⚠️ Had errors | Form templates seeding |
+| 043 | ✅ Run | Multi-event support (event_id) |
 
 ### Script Dependencies
 
 ```
 002-admin-schema.sql (events table)
-       â†“
+       ↓
 conference_registrations.sql (base registration table)
-       â†“
+       ↓
 040-conference-form-schema.sql (schemas + custom_fields)
-       â†“
+       ↓
 041-conference-file-upload-bucket.sql (storage)
-       â†“
+       ↓
 042-conference-form-templates.sql (templates)
-       â†“
+       ↓
 043-multi-event-support.sql (event_id + indexes)
 ```
 
@@ -946,15 +946,15 @@ conference_registrations.sql (base registration table)
 ### 10.1 Business Logic Questions
 
 1. **Can there be multiple active conferences simultaneously?**
-   - If YES â†’ Need event selection UI
-   - If NO â†’ Current "getCurrentEvent()" approach works
+   - If YES → Need event selection UI
+   - If NO → Current "getCurrentEvent()" approach works
 
 2. **Should users see past conference forms/registrations?**
-   - If YES â†’ Need archive/history UI
-   - If NO â†’ Filter to is_published + upcoming only
+   - If YES → Need archive/history UI
+   - If NO → Filter to is_published + upcoming only
 
 3. **Are conference registrations transferable between events?**
-   - Probably NO â†’ Makes event_id even more critical
+   - Probably NO → Makes event_id even more critical
 
 4. **Should form schemas be shareable across events?**
    - Currently NO (per-event versioning)
@@ -964,7 +964,7 @@ conference_registrations.sql (base registration table)
 
 1. **What happens when an event is deleted?**
    - Forms: CASCADE delete (lost forever)
-   - Registrations: event_id â†’ NULL (orphaned)
+   - Registrations: event_id → NULL (orphaned)
    - Better: RESTRICT delete if registrations exist
 
 2. **How to handle version conflicts?**
@@ -987,19 +987,19 @@ conference_registrations.sql (base registration table)
 **The system has multi-event backend support but no public-facing event selection mechanism.**
 
 **Result:**
-- Admin can manage forms per event âœ…
-- Users can't choose which event to register for âŒ
-- System assumes single "current" conference âŒ
+- Admin can manage forms per event ✅
+- Users can't choose which event to register for ❌
+- System assumes single "current" conference ❌
 
 ### 11.2 Root Cause
 
 **Incomplete migration from single-conference to multi-event paradigm.**
 
 The implementation added:
-- âœ… Database support (event_id, per-event schemas)
-- âœ… Admin UI (EventSelector in form builder)
-- âŒ Public UI (no event selection)
-- âŒ URL routing (?event=xxx handling)
+- ✅ Database support (event_id, per-event schemas)
+- ✅ Admin UI (EventSelector in form builder)
+- ❌ Public UI (no event selection)
+- ❌ URL routing (?event=xxx handling)
 
 ### 11.3 Priority Actions
 
@@ -1167,7 +1167,7 @@ export function ConferenceRegistrationForm({
       {/* Display event context */}
       <div className="event-header">
         <h1>{event.title}</h1>
-        <p>{formatDate(event.event_date)} â€¢ {event.location}</p>
+        <p>{formatDate(event.event_date)} • {event.location}</p>
       </div>
       
       <form onSubmit={handleSubmit}>
@@ -1179,7 +1179,7 @@ export function ConferenceRegistrationForm({
   const handleSubmit = async (consent) => {
     const result = await registerForConference({
       // ... all fields
-      eventId: event.id, // âœ… Include event!
+      eventId: event.id, // ✅ Include event!
     })
   }
 }
@@ -1411,10 +1411,10 @@ export default async function ConferencePage() {
 ### 15.3 Database Indexes Review
 
 **Existing Indexes (Good):**
-- âœ… `idx_conference_reg_event` - Filter by event
-- âœ… `idx_conference_reg_event_status` - Event + status queries
-- âœ… `idx_conference_reg_event_created` - Event + date sorting
-- âœ… `idx_conf_form_schema_event_active` - Active schema lookup
+- ✅ `idx_conference_reg_event` - Filter by event
+- ✅ `idx_conference_reg_event_status` - Event + status queries
+- ✅ `idx_conference_reg_event_created` - Event + date sorting
+- ✅ `idx_conf_form_schema_event_active` - Active schema lookup
 
 **Missing Indexes (Consider Adding):**
 ```sql
@@ -1452,10 +1452,10 @@ FOR SELECT USING (is_admin_user());
 ```
 
 **Issues:**
-- âŒ No event_id validation in INSERT policy
-- âŒ Users can submit for any event (even unpublished)
-- âŒ No rate limiting on registration endpoint
-- âŒ No CAPTCHA/bot protection
+- ❌ No event_id validation in INSERT policy
+- ❌ Users can submit for any event (even unpublished)
+- ❌ No rate limiting on registration endpoint
+- ❌ No CAPTCHA/bot protection
 
 ### 16.2 Recommended Security Enhancements
 
@@ -1524,11 +1524,11 @@ if (!await verifyCaptcha(token)) {
 
 ### 17.2 Existing Documentation (Good)
 
-- âœ… `ADMIN_USER_GUIDE.md` - Admin features
-- âœ… `BUILD_ERROR_FIX_SUMMARY.md` - Technical fixes
-- âœ… `DATABASE_MIGRATION_GUIDE.md` - Script execution
-- âœ… `tasks.md` - Implementation plan
-- âœ… Multiple phase completion docs
+- ✅ `ADMIN_USER_GUIDE.md` - Admin features
+- ✅ `BUILD_ERROR_FIX_SUMMARY.md` - Technical fixes
+- ✅ `DATABASE_MIGRATION_GUIDE.md` - Script execution
+- ✅ `tasks.md` - Implementation plan
+- ✅ Multiple phase completion docs
 
 ---
 
@@ -1572,7 +1572,7 @@ if (!await verifyCaptcha(token)) {
 **Impact:** High - Enables multiple conferences
 
 **Changes Required:**
-1. âœ… Database already supports it
+1. ✅ Database already supports it
 2. Add event selection to landing page
 3. Handle ?event=xxx in registration page
 4. Display event context in form
@@ -1618,10 +1618,10 @@ if (!await verifyCaptcha(token)) {
 **Impact:** Medium-High
 
 **Changes Required:**
-1. Keep multi-event backend as-is âœ…
+1. Keep multi-event backend as-is ✅
 2. Add simple event detection logic
-3. If single published conference â†’ auto-select it
-4. If multiple conferences â†’ show selection UI
+3. If single published conference → auto-select it
+4. If multiple conferences → show selection UI
 5. Display event context in form header
 
 **Implementation:**
@@ -1663,7 +1663,7 @@ export default async function RegisterPage({ searchParams }) {
 - Slightly more complex logic
 - Need to handle edge cases
 
-**Recommendation:** âœ… **Option C (Hybrid)** - Best balance of effort vs value
+**Recommendation:** ✅ **Option C (Hybrid)** - Best balance of effort vs value
 
 
 ---
@@ -1725,21 +1725,21 @@ export default async function RegisterPage({ searchParams }) {
 ### 21.1 Current State Summary
 
 The conference registration system has:
-- âœ… Excellent dynamic form builder
-- âœ… Complete multi-event database architecture  
-- âœ… Payment integration (3 providers)
-- âœ… Admin dashboard with event context
-- âš ï¸ **Missing public event selection UI**
-- âš ï¸ **Incomplete URL routing for events**
+- ✅ Excellent dynamic form builder
+- ✅ Complete multi-event database architecture  
+- ✅ Payment integration (3 providers)
+- ✅ Admin dashboard with event context
+- ⚠️ **Missing public event selection UI**
+- ⚠️ **Incomplete URL routing for events**
 
 ### 21.2 Core Problem
 
 **"The backend supports multiple events, but the frontend assumes a single conference."**
 
 This creates a mismatch where:
-- Admins can manage forms per event âœ…
-- Users can't choose which event to register for âŒ
-- System defaults to "current" event (ambiguous) âŒ
+- Admins can manage forms per event ✅
+- Users can't choose which event to register for ❌
+- System defaults to "current" event (ambiguous) ❌
 
 ### 21.3 Recommended Solution
 
@@ -1758,12 +1758,12 @@ This creates a mismatch where:
 
 ### 21.4 Success Criteria
 
-âœ… Users can register for specific conferences  
-âœ… Event context is always clear  
-âœ… Multiple concurrent conferences supported  
-âœ… Backward compatible with single conference  
-âœ… No breaking changes to existing data  
-âœ… Admin features continue to work  
+✅ Users can register for specific conferences  
+✅ Event context is always clear  
+✅ Multiple concurrent conferences supported  
+✅ Backward compatible with single conference  
+✅ No breaking changes to existing data  
+✅ Admin features continue to work  
 
 ### 21.5 Next Steps
 

@@ -98,7 +98,7 @@ export default function HighlightsPageContent({ highlights }: HighlightsPageCont
         <div className={styles.controls}>
           <div className={styles.searchField}>
             <label htmlFor="highlight-search">Search Episodes</label>
-            <div className={styles.searchInput}><Search size={18} aria-hidden="true" /><input id="highlight-search" type="search" placeholder="Search by episode title..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); handleFilterChange(); }} /></div>
+            <div className={styles.searchInput}><Search size={18} aria-hidden="true" /><input aria-label="Search episodes" id="highlight-search" type="search" placeholder="Search by episode title..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); handleFilterChange(); }} /></div>
           </div>
           <div className={styles.field}>
             <label htmlFor="highlight-episode">Filter by Episode</label>

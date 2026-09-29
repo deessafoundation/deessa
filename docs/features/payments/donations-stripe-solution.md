@@ -125,7 +125,7 @@ COMMENT ON COLUMN payments.invoice_id IS
 
 ### Migration Script
 
-**File:** `scripts/031-enhance-payments-stripe-references.sql`
+**File:** `scripts/db/migrations/031-enhance-payments-stripe-references.sql`
 
 ```sql
 -- ============================================================================
@@ -266,7 +266,7 @@ END $$;
 
 ### Backfill Script for Payment Intent IDs
 
-**File:** `scripts/backfill-stripe-payment-intents.ts`
+**File:** `scripts/archive/backfill-stripe-payment-intents.ts`
 
 ```typescript
 /**
@@ -335,11 +335,11 @@ async function backfillPaymentIntents() {
           console.error(`Error updating payment ${payment.id}:`, updateError)
           errorCount++
         } else {
-          console.log(`âœ“ Updated payment ${payment.id} with intent ${paymentIntentId}`)
+          console.log(`✓ Updated payment ${payment.id} with intent ${paymentIntentId}`)
           successCount++
         }
       } else {
-        console.warn(`âš  No payment intent found for session ${payment.session_id}`)
+        console.warn(`⚠ No payment intent found for session ${payment.session_id}`)
       }
       
       // Rate limiting: wait 100ms between requests
@@ -595,12 +595,12 @@ supabase
 
 ## Success Metrics
 
-- âœ… 100% of new Stripe payments have `payment_intent_id`
-- âœ… 95%+ of existing payments backfilled with `payment_intent_id`
-- âœ… Dashboard links work for 100% of payments with `payment_intent_id`
-- âœ… Zero increase in webhook error rate
-- âœ… Refund operations work (future feature)
-- âœ… Reconciliation queries 50% faster
+- ✅ 100% of new Stripe payments have `payment_intent_id`
+- ✅ 95%+ of existing payments backfilled with `payment_intent_id`
+- ✅ Dashboard links work for 100% of payments with `payment_intent_id`
+- ✅ Zero increase in webhook error rate
+- ✅ Refund operations work (future feature)
+- ✅ Reconciliation queries 50% faster
 
 ---
 
@@ -637,11 +637,11 @@ supabase
 ## Conclusion
 
 This professional solution provides:
-- âœ… Complete Stripe reference tracking
-- âœ… Backward compatibility
-- âœ… Future-proof architecture
-- âœ… Data integrity constraints
-- âœ… Comprehensive migration strategy
-- âœ… Low risk with high business value
+- ✅ Complete Stripe reference tracking
+- ✅ Backward compatibility
+- ✅ Future-proof architecture
+- ✅ Data integrity constraints
+- ✅ Comprehensive migration strategy
+- ✅ Low risk with high business value
 
 **Recommendation:** Proceed with this solution for a robust, maintainable, and scalable payment reference system.

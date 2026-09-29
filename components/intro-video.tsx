@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
 export function IntroVideo() {
+  const pathname = usePathname()
+  const { preferences } = useAccessibility()
   const [showIntro, setShowIntro] = useState(false)
   const [videoEnded, setVideoEnded] = useState(false)
   const [animateLogo, setAnimateLogo] = useState(false)
@@ -16,6 +20,17 @@ export function IntroVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Design previews should be immediately visible for comparison.
+    if (pathname?.startsWith('/demo')) return
+    
+    // A11Y: Skip intro if user has reduce motion or sensory-friendly enabled
+    if (preferences.reduceMotion || preferences.sensoryFriendly) {
+      console.log('📹 Intro video skipped due to accessibility preferences (reduce motion/sensory-friendly)')
+      // Immediately fire completion event so page doesn't wait
+      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      return
+    }
+    
     // Check if intro has been shown (using localStorage to persist across sessions)
     const introShown = localStorage.getItem("introShown")
     const lastShown = localStorage.getItem("introLastShown")
@@ -25,7 +40,7 @@ export function IntroVideo() {
     if (!introShown || (lastShown && now - parseInt(lastShown) > 30 * 60 * 1000)) {
       setShowIntro(true)
     }
-  }, [])
+  }, [pathname, preferences.reduceMotion, preferences.sensoryFriendly])
 
   useEffect(() => {
     if (showIntro && videoRef.current && !userInteracted) {
@@ -216,7 +231,7 @@ export function IntroVideo() {
     }, 300)
   }
 
-  if (!showIntro) return null
+  if (!showIntro || pathname?.startsWith('/demo')) return null
 
   return (
     <div 
@@ -303,4 +318,3 @@ export function IntroVideo() {
     </div>
   )
 }
-

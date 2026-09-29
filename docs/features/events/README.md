@@ -38,11 +38,11 @@ The Event Management Module is a full-featured, CMS-like platform for creating a
 ### For Developers
 ```bash
 # Apply database migrations
-psql -f scripts/050-events-module-schema.sql
-psql -f scripts/051-event-registration-enhancements.sql
-psql -f scripts/052-agenda-highlighted.sql
-psql -f scripts/053-ticket-sold-count.sql
-psql -f scripts/055-event-form-template-seeds.sql
+psql -f scripts/db/migrations/050-events-module-schema.sql
+psql -f scripts/db/migrations/051-event-registration-enhancements.sql
+psql -f scripts/db/migrations/052-agenda-highlighted.sql
+psql -f scripts/db/migrations/053-ticket-sold-count.sql
+psql -f scripts/db/migrations/055-event-form-template-seeds.sql
 
 # Start development server
 npm run dev
@@ -64,27 +64,27 @@ npm run dev
 ### System Architecture
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    DEESSA Foundation Platform                â”‚
-â”‚                                                              â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”‚
-â”‚  â”‚  Conference System   â”‚      â”‚  Event Management    â”‚    â”‚
-â”‚  â”‚    (Legacy)          â”‚      â”‚     Module (New)     â”‚    â”‚
-â”‚  â”‚                      â”‚      â”‚                      â”‚    â”‚
-â”‚  â”‚  /conference/*       â”‚      â”‚  /events/*           â”‚    â”‚
-â”‚  â”‚  conference_* tables â”‚      â”‚  event_* tables      â”‚    â”‚
-â”‚  â”‚                      â”‚      â”‚                      â”‚    â”‚
-â”‚  â”‚  âœ… Production       â”‚      â”‚  âœ… Production       â”‚    â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
-â”‚           â”‚                              â”‚                   â”‚
-â”‚           â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                   â”‚
-â”‚                          â”‚                                   â”‚
-â”‚                    Shared Layer:                             â”‚
-â”‚              - Payment Providers (Stripe, Khalti, eSewa)    â”‚
-â”‚              - Email Service                                 â”‚
-â”‚              - Admin Authentication                          â”‚
-â”‚              - Storage (Supabase)                            â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                    DEESSA Foundation Platform                │
+│                                                              │
+│  ┌──────────────────────┐      ┌──────────────────────┐    │
+│  │  Conference System   │      │  Event Management    │    │
+│  │    (Legacy)          │      │     Module (New)     │    │
+│  │                      │      │                      │    │
+│  │  /conference/*       │      │  /events/*           │    │
+│  │  conference_* tables │      │  event_* tables      │    │
+│  │                      │      │                      │    │
+│  │  ✅ Production       │      │  ✅ Production       │    │
+│  └──────────────────────┘      └──────────────────────┘    │
+│           │                              │                   │
+│           └──────────────┬───────────────┘                   │
+│                          │                                   │
+│                    Shared Layer:                             │
+│              - Payment Providers (Stripe, Khalti, eSewa)    │
+│              - Email Service                                 │
+│              - Admin Authentication                          │
+│              - Storage (Supabase)                            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Database Tables
@@ -104,30 +104,30 @@ npm run dev
 ## Features
 
 ### Admin Features
-- **Event CRUD** â€” Create, update, duplicate, archive, delete
-- **Status Lifecycle** â€” Draft â†’ Published â†’ Disabled â†’ Archived
-- **Form Builder** â€” 21 field types, drag-and-drop, undo/redo
-- **Form Templates** â€” 15 pre-built templates for common events
-- **Agenda Editor** â€” Multi-day schedule with session highlighting
-- **Pricing Manager** â€” Ticket types with capacity tracking
-- **Email Templates** â€” Customizable confirmation, reminder, etc.
-- **Registration Dashboard** â€” View, filter, export registrations
+- **Event CRUD** — Create, update, duplicate, archive, delete
+- **Status Lifecycle** — Draft → Published → Disabled → Archived
+- **Form Builder** — 21 field types, drag-and-drop, undo/redo
+- **Form Templates** — 15 pre-built templates for common events
+- **Agenda Editor** — Multi-day schedule with session highlighting
+- **Pricing Manager** — Ticket types with capacity tracking
+- **Email Templates** — Customizable confirmation, reminder, etc.
+- **Registration Dashboard** — View, filter, export registrations
 
 ### Public Features
-- **Event Listing** â€” Browse upcoming/past events
-- **Event Details** â€” Hero, agenda, gallery, venue map
-- **Registration Form** â€” Multi-step, schema-driven
-- **Payment Flow** â€” Stripe, Khalti, eSewa integration
-- **Confirmation** â€” Ticket-style success card
+- **Event Listing** — Browse upcoming/past events
+- **Event Details** — Hero, agenda, gallery, venue map
+- **Registration Form** — Multi-step, schema-driven
+- **Payment Flow** — Stripe, Khalti, eSewa integration
+- **Confirmation** — Ticket-style success card
 
 ### Form Builder Features
-- **21 Field Types** â€” Text, email, phone, select, radio, checkbox, toggle, date, date range, file, signature, rating, slider, rich text, repeating section, heading, paragraph, URL, number, textarea
-- **Drag & Drop** â€” Reorder fields and steps
-- **Conditional Logic** â€” Show/hide fields based on other values
-- **Undo/Redo** â€” 50-step history with Ctrl+Z/Ctrl+Shift+Z
-- **Preview Mode** â€” Desktop/tablet/mobile responsive preview
-- **Import/Export** â€” JSON schema backup and restore
-- **Templates** â€” Apply pre-built templates or save custom ones
+- **21 Field Types** — Text, email, phone, select, radio, checkbox, toggle, date, date range, file, signature, rating, slider, rich text, repeating section, heading, paragraph, URL, number, textarea
+- **Drag & Drop** — Reorder fields and steps
+- **Conditional Logic** — Show/hide fields based on other values
+- **Undo/Redo** — 50-step history with Ctrl+Z/Ctrl+Shift+Z
+- **Preview Mode** — Desktop/tablet/mobile responsive preview
+- **Import/Export** — JSON schema backup and restore
+- **Templates** — Apply pre-built templates or save custom ones
 
 ---
 
@@ -135,60 +135,60 @@ npm run dev
 
 ```
 lib/
-â”œâ”€â”€ actions/events-module/
-â”‚   â”œâ”€â”€ event-crud.ts              # Core CRUD operations
-â”‚   â”œâ”€â”€ event-agenda.ts            # Agenda management
-â”‚   â”œâ”€â”€ event-form-schema.ts       # Form schema versioning
-â”‚   â”œâ”€â”€ event-form-templates.ts    # Template management
-â”‚   â”œâ”€â”€ event-pricing.ts           # Ticket type CRUD
-â”‚   â”œâ”€â”€ event-email-templates.ts   # Email template CRUD
-â”‚   â””â”€â”€ event-registration.ts      # Registration submission
-â”œâ”€â”€ types/
-â”‚   â”œâ”€â”€ events-module.ts           # TypeScript types
-â”‚   â””â”€â”€ conference-form-schema.ts  # Form schema types (shared)
-â””â”€â”€ validation/
-    â”œâ”€â”€ form-schema.ts             # Field validation
-    â””â”€â”€ conditional-engine.ts      # Conditional logic
+├── actions/events-module/
+│   ├── event-crud.ts              # Core CRUD operations
+│   ├── event-agenda.ts            # Agenda management
+│   ├── event-form-schema.ts       # Form schema versioning
+│   ├── event-form-templates.ts    # Template management
+│   ├── event-pricing.ts           # Ticket type CRUD
+│   ├── event-email-templates.ts   # Email template CRUD
+│   └── event-registration.ts      # Registration submission
+├── types/
+│   ├── events-module.ts           # TypeScript types
+│   └── conference-form-schema.ts  # Form schema types (shared)
+└── validation/
+    ├── form-schema.ts             # Field validation
+    └── conditional-engine.ts      # Conditional logic
 
 components/
-â”œâ”€â”€ events/
-â”‚   â”œâ”€â”€ admin/
-â”‚   â”‚   â”œâ”€â”€ EventFormBuilder/      # Form builder (modular)
-â”‚   â”‚   â”‚   â”œâ”€â”€ index.tsx          # Main builder component
-â”‚   â”‚   â”‚   â”œâ”€â”€ FieldPalette.tsx   # Field type selector
-â”‚   â”‚   â”‚   â”œâ”€â”€ FormCanvas.tsx     # Form preview canvas
-â”‚   â”‚   â”‚   â”œâ”€â”€ SortableStepCard.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ SortableFieldCard.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ FieldPropertiesPanel.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ OptionsEditor.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ SchemaImportExport.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ useBuilderState.ts
-â”‚   â”‚   â”‚   â””â”€â”€ builder-actions.ts
-â”‚   â”‚   â”œâ”€â”€ AgendaEditor.tsx
-â”‚   â”‚   â”œâ”€â”€ PricingEditor.tsx
-â”‚   â”‚   â””â”€â”€ EmailTemplateEditor.tsx
-â”‚   â””â”€â”€ public/
-â”‚       â””â”€â”€ event-registration-form.tsx
-â”œâ”€â”€ conference/
-â”‚   â””â”€â”€ fields/                    # Shared field components (21 types)
-â””â”€â”€ ui/                            # shadcn/ui components
+├── events/
+│   ├── admin/
+│   │   ├── EventFormBuilder/      # Form builder (modular)
+│   │   │   ├── index.tsx          # Main builder component
+│   │   │   ├── FieldPalette.tsx   # Field type selector
+│   │   │   ├── FormCanvas.tsx     # Form preview canvas
+│   │   │   ├── SortableStepCard.tsx
+│   │   │   ├── SortableFieldCard.tsx
+│   │   │   ├── FieldPropertiesPanel.tsx
+│   │   │   ├── OptionsEditor.tsx
+│   │   │   ├── SchemaImportExport.tsx
+│   │   │   ├── useBuilderState.ts
+│   │   │   └── builder-actions.ts
+│   │   ├── AgendaEditor.tsx
+│   │   ├── PricingEditor.tsx
+│   │   └── EmailTemplateEditor.tsx
+│   └── public/
+│       └── event-registration-form.tsx
+├── conference/
+│   └── fields/                    # Shared field components (21 types)
+└── ui/                            # shadcn/ui components
 
 app/
-â”œâ”€â”€ admin/events/                  # Admin pages
-â”‚   â”œâ”€â”€ page.tsx                   # Event listing
-â”‚   â”œâ”€â”€ new/page.tsx               # Create event
-â”‚   â””â”€â”€ [id]/settings/             # Event settings dashboard
-â””â”€â”€ (public)/events/               # Public pages
-    â”œâ”€â”€ page.tsx                   # Event listing
-    â”œâ”€â”€ [slug]/page.tsx            # Event detail
-    â””â”€â”€ [slug]/register/           # Registration flow
+├── admin/events/                  # Admin pages
+│   ├── page.tsx                   # Event listing
+│   ├── new/page.tsx               # Create event
+│   └── [id]/settings/             # Event settings dashboard
+└── (public)/events/               # Public pages
+    ├── page.tsx                   # Event listing
+    ├── [slug]/page.tsx            # Event detail
+    └── [slug]/register/           # Registration flow
 
-scripts/
-â”œâ”€â”€ 050-events-module-schema.sql   # Core schema
-â”œâ”€â”€ 051-event-registration-enhancements.sql
-â”œâ”€â”€ 052-agenda-highlighted.sql
-â”œâ”€â”€ 053-ticket-sold-count.sql
-â””â”€â”€ 055-event-form-template-seeds.sql  # 15 template seeds
+scripts/db/migrations/
+├── 050-events-module-schema.sql   # Core schema
+├── 051-event-registration-enhancements.sql
+├── 052-agenda-highlighted.sql
+├── 053-ticket-sold-count.sql
+└── 055-event-form-template-seeds.sql  # 15 template seeds
 ```
 
 ---

@@ -892,6 +892,7 @@ export function EventRegistrationForm({
                         </div>
                         <button
                           type="button"
+                          aria-label="Remove payment screenshot"
                           onClick={handleRemoveScreenshot}
                           className="p-1.5 rounded-lg hover:bg-green-100 transition-colors"
                         >
@@ -902,6 +903,15 @@ export function EventRegistrationForm({
                   ) : (
                     <div
                       className="border-2 border-dashed rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Upload payment screenshot"
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault()
+                          screenshotInputRef.current?.click()
+                        }
+                      }}
                       onDrop={handleScreenshotDrop}
                       onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
                       onClick={() => screenshotInputRef.current?.click()}

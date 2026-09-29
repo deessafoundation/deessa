@@ -251,8 +251,8 @@ readinessProbe:
 Run the database migrations:
 ```bash
 # Run all migrations in order
-psql -d your_database -f scripts/001-create-tables.sql
-psql -d your_database -f scripts/023-enhance-payment-events.sql
+psql -d your_database -f scripts/db/migrations/001-create-tables.sql
+psql -d your_database -f scripts/db/migrations/023-enhance-payment-events.sql
 ```
 
 ### "MOCK_MODE_IN_PRODUCTION" Error

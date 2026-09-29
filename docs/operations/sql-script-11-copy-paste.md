@@ -242,20 +242,20 @@ Should show 1 row:
 
 ## Next Steps After Running SQL
 
-1. âœ… Configure Google Email (see: `docs/GOOGLE_EMAIL_SETUP.md`)
-2. âœ… Set Organization Details (Admin > Settings > Organization)
-3. âœ… Add to Payment Webhooks (see: `docs/RECEIPT_WEBHOOK_INTEGRATION.md`)
-4. âœ… Test with a sample donation
+1. ✅ Configure Google Email (see: `docs/GOOGLE_EMAIL_SETUP.md`)
+2. ✅ Set Organization Details (Admin > Settings > Organization)
+3. ✅ Add to Payment Webhooks (see: `docs/RECEIPT_WEBHOOK_INTEGRATION.md`)
+4. ✅ Test with a sample donation
 
 ---
 
 ## File Location
 
 This script is also saved at:
-`scripts/011-receipt-system-complete.sql`
+`scripts/db/migrations/010-receipt-system.sql`
 
 You can copy it from there if needed.
 
 ---
 
-**That's it!** Just copy, paste, and run. ï¿½ï¿½
+**That's it!** Just copy, paste, and run. ��

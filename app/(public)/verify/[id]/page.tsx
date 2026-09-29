@@ -149,13 +149,13 @@ function PageShell({ children, variant = "default" }: { children: React.ReactNod
       {/* Bottom footer */}
       <footer className="relative border-t border-gray-200 bg-[rgb(248,249,250)] py-6">
         <div className="max-w-2xl mx-auto px-4 text-center space-y-3">
-          <p className="text-xs text-[rgb(108,117,125)]">
+          <p className="text-xs text-foreground-muted">
             &copy; {new Date().getFullYear()} deessa Foundation Audit & Compliance Team
           </p>
           <div className="flex items-center justify-center gap-5 text-xs">
-            <Link href="/privacy" className="text-[rgb(63,171,222)] hover:underline">Privacy Policy</Link>
-            <Link href="/terms" className="text-[rgb(63,171,222)] hover:underline">Terms of Service</Link>
-            <Link href="/contact" className="text-[rgb(63,171,222)] hover:underline">Contact Us</Link>
+            <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+            <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
+            <Link href="/contact" className="text-primary hover:underline">Contact Us</Link>
           </div>
         </div>
       </footer>
@@ -487,10 +487,10 @@ export default async function VerificationPage({ params }: VerificationPageProps
       </div>
 
       {/* Title */}
-      <h1 className="text-3xl sm:text-4xl font-bold text-[rgb(11,95,138)] mb-3 text-center">
+      <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 text-center">
         Verified Authenticity
       </h1>
-      <p className="text-[rgb(108,117,125)] text-center max-w-lg mb-10 leading-relaxed">
+      <p className="text-foreground-muted text-center max-w-lg mb-10 leading-relaxed">
         This receipt matches our official records and has been confirmed as a legitimate donation to the deessa Foundation.
       </p>
 
@@ -518,30 +518,30 @@ export default async function VerificationPage({ params }: VerificationPageProps
             <div className="grid grid-cols-2 gap-x-6 gap-y-5">
               {/* Donor Name */}
               <div>
-                <p className="text-xs font-bold text-[rgb(108,117,125)] uppercase tracking-wider mb-1">Donor Name</p>
+                <p className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-1">Donor Name</p>
                 <p className="text-lg font-semibold text-[rgb(33,37,41)]">{maskedName}</p>
               </div>
               {/* Donation Date */}
               <div>
-                <p className="text-xs font-bold text-[rgb(108,117,125)] uppercase tracking-wider mb-1">Donation Date</p>
+                <p className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-1">Donation Date</p>
                 <p className="text-lg font-semibold text-[rgb(33,37,41)]">{formattedDate}</p>
               </div>
               {/* Amount */}
               <div>
-                <p className="text-xs font-bold text-[rgb(108,117,125)] uppercase tracking-wider mb-1">Verified Amount</p>
+                <p className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-1">Verified Amount</p>
                 <p className="text-xl font-bold text-[rgb(33,37,41)]">{formattedAmount}</p>
               </div>
               {/* Donation Type */}
               <div>
-                <p className="text-xs font-bold text-[rgb(108,117,125)] uppercase tracking-wider mb-1">Donation Type</p>
+                <p className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-1">Donation Type</p>
                 <p className="text-lg font-semibold text-[rgb(33,37,41)]">{donationType}</p>
               </div>
             </div>
 
             {/* Audit Trail ID */}
             <div className="pt-1">
-              <p className="text-xs font-bold text-[rgb(108,117,125)] uppercase tracking-wider mb-1">Audit Trail ID</p>
-              <p className="text-xs font-mono text-[rgb(108,117,125)] break-all select-all">{verificationId}</p>
+              <p className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-1">Audit Trail ID</p>
+              <p className="text-xs font-mono text-foreground-muted break-all select-all">{verificationId}</p>
             </div>
 
             {/* Action buttons */}
@@ -560,11 +560,11 @@ export default async function VerificationPage({ params }: VerificationPageProps
             {/* Receipt info notice */}
             <div className="bg-[rgb(232,246,252)]/60 border border-[rgb(63,171,222)]/15 rounded-xl p-4">
               <div className="flex gap-3">
-                <svg className="w-5 h-5 text-[rgb(63,171,222)] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                <svg className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <p className="text-xs text-[rgb(108,117,125)] leading-relaxed">
-                  <span className="font-semibold text-[rgb(11,95,138)]">Need your original receipt?</span>{" "}
+                <p className="text-xs text-foreground-muted leading-relaxed">
+                  <span className="font-semibold text-foreground">Need your original receipt?</span>{" "}
                   Please check the official email sent to your registered address at the time of donation. If you haven&apos;t received it or need a replacement, contact support with your Receipt Number and valid identification for re-verification.
                 </p>
               </div>
@@ -575,7 +575,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
               <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-[11px] text-[rgb(108,117,125)] leading-relaxed italic">
+              <p className="text-[11px] text-foreground-muted leading-relaxed italic">
                 This verification result is generated directly from the deessa Foundation&apos;s secure audit records. Any modification to the physical or digital receipt that does not match this data should be treated as potentially fraudulent.
               </p>
             </div>
@@ -583,8 +583,8 @@ export default async function VerificationPage({ params }: VerificationPageProps
         </div>
 
         {/* Encrypted badge */}
-        <div className="flex items-center justify-center gap-2 mt-8 text-xs text-[rgb(108,117,125)]">
-          <svg className="w-4 h-4 text-[rgb(63,171,222)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <div className="flex items-center justify-center gap-2 mt-8 text-xs text-foreground-muted">
+          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           <span className="uppercase tracking-widest font-semibold">End-to-End Encrypted Verification Portal</span>
@@ -594,7 +594,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
         <div className="text-center mt-6">
           <Link
             href="/verify"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold border-2 border-[rgb(63,171,222)]/30 text-[rgb(11,95,138)] hover:border-[rgb(63,171,222)] hover:bg-[rgb(232,246,252)] transition-all duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold border-2 border-[rgb(63,171,222)]/30 text-foreground hover:border-[rgb(63,171,222)] hover:bg-[rgb(232,246,252)] transition-all duration-200"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

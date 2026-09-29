@@ -6,7 +6,7 @@ Create a detailed registration page at `/admin/events/[id]` that matches AND exc
 ---
 
 ## Phase 1: Database Migration
-**File:** `scripts/051-event-registration-enhancements.sql`
+**File:** `scripts/db/migrations/051-event-registration-enhancements.sql`
 
 ### 1A. Add columns to `event_registrations`
 ```sql
@@ -235,7 +235,7 @@ Add:
 
 | # | File | Action |
 |---|------|--------|
-| 1 | `scripts/051-event-registration-enhancements.sql` | CREATE |
+| 1 | `scripts/db/migrations/051-event-registration-enhancements.sql` | CREATE |
 | 2 | `lib/types/events-module.ts` | MODIFY |
 | 3 | `lib/actions/events-module/event-registration-actions.ts` | CREATE |
 | 4 | `components/ui/detail-row.tsx` | CREATE (shared) |

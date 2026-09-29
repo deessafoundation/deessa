@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Before Running Migration
 
-### âœ… Prerequisites Verification
+### ✅ Prerequisites Verification
 
 Run these queries in Supabase SQL Editor to verify prerequisites:
 
@@ -65,7 +65,7 @@ WHERE table_name = 'payments'
   AND column_name IN ('event_registration_id', 'entity_type');
 
 -- Expected: 0 rows (columns don't exist yet)
--- If 2 rows returned, migration 057 already ran â€” safe to re-run, but verify constraints work
+-- If 2 rows returned, migration 057 already ran — safe to re-run, but verify constraints work
 ```
 
 ---
@@ -88,7 +88,7 @@ LIMIT 5;
 ### Step 2: Run Migration 057
 
 1. Open Supabase SQL Editor
-2. Copy entire contents of `scripts/057-extend-payments-for-registrations.sql`
+2. Copy entire contents of `scripts/db/migrations/057b-extend-payments-for-registrations.sql`
 3. Paste into SQL Editor
 4. Click "Run"
 5. Wait for completion (should take < 5 seconds for small tables, < 30 seconds for large tables)
@@ -104,7 +104,7 @@ NOTICE:    With donation_id: X
 NOTICE:    With event_registration_id: 0
 NOTICE:    With BOTH (should be 0): 0
 NOTICE:    With NEITHER (should be 0): 0
-NOTICE:  âœ… Polymorphic FK integrity verified
+NOTICE:  ✅ Polymorphic FK integrity verified
 ```
 
 **If you see any errors**, check Section "Troubleshooting" below.
@@ -235,7 +235,7 @@ DELETE FROM payments WHERE transaction_id LIKE 'test_migration_057_%';
 **Cause:** Migration 020 (creates payments table) not run yet.
 
 **Fix:**
-1. Run migration 020 first: `scripts/payments-v2/020-create-payments-table.sql`
+1. Run migration 020 first: `scripts/db/payments-v2/020-create-payments-table.sql`
 2. Then re-run migration 057
 
 ---
@@ -245,7 +245,7 @@ DELETE FROM payments WHERE transaction_id LIKE 'test_migration_057_%';
 **Cause:** Migration 056 not run yet.
 
 **Fix:**
-1. Run migration 056 first: `scripts/056-event-payment-integration.sql`
+1. Run migration 056 first: `scripts/db/migrations/056-event-payment-integration.sql`
 2. Then re-run migration 057
 
 ---
@@ -296,7 +296,7 @@ DELETE FROM payments WHERE transaction_id LIKE 'test_migration_057_%';
 
 ## Rollback Procedure
 
-**âš ï¸ ONLY use if V2 PaymentService has NOT written any event_registration_id rows yet**
+**⚠️ ONLY use if V2 PaymentService has NOT written any event_registration_id rows yet**
 
 ```sql
 -- Check if any event registration payments exist
@@ -317,7 +317,7 @@ ALTER TABLE payments DROP COLUMN IF EXISTS event_registration_id;
 ## Next Steps After Successful Migration
 
 - [ ] Verify migration success (all checks pass)
-- [ ] Update PLAN.md status: Phase 0 âœ… Complete
+- [ ] Update PLAN.md status: Phase 0 ✅ Complete
 - [ ] Proceed to Phase 1: Implement `PaymentService.confirmRegistration()` method
 - [ ] Update monitoring dashboards to include entity_type breakdown
 

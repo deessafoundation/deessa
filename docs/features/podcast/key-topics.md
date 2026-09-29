@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Podcast Key Topics & Structured Show Notes - Implementation Complete
 
-## âœ… What Was Implemented
+## ✅ What Was Implemented
 
 ### 1. **Database Changes**
 
@@ -57,13 +57,13 @@ last_updated: 2026-09-12
 - Content in readable prose format
 - Proper spacing between notes
 
-## ðŸ“‹ Migration Steps
+## 📋 Migration Steps
 
 ### Step 1: Run Database Migration
 
 ```sql
 -- In Supabase SQL Editor, run:
--- File: scripts/014-add_key_topics_and_structured_notes.sql
+-- File: scripts/db/migrations/014-add-key-topics-and-structured-notes.sql
 
 ALTER TABLE public.podcasts 
 ADD COLUMN IF NOT EXISTS key_topics TEXT;
@@ -102,7 +102,7 @@ pnpm dev
 3. Verify show notes display with proper titles
 4. Check scrolling behavior with many key topics
 
-## ðŸ“ Usage Guide for Admins
+## 📝 Usage Guide for Admins
 
 ### Adding Key Topics
 
@@ -129,23 +129,23 @@ Examples:
 4. Remove unwanted notes with X button
 5. Empty notes are automatically filtered out on save
 
-## ðŸŽ¨ Features
+## 🎨 Features
 
-âœ… Scrollable key topics (handles 20+ topics gracefully)
-âœ… Up to 5 organized show notes
-âœ… Brand color integration
-âœ… Mobile responsive
-âœ… Backward compatible (old podcasts still work)
-âœ… JSON validation
-âœ… Clean admin UI
-âœ… Visual feedback (note counter)
+✅ Scrollable key topics (handles 20+ topics gracefully)
+✅ Up to 5 organized show notes
+✅ Brand color integration
+✅ Mobile responsive
+✅ Backward compatible (old podcasts still work)
+✅ JSON validation
+✅ Clean admin UI
+✅ Visual feedback (note counter)
 
-## ðŸ”„ Backward Compatibility
+## 🔄 Backward Compatibility
 
 - Old podcasts without key_topics: Falls back to sample data
 - Old show_notes (plain text): Converts to single note automatically
 - No breaking changes to existing data
 
-## ðŸš€ Ready to Use
+## 🚀 Ready to Use
 
 All changes are complete. Just run the database migration and restart your server!

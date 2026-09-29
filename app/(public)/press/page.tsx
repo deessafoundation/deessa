@@ -37,15 +37,16 @@ export default function PressPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative">
-        <div className="w-full h-[400px] relative overflow-hidden">
+      <section data-a11y-hero="photo" className="relative">
+        <div className="w-full min-h-[400px] relative overflow-hidden">
           <div
+            data-a11y-photo
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC5xzHfv2hii0hZm5knPtqnBhBXuF43kiNX-3L6bPoaNWoNJhuaBEp0UnvkJbxD_8jxmQHLjE0b1j-TMOJq_VOIrW9983EZgYM46P8MAwn7PzfzaLz2HsWKlKvt5lKXcXf_b6vms2V8NcnXaz9-_X8SNQsr6s7_GyimSfmkpcQ4Oh5YRcHnl1A7tisgSR5H6pZkE2H_RJ7Ed4vN8OmKIZ2WhCp5LlGraRVM17Ryo2wWWdRDFec31aYUj8Kv479a7Hlv2NIwScl7Eek")`,
             }}
           />
-          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
+          <div data-a11y-hero-copy className="relative z-10 min-h-[inherit] py-12 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
             <Newspaper className="size-14 text-primary mb-4" />
             <h1 className="text-white text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">
               Press & Media Kit

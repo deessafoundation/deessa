@@ -48,3 +48,160 @@
   .quote { grid-row: 5; }
   .flow { grid-row: 6; }
 }
+
+/* ══════════════════════════════════════════════════════
+   ABOUT INTRO — HIGH CONTRAST (STANDARDS.md §3)
+   ══════════════════════════════════════════════════════ */
+:global(body.high-contrast) .section {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .label {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .title,
+:global(body.high-contrast) h2.title,
+:global(body.high-contrast) #about-intro-title {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .paragraphs p {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .quote,
+:global(body.high-contrast) blockquote.quote {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .quote p,
+:global(body.high-contrast) .quote * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .quote svg,
+:global(body.high-contrast) .quote svg * {
+  color: #000 !important;
+  fill: none !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .stepContent,
+:global(body.high-contrast) .stepContent span {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .icon,
+:global(body.high-contrast) .step .icon,
+:global(body.high-contrast) .step:nth-child(n) .icon,
+:global(body.high-contrast) .step:nth-child(3) .icon,
+:global(body.high-contrast) .step:nth-child(4) .icon {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .icon svg,
+:global(body.high-contrast) .icon svg *,
+:global(body.high-contrast) .step .icon svg,
+:global(body.high-contrast) .step .icon svg *,
+:global(body.high-contrast) .step:nth-child(n) .icon svg,
+:global(body.high-contrast) .step:nth-child(n) .icon svg * {
+  color: #fff !important;
+  stroke: #fff !important;
+  fill: none !important;
+}
+
+:global(body.high-contrast) .arrow,
+:global(body.high-contrast) .arrow svg,
+:global(body.high-contrast) .arrowItem svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .media {
+  border-color: #000 !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   ABOUT INTRO — INVERTED CONTRAST (STANDARDS.md §21)
+   ══════════════════════════════════════════════════════ */
+:global(body.inverted-contrast) .section {
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .label {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .title,
+:global(body.inverted-contrast) h2.title,
+:global(body.inverted-contrast) #about-intro-title {
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .paragraphs p {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .quote,
+:global(body.inverted-contrast) blockquote.quote {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .quote p,
+:global(body.inverted-contrast) .quote * {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .quote svg,
+:global(body.inverted-contrast) .quote svg * {
+  color: #fff !important;
+  fill: none !important;
+  stroke: #fff !important;
+}
+
+:global(body.inverted-contrast) .stepContent,
+:global(body.inverted-contrast) .stepContent span {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .icon,
+:global(body.inverted-contrast) .step .icon,
+:global(body.inverted-contrast) .step:nth-child(n) .icon,
+:global(body.inverted-contrast) .step:nth-child(3) .icon,
+:global(body.inverted-contrast) .step:nth-child(4) .icon {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .icon svg,
+:global(body.inverted-contrast) .icon svg *,
+:global(body.inverted-contrast) .step .icon svg,
+:global(body.inverted-contrast) .step .icon svg *,
+:global(body.inverted-contrast) .step:nth-child(n) .icon svg,
+:global(body.inverted-contrast) .step:nth-child(n) .icon svg * {
+  color: #000 !important;
+  stroke: #000 !important;
+  fill: none !important;
+}
+
+:global(body.inverted-contrast) .arrow,
+:global(body.inverted-contrast) .arrow svg,
+:global(body.inverted-contrast) .arrowItem svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.inverted-contrast) .media {
+  border-color: #fff !important;
+}
+
