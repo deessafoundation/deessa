@@ -146,7 +146,7 @@ export function Step4Review({ data, onEdit, onSubmit, onBack, isSubmitting, erro
                 <a href="https://deessa.org/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
                   Data Privacy Policy
                 </a>{" "}
-                of the DEESSA Foundation Conference.
+                of the deessa Foundation Conference.
               </span>
             </label>
             <label className="flex cursor-pointer items-start gap-3">
@@ -157,7 +157,7 @@ export function Step4Review({ data, onEdit, onSubmit, onBack, isSubmitting, erro
                 className="mt-0.5 size-5 rounded border-border text-primary focus:ring-primary"
               />
               <span className="text-sm text-foreground-muted">
-                I consent to receiving future newsletters and updates about upcoming DEESSA Foundation
+                I consent to receiving future newsletters and updates about upcoming deessa Foundation
                 events via email.
               </span>
             </label>

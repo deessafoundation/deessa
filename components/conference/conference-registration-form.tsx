@@ -139,7 +139,7 @@ export function ConferenceRegistrationForm({ schema }: ConferenceRegistrationFor
             <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-white font-bold text-lg">
               D
             </div>
-            <span className="text-lg font-bold tracking-tight text-foreground">DEESSA Foundation</span>
+            <span className="text-lg font-bold tracking-tight text-foreground">deessa Foundation</span>
           </div>
           <a
             href="/conference"

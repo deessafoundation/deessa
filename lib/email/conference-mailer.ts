@@ -53,9 +53,9 @@ export async function sendConferenceRegistrationEmail(params: {
     const html = ConferenceRegistrationTemplate(params)
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.email,
-      subject: "We received your registration! — DEESSA National Conference 2026",
+      subject: "We received your registration! — deessa National Conference 2026",
       html,
       headers: {
         'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
@@ -91,9 +91,9 @@ export async function sendConferenceConfirmationEmail(params: {
     const html = ConferenceConfirmationTemplate(params)
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.email,
-      subject: "🎉 Your Registration is Confirmed! — DEESSA National Conference 2026",
+      subject: "🎉 Your Registration is Confirmed! — deessa National Conference 2026",
       html,
       headers: {
         'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
@@ -119,9 +119,9 @@ export async function sendConferenceCancellationEmail(params: {
     const transporter = createGmailTransporter()
     const html = ConferenceCancellationTemplate(params)
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.email,
-      subject: "Your Registration Has Been Cancelled — DEESSA National Conference 2026",
+      subject: "Your Registration Has Been Cancelled — deessa National Conference 2026",
       html,
       headers: {
         'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,
@@ -159,7 +159,7 @@ export async function sendCustomEmail(params: {
           <td align="center" style="padding-bottom:20px;">
             <table cellpadding="0" cellspacing="0"><tr>
               <td style="background:#3FABDE;border-radius:12px;padding:10px 16px;">
-                <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">DEESSA</span>
+                <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">deessa</span>
                 <span style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Foundation</span>
               </td>
             </tr></table>
@@ -175,7 +175,7 @@ export async function sendCustomEmail(params: {
                   <div style="font-size:15px;color:#334155;line-height:1.7;white-space:pre-wrap;">${escapeHtml(body).replace(/\n/g, "<br/>")}</div>
                   <hr style="margin:32px 0;border:none;border-top:1px solid #E2E8F0;"/>
                   <p style="margin:0;font-size:12px;color:#94A3B8;">
-                    DEESSA Foundation &mdash; DEESSA National Conference 2026<br/>
+                    deessa Foundation &mdash; deessa National Conference 2026<br/>
                     Thamel, Kathmandu, Nepal 44600<br/>
                     <a href="mailto:deessa.social@gmail.com" style="color:#3FABDE;">deessa.social@gmail.com</a>
                   </p>
@@ -191,7 +191,7 @@ export async function sendCustomEmail(params: {
 </html>`
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to,
       subject,
       html,
@@ -243,7 +243,7 @@ export async function sendConferencePaymentLinkEmail(params: {
         <tr><td align="center" style="padding-bottom:20px;">
           <table cellpadding="0" cellspacing="0"><tr>
             <td style="background:#3FABDE;border-radius:12px;padding:10px 16px;">
-              <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">DEESSA</span>
+              <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-0.5px;">deessa</span>
               <span style="color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-left:8px;">Foundation</span>
             </td>
           </tr></table>
@@ -253,9 +253,9 @@ export async function sendConferencePaymentLinkEmail(params: {
             <tr><td style="height:4px;background:linear-gradient(90deg,#3FABDE,#2D8FBF);"></td></tr>
             <tr><td style="padding:36px 40px;">
               <h2 style="margin:0 0 4px;font-size:22px;color:#0F172A;font-weight:800;">Complete Your Registration</h2>
-              <p style="margin:0 0 24px;font-size:14px;color:#64748B;">DEESSA National Conference 2026</p>
+              <p style="margin:0 0 24px;font-size:14px;color:#64748B;">deessa National Conference 2026</p>
               <p style="margin:0 0 16px;font-size:15px;color:#334155;">Dear <strong>${safeFullName}</strong>,</p>
-              <p style="margin:0 0 24px;font-size:15px;color:#334155;line-height:1.6;">Thank you for registering for the DEESSA National Conference 2026. Your registration has been received and is <strong>pending payment</strong>. Please complete payment to confirm your spot.</p>
+              <p style="margin:0 0 24px;font-size:15px;color:#334155;line-height:1.6;">Thank you for registering for the deessa National Conference 2026. Your registration has been received and is <strong>pending payment</strong>. Please complete payment to confirm your spot.</p>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0;">
                 <tr><td style="padding:16px 20px;">
                   <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94A3B8;">Registration ID</p>
@@ -270,7 +270,7 @@ export async function sendConferencePaymentLinkEmail(params: {
               ${expiryNote}
               <p style="margin:24px 0 0;font-size:13px;color:#94A3B8;">Or copy this link: <a href="${paymentUrl}" style="color:#3FABDE;word-break:break-all;">${paymentUrl}</a></p>
               <hr style="margin:32px 0;border:none;border-top:1px solid #E2E8F0;"/>
-              <p style="margin:0;font-size:12px;color:#94A3B8;">DEESSA Foundation &mdash; DEESSA National Conference 2026<br/><a href="mailto:conference@deessa.org.np" style="color:#3FABDE;">conference@deessa.org.np</a></p>
+              <p style="margin:0;font-size:12px;color:#94A3B8;">deessa Foundation &mdash; deessa National Conference 2026<br/><a href="mailto:conference@deessa.org.np" style="color:#3FABDE;">conference@deessa.org.np</a></p>
             </td></tr>
           </table>
         </td></tr>
@@ -280,9 +280,9 @@ export async function sendConferencePaymentLinkEmail(params: {
 </body></html>`
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.email,
-      subject: "⏳ Complete Your Payment — DEESSA National Conference 2026",
+      subject: "⏳ Complete Your Payment — deessa National Conference 2026",
       html,
       headers: {
         'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,

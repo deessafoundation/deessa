@@ -7,12 +7,12 @@ import { teamMembers as fallbackTeamMembers } from "@/data/team"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Who We Are - About Deessa Foundation",
+  title: "Who We Are - About deessa Foundation",
   description:
-    "Learn about Deessa Foundation, a non-profit working for and with children with disabilities in Nepal, with a special focus on autism. Building a Nepal where every child is seen, heard, and included.",
+    "Learn about deessa Foundation, a non-profit working for and with children with disabilities in Nepal, with a special focus on autism. Building a Nepal where every child is seen, heard, and included.",
   path: "/about",
   keywords: [
-    "about Deessa Foundation",
+    "about deessa Foundation",
     "Nepal disability NGO",
     "autism organization Nepal",
     "child disability support",

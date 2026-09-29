@@ -85,7 +85,7 @@ export function SchemaImportExport({ schema, onImport }: SchemaImportExportProps
 
         // Validate. Accept the legacy marker so older exports still import.
         if (!data.deessa_form_schema && !data.deesha_form_schema) {
-          setImportError("This is not a valid Deessa form schema file.")
+          setImportError("This is not a valid deessa form schema file.")
           setImportDialogOpen(true)
           return
         }

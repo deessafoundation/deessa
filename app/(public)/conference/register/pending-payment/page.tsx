@@ -226,7 +226,7 @@ function PendingPaymentContent() {
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex size-8 items-center justify-center rounded-lg bg-primary font-bold text-lg text-white">D</div>
-            <span className="text-lg font-bold tracking-tight">DEESSA Foundation</span>
+            <span className="text-lg font-bold tracking-tight">deessa Foundation</span>
           </div>
           <Link href="/conference" className="text-sm font-semibold text-foreground-muted hover:text-primary transition-colors">
             ← Conference
@@ -252,7 +252,7 @@ function PendingPaymentContent() {
           <div className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
           <div className="p-6 sm:p-8">
             <h1 className="mb-1 text-xl font-extrabold text-foreground">Complete Your Registration</h1>
-            <p className="mb-6 text-sm text-foreground-muted">DEESSA National Conference 2026</p>
+            <p className="mb-6 text-sm text-foreground-muted">deessa National Conference 2026</p>
 
             <div className="grid grid-cols-2 gap-4 rounded-xl bg-muted/50 p-5">
               <div>

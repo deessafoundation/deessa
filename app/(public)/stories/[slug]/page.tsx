@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ],
       publishedTime: story.published_at || story.created_at,
       modifiedTime: story.updated_at,
-      authors: ['Deessa Foundation'],
+      authors: ['deessa Foundation'],
       section: story.category || 'Stories',
     },
     twitter: {
@@ -141,7 +141,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
       
       {/* Print-only header */}
       <div className="print-header hidden">
-        <div className="logo">DEESSA Foundation</div>
+        <div className="logo">deessa Foundation</div>
         <div className="url">www.deessafoundation.org</div>
       </div>
 

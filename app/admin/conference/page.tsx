@@ -75,7 +75,7 @@ export default async function ConferenceAdminPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Conference Registrations</h1>
           <p className="text-sm text-muted-foreground">
-            DEESSA National Conference 2026 — Oct 15–17
+            deessa National Conference 2026 — Oct 15–17
           </p>
         </div>
         <Card className="border-red-200 bg-red-50">
@@ -103,7 +103,7 @@ export default async function ConferenceAdminPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Conference Registrations</h1>
           <p className="text-sm text-muted-foreground">
-            DEESSA National Conference 2026 — Oct 15–17
+            deessa National Conference 2026 — Oct 15–17
           </p>
         </div>
         <div className="flex gap-2">

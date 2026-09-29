@@ -5,7 +5,7 @@ import { aacSupportProgram } from '@/data/programs/aac-support'
 import { thousandFamiliesCampaign } from '@/data/programs/1000-families'
 
 export const metadata: Metadata = {
-  title: 'Programs - DEESSA Foundation',
+  title: 'Programs - deessa Foundation',
   description: 'Explore our programs supporting children with autism and their families across Nepal.',
 }
 
@@ -19,7 +19,7 @@ export default function ProgramsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="mb-4 text-sm font-comic tracking-widest uppercase">
-              DEESSA FOUNDATION
+              deessa FOUNDATION
             </div>
             <h1 className="mb-6 text-5xl md:text-6xl font-marissa leading-tight">
               Our Programs

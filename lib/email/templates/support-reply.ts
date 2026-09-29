@@ -24,7 +24,7 @@ export function SupportReplyTemplate({
   reportStatus,
 }: SupportReplyTemplateProps): string {
   const safeRecipientName = escapeHtml(recipientName || 'there')
-  const safeSenderName = escapeHtml(senderName || 'DEESSA Foundation')
+  const safeSenderName = escapeHtml(senderName || 'deessa Foundation')
   const safeSubject = escapeHtml(subject || 'Support update')
   const safeReportId = escapeHtml(reportId)
   const safeStatus = escapeHtml(reportStatus || 'open')
@@ -47,7 +47,7 @@ export function SupportReplyTemplate({
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
-                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+                <img src="${siteUrl}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
               </a>
             </td>
           </tr>
@@ -131,7 +131,7 @@ export function SupportReplyTemplate({
 
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="${siteUrl}" style="color:#3FABDE;">deessafoundation.com</a>
               </p>

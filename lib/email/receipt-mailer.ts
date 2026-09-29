@@ -65,7 +65,7 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams): Promise<
     })
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.donorEmail,
       subject: `Your Donation Receipt — ${escapeHtml(params.receiptNumber)}`,
       html: emailHtml,

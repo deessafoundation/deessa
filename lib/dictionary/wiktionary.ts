@@ -66,7 +66,7 @@ async function fetchDefinition(term: string) {
     if (Date.now() - windowStart >= 60_000) { windowStart = Date.now(); requests = 0 }
     if (++requests > 120) throw new DictionaryError('rate_limited', 'Dictionary is busy. Please try again shortly.', 429, 60)
     const response = await fetch(`https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(candidate)}`, {
-      headers: { Accept: 'application/json', 'User-Agent': `DeeshaFoundationDictionary/1.0 (${site.origin}/contact)` },
+      headers: { Accept: 'application/json', 'User-Agent': `DeessaFoundationDictionary/1.0 (${site.origin}/contact)` },
       signal, redirect: 'error', cache: 'no-store',
     })
     if (response.status === 404) { await response.body?.cancel(); continue }

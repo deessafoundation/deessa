@@ -15,7 +15,7 @@ export async function sendSupportReplyEmail(opts: { to: string; toName?: string;
   const transporter = createGmailTransporter()
   const orgEmail = process.env.GOOGLE_EMAIL!
 
-  const senderName = opts.performed_by || 'DEESSA Foundation'
+  const senderName = opts.performed_by || 'deessa Foundation'
   const html = SupportReplyTemplate({
     recipientName: opts.toName || 'there',
     senderName,
@@ -34,7 +34,7 @@ export async function sendSupportReplyEmail(opts: { to: string; toName?: string;
   }
 
   await transporter.sendMail({
-    from: `"DEESSA Foundation" <${orgEmail}>`,
+    from: `"deessa Foundation" <${orgEmail}>`,
     to: opts.to,
     subject: opts.subject,
     html,

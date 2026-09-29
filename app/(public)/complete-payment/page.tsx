@@ -153,7 +153,7 @@ function CompletePaymentContent() {
         <div className="w-full max-w-md rounded-2xl border border-border bg-card p-10 shadow-xl">
           <div className="mb-6 flex items-center gap-2">
             <div className="flex size-8 items-center justify-center rounded-lg bg-primary font-bold text-white">D</div>
-            <span className="font-bold">DEESSA Foundation</span>
+            <span className="font-bold">deessa Foundation</span>
           </div>
           <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-primary/10">
             <Mail className="size-7 text-primary" />
@@ -261,7 +261,7 @@ function CompletePaymentContent() {
         {/* Header */}
         <div className="mb-6 flex items-center gap-2">
           <div className="flex size-8 items-center justify-center rounded-lg bg-primary font-bold text-white">D</div>
-          <span className="font-bold">DEESSA Foundation</span>
+          <span className="font-bold">deessa Foundation</span>
         </div>
 
         {/* Expiry banner */}
@@ -277,7 +277,7 @@ function CompletePaymentContent() {
           <div className="h-1 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
           <div className="p-6 sm:p-8">
             <h1 className="mb-1 text-xl font-extrabold">Complete Your Payment</h1>
-            <p className="mb-6 text-sm text-foreground-muted">DEESSA National Conference 2026</p>
+            <p className="mb-6 text-sm text-foreground-muted">deessa National Conference 2026</p>
             <div className="grid grid-cols-2 gap-4 rounded-xl bg-muted/50 p-5">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-foreground-muted">Registration ID</p>

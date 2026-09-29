@@ -388,7 +388,7 @@ export function EventRegistrationForm({
               D
             </div>
             <span className="text-lg font-bold tracking-tight text-foreground">
-              Deessa Foundation
+              deessa Foundation
             </span>
           </div>
           <Link
@@ -1041,7 +1041,7 @@ export function EventRegistrationForm({
                           >
                             Data Privacy Policy
                           </a>{" "}
-                          of the Deessa Foundation.
+                          of the deessa Foundation.
                         </span>
                       </label>
                       <label className="flex cursor-pointer items-start gap-3">
@@ -1054,7 +1054,7 @@ export function EventRegistrationForm({
                         />
                         <span className="text-sm text-foreground-muted">
                           I consent to receiving future newsletters and updates about
-                          upcoming Deessa Foundation events via email.
+                          upcoming deessa Foundation events via email.
                         </span>
                       </label>
                     </div>

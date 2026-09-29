@@ -70,7 +70,7 @@ export function SupportReassignmentTemplate({
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
-                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+                <img src="${siteUrl}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
               </a>
             </td>
           </tr>
@@ -219,7 +219,7 @@ export function SupportReassignmentTemplate({
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Admin Portal</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">deessa Foundation — Admin Portal</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="${siteUrl}/admin" style="color:${isNewAssignee ? '#8B5CF6' : '#d97706'};">Admin Dashboard</a> · 
                 <a href="${siteUrl}/admin/support" style="color:${isNewAssignee ? '#8B5CF6' : '#d97706'};">Support Center</a>

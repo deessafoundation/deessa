@@ -97,7 +97,7 @@ export function Step1PersonalDetails({ data, onChange, onNext }: Step1Props) {
               type="text"
               value={data.organization}
               onChange={(e) => onChange({ organization: e.target.value })}
-              placeholder="e.g. DEESSA Inc."
+              placeholder="e.g. deessa Inc."
               className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-foreground-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             />
           </label>

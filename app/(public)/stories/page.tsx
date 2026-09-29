@@ -13,7 +13,7 @@ export const revalidate = 0
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Impact Stories - Real Stories of Change in Nepal",
-  description: "Read inspiring stories of impact and transformation from our community. Discover how Deessa Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
+  description: "Read inspiring stories of impact and transformation from our community. Discover how deessa Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
   path: "/stories",
   keywords: [
     "Nepal impact stories",

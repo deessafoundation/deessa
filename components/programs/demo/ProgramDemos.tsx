@@ -761,7 +761,7 @@ export function ProgramDemoIndex() {
         <Link className={s.textLink} href="/demo">
           ← All demos
         </Link>
-        <Eyebrow>DEESSA / PROGRAM DESIGN EXPLORATIONS</Eyebrow>
+        <Eyebrow>deessa / PROGRAM DESIGN EXPLORATIONS</Eyebrow>
         <h1>
           One foundation.
           <br />

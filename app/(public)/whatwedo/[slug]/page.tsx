@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${area.label} | What We Do`,
       description: area.subtitle,
       path: `/whatwedo/${area.id}`,
-      keywords: [area.label, "autism support Nepal", "inclusive education", "Deessa Foundation"],
+      keywords: [area.label, "autism support Nepal", "inclusive education", "deessa Foundation"],
     })
   }
 
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Project Not Found" }
   }
 
-  return { title: program.document.seo.title || `${program.document.title} | DEESSA Foundation`, description: program.document.seo.description || program.document.shortDescription, alternates: { canonical: `/whatwedo/${program.slug}` }, robots: { index: true, follow: true } }
+  return { title: program.document.seo.title || `${program.document.title} | deessa Foundation`, description: program.document.seo.description || program.document.shortDescription, alternates: { canonical: `/whatwedo/${program.slug}` }, robots: { index: true, follow: true } }
 }
 
 export default async function ProgramDetailPage({ params }: PageProps) {

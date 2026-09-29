@@ -162,7 +162,7 @@ function buildInternalSupportEmail(params: SupportEmailParams): string {
       </div>
     </div>
     <div class="footer">
-      DEESSA Foundation Support Team · <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>
+      deessa Foundation Support Team · <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>
     </div>
   </div>
 </body>
@@ -257,10 +257,10 @@ function buildSupportConfirmationEmail(params: SupportEmailParams): string {
       
       <p style="font-size:14px; margin-bottom:8px;"><strong>Need Urgent Help?</strong> If this is a critical issue affecting your work, please email <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a> with <strong>URGENT</strong> in the subject line.</p>
 
-      <p style="font-size:14px; margin-top:20px;">Thank you for helping us improve!<br /><strong>DEESSA Foundation Support Team</strong></p>
+      <p style="font-size:14px; margin-top:20px;">Thank you for helping us improve!<br /><strong>deessa Foundation Support Team</strong></p>
     </div>
     <div class="footer">
-      DEESSA Foundation · Thamel, Kathmandu, Nepal 44600<br />
+      deessa Foundation · Thamel, Kathmandu, Nepal 44600<br />
       Questions? Reply to this email or contact <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>
     </div>
   </div>
@@ -288,7 +288,7 @@ export async function sendSupportEmails(params: SupportEmailParams): Promise<Ema
     const [internalResult, confirmationResult] = await Promise.allSettled([
       // 1. Internal notification (reply-to: reporter so team can reply directly)
       transporter.sendMail({
-        from: `"DEESSA Support System" <${orgEmail}>`,
+        from: `"deessa Support System" <${orgEmail}>`,
         to: supportEmail,
         replyTo: `"${params.name}" <${params.email}>`,
         subject: `[Support] ${params.issueType}: ${params.summary}`,
@@ -301,7 +301,7 @@ export async function sendSupportEmails(params: SupportEmailParams): Promise<Ema
 
       // 2. Confirmation to the reporter
       transporter.sendMail({
-        from: `"DEESSA Foundation Support" <${orgEmail}>`,
+        from: `"deessa Foundation Support" <${orgEmail}>`,
         to: params.email,
         subject: `Support Report Received — ${params.issueType}`,
         html: buildSupportConfirmationEmail(params),

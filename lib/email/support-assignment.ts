@@ -38,7 +38,7 @@ export async function sendSupportAssignmentEmail(opts: {
   })
 
   await transporter.sendMail({
-    from: `"DEESSA Foundation Admin" <${orgEmail}>`,
+    from: `"deessa Foundation Admin" <${orgEmail}>`,
     to: opts.to,
     subject: `🔔 New Support Assignment: ${opts.reportSubject}`,
     html,

@@ -57,13 +57,13 @@ export async function sendReassignmentEmails(opts: {
   // Send both emails
   await Promise.all([
     transporter.sendMail({
-      from: `"DEESSA Foundation Admin" <${orgEmail}>`,
+      from: `"deessa Foundation Admin" <${orgEmail}>`,
       to: opts.newAssigneeEmail,
       subject: `🔄 Support Report Reassigned to You: ${opts.reportSubject}`,
       html: newAssigneeHtml,
     }),
     transporter.sendMail({
-      from: `"DEESSA Foundation Admin" <${orgEmail}>`,
+      from: `"deessa Foundation Admin" <${orgEmail}>`,
       to: opts.previousAssigneeEmail,
       subject: `↩️ Support Report Reassigned: ${opts.reportSubject}`,
       html: previousAssigneeHtml,

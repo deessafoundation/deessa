@@ -244,7 +244,7 @@ function PendingPaymentContent() {
             <div className="flex size-8 items-center justify-center rounded-lg bg-primary font-bold text-lg text-white">
               D
             </div>
-            <span className="text-lg font-bold tracking-tight">DEESSA Foundation</span>
+            <span className="text-lg font-bold tracking-tight">deessa Foundation</span>
           </div>
           <Link
             href={`/events/${eventSlug}`}
