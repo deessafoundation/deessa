@@ -225,19 +225,37 @@ export function TtsControls() {
 
       {/* ── Primary Action / Transport ── */}
       {!isActive ? (
-        <button
-          type="button"
-          onClick={readPage}
-          disabled={disabled || isBusy}
-          className={cn(
-            "flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-sm transition-all",
-            "hover:bg-primary/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            "disabled:cursor-not-allowed disabled:opacity-50",
-          )}
-        >
-          <Play aria-hidden="true" className="size-4 shrink-0 fill-current" />
-          {status === "finished" ? strings.restart : strings.readPage}
-        </button>
+        <div className="space-y-2">
+          {/* Reads from the section currently on screen (top of page → whole page). */}
+          <button
+            type="button"
+            onClick={readPage}
+            disabled={disabled || isBusy}
+            className={cn(
+              "flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-sm transition-all",
+              "hover:bg-primary/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+            )}
+          >
+            <Play aria-hidden="true" className="size-4 shrink-0 fill-current" />
+            {strings.readPage}
+          </button>
+          {status === "finished" ? (
+            <button
+              type="button"
+              onClick={restart}
+              disabled={disabled || isBusy}
+              className={cn(
+                "flex min-h-[34px] w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors",
+                "hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                "disabled:cursor-not-allowed disabled:opacity-50",
+              )}
+            >
+              <Repeat aria-hidden="true" className="size-3.5" />
+              {strings.restart}
+            </button>
+          ) : null}
+        </div>
       ) : (
         <div className="space-y-2">
           <div className="grid grid-cols-4 gap-1.5">

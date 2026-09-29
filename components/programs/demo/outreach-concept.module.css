@@ -35,6 +35,9 @@
   position: relative;
 }
 
+.outreachCover > div:first-child { aspect-ratio: 16 / 9; }
+.outreachRibbon > div { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+
 .paperLabel {
   position: absolute;
   left: 24px;
@@ -146,4 +149,14 @@
   font-size: 1.9rem;
   letter-spacing: -0.045em;
   margin: 15px 0 24px;
+}
+
+@media (max-width: 767px) {
+  .outreachIntro, .outreachOpening, .outreachCta { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .outreachIntro { padding-top: 24px; }
+  .outreachOpening, .outreachVoice { padding-block: 40px; }
+  .outreachCta { padding: 28px; }
+  .outreachCover > div:first-child { aspect-ratio: 4 / 3; }
+  .paperLabel { position: static; transform: none; margin-top: 12px; }
+  .coverCaption { flex-wrap: wrap; gap: 8px; }
 }

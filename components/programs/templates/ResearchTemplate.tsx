@@ -18,12 +18,12 @@ import photoStyles from "./editorial-photo.module.css"
 export function ResearchTemplate({ document }: { document: ProgramDocument }) {
   const { hero } = document
   const visual = hero.editorial
-  const sections = document.sectionbase.filter((section) => section.enabled)
-  const question = document.sectionbase.find((section) => section.content.type === "rich_text")
-  const approach = sectionbase.find(
+  const sections = document.sections.filter((section) => section.enabled)
+  const question = sections.find((section) => section.content.type === "rich_text")
+  const approach = sections.find(
     (section) => section.content.type === "how_it_works" || section.content.type === "timeline",
   )
-  const board = sectionbase.find((section) => section.content.type === "built_in_demo")
+  const board = sections.find((section) => section.content.type === "built_in_demo")
   return (
     <div className={base.root + " " + base.research}>
       <section className={base.container + " " + research.researchHero}>
@@ -46,7 +46,7 @@ export function ResearchTemplate({ document }: { document: ProgramDocument }) {
             <p>{document.shortDescription}</p>
             <EditorialActions actions={hero.actions} />
             <div className={research.researchTags}>
-              {document.tagbase.map((tag) => (
+              {document.tags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
@@ -54,7 +54,7 @@ export function ResearchTemplate({ document }: { document: ProgramDocument }) {
           <div className={research.researchVisual}>
             <div className={research.visualOrbit} aria-hidden="true" />
             {imageUrl(hero.image) ? (
-              <EditorialPhoto image={hero.image} className={photoStylebase.photo} priority />
+              <EditorialPhoto image={hero.image} className={photoStyles.photo} priority />
             ) : (
               <div className={research.conceptCard}>
                 <span className={research.conceptCardLabel}>{visual?.conceptLabel || document.eyebrow}</span>
@@ -90,7 +90,7 @@ export function ResearchTemplate({ document }: { document: ProgramDocument }) {
           </div>
         </div>
       </section>
-      {sectionbase.map((section) => {
+      {sections.map((section) => {
         const c = section.content
         if (
           c.type === "rich_text" &&
@@ -112,7 +112,7 @@ export function ResearchTemplate({ document }: { document: ProgramDocument }) {
                 <SectionCopy section={section} />
               </div>
               <div>
-                {c.featurebase.map((item, i) => (
+                {c.features.map((item, i) => (
                   <article key={i}>
                     <span>INSIGHT {item.number || String(i + 1).padStart(2, "0")}</span>
                     <h3>{item.title}</h3>

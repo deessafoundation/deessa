@@ -13,6 +13,10 @@
   padding-block: 60px 66px;
 }
 
+.servicePortrait > div:first-child { aspect-ratio: 4 / 5; }
+.serviceFacts > div { display: grid; gap: 8px; }
+.serviceCta h2 { color: inherit; }
+
 .heroCopy {
   padding-block: 16px;
 }
@@ -78,4 +82,11 @@
   border: 1px solid rgb(var(--brand-primary) / 0.25);
   border-radius: 50%;
   margin-bottom: 40px;
+}
+
+@media (max-width: 767px) {
+  .serviceHero, .serviceCta { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 32px; }
+  .serviceCta { padding: 28px; }
+  .serviceFacts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .servicePortrait { padding: 0; }
 }

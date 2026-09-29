@@ -219,7 +219,7 @@ export function AccessibilityPanel() {
 
     // Button — centered vertically in middle mode via translateY(-50%)
     root.style.setProperty("--a11y-btn-top", isMiddle ? "50%" : "auto")
-    root.style.setProperty("--a11y-btn-right", isRight ? "1.5rem" : "auto")
+    root.style.setProperty("--a11y-btn-right", isRight ? "0" : "auto")
     root.style.setProperty("--a11y-btn-bottom", isBottom ? "1.5rem" : "auto")
     root.style.setProperty("--a11y-btn-left", !isRight ? "1.5rem" : "auto")
     root.style.setProperty("--a11y-btn-transform", isMiddle ? "translateY(-50%)" : "none")
@@ -227,9 +227,8 @@ export function AccessibilityPanel() {
     if (isMiddle) {
       // MIDDLE mode: open panel BESIDE the button (inward from screen edge),
       // vertically centered with the button.
-      // Button width = 3.5rem (w-14), gap = 0.75rem, edge = 1.5rem
-      // → panel edge offset = 1.5rem + 3.5rem + 0.75rem = 5.75rem
-      const panelEdge = "5.75rem"
+      // Button width = 3.5rem (w-14), with a 0.75rem gap from the screen edge.
+      const panelEdge = "4.25rem"
       root.style.setProperty("--a11y-panel-top", "50%")
       root.style.setProperty("--a11y-panel-right", isRight ? panelEdge : "auto")
       root.style.setProperty("--a11y-panel-left", !isRight ? panelEdge : "auto")

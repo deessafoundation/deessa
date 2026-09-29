@@ -433,32 +433,6 @@ export const CircularTestimonials = ({
               </motion.div>
             </AnimatePresence>
 
-            <div className="arrow-buttons">
-              <button
-                className="arrow-button prev-button"
-                onClick={handlePrev}
-                style={{
-                  backgroundColor: hoverPrev ? colorArrowHoverBg : colorArrowBg,
-                }}
-                onMouseEnter={() => setHoverPrev(true)}
-                onMouseLeave={() => setHoverPrev(false)}
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft size={28} color={colorArrowFg} />
-              </button>
-              <button
-                className="arrow-button next-button"
-                onClick={handleNext}
-                style={{
-                  backgroundColor: hoverNext ? colorArrowHoverBg : colorArrowBg,
-                }}
-                onMouseEnter={() => setHoverNext(true)}
-                onMouseLeave={() => setHoverNext(false)}
-                aria-label="Next testimonial"
-              >
-                <ChevronRight size={28} color={colorArrowFg} />
-              </button>
-            </div>
           </div>
         )}
       </div>
@@ -554,31 +528,12 @@ export const CircularTestimonials = ({
         .quote {
           line-height: 1.75;
         }
-        .arrow-buttons {
-          display: flex;
-          gap: 1.5rem;
-          padding-top: 3rem;
-        }
-        .arrow-button {
-          width: 2.7rem;
-          height: 2.7rem;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: background-color 0.3s;
-          border: none;
-        }
         .word {
           display: inline-block;
         }
         @media (min-width: 768px) {
           .testimonial-grid {
             grid-template-columns: 1fr 1fr;
-          }
-          .arrow-buttons {
-            padding-top: 0;
           }
         }
         .testimonial-grid.photo-only {

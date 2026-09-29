@@ -1,12 +1,12 @@
 "use client"
 
+import type React from "react"
 import { Fragment, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
 import {
   ArrowRight,
-  Download,
   Globe,
   GraduationCap,
   Handshake,
@@ -22,7 +22,6 @@ import {
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { OrgStructure } from "./OrgStructure"
-import { allResources } from "@/components/resource-downloads"
 import introStyles from "./about-intro.module.css"
 import aboutSectionStyles from "./about-sections.module.css"
 
@@ -60,7 +59,17 @@ const partnerCategories = [
   { icon: Trees, label: "Environment", bg: "bg-emerald-50", iconColor: "text-emerald-500" },
 ]
 
-function SectionHeader({ label, title, sub, level = 2 }: { label: string; title: string; sub?: string; level?: 2 | 3 | 4 }) {
+function SectionHeader({
+  label,
+  title,
+  sub,
+  level = 2,
+}: {
+  label: string
+  title: React.ReactNode
+  sub?: string
+  level?: 2 | 3 | 4
+}) {
   const HeadingTag = `h${level}` as "h2" | "h3" | "h4"
   return (
     <motion.div {...reveal} transition={{ duration: 0.5 }} className="mx-auto mb-14 max-w-[700px] text-center">
@@ -70,7 +79,7 @@ function SectionHeader({ label, title, sub, level = 2 }: { label: string; title:
       <HeadingTag className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px] about-heading-dark">
         {title}
       </HeadingTag>
-      {sub && <p className="font-dm-sans mt-4 text-base leading-relaxed text-[#6b7280] sm:text-lg">{sub}</p>}
+      {sub && <p className="font-comic mt-4 text-base leading-relaxed text-[#6b7280] sm:text-lg">{sub}</p>}
     </motion.div>
   )
 }
@@ -303,7 +312,14 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
-            title="Meet the Changemakers"
+            title={
+              <>
+                Meet the{" "}
+                <span className="text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
+                  Changemakers
+                </span>
+              </>
+            }
             sub="Our diverse team of passionate individuals working tirelessly on the ground and behind the scenes."
           />
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
@@ -459,57 +475,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         </div>
       </section>
 
-      {/* SECTION 8: OFFICIAL DOCUMENTS & MATERIALS */}
-      <section data-about-resources className={aboutSectionStyles.resourcesSection} aria-label="Official Documents and Materials">
-        <div className="mx-auto max-w-4xl px-4 md:px-8">
-          <SectionHeader
-            label="Resources"
-            title="Official Documents & Materials"
-            sub="Access our organizational documents, brand guidelines, and registration certificates."
-          />
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {allResources.map((resource, i) => {
-              const Icon = resource.icon
-              return (
-                <motion.article
-                  key={resource.title}
-                  {...reveal}
-                  transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className={aboutSectionStyles.resourceCard}
-                >
-                  <div className="mb-4 flex items-start gap-4">
-                    <div
-                      className={aboutSectionStyles.resourceIcon}
-                      aria-hidden="true"
-                    >
-                      <Icon className="size-5" />
-                    </div>
-                    <div>
-                      <h3 className={aboutSectionStyles.resourceTitle}>
-                        {resource.title}
-                      </h3>
-                      <p className={aboutSectionStyles.resourceDesc}>{resource.description}</p>
-                    </div>
-                  </div>
-                  <a
-                    href={resource.file}
-                    download
-                    aria-label={`Download ${resource.title} (${resource.type?.toUpperCase()})`}
-                    className={aboutSectionStyles.resourceBtn}
-                    data-slot="button"
-                    data-variant="outline"
-                  >
-                    <Download className="size-4" aria-hidden="true" />
-                    Download {resource.type?.toUpperCase()}
-                  </a>
-                </motion.article>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 9: FINAL CTA */}
+      {/* SECTION 8: FINAL CTA */}
       <section data-about-cta className={aboutSectionStyles.ctaSection} aria-labelledby="about-final-cta-heading">
         <div className="relative w-full">
           <svg

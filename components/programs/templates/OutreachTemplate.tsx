@@ -15,10 +15,10 @@ import outreach from "../demo/outreach-concept.module.css"
 
 export function OutreachTemplate({ document }: { document: ProgramDocument }) {
   const { hero } = document
-  const sections = document.sectionbase.filter((section) => section.enabled)
-  const firstStats = document.sectionbase.find((section) => section.content.type === "stats")
-  const firstGallery = document.sectionbase.find((section) => section.content.type === "gallery")
-  const activities = sectionbase.find((section) => section.content.type === "activities")
+  const sections = document.sections.filter((section) => section.enabled)
+  const firstStats = sections.find((section) => section.content.type === "stats")
+  const firstGallery = sections.find((section) => section.content.type === "gallery")
+  const activities = sections.find((section) => section.content.type === "activities")
   const visual = hero.editorial
   return (
     <div className={base.root + " " + base.outreach}>
@@ -57,12 +57,12 @@ export function OutreachTemplate({ document }: { document: ProgramDocument }) {
           </div>
         )}
       </section>
-      {hero.actionbase.length > 0 && (
+      {hero.actions.length > 0 && (
         <div className={base.container}>
           <EditorialActions actions={hero.actions} />
         </div>
       )}
-      {sectionbase.map((section) => {
+      {sections.map((section) => {
         const c = section.content
         if (
           c.type === "stats" &&
@@ -71,13 +71,13 @@ export function OutreachTemplate({ document }: { document: ProgramDocument }) {
           return (
             <div id={section.id} className={outreach.outreachRibbon} key={section.id}>
               <div className={base.container}>
-                {c.statbase.map((stat, i) => (
+                {c.stats.map((stat, i) => (
                   <span key={i}>
                     {stat.value} <small>{stat.label}</small>
                   </span>
                 ))}
                 {activities && (
-                  <a href={"#" + activitiebase.id}>
+                  <a href={"#" + activities.id}>
                     Explore the journey <ArrowDown size={19} aria-hidden="true" />
                   </a>
                 )}

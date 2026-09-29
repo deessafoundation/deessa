@@ -3354,11 +3354,11 @@ body.sensory-friendly
 
 /* Default values (bottom-right preset) */
 :root {
-  --a11y-btn-top: auto;
-  --a11y-btn-right: 1.5rem;
-  --a11y-btn-bottom: 1.5rem;
+  --a11y-btn-top: 50%;
+  --a11y-btn-right: 0;
+  --a11y-btn-bottom: auto;
   --a11y-btn-left: auto;
-  --a11y-btn-transform: none;
+  --a11y-btn-transform: translateY(-50%);
   --a11y-panel-top: auto;
   --a11y-panel-right: 1rem;
   --a11y-panel-bottom: max(6rem, calc(env(safe-area-inset-bottom) + 1.5rem));

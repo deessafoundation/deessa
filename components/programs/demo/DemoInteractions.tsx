@@ -82,7 +82,7 @@ export function CommunicationBoard() {
         <span>COMMUNICATION BOARD</span>
       </div>
       <div className={research.boardGreeting}>
-        <span>Little choicebase. Big expressionbase.</span>
+        <span>Little choices. Big expressions.</span>
         <h3>What’s on your mind?</h3>
       </div>
       <div className={research.sentence} role="status" aria-live="polite">
@@ -90,7 +90,7 @@ export function CommunicationBoard() {
         <span>{sentence.length ? sentence.join(" ") : "Tap a card to build a phrase"}</span>
       </div>
       <div className={research.wordGrid}>
-        {wordbase.map(({ label, icon: Icon, color }) => (
+        {words.map(({ label, icon: Icon, color }) => (
           <button
             key={label}
             style={{ background: color }}
