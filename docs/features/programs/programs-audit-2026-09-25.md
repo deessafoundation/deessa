@@ -8,9 +8,9 @@ All four categories have category-specific editing and rendering paths. This aud
 
 | Category | Fixed editor content reviewed | Rendering baseline |
 | --- | --- | --- |
-| Service | Hero title/description/actions, sticker/note/photo note, image metadata; facts; support cards; journey/handwritten note; story/attribution/mini stats; FAQ; CTA; metrics; gallery | Service demo, `program-demo.module.css` |
-| Outreach | Journal hero/stamp/location/captions/actions; ribbon; opening; activity postcards; photo essay; community quote; invitation; separate metrics and gallery | Outreach demo, `program-demo.module.css` |
-| Research | Concept hero/status/tags/actions; question; approach; interactive concept checklist/disclaimer; numbered insights; resources; invitation; metrics; gallery | Research demo, `program-demo.module.css` |
+| Service | Hero title/description/actions, sticker/note/photo note, image metadata; facts; support cards; journey/handwritten note; story/attribution/mini stats; FAQ; CTA; metrics; gallery | Service demo, `programs.module.css` |
+| Outreach | Journal hero/stamp/location/captions/actions; ribbon; opening; activity postcards; photo essay; community quote; invitation; separate metrics and gallery | Outreach demo, `programs.module.css` |
+| Research | Concept hero/status/tags/actions; question; approach; interactive concept checklist/disclaimer; numbered insights; resources; invitation; metrics; gallery | Research demo, `programs.module.css` |
 | Campaign | Split hero/captions/actions; progress; purpose; promise cards; milestones; family story/detail text; reach; gallery; participation cards | Campaign demo, `campaign-concept.module.css` |
 
 The three editorial editors show eight fixed panels even for an empty draft. Older additional sections are preserved. Layout controls are hidden in template mode. Repeated Outreach stats/gallery sections are edited independently. Image replacement preserves descriptive metadata. Service normalizing/rendering now carries image alt text, captions and focal points through, plus editorial heading formatting and icons.

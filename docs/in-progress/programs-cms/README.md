@@ -25,7 +25,7 @@ The four current demo pages are the visual reference:
 | Research | /demo/deessa-companion | components/programs/demo/ProgramDemos.tsx |
 | Campaign | /demo/1000-families | components/programs/demo/CampaignConcept.tsx, wrapped by CampaignDemo |
 
-Use /demo for direct links or /demo/programs to compare them. Shared styles are in program-demo.module.css; the campaign also uses campaign-concept.module.css.
+Use /demo for direct links or /demo/programs to compare them. Shared styles are in programs.module.css; the campaign also uses campaign-concept.module.css.
 
 Preserve ocean blue, the site's Marissa/DM Sans/Comic Neue typography, pill-shaped action buttons and the distinct compositions. Do not restore the old purple/yellow campaign, deep-blue panels or donation section. The campaign reference is the light, split, photo-led redesign.
 

@@ -1,7 +1,14 @@
 # Pre-Flight Safety Check Results
 
+> **⛔ NOTE: The refactor this checklist approved was later ABANDONED.**
+> The split of `program-demo.module.css` shipped but broke the design (dropped
+> ~417 of 519 selectors and corrupted identifiers in consumers) and was reverted
+> on September 30, 2026. The monolith now lives at
+> `components/programs/demo/programs.module.css`. See `css-refactor-complete.md`
+> for the full post-mortem. Historical document — do not act on it.
+
 **Date**: September 27, 2026  
-**Status**: ✅ READY TO PROCEED
+**Status**: ⛔ Superseded — the refactor it approved was abandoned
 
 ---
 

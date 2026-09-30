@@ -256,7 +256,7 @@ All files in `docs/features/conference/` use "DEESSA" extensively:
 | File | Line | Current | Replacement |
 |------|------|---------|-------------|
 | `app/globals.css` | 33 | `DEESSA FOUNDATION - OCEAN BLUE THEME` | `deessa FOUNDATION - OCEAN BLUE THEME` |
-| `components/programs/demo/program-demo.module.css` | 4, 6, 19 | `DEESSA` (in comments) | `deessa` |
+| `components/programs/demo/programs.module.css` | 4, 6, 19 | `DEESSA` (in comments) | `deessa` |
 
 ---
 
@@ -317,7 +317,7 @@ All files in `docs/features/conference/` use "DEESSA" extensively:
 13. Replace `DEESSA` -> `deessa` in conference/event/story docs
 
 **Step 6 - CSS comments:**
-14. `app/globals.css` and `program-demo.module.css`
+14. `app/globals.css` and `programs.module.css`
 
 **Step 7 - Domain fixes:**
 15. `test-url-detection.js` - `.org` -> `.com`

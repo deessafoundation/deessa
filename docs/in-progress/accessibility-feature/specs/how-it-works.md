@@ -49,7 +49,7 @@ body {
 - ✅ Footer
 
 **Potential exceptions:**
-- ⚠️ Some CSS modules with hard-coded pixel sizes (campaign-concept.module.css, program-demo.module.css)
+- ⚠️ Some CSS modules with hard-coded pixel sizes (campaign-concept.module.css, programs.module.css)
 - ⚠️ SVG text elements (if any)
 - 🔧 **Fix**: Convert hard-coded `font-size: 16px` to `font-size: 1rem` to inherit scaling
 
@@ -223,7 +223,7 @@ body.dyslexia-font pre {
 
 1. **Hard-coded font sizes** in CSS modules:
    - `components/programs/demo/campaign-concept.module.css`
-   - `components/programs/demo/program-demo.module.css`
+   - `components/programs/demo/programs.module.css`
    - These use `font-size: 16px` instead of `font-size: 1rem`
    
 2. **Inline styles** in components:

@@ -3,8 +3,16 @@
 **deessa Foundation Project**
 
 **Date**: September 27, 2026 (Revision 2 — supersedes the Sep 26 draft)
-**Status**: Analysed — ready for execution pending go-ahead
+**Status**: ⛔ ABANDONED — Step 3 (the CSS split) was executed but broke the design and was reverted on September 30, 2026; the monolith is now `components/programs/demo/programs.module.css`
 **Scope authority**: "Audit and Refactor CSS Architecture in Next.js" task brief (organizational refactor, not a redesign)
+
+> **Post-mortem:** the split described in Section 3 kept only plain single-class
+> rules and silently dropped ~417 of 519 selectors (element resets, descendant
+> rules, all media queries, hover/focus, reduced-motion and high-contrast
+> overrides), and the import-rewriting script corrupted identifiers
+> (`sectionbase`, `factbase`, `wordbase`). The design broke, so the split was
+> abandoned and the monolith restored. The audit findings below remain valid;
+> the execution plan does not. See `css-refactor-complete.md`.
 
 ---
 
