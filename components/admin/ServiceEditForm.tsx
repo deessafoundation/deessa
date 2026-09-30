@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { createEmptyContent } from "./program-sections/types"
+import { useState, useId, isValidElement, cloneElement } from "react"
 import { ChevronDown, ChevronRight, Plus, Trash2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { ImageMetadataFields } from "@/components/admin/program-sections/ImageMetadataFields"
 import { AssetPicker, AssetPick } from "@/components/admin/program-sections/AssetPicker"
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 
@@ -45,10 +47,13 @@ function Field({ label, hint, children, required, count, max }: {
   count?: number
   max?: number
 }) {
+  const id = useId()
+  const isControl = isValidElement<{ id?: string; onChange?: unknown }>(children) && !!children.props.onChange
+  const controlId = isControl ? children.props.id || id : undefined
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <Label className="text-xs text-muted-foreground">
+        <Label htmlFor={controlId} className="text-xs text-muted-foreground">
           {label} {required && <span className="text-destructive">*</span>}
         </Label>
         {count !== undefined && max !== undefined && (
@@ -58,7 +63,7 @@ function Field({ label, hint, children, required, count, max }: {
         )}
       </div>
       {hint && <p className="text-[10px] text-muted-foreground/70">{hint}</p>}
-      {children}
+      {isControl ? cloneElement(children, { id: controlId }) : children}
     </div>
   )
 }
@@ -100,7 +105,7 @@ export function ServiceEditForm({
   function updateSection(type: ProgramSection["content"]["type"], content: ProgramSection["content"]) {
     const exists = sections.find((s) => s.content.type === type)
     if (exists) {
-      onChange({ ...data, sections: sections.map((s) => s.content.type === type ? { ...s, content } : s) })
+      onChange({ ...data, sections: sections.map((s) => s.id === exists.id ? { ...s, content } : s) })
     } else {
       onChange({ ...data, sections: [...sections, { id: `${type.replace(/_/g, "-")}-auto`, enabled: true, content }] })
     }
@@ -109,20 +114,9 @@ export function ServiceEditForm({
   function updateSectionMeta(type: ProgramSection["content"]["type"], updates: Partial<Pick<ProgramSection, "heading" | "intro" | "description">>) {
     const exists = sections.find((s) => s.content.type === type)
     if (exists) {
-      onChange({ ...data, sections: sections.map((s) => s.content.type === type ? { ...s, ...updates } : s) })
+      onChange({ ...data, sections: sections.map((s) => s.id === exists.id ? { ...s, ...updates } : s) })
     } else {
-      const content = (() => {
-        switch (type) {
-          case "features": return { type: "features" as const, layout: "grid" as const, features: [{ title: "", description: "" }] }
-          case "how_it_works": return { type: "how_it_works" as const, items: [{ title: "", description: "" }] }
-          case "faq": return { type: "faq" as const, items: [{ question: "", answer: "" }] }
-          case "stats": return { type: "stats" as const, stats: [{ value: "", label: "" }] }
-          case "quote": return { type: "quote" as const, quote: "", person: "" }
-          case "gallery": return { type: "gallery" as const, layout: "grid" as const, images: [] }
-          case "cta": return { type: "cta" as const, title: "", description: "", buttons: [{ label: "", url: "/", variant: "primary" as const }] }
-          default: return { type, facts: [] } as any
-        }
-      })()
+      const content = createEmptyContent(type)
       onChange({ ...data, sections: [...sections, { id: `${type.replace(/_/g, "-")}-auto`, enabled: true, ...updates, content }] })
     }
   }
@@ -176,16 +170,16 @@ export function ServiceEditForm({
 
   function updateStep(index: number, field: string, val: string) {
     const next = steps.map((s, i) => i === index ? { ...s, [field]: val } : s)
-    updateSection("how_it_works", { type: "how_it_works", items: next })
+    updateSection("how_it_works", { ...stepsSection?.content, type: "how_it_works", items: next })
   }
 
   function addStep() {
     if (steps.length >= 6) return
-    updateSection("how_it_works", { type: "how_it_works", items: [...steps, { title: "", description: "" }] })
+    updateSection("how_it_works", { ...stepsSection?.content, type: "how_it_works", items: [...steps, { title: "", description: "" }] })
   }
 
   function removeStep(index: number) {
-    updateSection("how_it_works", { type: "how_it_works", items: steps.filter((_, i) => i !== index) })
+    updateSection("how_it_works", { ...stepsSection?.content, type: "how_it_works", items: steps.filter((_, i) => i !== index) })
   }
 
   // ── FAQ helpers ──────────────────────────────────────────
@@ -236,7 +230,7 @@ export function ServiceEditForm({
     updateSection("gallery", { type: "gallery", layout: "grid", images: next })
   }
 
-  function updateGalleryImageField(index: number, field: "alt" | "caption", value: string) {
+  function updateGalleryImageField(index: number, field: "alt" | "caption" | "focalPoint", value: string) {
     const next = galleryImages.map((img, i) => i === index ? { ...img, [field]: value } : img)
     updateSection("gallery", { type: "gallery", layout: "grid", images: next })
   }
@@ -298,18 +292,20 @@ export function ServiceEditForm({
             assetId={hero.image?.assetId ?? null}
             url={hero.image?.url}
             alt={hero.image?.alt || "Hero image"}
-            onPick={(pick) => updateHero({ image: { ...pick, alt: hero.image?.alt || "Hero image" } })}
+            onPick={(pick) => updateHero({ image: { ...hero.image, ...pick, alt: hero.image?.alt || "Hero image" } })}
             onClear={() => updateHero({ image: undefined })}
             label="Upload hero image"
           />
         </Field>
 
+        {hero.image && <ImageMetadataFields image={hero.image} onChange={image => updateHero({ image })} />}
+
         {/* Title block */}
         <Field label="Eyebrow" hint="Small label above the title" required count={eyebrow.length} max={120}>
           <Input value={eyebrow} onChange={(e) => onChange({ ...data, eyebrow: e.target.value })} placeholder="SERVICES & PROGRAMS" maxLength={120} className={inputClass} />
         </Field>
-        <Field label="Title" hint="The main heading visitors see" required count={hero.title.length} max={180}>
-          <Input value={hero.title} onChange={(e) => updateHero({ title: e.target.value })} placeholder="Every little expression." maxLength={180} className="h-10 text-base font-semibold" />
+        <Field label="Title" hint="Use line breaks and *accent text* to compose the demo heading" required count={hero.title.length} max={180}>
+          <textarea rows={3} value={hero.title} onChange={(e) => updateHero({ title: e.target.value })} placeholder="Every little expression." maxLength={180} className="h-10 text-base font-semibold" />
         </Field>
         <Field label="Description" hint="A short paragraph below the title" required count={hero.description.length} max={800}>
           <textarea value={hero.description} onChange={(e) => updateHero({ description: e.target.value })} placeholder="Communication looks different for every child…" maxLength={800} rows={3} className={textareaClass} />
@@ -320,16 +316,32 @@ export function ServiceEditForm({
           <Field label="Button Text" required count={(hero.actions?.[0]?.label || "").length} max={80}>
             <Input value={hero.actions?.[0]?.label || ""} onChange={(e) => {
               const actions = [...(hero.actions || [])]
-              actions[0] = { label: e.target.value, url: actions[0]?.url || "#", variant: "primary" }
-              updateHero({ actions: actions.slice(0, 1) })
+              actions[0] = { label: e.target.value, url: actions[0]?.url || "/", variant: "primary" }
+              updateHero({ actions: actions.slice(0, 2) })
             }} placeholder="Find support for your family" maxLength={80} className={inputClass} />
           </Field>
           <Field label="Button Link" required>
             <Input value={hero.actions?.[0]?.url || ""} onChange={(e) => {
               const actions = [...(hero.actions || [])]
               actions[0] = { label: actions[0]?.label || "", url: e.target.value, variant: "primary" }
-              updateHero({ actions: actions.slice(0, 1) })
+              updateHero({ actions: actions.slice(0, 2) })
             }} placeholder="#support" className={`${inputClass} font-mono text-xs`} />
+          </Field>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-[1fr_200px]">
+          <Field label="Secondary Button Text" count={(hero.actions?.[1]?.label || "").length} max={80}>
+            <Input value={hero.actions?.[1]?.label || ""} onChange={(e) => {
+              const actions = [...(hero.actions || [])]
+              actions[1] = { label: e.target.value, url: actions[1]?.url || "#about", variant: "secondary" }
+              updateHero({ actions: actions.slice(0, 2) })
+            }} placeholder="Explore the program" maxLength={80} className={inputClass} />
+          </Field>
+          <Field label="Secondary Button Link">
+            <Input value={hero.actions?.[1]?.url || ""} onChange={(e) => {
+              const actions = [...(hero.actions || [])]
+              actions[1] = { label: actions[1]?.label || "", url: e.target.value, variant: "secondary" }
+              updateHero({ actions: actions.slice(0, 2) })
+            }} placeholder="#about" className={`${inputClass} font-mono text-xs`} />
           </Field>
         </div>
 
@@ -367,7 +379,7 @@ export function ServiceEditForm({
                 <Input value={fact.value} onChange={(e) => updateFact(i, "value", e.target.value)} placeholder="AAC communication support" className={inputClass} />
               </Field>
             </div>
-            <Button variant="ghost" size="icon-sm" onClick={() => removeFact(i)} className="h-8 w-8 text-destructive shrink-0">
+            <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeFact(i)} className="h-8 w-8 text-destructive shrink-0">
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -381,7 +393,7 @@ export function ServiceEditForm({
 
       {/* ─── SUPPORT GRID ─── */}
       <Section title="Support Grid" hint="Feature cards with icons" defaultOpen={false} accent="#D6336C">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Section Heading" hint="Label above the grid" count={(getSection("features")?.heading || "").length} max={180}>
             <Input value={getSection("features")?.heading || ""} onChange={(e) => updateSectionMeta("features", { heading: e.target.value })} placeholder="A LITTLE UNDERSTANDING GOES A LONG WAY" maxLength={180} className={inputClass} />
           </Field>
@@ -398,7 +410,7 @@ export function ServiceEditForm({
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Feature {i + 1}</span>
               {features.length > 1 && (
-                <Button variant="ghost" size="icon-sm" onClick={() => removeFeature(i)} className="h-6 w-6 text-destructive">
+                <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeFeature(i)} className="h-6 w-6 text-destructive">
                   <Trash2 className="h-3 w-3" />
                 </Button>
               )}
@@ -454,7 +466,7 @@ export function ServiceEditForm({
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Step {i + 1}</span>
               {steps.length > 1 && (
-                <Button variant="ghost" size="icon-sm" onClick={() => removeStep(i)} className="h-6 w-6 text-destructive">
+                <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeStep(i)} className="h-6 w-6 text-destructive">
                   <Trash2 className="h-3 w-3" />
                 </Button>
               )}
@@ -484,11 +496,12 @@ export function ServiceEditForm({
             assetId={story?.image?.assetId ?? null}
             url={story?.image?.url}
             alt={story?.image?.alt || "Story photo"}
-            onPick={(pick) => updateStory({ image: { ...pick, alt: story?.image?.alt || "Story photo" } })}
+            onPick={(pick) => updateStory({ image: { ...story?.image, ...pick, alt: story?.image?.alt || "Story photo" } })}
             onClear={() => updateStory({ image: undefined })}
             label="Story Photo"
           />
         </div>
+        {story?.image && <ImageMetadataFields image={story.image} onChange={image => updateStory({ image })} />}
         <Field label="Quote" hint="The blockquote text" required count={(story?.quote || "").length} max={1200}>
           <textarea value={story?.quote || ""} onChange={(e) => updateStory({ quote: e.target.value })} placeholder="It wasn't just a new way to communicate…" maxLength={1200} rows={3} className={textareaClass} />
         </Field>
@@ -501,6 +514,9 @@ export function ServiceEditForm({
           </Field>
           <Field label="Role / Location" count={(story?.role || "").length} max={120}>
             <Input value={story?.role || ""} onChange={(e) => updateStory({ role: e.target.value })} placeholder="Illustrative story" maxLength={120} className={inputClass} />
+          </Field>
+          <Field label="Location" count={(story?.location || "").length} max={120}>
+            <Input value={story?.location || ""} onChange={(e) => updateStory({ location: e.target.value })} placeholder="Lalitpur, Nepal" maxLength={120} className={inputClass} />
           </Field>
         </div>
         <div className="h-px bg-border" />
@@ -515,7 +531,7 @@ export function ServiceEditForm({
                 <Input value={stat.label} onChange={(e) => updateStoryStat(i, "label", e.target.value)} placeholder="families" maxLength={120} className={inputClass} />
               </Field>
             </div>
-            <Button variant="ghost" size="icon-sm" onClick={() => removeStoryStat(i)} className="h-8 w-8 text-destructive shrink-0">
+            <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeStoryStat(i)} className="h-8 w-8 text-destructive shrink-0">
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -537,12 +553,13 @@ export function ServiceEditForm({
             <Input value={getSection("faq")?.intro || ""} onChange={(e) => updateSectionMeta("faq", { intro: e.target.value })} placeholder="A few things you might wonder." maxLength={800} className={inputClass} />
           </Field>
         </div>
+        <Field label="Section Description"><textarea value={getSection("faq")?.description || ""} onChange={e => updateSectionMeta("faq", { description: e.target.value })} maxLength={800} rows={2} className={textareaClass} /></Field>
         {faqs.map((faq, i) => (
           <div key={i} className="space-y-2 rounded-lg border p-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Q&A {i + 1}</span>
               {faqs.length > 1 && (
-                <Button variant="ghost" size="icon-sm" onClick={() => removeFaq(i)} className="h-6 w-6 text-destructive">
+                <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeFaq(i)} className="h-6 w-6 text-destructive">
                   <Trash2 className="h-3 w-3" />
                 </Button>
               )}
@@ -616,7 +633,7 @@ export function ServiceEditForm({
                 <Input value={stat.label} onChange={(e) => updateStat(i, "label", e.target.value)} placeholder="families" maxLength={120} className={inputClass} />
               </Field>
             </div>
-            <Button variant="ghost" size="icon-sm" onClick={() => removeStat(i)} className="h-8 w-8 text-destructive shrink-0">
+            <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeStat(i)} className="h-8 w-8 text-destructive shrink-0">
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -638,12 +655,13 @@ export function ServiceEditForm({
             <Input value={getSection("gallery")?.intro || ""} onChange={(e) => updateSectionMeta("gallery", { intro: e.target.value })} placeholder="Support lives in everyday moments." maxLength={800} className={inputClass} />
           </Field>
         </div>
+        <Field label="Section Description"><textarea value={getSection("gallery")?.description || ""} onChange={e => updateSectionMeta("gallery", { description: e.target.value })} maxLength={800} rows={2} className={textareaClass} /></Field>
         {galleryImages.map((img, i) => (
           <div key={i} className="space-y-2 rounded-lg border p-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Image {i + 1}</span>
               {galleryImages.length > 1 && (
-                <Button variant="ghost" size="icon-sm" onClick={() => removeGalleryImage(i)} className="h-6 w-6 text-destructive">
+                <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => removeGalleryImage(i)} className="h-6 w-6 text-destructive">
                   <Trash2 className="h-3 w-3" />
                 </Button>
               )}
@@ -659,6 +677,7 @@ export function ServiceEditForm({
             <Field label="Alt Text" hint="For screen readers" required count={(img.alt || "").length} max={180}>
               <Input value={img.alt} onChange={(e) => updateGalleryImageField(i, "alt", e.target.value)} placeholder="Describe this image" maxLength={180} className={inputClass} />
             </Field>
+            <Field label="Focal point"><Input value={img.focalPoint || ""} maxLength={40} placeholder="75% center" onChange={e => updateGalleryImageField(i, "focalPoint", e.target.value)} /></Field>
             <Field label="Caption" count={(img.caption || "").length} max={300}>
               <Input value={img.caption || ""} onChange={(e) => updateGalleryImageField(i, "caption", e.target.value)} placeholder="Shown on hover" maxLength={300} className={inputClass} />
             </Field>

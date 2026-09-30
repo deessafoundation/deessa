@@ -190,7 +190,7 @@ export function VersionHistoryPanel({ programId, currentRevision, onRestored }: 
           ) : (
             <div className="space-y-1.5">
               {versions.map((v) => {
-                const isCurrent = v.version_number === currentRevision
+                const isCurrent = false // A draft revision is not a published version number.
                 return (
                   <div
                     key={v.id}
@@ -278,11 +278,11 @@ export function VersionHistoryPanel({ programId, currentRevision, onRestored }: 
             <DialogTitle>Restore version {restoreDialog.version}?</DialogTitle>
             <DialogDescription>
               This will replace your current draft with the content from version {restoreDialog.version}.
-              Your current draft will be saved as a new version number.
+              Unpublished edits will be replaced. Published version history remains available.
             </DialogDescription>
           </DialogHeader>
           <div className="rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-            <strong>Your current draft will be preserved</strong> as a new revision before restoring.
+            <strong>Unsaved and unpublished edits will be lost.</strong> Copy anything you need before restoring.
           </div>
           <DialogFooter className="gap-3">
             <Button
