@@ -73,7 +73,7 @@ export function SectionPropertiesPanel({
       <CardContent className="space-y-4 p-4">
         {/* Common fields */}
         <div className="space-y-2">
-          <Label htmlFor="section-heading" className="text-xs">Section Heading</Label>
+          <Label htmlFor="section-heading" className="text-xs">Eyebrow / Section Heading</Label>
           <Input
             id="section-heading"
             value={section.heading ?? ""}
@@ -84,12 +84,12 @@ export function SectionPropertiesPanel({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="section-intro" className="text-xs">Intro Text</Label>
+          <Label htmlFor="section-intro" className="text-xs">Display Heading</Label>
           <textarea
             id="section-intro"
             value={section.intro ?? ""}
             onChange={(e) => onUpdate(section.id, { intro: e.target.value || undefined })}
-            placeholder="Optional subheading below the heading"
+            placeholder="Large heading; line breaks and *accent text* supported"
             rows={2}
             className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           />
@@ -107,6 +107,28 @@ export function SectionPropertiesPanel({
           />
         </div>
 
+        <p className="text-xs text-muted-foreground">Section link: #{section.id}</p>
+        {["stats", "gallery", "rich_text", "features"].includes(section.content.type) && <label className="block space-y-1 text-xs">Layout
+          <select className="w-full rounded border bg-background p-2" value={section.presentation || ""} onChange={event => onUpdate(section.id, { presentation: (event.target.value || undefined) as ProgramSection["presentation"] })}>
+            <option value="">Category default</option>
+            <option value="auto">Standard section</option>
+            {section.content.type === "stats" && <option value="ribbon">Outreach impact ribbon</option>}
+            {section.content.type === "gallery" && <option value="essay">Photo essay</option>}
+            {section.content.type === "rich_text" && <option value="question">Research question strip</option>}
+            {section.content.type === "features" && <option value="insights">Research insights</option>}
+          </select>
+        </label>}
+        <label className="block space-y-1 text-xs">Footnote
+          <Input maxLength={300} value={section.footnote || ""} onChange={event => onUpdate(section.id, { footnote: event.target.value })} />
+        </label>
+        {["story", "quote"].includes(section.content.type) && <>
+          <label className="block space-y-1 text-xs">Expanded story label
+            <Input maxLength={120} value={section.detailLabel || ""} onChange={event => onUpdate(section.id, { detailLabel: event.target.value })} />
+          </label>
+          <label className="block space-y-1 text-xs">Expanded story text
+            <textarea className="w-full rounded border bg-background p-2" rows={4} maxLength={4000} value={section.detailText || ""} onChange={event => onUpdate(section.id, { detailText: event.target.value })} />
+          </label>
+        </>}
         <div className="flex items-center justify-between">
           <Label className="text-xs">Enabled</Label>
           <Switch

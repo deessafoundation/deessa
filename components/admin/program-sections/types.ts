@@ -11,6 +11,7 @@ export interface SectionTypeConfig {
 }
 
 export const SECTION_TYPES: SectionTypeConfig[] = [
+  { type: "built_in_demo", label: "Communication Board", description: "Interactive Research concept with checklist", icon: "MessageCircle", accent: "#3FABDE" },
   { type: "rich_text", label: "Rich Text", description: "Formatted text content", icon: "FileText", accent: "#3FABDE" },
   { type: "stats", label: "Statistics", description: "Key metrics and numbers", icon: "BarChart3", accent: "#F59E0B" },
   { type: "gallery", label: "Image Gallery", description: "Grid or story layout images", icon: "Images", accent: "#0EA5E9" },
@@ -51,7 +52,7 @@ export const SECTION_CATEGORIES = [
   },
   {
     name: "Engagement",
-    types: ["cta", "activities", "resources"] as SectionType[],
+    types: ["cta", "activities", "resources", "built_in_demo"] as SectionType[],
   },
 ]
 
@@ -74,7 +75,7 @@ export function createEmptyContent(type: SectionType): ProgramSection["content"]
     case "faq":
       return { type: "faq", items: [{ question: "", answer: "" }] }
     case "progress_tracker":
-      return { type: "progress_tracker", current: 0, goal: 100, unit: "" }
+      return { type: "progress_tracker", current: 0, goal: 100, unit: "families" }
     case "cta":
       return { type: "cta", title: "", description: "", buttons: [{ label: "", url: "/", variant: "primary" }] }
     case "activities":
@@ -112,23 +113,30 @@ export type ProgramCategoryType = "service" | "outreach" | "research" | "campaig
 export const CATEGORY_DEFAULTS: Record<ProgramCategoryType, { label: string; sectionTypes: SectionType[] }> = {
   service: {
     label: "Service",
-    sectionTypes: ["rich_text", "features", "how_it_works", "stats", "quote", "faq", "cta", "gallery"],
+    sectionTypes: ["facts_bar", "features", "how_it_works", "story", "faq", "cta", "stats", "gallery"],
   },
   outreach: {
     label: "Outreach",
-    sectionTypes: ["rich_text", "stats", "activities", "gallery", "quote", "cta"],
+    sectionTypes: ["stats", "rich_text", "activities", "gallery", "quote", "cta", "stats", "gallery"],
   },
   research: {
     label: "Research",
-    sectionTypes: ["rich_text", "features", "who_we_support", "stats", "resources", "cta", "gallery"],
+    sectionTypes: ["rich_text", "how_it_works", "built_in_demo", "features", "faq", "cta", "stats", "gallery"],
   },
   campaign: {
     label: "Campaign",
-    sectionTypes: ["rich_text", "progress_tracker", "features", "timeline", "stats", "gallery", "quote", "cta"],
+    sectionTypes: ["progress_tracker", "rich_text", "features", "timeline", "story", "stats", "gallery", "cta"],
   },
 }
 
 export function getDefaultSectionsForCategory(category: ProgramCategoryType): ProgramSection[] {
   const config = CATEGORY_DEFAULTS[category]
-  return config.sectionTypes.map((type) => createSection(type))
+  return config.sectionTypes.map((type, index) => {
+    const section = createSection(type)
+    if (category === "research" && type === "features") section.presentation = "insights"
+    if (category === "research" && type === "rich_text") section.presentation = "question"
+    if (category === "outreach" && type === "stats") section.presentation = index === 0 ? "ribbon" : "auto"
+    if (category === "outreach" && type === "gallery") section.presentation = index === 3 ? "essay" : "auto"
+    return section
+  })
 }
