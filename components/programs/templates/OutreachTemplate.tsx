@@ -17,8 +17,8 @@ const outreach = base
 export function OutreachTemplate({ document }: { document: ProgramDocument }) {
   const { hero } = document
   const sections = document.sections.filter((section) => section.enabled)
-  const firstStats = document.sections.find((section) => section.content.type === "stats")
-  const firstGallery = document.sections.find((section) => section.content.type === "gallery")
+  const firstStats = sections.find((section) => section.content.type === "stats")
+  const firstGallery = sections.find((section) => section.content.type === "gallery")
   const activities = sections.find((section) => section.content.type === "activities")
   const visual = hero.editorial
   return (

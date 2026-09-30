@@ -22,6 +22,7 @@ import {
   Podcast,
   Bell,
   Info,
+  Palette,
 } from "lucide-react"
 import { type AdminRole, hasPermission, canViewFinance, canManageUsers } from "@/lib/types/admin"
 
@@ -55,6 +56,7 @@ export const adminNavSections: AdminNavSection[] = [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
       { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },
+      { name: "Artworks", href: "/admin/artworks", icon: Palette, permission: "settings", description: "Art gallery & homepage feature" },
       { name: "Projects", href: "/admin/projects", icon: FolderKanban, permission: "projects" },
       { name: "Programs", href: "/admin/programs", icon: BookOpen, permission: "programs" },
       { name: "Events", href: "/admin/events", icon: Calendar, permission: "events" },

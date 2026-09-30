@@ -342,6 +342,12 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
   const w = whatWeDo || DEFAULT_WHAT_WE_DO
   const corePillars = [...w.pillars].filter((p) => p.visible).sort((a, b) => a.order - b.order)
 
+  // Split the (CMS-editable) title into a black lead-in line and a blue
+  // emphasis line, matching the /whatwedo hero treatment. Falls back to a
+  // single blue line if an admin has edited the title to something else.
+  const titleLeadIn = "We turn understanding into action for"
+  const titleEmphasis = w.title.startsWith(titleLeadIn) ? w.title.slice(titleLeadIn.length).trim() : null
+
   return (
     <section id="what-we-do" className="py-12 sm:py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -359,7 +365,18 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
             <span className={`${styles.darkLabel} text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block`}>
               {w.eyebrow}
             </span>
-            <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
+            {titleEmphasis ? (
+              <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4">
+                <span className="block text-[#1a1a2e]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
+                  {titleLeadIn}
+                </span>
+                <span className="block text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
+                  {titleEmphasis}
+                </span>
+              </h2>
+            ) : (
+              <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
+            )}
             <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">{w.subtitle}</p>
           </div>
         </ScrollReveal>

@@ -3,265 +3,140 @@
    Scoped styles and full High-Contrast / Inverted-Contrast modes
    ===================================================== */
 
+/* ── Our Programs in Action ──
+   Layout, colour accents and interaction states are Tailwind utilities in
+   whatwedo-client.tsx / page.tsx. This block holds typography plus the hooks
+   used by the contrast modes below. Tabs, cards, pagination and the empty
+   state share the look of the Support CTA section further down. */
 .section {
   background: #f8f6f1;
 }
 
 .sectionTitle {
   font-family: var(--font-marissa);
-  line-height: 1.15;
   color: #1a1a2e;
-  margin-bottom: 1rem;
-  padding: 0 1rem;
-  font-size: 1.75rem;
+  line-height: 1.15;
+  margin: 0 auto 1rem;
+  max-width: 48rem;
+  font-size: 2rem;
+  -webkit-text-stroke: 0.5px currentColor;
 }
 
 @media (min-width: 640px) {
   .sectionTitle {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .sectionTitle {
-    font-size: 2.75rem;
+    font-size: 3rem;
   }
 }
 
 .sectionDesc {
   font-family: var(--font-dm-sans);
   color: #475569;
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 0 auto;
-  padding: 0 1rem;
-  font-size: 0.9375rem;
-  line-height: 1.625;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 @media (min-width: 768px) {
   .sectionDesc {
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
   }
 }
 
-/* ── Filter Tabs ── */
-.tabActive {
-  padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 14px;
-  background-color: #29b6c8;
-  color: #fff;
-  border: 1.5px solid #29b6c8;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.tabInactive {
-  padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 14px;
-  background-color: #fff;
-  color: #1a1a2e;
-  border: 1.5px solid #1a1a2e;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.tabInactive:hover {
-  border-color: #29b6c8;
-  color: #29b6c8;
-}
-
-/* ── Program Cards ── */
-.card {
-  background-color: #fff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.cardImage {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-}
-
+/* Image area fallback (also visible if the image fails to load) */
 .cardImagePlaceholder {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-}
-
-.cardImagePlaceholderIcon {
-  font-size: 2.5rem;
-  opacity: 0.45;
-  filter: grayscale(1);
-  user-select: none;
-}
-
-.cardImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cardBadge {
-  position: absolute;
-  bottom: 0.75rem;
-  left: 0.75rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.025em;
-  color: #fff;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.cardBody {
-  padding: 1.5rem;
+  background: linear-gradient(135deg, #eaf8fa 0%, #f1ecf6 100%);
 }
 
 .cardTitle {
   font-family: var(--font-marissa);
-  font-size: 22px;
   color: #1a1a2e;
-  margin-bottom: 0.75rem;
+  font-size: 1.375rem;
   line-height: 1.25;
-  font-weight: 700;
+  margin-bottom: 0.625rem;
+  -webkit-text-stroke: 0.35px currentColor;
+}
+
+@media (min-width: 1024px) {
+  .cardTitle {
+    font-size: 1.5rem;
+  }
 }
 
 .cardDesc {
   font-family: var(--font-dm-sans);
-  font-size: 15px;
-  color: rgba(26, 26, 46, 0.7);
-  margin-bottom: 1rem;
-  line-height: 1.625;
+  color: #475569;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.cardLink {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 14px;
-  color: #29b6c8;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.cardLink:hover {
-  color: #1a8fa0;
-}
-
-/* ── Pagination ── */
-.paginationBtn {
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 0.875rem;
-  border: 1px solid rgba(26, 26, 46, 0.2);
-  background: #fff;
-  color: #1a1a2e;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.paginationBtn:hover:not(:disabled) {
-  border-color: #29b6c8;
-  color: #29b6c8;
-}
-
-.paginationBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.paginationPage {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 0.875rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(26, 26, 46, 0.2);
-  background: #fff;
-  color: #1a1a2e;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.paginationPageActive {
-  background: #29b6c8;
-  color: #fff;
-  border: 1px solid #29b6c8;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* ── Empty State ── */
-.emptyState {
-  text-align: center;
-  padding: 4rem 1rem;
-}
-
 .emptyTitle {
   font-family: var(--font-marissa);
-  font-size: 28px;
   color: #1a1a2e;
+  font-size: 1.625rem;
+  line-height: 1.25;
   margin-bottom: 0.75rem;
+  -webkit-text-stroke: 0.35px currentColor;
+}
+
+@media (min-width: 768px) {
+  .emptyTitle {
+    font-size: 1.875rem;
+  }
 }
 
 .emptyDesc {
   font-family: var(--font-dm-sans);
-  font-size: 16px;
-  color: rgba(26, 26, 46, 0.6);
-  margin-bottom: 1.5rem;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 1.75rem;
 }
 
-.emptyBtn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  background-color: #29b6c8;
-  color: #fff;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 14px;
-  border: 1.5px solid #29b6c8;
-  cursor: pointer;
-  transition: background-color 0.2s;
+/* Windows High Contrast / forced colours: keep edges and the selected tab visible */
+@media (forced-colors: active) {
+  .tabList,
+  .card,
+  .emptyState,
+  .paginationBtn,
+  .paginationPage {
+    border: 1px solid CanvasText;
+  }
+
+  .tabActive,
+  .paginationPageActive {
+    border: 2px solid Highlight;
+    text-decoration: underline;
+  }
+
+  .cardBar,
+  .cardBadgeDot {
+    display: none;
+  }
 }
 
-.emptyBtn:hover {
-  background-color: #1a8fa0;
-}
-
-/* ── CTA Banner Section ── */
+/* ── Support CTA Section (light) ──
+   Layout, colour accents and interaction states are Tailwind utilities in page.tsx.
+   This block holds typography plus the hooks used by the contrast modes below. */
 .ctaSection {
-  background-color: #1a1a2e;
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbfc 100%);
 }
 
 .ctaBrushPath {
@@ -270,156 +145,84 @@
 
 .ctaHeading {
   font-family: var(--font-marissa);
-  color: #fff;
+  color: #1a1a2e;
   line-height: 1.15;
-  margin-bottom: 0.75rem;
-  padding: 0 1rem;
-  font-size: 2.25rem;
+  margin: 0 auto 1rem;
+  max-width: 48rem;
+  font-size: 2rem;
+  -webkit-text-stroke: 0.5px currentColor;
 }
 
 @media (min-width: 640px) {
   .ctaHeading {
-    font-size: 2.75rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .ctaHeading {
-    font-size: 3.25rem;
+    font-size: 3rem;
   }
+}
+
+/* #0b76b7 on white is ~5:1, so the accent stays readable */
+.ctaHeadingAccent {
+  color: #0b76b7;
 }
 
 .ctaSubheading {
   font-family: var(--font-dm-sans);
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 42rem;
-  margin: 0 auto 2.5rem;
-  padding: 0 1rem;
+  color: #475569;
+  max-width: 38rem;
+  margin: 0 auto;
   font-size: 1rem;
-  line-height: 1.625;
+  line-height: 1.7;
 }
 
 @media (min-width: 768px) {
   .ctaSubheading {
     font-size: 1.125rem;
-    margin-bottom: 3rem;
   }
-}
-
-.ctaCard {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-@media (min-width: 768px) {
-  .ctaCard {
-    padding: 2rem;
-  }
-}
-
-.ctaCard:hover {
-  border-color: #29b6c8;
-  transform: translateY(-0.25rem);
-}
-
-.ctaCardEmojiWrapper {
-  margin-bottom: 0.75rem;
-}
-
-@media (min-width: 768px) {
-  .ctaCardEmojiWrapper {
-    margin-bottom: 1rem;
-  }
-}
-
-.ctaCardEmoji {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-  display: inline-block;
-  user-select: none;
-  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .ctaCardTitle {
   font-family: var(--font-marissa);
-  color: #fff;
-  margin-bottom: 0.5rem;
+  color: #1a1a2e;
   font-size: 1.375rem;
+  line-height: 1.25;
+  margin-bottom: 0.625rem;
+  -webkit-text-stroke: 0.35px currentColor;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .ctaCardTitle {
     font-size: 1.5rem;
-    margin-bottom: 0.75rem;
   }
 }
 
 .ctaCardDesc {
   font-family: var(--font-dm-sans);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8125rem;
-  line-height: 1.625;
-  margin-bottom: 1.25rem;
+  color: #475569;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  margin-bottom: 1.75rem;
 }
 
-@media (min-width: 768px) {
-  .ctaCardDesc {
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
+/* Windows High Contrast / forced colours: keep card edges and buttons visible */
+@media (forced-colors: active) {
+  .ctaCard {
+    border: 1px solid CanvasText;
   }
-}
 
-.ctaPrimaryBtn {
-  display: inline-block;
-  padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  background-color: #29b6c8;
-  color: #fff;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 0.8125rem;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-
-@media (min-width: 768px) {
-  .ctaPrimaryBtn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-  }
-}
-
-.ctaPrimaryBtn:hover {
-  background-color: #1a8fa0;
-}
-
-.ctaSecondaryBtn {
-  display: inline-block;
-  padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  border: 2px solid #fff;
-  color: #fff;
-  background-color: transparent;
-  font-family: var(--font-comic);
-  font-weight: 700;
-  font-size: 0.8125rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-@media (min-width: 768px) {
+  .ctaPrimaryBtn,
   .ctaSecondaryBtn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
+    border: 2px solid ButtonText;
   }
-}
 
-.ctaSecondaryBtn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  .ctaDecor,
+  .ctaCardBar {
+    display: none;
+  }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -564,55 +367,101 @@
   text-decoration: underline !important;
 }
 
+/* Programs section additions in High Contrast */
+:global(body.high-contrast) .tabList {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .cardBar,
+:global(body.high-contrast) .cardBadgeDot {
+  display: none !important;
+}
+
+:global(body.high-contrast) .cardImagePlaceholder {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .cardLinkChip {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .emptyState {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .emptyIcon {
+  background: #000 !important;
+  color: #fff !important;
+}
+
 /* CTA Section in High Contrast */
 :global(body.high-contrast) .ctaSection {
-  background: #000 !important;
-  background-color: #000 !important;
+  background: #fff !important;
+  background-color: #fff !important;
 }
 
 :global(body.high-contrast) .ctaBrushPath {
   fill: #fff !important;
 }
 
-:global(body.high-contrast) .ctaHeading {
-  color: #fff !important;
+:global(body.high-contrast) .ctaDecor,
+:global(body.high-contrast) .ctaCardBar {
+  display: none !important;
+}
+
+:global(body.high-contrast) .ctaEyebrow {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .ctaHeading,
+:global(body.high-contrast) .ctaHeadingAccent {
+  color: #000 !important;
   -webkit-text-stroke: 0 !important;
 }
 
 :global(body.high-contrast) .ctaSubheading {
-  color: #fff !important;
+  color: #000 !important;
 }
 
 :global(body.high-contrast) .ctaCard {
-  background: #000 !important;
-  background-color: #000 !important;
-  border: 2px solid #fff !important;
+  background: #fff !important;
+  background-color: #fff !important;
+  border: 2px solid #000 !important;
   box-shadow: none !important;
 }
 
-:global(body.high-contrast) .ctaCardEmoji {
-  filter: grayscale(1) brightness(1.8) contrast(1.2) !important;
-  display: inline-block;
+:global(body.high-contrast) .ctaCardIcon {
+  background: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
 }
 
 :global(body.high-contrast) .ctaCardTitle {
-  color: #fff !important;
+  color: #000 !important;
   -webkit-text-stroke: 0 !important;
 }
 
 :global(body.high-contrast) .ctaCardDesc {
-  color: #fff !important;
+  color: #000 !important;
 }
 
 :global(body.high-contrast) .ctaPrimaryBtn,
 :global(body.high-contrast) a.ctaPrimaryBtn {
-  background: #fff !important;
-  background-color: #fff !important;
-  color: #000 !important;
-  border: 2px solid #fff !important;
+  background: #000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
   text-decoration: underline !important;
   font-weight: 800 !important;
-  -webkit-text-fill-color: #000 !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 :global(body.high-contrast) .ctaSecondaryBtn,
@@ -719,52 +568,102 @@
   border: 2px solid #fff !important;
 }
 
+/* Programs section additions in Inverted Contrast */
+:global(body.inverted-contrast) .tabList {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .cardBar,
+:global(body.inverted-contrast) .cardBadgeDot {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .cardImagePlaceholder {
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .cardLinkChip {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .emptyState {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .emptyIcon {
+  background: #fff !important;
+  color: #000 !important;
+}
+
 /* CTA Section in Inverted Contrast */
 :global(body.inverted-contrast) .ctaSection {
-  background: #fff !important;
-  background-color: #fff !important;
+  background: #000 !important;
+  background-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .ctaBrushPath {
   fill: #000 !important;
 }
 
+:global(body.inverted-contrast) .ctaDecor,
+:global(body.inverted-contrast) .ctaCardBar {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .ctaEyebrow {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
 :global(body.inverted-contrast) .ctaHeading,
+:global(body.inverted-contrast) .ctaHeadingAccent,
 :global(body.inverted-contrast) .ctaSubheading {
-  color: #000 !important;
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
 }
 
 :global(body.inverted-contrast) .ctaCard {
-  background: #fff !important;
-  background-color: #fff !important;
-  border: 2px solid #000 !important;
+  background: #000 !important;
+  background-color: #000 !important;
+  border: 2px solid #fff !important;
   box-shadow: none !important;
 }
 
-:global(body.inverted-contrast) .ctaCardEmoji {
-  filter: grayscale(1) contrast(1.5) brightness(0.4) !important;
-  display: inline-block;
+:global(body.inverted-contrast) .ctaCardIcon {
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: none !important;
 }
 
 :global(body.inverted-contrast) .ctaCardTitle,
 :global(body.inverted-contrast) .ctaCardDesc {
-  color: #000 !important;
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
 }
 
 :global(body.inverted-contrast) .ctaPrimaryBtn,
 :global(body.inverted-contrast) a.ctaPrimaryBtn {
-  background: #000 !important;
-  background-color: #000 !important;
-  color: #fff !important;
-  border: 2px solid #000 !important;
+  background: #fff !important;
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .ctaSecondaryBtn,
 :global(body.inverted-contrast) a.ctaSecondaryBtn {
-  background: #fff !important;
-  background-color: #fff !important;
-  color: #000 !important;
-  border: 2px solid #000 !important;
+  background: #000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #fff !important;
 }

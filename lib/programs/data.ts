@@ -20,8 +20,6 @@ export async function getPublishedProgramCards() {
   const supabase = await createClient()
   const { data, error } = await supabase.from("program_publications").select("id, slug, category, title, short_description, card, published_at, display_order").order("display_order", { ascending: true }).order("published_at", { ascending: false })
   if (error) {
-    const code = "code" in error ? error.code : undefined
-    if (code === "42P01" || code === "PGRST205") return []
     throw new Error("Unable to load programs")
   }
   return data ?? []

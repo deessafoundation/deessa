@@ -17,6 +17,8 @@ import {
   getHomepageHeroCarousel,
   getHomepageTestimonials,
 } from "@/lib/data/homepage-settings"
+import { getArtsContent, getHomepageArtworks } from "@/lib/data/artworks"
+import { HomeArtFeature } from "@/components/arts/home-art-feature"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 // Homepage content comes from the shared CMS. Always render it from the
@@ -51,6 +53,8 @@ export default async function HomePage() {
   const whatWeDoSettings = await getHomepageWhatWeDo()
   const heroCarouselSettings = await getHomepageHeroCarousel()
   const testimonialsSettings = await getHomepageTestimonials()
+  const homeArtworks = await getHomepageArtworks()
+  const artsContent = homeArtworks.length ? await getArtsContent() : null
 
   // Convert hero carousel settings to slides format
   // Normalize CMS image paths: fix Windows backslashes and ensure leading
@@ -103,6 +107,9 @@ export default async function HomePage() {
 
       {/* 5. WHAT WE DO - CMS POWERED */}
       <ProgramsSection whatWeDo={whatWeDoSettings} />
+
+      {/* 6. ART FEATURE - managed in /admin/artworks (hidden when none published) */}
+      <HomeArtFeature artworks={homeArtworks} content={artsContent?.home} />
 
       {/* 7. PODCAST FEATURE */}
       <PodcastSection />

@@ -57,7 +57,7 @@
   --line: rgb(var(--brand-primary) / .25);
   background: var(--paper);
   color: var(--ink);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-comic), 'Comic Neue', cursive;
   overflow: clip
 }
 
@@ -291,6 +291,9 @@
 
 .photo {
   position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  border-radius: 18px;
   background: rgb(var(--brand-primary) / .25);
   overflow: hidden
 }
@@ -467,6 +470,10 @@
 .servicePortrait .photo {
   height: 495px;
   border-radius: 180px 180px 12px 12px
+}
+
+.servicePortrait>div:first-child {
+  aspect-ratio: 4 / 5
 }
 
 .servicePortrait img {
@@ -1144,6 +1151,10 @@
 
 .outreachCover>.photo {
   height: 400px
+}
+
+.outreachCover>div:first-child {
+  aspect-ratio: 16 / 9
 }
 
 .outreachCover img {
@@ -2186,7 +2197,8 @@
   }
 
   .miniStats {
-    gap: 35px
+    gap: 35px;
+    flex-wrap: wrap
   }
 
   .faqSection {
@@ -2395,6 +2407,10 @@
     height: 285px
   }
 
+  .outreachCover>div:first-child {
+    aspect-ratio: 4 / 3
+  }
+
   .paperLabel {
     left: 12px;
     top: 18px;
@@ -2520,6 +2536,12 @@
     align-items: flex-start;
     gap: 14px;
     margin-bottom: 30px
+  }
+
+  .researchMeta,
+  .boardTop,
+  .boardBottom {
+    flex-wrap: wrap
   }
 
   .researchMeta .kicker {
@@ -2714,7 +2736,7 @@
   --paper: #f8f9fa;
   --accent: #3fabde;
   --line: #dce7ed;
-  font-family: 'DM Sans', system-ui, sans-serif
+  font-family: var(--font-comic), 'Comic Neue', cursive
 }
 
 .root h1,

@@ -26,6 +26,7 @@ import { liveAnnouncer } from "@/lib/utils/accessibility"
 import { extractSections, resolveTtsRoot } from "@/lib/tts/content-extractor"
 import { getPanelStrings } from "@/lib/tts/i18n"
 import { onMediaPlaying, pauseAllNativeMedia } from "@/lib/tts/media-coordinator"
+import { findReadingStartIndex } from "@/lib/tts/reading-position"
 import { chunkText } from "@/lib/tts/text-normalizer"
 import { translateSectionsToNepali } from "@/lib/tts/translator"
 import {
@@ -108,6 +109,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
         const systemPrefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
         let loaded: AccessibilityPreferences | null = null
+        let migrateOldLauncherDefault = false
         for (const storageName of ["localStorage", "sessionStorage"] as const) {
           try {
             const storage = window[storageName]
@@ -116,10 +118,13 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
             const parsed: unknown = JSON.parse(raw)
             loaded = decodeAccessibilityData(parsed)
             if (loaded) {
-              // Back up pre-v4 data before migration
+              migrateOldLauncherDefault =
+                (parsed as { version?: unknown }).version === 4 &&
+                loaded.widgetPosition === "bottom-right"
+              // Back up older accessibility settings before migration.
               if ((parsed as { version?: unknown }).version !== STORAGE_CONFIG.VERSION) {
                 try {
-                  storage.setItem(STORAGE_CONFIG.KEY + "-pre-v4", raw)
+                  storage.setItem(STORAGE_CONFIG.KEY + "-pre-v5", raw)
                 } catch {
                   // Migration works even when backup storage is full.
                 }
@@ -132,6 +137,9 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
         }
 
         const initial = loaded ?? { ...DEFAULT_ACCESSIBILITY_PREFERENCES }
+        // Move the old default to the new center-right position once, while preserving
+        // an explicit position choice made after this settings version is saved.
+        if (migrateOldLauncherDefault) initial.widgetPosition = "middle-right"
         if (systemPrefersReducedMotion) initial.reduceMotion = true
         setPreferences(initial)
       } catch (error) {
@@ -433,14 +441,20 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
 
       const preferredLocale = preferencesRef.current.ttsLocale
 
-      // Translate to Nepali if needed
+      // Translate to Nepali if needed. Only sections from the start point on
+      // are translated: earlier ones are not about to be spoken, and skipping
+      // them saves translation quota and time-to-first-word when reading
+      // starts mid-page. "Previous" re-enters here and translates just the
+      // one extra section (already-translated ones are skipped by the cache).
       if (preferredLocale === "ne-NP") {
         setTtsStatus("translating")
         let outcome: "none" | "partial" | "failed" = "none"
+        const base = sectionsRef.current
+        const translateFrom = Math.min(Math.max(0, startIndex), base.length)
         try {
-          const result = await translateSectionsToNepali(sectionsRef.current)
+          const result = await translateSectionsToNepali(base.slice(translateFrom))
           if (!isCurrent()) return
-          sectionsRef.current = result.sections
+          sectionsRef.current = [...base.slice(0, translateFrom), ...result.sections]
           if (result.failed > 0) {
             outcome = result.translated > 0 ? "partial" : "failed"
           }
@@ -551,7 +565,14 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   // TTS — PUBLIC COMMANDS
   // ============================================================================
 
+  /** Play: start from the section currently on screen. */
   const ttsReadPage = useCallback(() => {
+    ttsRescan()
+    void startPlayback(findReadingStartIndex(sectionsRef.current, resolveTtsRoot()))
+  }, [ttsRescan, startPlayback])
+
+  /** Restart: always from the first section of the page. */
+  const ttsRestart = useCallback(() => {
     ttsRescan()
     void startPlayback(0)
   }, [ttsRescan, startPlayback])
@@ -615,7 +636,9 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
 
       ttsRescan()
       if (wasReadingAloud && preferencesRef.current.ttsAutoRead && sectionsRef.current.length > 0) {
-        void startPlayback(0)
+        // Normally the new page is at the top (index 0). Hash links and
+        // back/forward scroll restoration land mid-page, so honour that too.
+        void startPlayback(findReadingStartIndex(sectionsRef.current, resolveTtsRoot()))
       }
     }, ROUTE_SETTLE_MS)
 
@@ -646,7 +669,13 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
       timer = setTimeout(() => {
         const activeEl = sectionsRef.current[ttsSectionIndexRef.current]?.element
         const activeRemoved = activeEl ? !activeEl.isConnected : false
-        if (ttsStatusRef.current === "speaking" && !activeRemoved) {
+        // Any in-flight playback owns the section list: swapping it while
+        // loading/translating/paused desyncs the start index, the section
+        // counter and Next/Previous from what is actually being read.
+        const status = ttsStatusRef.current
+        const playbackInFlight =
+          status === "speaking" || status === "paused" || status === "loading" || status === "translating"
+        if (playbackInFlight && !activeRemoved) {
           pendingRescanRef.current = true
           return
         }
@@ -869,7 +898,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
     ttsStop,
     ttsNext,
     ttsPrevious,
-    ttsRestart: ttsReadPage,
+    ttsRestart,
     setTtsLocale,
     setTtsVoice,
     setTtsRate,

@@ -1,0 +1,133 @@
+/* =====================================================
+   WHAT WE DO — HERO ("A window into the work")
+   Layout and colours are Tailwind utilities in whatwedo-hero.tsx.
+   This file only holds the contrast-mode, forced-colors and print overrides.
+   ===================================================== */
+
+/* ── High contrast ── */
+:global(body.high-contrast) .hero {
+  background: #fff !important;
+}
+
+:global(body.high-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.high-contrast) .breadcrumb,
+:global(body.high-contrast) .breadcrumb a,
+:global(body.high-contrast) .eyebrow,
+:global(body.high-contrast) .heading,
+:global(body.high-contrast) .headingAccent,
+:global(body.high-contrast) .description {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .heading {
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .headingAccent {
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.06em !important;
+  text-underline-offset: 0.12em !important;
+}
+
+:global(body.high-contrast) .primaryBtn,
+:global(body.high-contrast) a.primaryBtn {
+  background: #000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .secondaryBtn,
+:global(body.high-contrast) a.secondaryBtn {
+  background: #fff !important;
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .photo {
+  outline: 2px solid #000;
+}
+
+:global(body.high-contrast) .photo img {
+  filter: grayscale(1) contrast(1.1) !important;
+}
+
+/* ── Inverted contrast ── */
+:global(body.inverted-contrast) .hero {
+  background: #000 !important;
+}
+
+:global(body.inverted-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .breadcrumb,
+:global(body.inverted-contrast) .breadcrumb a,
+:global(body.inverted-contrast) .eyebrow,
+:global(body.inverted-contrast) .heading,
+:global(body.inverted-contrast) .headingAccent,
+:global(body.inverted-contrast) .description {
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .headingAccent {
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.06em !important;
+  text-underline-offset: 0.12em !important;
+}
+
+:global(body.inverted-contrast) .primaryBtn,
+:global(body.inverted-contrast) a.primaryBtn {
+  background: #fff !important;
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .secondaryBtn,
+:global(body.inverted-contrast) a.secondaryBtn {
+  background: #000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .photo {
+  outline: 2px solid #fff;
+}
+
+/* ── Windows High Contrast / forced colours ── */
+@media (forced-colors: active) {
+  .decor {
+    display: none;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    border: 2px solid ButtonText;
+  }
+
+  .headingAccent {
+    text-decoration: underline;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  .decor {
+    display: none;
+  }
+
+  .photo {
+    break-inside: avoid;
+  }
+}

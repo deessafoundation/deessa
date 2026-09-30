@@ -6,6 +6,8 @@ import { CmsProgramRenderer } from "@/components/programs/CmsProgramRenderer"
 import type { ProgramDocument } from "@/lib/programs/content"
 import { WhatWeDoAreaDetail } from "@/components/what-we-do-area-detail"
 import { getWhatWeDoArea, WHAT_WE_DO_AREA_IDS } from "@/lib/data/what-we-do-areas"
+import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import Link from "next/link"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -73,5 +75,12 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   const relatedIds = (program.document as any).relatedProgramIds as string[] | undefined
   const relatedPrograms = relatedIds?.length ? await getRelatedPrograms(relatedIds) : undefined
 
-  return <CmsProgramRenderer document={sanitizedDoc} relatedPrograms={relatedPrograms} />
+  return <>
+    <nav aria-label="Breadcrumb" className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-5 py-6 font-comic text-sm sm:px-8">
+      <Link href="/whatwedo#programs" className="rounded text-sky-700 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2">← All Programs</Link>
+      <span aria-hidden="true" className="text-slate-400">/</span>
+      <span aria-current="page">{program.document.title}</span>
+    </nav>
+    <CmsProgramRenderer document={sanitizedDoc} relatedPrograms={relatedPrograms} />
+  </>
 }

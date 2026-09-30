@@ -1,0 +1,161 @@
+/* =====================================================
+   ARTS — homepage feature, /arts gallery and lightbox
+   Layout and colour live in Tailwind utilities; this file holds
+   keyframes, contrast-mode, forced-colors and print overrides.
+   ===================================================== */
+
+/* Gentle entrance for the lightbox image; disabled for reduced motion. */
+@keyframes artReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lightboxImage {
+  animation: artReveal 260ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightboxImage {
+    animation: none;
+  }
+
+  /* Tailwind v4 rotate-/translate- utilities use the individual properties. */
+  .tilt {
+    rotate: none !important;
+    translate: none !important;
+  }
+}
+
+/* ── High contrast ── */
+:global(body.high-contrast) .section,
+:global(body.high-contrast) .mat,
+:global(body.high-contrast) .card,
+:global(body.high-contrast) .frame,
+:global(body.high-contrast) .chip,
+:global(body.high-contrast) .lightbox {
+  background: #fff !important;
+  background-image: none !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .card,
+:global(body.high-contrast) .frame,
+:global(body.high-contrast) .chip,
+:global(body.high-contrast) .lightbox {
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.high-contrast) .heading,
+:global(body.high-contrast) .accent,
+:global(body.high-contrast) .muted,
+:global(body.high-contrast) .eyebrow {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .accent {
+  text-decoration: underline !important;
+  text-underline-offset: 0.12em;
+}
+
+:global(body.high-contrast) .primaryBtn,
+:global(body.high-contrast) a.primaryBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .iconBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+/* ── Inverted contrast ── */
+:global(body.inverted-contrast) .section,
+:global(body.inverted-contrast) .mat,
+:global(body.inverted-contrast) .card,
+:global(body.inverted-contrast) .frame,
+:global(body.inverted-contrast) .chip,
+:global(body.inverted-contrast) .lightbox {
+  background: #000 !important;
+  background-image: none !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .card,
+:global(body.inverted-contrast) .frame,
+:global(body.inverted-contrast) .chip,
+:global(body.inverted-contrast) .lightbox {
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .heading,
+:global(body.inverted-contrast) .accent,
+:global(body.inverted-contrast) .muted,
+:global(body.inverted-contrast) .eyebrow {
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .primaryBtn,
+:global(body.inverted-contrast) a.primaryBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .iconBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* ── Windows High Contrast / forced colours ── */
+@media (forced-colors: active) {
+  .decor {
+    display: none;
+  }
+
+  .card,
+  .frame,
+  .chip,
+  .lightbox,
+  .iconBtn,
+  .primaryBtn {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  .decor,
+  .iconBtn {
+    display: none;
+  }
+
+  .card,
+  .frame {
+    break-inside: avoid;
+    box-shadow: none;
+    rotate: none !important;
+  }
+}

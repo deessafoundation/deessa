@@ -218,7 +218,7 @@ export const DEFAULT_ACCESSIBILITY_PREFERENCES: AccessibilityPreferences = {
   letterSpacing: null, // null = use site default
   readingMode: false,
   dictionaryMode: "off",
-  widgetPosition: "bottom-right",
+  widgetPosition: "middle-right",
   // TTS
   ttsLocale: "en-US" as SupportedSpeechLocale,
   ttsVoiceId: null,
@@ -330,6 +330,7 @@ export interface AccessibilityContextValue {
   ttsErrorCode: TtsErrorCode | null
   ttsStrings: PanelStrings
   // TTS commands
+  /** Start reading from the section currently on screen (whole page when at the top). */
   ttsReadPage: () => void
   ttsReadSection: (index: number) => void
   ttsPause: () => void
@@ -337,6 +338,7 @@ export interface AccessibilityContextValue {
   ttsStop: () => void
   ttsNext: () => void
   ttsPrevious: () => void
+  /** Start reading from the first section of the page. */
   ttsRestart: () => void
   setTtsLocale: (locale: SupportedSpeechLocale) => void
   setTtsVoice: (voiceId: string | null) => void
@@ -356,9 +358,9 @@ export const STORAGE_CONFIG = {
   KEY: "deessa-a11y-preferences",
 
   /**
-   * Current schema version (V3 - integer)
+ * Current schema version
    */
-  VERSION: 4,
+  VERSION: 5,
 
   /**
    * Maximum storage size (approximate, in characters)
@@ -430,7 +432,7 @@ export function isValidStoredData(data: unknown): data is StoredAccessibilityDat
 
   return (
     typeof d.version === "number" &&
-    d.version === 4 &&
+    (d.version === 4 || d.version === 5) &&
     typeof d.preferences === "object" &&
     d.preferences !== null &&
     !Array.isArray(d.preferences) &&
@@ -515,7 +517,7 @@ export function validatePreferences(prefs: Partial<AccessibilityPreferences>): A
     dictionaryMode: DICTIONARY_MODES.includes(prefs.dictionaryMode as DictionaryMode) ? prefs.dictionaryMode! : "off",
     widgetPosition: WIDGET_POSITIONS.includes(prefs.widgetPosition as WidgetPosition)
       ? prefs.widgetPosition!
-      : "bottom-right",
+      : "middle-right",
     // TTS
     ttsLocale: isSupportedSpeechLocale(prefs.ttsLocale) ? prefs.ttsLocale : "en-US",
     ttsVoiceId: typeof prefs.ttsVoiceId === "string" && prefs.ttsVoiceId.length > 0 ? prefs.ttsVoiceId : null,
@@ -563,7 +565,7 @@ export function migrateV1toV3(v1Prefs: StoredAccessibilityDataV1["preferences"])
     letterSpacing,
     readingMode: v1Prefs.readingMode,
     dictionaryMode: "off",
-    widgetPosition: "bottom-right",
+    widgetPosition: "middle-right",
   }
 
   return validatePreferences(migrated)

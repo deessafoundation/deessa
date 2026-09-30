@@ -41,6 +41,7 @@ const footerLinks = {
     { label: "SWC Certificate", href: "/deessa-resources/SWC.jpg", download: true, icon: Download },
     { label: "Contact Us", href: "/contact", icon: Mail },
     { label: "Photo Gallery", href: "/impact#gallery", icon: Camera },
+    { label: "Arts", href: "/arts", icon: Camera },
     { label: "Newsletter Archive", href: "/newsletter-archive", icon: Archive },
   ],
 }
