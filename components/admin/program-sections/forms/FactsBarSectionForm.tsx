@@ -38,29 +38,23 @@ export function FactsBarSectionForm({ content, onChange }: Props) {
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Fact {i + 1}</span>
             {facts.length > 1 && (
-              <Button variant="ghost" size="icon-sm" onClick={() => remove(i)} className="h-6 w-6 text-destructive">
+              <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => remove(i)} className="h-6 w-6 text-destructive">
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Label *</Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Label *</span><Input
               value={fact.label}
               onChange={(e) => update(i, "label", e.target.value)}
               placeholder="e.g. THE PROGRAM"
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Value *</Label>
-            <Input
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Value *</span><Input
               value={fact.value}
               onChange={(e) => update(i, "value", e.target.value)}
               placeholder="e.g. AAC communication support"
               className="h-7 text-xs"
-            />
-          </div>
+            /></label>
         </div>
       ))}
 

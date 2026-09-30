@@ -10,11 +10,14 @@ import {
 import type { ProgramSection } from "@/lib/programs/content"
 
 interface Props {
+  fixedLayout?: boolean
+  hideIcon?: boolean
+  hideNumber?: boolean
   content: Extract<ProgramSection["content"], { type: "features" }>
   onChange: (content: ProgramSection["content"]) => void
 }
 
-export function FeaturesSectionForm({ content, onChange }: Props) {
+export function FeaturesSectionForm({ content, onChange, fixedLayout = false, hideIcon = false, hideNumber = false }: Props) {
   const features = content.features
 
   function update(index: number, field: string, value: string) {
@@ -36,7 +39,7 @@ export function FeaturesSectionForm({ content, onChange }: Props) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <Label className="text-xs">Features ({features.length}/12)</Label>
-        <Select
+        {!fixedLayout && <Select
           value={content.layout}
           onValueChange={(layout: "grid" | "list") => onChange({ ...content, layout })}
         >
@@ -47,7 +50,7 @@ export function FeaturesSectionForm({ content, onChange }: Props) {
             <SelectItem value="grid">Grid</SelectItem>
             <SelectItem value="list">List</SelectItem>
           </SelectContent>
-        </Select>
+        </Select>}
       </div>
 
       {features.map((feat, i) => (
@@ -55,49 +58,37 @@ export function FeaturesSectionForm({ content, onChange }: Props) {
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Feature {i + 1}</span>
             {features.length > 1 && (
-              <Button variant="ghost" size="icon-sm" onClick={() => remove(i)} className="h-6 w-6 text-destructive">
+              <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => remove(i)} className="h-6 w-6 text-destructive">
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Title *</Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Title *</span><Input
               value={feat.title}
               onChange={(e) => update(i, "title", e.target.value)}
               placeholder="Feature name"
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Description *</Label>
-            <textarea
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Description *</span><textarea
               value={feat.description}
               onChange={(e) => update(i, "description", e.target.value)}
               placeholder="What this feature does"
               rows={2}
               className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            />
-          </div>
+            /></label>
           <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <Label className="text-[11px]">Icon (emoji)</Label>
-              <Input
+            {!hideIcon && <label className="space-y-1 block"><span className="text-[11px]">Icon (emoji)</span><Input
                 value={feat.icon ?? ""}
                 onChange={(e) => update(i, "icon", e.target.value)}
                 placeholder="💊"
                 className="h-7 text-xs"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[11px]">Number Badge</Label>
-              <Input
+              /></label>}
+            {!hideNumber && <label className="space-y-1 block"><span className="text-[11px]">Number Badge</span><Input
                 value={feat.number ?? ""}
                 onChange={(e) => update(i, "number", e.target.value)}
                 placeholder="01"
                 className="h-7 text-xs"
-              />
-            </div>
+              /></label>}
           </div>
         </div>
       ))}

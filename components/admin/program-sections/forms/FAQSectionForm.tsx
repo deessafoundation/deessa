@@ -38,30 +38,24 @@ export function FAQSectionForm({ content, onChange }: Props) {
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Q{i + 1}</span>
             {items.length > 1 && (
-              <Button variant="ghost" size="icon-sm" onClick={() => remove(i)} className="h-6 w-6 text-destructive">
+              <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => remove(i)} className="h-6 w-6 text-destructive">
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Question *</Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Question *</span><Input
               value={item.question}
               onChange={(e) => update(i, "question", e.target.value)}
               placeholder="What is...?"
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Answer *</Label>
-            <textarea
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Answer *</span><textarea
               value={item.answer}
               onChange={(e) => update(i, "answer", e.target.value)}
               placeholder="The answer to this question"
               rows={3}
               className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            />
-          </div>
+            /></label>
         </div>
       ))}
 

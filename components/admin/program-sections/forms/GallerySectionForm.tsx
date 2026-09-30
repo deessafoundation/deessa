@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, Trash2, Link as LinkIcon } from "lucide-react"
+import { Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,11 +11,12 @@ import type { ProgramSection } from "@/lib/programs/content"
 import { AssetPicker, AssetPick } from "../AssetPicker"
 
 interface Props {
+  fixedLayout?: boolean
   content: Extract<ProgramSection["content"], { type: "gallery" }>
   onChange: (content: ProgramSection["content"]) => void
 }
 
-export function GallerySectionForm({ content, onChange }: Props) {
+export function GallerySectionForm({ content, onChange, fixedLayout = false }: Props) {
   const images = content.images
 
   function updateImage(index: number, pick: AssetPick) {
@@ -23,7 +24,7 @@ export function GallerySectionForm({ content, onChange }: Props) {
     onChange({ ...content, images: next })
   }
 
-  function updateImageField(index: number, field: "alt" | "caption", value: string) {
+  function updateImageField(index: number, field: "alt" | "caption" | "focalPoint", value: string) {
     const next = images.map((img, i) => (i === index ? { ...img, [field]: value } : img))
     onChange({ ...content, images: next })
   }
@@ -41,7 +42,7 @@ export function GallerySectionForm({ content, onChange }: Props) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <Label className="text-xs">Images ({images.length}/8)</Label>
-        <Select
+        {!fixedLayout && <Select
           value={content.layout}
           onValueChange={(layout: "grid" | "story") => onChange({ ...content, layout })}
         >
@@ -52,7 +53,7 @@ export function GallerySectionForm({ content, onChange }: Props) {
             <SelectItem value="grid">Grid</SelectItem>
             <SelectItem value="story">Story</SelectItem>
           </SelectContent>
-        </Select>
+        </Select>}
       </div>
 
       {images.length === 0 && (
@@ -65,7 +66,7 @@ export function GallerySectionForm({ content, onChange }: Props) {
         <div key={i} className="space-y-2 rounded-lg border p-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Image {i + 1}</span>
-            <Button variant="ghost" size="icon-sm" onClick={() => removeImage(i)} className="h-6 w-6 text-destructive">
+            <Button variant="ghost" size="icon-sm" aria-label={`Remove image ${i + 1}`} onClick={() => removeImage(i)} className="h-6 w-6 text-destructive">
               <Trash2 className="h-3 w-3" />
             </Button>
           </div>
@@ -79,24 +80,21 @@ export function GallerySectionForm({ content, onChange }: Props) {
             label="Upload Image"
           />
 
-          <div className="space-y-1">
-            <Label className="text-[11px]">Alt Text * <span className="text-muted-foreground">(required for accessibility)</span></Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Alt Text * <span className="text-muted-foreground">(required for accessibility)</span></span><Input
               value={img.alt}
               onChange={(e) => updateImageField(i, "alt", e.target.value)}
               placeholder="Describe this image for screen readers"
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Caption</Label>
-            <Input
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Caption</span><Input
               value={img.caption ?? ""}
               onChange={(e) => updateImageField(i, "caption", e.target.value)}
               placeholder="Optional caption shown below image"
               className="h-7 text-xs"
-            />
-          </div>
+            /></label>
+          <label className="block space-y-1 text-xs">Focal point
+            <Input value={img.focalPoint || ""} maxLength={40} placeholder="75% center" onChange={e => updateImageField(i, "focalPoint", e.target.value)} />
+          </label>
         </div>
       ))}
 
