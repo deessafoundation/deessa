@@ -2,8 +2,8 @@
 
 import type { StoryContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { useState } from 'react'
+import { SafeImage } from '../SafeImage'
 import { SectionHeading } from './SectionHeading'
 
 interface StorySectionProps {
@@ -14,6 +14,7 @@ interface StorySectionProps {
 
 export function StorySection({ heading, content, theme }: StorySectionProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   return (
     <section className="py-16 md:py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -29,14 +30,15 @@ export function StorySection({ heading, content, theme }: StorySectionProps) {
           {/* Photo side */}
           {content.image && (
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
-              <Image
+              {!imageLoaded && !imageError && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
+              <SafeImage
                 src={content.image}
                 alt={content.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
               />
             </div>
           )}

@@ -2,9 +2,9 @@
 
 import type { ProgramHero as ProgramHeroType, ProgramTheme } from '@/lib/types/program-prototype'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { SafeImage } from '../SafeImage'
 
 interface ProgramHeroProps {
   hero: ProgramHeroType
@@ -20,7 +20,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
   // Full-bleed hero
   if (hero.layout === 'full_bleed') {
     return (
-      <section className="relative w-full h-[650px] md:h-[750px] overflow-hidden">
+      <section data-a11y-hero="photo" className="relative w-full min-h-[650px] md:min-h-[750px] overflow-hidden">
         <div className="absolute inset-0">
           {!imageLoaded && !imageError && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
           {imageError ? (
@@ -28,7 +28,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
               <span className="text-white/40 text-lg font-medium">{hero.title || "Program"}</span>
             </div>
           ) : (
-            <Image
+            <SafeImage
               src={hero.image}
               alt={hero.imageAlt}
               fill
@@ -39,14 +39,14 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
               onError={() => setImageError(true)}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/70 via-gray-900/40 to-transparent" />
+          <div data-a11y-shade className="absolute inset-0 bg-gradient-to-r from-gray-900/70 via-gray-900/40 to-transparent" />
         </div>
 
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="relative z-10 flex items-center h-full px-4"
+          data-a11y-hero-copy className="relative z-10 flex items-center min-h-[inherit] py-16 px-4"
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
             {hero.eyebrow && (
@@ -70,8 +70,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
             
             <div className="flex flex-col sm:flex-row gap-5">
               {hero.cta && (
-                <Link
-                  href={hero.cta.url}
+                <Link data-a11y-control                   href={hero.cta.url}
                   className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-10 py-5 rounded-full font-dm-sans font-semibold transition-all text-center shadow-lg hover:shadow-xl hover:scale-105 text-lg"
                 >
                   {hero.cta.label}
@@ -79,8 +78,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
               )}
               
               {hero.secondaryCta && (
-                <Link
-                  href={hero.secondaryCta.url}
+                <Link data-a11y-control                   href={hero.secondaryCta.url}
                   className="px-10 py-5 rounded-full font-dm-sans font-semibold border-2 border-white text-white hover:bg-white/20 transition-all text-center hover:scale-105 text-lg"
                 >
                   {hero.secondaryCta.label}
@@ -141,8 +139,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
                 className="flex flex-col sm:flex-row gap-4"
               >
                 {hero.cta && (
-                  <Link
-                    href={hero.cta.url}
+                  <Link data-a11y-control                     href={hero.cta.url}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-dm-sans font-semibold transition-all text-center shadow-lg hover:shadow-xl hover:scale-105"
                   >
                     {hero.cta.label}
@@ -150,8 +147,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
                 )}
                 
                 {hero.secondaryCta && (
-                  <Link
-                    href={hero.secondaryCta.url}
+                  <Link data-a11y-control                     href={hero.secondaryCta.url}
                     className="border-blue-400 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full font-dm-sans font-semibold border-2 transition-all text-center hover:scale-105"
                   >
                     {hero.secondaryCta.label}
@@ -174,7 +170,7 @@ export function ProgramHero({ hero, theme }: ProgramHeroProps) {
                     <span className="text-white/40 text-lg font-medium">{hero.title || "Program"}</span>
                   </div>
                 ) : (
-                  <Image
+                  <SafeImage
                     src={hero.image}
                     alt={hero.imageAlt || hero.title}
                     fill

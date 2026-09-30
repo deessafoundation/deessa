@@ -12,7 +12,7 @@ interface FactsBarSectionProps {
 
 export function FactsBarSection({ heading, content, theme }: FactsBarSectionProps) {
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 relative overflow-hidden">
+    <section data-a11y-region="neutral" className="py-12 md:py-16 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl" />
       </div>

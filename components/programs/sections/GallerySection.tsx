@@ -2,8 +2,8 @@
 
 import type { GalleryContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { useState } from 'react'
+import { SafeImage } from '../SafeImage'
 import { SectionHeading } from './SectionHeading'
 
 interface GallerySectionProps {
@@ -50,7 +50,7 @@ export function GallerySection({ heading, content, theme }: GallerySectionProps)
                       <span className="text-gray-400 text-xs font-medium text-center px-2">{image.alt || "Image"}</span>
                     </div>
                   ) : (
-                    <Image
+                    <SafeImage
                       src={image.url}
                       alt={image.alt}
                       fill
@@ -97,7 +97,7 @@ export function GallerySection({ heading, content, theme }: GallerySectionProps)
                         <span className="text-gray-400 text-xs font-medium text-center px-2">{image.alt || "Image"}</span>
                       </div>
                     ) : (
-                      <Image
+                      <SafeImage
                         src={image.url}
                         alt={image.alt}
                         fill

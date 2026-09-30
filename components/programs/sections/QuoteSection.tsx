@@ -2,8 +2,8 @@
 
 import type { QuoteContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { useState } from 'react'
+import { SafeImage } from '../SafeImage'
 import { SectionHeading } from './SectionHeading'
 
 interface QuoteSectionProps {
@@ -14,6 +14,7 @@ interface QuoteSectionProps {
 
 export function QuoteSection({ heading, content, theme }: QuoteSectionProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   return (
     <section className="py-20 md:py-28 bg-gradient-to-br from-purple-50 via-blue-50 to-white">
@@ -37,14 +38,15 @@ export function QuoteSection({ heading, content, theme }: QuoteSectionProps) {
             <div className="flex items-center gap-6">
               {content.photo && (
                 <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-lg flex-shrink-0">
-                  {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
-                  <Image
+                  {!imageLoaded && !imageError && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
+                  <SafeImage
                     src={content.photo}
                     alt={content.person}
                     fill
                     sizes="80px"
                     className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                     onLoad={() => setImageLoaded(true)}
+                    onError={() => setImageError(true)}
                   />
                 </div>
               )}

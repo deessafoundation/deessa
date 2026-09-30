@@ -21,7 +21,7 @@ export function CTASection({ content, theme }: CTASectionProps) {
   }
 
   return (
-    <section className={`py-20 md:py-28 ${getBackgroundStyle()} relative overflow-hidden`}>
+    <section data-a11y-region="neutral" className={`py-20 md:py-28 ${getBackgroundStyle()} relative overflow-hidden`}>
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-96 h-96 bg-yellow-300 rounded-full blur-3xl animate-pulse" />

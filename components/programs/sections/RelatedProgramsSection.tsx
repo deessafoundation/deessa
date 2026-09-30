@@ -2,9 +2,9 @@
 
 import type { Program } from '@/lib/types/program-prototype'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { SafeImage } from '../SafeImage'
 
 interface RelatedProgramsSectionProps {
   programs: NonNullable<Program['relatedPrograms']>
@@ -89,7 +89,7 @@ function RelatedProgramImage({ image, alt }: { image: string; alt: string }) {
   }
 
   return (
-    <Image
+    <SafeImage
       src={image}
       alt={alt}
       fill
