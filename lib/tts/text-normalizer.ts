@@ -23,13 +23,13 @@ import { TTS_LIMITS, type SupportedSpeechLocale } from "./types"
  *
  * "deessa" is a Nepali word meaning a way or direction, so it must be spoken as
  * that word — not spelled out, and not read with English letter values. The
- * only correct written spelling is "Deessa"; "Deesha" is a misspelling that is
+ * only correct written spelling is "Deessa"; "deessa" is a misspelling that is
  * still matched below purely to catch it in older CMS content.
  *
  * ── TUNING ────────────────────────────────────────────────────────────────
  * These two constants are the only place the name's pronunciation is defined.
  * If the final syllable should be "shaa" rather than "saa", change them to
- * "Deeshaa" / "दिशा" and nothing else needs touching.
+ * "deessaa" / "दिशा" and nothing else needs touching.
  */
 // Two simple words give browser voices an unambiguous, natural reading:
 // "Dee sah". A hyphenated version is deliberately avoided because it is
@@ -44,7 +44,7 @@ const PRONUNCIATION_DICTIONARY: Record<
   "en-US": [
     ["Deessa", ORG_NAME_SPOKEN_EN],
     // Legacy misspelling; must still sound identical to the correct spelling.
-    ["Deesha", ORG_NAME_SPOKEN_EN],
+    ["deessa", ORG_NAME_SPOKEN_EN],
     ["NGO", "N G O"],
     ["NPR", "Nepalese Rupees"],
     ["PDF", "P D F"],
@@ -61,7 +61,7 @@ const PRONUNCIATION_DICTIONARY: Record<
     // Hand the Devanagari voice the actual Nepali word rather than a romanised
     // spelling, so it is pronounced natively instead of letter by letter.
     ["Deessa", ORG_NAME_SPOKEN_NE],
-    ["Deesha", ORG_NAME_SPOKEN_NE],
+    ["deessa", ORG_NAME_SPOKEN_NE],
     ["NGO", "एन जी ओ"],
     ["NPR", "नेपाली रुपैयाँ"],
     ["PDF", "पी डी एफ"],
