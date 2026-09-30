@@ -1,16 +1,52 @@
-﻿/*
- * ⚠️ ARCHIVED FILE - DO NOT USE IN NEW CODE ⚠️
- * 
- * This file was refactored into modular files on 2026-09-27:
- * - program-base.module.css (shared styles and theme roots)
- * - service-concept.module.css (service-specific styles)
- * - outreach-concept.module.css (outreach-specific styles) 
- * - research-concept.module.css (research-specific styles)
- * 
- * This archive is kept temporarily for reference and verification.
- * Safe to delete after confirming all functionality works correctly.
- * 
- * Original size: 3,150 lines → New total: 720 lines (77% reduction)
+/*
+ * ===========================================================================
+ * programs.module.css — one stylesheet for the whole program system
+ * ===========================================================================
+ *
+ * Deliberately monolithic. A refactor once split this file into program-base /
+ * service-concept / outreach-concept / research-concept modules; the extraction
+ * only kept plain single-class rules and silently dropped ~417 of 519 selectors
+ * (element resets, descendant rules, every media query, hover/focus states and
+ * the high-contrast overrides), which broke the design. The split was reverted.
+ * Do not re-split without a selector-coverage check against this file.
+ *
+ * CONSUMERS (all import this one module):
+ *   components/programs/demo/ProgramDemos.tsx      /demo/aac-support, /demo/1000-families,
+ *                                                  /demo/community-outreach,
+ *                                                  /demo/deessa-companion,
+ *                                                  /demo/programs (index)
+ *   components/programs/demo/DemoInteractions.tsx  DemoAction, contribution, board
+ *   components/programs/templates/*.tsx            /whatwedo CMS previews
+ *   components/programs/demo/CampaignConcept.tsx   uses campaign-concept.module.css
+ *                                                  alongside this file
+ *
+ * FINDING A SECTION (search the banner comment):
+ *   "Services:"        service concept — hero, facts bar, journey, story, FAQ, CTA
+ *   "Campaign:"        campaign concept — purple/yellow poster + contribution block
+ *   "Outreach:"        outreach concept — field journal, postcards, ribbon
+ *   "Research:"        research concept — notebook hero, communication board, stages
+ *   "comparison"       /demo/programs index cards
+ *   "Brand alignment"  shared colour pass applied across every concept
+ *   "high-contrast"    accessibility overrides at the end of the file
+ *
+ * ORDER OF THE FILE:
+ *   foundations  `.root` reset, type scale, focus outlines  (starts ~line 30)
+ *   shared shell `.container`, `.demoBar`, `.switcher`, `.button`, `.kicker`
+ *   shared parts `.sectionHeading`, `.faqs`, `.metric*`, `.gallery*`, `.actions`
+ *   themes       service / campaign / outreach / research
+ *   index        comparison landing page
+ *   responsive   1500px wide, 1050px, 760px mobile
+ *   motion + a11y reduced-motion, `body.high-contrast`
+ *
+ * CONVENTIONS:
+ *   - Concept-only classes are prefixed with their concept (serviceHero,
+ *     outreachRibbon, researchStrip, campaignHero); shared ones are not.
+ *   - Theme roots `.service .campaign .outreach .research .index` only assign
+ *     CSS custom properties (--accent, --paper, --line, ...). They are applied
+ *     dynamically through `s[category]` in ProgramDemos.tsx.
+ *   - When adding a coloured surface, add its `body.high-contrast` override.
+ *   - Verify changes on /demo/programs plus the four concept pages at 1280px
+ *     and 390px before shipping.
  */
 
 .root {

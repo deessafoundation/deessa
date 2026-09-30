@@ -24,11 +24,12 @@ import {
   researchStages,
   type DemoCategory,
 } from "./demo-content"
-import base from "./program-base.module.css"
-import service from "./service-concept.module.css"
-import outreach from "./outreach-concept.module.css"
-import research from "./research-concept.module.css"
+import s from "./programs.module.css"
 import { CampaignConcept } from "./CampaignConcept"
+
+const service = s
+const outreach = s
+const research = s
 
 const photos = {
   children: "/twins-together.jpg",
@@ -58,7 +59,7 @@ function Photo({
 
 function Shell({ category, children }: { category: DemoCategory; children: ReactNode }) {
   return (
-    <div className={`${s.root} ${base[category]}`}>
+    <div className={`${s.root} ${s[category]}`}>
       <div className={s.demoBar}>
         <div className={s.container}>
           <span>
@@ -770,7 +771,7 @@ export function ProgramDemoIndex() {
         <p>Explore four ways to bring our work to life. All pages use sample content and illustrative imagery.</p>
         <div className={s.indexCards}>
           {demoPages.map((page) => (
-            <Link key={page.slug} href={`/demo/${page.slug}`} className={base[page.category]}>
+            <Link key={page.slug} href={`/demo/${page.slug}`} className={s[page.category]}>
               <div>
                 <span>
                   {page.number} / {page.label}

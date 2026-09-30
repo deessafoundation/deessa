@@ -2,8 +2,9 @@ import type { Program, ProgramSection } from "@/lib/types/program-prototype"
 import { ArrowDown, ArrowUpRight, Plus } from "lucide-react"
 import { EditorialText, EditorialIcon } from "./EditorialParts"
 import { SafeImage } from "../SafeImage"
-import base from "../demo/program-base.module.css"
-import service from "../demo/service-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const service = base
 
 interface ServiceTemplateProps {
   program: Program
@@ -11,7 +12,7 @@ interface ServiceTemplateProps {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function findContent(sections: ProgramSection[], type: string): any {
-  return sectionbase.find((s) => base.type === type)?.content ?? null
+  return sections.find((s) => s.type === type)?.content ?? null
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -80,7 +81,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
   const statItems: any[] = statsContent?.stats ?? []
   const galleryImages: any[] = galleryContent?.images ?? []
 
-  const section = (type: string) => sectionbase.find((s) => base.type === type)
+  const section = (type: string) => sections.find((s) => s.type === type)
   const featuresSection = section("features")
   const howItWorksSection = section("how_it_works")
   const storySection = section("story")
@@ -141,9 +142,9 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       </section>
 
       {/* ─── FACTS BAR ─── */}
-      {factbase.length > 0 && (
+      {facts.length > 0 && (
         <div className={`${base.container} ${service.serviceFacts}`}>
-          {factbase.map((fact: any, i: number) => (
+          {facts.map((fact: any, i: number) => (
             <div key={i}>
               <span>{fact.label?.toUpperCase() || "INFO"}</span>
               <strong>{fact.value}</strong>
@@ -153,7 +154,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── SUPPORT GRID (features) ─── */}
-      {featureItembase.length > 0 && (
+      {featureItems.length > 0 && (
         <section id="about" className={`${base.container} ${base.section}`}>
           <SectionTitle
             eyebrow={featuresSection?.heading || "WHAT WE OFFER"}
@@ -161,7 +162,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             text={sectionIntro(featuresSection)}
           />
           <div className={base.supportGrid}>
-            {featureItembase.map((item: any, index: number) => (
+            {featureItems.map((item: any, index: number) => (
               <article key={index}>
                 {item.icon && (
                   <span className={service.serviceIcon}>
@@ -178,7 +179,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── JOURNEY STEPS ─── */}
-      {stepbase.length > 0 && (
+      {steps.length > 0 && (
         <section className={service.serviceJourney}>
           <div className={`${base.container} ${base.journeyGrid}`}>
             <div>
@@ -188,7 +189,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
               {handwrittenNote && <span className={base.handwritten}>{handwrittenNote}</span>}
             </div>
             <ol className={base.steps}>
-              {stepbase.map((step: any, index: number) => (
+              {steps.map((step: any, index: number) => (
                 <li key={index}>
                   <span>0{index + 1}</span>
                   <div>
@@ -226,9 +227,9 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
                 {storyContent.location ? ` · ${storyContent.location}` : ""}
               </span>
             )}
-            {storyContent.stats && storyContent.statbase.length > 0 && (
+            {storyContent.stats && storyContent.stats.length > 0 && (
               <div className={base.miniStats}>
-                {storyContent.statbase.map((stat: any, i: number) => (
+                {storyContent.stats.map((stat: any, i: number) => (
                   <div key={i}>
                     <strong>{stat.value}</strong>
                     <span>{stat.label}</span>
@@ -241,7 +242,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── FAQ ─── */}
-      {faqItembase.length > 0 && (
+      {faqItems.length > 0 && (
         <section id="support" className={`${base.container} ${base.faqSection}`}>
           <div>
             <Eyebrow>{faqSection?.heading || "FAQ"}</Eyebrow>
@@ -249,7 +250,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             {faqSection?.description && <p>{faqSection.description}</p>}
           </div>
           <div className={base.faqs}>
-            {faqItembase.map((item: any, i: number) => (
+            {faqItems.map((item: any, i: number) => (
               <details key={i}>
                 <summary>
                   {item.question}
@@ -271,7 +272,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           </div>
           <div>
             {ctaContent.description && <p>{ctaContent.description}</p>}
-            {ctaContent.buttons && ctaContent.buttonbase.length > 0 && (
+            {ctaContent.buttons && ctaContent.buttons.length > 0 && (
               <a className={base.button} href={ctaContent.buttons[0].url}>
                 {ctaContent.buttons[0].label}
                 <ArrowUpRight size={18} aria-hidden="true" />
@@ -282,7 +283,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── METRICS ─── */}
-      {statItembase.length > 0 && (
+      {statItems.length > 0 && (
         <section className={`${base.container} ${base.metricSection}`}>
           <SectionTitle
             eyebrow={statsSection?.heading || "IMPACT"}
@@ -290,7 +291,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             text={sectionIntro(statsSection)}
           />
           <div className={base.metricGrid}>
-            {statItembase.map((stat: any, i: number) => (
+            {statItems.map((stat: any, i: number) => (
               <div className={base.metric} key={i}>
                 <strong>{stat.value}</strong>
                 <span>{stat.label}</span>
@@ -301,7 +302,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── GALLERY ─── */}
-      {galleryImagebase.length > 0 && (
+      {galleryImages.length > 0 && (
         <section className={`${base.container} ${base.gallerySection}`}>
           <SectionTitle
             eyebrow={gallerySection?.heading || "GALLERY"}
@@ -309,7 +310,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             text={sectionIntro(gallerySection)}
           />
           <div className={base.galleryGrid}>
-            {galleryImagebase.map((img: any, i: number) => (
+            {galleryImages.map((img: any, i: number) => (
               <figure key={i}>
                 <Photo src={img.url || ""} alt={img.alt || "Gallery image"} focalPoint={img.focalPoint} />
                 {img.caption && <figcaption>{img.caption}</figcaption>}
@@ -320,7 +321,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       )}
 
       {/* ─── RICH TEXT / OTHER ─── */}
-      {sectionbase.map((section) => {
+      {sections.map((section) => {
         if (["facts_bar", "features", "how_it_works", "story", "faq", "cta", "stats", "gallery"].includes(section.type))
           return null
         if (section.type === "rich_text" && "body" in section.content) {

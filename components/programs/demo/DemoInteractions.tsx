@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { ArrowUpRight, Check, RotateCcw, Heart, Sun, Droplets, Apple, House, Hand, Smile, Volume2 } from "lucide-react"
-import base from "./program-base.module.css"
-import research from "./research-concept.module.css"
+import base from "./programs.module.css"
+
+const research = base
 
 export function DemoAction({ label, message }: { label: string; message: string }) {
   const [open, setOpen] = useState(false)
@@ -82,7 +83,7 @@ export function CommunicationBoard() {
         <span>COMMUNICATION BOARD</span>
       </div>
       <div className={research.boardGreeting}>
-        <span>Little choicebase. Big expressionbase.</span>
+        <span>Little choices. Big expressions.</span>
         <h3>What’s on your mind?</h3>
       </div>
       <div className={research.sentence} role="status" aria-live="polite">
@@ -90,7 +91,7 @@ export function CommunicationBoard() {
         <span>{sentence.length ? sentence.join(" ") : "Tap a card to build a phrase"}</span>
       </div>
       <div className={research.wordGrid}>
-        {wordbase.map(({ label, icon: Icon, color }) => (
+        {words.map(({ label, icon: Icon, color }) => (
           <button
             key={label}
             style={{ background: color }}

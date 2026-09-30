@@ -10,7 +10,7 @@ import {
   EditorialText,
 } from "./EditorialParts"
 import s from "../demo/campaign-concept.module.css"
-import base from "../demo/program-base.module.css"
+import base from "../demo/programs.module.css"
 
 function Heading({ section }: { section: ProgramSection }) {
   return (

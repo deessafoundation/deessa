@@ -3,8 +3,9 @@ import { ArrowDown, ArrowUpRight, Check, Heart, MapPin, MessageCircle, Plus, Spa
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 import { CommunicationBoard } from "../demo/DemoInteractions"
 import { SafeImage } from "../SafeImage"
-import base from "../demo/program-base.module.css"
-import research from "../demo/research-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const research = base
 
 export type ImageRef = ProgramDocument["hero"]["image"]
 export type Action = ProgramDocument["hero"]["actions"][number]
@@ -79,7 +80,7 @@ export function EditorialIcon({ name, fallback = "MessageCircle" }: { name?: str
 export function EditorialActions({ actions = [] }: { actions?: Action[] }) {
   return (
     <div className={base.actions}>
-      {actionbase.map((action, i) => (
+      {actions.map((action, i) => (
         <a key={i} className={action.variant === "primary" ? base.button : base.textLink} href={action.url}>
           {action.label}
           {action.variant === "primary" ? (
@@ -127,7 +128,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.metricSection}`}>
           <EditorialHeading section={section} />
           <div className={base.metricGrid}>
-            {c.statbase.map((stat, i) => (
+            {c.stats.map((stat, i) => (
               <div className={base.metric} key={i}>
                 <strong>{stat.value}</strong>
                 <span>{stat.label}</span>
@@ -146,7 +147,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <>
           <EditorialHeading section={section} />
           <div className={essay ? base.essayGrid : base.galleryGrid}>
-            {c.imagebase.map((image, i) => (
+            {c.images.map((image, i) => (
               <figure key={i}>
                 <EditorialPhoto image={image} />
                 {image.caption && (
@@ -176,7 +177,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.resources}`}>
           <EditorialHeading section={section} />
           <div className={base.faqs}>
-            {c.itembase.map((item, i) => (
+            {c.items.map((item, i) => (
               <details key={i}>
                 <summary>
                   {item.question}
@@ -193,7 +194,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.resources}`}>
           <EditorialHeading section={section} />
           <div className={base.faqs}>
-            {c.resourcebase.map((item, i) => (
+            {c.resources.map((item, i) => (
               <details key={i}>
                 <summary>
                   {item.label}
@@ -223,7 +224,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.section}`}>
           <EditorialHeading section={section} />
           <div className={base.supportGrid}>
-            {itembase.map((item, i) => (
+            {items.map((item, i) => (
               <article key={i}>
                 <span className={base.serviceIcon}>
                   <EditorialIcon name={"icon" in item ? item.icon : undefined} />
@@ -246,7 +247,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.section}`}>
           <EditorialHeading section={section} />
           <div className={research.researchStages}>
-            {c.itembase.map((item, i) => (
+            {c.items.map((item, i) => (
               <article key={i}>
                 <div className={base.kicker}>{item.date || String(i + 1).padStart(2, "0")}</div>
                 <h3>{item.title}</h3>
@@ -261,7 +262,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
     case "facts_bar":
       return (
         <div id={section.id} className={`${base.container} ${base.serviceFacts}`}>
-          {c.factbase.map((fact, i) => (
+          {c.facts.map((fact, i) => (
             <div key={i}>
               <span>{fact.label}</span>
               <strong>{fact.value}</strong>
@@ -274,7 +275,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
         <section id={section.id} className={`${base.container} ${base.section}`}>
           <EditorialHeading section={section} />
           <div className={base.postcards}>
-            {c.activitiebase.map((item, i) => (
+            {c.activities.map((item, i) => (
               <article key={i}>
                 <div className={base.postcardTop}>
                   <span>STOP {String(i + 1).padStart(2, "0")}</span>
@@ -308,9 +309,9 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
             {c.type === "story" && c.description && <p>{c.description}</p>}
             <p>{section.description}</p>
             <span className={base.storyCredit}>{[c.person, c.role, c.location].filter(Boolean).join(" · ")}</span>
-            {c.type === "story" && c.statbase.length > 0 && (
+            {c.type === "story" && c.stats.length > 0 && (
               <div className={base.miniStats}>
-                {c.statbase.map((stat, i) => (
+                {c.stats.map((stat, i) => (
                   <div key={i}>
                     <strong>{stat.value}</strong>
                     <span>{stat.label}</span>
@@ -373,7 +374,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
   }
 }
 
-// Keep demo anchors working with existing generated CMS section IDbase.
+// Keep demo anchors working with existing generated CMS section IDs.
 export function AnchorAlias({ id, section }: { id: string; section: ProgramSection | undefined }) {
   return section && section.id !== id ? <span id={id} style={{ display: "block", scrollMarginTop: 110 }} /> : null
 }
