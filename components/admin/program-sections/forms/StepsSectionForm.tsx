@@ -17,7 +17,7 @@ interface Props {
 export function StepsSectionForm({ content, onChange }: Props) {
   const items = content.items
   const isTimeline = content.type === "timeline"
-  const handwrittenNote = !isTimeline && "handwrittenNote" in content ? (content as Extract<ProgramSection["content"], { type: "how_it_works" }>).handwrittenNote : undefined
+  const handwrittenNote = content.handwrittenNote
 
   function update(index: number, field: string, value: string) {
     const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item))
@@ -54,41 +54,32 @@ export function StepsSectionForm({ content, onChange }: Props) {
               {isTimeline ? `Milestone ${i + 1}` : `Step ${i + 1}`}
             </span>
             {items.length > 1 && (
-              <Button variant="ghost" size="icon-sm" onClick={() => remove(i)} className="h-6 w-6 text-destructive">
+              <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => remove(i)} className="h-6 w-6 text-destructive">
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Title *</Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Title *</span><Input
               value={item.title}
               onChange={(e) => update(i, "title", e.target.value)}
               placeholder={isTimeline ? "Milestone name" : "Step name"}
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Description *</Label>
-            <textarea
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Description *</span><textarea
               value={item.description}
               onChange={(e) => update(i, "description", e.target.value)}
               placeholder="What happens at this step"
               rows={2}
               className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            />
-          </div>
+            /></label>
           {isTimeline && (
             <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-1">
-                <Label className="text-[11px]">Date</Label>
-                <Input
+              <label className="space-y-1 block"><span className="text-[11px]">Date</span><Input
                   value={item.date ?? ""}
                   onChange={(e) => update(i, "date", e.target.value)}
                   placeholder="Jan 2024"
                   className="h-7 text-xs"
-                />
-              </div>
+                /></label>
               <div className="space-y-1">
                 <Label className="text-[11px]">Status</Label>
                 <Select

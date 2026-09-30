@@ -38,39 +38,30 @@ export function WhoWeSupportSectionForm({ content, onChange }: Props) {
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Group {i + 1}</span>
             {groups.length > 1 && (
-              <Button variant="ghost" size="icon-sm" onClick={() => remove(i)} className="h-6 w-6 text-destructive">
+              <Button variant="ghost" size="icon-sm" aria-label={`Remove item ${i + 1}`} onClick={() => remove(i)} className="h-6 w-6 text-destructive">
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
           </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Title *</Label>
-            <Input
+          <label className="space-y-1 block"><span className="text-[11px]">Title *</span><Input
               value={group.title}
               onChange={(e) => update(i, "title", e.target.value)}
               placeholder="Children with ASD"
               className="h-7 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Description *</Label>
-            <textarea
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Description *</span><textarea
               value={group.description}
               onChange={(e) => update(i, "description", e.target.value)}
               placeholder="Who they are and what they need"
               rows={2}
               className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-[11px]">Age Range</Label>
-            <Input
+            /></label>
+          <label className="space-y-1 block"><span className="text-[11px]">Age Range</span><Input
               value={group.ageRange ?? ""}
               onChange={(e) => update(i, "ageRange", e.target.value)}
               placeholder="2-12 years"
               className="h-7 text-xs"
-            />
-          </div>
+            /></label>
         </div>
       ))}
 

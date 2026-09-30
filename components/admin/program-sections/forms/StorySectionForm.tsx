@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { ProgramSection } from "@/lib/programs/content"
 import { AssetPicker } from "../AssetPicker"
+import { ImageMetadataFields } from "../ImageMetadataFields"
 
 interface Props {
   content: Extract<ProgramSection["content"], { type: "story" }>
@@ -35,53 +36,38 @@ export function StorySectionForm({ content, onChange }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="space-y-1">
-        <Label className="text-[11px]">Story Quote *</Label>
-        <textarea
+      <label className="space-y-1 block"><span className="text-[11px]">Story Quote *</span><textarea
           value={content.quote}
           onChange={(e) => update("quote", e.target.value)}
           placeholder="A memorable quote from this story"
           rows={3}
           className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">Description</Label>
-        <textarea
+        /></label>
+      <label className="space-y-1 block"><span className="text-[11px]">Description</span><textarea
           value={content.description ?? ""}
           onChange={(e) => update("description", e.target.value)}
           placeholder="A short paragraph about this story"
           rows={2}
           className="flex w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">Person Name *</Label>
-        <Input
+        /></label>
+      <label className="space-y-1 block"><span className="text-[11px]">Person Name *</span><Input
           value={content.person}
           onChange={(e) => update("person", e.target.value)}
           placeholder="Jane Doe"
           className="h-7 text-xs"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">Role</Label>
-        <Input
+        /></label>
+      <label className="space-y-1 block"><span className="text-[11px]">Role</span><Input
           value={content.role ?? ""}
           onChange={(e) => update("role", e.target.value)}
           placeholder="Program Participant"
           className="h-7 text-xs"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">Location</Label>
-        <Input
+        /></label>
+      <label className="space-y-1 block"><span className="text-[11px]">Location</span><Input
           value={content.location ?? ""}
           onChange={(e) => update("location", e.target.value)}
           placeholder="Kathmandu, Nepal"
           className="h-7 text-xs"
-        />
-      </div>
+        /></label>
 
       <AssetPicker
         assetId={content.image?.assetId ?? null}
@@ -90,7 +76,7 @@ export function StorySectionForm({ content, onChange }: Props) {
         onPick={(pick) =>
           onChange({
             ...content,
-            image: { ...pick, alt: content.image?.alt || "Story image" },
+            image: { ...content.image, ...pick, alt: content.image?.alt || "Story image" },
           } as typeof content)
         }
         onClear={() =>
@@ -101,6 +87,7 @@ export function StorySectionForm({ content, onChange }: Props) {
         }
         label="Story Photo"
       />
+      {content.image && <ImageMetadataFields image={content.image} onChange={image => onChange({ ...content, image })} />}
 
       <div className="h-px bg-border" />
       <Label className="text-xs">Mini Stats ({stats.length}/4)</Label>
@@ -108,24 +95,18 @@ export function StorySectionForm({ content, onChange }: Props) {
       {stats.map((stat, i) => (
         <div key={i} className="flex items-end gap-2 rounded-lg border p-3">
           <div className="flex-1 grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <Label className="text-[11px]">Value *</Label>
-              <Input
+            <label className="space-y-1 block"><span className="text-[11px]">Value *</span><Input
                 value={stat.value}
                 onChange={(e) => updateStat(i, "value", e.target.value)}
                 placeholder="120"
                 className="h-7 text-xs"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[11px]">Label *</Label>
-              <Input
+              /></label>
+            <label className="space-y-1 block"><span className="text-[11px]">Label *</span><Input
                 value={stat.label}
                 onChange={(e) => updateStat(i, "label", e.target.value)}
                 placeholder="families"
                 className="h-7 text-xs"
-              />
-            </div>
+              /></label>
           </div>
           <Button variant="ghost" size="icon-sm" onClick={() => removeStat(i)} className="h-7 w-7 text-destructive shrink-0">
             <Trash2 className="h-3 w-3" />

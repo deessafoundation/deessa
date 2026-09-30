@@ -19,48 +19,36 @@ export function ProgressTrackerSectionForm({ content, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-2">
-        <div className="space-y-1">
-          <Label className="text-[11px]">Current Value *</Label>
-          <Input
+        <label className="space-y-1 block"><span className="text-[11px]">Current Value *</span><Input
             type="number"
             value={content.current}
             onChange={(e) => update("current", Number(e.target.value))}
             min={0}
             className="h-7 text-xs"
-          />
-        </div>
-        <div className="space-y-1">
-          <Label className="text-[11px]">Goal *</Label>
-          <Input
+          /></label>
+        <label className="space-y-1 block"><span className="text-[11px]">Goal *</span><Input
             type="number"
             value={content.goal}
             onChange={(e) => update("goal", Number(e.target.value))}
             min={1}
             className="h-7 text-xs"
-          />
-        </div>
+          /></label>
       </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">Unit *</Label>
-        <Input
+      <label className="space-y-1 block"><span className="text-[11px]">Unit *</span><Input
           value={content.unit}
           onChange={(e) => update("unit", e.target.value)}
           placeholder="families, dollars, etc."
           className="h-7 text-xs"
-        />
-      </div>
+        /></label>
       <div className="rounded-md bg-muted p-2 text-center text-xs text-muted-foreground">
         {percentage}% complete ({content.current} / {content.goal} {content.unit || "units"})
       </div>
-      <div className="space-y-1">
-        <Label className="text-[11px]">As of Date (ISO)</Label>
-        <Input
-          value={content.asOf ?? ""}
-          onChange={(e) => update("asOf", e.target.value)}
-          placeholder="2024-12-31T00:00:00Z"
+      <label className="space-y-1 block"><span className="text-[11px]">Progress updated on</span><Input
+          type="date"
+          value={content.asOf?.slice(0, 10) ?? ""}
+          onChange={(e) => onChange({ ...content, asOf: e.target.value ? e.target.value + "T00:00:00Z" : undefined })}
           className="h-7 text-xs font-mono"
-        />
-      </div>
+        /></label>
     </div>
   )
 }
