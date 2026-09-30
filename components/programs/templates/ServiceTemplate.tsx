@@ -1,6 +1,7 @@
 import type { Program, ProgramSection } from '@/lib/types/program-prototype'
-import Image from 'next/image'
-import { ArrowDown, ArrowUpRight, Heart, Plus, Sparkles } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Plus } from 'lucide-react'
+import { EditorialText, EditorialIcon } from './EditorialParts'
+import { SafeImage } from '../SafeImage'
 import s from '../demo/program-demo.module.css'
 
 interface ServiceTemplateProps {
@@ -21,18 +22,18 @@ function SectionTitle({ eyebrow, title, text }: { eyebrow: string; title: string
     <div className={s.sectionHeading}>
       <div>
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h2>{title}</h2>
+        <h2><EditorialText text={title} /></h2>
       </div>
       {text && <p>{text}</p>}
     </div>
   )
 }
 
-function Photo({ src, alt, className = '', priority = false }: { src: string; alt: string; className?: string; priority?: boolean }) {
+function Photo({ src, alt, focalPoint, className = '', priority = false }: { src: string; alt: string; focalPoint?: string; className?: string; priority?: boolean }) {
   if (!src) return <div className={`${s.photo} ${className}`} />
   return (
     <div className={`${s.photo} ${className}`}>
-      <Image src={src} alt={alt} fill sizes="(max-width: 760px) 100vw, 60vw" priority={priority} />
+      <SafeImage src={src} alt={alt} fill style={{ objectPosition: focalPoint || 'center' }} sizes="(max-width: 760px) 100vw, 60vw" priority={priority} />
     </div>
   )
 }
@@ -58,7 +59,6 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
   const galleryImages: any[] = galleryContent?.images ?? []
 
   const section = (type: string) => sections.find((s) => s.type === type)
-  const factsBarSection = section('facts_bar')
   const featuresSection = section('features')
   const howItWorksSection = section('how_it_works')
   const storySection = section('story')
@@ -66,6 +66,8 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
   const ctaSection = section('cta')
   const statsSection = section('stats')
   const gallerySection = section('gallery')
+
+  const sectionIntro = (value: ProgramSection | undefined) => value?.description || value?.subheading
 
   const heroImageUrl = hero.image || ''
 
@@ -78,7 +80,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             <span className={s.tinyLine} />
             {eyebrow || 'SERVICES & PROGRAMS'}
           </Eyebrow>
-          <h1>{hero.title || program.title}</h1>
+          <h1><EditorialText text={hero.title || program.title} /></h1>
           <p>{hero.description || shortDescription}</p>
           {hero.cta && (
             <div className={s.actions}>
@@ -90,18 +92,18 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           )}
           {hero.note && (
             <div className={s.heroNote}>
-              <Heart size={18} aria-hidden="true" /> {hero.note.text}
+              <EditorialIcon name={hero.note.icon} fallback="Heart" /> {hero.note.text}
             </div>
           )}
         </div>
         <div className={s.servicePortrait}>
-          <Photo src={heroImageUrl} alt={hero.imageAlt || hero.title} priority />
+          <Photo src={heroImageUrl} alt={hero.imageAlt || hero.title} focalPoint={hero.focalPoint} priority />
           {hero.sticker && (
             <span className={s.portraitSticker}>
-              <Sparkles size={22} aria-hidden="true" /> {hero.sticker.text || 'Every mind is a gift.'}
+              <EditorialIcon name={hero.sticker.icon} fallback="Sparkles" /> {hero.sticker.text || 'Every mind is a gift.'}
             </span>
           )}
-          {hero.photoNote && <div className={s.photoNote}>{hero.photoNote}</div>}
+          {(hero.photoNote || hero.imageCaption) && <div className={s.photoNote}>{hero.photoNote || hero.imageCaption}</div>}
         </div>
       </section>
 
@@ -123,13 +125,14 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           <SectionTitle
             eyebrow={featuresSection?.heading || 'WHAT WE OFFER'}
             title={featuresSection?.subheading || 'More ways to support.'}
+            text={sectionIntro(featuresSection)}
           />
           <div className={s.supportGrid}>
             {featureItems.map((item: any, index: number) => (
               <article key={index}>
                 {item.icon && (
                   <span className={s.serviceIcon}>
-                    <span style={{ fontSize: 27 }}>{item.icon}</span>
+                    <EditorialIcon name={item.icon} />
                   </span>
                 )}
                 <span className={s.cardNumber}>0{index + 1}</span>
@@ -148,6 +151,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
             <div>
               <Eyebrow>{howItWorksSection?.heading || 'HOW IT WORKS'}</Eyebrow>
               <h2>{howItWorksSection?.subheading || 'We start where you are.'}</h2>
+              {howItWorksSection?.description && <p>{howItWorksSection.description}</p>}
               {handwrittenNote && (
                 <span className={s.handwritten}>{handwrittenNote}</span>
               )}
@@ -170,13 +174,13 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
       {/* ─── STORY ─── */}
       {storyContent && (
         <section className={`${s.container} ${s.storySection}`}>
-          {storyContent.image && <Photo src={storyContent.image} alt={storyContent.person || 'Story'} />}
+          {storyContent.image && <figure><Photo src={storyContent.image} alt={storyContent.imageAlt || storyContent.person || 'Story'} focalPoint={storyContent.focalPoint} />{storyContent.imageCaption && <figcaption>{storyContent.imageCaption}</figcaption>}</figure>}
           <div>
             <Eyebrow>{storySection?.heading || 'THE MOMENTS THAT MATTER'}</Eyebrow>
             {storyContent.quote && <blockquote>&ldquo;{storyContent.quote}&rdquo;</blockquote>}
             {storyContent.description && <p>{storyContent.description}</p>}
             {storyContent.person && (
-              <span className={s.storyCredit}>{storyContent.person}{storyContent.role ? ` · ${storyContent.role}` : ''}</span>
+              <span className={s.storyCredit}>{storyContent.person}{storyContent.role ? ` · ${storyContent.role}` : ''}{storyContent.location ? ` · ${storyContent.location}` : ''}</span>
             )}
             {storyContent.stats && storyContent.stats.length > 0 && (
               <div className={s.miniStats}>
@@ -198,6 +202,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           <div>
             <Eyebrow>{faqSection?.heading || 'FAQ'}</Eyebrow>
             <h2>{faqSection?.subheading || 'A few things you might wonder.'}</h2>
+            {faqSection?.description && <p>{faqSection.description}</p>}
           </div>
           <div className={s.faqs}>
             {faqItems.map((item: any, i: number) => (
@@ -235,6 +240,7 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           <SectionTitle
             eyebrow={statsSection?.heading || 'IMPACT'}
             title={statsSection?.subheading || 'Small steps, visible change.'}
+            text={sectionIntro(statsSection)}
           />
           <div className={s.metricGrid}>
             {statItems.map((stat: any, i: number) => (
@@ -253,11 +259,12 @@ export function ServiceTemplate({ program }: ServiceTemplateProps) {
           <SectionTitle
             eyebrow={gallerySection?.heading || 'GALLERY'}
             title={gallerySection?.subheading || 'A glimpse of the work.'}
+            text={sectionIntro(gallerySection)}
           />
           <div className={s.galleryGrid}>
             {galleryImages.map((img: any, i: number) => (
               <figure key={i}>
-                <Photo src={img.url || ''} alt={img.alt || 'Gallery image'} />
+                <Photo src={img.url || ''} alt={img.alt || 'Gallery image'} focalPoint={img.focalPoint} />
                 {img.caption && <figcaption>{img.caption}</figcaption>}
               </figure>
             ))}

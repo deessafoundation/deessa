@@ -1,66 +1,28 @@
-import type { Program } from '@/lib/types/program-prototype'
-import { ProgramHero } from '../sections/ProgramHero'
-import { RichTextSection } from '../sections/RichTextSection'
-import { FeaturesSection } from '../sections/FeaturesSection'
-import { StatsSection } from '../sections/StatsSection'
-import { QuoteSection } from '../sections/QuoteSection'
-import { GallerySection } from '../sections/GallerySection'
-import { CTASection } from '../sections/CTASection'
-import { FactsBarSection } from '../sections/FactsBarSection'
-import { ActivitiesSection } from '../sections/ActivitiesSection'
-import { RelatedProgramsSection } from '../sections/RelatedProgramsSection'
-import { SectionNav } from '../sections/SectionNav'
+import { Fragment } from 'react'
+import { ArrowDown, MapPin } from 'lucide-react'
+import type { ProgramDocument } from '@/lib/programs/content'
+import { AnchorAlias, EditorialAccent, EditorialActions, EditorialPhoto, EditorialSection, EditorialText, SectionCopy } from './EditorialParts'
+import s from '../demo/program-demo.module.css'
 
-interface OutreachTemplateProps {
-  program: Program
-}
-
-function slugify(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
-
-export function OutreachTemplate({ program }: OutreachTemplateProps) {
-  const sectionNavItems = program.sections
-    .filter((s) => s.heading)
-    .map((s) => ({ id: `section-${s.id || slugify(s.heading!)}`, label: s.heading! }))
-
-  return (
-    <div className="program-outreach" data-theme={program.theme}>
-      <ProgramHero hero={program.hero} theme={program.theme} />
-
-      {program.sections.map((section) => {
-        const sectionId = `section-${section.id || slugify(section.heading || '')}`
-        const wrapped = (child: React.ReactNode) => (
-          <div id={sectionId} key={section.id}>{child}</div>
-        )
-
-        switch (section.type) {
-          case 'rich_text':
-            return wrapped(<RichTextSection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'facts_bar':
-            return wrapped(<FactsBarSection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'activities':
-            return wrapped(<ActivitiesSection heading={section.heading} subheading={section.subheading} content={section.content as any} theme={program.theme} />)
-          case 'features':
-            return wrapped(<FeaturesSection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'stats':
-            return wrapped(<StatsSection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'quote':
-            return wrapped(<QuoteSection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'gallery':
-            return wrapped(<GallerySection heading={section.heading} content={section.content as any} theme={program.theme} />)
-          case 'cta':
-            return wrapped(<CTASection content={section.content as any} theme={program.theme} />)
-          default:
-            return null
-        }
-      })}
-
-      {program.relatedPrograms && program.relatedPrograms.length > 0 && (
-        <RelatedProgramsSection programs={program.relatedPrograms} />
-      )}
-
-      <SectionNav sections={sectionNavItems} />
-    </div>
-  )
+export function OutreachTemplate({ document }: { document: ProgramDocument }) {
+  const { hero } = document
+  const sections = document.sections.filter(section => section.enabled)
+  const firstStats = document.sections.find(section => section.content.type === 'stats')
+  const firstGallery = document.sections.find(section => section.content.type === 'gallery')
+  const activities = sections.find(section => section.content.type === 'activities')
+  const visual = hero.editorial
+  return <div className={s.root + ' ' + s.outreach}>
+    <section className={s.container + ' ' + s.outreachIntro}><div><div className={s.kicker}>{document.eyebrow}</div><h1><EditorialText text={hero.title} /><br /><EditorialAccent text={hero.description} /></h1></div><div>{(visual?.stamp || hero.sticker?.text) && <span className={s.outreachStamp}><EditorialText text={visual?.stamp || hero.sticker?.text} /></span>}<p><EditorialText text={hero.photoNote || document.shortDescription} /></p></div></section>
+    <section className={s.container + ' ' + s.outreachCover}><EditorialPhoto image={hero.image} priority />{(visual?.location || hero.note?.text) && <span className={s.paperLabel}><MapPin size={18} aria-hidden="true" />{visual?.location || hero.note?.text}</span>}{(visual?.captionLeft || visual?.captionRight) && <div className={s.coverCaption}><span>{visual.captionLeft}</span><span>{visual.captionRight}</span></div>}</section>
+    {hero.actions.length > 0 && <div className={s.container}><EditorialActions actions={hero.actions} /></div>}
+    {sections.map(section => {
+      const c = section.content
+      if (c.type === 'stats' && (section.presentation === 'ribbon' || (!section.presentation && section.id === firstStats?.id))) return <div id={section.id} className={s.outreachRibbon} key={section.id}><div className={s.container}>{c.stats.map((stat, i) => <span key={i}>{stat.value} <small>{stat.label}</small></span>)}{activities && <a href={'#' + activities.id}>Explore the journey <ArrowDown size={19} aria-hidden="true" /></a>}</div></div>
+      if (c.type === 'rich_text') return <section key={section.id} id={section.id} className={s.container + ' ' + s.outreachOpening}><div className={s.kicker}>{section.heading}</div><div>{section.intro && <h2><EditorialText text={section.intro} /></h2>}{section.description && <p>{section.description}</p>}<div dangerouslySetInnerHTML={{ __html: c.body }} /></div></section>
+      if (c.type === 'quote') return <section key={section.id} id={section.id} className={s.container + ' ' + s.outreachVoice}><div className={s.kicker}>{section.heading}</div><blockquote><EditorialText text={c.quote} /></blockquote><p>{[c.person, c.role, c.location].filter(Boolean).join(' · ')}</p>{section.description && <p>{section.description}</p>}</section>
+      if (c.type === 'cta') return <section key={section.id} id={section.id} className={s.container + ' ' + s.outreachCta}><span className={s.outreachAsterisk} aria-hidden="true">✳</span><div><SectionCopy section={{ ...section, intro: c.title, description: c.description }} /><EditorialActions actions={c.buttons} /></div></section>
+      const essay = c.type === 'gallery' && !section.presentation && section.id === firstGallery?.id
+      return <Fragment key={section.id}>{section.id === activities?.id && <AnchorAlias id="field-notes" section={section} />}<EditorialSection section={essay ? { ...section, presentation: 'essay' } : section} /></Fragment>
+    })}
+  </div>
 }
