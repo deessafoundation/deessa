@@ -80,7 +80,6 @@ const PAGE_SIZE = 9
 
 // Shared pill styles (tabs, pagination, empty-state button)
 const focusRing = "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#29b6c8]/40"
-const pillActive = "bg-[#0e7c8c] text-white shadow-[0_8px_20px_-8px_rgba(14,124,140,0.7)]"
 
 export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
   const router = useRouter()
@@ -146,6 +145,8 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
               <button
                 key={cat.id}
                 type="button"
+                data-slot="button"
+                data-variant={isActive ? "default" : "outline"}
                 aria-pressed={isActive}
                 onClick={() => setCategory(cat.id)}
                 disabled={isPending}
@@ -154,7 +155,6 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                   "shrink-0 whitespace-nowrap rounded-full px-4 sm:px-5 py-2.5 min-h-[44px]",
                   "font-comic font-bold text-[14px] transition-colors duration-200 disabled:cursor-wait disabled:opacity-60",
                   focusRing,
-                  isActive ? pillActive : "text-[#1a1a2e] hover:bg-[#29b6c8]/10 hover:text-[#0e6f7d]",
                 )}
               >
                 {cat.label}
@@ -224,8 +224,8 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                         <span
                           className={cn(
                             styles.cardBadge,
-                            "absolute left-3 top-4 z-[1] inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1",
-                            "font-comic text-[11px] font-bold tracking-wider text-[#1a1a2e] shadow-[0_4px_12px_rgba(26,26,46,0.15)]",
+                            "absolute left-3 top-4 z-[1] inline-flex items-center gap-1.5 rounded-full px-3 py-1",
+                            "font-comic text-[11px] font-bold tracking-wider shadow-[0_4px_12px_rgba(26,26,46,0.15)]",
                           )}
                         >
                           <span aria-hidden="true" className={cn(styles.cardBadgeDot, "h-2 w-2 rounded-full", accent.dot)} />
@@ -242,8 +242,8 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                             styles.cardLink,
                             "mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-4",
                             "font-comic text-[15px] font-bold",
-                            accent.text,
                           )}
+                          data-accent={program.category}
                         >
                           Learn More
                           <span
@@ -251,8 +251,8 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                             className={cn(
                               styles.cardLinkChip,
                               "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors duration-200",
-                              accent.chip,
                             )}
+                            data-accent={program.category}
                           >
                             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
                           </span>
@@ -269,13 +269,15 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
               <nav aria-label="Program pages" className="mt-12 flex flex-wrap items-center justify-center gap-2">
                 <button
                   type="button"
+                  data-slot="button"
+                  data-variant="outline"
                   onClick={() => setPage(safePage - 1)}
                   disabled={safePage <= 1 || isPending}
                   className={cn(
                     styles.paginationBtn,
-                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4",
-                    "font-comic text-sm font-bold text-[#1a1a2e] transition-colors duration-200",
-                    "hover:enabled:border-[#29b6c8] hover:enabled:text-[#0e6f7d] disabled:cursor-not-allowed disabled:opacity-40",
+                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4",
+                    "font-comic text-sm font-bold transition-colors duration-200",
+                    "disabled:cursor-not-allowed disabled:opacity-40",
                     focusRing,
                   )}
                 >
@@ -288,6 +290,8 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                     <button
                       key={page}
                       type="button"
+                      data-slot="button"
+                      data-variant={isCurrent ? "default" : "outline"}
                       onClick={() => setPage(page)}
                       disabled={isPending}
                       aria-label={`Page ${page}`}
@@ -297,9 +301,6 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                         isCurrent && styles.paginationPageActive,
                         "inline-flex h-11 w-11 items-center justify-center rounded-full font-comic text-sm font-bold transition-colors duration-200",
                         focusRing,
-                        isCurrent
-                          ? pillActive
-                          : "border border-slate-200 bg-white text-[#1a1a2e] hover:border-[#29b6c8] hover:text-[#0e6f7d]",
                       )}
                     >
                       {page}
@@ -308,13 +309,15 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                 })}
                 <button
                   type="button"
+                  data-slot="button"
+                  data-variant="outline"
                   onClick={() => setPage(safePage + 1)}
                   disabled={safePage >= totalPages || isPending}
                   className={cn(
                     styles.paginationBtn,
-                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4",
-                    "font-comic text-sm font-bold text-[#1a1a2e] transition-colors duration-200",
-                    "hover:enabled:border-[#29b6c8] hover:enabled:text-[#0e6f7d] disabled:cursor-not-allowed disabled:opacity-40",
+                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4",
+                    "font-comic text-sm font-bold transition-colors duration-200",
+                    "disabled:cursor-not-allowed disabled:opacity-40",
                     focusRing,
                   )}
                 >
@@ -341,7 +344,7 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
               aria-hidden="true"
               className={cn(
                 styles.emptyIcon,
-                "mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#29b6c8]/10 text-[#0e7c8c] ring-1 ring-[#29b6c8]/20",
+                "mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl ring-1",
               )}
             >
               <Search className="h-7 w-7" strokeWidth={2} />
@@ -360,7 +363,7 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
               <button
                 type="button"
                 onClick={() => router.refresh()}
-                className={cn(styles.emptyBtn, "inline-flex min-h-[48px] items-center rounded-full px-6 font-comic text-[15px] font-bold transition-colors duration-200 hover:bg-[#0a6573]", pillActive, focusRing)}
+                className={cn(styles.emptyBtn, "inline-flex min-h-[48px] items-center rounded-full px-6 font-comic text-[15px] font-bold transition-colors duration-200", focusRing)}
               >
                 Try Again
               </button>
@@ -368,7 +371,7 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
               <button
                 type="button"
                 onClick={() => setCategory("all")}
-                className={cn(styles.emptyBtn, "inline-flex min-h-[48px] items-center rounded-full px-6 font-comic text-[15px] font-bold transition-colors duration-200 hover:bg-[#0a6573]", pillActive, focusRing)}
+                className={cn(styles.emptyBtn, "inline-flex min-h-[48px] items-center rounded-full px-6 font-comic text-[15px] font-bold transition-colors duration-200", focusRing)}
               >
                 View All Programs
               </button>

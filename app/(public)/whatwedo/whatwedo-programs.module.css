@@ -49,6 +49,103 @@
   }
 }
 
+.tabActive {
+  background-color: #0e7c8c;
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(14, 124, 140, 0.7);
+}
+
+.tabInactive {
+  background-color: transparent;
+  color: #1a1a2e;
+}
+
+.tabInactive:hover {
+  background-color: rgba(41, 182, 200, 0.1);
+  color: #0e6f7d;
+}
+
+.paginationBtn {
+  background-color: #fff;
+  color: #1a1a2e;
+  border: 1px solid #e2e8f0;
+}
+
+.paginationBtn:hover:not(:disabled) {
+  border-color: #29b6c8;
+  color: #0e6f7d;
+}
+
+.paginationPage {
+  background-color: #fff;
+  color: #1a1a2e;
+  border: 1px solid #e2e8f0;
+}
+
+.paginationPage:hover:not(.paginationPageActive) {
+  border-color: #29b6c8;
+  color: #0e6f7d;
+}
+
+.paginationPageActive {
+  background-color: #0e7c8c;
+  color: #fff;
+  border-color: #0e7c8c;
+  box-shadow: 0 8px 20px -8px rgba(14, 124, 140, 0.7);
+}
+
+.cardBadge {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #1a1a2e;
+}
+
+/* Per-category accent colours for "Learn More" row (normal mode only).
+   Using data-accent avoids the globals.css bg-[#] / text-[#] substring trap. */
+.cardLink[data-accent="service"] { color: #0b76b7; }
+.cardLink[data-accent="campaign"] { color: #6F3E96; }
+.cardLink[data-accent="outreach"] { color: #c2410c; }  /* orange-700 */
+.cardLink[data-accent="research"] { color: #0e7c8c; }
+
+.cardLinkChip[data-accent="service"] {
+  background-color: rgba(11, 118, 183, 0.10);
+  color: #0b76b7;
+}
+.cardLinkChip[data-accent="campaign"] {
+  background-color: rgba(111, 62, 150, 0.10);
+  color: #6F3E96;
+}
+.cardLinkChip[data-accent="outreach"] {
+  background-color: #fff7ed;  /* orange-50 */
+  color: #c2410c;             /* orange-700 */
+}
+.cardLinkChip[data-accent="research"] {
+  background-color: rgba(41, 182, 200, 0.10);
+  color: #0e7c8c;
+}
+
+/* Hover: fill chip with accent colour */
+.card:hover .cardLinkChip[data-accent="service"],
+.card:focus-within .cardLinkChip[data-accent="service"] {
+  background-color: #0b76b7;
+  color: #fff;
+}
+.card:hover .cardLinkChip[data-accent="campaign"],
+.card:focus-within .cardLinkChip[data-accent="campaign"] {
+  background-color: #6F3E96;
+  color: #fff;
+}
+.card:hover .cardLinkChip[data-accent="outreach"],
+.card:focus-within .cardLinkChip[data-accent="outreach"] {
+  background-color: #c2410c;
+  color: #fff;
+}
+.card:hover .cardLinkChip[data-accent="research"],
+.card:focus-within .cardLinkChip[data-accent="research"] {
+  background-color: #0e7c8c;
+  color: #fff;
+}
+
+
 /* Image area fallback (also visible if the image fails to load) */
 .cardImagePlaceholder {
   position: absolute;
@@ -108,6 +205,22 @@
   font-size: 1rem;
   line-height: 1.65;
   margin-bottom: 1.75rem;
+}
+
+.emptyIcon {
+  background-color: rgba(41, 182, 200, 0.10);
+  color: #0e7c8c;
+  box-shadow: 0 0 0 1px rgba(41, 182, 200, 0.20);
+}
+
+.emptyBtn {
+  background-color: #0e7c8c;
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(14, 124, 140, 0.7);
+}
+
+.emptyBtn:hover {
+  background-color: #0a6573;
 }
 
 /* Windows High Contrast / forced colours: keep edges and the selected tab visible */
@@ -208,6 +321,78 @@
   margin-bottom: 1.75rem;
 }
 
+/* ctaCardIcon base (fallback — overridden by data-action below) */
+.ctaCardIcon {
+  background-color: rgba(41, 182, 200, 0.10);
+  color: #0e7c8c;
+  box-shadow: 0 0 0 1px rgba(41, 182, 200, 0.30);
+}
+
+/* Per-action icon colours (normal mode).
+   data-action avoids the globals.css bg-[#] / text-[#] substring trap. */
+.ctaCardIcon[data-action="donate"] {
+  background-color: #29b6c8;
+  color: #fff;
+  box-shadow: 0 8px 20px -6px rgba(41, 182, 200, 0.6), 0 0 0 1px rgba(41, 182, 200, 0.30);
+}
+.ctaCardIcon[data-action="partner"] {
+  background-color: rgba(111, 62, 150, 0.10);
+  color: #6F3E96;
+  box-shadow: 0 0 0 1px rgba(111, 62, 150, 0.15);
+}
+.ctaCardIcon[data-action="volunteer"] {
+  background-color: #fff7ed; /* orange-50 */
+  color: #ea580c;            /* orange-600 */
+  box-shadow: 0 0 0 1px rgba(234, 88, 12, 0.2);
+}
+
+/* Hover: fill icon with accent colour */
+.ctaCard:hover .ctaCardIcon[data-action="partner"],
+.ctaCard:focus-within .ctaCardIcon[data-action="partner"] {
+  background-color: #6F3E96;
+  color: #fff;
+}
+.ctaCard:hover .ctaCardIcon[data-action="volunteer"],
+.ctaCard:focus-within .ctaCardIcon[data-action="volunteer"] {
+  background-color: #f97316; /* orange-500 */
+  color: #fff;
+}
+
+/* ctaPrimaryBtn base (donate — teal filled) */
+.ctaPrimaryBtn {
+  background-color: #0e7c8c;
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(14, 124, 140, 0.7);
+}
+.ctaPrimaryBtn:hover {
+  background-color: #0a6573;
+}
+
+/* ctaSecondaryBtn base fallback */
+.ctaSecondaryBtn {
+  background-color: #fff;
+  color: #1a1a2e;
+  border: 2px solid currentColor;
+}
+
+/* Per-action button colours (normal mode) */
+a.ctaSecondaryBtn[data-action="partner"] {
+  border-color: #6F3E96;
+  color: #6F3E96;
+}
+a.ctaSecondaryBtn[data-action="partner"]:hover {
+  background-color: #6F3E96;
+  color: #fff;
+}
+a.ctaSecondaryBtn[data-action="volunteer"] {
+  border-color: #c2410c; /* orange-700 */
+  color: #c2410c;
+}
+a.ctaSecondaryBtn[data-action="volunteer"]:hover {
+  background-color: #c2410c;
+  color: #fff;
+}
+
 /* Windows High Contrast / forced colours: keep card edges and buttons visible */
 @media (forced-colors: active) {
   .ctaCard {
@@ -242,26 +427,42 @@
 }
 
 /* Filter Tabs in High Contrast */
-:global(body.high-contrast) .tabActive,
-:global(body.high-contrast) button.tabActive {
+:global(body.high-contrast) #programs .tabActive,
+:global(body.high-contrast) button.tabActive,
+:global(body.high-contrast) .tabActive {
   background: #000 !important;
   background-color: #000 !important;
   color: #fff !important;
   border: 2px solid #000 !important;
   text-decoration: underline !important;
   box-shadow: none !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
-:global(body.high-contrast) .tabInactive,
-:global(body.high-contrast) button.tabInactive {
+:global(body.high-contrast) #programs .tabActive *,
+:global(body.high-contrast) button.tabActive * {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.high-contrast) #programs .tabInactive,
+:global(body.high-contrast) button.tabInactive,
+:global(body.high-contrast) .tabInactive {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #000 !important;
   box-shadow: none !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
-:global(body.high-contrast) .tabInactive:hover,
+:global(body.high-contrast) #programs .tabInactive *,
+:global(body.high-contrast) button.tabInactive * {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.high-contrast) #programs .tabInactive:hover,
 :global(body.high-contrast) button.tabInactive:hover {
   background: #e5e5e5 !important;
   background-color: #e5e5e5 !important;
@@ -280,23 +481,33 @@
   filter: grayscale(1) contrast(1.2) !important;
 }
 
+:global(body.high-contrast) #programs .cardBadge,
 :global(body.high-contrast) .card .cardBadge,
-:global(body.high-contrast) .cardBadge {
+:global(body.high-contrast) .cardBadge,
+:global(body.high-contrast) [class*="cardBadge"] {
   background: #000 !important;
   background-color: #000 !important;
   color: #fff !important;
   border: 2px solid #fff !important;
   box-shadow: none !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
+:global(body.high-contrast) #programs .cardBadge *,
 :global(body.high-contrast) .card .cardBadge *,
-:global(body.high-contrast) .cardBadge * {
+:global(body.high-contrast) .cardBadge *,
+:global(body.high-contrast) [class*="cardBadge"] * {
   color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
+:global(body.high-contrast) #programs .cardTitle,
+:global(body.high-contrast) .card .cardTitle,
 :global(body.high-contrast) .cardTitle {
   color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
   -webkit-text-stroke: 0 !important;
+  text-decoration: underline !important;
 }
 
 :global(body.high-contrast) .cardDesc {
@@ -321,35 +532,45 @@
 }
 
 /* Pagination in High Contrast */
-:global(body.high-contrast) .paginationBtn,
+:global(body.high-contrast) #programs .paginationBtn,
 :global(body.high-contrast) button.paginationBtn {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
-:global(body.high-contrast) .paginationBtn:disabled,
+:global(body.high-contrast) #programs .paginationBtn *,
+:global(body.high-contrast) button.paginationBtn * {
+  color: #000 !important;
+  stroke: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.high-contrast) #programs .paginationBtn:disabled,
 :global(body.high-contrast) button.paginationBtn:disabled {
   opacity: 0.4 !important;
   cursor: not-allowed !important;
 }
 
-:global(body.high-contrast) .paginationPage,
+:global(body.high-contrast) #programs .paginationPage,
 :global(body.high-contrast) button.paginationPage {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
-:global(body.high-contrast) .paginationPageActive,
+:global(body.high-contrast) #programs .paginationPageActive,
 :global(body.high-contrast) button.paginationPageActive {
   background: #000 !important;
   background-color: #000 !important;
   color: #fff !important;
   border: 2px solid #000 !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 /* Empty State in High Contrast */
@@ -383,9 +604,27 @@
   background: #fff !important;
 }
 
-:global(body.high-contrast) .cardLinkChip {
+:global(body.high-contrast) #programs .cardLinkChip,
+:global(body.high-contrast) .card .cardLinkChip,
+:global(body.high-contrast) .cardLinkChip,
+:global(body.high-contrast) [class*="cardLinkChip"] {
   background: #000 !important;
+  background-color: #000 !important;
   color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) #programs .cardLinkChip svg,
+:global(body.high-contrast) .card .cardLinkChip svg,
+:global(body.high-contrast) .cardLinkChip svg,
+:global(body.high-contrast) [class*="cardLinkChip"] svg,
+:global(body.high-contrast) #programs .cardLinkChip *,
+:global(body.high-contrast) .card .cardLinkChip *,
+:global(body.high-contrast) .cardLinkChip *,
+:global(body.high-contrast) [class*="cardLinkChip"] * {
+  color: #fff !important;
+  stroke: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 :global(body.high-contrast) .emptyState {
@@ -437,10 +676,25 @@
   box-shadow: none !important;
 }
 
-:global(body.high-contrast) .ctaCardIcon {
+:global(body.high-contrast) [data-cta-icon],
+:global(body.high-contrast) .ctaCardIcon,
+:global(body.high-contrast) [class*="ctaCardIcon"] {
   background: #000 !important;
+  background-color: #000 !important;
   color: #fff !important;
+  border: 2px solid #000 !important;
   box-shadow: none !important;
+}
+
+:global(body.high-contrast) [data-cta-icon] svg,
+:global(body.high-contrast) .ctaCardIcon svg,
+:global(body.high-contrast) [class*="ctaCardIcon"] svg,
+:global(body.high-contrast) [data-cta-icon] *,
+:global(body.high-contrast) .ctaCardIcon *,
+:global(body.high-contrast) [class*="ctaCardIcon"] * {
+  color: #fff !important;
+  stroke: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 :global(body.high-contrast) .ctaCardTitle {
@@ -452,6 +706,8 @@
   color: #000 !important;
 }
 
+:global(body.high-contrast) .ctaSection a.ctaPrimaryBtn,
+:global(body.high-contrast) .ctaCard a.ctaPrimaryBtn,
 :global(body.high-contrast) .ctaPrimaryBtn,
 :global(body.high-contrast) a.ctaPrimaryBtn {
   background: #000 !important;
@@ -464,6 +720,17 @@
   -webkit-text-fill-color: #fff !important;
 }
 
+:global(body.high-contrast) .ctaSection a.ctaPrimaryBtn *,
+:global(body.high-contrast) .ctaCard a.ctaPrimaryBtn *,
+:global(body.high-contrast) .ctaPrimaryBtn *,
+:global(body.high-contrast) a.ctaPrimaryBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.high-contrast) .ctaSection a.ctaSecondaryBtn,
+:global(body.high-contrast) .ctaCard a.ctaSecondaryBtn,
 :global(body.high-contrast) .ctaSecondaryBtn,
 :global(body.high-contrast) a.ctaSecondaryBtn {
   background: #fff !important;
@@ -472,6 +739,15 @@
   border: 2px solid #000 !important;
   text-decoration: underline !important;
   font-weight: 800 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.high-contrast) .ctaSection a.ctaSecondaryBtn *,
+:global(body.high-contrast) .ctaCard a.ctaSecondaryBtn *,
+:global(body.high-contrast) .ctaSecondaryBtn *,
+:global(body.high-contrast) a.ctaSecondaryBtn * {
+  color: #000 !important;
+  stroke: #000 !important;
   -webkit-text-fill-color: #000 !important;
 }
 
@@ -487,20 +763,37 @@
   color: #fff !important;
 }
 
-:global(body.inverted-contrast) .tabActive,
-:global(body.inverted-contrast) button.tabActive {
+:global(body.inverted-contrast) #programs .tabActive,
+:global(body.inverted-contrast) button.tabActive,
+:global(body.inverted-contrast) .tabActive {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #fff !important;
+  text-decoration: underline !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
-:global(body.inverted-contrast) .tabInactive,
-:global(body.inverted-contrast) button.tabInactive {
+:global(body.inverted-contrast) #programs .tabActive *,
+:global(body.inverted-contrast) button.tabActive * {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.inverted-contrast) #programs .tabInactive,
+:global(body.inverted-contrast) button.tabInactive,
+:global(body.inverted-contrast) .tabInactive {
   background: #000 !important;
   background-color: #000 !important;
   color: #fff !important;
   border: 2px solid #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.inverted-contrast) #programs .tabInactive *,
+:global(body.inverted-contrast) button.tabInactive * {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 :global(body.inverted-contrast) .card {
@@ -513,17 +806,24 @@
   filter: invert(0.9) hue-rotate(180deg) contrast(1.1) !important;
 }
 
+:global(body.inverted-contrast) #programs .cardBadge,
 :global(body.inverted-contrast) .card .cardBadge,
-:global(body.inverted-contrast) .cardBadge {
+:global(body.inverted-contrast) .cardBadge,
+:global(body.inverted-contrast) [class*="cardBadge"] {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #000 !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
+:global(body.inverted-contrast) #programs .cardBadge *,
 :global(body.inverted-contrast) .card .cardBadge *,
-:global(body.inverted-contrast) .cardBadge * {
+:global(body.inverted-contrast) .cardBadge *,
+:global(body.inverted-contrast) [class*="cardBadge"] * {
   color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .cardTitle,
@@ -540,19 +840,39 @@
   text-decoration: underline !important;
 }
 
-:global(body.inverted-contrast) .paginationBtn,
-:global(body.inverted-contrast) .paginationPage {
+:global(body.inverted-contrast) #programs .paginationBtn,
+:global(body.inverted-contrast) button.paginationBtn {
   background: #000 !important;
   background-color: #000 !important;
   color: #fff !important;
   border: 2px solid #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
-:global(body.inverted-contrast) .paginationPageActive {
+:global(body.inverted-contrast) #programs .paginationBtn *,
+:global(body.inverted-contrast) button.paginationBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.inverted-contrast) #programs .paginationPage,
+:global(body.inverted-contrast) button.paginationPage {
+  background: #000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.inverted-contrast) #programs .paginationPageActive,
+:global(body.inverted-contrast) button.paginationPageActive {
   background: #fff !important;
   background-color: #fff !important;
   color: #000 !important;
   border: 2px solid #fff !important;
+  text-decoration: underline !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .emptyTitle,
@@ -584,9 +904,27 @@
   background: #000 !important;
 }
 
-:global(body.inverted-contrast) .cardLinkChip {
+:global(body.inverted-contrast) #programs .cardLinkChip,
+:global(body.inverted-contrast) .card .cardLinkChip,
+:global(body.inverted-contrast) .cardLinkChip,
+:global(body.inverted-contrast) [class*="cardLinkChip"] {
   background: #fff !important;
+  background-color: #fff !important;
   color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) #programs .cardLinkChip svg,
+:global(body.inverted-contrast) .card .cardLinkChip svg,
+:global(body.inverted-contrast) .cardLinkChip svg,
+:global(body.inverted-contrast) [class*="cardLinkChip"] svg,
+:global(body.inverted-contrast) #programs .cardLinkChip *,
+:global(body.inverted-contrast) .card .cardLinkChip *,
+:global(body.inverted-contrast) .cardLinkChip *,
+:global(body.inverted-contrast) [class*="cardLinkChip"] * {
+  color: #000 !important;
+  stroke: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .emptyState {
@@ -635,10 +973,25 @@
   box-shadow: none !important;
 }
 
-:global(body.inverted-contrast) .ctaCardIcon {
+:global(body.inverted-contrast) [data-cta-icon],
+:global(body.inverted-contrast) .ctaCardIcon,
+:global(body.inverted-contrast) [class*="ctaCardIcon"] {
   background: #fff !important;
+  background-color: #fff !important;
   color: #000 !important;
+  border: 2px solid #fff !important;
   box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) [data-cta-icon] svg,
+:global(body.inverted-contrast) .ctaCardIcon svg,
+:global(body.inverted-contrast) [class*="ctaCardIcon"] svg,
+:global(body.inverted-contrast) [data-cta-icon] *,
+:global(body.inverted-contrast) .ctaCardIcon *,
+:global(body.inverted-contrast) [class*="ctaCardIcon"] * {
+  color: #000 !important;
+  stroke: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.inverted-contrast) .ctaCardTitle,
@@ -647,6 +1000,8 @@
   -webkit-text-stroke: 0 !important;
 }
 
+:global(body.inverted-contrast) .ctaSection a.ctaPrimaryBtn,
+:global(body.inverted-contrast) .ctaCard a.ctaPrimaryBtn,
 :global(body.inverted-contrast) .ctaPrimaryBtn,
 :global(body.inverted-contrast) a.ctaPrimaryBtn {
   background: #fff !important;
@@ -655,9 +1010,21 @@
   border: 2px solid #fff !important;
   box-shadow: none !important;
   text-decoration: underline !important;
+  font-weight: 800 !important;
   -webkit-text-fill-color: #000 !important;
 }
 
+:global(body.inverted-contrast) .ctaSection a.ctaPrimaryBtn *,
+:global(body.inverted-contrast) .ctaCard a.ctaPrimaryBtn *,
+:global(body.inverted-contrast) .ctaPrimaryBtn *,
+:global(body.inverted-contrast) a.ctaPrimaryBtn * {
+  color: #000 !important;
+  stroke: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.inverted-contrast) .ctaSection a.ctaSecondaryBtn,
+:global(body.inverted-contrast) .ctaCard a.ctaSecondaryBtn,
 :global(body.inverted-contrast) .ctaSecondaryBtn,
 :global(body.inverted-contrast) a.ctaSecondaryBtn {
   background: #000 !important;
@@ -665,5 +1032,15 @@
   color: #fff !important;
   border: 2px solid #fff !important;
   text-decoration: underline !important;
+  font-weight: 800 !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.inverted-contrast) .ctaSection a.ctaSecondaryBtn *,
+:global(body.inverted-contrast) .ctaCard a.ctaSecondaryBtn *,
+:global(body.inverted-contrast) .ctaSecondaryBtn *,
+:global(body.inverted-contrast) a.ctaSecondaryBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
   -webkit-text-fill-color: #fff !important;
 }

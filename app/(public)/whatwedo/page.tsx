@@ -401,11 +401,12 @@ export default async function ProgramsPage() {
                     {/* Icon */}
                     <span
                       aria-hidden="true"
+                      data-cta-icon
+                      data-action={action.id}
                       className={cn(
                         programsStyles.ctaCardIcon,
                         "mb-5 inline-flex w-14 h-14 items-center justify-center rounded-2xl ring-1 transition-all duration-300",
                         "group-hover:scale-105 group-hover:-rotate-3 motion-reduce:transition-none motion-reduce:group-hover:transform-none",
-                        action.iconClass,
                       )}
                     >
                       <Icon className="w-7 h-7" strokeWidth={2} />
@@ -418,12 +419,14 @@ export default async function ProgramsPage() {
 
                     <Link
                       href={action.href}
+                      data-slot="button"
+                      data-variant={action.primary ? "default" : "outline"}
+                      data-action={action.id}
                       className={cn(
                         action.primary ? programsStyles.ctaPrimaryBtn : programsStyles.ctaSecondaryBtn,
                         "mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 min-h-[48px]",
                         "font-comic font-bold text-[15px] transition-colors duration-200",
                         "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2",
-                        action.buttonClass,
                       )}
                     >
                       {action.cta}

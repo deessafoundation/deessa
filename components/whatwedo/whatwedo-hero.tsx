@@ -143,12 +143,16 @@ export function WhatWeDoHero() {
             <div className="mt-6 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap md:mt-7">
               <a
                 href="#programs"
+                data-slot="button"
+                data-variant="default"
                 className={cn(styles.primaryBtn, buttonBase, "bg-[#0B5F8A] text-white hover:border-[#094E72] hover:bg-[#094E72]")}
               >
                 Explore Programs <span aria-hidden="true">↓</span>
               </a>
               <Link
                 href="/donate"
+                data-slot="button"
+                data-variant="outline"
                 className={cn(styles.secondaryBtn, buttonBase, "bg-white text-[#0B5F8A] hover:bg-[#E8F6FC]")}
               >
                 Donate to a Program <span aria-hidden="true">→</span>
