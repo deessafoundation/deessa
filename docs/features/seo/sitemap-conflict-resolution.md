@@ -42,7 +42,7 @@ Both routes were trying to handle the `/sitemap` path, causing a build conflict.
 
 ## Current State
 
-âœ… **XML Sitemap for Search Engines:**
+ **XML Sitemap for Search Engines:**
 - Route: `/sitemap.xml`
 - File: `app/sitemap.ts`
 - Purpose: Dynamic XML sitemap for Google, Bing, etc.
@@ -88,17 +88,17 @@ After this fix, verify:
 npm run dev
 
 # Test these URLs:
-âœ… http://localhost:3000/sitemap.xml - Should return XML sitemap
-âœ… http://localhost:3000/robots.txt - Should return robots rules
+ http://localhost:3000/sitemap.xml - Should return XML sitemap
+ http://localhost:3000/robots.txt - Should return robots rules
 âŒ http://localhost:3000/sitemap - Should return 404 (page removed)
 ```
 
 ## Summary
 
-âœ… Conflict resolved  
-âœ… XML sitemap working at `/sitemap.xml`  
-âœ… Robots.txt updated  
-âœ… Documentation updated  
-âœ… No routing conflicts  
+ Conflict resolved  
+ XML sitemap working at `/sitemap.xml`  
+ Robots.txt updated  
+ Documentation updated  
+ No routing conflicts  
 
 The Next.js app should now build and run without the sitemap conflict error.

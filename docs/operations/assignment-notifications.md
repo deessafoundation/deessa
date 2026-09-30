@@ -17,33 +17,33 @@ Comprehensive email and in-app notification system for support report assignment
 ### 1. Initial Assignment
 **When**: Admin assigns a report to someone for the first time
 **Behavior**:
-- âœ… Sends email to new assignee (green theme, action required)
-- âœ… Creates in-app notification for new assignee
-- âœ… Email subject: `ðŸ”” New Support Assignment: [Report Subject]`
+-  Sends email to new assignee (green theme, action required)
+-  Creates in-app notification for new assignee
+-  Email subject: `ðŸ”” New Support Assignment: [Report Subject]`
 
 ### 2. Reassignment
 **When**: Admin changes assignee from one person to another
 **Behavior**:
-- âœ… Detects reassignment automatically (checks if report already has assignee)
-- âœ… Sends email to **new assignee** (purple theme, action required)
+-  Detects reassignment automatically (checks if report already has assignee)
+-  Sends email to **new assignee** (purple theme, action required)
   - Shows assignment history (Previous â†’ Current)
   - "Action Required" message
   - "View & Respond" button
-- âœ… Sends email to **previous assignee** (amber theme, informational)
+-  Sends email to **previous assignee** (amber theme, informational)
   - Shows assignment history
   - "No Action Required" message
   - "View Report (Read-Only)" button
-- âœ… Creates in-app notifications for both admins
-- âœ… Email subject for new assignee: `ðŸ”„ Support Report Reassigned to You: [Report Subject]`
-- âœ… Email subject for previous assignee: `â†©ï¸ Support Report Reassigned: [Report Subject]`
+-  Creates in-app notifications for both admins
+-  Email subject for new assignee: `ðŸ”„ Support Report Reassigned to You: [Report Subject]`
+-  Email subject for previous assignee: `â†©ï¸ Support Report Reassigned: [Report Subject]`
 
 ### 3. Unassignment
 **When**: Admin removes assignee from a report
 **Behavior**:
-- âœ… Sends email to previous assignee (gray theme, informational)
-- âœ… Creates in-app notification for previous assignee
-- âœ… "No Action Required" message
-- âœ… Email subject: `ðŸ”“ Unassigned from Support Report: [Report Subject]`
+-  Sends email to previous assignee (gray theme, informational)
+-  Creates in-app notification for previous assignee
+-  "No Action Required" message
+-  Email subject: `ðŸ”“ Unassigned from Support Report: [Report Subject]`
 
 ## Files Created
 

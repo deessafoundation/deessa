@@ -39,13 +39,13 @@ Added confirmation dialog for deleting entire testimonials to prevent accidental
 ### When Deleting a Testimonial
 
 1. **Testimonial Data**:
-   - âœ… Name, role, location
-   - âœ… Quote text
-   - âœ… Rating
-   - âœ… All metadata
+   -  Name, role, location
+   -  Quote text
+   -  Rating
+   -  All metadata
 
 2. **Image Handling**:
-   - âœ… **Uploaded images**: Deleted from storage
+   -  **Uploaded images**: Deleted from storage
    - âŒ **External URLs**: Not deleted (not in our storage)
 
 3. **Automatic Cleanup**:
@@ -228,24 +228,24 @@ const deleteTestimonial = (index: number) => {
 ## Benefits
 
 ### Prevents Accidents
-- âœ… Can't accidentally delete testimonials
-- âœ… Shows exactly what will be deleted
-- âœ… Requires explicit confirmation
+-  Can't accidentally delete testimonials
+-  Shows exactly what will be deleted
+-  Requires explicit confirmation
 
 ### Clear Communication
-- âœ… Warning about permanent deletion
-- âœ… Visual preview of content
-- âœ… Descriptive button labels
+-  Warning about permanent deletion
+-  Visual preview of content
+-  Descriptive button labels
 
 ### Professional UX
-- âœ… Consistent with modern UI patterns
-- âœ… Matches other confirmation dialogs
-- âœ… Clear visual hierarchy
+-  Consistent with modern UI patterns
+-  Matches other confirmation dialogs
+-  Clear visual hierarchy
 
 ### Data Integrity
-- âœ… Automatic image cleanup
-- âœ… No orphaned files
-- âœ… Proper error handling
+-  Automatic image cleanup
+-  No orphaned files
+-  Proper error handling
 
 ---
 
@@ -305,18 +305,18 @@ const deleteTestimonial = (index: number) => {
 ## Accessibility
 
 ### Keyboard Navigation
-- âœ… Tab through buttons
-- âœ… Enter to confirm
-- âœ… Escape to cancel
+-  Tab through buttons
+-  Enter to confirm
+-  Escape to cancel
 
 ### Screen Readers
-- âœ… Dialog title announced
-- âœ… Description read
-- âœ… Button labels clear
+-  Dialog title announced
+-  Description read
+-  Button labels clear
 
 ### Focus Management
-- âœ… Focus trapped in dialog
-- âœ… Focus returns after close
+-  Focus trapped in dialog
+-  Focus returns after close
 
 ---
 

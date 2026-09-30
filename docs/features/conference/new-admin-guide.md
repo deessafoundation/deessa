@@ -303,7 +303,7 @@ Save time by reusing form structures.
 
 ### Form Design
 
-âœ… **DO:**
+ **DO:**
 - Keep steps focused (5-7 fields per step max)
 - Use clear, descriptive labels
 - Add help text for complex fields

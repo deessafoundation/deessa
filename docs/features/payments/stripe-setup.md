@@ -17,12 +17,12 @@ Your project already has Stripe payment integration built in! This guide will he
 
 ## ðŸŽ¯ What's Already Implemented
 
-âœ… Stripe checkout flow in the donation form  
-âœ… Webhook handling for payment verification  
-âœ… One-time and recurring donations support  
-âœ… Multi-currency support (USD/NPR)  
-âœ… Success and cancel pages  
-âœ… Mock mode for testing without API keys  
+ Stripe checkout flow in the donation form  
+ Webhook handling for payment verification  
+ One-time and recurring donations support  
+ Multi-currency support (USD/NPR)  
+ Success and cancel pages  
+ Mock mode for testing without API keys  
 
 ## ðŸ“‹ Prerequisites
 
@@ -276,7 +276,7 @@ If you encounter issues:
 3. Consult the [Stripe API Reference](https://stripe.com/docs/api)
 4. Contact Stripe Support (they're very responsive!)
 
-## âœ… Launch Checklist
+##  Launch Checklist
 
 Before going live with real payments:
 

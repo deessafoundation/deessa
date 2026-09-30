@@ -47,7 +47,7 @@ https://deessafoundation.com
 ### Step 3: Set Environment Scope
 
 Make sure to set this for:
-- âœ… **Production** (most important!)
+-  **Production** (most important!)
 - âš ï¸ **Preview** (optional - can use Vercel URL for preview deployments)
 - âš ï¸ **Development** (optional - keep as localhost or Vercel URL)
 
@@ -99,7 +99,7 @@ Once redeployed:
 6. Click **Submit**
 7. Wait a few minutes for Google to fetch and validate
 
-âœ… The error should now be resolved!
+ The error should now be resolved!
 
 ---
 
@@ -162,13 +162,13 @@ After making all changes and redeploying:
 ## Common Mistakes to Avoid
 
 âŒ **Don't** update the environment variable in `.env.local` only - this is local development
-âœ… **Do** update it in Vercel Dashboard â†’ Settings â†’ Environment Variables
+ **Do** update it in Vercel Dashboard â†’ Settings â†’ Environment Variables
 
 âŒ **Don't** forget to redeploy after changing environment variables
-âœ… **Do** trigger a new deployment (Vercel doesn't auto-deploy on env changes)
+ **Do** trigger a new deployment (Vercel doesn't auto-deploy on env changes)
 
 âŒ **Don't** use the Vercel URL (`deessa-foundation.vercel.app`) for production
-âœ… **Do** use your custom domain (`deessafoundation.com`)
+ **Do** use your custom domain (`deessafoundation.com`)
 
 ---
 

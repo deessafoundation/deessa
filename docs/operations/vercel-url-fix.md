@@ -1,5 +1,5 @@
 ---
-title: "Receipt URL Fix for Vercel Deployment âœ…"
+title: "Receipt URL Fix for Vercel Deployment "
 description: "Your receipt download URLs were using localhost:3000 even in Vercel deployments, causing ERRBLOCKEDBYCLIENT errors. T..."
 owner: "deessa Team"
 status: operational
@@ -7,7 +7,7 @@ category: operations
 audience: operator
 last_updated: 2026-09-12
 ---
-# Receipt URL Fix for Vercel Deployment âœ…
+# Receipt URL Fix for Vercel Deployment 
 
 ## Problem Solved
 
@@ -49,13 +49,13 @@ export function getAppBaseUrl(): string {
 
 ### 2. Updated All URL Generation Points
 
-âœ… **Receipt System:**
+ **Receipt System:**
 
 - `lib/receipts/token.ts` - Receipt download URL generation
 - `lib/receipts/qr.ts` - QR code verification URLs
 - `lib/receipts/receipt-document.tsx` - PDF logo URLs
 
-âœ… **Email Templates:**
+ **Email Templates:**
 
 - `lib/email/templates/receipt.ts` - Receipt emails
 - `lib/email/templates/conference-confirmation.ts` - Conference confirmations
@@ -63,7 +63,7 @@ export function getAppBaseUrl(): string {
 - `lib/email/templates/conference-cancellation.ts` - Conference cancellations
 - `lib/email/conference-mailer.ts` - Payment link emails
 
-âœ… **Payment Providers:**
+ **Payment Providers:**
 
 - `lib/payments/esewa.ts` - eSewa callback URLs
 - `lib/payments/khalti.ts` - Khalti return URLs
@@ -75,15 +75,15 @@ export function getAppBaseUrl(): string {
 ### Before (Broken):
 
 ```
-Local: NEXT_PUBLIC_APP_URL set â†’ Works âœ…
+Local: NEXT_PUBLIC_APP_URL set â†’ Works 
 Vercel: NEXT_PUBLIC_APP_URL not set â†’ localhost:3000 â†’ ERR_BLOCKED_BY_CLIENT âŒ
 ```
 
 ### After (Fixed):
 
 ```
-Local: NEXT_PUBLIC_APP_URL set â†’ Uses configured URL âœ…
-Vercel: VERCEL_URL automatically available â†’ Uses vercel URL âœ…
+Local: NEXT_PUBLIC_APP_URL set â†’ Uses configured URL 
+Vercel: VERCEL_URL automatically available â†’ Uses vercel URL 
 ```
 
 ## No Configuration Required! ðŸŽ‰
@@ -102,7 +102,7 @@ The fix automatically works in Vercel deployments because:
 # Should work as before
 npm run dev
 # Visit: http://localhost:3000/donate
-# Make a donation â†’ Receipt download will use localhost:3000 âœ…
+# Make a donation â†’ Receipt download will use localhost:3000 
 ```
 
 ### Vercel Deployment
@@ -117,8 +117,8 @@ git push
 After deployment:
 
 1. Make a test donation on your Vercel site
-2. Click "Download Receipt" â†’ Should work without `ERR_BLOCKED_BY_CLIENT` âœ…
-3. Check email download link â†’ Should use your Vercel URL âœ…
+2. Click "Download Receipt" â†’ Should work without `ERR_BLOCKED_BY_CLIENT` 
+3. Check email download link â†’ Should use your Vercel URL 
 
 ## Optional: Set Custom Domain
 
@@ -137,28 +137,28 @@ The function will use your custom domain instead of the auto-generated Vercel UR
 
 ### Core Utilities
 
-- âœ… `lib/utils.ts` - Added `getAppBaseUrl()` function
+-  `lib/utils.ts` - Added `getAppBaseUrl()` function
 
 ### Receipt System (5 files)
 
-- âœ… `lib/receipts/token.ts`
-- âœ… `lib/receipts/qr.ts`
-- âœ… `lib/receipts/receipt-document.tsx`
+-  `lib/receipts/token.ts`
+-  `lib/receipts/qr.ts`
+-  `lib/receipts/receipt-document.tsx`
 
 ### Email System (5 files)
 
-- âœ… `lib/email/templates/receipt.ts`
-- âœ… `lib/email/templates/conference-confirmation.ts`
-- âœ… `lib/email/templates/conference-registration.ts`
-- âœ… `lib/email/templates/conference-cancellation.ts`
-- âœ… `lib/email/conference-mailer.ts`
+-  `lib/email/templates/receipt.ts`
+-  `lib/email/templates/conference-confirmation.ts`
+-  `lib/email/templates/conference-registration.ts`
+-  `lib/email/templates/conference-cancellation.ts`
+-  `lib/email/conference-mailer.ts`
 
 ### Payment System (4 files)
 
-- âœ… `lib/payments/esewa.ts`
-- âœ… `lib/payments/khalti.ts`
-- âœ… `lib/payments/stripe.ts`
-- âœ… `lib/actions/conference-registration.ts`
+-  `lib/payments/esewa.ts`
+-  `lib/payments/khalti.ts`
+-  `lib/payments/stripe.ts`
+-  `lib/actions/conference-registration.ts`
 
 ## Verification Checklist
 
@@ -173,11 +173,11 @@ After deploying:
 
 ## Benefits
 
-âœ… **Automatic**: Works in all Vercel environments (production, preview, development)
-âœ… **Zero Config**: No need to manually set environment variables
-âœ… **Flexible**: Can still override with custom domain if needed
-âœ… **Consistent**: Same behavior across all URL generation points
-âœ… **Future-Proof**: New features will automatically use correct URLs
+ **Automatic**: Works in all Vercel environments (production, preview, development)
+ **Zero Config**: No need to manually set environment variables
+ **Flexible**: Can still override with custom domain if needed
+ **Consistent**: Same behavior across all URL generation points
+ **Future-Proof**: New features will automatically use correct URLs
 
 ## Rollback (If Needed)
 
@@ -198,6 +198,6 @@ If you still see localhost URLs after deployment:
 
 ---
 
-**Status:** âœ… Ready to deploy
+**Status:**  Ready to deploy
 **Estimated Impact:** Fixes all receipt-related URL issues in Vercel
 **Breaking Changes:** None - backward compatible with local development

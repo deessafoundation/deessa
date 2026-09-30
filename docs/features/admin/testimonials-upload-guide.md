@@ -40,9 +40,9 @@ last_updated: 2026-09-12
 ## Image Requirements
 
 ### File Format
-- âœ… JPG/JPEG
-- âœ… PNG
-- âœ… WebP
+-  JPG/JPEG
+-  PNG
+-  WebP
 - âŒ GIF (not supported)
 - âŒ PDF (not supported)
 

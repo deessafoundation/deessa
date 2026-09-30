@@ -91,36 +91,36 @@ This folder contains all resources for the new deessa Foundation brand theme tra
 
 ### Colors
 
-âœ… Primary brand colors (2 shades)  
-âœ… Three pillar accent colors  
-âœ… Semantic/functional colors (4 types)  
-âœ… Neutral palette (5 shades)  
-âœ… Derived color variants (light/hover states)
+ Primary brand colors (2 shades)  
+ Three pillar accent colors  
+ Semantic/functional colors (4 types)  
+ Neutral palette (5 shades)  
+ Derived color variants (light/hover states)
 
 ### Interactive States
 
-âœ… Button hover, focus, disabled states  
-âœ… Card hover effects  
-âœ… Input focus rings  
-âœ… Link hover animations  
-âœ… Loading/skeleton states
+ Button hover, focus, disabled states  
+ Card hover effects  
+ Input focus rings  
+ Link hover animations  
+ Loading/skeleton states
 
 ### Components
 
-âœ… Buttons (primary, outline, accent)  
-âœ… Badges & status indicators  
-âœ… Alerts (info, success, warning, error)  
-âœ… Progress bars (with pillar colors)  
-âœ… Cards (various hover effects)  
-âœ… Form inputs (all states)
+ Buttons (primary, outline, accent)  
+ Badges & status indicators  
+ Alerts (info, success, warning, error)  
+ Progress bars (with pillar colors)  
+ Cards (various hover effects)  
+ Form inputs (all states)
 
 ### Extras
 
-âœ… Gradient combinations  
-âœ… Typography hierarchy  
-âœ… Shadow variants  
-âœ… Dark mode support  
-âœ… Accessibility compliance (WCAG AA)
+ Gradient combinations  
+ Typography hierarchy  
+ Shadow variants  
+ Dark mode support  
+ Accessibility compliance (WCAG AA)
 
 ---
 
@@ -356,6 +356,6 @@ For questions or issues during implementation:
 
 ---
 
-**Status:** âœ… Ready for Review  
+**Status:**  Ready for Review  
 **Last Updated:** December 20, 2025  
 **Version:** 1.0

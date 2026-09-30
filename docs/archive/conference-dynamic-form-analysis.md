@@ -45,10 +45,10 @@ Located at: `/conference/register`
 Located at: `/admin/conference/settings`
 
 **Current Capabilities:**
-âœ… Event Details (name, dates, venue, contact)
-âœ… Payment Configuration (fees, currency, expiry)
-âœ… Agenda/Timeline Management (add/remove/reorder items)
-âœ… Email Templates (3 types: general, reminder, directions)
+ Event Details (name, dates, venue, contact)
+ Payment Configuration (fees, currency, expiry)
+ Agenda/Timeline Management (add/remove/reorder items)
+ Email Templates (3 types: general, reminder, directions)
 
 **What's Missing:**
 âŒ No form field management
@@ -479,23 +479,23 @@ export async function updateFormSchema(schema: FormSchema): Promise<Result> {
 ## Benefits
 
 ### For Admins
-âœ… **Full control** over registration form without code changes
-âœ… **Easy customization** for different events or conferences
-âœ… **Quick iterations** - test different questions, reorder fields
-âœ… **Version history** - rollback to previous form versions
-âœ… **Better data collection** - ask exactly what you need
+ **Full control** over registration form without code changes
+ **Easy customization** for different events or conferences
+ **Quick iterations** - test different questions, reorder fields
+ **Version history** - rollback to previous form versions
+ **Better data collection** - ask exactly what you need
 
 ### For Developers
-âœ… **Reduced maintenance** - no code changes for form updates
-âœ… **Reusable system** - can extend to other forms (volunteer, contact, etc.)
-âœ… **Clean separation** - form structure decoupled from rendering logic
-âœ… **Type-safe** - schema validation ensures data integrity
+ **Reduced maintenance** - no code changes for form updates
+ **Reusable system** - can extend to other forms (volunteer, contact, etc.)
+ **Clean separation** - form structure decoupled from rendering logic
+ **Type-safe** - schema validation ensures data integrity
 
 ### For Users (Registrants)
-âœ… **Faster forms** - only relevant fields shown
-âœ… **Better UX** - conditional logic reduces clutter
-âœ… **Clear guidance** - custom help text per field
-âœ… **No unnecessary questions** - admins can remove unused fields
+ **Faster forms** - only relevant fields shown
+ **Better UX** - conditional logic reduces clutter
+ **Clear guidance** - custom help text per field
+ **No unnecessary questions** - admins can remove unused fields
 
 ---
 

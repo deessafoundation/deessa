@@ -15,12 +15,12 @@ This guide provides step-by-step instructions for incrementally enabling Payment
 
 ## Prerequisites
 
-- âœ… Production deployment completed (Task 28.4)
-- âœ… V1 flow verified working in production
-- âœ… No critical errors in first 2 hours
-- âœ… Team approval for V2 enablement
-- âœ… Monitoring dashboards ready
-- âœ… Rollback plan prepared
+-  Production deployment completed (Task 28.4)
+-  V1 flow verified working in production
+-  No critical errors in first 2 hours
+-  Team approval for V2 enablement
+-  Monitoring dashboards ready
+-  Rollback plan prepared
 
 ## Rollout Strategy
 

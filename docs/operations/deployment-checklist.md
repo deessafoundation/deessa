@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Pre-Deployment Verification
 
-### âœ… Phase 1 & 2 Complete
+###  Phase 1 & 2 Complete
 - [x] SQL migration file created (`scripts/db/migrations/037-homepage-cms-schema.sql`)
 - [x] TypeScript types defined (`lib/types/homepage-settings.ts`)
 - [x] Data loaders created (`lib/data/homepage-settings.ts`)
@@ -37,10 +37,10 @@ npm run dev
 ```
 
 **Expected Result:**
-- âœ… Page loads without errors
-- âœ… All sections display data
-- âœ… Data comes from fallback values
-- âœ… No console errors
+-  Page loads without errors
+-  All sections display data
+-  Data comes from fallback values
+-  No console errors
 
 **If test fails:**
 - Check TypeScript errors: `npm run type-check`
@@ -128,11 +128,11 @@ npm run dev
 ```
 
 **Expected Result:**
-- âœ… Page loads without errors
-- âœ… All sections display data
-- âœ… Data now comes from database
-- âœ… Values match what's in SQL migration
-- âœ… No console errors
+-  Page loads without errors
+-  All sections display data
+-  Data now comes from database
+-  Values match what's in SQL migration
+-  No console errors
 
 ---
 
@@ -144,12 +144,12 @@ npm run dev
 ```
 
 **Expected Result:**
-- âœ… Page loads normally
-- âœ… Stats section displays correctly
-- âœ… Programs section displays correctly
-- âœ… Layout unchanged
-- âœ… No visual differences
-- âœ… No console errors
+-  Page loads normally
+-  Stats section displays correctly
+-  Programs section displays correctly
+-  Layout unchanged
+-  No visual differences
+-  No console errors
 
 **Test Checklist:**
 - [ ] Hero section loads
@@ -172,11 +172,11 @@ npm run dev
 3. Verify page still works with fallback values
 
 **Expected Result:**
-- âœ… Page loads (doesn't crash)
-- âœ… Stats display (from fallback)
-- âœ… Programs display (from fallback)
-- âœ… Console shows error log (expected)
-- âœ… User sees no errors
+-  Page loads (doesn't crash)
+-  Stats display (from fallback)
+-  Programs display (from fallback)
+-  Console shows error log (expected)
+-  User sees no errors
 
 ---
 
@@ -328,32 +328,32 @@ DELETE FROM site_settings WHERE key LIKE 'homepage_%';
 
 ## Success Criteria
 
-### âœ… Deployment Successful If:
+###  Deployment Successful If:
 
 1. **Functionality**
-   - âœ… Impact page loads correctly
-   - âœ… Stats display properly
-   - âœ… Programs display properly
-   - âœ… No console errors
-   - âœ… Fallbacks work
+   -  Impact page loads correctly
+   -  Stats display properly
+   -  Programs display properly
+   -  No console errors
+   -  Fallbacks work
 
 2. **Performance**
-   - âœ… Page load time unchanged
-   - âœ… No database slowdowns
-   - âœ… No memory leaks
-   - âœ… Lighthouse score unchanged
+   -  Page load time unchanged
+   -  No database slowdowns
+   -  No memory leaks
+   -  Lighthouse score unchanged
 
 3. **User Experience**
-   - âœ… No visual changes
-   - âœ… No broken links
-   - âœ… Mobile works
-   - âœ… Accessibility maintained
+   -  No visual changes
+   -  No broken links
+   -  Mobile works
+   -  Accessibility maintained
 
 4. **Technical**
-   - âœ… No TypeScript errors
-   - âœ… No runtime errors
-   - âœ… Database queries efficient
-   - âœ… Caching works
+   -  No TypeScript errors
+   -  No runtime errors
+   -  Database queries efficient
+   -  Caching works
 
 ---
 

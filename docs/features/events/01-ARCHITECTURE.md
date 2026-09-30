@@ -65,7 +65,7 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 â”‚  â”‚  /conference/*       â”‚      â”‚  /events/*           â”‚    â”‚
 â”‚  â”‚  conference_* tables â”‚      â”‚  event_* tables      â”‚    â”‚
 â”‚  â”‚                      â”‚      â”‚                      â”‚    â”‚
-â”‚  â”‚  âœ… Production       â”‚      â”‚  ðŸ—ï¸ In Development   â”‚    â”‚
+â”‚  â”‚   Production       â”‚      â”‚  ðŸ—ï¸ In Development   â”‚    â”‚
 â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
 â”‚           â”‚                              â”‚                   â”‚
 â”‚           â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                   â”‚
@@ -130,14 +130,14 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 
 ### 3.1 In Scope
 
-âœ… Generic event management (any event type)
-âœ… Dynamic form builder per event
-âœ… Multi-ticket pricing
-âœ… Payment processing (existing providers)
-âœ… Email automation
-âœ… Event lifecycle management
-âœ… Registration tracking
-âœ… Admin dashboard
+ Generic event management (any event type)
+ Dynamic form builder per event
+ Multi-ticket pricing
+ Payment processing (existing providers)
+ Email automation
+ Event lifecycle management
+ Registration tracking
+ Admin dashboard
 
 ### 3.2 Out of Scope
 
@@ -278,14 +278,14 @@ lib/actions/events-module/
 
 **From Conference System:**
 ```typescript
-// âœ… Allowed - Generic field components
+//  Allowed - Generic field components
 import { FieldText } from "@/components/conference/fields/field-text"
 import { DynamicStep } from "@/components/conference/dynamic-step"
 
-// âœ… Allowed - Type definitions
+//  Allowed - Type definitions
 import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
 
-// âœ… Allowed - If modular
+//  Allowed - If modular
 import { startStripeCheckout } from "@/lib/payments/stripe"
 ```
 
@@ -294,7 +294,7 @@ import { startStripeCheckout } from "@/lib/payments/stripe"
 **Event-Specific Logic:**
 ```typescript
 // âŒ Do NOT import and modify
-// âœ… DO rebuild as EventFormBuilder.tsx
+//  DO rebuild as EventFormBuilder.tsx
 components/events/admin/EventFormBuilder.tsx
 
 // Different from conference version:

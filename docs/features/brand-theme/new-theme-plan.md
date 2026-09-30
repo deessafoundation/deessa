@@ -499,12 +499,12 @@ h6 {
 
 | Combination           | Ratio   | Status      |
 | --------------------- | ------- | ----------- |
-| Primary on White      | 4.52:1  | âœ… Pass     |
-| Primary Dark on White | 7.89:1  | âœ… Pass AAA |
-| Text Main on White    | 14.23:1 | âœ… Pass AAA |
-| Text Muted on White   | 4.61:1  | âœ… Pass     |
-| Success on White      | 4.85:1  | âœ… Pass     |
-| Danger on White       | 5.21:1  | âœ… Pass     |
+| Primary on White      | 4.52:1  |  Pass     |
+| Primary Dark on White | 7.89:1  |  Pass AAA |
+| Text Main on White    | 14.23:1 |  Pass AAA |
+| Text Muted on White   | 4.61:1  |  Pass     |
+| Success on White      | 4.85:1  |  Pass     |
+| Danger on White       | 5.21:1  |  Pass     |
 
 ### Focus Indicators
 
@@ -525,10 +525,10 @@ h6 {
 
 ### Color-Independent Design
 
-- âœ… Never use color alone to convey information
-- âœ… Include icons alongside colored badges
-- âœ… Use text labels for status indicators
-- âœ… Provide patterns/textures for charts when needed
+-  Never use color alone to convey information
+-  Include icons alongside colored badges
+-  Use text labels for status indicators
+-  Provide patterns/textures for charts when needed
 
 ---
 
@@ -739,13 +739,13 @@ h6 {
 
 ## ðŸŽ¯ Success Metrics
 
-- âœ… All components using new color system
-- âœ… 100% WCAG AA compliance
-- âœ… Consistent hover/focus states
-- âœ… Smooth transition animations
-- âœ… Dark mode support (optional)
-- âœ… Brand recognition improved
-- âœ… User feedback positive
+-  All components using new color system
+-  100% WCAG AA compliance
+-  Consistent hover/focus states
+-  Smooth transition animations
+-  Dark mode support (optional)
+-  Brand recognition improved
+-  User feedback positive
 
 ---
 

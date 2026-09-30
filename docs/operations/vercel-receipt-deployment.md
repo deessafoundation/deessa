@@ -55,7 +55,7 @@ Add each of these variables. For each one:
 - Click "Add New"
 - Enter the key name
 - Enter the value
-- Select environments: âœ… Production, âœ… Preview, âœ… Development
+- Select environments:  Production,  Preview,  Development
 - Click "Save"
 
 #### Required Variables:
@@ -114,13 +114,13 @@ After adding all variables, verify they're set:
    - Replace `your-domain.com` with your actual Vercel domain
 4. Click "Select events"
 5. Select these events:
-   - âœ… `checkout.session.completed`
-   - âœ… `checkout.session.expired`
-   - âœ… `invoice.payment_succeeded`
-   - âœ… `invoice.payment_failed`
-   - âœ… `payment_intent.payment_failed`
-   - âœ… `customer.subscription.created`
-   - âœ… `customer.subscription.deleted`
+   -  `checkout.session.completed`
+   -  `checkout.session.expired`
+   -  `invoice.payment_succeeded`
+   -  `invoice.payment_failed`
+   -  `payment_intent.payment_failed`
+   -  `customer.subscription.created`
+   -  `customer.subscription.deleted`
 6. Click "Add events"
 7. Click "Add endpoint"
 
@@ -136,7 +136,7 @@ After adding all variables, verify they're set:
 ### Step 3: Verify Webhook Status
 
 1. In Stripe Dashboard, verify the endpoint shows:
-   - Status: âœ… Enabled
+   - Status:  Enabled
    - Events: 7 events selected
    - URL: Your production URL
 
@@ -363,7 +363,7 @@ If issues occur in production:
 
 ## Success Criteria
 
-âœ… Deployment is successful when:
+ Deployment is successful when:
 
 - [ ] Diagnostic endpoint returns all green
 - [ ] Test donation completes successfully

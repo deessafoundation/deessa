@@ -211,7 +211,7 @@ Comprehensive links in footer:
 
 ## Internal Linking Best Practices
 
-### âœ… DO:
+###  DO:
 
 1. **Use Descriptive Anchor Text**
    ```tsx

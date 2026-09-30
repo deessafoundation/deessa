@@ -569,13 +569,13 @@ If issues occur during rotation:
 ## Credential Storage Best Practices
 
 ### DO:
-- âœ… Store credentials in environment variables
-- âœ… Use deployment platform secret management (Vercel, AWS Secrets Manager, etc.)
-- âœ… Rotate credentials quarterly
-- âœ… Use different credentials for staging and production
-- âœ… Limit access to credentials (need-to-know basis)
-- âœ… Audit credential access logs
-- âœ… Document rotation procedures
+-  Store credentials in environment variables
+-  Use deployment platform secret management (Vercel, AWS Secrets Manager, etc.)
+-  Rotate credentials quarterly
+-  Use different credentials for staging and production
+-  Limit access to credentials (need-to-know basis)
+-  Audit credential access logs
+-  Document rotation procedures
 
 ### DON'T:
 - âŒ Commit credentials to git

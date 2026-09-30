@@ -241,16 +241,16 @@ TypeScript-first schema validation library. Used to validate user input before p
 
 **Features**:
 
-- âœ… Registration with 8 custom fields
-- âœ… Dual attendance mode (In-person USD / Virtual NPR)
-- âœ… Three payment gateways (Stripe, Khalti, eSewa)
-- âœ… Dual-path payment verification
-- âœ… Automated confirmation emails (Nodemailer + Gmail)
-- âœ… Admin dashboard (list, detail, CSV export)
-- âœ… Database-driven settings (no code deploy for config changes)
-- âœ… 24-hour expiry with hourly cron job
-- âœ… Responsive design (mobile-first)
-- âœ… GDPR-ready (data export, retention policies)
+-  Registration with 8 custom fields
+-  Dual attendance mode (In-person USD / Virtual NPR)
+-  Three payment gateways (Stripe, Khalti, eSewa)
+-  Dual-path payment verification
+-  Automated confirmation emails (Nodemailer + Gmail)
+-  Admin dashboard (list, detail, CSV export)
+-  Database-driven settings (no code deploy for config changes)
+-  24-hour expiry with hourly cron job
+-  Responsive design (mobile-first)
+-  GDPR-ready (data export, retention policies)
 
 **Technical Stack**:
 
@@ -342,9 +342,9 @@ cancelled   expired       (final state)
 | **Payment Methods** | Cards, Wallets, Bank | Cards, Wallet | Wallet only |
 | **Fee**             | 2.9% + $0.30         | 3.5% + NPR 15 | 2%          |
 | **Settlement**      | 2-7 days             | 3-5 days      | 1-2 days    |
-| **Webhook**         | âœ… Yes               | âŒ No         | âŒ No       |
-| **Refund API**      | âœ… Automated         | âœ… Automated  | âŒ Manual   |
-| **Metadata**        | âœ… Yes               | âŒ No         | âŒ No       |
+| **Webhook**         |  Yes               | âŒ No         | âŒ No       |
+| **Refund API**      |  Automated         |  Automated  | âŒ Manual   |
+| **Metadata**        |  Yes               | âŒ No         | âŒ No       |
 
 ### 4.5 Admin Quick Actions
 

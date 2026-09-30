@@ -381,7 +381,7 @@ if (!process.env.ENABLE_RECEIPT_EMAILS) {
 
 ## Security Audit
 
-âœ… **Completed:**
+ **Completed:**
 
 - RLS policies on audit logs
 - Public read access to receipts only

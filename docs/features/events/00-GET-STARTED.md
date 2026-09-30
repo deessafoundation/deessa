@@ -13,7 +13,7 @@ last_updated: 2026-09-12
 
 ---
 
-## âœ… What's Been Set Up
+##  What's Been Set Up
 
 Your professional development environment is ready:
 
@@ -80,9 +80,9 @@ docs/event-management-module/
 
 ### Before Development Starts
 
-- [x] All critical decisions approved âœ…
-- [x] Database schema finalized âœ…
-- [x] Implementation plan created âœ…
+- [x] All critical decisions approved 
+- [x] Database schema finalized 
+- [x] Implementation plan created 
 - [ ] Development environment ready
 - [ ] Begin Phase 0: Create migration file
 
@@ -118,13 +118,13 @@ docs/event-management-module/
 
 | ID | Decision | Status | Choice |
 |----|----------|--------|--------|
-| DEC-001 | Database strategy | âœ… Approved | Drop & recreate events table |
-| DEC-002 | Component reuse | âœ… Approved | Import field components (read-only) |
-| DEC-003 | Register button | âœ… Approved | Direct to form |
+| DEC-001 | Database strategy |  Approved | Drop & recreate events table |
+| DEC-002 | Component reuse |  Approved | Import field components (read-only) |
+| DEC-003 | Register button |  Approved | Direct to form |
 | DEC-004 | Payment integration | ðŸŸ¡ Deferred | Wait for payment module developer |
-| DEC-005 | Free events flag | âœ… Approved | is_free flag |
-| DEC-006 | Capacity/waitlist | âœ… Approved | Defer to Phase 2+ |
-| DEC-007 | Agenda model | âœ… Approved | Single table with day_number |
+| DEC-005 | Free events flag |  Approved | is_free flag |
+| DEC-006 | Capacity/waitlist |  Approved | Defer to Phase 2+ |
+| DEC-007 | Agenda model |  Approved | Single table with day_number |
 
 **Update:** See `02-DECISIONS.md` for full details
 
@@ -201,11 +201,11 @@ The conference system is production-ready for deessa 2026 Conference. We're buil
 
 You'll know you're ready to start development when:
 
-- âœ… All critical decisions approved (6/7, 1 deferred)
-- âœ… Database schema is finalized in tasks.md
-- âœ… Implementation plan (tasks.md) is complete
-- âœ… Everyone has read Architecture & Decisions docs
-- âœ… Development environment is configured
+-  All critical decisions approved (6/7, 1 deferred)
+-  Database schema is finalized in tasks.md
+-  Implementation plan (tasks.md) is complete
+-  Everyone has read Architecture & Decisions docs
+-  Development environment is configured
 
 **Then:** Start Phase 0 â€” Create `050-events-module-schema.sql`!
 

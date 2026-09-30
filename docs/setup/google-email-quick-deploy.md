@@ -284,13 +284,13 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ## Next Steps
 
-1. âœ… Run SQL script
-2. âœ… Configure Google email
-3. âœ… Set organization details
-4. âœ… Integrate webhooks
-5. âœ… Test system
-6. âœ… Monitor email delivery
-7. âœ… Gather donor feedback
+1.  Run SQL script
+2.  Configure Google email
+3.  Set organization details
+4.  Integrate webhooks
+5.  Test system
+6.  Monitor email delivery
+7.  Gather donor feedback
 
 ---
 

@@ -227,7 +227,7 @@ The system is designed for **content control** by staff and **technical control*
 
 ## System Maturity & Production Readiness
 
-### Current Status: Production-Ready âœ…
+### Current Status: Production-Ready 
 
 This system is:
 

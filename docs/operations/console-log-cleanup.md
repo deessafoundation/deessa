@@ -16,26 +16,26 @@ Cleaned up unnecessary console logs in the Stripe webhook handler while keeping 
 ## Logs Kept (Essential for Production)
 
 ### Error Logs (Always Keep)
-- âœ… Payment confirmation failures
-- âœ… Receipt generation failures
-- âœ… Webhook signature verification failures
-- âœ… Missing environment variables
-- âœ… Database update failures
-- âœ… Conference registration errors
-- âœ… Amount/currency mismatches
-- âœ… Subscription processing errors
+-  Payment confirmation failures
+-  Receipt generation failures
+-  Webhook signature verification failures
+-  Missing environment variables
+-  Database update failures
+-  Conference registration errors
+-  Amount/currency mismatches
+-  Subscription processing errors
 
 ### Success Logs (Keep for Monitoring)
-- âœ… Payment confirmed (with donation ID and session ID)
-- âœ… Receipt generated (with receipt number)
-- âœ… Conference registration confirmed
-- âœ… Subscription receipt generated
+-  Payment confirmed (with donation ID and session ID)
+-  Receipt generated (with receipt number)
+-  Conference registration confirmed
+-  Subscription receipt generated
 
 ### Warning Logs (Keep for Observability)
-- âœ… Missing donation ID in session
-- âœ… Missing donation ID in subscription
-- âœ… Session not paid (conference)
-- âœ… Payment events table errors
+-  Missing donation ID in session
+-  Missing donation ID in subscription
+-  Session not paid (conference)
+-  Payment events table errors
 
 ## Logs Removed (Unnecessary Noise)
 
@@ -95,9 +95,9 @@ Cleaned up unnecessary console logs in the Stripe webhook handler while keeping 
 ### Good Logs (After Cleanup)
 
 ```
-âœ… Stripe webhook: Payment confirmed { donationId: 'xxx', sessionId: 'xxx', status: 'confirmed' }
-âœ… Stripe webhook: Receipt generated { donationId: 'xxx', receiptNumber: 'RCP-2026-00030' }
-âœ… Stripe webhook (conference): confirmed xxx
+ Stripe webhook: Payment confirmed { donationId: 'xxx', sessionId: 'xxx', status: 'confirmed' }
+ Stripe webhook: Receipt generated { donationId: 'xxx', receiptNumber: 'RCP-2026-00030' }
+ Stripe webhook (conference): confirmed xxx
 ```
 
 ### Error Logs (Actionable)
@@ -168,12 +168,12 @@ After cleanup, verify logs still provide useful information:
 
 1. Make a test donation
 2. Check Vercel logs for:
-   - âœ… "Payment confirmed" message
-   - âœ… "Receipt generated" message
+   -  "Payment confirmed" message
+   -  "Receipt generated" message
 3. Trigger an error (wrong webhook secret)
 4. Check Vercel logs for:
-   - âœ… Clear error message
-   - âœ… Actionable information
+   -  Clear error message
+   -  Actionable information
 
 ## Future Improvements
 

@@ -20,13 +20,13 @@ This guide helps diagnose and fix issues where receipts are not being generated 
 Go to your Vercel project â†’ Settings â†’ Environment Variables and verify these are set:
 
 **Required for Receipt Generation:**
-- âœ… `SUPABASE_SERVICE_ROLE_KEY` - Required for database writes
-- âœ… `GOOGLE_EMAIL` - Gmail address for sending receipts
-- âœ… `GOOGLE_APP_PASSWORD` - Gmail app-specific password
-- âœ… `STRIPE_WEBHOOK_SECRET` - Production webhook secret (not CLI secret)
-- âœ… `STRIPE_SECRET_KEY` - Production Stripe key (sk_live_...)
-- âœ… `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- âœ… `PAYMENT_MODE` - Should be "live" for production
+-  `SUPABASE_SERVICE_ROLE_KEY` - Required for database writes
+-  `GOOGLE_EMAIL` - Gmail address for sending receipts
+-  `GOOGLE_APP_PASSWORD` - Gmail app-specific password
+-  `STRIPE_WEBHOOK_SECRET` - Production webhook secret (not CLI secret)
+-  `STRIPE_SECRET_KEY` - Production Stripe key (sk_live_...)
+-  `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+-  `PAYMENT_MODE` - Should be "live" for production
 
 ### 2. Test Environment Configuration
 
@@ -78,7 +78,7 @@ Failed to update donation with receipt
 2. Click on your production webhook endpoint
 3. Check "Recent deliveries" tab
 4. Look for:
-   - âœ… Status 200 (success)
+   -  Status 200 (success)
    - âŒ Status 400/500 (error)
    - âŒ Timeout (webhook taking too long)
 
@@ -167,10 +167,10 @@ Failed to update donation with receipt
    - Click "Add endpoint"
    - Enter URL: `https://your-domain.vercel.app/api/webhooks/stripe`
    - Select events:
-     - âœ… `checkout.session.completed`
-     - âœ… `invoice.payment_succeeded`
-     - âœ… `checkout.session.expired`
-     - âœ… `payment_intent.payment_failed`
+     -  `checkout.session.completed`
+     -  `invoice.payment_succeeded`
+     -  `checkout.session.expired`
+     -  `payment_intent.payment_failed`
    - Click "Add endpoint"
 
 2. Copy the webhook signing secret and add to Vercel (see Issue 3)

@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 **Version:** 1.1  
 **Date:** July 23, 2026  
-**Status:** âœ… Approved â€” All 7 decisions approved
+**Status:**  Approved â€” All 7 decisions approved
 
 ---
 
@@ -104,11 +104,11 @@ CREATE TABLE events (
 ```
 
 ### Consequences
-- âœ… Clean, focused schema
-- âœ… No migration complexity
-- âœ… No partition column needed
-- âœ… Existing `/events` and `/admin/events` will be rebuilt fresh
-- âœ… No risk to conference system (completely separate)
+-  Clean, focused schema
+-  No migration complexity
+-  No partition column needed
+-  Existing `/events` and `/admin/events` will be rebuilt fresh
+-  No risk to conference system (completely separate)
 
 ### Actions Completed
 - [x] Verified no production data in events table
@@ -140,16 +140,16 @@ CREATE TABLE events (
 
 ### Approved Imports
 ```typescript
-// âœ… Allowed - Generic field components
+//  Allowed - Generic field components
 import { FieldText } from "@/components/conference/fields/field-text"
 import { FieldEmail } from "@/components/conference/fields/field-email"
 import { FieldSelect } from "@/components/conference/fields/field-select"
 // ... all 14 field types
 
-// âœ… Allowed - Form renderer
+//  Allowed - Form renderer
 import { DynamicStep } from "@/components/conference/dynamic-step"
 
-// âœ… Allowed - Type definitions
+//  Allowed - Type definitions
 import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
 ```
 
@@ -165,10 +165,10 @@ import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
 - Event registration wrapper component
 
 ### Consequences
-- âœ… Zero code duplication
-- âœ… Automatic bug fixes in fields
-- âœ… Faster development
-- âœ… Consistent user experience
+-  Zero code duplication
+-  Automatic bug fixes in fields
+-  Faster development
+-  Consistent user experience
 
 ### Actions Completed
 - [x] Approved read-only import strategy
@@ -215,10 +215,10 @@ Detail page also has Register CTA â†’ /events/[slug]/register
 4. "Register directly" requirement satisfied
 
 ### Consequences
-- âœ… Fast registration path
-- âœ… Clear user intent separation
-- âœ… Detail page for exploration
-- âœ… Two click handlers needed
+-  Fast registration path
+-  Clear user intent separation
+-  Detail page for exploration
+-  Two click handlers needed
 
 ### Actions Completed
 - [x] Approved fast-path approach
@@ -270,8 +270,8 @@ async function processPayment(data) {
 ### Consequences
 - âš ï¸ Phase 1-5 will have mock/placeholder payment
 - âš ï¸ Cannot fully test registration flow until integrated
-- âœ… Avoids duplicate work
-- âœ… Gets modular payment system for free
+-  Avoids duplicate work
+-  Gets modular payment system for free
 
 ### Actions Required
 - [ ] Coordinate with payment module developer
@@ -353,10 +353,10 @@ if (event.is_free) {
 4. Clear business logic (no ambiguity)
 
 ### Consequences
-- âœ… Explicit pricing model
-- âœ… Supports multiple pricing strategies
-- âœ… Clear in admin UI ("Mark as Free" checkbox)
-- âœ… Analytics can track free vs paid events
+-  Explicit pricing model
+-  Supports multiple pricing strategies
+-  Clear in admin UI ("Mark as Free" checkbox)
+-  Analytics can track free vs paid events
 
 ### Actions Completed
 - [x] Approved explicit flag approach
@@ -381,10 +381,10 @@ if (event.is_free) {
 > "d6: b" â€” Defer capacity management and waitlist to future phase
 
 ### Phase 1 Scope (Approved)
-- âœ… Basic event creation & management
-- âœ… Dynamic form builder
-- âœ… Registration submission
-- âœ… Payment integration (when ready)
+-  Basic event creation & management
+-  Dynamic form builder
+-  Registration submission
+-  Payment integration (when ready)
 - âŒ Capacity limits
 - âŒ Waitlist management
 - âŒ Sold-out handling
@@ -412,9 +412,9 @@ CREATE TABLE event_waitlist (
 5. Most events won't need capacity limits initially
 
 ### Consequences
-- âœ… Faster Phase 1 delivery
-- âœ… Simpler initial implementation
-- âœ… Focus on core features first
+-  Faster Phase 1 delivery
+-  Simpler initial implementation
+-  Focus on core features first
 - âš ï¸ Unlimited registration (admin monitors manually)
 
 ### Actions Completed
@@ -499,10 +499,10 @@ ORDER BY day_number;
 5. Less database overhead
 
 ### Consequences
-- âœ… Simple data model
-- âœ… Fast queries
-- âœ… Easy drag-and-drop reordering
-- âœ… Supports multi-day events cleanly
+-  Simple data model
+-  Fast queries
+-  Easy drag-and-drop reordering
+-  Supports multi-day events cleanly
 
 ### Actions Completed
 - [x] Approved single-table approach
@@ -515,13 +515,13 @@ ORDER BY day_number;
 
 | ID | Decision | Status | User Decision | Owner | Deadline |
 |----|----------|--------|---------------|-------|----------|
-| DEC-001 | Drop events table, rebuild fresh | âœ… Approved | d1 - Drop table, drop/refactor routes | Product Owner | July 23, 2026 |
-| DEC-002 | Import field components (read-only) | âœ… Approved | d2 - A (Import) | Frontend Lead | July 23, 2026 |
-| DEC-003 | Register button = Direct to form | âœ… Approved | d3 - A (Direct) | UX Designer | July 23, 2026 |
+| DEC-001 | Drop events table, rebuild fresh |  Approved | d1 - Drop table, drop/refactor routes | Product Owner | July 23, 2026 |
+| DEC-002 | Import field components (read-only) |  Approved | d2 - A (Import) | Frontend Lead | July 23, 2026 |
+| DEC-003 | Register button = Direct to form |  Approved | d3 - A (Direct) | UX Designer | July 23, 2026 |
 | DEC-004 | Defer payment integration | ðŸŸ¡ Deferred | d4 - Skip for now, integrate later | Tech Lead | TBD (after payment module) |
-| DEC-005 | Admin decides free/paid/free-then-paid | âœ… Approved | d5 - B (Admin decides) | Product Owner | July 23, 2026 |
-| DEC-006 | Defer capacity/waitlist to Phase 2+ | âœ… Approved | d6 - b (Defer) | Product Owner | July 23, 2026 |
-| DEC-007 | Single agenda table with day_number | âœ… Approved | d7 - A (Single table) | Backend Lead | July 23, 2026 |
+| DEC-005 | Admin decides free/paid/free-then-paid |  Approved | d5 - B (Admin decides) | Product Owner | July 23, 2026 |
+| DEC-006 | Defer capacity/waitlist to Phase 2+ |  Approved | d6 - b (Defer) | Product Owner | July 23, 2026 |
+| DEC-007 | Single agenda table with day_number |  Approved | d7 - A (Single table) | Backend Lead | July 23, 2026 |
 
 ---
 
@@ -544,9 +544,9 @@ _None_
 ---
 
 **Next Steps:**
-1. ~~Schedule decision review meeting~~ âœ… Done
-2. ~~Assign owners and deadlines~~ âœ… Done
-3. ~~Update statuses as decisions are made~~ âœ… Done
+1. ~~Schedule decision review meeting~~  Done
+2. ~~Assign owners and deadlines~~  Done
+3. ~~Update statuses as decisions are made~~  Done
 4. Begin Phase 1 implementation
 5. Coordinate with payment module developer for DEC-004 integration timing
 

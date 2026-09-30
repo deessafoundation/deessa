@@ -57,4 +57,4 @@ https://deessafoundation.com/sitemap.xml
 
 ---
 
-âœ… All domain references have been corrected to `deessafoundation.com`
+ All domain references have been corrected to `deessafoundation.com`

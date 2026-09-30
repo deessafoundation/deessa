@@ -140,7 +140,7 @@ Select these events (minimum required):
 2. Select event type: `checkout.session.completed`
 3. Click **Send test webhook**
 4. Check the response:
-   - **200 OK** = Success âœ…
+   - **200 OK** = Success 
    - **400/500** = Error (see logs below)
 
 ## 3. Testing Webhook Delivery

@@ -89,7 +89,7 @@ psql -U postgres -d deessa_foundation
 
 ---
 
-## âœ… Verification Steps
+##  Verification Steps
 
 After running the migration, verify it worked:
 
@@ -193,10 +193,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ## ðŸ”’ Security Notes
 
-âœ… **Row Level Security (RLS)** is enabled  
-âœ… Only authenticated admins can access  
-âœ… Policies enforce permission checks  
-âœ… Soft delete prevents accidental data loss  
+ **Row Level Security (RLS)** is enabled  
+ Only authenticated admins can access  
+ Policies enforce permission checks  
+ Soft delete prevents accidental data loss  
 
 ---
 
@@ -226,14 +226,14 @@ DROP FUNCTION IF EXISTS update_media_assets_updated_at() CASCADE;
 
 ---
 
-## âœ… After Migration
+##  After Migration
 
 Once migration is complete:
 
-1. âœ… Restart your Next.js dev server
-2. âœ… Go to `/admin/media`
-3. âœ… Try uploading a file
-4. âœ… Check it appears in the table:
+1.  Restart your Next.js dev server
+2.  Go to `/admin/media`
+3.  Try uploading a file
+4.  Check it appears in the table:
 
    ```sql
    SELECT * FROM media_assets LIMIT 5;
@@ -245,11 +245,11 @@ Once migration is complete:
 
 If you see this, you're ready:
 
-- âœ… Table `media_assets` exists
-- âœ… 15 columns present
-- âœ… 5+ indexes created
-- âœ… 4 RLS policies active
-- âœ… Trigger function working
+-  Table `media_assets` exists
+-  15 columns present
+-  5+ indexes created
+-  4 RLS policies active
+-  Trigger function working
 
 **You can now use the Homepage Content Management System!**
 

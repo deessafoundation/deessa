@@ -201,4 +201,4 @@ Once all checklist items are complete:
 **Tested by:** _________________  
 **Date:** _________________  
 **Environment:** Development / Staging / Production  
-**Status:** âœ… Approved / âš ï¸ Issues Found / âŒ Failed
+**Status:**  Approved / âš ï¸ Issues Found / âŒ Failed

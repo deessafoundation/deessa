@@ -17,11 +17,11 @@ last_updated: 2026-09-12
 
 Steps:
 1. Open: https://app.supabase.com
-2. Go to: SQL Editor â†’ New Query
+2. Go to: SQL Editor New Query
 3. Copy entire contents of `scripts/db/migrations/010-receipt-system.sql`
 4. Paste into SQL Editor
 5. Click "Run"
-6. Done! âœ…
+6. Done! 
 
 This script does everything:
 - Adds receipt columns to donations table
@@ -49,7 +49,7 @@ GOOGLE_APP_PASSWORD=xxxx xxxx xxxx xxxx
 
 4. Restart dev server: `npm run dev`
 
-That's it! âœ…
+That's it! 
 
 ---
 
@@ -58,7 +58,7 @@ That's it! âœ…
 1. Go to: `http://localhost:3000/admin/settings/organization`
 2. Fill in all fields
 3. Click "Save Organization Details"
-4. Done! âœ…
+4. Done! 
 
 ---
 
@@ -117,15 +117,15 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ## Key Features
 
-âœ… Automatic receipt generation after payment
-âœ… Email sent via Google Email (Gmail/Google Workspace)
-âœ… Professional receipt with organization details
-âœ… Tax compliance (VAT, PAN, SWC numbers)
-âœ… Download receipt anytime
-âœ… Resend email option
-âœ… Admin management
-âœ… Audit logging
-âœ… Security best practices
+ Automatic receipt generation after payment
+ Email sent via Google Email (Gmail/Google Workspace)
+ Professional receipt with organization details
+ Tax compliance (VAT, PAN, SWC numbers)
+ Download receipt anytime
+ Resend email option
+ Admin management
+ Audit logging
+ Security best practices
 
 ---
 

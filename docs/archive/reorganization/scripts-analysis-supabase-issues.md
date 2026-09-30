@@ -451,81 +451,81 @@ ALTER TABLE payments
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
-| `001-create-tables.sql` | Core public tables (contacts, donations, registrations, volunteers) | âœ… ENABLED |
-| `002-admin-schema.sql` | Admin users, settings, roles | âœ… ENABLED |
+| `001-create-tables.sql` | Core public tables (contacts, donations, registrations, volunteers) |  ENABLED |
+| `002-admin-schema.sql` | Admin users, settings, roles |  ENABLED |
 | `003-storage-setup.sql` | Storage buckets for file uploads | N/A |
 | `004-site-assets-storage.sql` | Site assets storage bucket | N/A |
-| `005-expand-site-settings.sql` | Extended site settings | âœ… ENABLED |
-| `006-media-assets.sql` | Media asset management | âœ… ENABLED |
+| `005-expand-site-settings.sql` | Extended site settings |  ENABLED |
+| `006-media-assets.sql` | Media asset management |  ENABLED |
 | `007-sync-existing-media.sql` | Sync existing media data | N/A |
-| `008-currency-support.sql` | Multi-currency support + `donation_stats_by_currency` view | âœ… (table) / âŒ (view) |
+| `008-currency-support.sql` | Multi-currency support + `donation_stats_by_currency` view |  (table) / âŒ (view) |
 | `009-payment-security-hardening.sql` | Provider references + `payment_events` table | âŒ (payment_events) |
-| `010-receipt-system.sql` | Receipt columns + `receipt_audit_log` | âœ… ENABLED |
+| `010-receipt-system.sql` | Receipt columns + `receipt_audit_log` |  ENABLED |
 
 ### Receipt System (011-012)
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
-| `011-receipt-system-complete.sql` | Idempotent receipt setup + storage | âœ… ENABLED |
+| `011-receipt-system-complete.sql` | Idempotent receipt setup + storage |  ENABLED |
 | `012-receipt-sequence.sql` | Receipt number sequence + `get_next_receipt_number()` function | N/A (function) |
 
 ### Podcasts (012-016)
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
-| `012-create_podcasts_table.sql` | Podcasts table | âœ… ENABLED |
+| `012-create_podcasts_table.sql` | Podcasts table |  ENABLED |
 | `013-seed_podcasts.sql` | Seed podcast data | N/A |
-| `014-add_key_topics_and_structured_notes.sql` | Podcast key topics | âœ… ENABLED |
-| `015-add_guest_roles_and_enhance_social.sql` | Guest roles | âœ… ENABLED |
-| `016-add_podcast_highlights.sql` | Podcast highlights | âœ… ENABLED |
+| `014-add_key_topics_and_structured_notes.sql` | Podcast key topics |  ENABLED |
+| `015-add_guest_roles_and_enhance_social.sql` | Guest roles |  ENABLED |
+| `016-add_podcast_highlights.sql` | Podcast highlights |  ENABLED |
 
 ### Rate Limiting (018)
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
 | `018-rate-limit-function.sql` | `increment_rate_limit()` function | N/A (function) |
-| `018-rate-limits.sql` | `rate_limits` table | âœ… ENABLED |
+| `018-rate-limits.sql` | `rate_limits` table |  ENABLED |
 
 ### Conference & Forms (019-043)
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
-| `019-conference-email-timestamps.sql` | Conference email tracking | âœ… ENABLED |
+| `019-conference-email-timestamps.sql` | Conference email tracking |  ENABLED |
 | `020-seed-real-stories.sql` | Seed success stories | N/A |
 | `030-admin-transaction-detail-schema.sql` | `review_notes`, `status_change_log` tables | âŒ DISABLED |
 | `030-cleanup-constraint.sql` | Cleanup constraints | N/A |
 | `031-enhance-payments-stripe-references.sql` | Add Stripe columns to payments | âŒ (payments) |
-| `032-add-provider-and-message-to-donations.sql` | Provider columns | âœ… ENABLED |
-| `034-support-feedback.sql` | Support feedback | âœ… ENABLED |
-| `035-support-admin-actions.sql` | Admin support actions | âœ… ENABLED |
-| `036-admin-notifications.sql` | Admin notifications | âœ… ENABLED |
-| `037-homepage-cms-schema.sql` | Homepage CMS | âœ… ENABLED |
-| `038-homepage-cms-additional-keys.sql` | CMS additional keys | âœ… ENABLED |
-| `039-homepage-cms-story-whatwedo.sql` | CMS story sections | âœ… ENABLED |
+| `032-add-provider-and-message-to-donations.sql` | Provider columns |  ENABLED |
+| `034-support-feedback.sql` | Support feedback |  ENABLED |
+| `035-support-admin-actions.sql` | Admin support actions |  ENABLED |
+| `036-admin-notifications.sql` | Admin notifications |  ENABLED |
+| `037-homepage-cms-schema.sql` | Homepage CMS |  ENABLED |
+| `038-homepage-cms-additional-keys.sql` | CMS additional keys |  ENABLED |
+| `039-homepage-cms-story-whatwedo.sql` | CMS story sections |  ENABLED |
 | `039-testimonials-storage-bucket.sql` | Testimonials storage | N/A |
-| `040-conference-form-schema.sql` | Conference forms | âœ… ENABLED |
-| `040-restrict-donations-insert-policy.sql` | Restrict donations insert | âœ… ENABLED |
-| `041-bank-transfer-donations.sql` | Bank transfer support | âœ… ENABLED |
+| `040-conference-form-schema.sql` | Conference forms |  ENABLED |
+| `040-restrict-donations-insert-policy.sql` | Restrict donations insert |  ENABLED |
+| `041-bank-transfer-donations.sql` | Bank transfer support |  ENABLED |
 | `041-conference-file-upload-bucket.sql` | Conference file uploads | N/A |
-| `042-conference-form-templates.sql` | Form templates | âœ… ENABLED |
-| `043-multi-event-support.sql` | Multi-event support | âœ… ENABLED |
+| `042-conference-form-templates.sql` | Form templates |  ENABLED |
+| `043-multi-event-support.sql` | Multi-event support |  ENABLED |
 
 ### Events Module (050-059)
 
 | Script | Purpose | RLS Status |
 |--------|---------|------------|
-| `050-events-module-schema.sql` | Complete events module (7 tables + view) | âœ… ENABLED (tables) / âŒ (view) |
-| `051-event-registration-enhancements.sql` | Registration enhancements + emails/notes tables | âœ… ENABLED |
-| `052-agenda-highlighted.sql` | Agenda highlights | âœ… ENABLED |
-| `053-ticket-sold-count.sql` | Ticket sold count | âœ… ENABLED |
-| `054-add-custom-email-template-type.sql` | Custom email templates | âœ… ENABLED |
+| `050-events-module-schema.sql` | Complete events module (7 tables + view) |  ENABLED (tables) / âŒ (view) |
+| `051-event-registration-enhancements.sql` | Registration enhancements + emails/notes tables |  ENABLED |
+| `052-agenda-highlighted.sql` | Agenda highlights |  ENABLED |
+| `053-ticket-sold-count.sql` | Ticket sold count |  ENABLED |
+| `054-add-custom-email-template-type.sql` | Custom email templates |  ENABLED |
 | `055-event-form-template-seeds.sql` | Form template seeds | N/A |
 | `056-event-payment-integration.sql` | Event payment integration + view update | âŒ (view) |
 | `056-event-uploads-storage-bucket.sql` | Event uploads storage | N/A |
 | `057-extend-payments-for-registrations.sql` | Extend payments for registrations | âŒ (payments) |
-| `057-event-qr-payment.sql` | QR payment support | âœ… ENABLED |
+| `057-event-qr-payment.sql` | QR payment support |  ENABLED |
 | `057-ticket-sold-count-rpc.sql` | Ticket count RPC | N/A (function) |
-| `058-add-archived-at.sql` | Archive support | âœ… ENABLED |
+| `058-add-archived-at.sql` | Archive support |  ENABLED |
 | `059-extend-review-tracking-to-events.sql` | Review tracking for events | âŒ (review_notes, status_change_log) |
 
 ### Payment V2 (payments-v2/)
@@ -541,8 +541,8 @@ ALTER TABLE payments
 | `025-create-payment-logs-table.sql` | Payment logs + views | âŒ DISABLED |
 | `026-create-receipt-failures-table.sql` | Receipt failures | âŒ DISABLED |
 | `027-create-email-failures-table.sql` | Email failures | âŒ DISABLED |
-| `028-add-confirmed-at-to-donations.sql` | Add confirmed_at | âœ… ENABLED |
-| `029-add-verification-id-to-donations.sql` | Add verification_id | âœ… ENABLED |
+| `028-add-confirmed-at-to-donations.sql` | Add confirmed_at |  ENABLED |
+| `029-add-verification-id-to-donations.sql` | Add verification_id |  ENABLED |
 
 ---
 

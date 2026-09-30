@@ -213,16 +213,16 @@ FAILURE PATH:
 
 | Area                   | Status                    | Notes                                                                  |
 | ---------------------- | ------------------------- | ---------------------------------------------------------------------- |
-| Session creation       | âœ… Correct                | Uses `client_reference_id` for donation linkage                        |
-| Signature verification | âœ… Live mode only         | **Mock mode skips entirely** â€” acceptable for dev                      |
-| Idempotency            | âœ… `payment_events` table | Falls back gracefully if table missing                                 |
-| Amount verification    | âœ… Fail-closed            | Flags as `review` on mismatch                                          |
+| Session creation       |  Correct                | Uses `client_reference_id` for donation linkage                        |
+| Signature verification |  Live mode only         | **Mock mode skips entirely** â€” acceptable for dev                      |
+| Idempotency            |  `payment_events` table | Falls back gracefully if table missing                                 |
+| Amount verification    |  Fail-closed            | Flags as `review` on mismatch                                          |
 | Receipt generation     | âš ï¸ BLOCKING in webhook    | `await generateReceiptForDonation()` delays webhook response           |
 | Success page           | âš ï¸ Dual-path risk         | Both webhook and GET verify can update the same donation               |
 | Subscription support   | âš ï¸ Partial                | `invoice.payment_succeeded` uses `LIKE` query on `payment_id`          |
 | PII exposure           | ðŸ”´ Risk                   | `GET /verify` returns full donor PII in JSON; session_id is in the URL |
 | Rate limiting          | âš ï¸ Broken in serverless   | In-memory `Map` resets per cold start                                  |
-| Cancel / failure       | âœ…                        | `checkout.session.expired` marks as failed                             |
+| Cancel / failure       |                         | `checkout.session.expired` marks as failed                             |
 
 **Stripe-Specific Gaps:**
 
@@ -236,10 +236,10 @@ FAILURE PATH:
 
 | Area                   | Status              | Notes                                                                                                   |
 | ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------- |
-| Payment initiation     | âœ…                  | Sandbox/live key detection with warning                                                                 |
-| Amount verification    | âœ… Fail-closed      | Marks as `review` on mismatch                                                                           |
-| Status handling        | âœ… Exhaustive       | All Khalti statuses handled                                                                             |
-| Idempotency            | âœ… `payment_events` | Best-effort if table missing                                                                            |
+| Payment initiation     |                   | Sandbox/live key detection with warning                                                                 |
+| Amount verification    |  Fail-closed      | Marks as `review` on mismatch                                                                           |
+| Status handling        |  Exhaustive       | All Khalti statuses handled                                                                             |
+| Idempotency            |  `payment_events` | Best-effort if table missing                                                                            |
 | Webhook support        | ðŸ”´ Missing          | Entirely absent â€” verification is client-initiated only                                                 |
 | Rate limiting          | ðŸ”´ None             | No rate limit on `/api/payments/khalti/verify`                                                          |
 | PII in response        | â„¹ï¸ Low              | Verify endpoint does not return PII                                                                     |
@@ -250,7 +250,7 @@ FAILURE PATH:
 
 1. There is no Khalti webhook integration. If the user closes the browser after payment succeeds but before the redirect completes, the donation remains `pending` indefinitely. An admin has no automated way to reconcile.
 2. The `pidx` from the URL is the only input required to trigger verification. Any client can call this endpoint with any pidx. The guard is that the pidx must already exist in `donations.khalti_pidx` â€” but an attacker doing reconnaissance could submit a real Khalti payment for Re. 1 to get a valid pidx, then attempt to look up another donation via that pidx if the UUID mapping is predictable.
-3. In mock mode, the mock pidx is `khalti_mock_${donation.id}` â€” since `donation.id` is a UUIDv4, this is unpredictable. âœ…
+3. In mock mode, the mock pidx is `khalti_mock_${donation.id}` â€” since `donation.id` is a UUIDv4, this is unpredictable. 
 
 ---
 
@@ -258,14 +258,14 @@ FAILURE PATH:
 
 | Area                               | Status              | Notes                                                         |
 | ---------------------------------- | ------------------- | ------------------------------------------------------------- |
-| Payment initiation                 | âœ…                  | HMAC-SHA256 signature generated correctly                     |
+| Payment initiation                 |                   | HMAC-SHA256 signature generated correctly                     |
 | Signature verification on callback | âš ï¸                  | Skipped when `?mock=1` URL param is present â€” **exploitable** |
-| Status check                       | âœ…                  | Checks `status === "COMPLETE"`                                |
-| Amount verification                | âœ…                  | Fail-closed                                                   |
-| Idempotency                        | âœ… `payment_events` | Best-effort                                                   |
+| Status check                       |                   | Checks `status === "COMPLETE"`                                |
+| Amount verification                |                   | Fail-closed                                                   |
+| Idempotency                        |  `payment_events` | Best-effort                                                   |
 | Failure callback auth              | ðŸ”´ None             | No signature check on the failure URL callback                |
 | Webhook support                    | ðŸ”´ Missing          | Redirect callback only â€” no dedicated webhook                 |
-| transactionUuid storage            | âœ…                  | Stored before redirect                                        |
+| transactionUuid storage            |                   | Stored before redirect                                        |
 | Conference branch                  | âš ï¸ Duplicated       | Massive if/else branching inside same route                   |
 | Mock data trust                    | ðŸ”´ High risk        | `?mock=1` + URL params bypass HMAC even in live mode          |
 

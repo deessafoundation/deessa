@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
-> **Status:** âœ… Implemented
+> **Status:**  Implemented
 
 ---
 
@@ -23,7 +23,7 @@ The print feature allows users to print stories in a clean, professional format 
 
 ## Features
 
-### âœ… Implemented
+###  Implemented
 
 1. **Print Button**
    - Located in the sidebar "Share" section
@@ -183,7 +183,7 @@ The print styles handle:
 
 ## Browser Compatibility
 
-### âœ… Fully Supported
+###  Fully Supported
 
 - **Chrome/Edge:** Excellent print preview and PDF export
 - **Firefox:** Good print support
@@ -193,10 +193,10 @@ The print styles handle:
 
 | Browser | Print Preview | Save as PDF | Page Setup |
 |---------|--------------|-------------|------------|
-| Chrome  | âœ… Excellent  | âœ… Yes      | âœ… Yes     |
-| Firefox | âœ… Good       | âœ… Yes      | âœ… Yes     |
-| Safari  | âœ… Good       | âœ… Yes      | âœ… Yes     |
-| Edge    | âœ… Excellent  | âœ… Yes      | âœ… Yes     |
+| Chrome  |  Excellent  |  Yes      |  Yes     |
+| Firefox |  Good       |  Yes      |  Yes     |
+| Safari  |  Good       |  Yes      |  Yes     |
+| Edge    |  Excellent  |  Yes      |  Yes     |
 
 ---
 
@@ -204,7 +204,7 @@ The print styles handle:
 
 ### What's Included
 
-âœ… **Printed:**
+ **Printed:**
 - deessa Foundation header
 - Story title
 - Published date, category, read time
@@ -340,4 +340,4 @@ The print styles handle:
 
 **Last Updated:** April 4, 2026  
 **Version:** 1.0.0  
-**Status:** âœ… Ready for use
+**Status:**  Ready for use

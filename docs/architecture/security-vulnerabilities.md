@@ -536,7 +536,7 @@ if (!cronSecret) {
   return NextResponse.json({ error: "Cron not configured" }, { status: 500 })
 }
 ```
-This is handled correctly â€” the cron returns 500 if unconfigured. âœ…  
+This is handled correctly â€” the cron returns 500 if unconfigured.   
 **Recommendation:** Document `CRON_SECRET` as a required production environment variable in the deployment guide.
 
 ---
@@ -574,18 +574,18 @@ The following areas were reviewed and found to implement good security practices
 
 | Area | Assessment |
 |------|-----------|
-| Stripe webhook signature verification | âœ… Correctly implemented with `STRIPE_WEBHOOK_SECRET` |
-| Webhook idempotency | âœ… `payment_events` table prevents double-processing |
-| File upload security | âœ… MIME type validation, 2MB size limit, filename sanitization |
-| Admin middleware auth | âœ… Session checked on every admin route, role-based path restrictions |
-| Conference payment dual-key check | âœ… Registration ID + email both required |
-| Distributed rate limiter (`lib/rate-limit.ts`) | âœ… Supabase-backed atomic PostgreSQL implementation |
-| Receipt download token auth | âœ… JWT-based token verification |
-| Receipt download rate limiting | âœ… Uses `checkRateLimit` correctly |
-| Support form rate limiting | âœ… Per-email limit via `checkRateLimit` |
-| Admin user creation | âœ… Only SUPER_ADMIN can create new admins |
-| Git ignore | âœ… `.env` files are properly excluded |
-| Cron job protection | âœ… Bearer token auth on cron endpoint |
+| Stripe webhook signature verification |  Correctly implemented with `STRIPE_WEBHOOK_SECRET` |
+| Webhook idempotency |  `payment_events` table prevents double-processing |
+| File upload security |  MIME type validation, 2MB size limit, filename sanitization |
+| Admin middleware auth |  Session checked on every admin route, role-based path restrictions |
+| Conference payment dual-key check |  Registration ID + email both required |
+| Distributed rate limiter (`lib/rate-limit.ts`) |  Supabase-backed atomic PostgreSQL implementation |
+| Receipt download token auth |  JWT-based token verification |
+| Receipt download rate limiting |  Uses `checkRateLimit` correctly |
+| Support form rate limiting |  Per-email limit via `checkRateLimit` |
+| Admin user creation |  Only SUPER_ADMIN can create new admins |
+| Git ignore |  `.env` files are properly excluded |
+| Cron job protection |  Bearer token auth on cron endpoint |
 
 ---
 

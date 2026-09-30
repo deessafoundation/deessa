@@ -15,14 +15,14 @@ Payment Architecture V2 is a complete refactor of the payment processing system,
 
 ## Key Features
 
-âœ… **Centralized Payment Confirmation** - Single source of truth for all payment state transitions
-âœ… **Fail-Closed Verification** - Amount/currency mismatches â†’ REVIEW status
-âœ… **Transactional Integrity** - Atomic database operations with row-level locking
-âœ… **Idempotency** - Duplicate webhook/event handling
-âœ… **Provider Abstraction** - Unified interface for Stripe, Khalti, and eSewa
-âœ… **Security Hardening** - Signature verification, token authentication, rate limiting
-âœ… **Comprehensive Testing** - 340+ test cases covering unit, integration, and security
-âœ… **Operational Excellence** - Monitoring, alerting, reconciliation, and runbooks
+ **Centralized Payment Confirmation** - Single source of truth for all payment state transitions
+ **Fail-Closed Verification** - Amount/currency mismatches â†’ REVIEW status
+ **Transactional Integrity** - Atomic database operations with row-level locking
+ **Idempotency** - Duplicate webhook/event handling
+ **Provider Abstraction** - Unified interface for Stripe, Khalti, and eSewa
+ **Security Hardening** - Signature verification, token authentication, rate limiting
+ **Comprehensive Testing** - 340+ test cases covering unit, integration, and security
+ **Operational Excellence** - Monitoring, alerting, reconciliation, and runbooks
 
 ## Architecture Diagram
 
@@ -518,16 +518,16 @@ See [Operations Runbook](./operations/RUNBOOK.md) for more troubleshooting proce
 
 ### Security Controls
 
-- âœ… Webhook signature verification (Stripe, eSewa)
-- âœ… HMAC-SHA256 with timing-safe comparison
-- âœ… Token-based receipt authentication (JWT)
-- âœ… Rate limiting (10 req/min)
-- âœ… Session management (secure cookies)
-- âœ… CSRF protection
-- âœ… Mock mode prevention in production
-- âœ… Replay attack prevention (idempotency)
-- âœ… Security headers (CSP, HSTS, X-Frame-Options)
-- âœ… Audit logging
+-  Webhook signature verification (Stripe, eSewa)
+-  HMAC-SHA256 with timing-safe comparison
+-  Token-based receipt authentication (JWT)
+-  Rate limiting (10 req/min)
+-  Session management (secure cookies)
+-  CSRF protection
+-  Mock mode prevention in production
+-  Replay attack prevention (idempotency)
+-  Security headers (CSP, HSTS, X-Frame-Options)
+-  Audit logging
 
 ### Security Best Practices
 

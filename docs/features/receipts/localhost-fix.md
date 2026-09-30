@@ -64,7 +64,7 @@ Browser: âŒ ERR_BLOCKED_BY_CLIENT (can't access localhost from production)
 ### After (Fixed):
 ```
 Receipt URL: https://your-domain.com/api/receipts/download?token=...
-Browser: âœ… Downloads receipt successfully
+Browser:  Downloads receipt successfully
 ```
 
 ---
@@ -158,4 +158,4 @@ See [Receipt Quick Fix Guide](./docs/RECEIPT_QUICK_FIX.md) for details on each v
 1. Add environment variable
 2. Redeploy
 3. Test receipt download
-4. âœ… Done!
+4.  Done!

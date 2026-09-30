@@ -42,9 +42,9 @@ The `NEXT_PUBLIC_SITE_URL` or `NEXT_PUBLIC_APP_URL` environment variable is not 
    ```
 
 3. Select all environments:
-   - âœ… Production
-   - âœ… Preview
-   - âœ… Development
+   -  Production
+   -  Preview
+   -  Development
 
 4. Click "Save"
 

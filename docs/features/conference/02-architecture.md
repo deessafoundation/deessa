@@ -313,20 +313,20 @@ Indexes:
 
 **Through Admin Dashboard** (No Developer Needed):
 
-- âœ… Conference name, dates, venue
-- âœ… Registration deadlines
-- âœ… Registration pricing (enable/disable, amount, currency)
-- âœ… Per-attendance-mode fees (in-person vs. online)
-- âœ… Agenda items (time, title, description)
-- âœ… Email template content (subject lines, body text, variables)
-- âœ… Contact email displayed to attendees
-- âœ… Google Maps URL
-- âœ… Expiry window (hours)
-- âœ… Registration approvals (confirm/cancel/extend)
-- âœ… Payment overrides (mark as paid manually)
-- âœ… Admin notes on registrations
-- âœ… Custom email sends to individual registrants
-- âœ… CSV export
+-  Conference name, dates, venue
+-  Registration deadlines
+-  Registration pricing (enable/disable, amount, currency)
+-  Per-attendance-mode fees (in-person vs. online)
+-  Agenda items (time, title, description)
+-  Email template content (subject lines, body text, variables)
+-  Contact email displayed to attendees
+-  Google Maps URL
+-  Expiry window (hours)
+-  Registration approvals (confirm/cancel/extend)
+-  Payment overrides (mark as paid manually)
+-  Admin notes on registrations
+-  Custom email sends to individual registrants
+-  CSV export
 
 **deessa Does NOT Control** (Requires Developer):
 

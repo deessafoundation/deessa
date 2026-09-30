@@ -179,18 +179,18 @@ const [isSkipping, setIsSkipping] = useState(false)
 4. **Mobile Touch**: All interactions work same as desktop clicks
 
 ## UI Impact
-âœ… **No visual changes** - All fixes are functional only:
+ **No visual changes** - All fixes are functional only:
 - Same layout and styling
 - Same animations and transitions
 - Same text and button appearance
 - Only added minimum sizing to skip button (maintains visual appearance while meeting accessibility standards)
 
 ## Browser Compatibility
-- âœ… iOS Safari
-- âœ… Android Chrome
-- âœ… Desktop Chrome/Firefox/Edge
-- âœ… Brave Browser
-- âœ… Privacy-focused browsers
+-  iOS Safari
+-  Android Chrome
+-  Desktop Chrome/Firefox/Edge
+-  Brave Browser
+-  Privacy-focused browsers
 
 ## Files Modified
 - `components/intro-video.tsx`

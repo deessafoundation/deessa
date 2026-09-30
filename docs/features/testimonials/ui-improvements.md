@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Changes Made
 
-### 1. Enhanced File Upload Button âœ…
+### 1. Enhanced File Upload Button 
 
 **Location**: `components/admin/homepage-manager/components/TestimonialsManager.tsx`
 
@@ -50,7 +50,7 @@ last_updated: 2026-09-12
 
 ---
 
-### 2. Fixed Image Size Flash on Reload âœ…
+### 2. Fixed Image Size Flash on Reload 
 
 **Location**: `components/circular-testimonials.tsx`
 
@@ -86,11 +86,11 @@ When page reloaded, testimonial images would:
 ```
 
 #### Benefits
-- âœ… No more size flash on reload
-- âœ… Proper space reservation
-- âœ… Smoother animations
-- âœ… Better performance
-- âœ… Improved Core Web Vitals (CLS score)
+-  No more size flash on reload
+-  Proper space reservation
+-  Smoother animations
+-  Better performance
+-  Improved Core Web Vitals (CLS score)
 
 ---
 
@@ -207,14 +207,14 @@ Page Load â†’ [Correct Size] â†’ [Smooth Animation]
 ## Browser Compatibility
 
 ### File Upload Button
-- âœ… Chrome/Edge (Chromium)
-- âœ… Firefox
-- âœ… Safari
-- âœ… Mobile browsers
+-  Chrome/Edge (Chromium)
+-  Firefox
+-  Safari
+-  Mobile browsers
 
 ### Image Attributes
-- âœ… All modern browsers
-- âœ… Graceful degradation in older browsers
+-  All modern browsers
+-  Graceful degradation in older browsers
 
 ---
 

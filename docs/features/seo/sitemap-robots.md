@@ -326,10 +326,10 @@ disallow: [
 ## Deployment Notes
 
 This implementation follows Next.js App Router conventions and will work in:
-- âœ… Next.js standalone mode (SSR)
-- âœ… Vercel deployment
-- âœ… Static export (`output: 'export'`) - will generate sitemap at build time
-- âœ… Docker deployments
-- âœ… Any Node.js environment
+-  Next.js standalone mode (SSR)
+-  Vercel deployment
+-  Static export (`output: 'export'`) - will generate sitemap at build time
+-  Docker deployments
+-  Any Node.js environment
 
 No additional configuration or plugins required.

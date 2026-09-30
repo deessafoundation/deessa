@@ -178,7 +178,7 @@ To customize the email template:
 
 ## Security Best Practices
 
-âœ… **Do:**
+ **Do:**
 - Use App Passwords, not regular passwords
 - Keep `.env.local` out of version control
 - Rotate App Passwords periodically
@@ -246,12 +246,12 @@ If you encounter issues:
 
 ## Next Steps
 
-1. âœ… Complete setup above
-2. âœ… Test email configuration
-3. âœ… Make test donation
-4. âœ… Verify receipt email received
-5. âœ… Monitor email delivery
-6. âœ… Gather donor feedback
+1.  Complete setup above
+2.  Test email configuration
+3.  Make test donation
+4.  Verify receipt email received
+5.  Monitor email delivery
+6.  Gather donor feedback
 
 ## Additional Resources
 

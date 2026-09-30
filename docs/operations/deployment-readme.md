@@ -351,20 +351,20 @@ See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed troubleshooting.
 ## Success Criteria
 
 ### Staging Success
-- âœ… All smoke tests passed
-- âœ… No critical errors in 24-48 hours
-- âœ… All metrics meeting targets
+-  All smoke tests passed
+-  No critical errors in 24-48 hours
+-  All metrics meeting targets
 
 ### Production Success
-- âœ… V1 working after deployment
-- âœ… V2 enabled successfully
-- âœ… No critical errors in 7 days
-- âœ… All metrics meeting targets
+-  V1 working after deployment
+-  V2 enabled successfully
+-  No critical errors in 7 days
+-  All metrics meeting targets
 
 ### Cleanup Success
-- âœ… All V1 code removed
-- âœ… All feature flags removed
-- âœ… Metrics stable for 7 days
+-  All V1 code removed
+-  All feature flags removed
+-  Metrics stable for 7 days
 
 ## Contributing
 

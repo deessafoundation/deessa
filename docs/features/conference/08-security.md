@@ -47,13 +47,13 @@ This system follows these core security principles:
 
 **Protected Against**:
 
-- âœ… SQL injection (parameterized queries + Supabase ORM)
-- âœ… XSS (React auto-escaping + Content Security Policy)
-- âœ… CSRF (SameSite cookies + token validation)
-- âœ… Brute force (rate limiting)
-- âœ… Unauthorized data access (RLS policies + dual-key auth)
-- âœ… Man-in-the-middle (TLS 1.3)
-- âœ… Payment data theft (no local storage, gateway-handled)
+-  SQL injection (parameterized queries + Supabase ORM)
+-  XSS (React auto-escaping + Content Security Policy)
+-  CSRF (SameSite cookies + token validation)
+-  Brute force (rate limiting)
+-  Unauthorized data access (RLS policies + dual-key auth)
+-  Man-in-the-middle (TLS 1.3)
+-  Payment data theft (no local storage, gateway-handled)
 
 **Partial Protection**:
 
@@ -276,8 +276,8 @@ WITH CHECK (true);
 **Security Trade-off**:
 
 - âŒ **Lost**: Database-level enforcement (RLS would block invalid queries)
-- âœ… **Gained**: Flexibility (can implement custom auth logic)
-- âœ… **Mitigation**: Thorough application-level validation before database queries
+-  **Gained**: Flexibility (can implement custom auth logic)
+-  **Mitigation**: Thorough application-level validation before database queries
 
 ### 3.2 Admin Role Authorization
 
@@ -331,10 +331,10 @@ const supabase = createClient(
 
 **Protection Mechanisms**:
 
-- âœ… Stored in Vercel environment variables (encrypted)
-- âœ… Never committed to Git (`.env.local` in `.gitignore`)
-- âœ… Only used in server-side code (API routes, Server Components)
-- âœ… Never sent to client (Next.js `NEXT_PUBLIC_` prefix not used)
+-  Stored in Vercel environment variables (encrypted)
+-  Never committed to Git (`.env.local` in `.gitignore`)
+-  Only used in server-side code (API routes, Server Components)
+-  Never sent to client (Next.js `NEXT_PUBLIC_` prefix not used)
 
 **Verification** (that key is not exposed):
 
@@ -380,12 +380,12 @@ openssl s_client -connect deessafoundation.com:443 -tls1_3
 
 | Field | Sensitivity | Encrypted at Rest | Access Control |
 |---|---|---|---|
-| **Full Name** | Medium | âœ… Yes (database-level) | Admins + User (dual-key) |
-| **Email** | High | âœ… Yes | Admins + User (dual-key) |
-| **Phone** | High | âœ… Yes | Admins + User (dual-key) |
-| **Country** | Low | âœ… Yes | Admins + User (dual-key) |
-| **Organization** | Low | âœ… Yes | Admins + User (dual-key) |
-| **Dietary Restrictions** | Medium | âœ… Yes | Admins + User (dual-key) |
+| **Full Name** | Medium |  Yes (database-level) | Admins + User (dual-key) |
+| **Email** | High |  Yes | Admins + User (dual-key) |
+| **Phone** | High |  Yes | Admins + User (dual-key) |
+| **Country** | Low |  Yes | Admins + User (dual-key) |
+| **Organization** | Low |  Yes | Admins + User (dual-key) |
+| **Dietary Restrictions** | Medium |  Yes | Admins + User (dual-key) |
 
 **NOT Collected** (by design):
 
@@ -511,9 +511,9 @@ if (!result.success) {
 
 **SQL Injection Prevention**:
 
-- âœ… All queries use parameterized statements (Supabase ORM)
-- âœ… No raw SQL with user input
-- âœ… Example safe query:
+-  All queries use parameterized statements (Supabase ORM)
+-  No raw SQL with user input
+-  Example safe query:
 
   ```typescript
   supabase
@@ -555,7 +555,7 @@ module.exports = {
 **Who Handles Card Data**:
 
 - âŒ deessa system does NOT store, process, or transmit card data
-- âœ… Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
+-  Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
 
 **Compliance Status**:
 
@@ -628,13 +628,13 @@ export async function POST(req: Request) {
 
 **Protection Against**:
 
-- âœ… Spoofed webhooks (attacker can't sign without secret)
-- âœ… Replay attacks (partially - idempotency table prevents duplicate processing)
+-  Spoofed webhooks (attacker can't sign without secret)
+-  Replay attacks (partially - idempotency table prevents duplicate processing)
 
 **Khalti/eSewa**:
 
 - âŒ NO webhook signature verification (they don't offer webhooks)
-- âœ… Mitigation: Dual-path verification (polling + manual check in gateway dashboard)
+-  Mitigation: Dual-path verification (polling + manual check in gateway dashboard)
 
 ### 6.3 Amount Verification
 
@@ -714,24 +714,24 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 13 (Right to be Informed)**:
 
-- âœ… Privacy policy published at `/privacy`
-- âœ… Registration form includes consent checkbox: "I agree to privacy policy"
-- âœ… Users informed: data collected, purpose, retention, contact for questions
+-  Privacy policy published at `/privacy`
+-  Registration form includes consent checkbox: "I agree to privacy policy"
+-  Users informed: data collected, purpose, retention, contact for questions
 
 **Article 15 (Right of Access)**:
 
-- âœ… Users can access their data via dual-key (registrationId + email)
-- âœ… Admin can export user's data (CSV)
+-  Users can access their data via dual-key (registrationId + email)
+-  Admin can export user's data (CSV)
 
 **Article 16 (Right to Rectification)**:
 
 - âš ï¸ PARTIALLY: Users must contact admin to update (no self-service edit)
-- âœ… Admin can update registration details
+-  Admin can update registration details
 
 **Article 17 (Right to Erasure)**:
 
-- âœ… Users can request deletion via email
-- âœ… Admin can delete registration:
+-  Users can request deletion via email
+-  Admin can delete registration:
 
   ```sql
   DELETE FROM conference_registrations WHERE email = 'user@example.com';
@@ -739,21 +739,21 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 32 (Security of Processing)**:
 
-- âœ… Encryption at rest (AES-256)
-- âœ… Encryption in transit (TLS 1.3)
-- âœ… Access control (RLS, dual-key, admin auth)
-- âœ… Regular backups (daily)
+-  Encryption at rest (AES-256)
+-  Encryption in transit (TLS 1.3)
+-  Access control (RLS, dual-key, admin auth)
+-  Regular backups (daily)
 
 **Article 33 (Breach Notification)**:
 
 - âš ï¸ Process documented but not tested
-- âœ… Breach notification within 72 hours (manual process)
+-  Breach notification within 72 hours (manual process)
 
 **Data Processing Agreement (DPA)**:
 
-- âœ… Vercel DPA signed (for hosting)
-- âœ… Supabase DPA signed (for database)
-- âœ… Stripe DPA signed (for payments)
+-  Vercel DPA signed (for hosting)
+-  Supabase DPA signed (for database)
+-  Stripe DPA signed (for payments)
 
 ### 7.2 Accessibility (WCAG 2.1 AA)
 
@@ -761,19 +761,19 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Keyboard Navigation**:
 
-- âœ… All forms navigable with Tab
-- âœ… Enter key submits forms
+-  All forms navigable with Tab
+-  Enter key submits forms
 - âš ï¸ Modal dialogs need Escape key support
 
 **Screen Readers**:
 
 - âš ï¸ Missing ARIA labels on some buttons
 - âš ï¸ Form errors not announced (need aria-live)
-- âœ… Semantic HTML used (`<button>`, `<form>`, `<label>`)
+-  Semantic HTML used (`<button>`, `<form>`, `<label>`)
 
 **Color Contrast**:
 
-- âœ… Text meets 4.5:1 ratio (checked with WebAIM tool)
+-  Text meets 4.5:1 ratio (checked with WebAIM tool)
 - âš ï¸ Some status badges may fail for colorblind users (rely on color only)
 
 **Recommended Improvements**:

@@ -271,11 +271,11 @@ If issues occur:
 
 ## Success Metrics
 
-- âœ… New donations store `pi_xxx` in `payments.transaction_id`
-- âœ… Dashboard links open correct Stripe transaction
-- âœ… No increase in webhook errors
-- âœ… Refund operations work (future feature)
-- âœ… Reconciliation is faster (future improvement)
+-  New donations store `pi_xxx` in `payments.transaction_id`
+-  Dashboard links open correct Stripe transaction
+-  No increase in webhook errors
+-  Refund operations work (future feature)
+-  Reconciliation is faster (future improvement)
 
 ---
 

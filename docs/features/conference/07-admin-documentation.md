@@ -156,7 +156,7 @@ last_updated: 2026-09-12
 â”‚ [ðŸ“§ Resend Email] [ðŸ“‹ Copy ID] [âœ‰ï¸ Custom Email]â”‚
 â”‚                                                  â”‚
 â”‚ Admin Actions                                   â”‚
-â”‚ [âœ… Confirm] [âŒ Cancel] [ðŸ’° Mark as Paid]       â”‚
+â”‚ [ Confirm] [âŒ Cancel] [ðŸ’° Mark as Paid]       â”‚
 â”‚ [â° Extend Expiry +24h]                         â”‚
 â”‚                                                  â”‚
 â”‚ Admin Notes                                     â”‚
@@ -270,7 +270,7 @@ last_updated: 2026-09-12
 
 ### 3.2 Admin Actions (Status-Dependent)
 
-#### **Confirm (âœ…)**
+#### **Confirm ()**
 
 **Button appears when**: Status is "Pending" or "Pending Payment"
 

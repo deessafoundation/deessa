@@ -92,12 +92,12 @@ Every reference to `PAYMENT_MODE` was removed across the codebase:
 
 ## 3. Current State After Fix
 
-- âœ… Stripe webhooks always verify signature â€” no bypass possible
-- âœ… `PAYMENT_MODE` env var no longer needed on Vercel (can be removed from all environments)
-- âœ… Currency mismatches are non-fatal when amounts match; DB is auto-corrected
-- âœ… All three adapters (Stripe, Khalti, eSewa) always use real API calls
-- âœ… Conference registration Khalti and eSewa verification always hits real APIs
-- âœ… Health check route no longer skips provider checks in "mock mode"
+-  Stripe webhooks always verify signature â€” no bypass possible
+-  `PAYMENT_MODE` env var no longer needed on Vercel (can be removed from all environments)
+-  Currency mismatches are non-fatal when amounts match; DB is auto-corrected
+-  All three adapters (Stripe, Khalti, eSewa) always use real API calls
+-  Conference registration Khalti and eSewa verification always hits real APIs
+-  Health check route no longer skips provider checks in "mock mode"
 
 ---
 
@@ -131,13 +131,13 @@ Every reference to `PAYMENT_MODE` was removed across the codebase:
 | Variable | Status | Notes |
 |----------|--------|-------|
 | `PAYMENT_MODE` | âŒ **Remove** | No longer used anywhere |
-| `STRIPE_SECRET_KEY` | âœ… Required | `sk_test_â€¦` for local, `sk_live_â€¦` for Vercel |
-| `STRIPE_WEBHOOK_SECRET` | âœ… Required | From Stripe Dashboard â†’ Webhooks â†’ Signing secret |
-| `KHALTI_SECRET_KEY` | âœ… Required if using Khalti | |
-| `KHALTI_BASE_URL` | âœ… Required if using Khalti | `https://khalti.com/api/v2` |
-| `ESEWA_SECRET_KEY` | âœ… Required if using eSewa | |
-| `ESEWA_MERCHANT_ID` | âœ… Required if using eSewa | |
-| `ESEWA_BASE_URL` | âœ… Required if using eSewa | |
-| `NEXT_PUBLIC_SUPABASE_URL` | âœ… Required | |
-| `SUPABASE_SERVICE_ROLE_KEY` | âœ… Required | Used for payment status updates (bypasses RLS) |
-| `RECEIPT_TOKEN_SECRET` | âœ… Required | `openssl rand -base64 32` |
+| `STRIPE_SECRET_KEY` |  Required | `sk_test_â€¦` for local, `sk_live_â€¦` for Vercel |
+| `STRIPE_WEBHOOK_SECRET` |  Required | From Stripe Dashboard â†’ Webhooks â†’ Signing secret |
+| `KHALTI_SECRET_KEY` |  Required if using Khalti | |
+| `KHALTI_BASE_URL` |  Required if using Khalti | `https://khalti.com/api/v2` |
+| `ESEWA_SECRET_KEY` |  Required if using eSewa | |
+| `ESEWA_MERCHANT_ID` |  Required if using eSewa | |
+| `ESEWA_BASE_URL` |  Required if using eSewa | |
+| `NEXT_PUBLIC_SUPABASE_URL` |  Required | |
+| `SUPABASE_SERVICE_ROLE_KEY` |  Required | Used for payment status updates (bypasses RLS) |
+| `RECEIPT_TOKEN_SECRET` |  Required | `openssl rand -base64 32` |

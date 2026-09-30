@@ -92,21 +92,21 @@ This prevents losing unsaved changes when users switch tabs.
 
 ### API Route Fix
 **File:** `app/api/admin/events/[id]/form-schema/route.ts`
-- âœ… Changed to `createServiceRoleClient()` (bypasses RLS)
-- âœ… Added fallback to fetch latest draft if no active schema exists
+-  Changed to `createServiceRoleClient()` (bypasses RLS)
+-  Added fallback to fetch latest draft if no active schema exists
 
 ### Parent State Sync
 **File:** `components/events/admin/EventSettingsClient.tsx`
-- âœ… Added `onSchemaSaved` callback to update parent state immediately
+-  Added `onSchemaSaved` callback to update parent state immediately
 
 ## Testing Checklist
 
-- [x] Apply a template â†’ Save draft â†’ Refresh page â†’ Schema persists âœ…
-- [x] Edit fields â†’ Save draft â†’ Refresh page â†’ Edits persist âœ…
-- [x] Switch tabs â†’ Form builder preserves local state âœ…
-- [x] Save draft â†’ Switch tabs â†’ Come back â†’ Edits still there âœ…
-- [x] Can edit field labels, options, validation rules âœ…
-- [x] Publish form â†’ Refresh â†’ Shows published version âœ…
+- [x] Apply a template â†’ Save draft â†’ Refresh page â†’ Schema persists 
+- [x] Edit fields â†’ Save draft â†’ Refresh page â†’ Edits persist 
+- [x] Switch tabs â†’ Form builder preserves local state 
+- [x] Save draft â†’ Switch tabs â†’ Come back â†’ Edits still there 
+- [x] Can edit field labels, options, validation rules 
+- [x] Publish form â†’ Refresh â†’ Shows published version 
 
 ## Key Takeaways
 
@@ -129,7 +129,7 @@ This prevents losing unsaved changes when users switch tabs.
 
 ## Result
 
-âœ… **Form builder now correctly loads saved schemas on page refresh**  
-âœ… **All field editing functionality works as expected**  
-âœ… **Tab switching preserves unsaved changes**  
-âœ… **No more reverting to default schema**
+ **Form builder now correctly loads saved schemas on page refresh**  
+ **All field editing functionality works as expected**  
+ **Tab switching preserves unsaved changes**  
+ **No more reverting to default schema**

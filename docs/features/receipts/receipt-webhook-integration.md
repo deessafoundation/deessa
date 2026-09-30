@@ -315,24 +315,24 @@ console.log("Email from:", process.env.EMAIL_FROM)
 
 ## Best Practices
 
-âœ… **Always verify webhook signatures**
+ **Always verify webhook signatures**
 - Prevents unauthorized webhook calls
 - Ensures data integrity
 
-âœ… **Don't fail webhooks on receipt errors**
+ **Don't fail webhooks on receipt errors**
 - Receipts can be generated later
 - Payment confirmation is more important
 
-âœ… **Log all receipt actions**
+ **Log all receipt actions**
 - Helps with debugging
 - Provides audit trail
 
-âœ… **Handle edge cases**
+ **Handle edge cases**
 - Duplicate webhook calls
 - Missing donation records
 - Invalid email addresses
 
-âœ… **Monitor receipt generation**
+ **Monitor receipt generation**
 - Check for failed receipts
 - Alert on errors
 - Track success rate

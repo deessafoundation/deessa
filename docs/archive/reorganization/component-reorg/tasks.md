@@ -24,39 +24,39 @@ last_updated: 2026-09-12
 
 | File | Export(s) | Used In | Status |
 |------|-----------|---------|--------|
-| `about-hero.tsx` | `AboutHero` | `app/(public)/about/page.tsx` | âœ… Used |
+| `about-hero.tsx` | `AboutHero` | `app/(public)/about/page.tsx` |  Used |
 | `accessibility-toolbar.tsx` | `AccessibilityToolbar` | â€” | âš ï¸ **UNUSED** |
-| `circular-testimonials.tsx` | `CircularTestimonials` | `components/homepage-sections.tsx` | âœ… Used |
-| `contact-form.tsx` | `ContactForm` | `components/contact-form-prefilled.tsx` | âœ… Used (internal) |
-| `contact-form-prefilled.tsx` | `ContactFormPrefilled` | `app/(public)/contact/page.tsx` | âœ… Used |
-| `development-notice-modal.tsx` | `DevelopmentNoticeModal` | `app/(public)/layout.tsx` | âœ… Used |
+| `circular-testimonials.tsx` | `CircularTestimonials` | `components/homepage-sections.tsx` |  Used |
+| `contact-form.tsx` | `ContactForm` | `components/contact-form-prefilled.tsx` |  Used (internal) |
+| `contact-form-prefilled.tsx` | `ContactFormPrefilled` | `app/(public)/contact/page.tsx` |  Used |
+| `development-notice-modal.tsx` | `DevelopmentNoticeModal` | `app/(public)/layout.tsx` |  Used |
 | `donation-amount-picker.tsx` | `DonationAmountPicker` | â€” | âš ï¸ **UNUSED** |
 | `event-preview-card.tsx` | `EventPreviewCard` | â€” | âš ï¸ **UNUSED** |
-| `event-registration-modal.tsx` | `EventRegistrationModal` | `app/(public)/events/page.tsx` | âœ… Used |
-| `footer.tsx` | `Footer` | `app/(public)/layout.tsx` | âœ… Used |
-| `global-video-modal.tsx` | `GlobalVideoModal` | `app/(public)/layout.tsx` | âœ… Used |
-| `hero-carousel.tsx` | `HeroCarousel`, `HeroSlide` | `app/(public)/page.tsx` | âœ… Used |
+| `event-registration-modal.tsx` | `EventRegistrationModal` | `app/(public)/events/page.tsx` |  Used |
+| `footer.tsx` | `Footer` | `app/(public)/layout.tsx` |  Used |
+| `global-video-modal.tsx` | `GlobalVideoModal` | `app/(public)/layout.tsx` |  Used |
+| `hero-carousel.tsx` | `HeroCarousel`, `HeroSlide` | `app/(public)/page.tsx` |  Used |
 | `hero-video.tsx` | `HeroVideo` | â€” | âš ï¸ **UNUSED** |
-| `home-accessibility-button.tsx` | `HomeAccessibilityButton` | `app/(public)/page.tsx` | âœ… Used |
-| `home-faqs.tsx` | `HomeFAQs` | `app/(public)/page.tsx` | âœ… Used |
+| `home-accessibility-button.tsx` | `HomeAccessibilityButton` | `app/(public)/page.tsx` |  Used |
+| `home-faqs.tsx` | `HomeFAQs` | `app/(public)/page.tsx` |  Used |
 | `home-testimonials-slider.tsx` | `HomeTestimonialsSlider` | â€” | âš ï¸ **UNUSED** |
-| `homepage-sections.tsx` | 9 exports (ImpactStatsBar, OurStorySection, etc.) | `app/(public)/page.tsx` | âœ… Used |
-| `impact-counter.tsx` | `ImpactCounter` | `components/homepage-sections.tsx` | âœ… Used |
-| `intro-video.tsx` | `IntroVideo` | `app/(public)/layout.tsx` | âœ… Used |
-| `navbar-wrapper.tsx` | `NavbarWrapper` | `app/(public)/layout.tsx` | âœ… Used |
-| `navbar.tsx` | `Navbar` | `components/navbar-wrapper.tsx` | âœ… Used (internal) |
-| `newsletter-form.tsx` | `NewsletterForm` | `components/footer.tsx` | âœ… Used (internal) |
+| `homepage-sections.tsx` | 9 exports (ImpactStatsBar, OurStorySection, etc.) | `app/(public)/page.tsx` |  Used |
+| `impact-counter.tsx` | `ImpactCounter` | `components/homepage-sections.tsx` |  Used |
+| `intro-video.tsx` | `IntroVideo` | `app/(public)/layout.tsx` |  Used |
+| `navbar-wrapper.tsx` | `NavbarWrapper` | `app/(public)/layout.tsx` |  Used |
+| `navbar.tsx` | `Navbar` | `components/navbar-wrapper.tsx` |  Used (internal) |
+| `newsletter-form.tsx` | `NewsletterForm` | `components/footer.tsx` |  Used (internal) |
 | `partner-strip.tsx` | `PartnerStrip` | â€” | âš ï¸ **UNUSED** |
-| `receipt-preview.tsx` | `ReceiptPreview` | `app/(public)/donate/success/success-content.tsx` | âœ… Used |
-| `resource-downloads.tsx` | `ResourceDownloads`, `brandResources`, `legalResources` | `app/(public)/about/page.tsx`, `app/(public)/press/page.tsx` | âœ… Used |
-| `scroll-animations.tsx` | 8 exports (ScrollReveal, CountUp, etc.) | `components/homepage-sections.tsx`, `components/home-faqs.tsx` | âœ… Used |
-| `secret-key-listener.tsx` | `SecretKeyListener` | `app/(public)/page.tsx` | âœ… Used |
-| `share-button.tsx` | `ShareButton` | `app/(public)/podcasts/[slug]/page.tsx` | âœ… Used |
-| `social-icons.tsx` | Facebook, Twitter, Instagram, Youtube, Linkedin | Multiple podcast, footer, site-settings files | âœ… Used |
+| `receipt-preview.tsx` | `ReceiptPreview` | `app/(public)/donate/success/success-content.tsx` |  Used |
+| `resource-downloads.tsx` | `ResourceDownloads`, `brandResources`, `legalResources` | `app/(public)/about/page.tsx`, `app/(public)/press/page.tsx` |  Used |
+| `scroll-animations.tsx` | 8 exports (ScrollReveal, CountUp, etc.) | `components/homepage-sections.tsx`, `components/home-faqs.tsx` |  Used |
+| `secret-key-listener.tsx` | `SecretKeyListener` | `app/(public)/page.tsx` |  Used |
+| `share-button.tsx` | `ShareButton` | `app/(public)/podcasts/[slug]/page.tsx` |  Used |
+| `social-icons.tsx` | Facebook, Twitter, Instagram, Youtube, Linkedin | Multiple podcast, footer, site-settings files |  Used |
 | `stories-carousel.tsx` | `StoriesCarousel` | â€” | âš ï¸ **UNUSED** |
-| `support-form.tsx` | `SupportForm` | `app/(public)/support/page.tsx` | âœ… Used |
+| `support-form.tsx` | `SupportForm` | `app/(public)/support/page.tsx` |  Used |
 | `theme-provider.tsx` | `ThemeProvider` | â€” | âš ï¸ **UNUSED** |
-| `volunteer-form.tsx` | `VolunteerForm` | `app/(public)/get-involved/page.tsx` | âœ… Used |
+| `volunteer-form.tsx` | `VolunteerForm` | `app/(public)/get-involved/page.tsx` |  Used |
 
 **UI primitives (`components/ui/`) â€” 67 files:**
 
@@ -805,11 +805,11 @@ grep -r "from [\"']@/components/<old-path>" --include="*.tsx" --include="*.ts"
 
 | Decision | Options | Recommendation | Needed From You |
 |----------|---------|---------------|-----------------|
-| **Barrel exports (index.ts)?** | A) No barrels (direct imports everywhere) <br> B) Barrels per folder (e.g., `components/shared/cards/index.ts`) | **DECIDED: A â€” No barrels.** Current codebase uses direct imports. Barrels add indirection and can cause circular imports. | âœ… Confirmed |
-| **Strict feature vs type split?** | A) Feature-first (what we proposed) <br> B) Type-first (all cards together, all forms together) | **DECIDED: A â€” Feature-first.** Admin is already feature-separated. Public components map to routes. | âœ… Confirmed |
-| **Delete unused components now?** | A) Yes, delete in Phase 1 <br> B) Move to `archive/` folder first | **DECIDED: B â€” Move to archive first.** Keep them accessible during testing, delete in a later cleanup pass after reorg is verified stable. | âœ… Confirmed |
-| **Podcasts: top-level or under features/?** | A) `components/podcasts/` (current, keep as top-level) <br> B) `components/features/podcasts/` | **DECIDED: A â€” Keep top-level.** 20 files is large enough. Features/ has smaller groups. | âœ… Confirmed |
-| **Homepage-manager-client duplication** | A) Delete the root-level `admin/homepage-manager-client.tsx` <br> B) Keep both | **DECIDED: A â€” Delete.** Only the subfolder version is imported. | âœ… Confirmed |
+| **Barrel exports (index.ts)?** | A) No barrels (direct imports everywhere) <br> B) Barrels per folder (e.g., `components/shared/cards/index.ts`) | **DECIDED: A â€” No barrels.** Current codebase uses direct imports. Barrels add indirection and can cause circular imports. |  Confirmed |
+| **Strict feature vs type split?** | A) Feature-first (what we proposed) <br> B) Type-first (all cards together, all forms together) | **DECIDED: A â€” Feature-first.** Admin is already feature-separated. Public components map to routes. |  Confirmed |
+| **Delete unused components now?** | A) Yes, delete in Phase 1 <br> B) Move to `archive/` folder first | **DECIDED: B â€” Move to archive first.** Keep them accessible during testing, delete in a later cleanup pass after reorg is verified stable. |  Confirmed |
+| **Podcasts: top-level or under features/?** | A) `components/podcasts/` (current, keep as top-level) <br> B) `components/features/podcasts/` | **DECIDED: A â€” Keep top-level.** 20 files is large enough. Features/ has smaller groups. |  Confirmed |
+| **Homepage-manager-client duplication** | A) Delete the root-level `admin/homepage-manager-client.tsx` <br> B) Keep both | **DECIDED: A â€” Delete.** Only the subfolder version is imported. |  Confirmed |
 
 ---
 

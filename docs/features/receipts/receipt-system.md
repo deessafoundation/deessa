@@ -15,12 +15,12 @@ The receipt system enables automatic generation, storage, and delivery of tax-de
 
 ## Features
 
-âœ… **Automatic Receipt Generation** - Receipts are generated after successful payment
-âœ… **Email Delivery** - Receipts sent automatically to donor email
-âœ… **PDF Download** - Donors can download receipts anytime
-âœ… **Tax Compliance** - Includes VAT, PAN, and SWC registration numbers
-âœ… **Audit Trail** - Complete logging of receipt actions
-âœ… **Admin Management** - Resend receipts, view history, manage settings
+ **Automatic Receipt Generation** - Receipts are generated after successful payment
+ **Email Delivery** - Receipts sent automatically to donor email
+ **PDF Download** - Donors can download receipts anytime
+ **Tax Compliance** - Includes VAT, PAN, and SWC registration numbers
+ **Audit Trail** - Complete logging of receipt actions
+ **Admin Management** - Resend receipts, view history, manage settings
 
 ## Database Schema
 
@@ -244,17 +244,17 @@ In donations table:
 
 ## Security Considerations
 
-âœ… **Access Control**
+ **Access Control**
 - Only admins can view receipt audit logs
 - Donors can only access their own receipts
 - Download links include donation ID verification
 
-âœ… **Data Protection**
+ **Data Protection**
 - Receipts stored in secure Supabase Storage
 - Email addresses not exposed in URLs
 - Sensitive data encrypted in transit
 
-âœ… **Audit Trail**
+ **Audit Trail**
 - All receipt actions logged
 - Timestamps recorded
 - Admin can view complete history
