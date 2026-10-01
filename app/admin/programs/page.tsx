@@ -9,6 +9,20 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ProgramThumb } from "@/components/admin/program-thumb"
+
+function heroThumb(hero: unknown): string | null {
+  if (typeof hero === "string") return hero || null
+  if (!hero || typeof hero !== "object") return null
+  const image = (hero as { image?: unknown }).image
+  if (typeof image === "string") return image || null
+  if (image && typeof image === "object") {
+    const o = image as { assetId?: string; url?: string }
+    if (o.assetId) return `/api/assets/${o.assetId}`
+    if (o.url) return o.url
+  }
+  return null
+}
 
 async function requireProgramsAccess() {
   const supabase = await createClient()
@@ -25,10 +39,17 @@ const categoryLabels: Record<string, string> = {
   campaign: "Campaign",
 }
 
-const statusColors: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  published: "default",
-  draft: "secondary",
-  archived: "destructive",
+const categoryBadgeColors: Record<string, string> = {
+  service: "bg-blue-100 text-blue-700",
+  outreach: "bg-orange-100 text-orange-700",
+  research: "bg-teal-100 text-teal-700",
+  campaign: "bg-purple-100 text-purple-700",
+}
+
+const statusBadgeColors: Record<string, string> = {
+  published: "bg-green-100 text-green-700",
+  draft: "bg-yellow-100 text-yellow-700",
+  archived: "bg-red-100 text-red-700",
 }
 
 export default async function AdminProgramsPage({
@@ -42,8 +63,7 @@ export default async function AdminProgramsPage({
 
   let query = supabase
     .from("programs")
-    .select("id, slug, status, display_order, updated_at, created_at")
-    .order("display_order")
+    .select("id, slug, status, updated_at, created_at")
     .order("updated_at", { ascending: false })
 
   if (params.status && params.status !== "all") {
@@ -69,7 +89,7 @@ export default async function AdminProgramsPage({
               <h2 className="font-semibold">Programs CMS is not ready yet</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {isMissingTable
-                  ? "Apply scripts/migrations/060-programs-cms-foundation.sql in the Supabase SQL Editor, then refresh this page."
+                  ? "Apply scripts/db/programs-migrations/P01-programs-cms-foundation.sql in the Supabase SQL Editor, then refresh this page."
                   : isPermissionError
                     ? "The CMS tables exist, but this admin account does not have the required programs permission or database policy."
                     : "The CMS tables could not be loaded. Check the Supabase migration and server logs before retrying."}
@@ -84,7 +104,7 @@ export default async function AdminProgramsPage({
   // Fetch drafts to get titles and categories (programs table may not have them)
   // Fetch titles and categories from the programs master table
   const programIds = programs?.map((p) => p.id) || []
-  let draftsMap: Record<string, { title: string; category: string }> = {}
+  const draftsMap: Record<string, { title: string; category: string }> = {}
   if (programIds.length > 0) {
     const { data: programData } = await supabase
       .from("programs")
@@ -103,6 +123,18 @@ export default async function AdminProgramsPage({
 
   // Apply search filter (client-side on title/slug)
   let filtered = programs || []
+
+  // Hero thumbnails from drafts
+  const heroMap: Record<string, string | null> = {}
+  if (programIds.length > 0) {
+    const { data: drafts } = await supabase
+      .from("program_drafts")
+      .select("program_id, hero")
+      .in("program_id", programIds)
+    if (drafts) {
+      for (const d of drafts) heroMap[d.program_id] = heroThumb(d.hero)
+    }
+  }
   if (params.q) {
     const q = params.q.toLowerCase()
     filtered = filtered.filter((p) => {
@@ -203,7 +235,6 @@ export default async function AdminProgramsPage({
                 <TableHead>Slug</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Order</TableHead>
                 <TableHead>Updated</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -211,7 +242,7 @@ export default async function AdminProgramsPage({
             <TableBody>
               {!filtered.length ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
                     {programs?.length ? "No programs match your filters." : "No CMS programs yet. Create the first draft."}
                   </TableCell>
                 </TableRow>
@@ -219,28 +250,35 @@ export default async function AdminProgramsPage({
                 filtered.map((program) => {
                   const info = draftsMap[program.id]
                   return (
-                    <TableRow key={program.id}>
-                      <TableCell className="font-medium max-w-[250px] truncate">
-                        {info?.title || program.slug}
+                    <TableRow key={program.id} className="group relative cursor-pointer hover:bg-muted/60">
+                      <TableCell className="max-w-[280px]">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <ProgramThumb src={heroMap[program.id] || null} alt="" />
+                          <Link
+                            href={`/admin/programs/${program.id}/edit`}
+                            className="min-w-0 truncate font-medium transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-primary"
+                          >
+                            {info?.title || program.slug}
+                          </Link>
+                        </div>
                       </TableCell>
                       <TableCell className="text-muted-foreground font-mono text-xs">
                         {program.slug}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">
+                        <Badge variant="secondary" className={`rounded-full ${categoryBadgeColors[info?.category || ""] || ""}`}>
                           {categoryLabels[info?.category || ""] || info?.category || "—"}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={statusColors[program.status] || "secondary"}>
+                        <Badge variant="secondary" className={`rounded-full capitalize ${statusBadgeColors[program.status] || ""}`}>
                           {program.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>{program.display_order}</TableCell>
                       <TableCell className="text-muted-foreground text-xs">
                         {new Date(program.updated_at).toLocaleDateString()}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="relative z-10 text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="ghost" size="icon" asChild>
                             <Link href={`/admin/programs/${program.id}/edit`} aria-label={`Edit ${info?.title || program.slug}`}>

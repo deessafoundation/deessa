@@ -2,13 +2,12 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState, useEffect, useCallback, useRef } from "react"
+import { use, useState, useEffect, useCallback, useRef } from "react"
 import {
-  ArrowLeft, Loader2, Save, Globe, Archive, RotateCcw, Trash2, Eye,
+  ArrowLeft, Loader2, Save, Globe, GlobeOff, Archive, RotateCcw, Trash2, Eye,
   Plus, X, AlertTriangle, CheckCircle2, AlertCircle, Image as ImageIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
@@ -28,16 +27,20 @@ import {
   restoreProgram,
   deleteProgram,
 } from "@/lib/actions/program-crud"
-import type { ProgramDocument, ProgramSection, ProgramCategory } from "@/lib/programs/content"
+import { programDocumentSchema, type ProgramDocument, type ProgramSection, type ProgramCategory } from "@/lib/programs/content"
 import { SectionEditor } from "@/components/admin/program-sections"
 import { ProgramIdProvider } from "@/components/admin/program-sections/program-id-context"
 import { ServiceEditForm } from "@/components/admin/ServiceEditForm"
-import { OutreachEditForm } from "@/components/admin/OutreachEditForm"
-import { ResearchEditForm } from "@/components/admin/ResearchEditForm"
-import { CampaignEditForm } from "@/components/admin/CampaignEditForm"
+import { EditorialProgramEditor } from "@/components/admin/EditorialProgramEditor"
+import { readEditorHero } from "@/lib/programs/editor-hero"
 import { ProgramMediaLibrary } from "@/components/admin/program-sections/ProgramMediaLibrary"
 import { VersionHistoryPanel } from "@/components/admin/program-sections/VersionHistoryPanel"
+import { ProgramEditSkeleton } from "@/components/admin/program-edit-skeleton"
 import { notifications } from "@/lib/notifications"
+
+function formSnapshot(value: Record<string, unknown>) {
+  return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b))))
+}
 
 const CATEGORIES: { value: ProgramCategory; label: string }[] = [
   { value: "service", label: "Service" },
@@ -95,7 +98,7 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
             </div>
           </div>
         </DialogHeader>
-        {(state.variant === "danger" || state.variant === "warning") && (
+        {state.variant === "danger" && (
           <div className="px-6 pb-2">
             <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 leading-relaxed">
               <strong>This action cannot be undone.</strong>
@@ -272,6 +275,7 @@ interface Props {
 }
 
 export default function EditProgramPage({ params }: Props) {
+  const { id: routeProgramId } = use(params)
   const router = useRouter()
   const [programId, setProgramId] = useState<string | null>(null)
   const [slug, setSlug] = useState("")
@@ -289,17 +293,22 @@ export default function EditProgramPage({ params }: Props) {
   const [revision, setRevision] = useState(1)
   const [sections, setSections] = useState<ProgramSection[]>([])
 
+  const [editorialHero, setEditorialHero] = useState<ProgramDocument["hero"]>({ title: "", description: "", actions: [] })
+  const [editorKey, setEditorKey] = useState(0)
+
   // Hero fields
   const [heroTitle, setHeroTitle] = useState("")
   const [heroDescription, setHeroDescription] = useState("")
   const [heroCtaLabel, setHeroCtaLabel] = useState("")
   const [heroCtaUrl, setHeroCtaUrl] = useState("")
+  const [heroSecondaryCtaLabel, setHeroSecondaryCtaLabel] = useState("")
+  const [heroSecondaryCtaUrl, setHeroSecondaryCtaUrl] = useState("")
   const [heroNoteText, setHeroNoteText] = useState("")
   const [heroNoteIcon, setHeroNoteIcon] = useState("")
   const [heroStickerText, setHeroStickerText] = useState("")
   const [heroStickerIcon, setHeroStickerIcon] = useState("")
   const [heroPhotoNote, setHeroPhotoNote] = useState("")
-  const [heroImage, setHeroImage] = useState<{ assetId?: string; url?: string; alt: string } | undefined>(undefined)
+  const [heroImage, setHeroImage] = useState<ProgramDocument["hero"]["image"]>(undefined)
 
   // SEO fields
   const [seoTitle, setSeoTitle] = useState("")
@@ -308,6 +317,7 @@ export default function EditProgramPage({ params }: Props) {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null)
   const [isDirty, setIsDirty] = useState(false)
   const initialSnapshotRef = useRef<string>("")
+  const latestSnapshotRef = useRef<string>("")
 
   // Confirm dialog state
   const [confirm, setConfirm] = useState<ConfirmState>({
@@ -323,9 +333,12 @@ export default function EditProgramPage({ params }: Props) {
 
   function checkPublishReadiness(): ReadinessIssue[] {
     const issues: ReadinessIssue[] = []
+    const validation = programDocumentSchema.safeParse(buildDoc())
+    if (!validation.success) for (const issue of validation.error.issues) issues.push({ type: "error", message: `${issue.path.join(".")}: ${issue.message}` })
     if (!title.trim()) issues.push({ type: "error", message: "Title is required" })
     if (!shortDescription.trim()) issues.push({ type: "error", message: "Short description is required" })
-    if (!heroImage?.url && !heroImage?.assetId) issues.push({ type: "warning", message: "Hero image is not set — the page will have no hero visual" })
+    const visibleHeroImage = category === "service" ? heroImage : editorialHero.image
+    if (category !== "research" && !visibleHeroImage?.url && !visibleHeroImage?.assetId) issues.push({ type: "warning", message: "Hero image is not set — the page will have no hero visual" })
     if (!seoTitle.trim()) issues.push({ type: "warning", message: "Meta title is missing — defaults to program title" })
     if (!seoDescription.trim()) issues.push({ type: "warning", message: "Meta description is missing — hurts SEO" })
     if (sections.filter((s) => s.enabled).length === 0) issues.push({ type: "warning", message: "No enabled sections — the page body will be empty" })
@@ -337,16 +350,19 @@ export default function EditProgramPage({ params }: Props) {
   // Track dirty state by comparing current form to initial snapshot
   useEffect(() => {
     if (loading || !initialSnapshotRef.current) return
-    const current = JSON.stringify({
+    const current = formSnapshot({
       title, shortDescription, eyebrow, category, tags,
-      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl,
+      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
+      heroSecondaryCtaLabel, heroSecondaryCtaUrl,
       heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
       heroImage,
       seoTitle, seoDescription, sections,
     })
+    latestSnapshotRef.current = current
     setIsDirty(current !== initialSnapshotRef.current)
   }, [title, shortDescription, eyebrow, category, tags,
-    heroTitle, heroDescription, heroCtaLabel, heroCtaUrl,
+    heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
+    heroSecondaryCtaLabel, heroSecondaryCtaUrl,
     heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
     heroImage,
     seoTitle, seoDescription, sections, loading])
@@ -364,7 +380,8 @@ export default function EditProgramPage({ params }: Props) {
   }, [isDirty])
 
   useEffect(() => {
-    params.then(async ({ id }) => {
+    const id = routeProgramId
+    async function loadDraft() {
       setProgramId(id)
       const result = await getProgramDraft(id)
       if (!result.ok) {
@@ -374,81 +391,90 @@ export default function EditProgramPage({ params }: Props) {
       }
       const { program, draft } = result.data
       setTitle(program.title)
-      setShortDescription((program as any).short_description || "")
-      setEyebrow((program as any).eyebrow || "")
-      setCategory((program as any).category || "service")
+      setShortDescription(program.short_description || "")
+      setEyebrow(program.eyebrow || "")
+      setCategory(program.category || "service")
       setSlug(program.slug || "")
-      setTags((program as any).tags || [])
+      setTags(program.tags || [])
       setStatus(program.status)
       setRevision(draft.revision)
       setSections((draft.sections as ProgramSection[]) || [])
 
       // Load hero from draft
-      const hero = (draft as any).hero
+      const hero = readEditorHero(draft.hero, program.title, program.short_description || "")
+      setEditorialHero(readEditorHero(hero, program.title, program.short_description || ""))
       if (hero) {
         setHeroTitle(hero.title || "")
         setHeroDescription(hero.description || "")
-        setHeroCtaLabel(hero.cta?.label || "")
-        setHeroCtaUrl(hero.cta?.url || "")
+        setHeroCtaLabel(readEditorHero(hero, "", "").actions[0]?.label || "")
+        setHeroCtaUrl(readEditorHero(hero, "", "").actions[0]?.url || "")
+        setHeroSecondaryCtaLabel(readEditorHero(hero, "", "").actions[1]?.label || "")
+        setHeroSecondaryCtaUrl(readEditorHero(hero, "", "").actions[1]?.url || "")
         setHeroNoteText(hero.note?.text || "")
         setHeroNoteIcon(hero.note?.icon || "")
         setHeroStickerText(hero.sticker?.text || "")
         setHeroStickerIcon(hero.sticker?.icon || "")
         setHeroPhotoNote(hero.photoNote || "")
         if (hero.image && typeof hero.image === "object" && (hero.image.url || hero.image.assetId)) {
-          setHeroImage({ assetId: hero.image.assetId, url: hero.image.url, alt: hero.image.alt || hero.title || "" })
+          setHeroImage({ ...hero.image, alt: hero.image.alt || hero.title || "" })
         } else if (hero.image && typeof hero.image === "string" && hero.image) {
           setHeroImage({ url: hero.image, alt: hero.title || "" })
         }
       } else {
         setHeroTitle(program.title)
-        setHeroDescription((program as any).short_description || "")
+        setHeroDescription(program.short_description || "")
       }
 
-      setSeoTitle((draft as any).seo_title || "")
-      setSeoDescription((draft as any).seo_description || "")
+      setSeoTitle(draft.seo_title || "")
+      setSeoDescription(draft.seo_description || "")
       setLoading(false)
 
       setTimeout(() => {
-        const hero = (draft as any).hero || {}
+        const hero = readEditorHero(draft.hero, program.title, program.short_description || "")
         let heroImg = undefined
         if (hero.image && typeof hero.image === "object" && (hero.image.url || hero.image.assetId)) {
-          heroImg = { assetId: hero.image.assetId, url: hero.image.url, alt: hero.image.alt || hero.title || "" }
+          heroImg = { ...hero.image, alt: hero.image.alt || hero.title || "" }
         } else if (hero.image && typeof hero.image === "string" && hero.image) {
           heroImg = { url: hero.image, alt: hero.title || "" }
         }
-        initialSnapshotRef.current = JSON.stringify({
+        initialSnapshotRef.current = formSnapshot({
           title: program.title,
-          shortDescription: (program as any).short_description || "",
-          eyebrow: (program as any).eyebrow || "",
-          category: (program as any).category || "service",
-          tags: (program as any).tags || [],
+          shortDescription: program.short_description || "",
+          eyebrow: program.eyebrow || "",
+          category: program.category || "service",
+          tags: program.tags || [],
+          editorialHero: readEditorHero(hero, program.title, program.short_description || ""),
           heroTitle: hero.title || "",
           heroDescription: hero.description || "",
-          heroCtaLabel: hero.cta?.label || "",
-          heroCtaUrl: hero.cta?.url || "",
+          heroCtaLabel: readEditorHero(hero, "", "").actions[0]?.label || "",
+          heroCtaUrl: readEditorHero(hero, "", "").actions[0]?.url || "",
+          heroSecondaryCtaLabel: readEditorHero(hero, "", "").actions[1]?.label || "",
+          heroSecondaryCtaUrl: readEditorHero(hero, "", "").actions[1]?.url || "",
           heroNoteText: hero.note?.text || "",
           heroNoteIcon: hero.note?.icon || "",
           heroStickerText: hero.sticker?.text || "",
           heroStickerIcon: hero.sticker?.icon || "",
           heroPhotoNote: hero.photoNote || "",
           heroImage: heroImg,
-          seoTitle: (draft as any).seo_title || "",
-          seoDescription: (draft as any).seo_description || "",
+          seoTitle: draft.seo_title || "",
+          seoDescription: draft.seo_description || "",
           sections: (draft.sections as ProgramSection[]) || [],
         })
       }, 0)
-    })
-  }, [params])
+    }
+    void loadDraft()
+  }, [routeProgramId])
 
   function resetSnapshot() {
-    initialSnapshotRef.current = JSON.stringify({
+    initialSnapshotRef.current = formSnapshot({
       title, shortDescription, eyebrow, category, tags,
-      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl,
+      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
+      heroSecondaryCtaLabel, heroSecondaryCtaUrl,
       heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
       heroImage,
       seoTitle, seoDescription, sections,
     })
+    setIsDirty(latestSnapshotRef.current !== initialSnapshotRef.current)
   }
 
   function buildDoc(): ProgramDocument {
@@ -459,12 +485,12 @@ export default function EditProgramPage({ params }: Props) {
       eyebrow: eyebrow || undefined,
       category,
       tags,
-      hero: {
+      hero: category !== "service" ? { ...editorialHero, actions: editorialHero.actions.filter(action => action.label.trim() || action.url.trim()) } : {
         title: heroTitle || title,
         description: heroDescription || shortDescription || title,
         image: heroImage,
         actions: heroCtaLabel && heroCtaUrl
-          ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }]
+          ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }, ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }] : [])]
           : [],
         note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined,
         sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined,
@@ -477,6 +503,24 @@ export default function EditProgramPage({ params }: Props) {
       sections,
       relatedProgramIds: [],
     }
+  }
+
+  function changeCategory(value: ProgramCategory) {
+    const hero = buildDoc().hero
+    setEditorialHero(hero)
+    setHeroTitle(hero.title)
+    setHeroDescription(hero.description)
+    setHeroImage(hero.image)
+    setHeroCtaLabel(hero.actions[0]?.label || "")
+    setHeroCtaUrl(hero.actions[0]?.url || "")
+    setHeroSecondaryCtaLabel(hero.actions[1]?.label || "")
+    setHeroSecondaryCtaUrl(hero.actions[1]?.url || "")
+    setHeroNoteText(hero.note?.text || "")
+    setHeroNoteIcon(hero.note?.icon || "")
+    setHeroStickerText(hero.sticker?.text || "")
+    setHeroStickerIcon(hero.sticker?.icon || "")
+    setHeroPhotoNote(hero.photoNote || "")
+    setCategory(value)
   }
 
   function addTag() {
@@ -540,7 +584,7 @@ export default function EditProgramPage({ params }: Props) {
     setRevision(saveResult.data.revision)
     resetSnapshot()
 
-    const result = await publishProgram(programId, "Published from editor")
+    const result = await publishProgram(programId, "Published from editor", saveResult.data.revision)
     setPublishing(false)
     if (!result.ok) {
       notifications.showError({ title: "Publish failed", description: result.error })
@@ -621,12 +665,7 @@ export default function EditProgramPage({ params }: Props) {
   // ── Render ────────────────────────────────────────────────
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <Button variant="ghost" asChild><Link href="/admin/programs"><ArrowLeft className="mr-2 h-4 w-4" />Back</Link></Button>
-        <Card><CardContent className="flex items-center justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></CardContent></Card>
-      </div>
-    )
+    return <ProgramEditSkeleton />
   }
 
   const statusVariant = status === "published" ? "default" : status === "archived" ? "secondary" : "outline"
@@ -635,7 +674,7 @@ export default function EditProgramPage({ params }: Props) {
     <div className="space-y-4">
       {/* Sticky header */}
       <div className="sticky top-0 z-40 -mx-6 border-b bg-background/95 px-6 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Button variant="ghost" size="sm" asChild className="shrink-0">
               <Link href="/admin/programs"><ArrowLeft className="mr-1 h-4 w-4" />Back</Link>
@@ -650,17 +689,22 @@ export default function EditProgramPage({ params }: Props) {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Button variant="ghost" size="sm" onClick={handlePreview} disabled={saving} className="text-xs gap-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Button variant="ghost" size="sm" onClick={handlePreview} disabled={saving || publishing} className="text-xs gap-1">
               {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Eye className="h-3 w-3" />}Preview
             </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving || !isDirty} className="text-xs gap-1">
+            <Button size="sm" onClick={handleSave} disabled={saving || publishing || !isDirty} className="text-xs gap-1">
               {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}Save
             </Button>
-            <Button size="sm" onClick={handlePublish} disabled={publishing} className="text-xs gap-1 bg-green-600 hover:bg-green-700">
+            <Button size="sm" onClick={handlePublish} disabled={publishing || saving || status === "archived"} className="text-xs gap-1 bg-green-600 hover:bg-green-700">
               {publishing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Globe className="h-3 w-3" />}
               {status === "published" ? "Update" : "Publish"}
             </Button>
+            {status === "published" && (
+              <Button variant="ghost" size="sm" onClick={handleUnpublish} className="text-xs gap-1 text-amber-600 hover:text-amber-700">
+                <GlobeOff className="h-3 w-3" />Unpublish
+              </Button>
+            )}
             <div className="h-5 w-px bg-border mx-1" />
             {status !== "archived" ? (
               <Button variant="ghost" size="sm" onClick={handleArchive} className="text-xs gap-1">
@@ -692,7 +736,7 @@ export default function EditProgramPage({ params }: Props) {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Category</Label>
-            <Select value={category} onValueChange={(v: ProgramCategory) => setCategory(v)}>
+            <Select value={category} onValueChange={changeCategory}>
               <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
@@ -802,66 +846,13 @@ export default function EditProgramPage({ params }: Props) {
             <ProgramIdProvider programId={programId}>
               {category === "service" ? (
                 <ServiceEditForm
-                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
+                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }, ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }] : [])] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
                   onChange={(data) => {
                     setHeroTitle(data.hero.title)
                     setHeroDescription(data.hero.description)
                     setHeroImage(data.hero.image)
                     if (data.hero.actions?.[0]) { setHeroCtaLabel(data.hero.actions[0].label); setHeroCtaUrl(data.hero.actions[0].url) }
-                    setHeroNoteText(data.hero.note?.text || "")
-                    setHeroNoteIcon(data.hero.note?.icon || "")
-                    setHeroStickerText(data.hero.sticker?.text || "")
-                    setHeroStickerIcon(data.hero.sticker?.icon || "")
-                    setHeroPhotoNote(data.hero.photoNote || "")
-                    setEyebrow(data.eyebrow)
-                    setShortDescription(data.shortDescription)
-                    setSections(data.sections)
-                  }}
-                />
-              ) : category === "outreach" ? (
-                <OutreachEditForm
-                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
-                  onChange={(data) => {
-                    setHeroTitle(data.hero.title)
-                    setHeroDescription(data.hero.description)
-                    setHeroImage(data.hero.image)
-                    if (data.hero.actions?.[0]) { setHeroCtaLabel(data.hero.actions[0].label); setHeroCtaUrl(data.hero.actions[0].url) }
-                    setHeroNoteText(data.hero.note?.text || "")
-                    setHeroNoteIcon(data.hero.note?.icon || "")
-                    setHeroStickerText(data.hero.sticker?.text || "")
-                    setHeroStickerIcon(data.hero.sticker?.icon || "")
-                    setHeroPhotoNote(data.hero.photoNote || "")
-                    setEyebrow(data.eyebrow)
-                    setShortDescription(data.shortDescription)
-                    setSections(data.sections)
-                  }}
-                />
-              ) : category === "research" ? (
-                <ResearchEditForm
-                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
-                  onChange={(data) => {
-                    setHeroTitle(data.hero.title)
-                    setHeroDescription(data.hero.description)
-                    setHeroImage(data.hero.image)
-                    if (data.hero.actions?.[0]) { setHeroCtaLabel(data.hero.actions[0].label); setHeroCtaUrl(data.hero.actions[0].url) }
-                    setHeroNoteText(data.hero.note?.text || "")
-                    setHeroNoteIcon(data.hero.note?.icon || "")
-                    setHeroStickerText(data.hero.sticker?.text || "")
-                    setHeroStickerIcon(data.hero.sticker?.icon || "")
-                    setHeroPhotoNote(data.hero.photoNote || "")
-                    setEyebrow(data.eyebrow)
-                    setShortDescription(data.shortDescription)
-                    setSections(data.sections)
-                  }}
-                />
-              ) : category === "campaign" ? (
-                <CampaignEditForm
-                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
-                  onChange={(data) => {
-                    setHeroTitle(data.hero.title)
-                    setHeroDescription(data.hero.description)
-                    setHeroImage(data.hero.image)
-                    if (data.hero.actions?.[0]) { setHeroCtaLabel(data.hero.actions[0].label); setHeroCtaUrl(data.hero.actions[0].url) }
+                    if (data.hero.actions?.[1]) { setHeroSecondaryCtaLabel(data.hero.actions[1].label); setHeroSecondaryCtaUrl(data.hero.actions[1].url) }
                     setHeroNoteText(data.hero.note?.text || "")
                     setHeroNoteIcon(data.hero.note?.icon || "")
                     setHeroStickerText(data.hero.sticker?.text || "")
@@ -873,7 +864,21 @@ export default function EditProgramPage({ params }: Props) {
                   }}
                 />
               ) : (
-                <SectionEditor programId={programId} initialSections={sections} onChange={setSections} />
+                <EditorialProgramEditor
+                  key={editorKey}
+                  programId={programId}
+                  category={category}
+                  data={{ hero: editorialHero, eyebrow, shortDescription, sections }}
+                  onSectionsChange={setSections}
+                  onChange={(data) => {
+                    setEditorialHero(data.hero)
+                    setHeroImage(data.hero.image)
+                    setHeroTitle(data.hero.title)
+                    setHeroDescription(data.hero.description)
+                    setEyebrow(data.eyebrow)
+                    setShortDescription(data.shortDescription)
+                  }}
+                />
               )}
             </ProgramIdProvider>
           ) : null}
@@ -888,30 +893,7 @@ export default function EditProgramPage({ params }: Props) {
         <VersionHistoryPanel
           programId={programId}
           currentRevision={revision}
-          onRestored={(newRevision, hero, sections) => {
-            setRevision(newRevision)
-            if (hero && typeof hero === "object") {
-              const h = hero as any
-              setHeroTitle(h.title || "")
-              setHeroDescription(h.description || "")
-              if (h.image && typeof h.image === "object" && (h.image.url || h.image.assetId)) {
-                setHeroImage({ assetId: h.image.assetId, url: h.image.url, alt: h.image.alt || "" })
-              } else if (h.image && typeof h.image === "string" && h.image) {
-                setHeroImage({ url: h.image, alt: h.title || "" })
-              }
-              setHeroCtaLabel(h.cta?.label || "")
-              setHeroCtaUrl(h.cta?.url || "")
-              setHeroNoteText(h.note?.text || "")
-              setHeroNoteIcon(h.note?.icon || "")
-              setHeroStickerText(h.sticker?.text || "")
-              setHeroStickerIcon(h.sticker?.icon || "")
-              setHeroPhotoNote(h.photoNote || "")
-            }
-            if (Array.isArray(sections)) {
-              setSections(sections as ProgramSection[])
-            }
-            resetSnapshot()
-          }}
+          onRestored={() => { window.location.reload() }}
         />
       )}
 
@@ -926,7 +908,7 @@ export default function EditProgramPage({ params }: Props) {
         title={title}
         slug={slug}
         category={category}
-        heroImage={heroImage}
+        heroImage={category === "service" ? heroImage : editorialHero.image}
         sections={sections}
         seoTitle={seoTitle}
         seoDescription={seoDescription}

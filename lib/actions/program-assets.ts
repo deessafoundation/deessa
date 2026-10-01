@@ -5,6 +5,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
 import { revalidatePath } from "next/cache"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { hasPermission, ROLE_PERMISSIONS, type AdminRole } from "@/lib/types/admin"
 
 // ─── Constants ──────────────────────────────────────────────
 
@@ -71,7 +72,7 @@ export type AssetRecord = {
 
 async function requireAdmin() {
   const admin = await getCurrentAdmin()
-  if (!admin) throw new Error("Unauthorized")
+  if (!admin?.is_active || !(admin.role in ROLE_PERMISSIONS) || !hasPermission(admin.role as AdminRole, "programs")) throw new Error("Unauthorized")
   return admin
 }
 
@@ -105,16 +106,20 @@ export async function uploadProgramAsset(
 
     // --- Validate inputs ---
     if (!programId) return { ok: false, error: "Program ID is required" }
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(programId)) return { ok: false, error: "Invalid program ID" }
     if (!file) return { ok: false, error: "No file provided" }
     if (!opts.altText?.trim()) return { ok: false, error: "Alt text is required" }
 
     // --- Check asset count quota (50 per program) ---
     const MAX_ASSETS_PER_PROGRAM = 50
     const supabaseCheck = await createClient()
-    const { count } = await supabaseCheck
+    const { data: program, error: programError } = await supabaseCheck.from("programs").select("id").eq("id", programId).single()
+    if (programError || !program) return { ok: false, error: "Program not found or access denied" }
+    const { count, error: quotaError } = await supabaseCheck
       .from("program_assets")
       .select("id", { count: "exact", head: true })
       .eq("program_id", programId)
+    if (quotaError) return { ok: false, error: "Unable to check the upload quota" }
     if (count && count >= MAX_ASSETS_PER_PROGRAM) {
       return { ok: false, error: `Program has reached the maximum of ${MAX_ASSETS_PER_PROGRAM} assets. Remove some before uploading more.` }
     }
@@ -123,7 +128,7 @@ export async function uploadProgramAsset(
       return { ok: false, error: `File exceeds 10 MB limit (${(file.size / 1024 / 1024).toFixed(1)} MB)` }
     }
 
-    if (!ALLOWED_MIME.includes(file.type as any)) {
+    if (!ALLOWED_MIME.some(type => type === file.type)) {
       return { ok: false, error: "Only JPEG, PNG, WebP, and AVIF images are allowed" }
     }
 
@@ -240,7 +245,7 @@ export async function deleteProgramAsset(assetId: string): Promise<{ ok: boolean
     // Fetch asset with program association
     const { data: asset, error: fetchError } = await supabase
       .from("program_assets")
-      .select("storage_path, program_id")
+      .select("storage_path, program_id, url")
       .eq("id", assetId)
       .single()
 
@@ -248,41 +253,24 @@ export async function deleteProgramAsset(assetId: string): Promise<{ ok: boolean
       return { ok: false, error: "Asset not found" }
     }
 
-    // Check if asset is referenced in any draft sections or hero (live protection)
-    const { data: draft } = await supabase
-      .from("program_drafts")
-      .select("sections, hero")
-      .eq("program_id", asset.program_id)
-      .single()
-
-    if (draft?.hero) {
-      const hero = draft.hero as any
-      if (hero.image?.assetId === assetId) {
-        return { ok: false, error: "Cannot delete: asset is used as hero image. Remove it from the editor first." }
-      }
+    // URL-based picks and published snapshots must receive the same protection as IDs.
+    const assetUrl = asset.url
+    const refs = new Set([assetId, assetUrl, `/api/assets/${assetId}`])
+    function usesAsset(value: unknown): boolean {
+      if (typeof value === "string") return refs.has(value) || (!!assetUrl && value.includes(assetUrl))
+      if (Array.isArray(value)) return value.some(usesAsset)
+      if (value && typeof value === "object") return Object.values(value).some(usesAsset)
+      return false
     }
-
-    if (draft?.sections) {
-      const sections = draft.sections as any[]
-      for (const section of sections) {
-        const content = section.content || {}
-        // Check image, gallery, hero image references
-        if (content.image?.assetId === assetId) {
-          return { ok: false, error: "Cannot delete: asset is used in a program section. Remove it from the editor first." }
-        }
-        if (content.images?.some((img: any) => img.assetId === assetId)) {
-          return { ok: false, error: "Cannot delete: asset is used in a gallery section. Remove it from the editor first." }
-        }
-        if (content.hero?.image?.assetId === assetId) {
-          return { ok: false, error: "Cannot delete: asset is used as hero image. Remove it from the editor first." }
-        }
-      }
+    for (const [table, columns] of [["program_drafts", "hero, sections"], ["program_publications", "document"], ["program_versions", "hero, sections"]]) {
+      const { data, error } = await supabase.from(table).select(columns)
+      if (error) return { ok: false, error: "Unable to verify image references. Nothing was deleted." }
+      if (usesAsset(data)) return { ok: false, error: "Cannot delete: this image is referenced by a draft, publication or saved version." }
     }
 
     // Delete from storage
-    await serviceClient.storage.from(BUCKET).remove([asset.storage_path]).catch((e) => {
-      console.warn("Failed to delete storage file:", e)
-    })
+    const { error: storageError } = await serviceClient.storage.from(BUCKET).remove([asset.storage_path])
+    if (storageError) return { ok: false, error: "Image could not be removed from storage. Nothing was removed from the media library." }
 
     // Delete record
     const { error: deleteError } = await supabase
@@ -341,7 +329,7 @@ export async function registerProgramAsset(
     if (!UUID_RE.test(programId)) return { ok: false, error: "Invalid program ID" }
 
     // Validate storage path starts with programId (prevent path traversal)
-    if (!storagePath.startsWith(`${programId}/`)) {
+    if (!storagePath.startsWith(`${programId}/`) || storagePath.split('/').some(part => !part || part === '.' || part === '..') || /[\\\u0000-\u0020]/.test(storagePath)) {
       return { ok: false, error: "Storage path must belong to this program" }
     }
 
@@ -353,11 +341,18 @@ export async function registerProgramAsset(
 
     // Validate file size (10MB max)
     const MAX_SIZE = 10 * 1024 * 1024
-    if (fileSize > MAX_SIZE) {
+    if (!Number.isInteger(fileSize) || fileSize <= 0 || fileSize > MAX_SIZE) {
       return { ok: false, error: "File size must be under 10MB" }
     }
 
     const supabase = await createClient()
+    const { data: program, error: programError } = await supabase.from("programs").select("id").eq("id", programId).single()
+    if (programError || !program) return { ok: false, error: "Program not found or access denied" }
+    const storage = supabase.storage.from(BUCKET)
+    const { data: uploaded, error: downloadError } = await storage.download(storagePath)
+    if (downloadError || !uploaded || uploaded.size !== fileSize || !verifyMagicBytes(await uploaded.arrayBuffer(), mimeType)) return { ok: false, error: "Uploaded image could not be verified" }
+    const { data: canonical } = storage.getPublicUrl(storagePath)
+    if (url !== canonical.publicUrl) return { ok: false, error: "Image URL does not match its storage path" }
     const { data: asset, error: insertError } = await supabase
       .from("program_assets")
       .insert({

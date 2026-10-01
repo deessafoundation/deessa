@@ -3,20 +3,21 @@
 import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
-import { programDocumentSchema, type ProgramDocument } from "@/lib/programs/content"
+import { programDocumentSchema, programDraftSchema, type ProgramDocument } from "@/lib/programs/content"
 import { uniqueSlug } from "@/lib/programs/slug"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { readEditorHero } from "@/lib/programs/editor-hero"
+import { hasPermission, ROLE_PERMISSIONS, type AdminRole } from "@/lib/types/admin"
 
 const BUCKET = "program-assets"
 
-// Strip HTML tags and encode special characters to prevent stored XSS
+// Plain text is escaped by React when rendered. Do not store HTML entities:
+// doing so double-encodes ampersands and apostrophes on every save.
 function sanitizePlainText(text: string): string {
-  const escapeMap: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }
   return text
     .replace(/<[^>]*>/g, "") // strip tags
-    .replace(/[&<>"']/g, (c) => escapeMap[c] || c)
     .trim()
 }
 
@@ -27,7 +28,8 @@ export type CrudResult<T = void> =
   | { ok: false; error: string }
 
 type ProgramRow = {
-  id: string; slug: string; title: string; category: string; status: string
+  id: string; slug: string; title: string; category: ProgramDocument["category"]; status: string
+  short_description: string; eyebrow: string | null; tags: string[]
   display_order: number; created_at: string; updated_at: string
 }
 
@@ -48,34 +50,15 @@ type PublishResult = { versionNumber: number; publishedAt: string }
 
 async function requireAdmin() {
   const admin = await getCurrentAdmin()
-  if (!admin) throw new Error("Unauthorized")
+  if (!admin?.is_active || !(admin.role in ROLE_PERMISSIONS) || !hasPermission(admin.role as AdminRole, "programs")) throw new Error("Unauthorized")
   return admin
 }
 
 // ─── Hero normalizer (Zod document → DB draft JSONB) ────────
 
 function heroForDraft(doc: ProgramDocument) {
-  const img = doc.hero.image
-  const imageUrl = img?.assetId
-    ? `/api/assets/${img.assetId}`
-    : img?.url || ""
-  return {
-    eyebrow: doc.eyebrow,
-    title: doc.hero.title,
-    description: doc.hero.description,
-    image: imageUrl,
-    imageAlt: img?.alt || doc.hero.title,
-    layout: "full_bleed",
-    cta: doc.hero.actions?.[0]
-      ? { label: doc.hero.actions[0].label, url: doc.hero.actions[0].url, variant: doc.hero.actions[0].variant }
-      : undefined,
-    secondaryCta: doc.hero.actions?.[1]
-      ? { label: doc.hero.actions[1].label, url: doc.hero.actions[1].url }
-      : undefined,
-    note: doc.hero.note,
-    sticker: doc.hero.sticker,
-    photoNote: doc.hero.photoNote,
-  }
+  // Store the validated document shape, including image metadata and both actions.
+  return doc.hero
 }
 
 function cardForPublication(doc: ProgramDocument) {
@@ -103,7 +86,7 @@ export async function createProgram(input: {
     const admin = await requireAdmin()
     const supabase = await createClient()
 
-    const parsed = programDocumentSchema.safeParse(input.document)
+    const parsed = programDraftSchema.safeParse(input.document)
     if (!parsed.success) {
       return { ok: false, error: `Invalid document: ${parsed.error.issues[0]?.message}` }
     }
@@ -184,7 +167,7 @@ export async function updateProgramDraft(
     const admin = await requireAdmin()
     const supabase = await createClient()
 
-    const parsed = programDocumentSchema.safeParse(document)
+    const parsed = programDraftSchema.safeParse(document)
     if (!parsed.success) {
       return { ok: false, error: `Invalid document: ${parsed.error.issues[0]?.message}` }
     }
@@ -204,7 +187,7 @@ export async function updateProgramDraft(
 
     const newRevision = expectedRevision + 1
 
-    const { error: updateError } = await supabase
+    const { data: savedDraft, error: updateError } = await supabase
       .from("program_drafts")
       .update({
         hero: heroForDraft(doc),
@@ -216,16 +199,19 @@ export async function updateProgramDraft(
       })
       .eq("program_id", programId)
       .eq("revision", expectedRevision)
+      .select("revision")
+      .maybeSingle()
 
     if (updateError) {
       return { ok: false, error: updateError.message }
     }
+    if (!savedDraft) return { ok: false, error: "Conflict: this draft changed while saving. Reload and try again." }
 
     // Also update master table fields
     const VALID_CATEGORIES = ["service", "outreach", "research", "campaign"]
     const category = VALID_CATEGORIES.includes(doc.category) ? doc.category : "service"
 
-    await supabase
+    const { error: masterError } = await supabase
       .from("programs")
       .update({
         title: sanitizePlainText(doc.title),
@@ -236,6 +222,8 @@ export async function updateProgramDraft(
         updated_by: admin.user_id,
       })
       .eq("id", programId)
+
+    if (masterError) return { ok: false, error: "Content saved, but program details could not be saved. Reload before retrying: " + masterError.message }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,
@@ -256,7 +244,8 @@ export async function updateProgramDraft(
 
 export async function publishProgram(
   programId: string,
-  changeSummary?: string
+  changeSummary?: string,
+  expectedRevision?: number
 ): Promise<CrudResult<PublishResult>> {
   try {
     const admin = await requireAdmin()
@@ -281,6 +270,11 @@ export async function publishProgram(
 
     if (pErr || !program) return { ok: false, error: "Program not found" }
     if (dErr || !draft) return { ok: false, error: "Draft not found. Save the draft before publishing." }
+    if (program.status === "archived") return { ok: false, error: "Restore the archived program before publishing." }
+    if (expectedRevision !== undefined && draft.revision !== expectedRevision) return { ok: false, error: "Draft changed before publication. Reload and review the latest content." }
+
+    const validated = programDocumentSchema.safeParse({ schemaVersion: 1, title: program.title, shortDescription: program.short_description, eyebrow: program.eyebrow || undefined, category: program.category, tags: program.tags || [], hero: readEditorHero(draft.hero, program.title, program.short_description || ""), seo: { title: draft.seo_title || undefined, description: draft.seo_description || undefined }, sections: draft.sections, relatedProgramIds: [] })
+    if (!validated.success) return { ok: false, error: "Invalid draft: " + validated.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join('; ') }
 
     // Check if draft has changed since last publish
     const { data: lastVersion } = await supabase
@@ -293,7 +287,7 @@ export async function publishProgram(
 
     // If already published and draft hasn't changed since last publish, skip version creation
     const alreadyPublished = program.status === "published"
-    const draftChanged = !alreadyPublished || draft.revision !== (program as any).last_published_revision
+    const draftChanged = !alreadyPublished || draft.revision !== program.last_published_revision
 
     let versionNumber: number
     let versionId: string | null = null
@@ -311,7 +305,7 @@ export async function publishProgram(
           program_id: programId,
           version_number: versionNumber,
           schema_version: draft.schema_version,
-          program_data: { title: program.title, category: program.category, slug: program.slug },
+          program_data: { title: program.title, category: program.category, slug: program.slug, shortDescription: program.short_description, eyebrow: program.eyebrow, tags: program.tags, seo: validated.data.seo },
           hero: draft.hero,
           sections: draft.sections,
           change_summary: changeSummary || null,
@@ -327,25 +321,7 @@ export async function publishProgram(
     }
 
     // 2. Build publication document
-    const draftSeo = {
-      title: (draft as any).seo_title || undefined,
-      description: (draft as any).seo_description || undefined,
-    }
-    const document = {
-      schemaVersion: 1 as const,
-      title: program.title,
-      shortDescription: (program as any).short_description,
-      eyebrow: (program as any).eyebrow,
-      category: program.category,
-      tags: (program as any).tags || [],
-      hero: draft.hero,
-      seo: {
-        title: draftSeo.title || (program as any).meta_title || undefined,
-        description: draftSeo.description || (program as any).meta_description || undefined,
-      },
-      sections: draft.sections,
-      relatedProgramIds: [],
-    }
+    const document = validated.data
 
     const now = new Date().toISOString()
 
@@ -356,8 +332,8 @@ export async function publishProgram(
       slug: program.slug,
       category: program.category,
       title: program.title,
-      short_description: (program as any).short_description || "",
-      tags: (program as any).tags || [],
+      short_description: program.short_description || "",
+      tags: program.tags || [],
       card: cardForPublication(document as unknown as ProgramDocument),
       document: document as unknown as Record<string, unknown>,
       display_order: program.display_order,
@@ -377,15 +353,18 @@ export async function publishProgram(
     }
 
     // 4. Update program status (with concurrency guard)
-    const { error: statusErr } = await supabase
+    const { data: published, error: statusErr } = await supabase
       .from("programs")
       .update({ status: "published", published_at: now, updated_by: admin.user_id, last_published_revision: draft.revision })
       .eq("id", programId)
       .eq("status", program.status) // prevent concurrent publish race
+      .select("id")
+      .maybeSingle()
 
     if (statusErr) {
       return { ok: false, error: `Status update failed: ${statusErr.message}` }
     }
+    if (!published) return { ok: false, error: "Program status changed during publication. Reload to check its current state." }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,
@@ -424,13 +403,17 @@ export async function unpublishProgram(
     if (program.status !== "published") return { ok: false, error: "Program is not published" }
 
     // Remove publication
-    await supabase.from("program_publications").delete().eq("program_id", programId)
+    const { error: removalError } = await supabase.from("program_publications").delete().eq("program_id", programId)
+    if (removalError) return { ok: false, error: removalError.message }
 
     // Update status
-    await supabase
+    const { data: changed, error: statusError } = await supabase
       .from("programs")
       .update({ status: "draft", published_at: null, updated_by: admin.user_id })
       .eq("id", programId)
+      .eq("status", "published")
+      .select("id").maybeSingle()
+    if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,
@@ -469,10 +452,11 @@ export async function archiveProgram(
 
     // Unpublish first if published
     if (program.status === "published") {
-      await supabase.from("program_publications").delete().eq("program_id", programId)
+      const { error } = await supabase.from("program_publications").delete().eq("program_id", programId)
+      if (error) return { ok: false, error: error.message }
     }
 
-    await supabase
+    const { data: changed, error: statusError } = await supabase
       .from("programs")
       .update({
         status: "archived",
@@ -481,6 +465,9 @@ export async function archiveProgram(
         updated_by: admin.user_id,
       })
       .eq("id", programId)
+      .eq("status", program.status)
+      .select("id").maybeSingle()
+    if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,
@@ -517,10 +504,13 @@ export async function restoreProgram(
     if (!program) return { ok: false, error: "Program not found" }
     if (program.status !== "archived") return { ok: false, error: "Only archived programs can be restored" }
 
-    await supabase
+    const { data: changed, error: statusError } = await supabase
       .from("programs")
       .update({ status: "draft", archived_at: null, updated_by: admin.user_id })
       .eq("id", programId)
+      .eq("status", "archived")
+      .select("id").maybeSingle()
+    if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
     await supabase.from("activity_logs").insert({
       user_id: admin.id,
@@ -673,18 +663,22 @@ export async function restoreProgramVersion(
     if (dErr || !draft) return { ok: false, error: "Draft not found" }
 
     const newRevision = draft.revision + 1
+    const pd = version.program_data as Record<string, unknown> | null
+    const seo = pd?.seo as ProgramDocument['seo'] | undefined
 
     // Update the draft with the version's content
-    const { error: updateErr } = await supabase
+    const { data: restored, error: updateErr } = await supabase
       .from("program_drafts")
       .update({
         hero: version.hero,
         sections: version.sections,
+        ...(seo ? { seo_title: seo.title || null, seo_description: seo.description || null } : {}),
         revision: newRevision,
         updated_at: new Date().toISOString(),
       })
       .eq("program_id", programId)
       .eq("revision", draft.revision) // optimistic concurrency check
+      .select("revision").maybeSingle()
 
     if (updateErr) {
       if (updateErr.code === "23505") {
@@ -692,11 +686,11 @@ export async function restoreProgramVersion(
       }
       return { ok: false, error: updateErr.message }
     }
+    if (!restored) return { ok: false, error: "Draft changed while restoring. Reload before retrying." }
 
     // Sync master table fields from version's program_data
-    const pd = version.program_data as Record<string, unknown> | null
     if (pd) {
-      await supabase
+      const { error: metadataError } = await supabase
         .from("programs")
         .update({
           title: pd.title,
@@ -707,6 +701,7 @@ export async function restoreProgramVersion(
           updated_at: new Date().toISOString(),
         })
         .eq("id", programId)
+      if (metadataError) return { ok: false, error: "Content restored, but metadata could not be restored. Reload before retrying: " + metadataError.message }
     }
 
     revalidatePath("/admin/programs")
