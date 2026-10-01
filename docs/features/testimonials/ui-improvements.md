@@ -149,18 +149,18 @@ When page reloaded, testimonial images would:
 
 **Before:**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Choose File    No file chosen       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│ Choose File    No file chosen       │
+└─────────────────────────────────────┘
 ```
 
 **After:**
 ```
-â”Œ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”
-â”‚  [Choose File]  No file chosen      â”‚
-â”‚   (Ocean Blue                       â”‚
-â”‚    Gradient)                        â”‚
-â”” â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”˜
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+│  [Choose File]  No file chosen      │
+│   (Ocean Blue                       │
+│    Gradient)                        │
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
      Dashed Border with Hover
 ```
 
@@ -168,13 +168,13 @@ When page reloaded, testimonial images would:
 
 **Before:**
 ```
-Page Load â†’ [HUGE IMAGE] â†’ [Shrinks] â†’ [Correct Size]
+Page Load → [HUGE IMAGE] → [Shrinks] → [Correct Size]
             (Flash!)       (Jarring)    (Finally OK)
 ```
 
 **After:**
 ```
-Page Load â†’ [Correct Size] â†’ [Smooth Animation]
+Page Load → [Correct Size] → [Smooth Animation]
             (Reserved)        (No Flash!)
 ```
 

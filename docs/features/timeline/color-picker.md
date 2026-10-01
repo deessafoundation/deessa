@@ -22,7 +22,7 @@ Badge Gradient Class: from-blue-500 to-blue-600
 Year Badge Class: bg-blue-500
 ```
 
-âŒ **Issues**:
+❌ **Issues**:
 - Requires knowledge of Tailwind CSS
 - Easy to make syntax errors
 - No visual preview of colors
@@ -56,16 +56,16 @@ Created a visual color picker component with:
 - Generates proper Tailwind classes automatically
 
 **Preset Colors**:
-1. Primary Blue (#3FABDE â†’ #2E8BC0)
-2. Education Orange (#F7931E â†’ #F5A623)
-3. Empowerment Pink (#E91E63 â†’ #F06292)
-4. Environment Green (#84CC16 â†’ #65A30D)
-5. Purple (#6F3E96 â†’ #8B5CF6)
-6. Yellow (#F7C52B â†’ #FBBF24)
-7. Red (#EF4444 â†’ #DC2626)
-8. Teal (#14B8A6 â†’ #0D9488)
-9. Indigo (#6366F1 â†’ #4F46E5)
-10. Gray (#6B7280 â†’ #4B5563)
+1. Primary Blue (#3FABDE → #2E8BC0)
+2. Education Orange (#F7931E → #F5A623)
+3. Empowerment Pink (#E91E63 → #F06292)
+4. Environment Green (#84CC16 → #65A30D)
+5. Purple (#6F3E96 → #8B5CF6)
+6. Yellow (#F7C52B → #FBBF24)
+7. Red (#EF4444 → #DC2626)
+8. Teal (#14B8A6 → #0D9488)
+9. Indigo (#6366F1 → #4F46E5)
+10. Gray (#6B7280 → #4B5563)
 
 ### 2. **Updated TimelineManager**
 **File**: `components/admin/homepage-manager/components/TimelineManager.tsx`
@@ -85,34 +85,34 @@ Created a visual color picker component with:
 
 #### **1. Click Color Button**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ [ðŸŽ¨ #3FABDE â†’ #2E8BC0]  â–¼      â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────┐
+│ [🎨 #3FABDE → #2E8BC0]  ▼      │
+└─────────────────────────────────┘
 ```
 
 #### **2. Choose Preset or Custom**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Preset Colors                   â”‚
-â”‚ â”Œâ”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚ â”‚ Blue â”‚ â”‚Orangeâ”‚ â”‚ Pink â”‚     â”‚
-â”‚ â””â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”˜     â”‚
-â”‚                                 â”‚
-â”‚ Custom Color                    â”‚
-â”‚ From: [ðŸŽ¨] #3FABDE              â”‚
-â”‚ To:   [ðŸŽ¨] #2E8BC0              â”‚
-â”‚ [Apply Custom Color]            â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────┐
+│ Preset Colors                   │
+│ ┌──────┐ ┌──────┐ ┌──────┐     │
+│ │ Blue │ │Orange│ │ Pink │     │
+│ └──────┘ └──────┘ └──────┘     │
+│                                 │
+│ Custom Color                    │
+│ From: [🎨] #3FABDE              │
+│ To:   [🎨] #2E8BC0              │
+│ [Apply Custom Color]            │
+└─────────────────────────────────┘
 ```
 
 #### **3. See Preview**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Preview                         â”‚
-â”‚ â”Œâ”€â”€â” 2024                       â”‚
-â”‚ â”‚ðŸŽ¨â”‚ New Milestone              â”‚
-â”‚ â””â”€â”€â”˜ Description here...        â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────┐
+│ Preview                         │
+│ ┌──┐ 2024                       │
+│ │🎨│ New Milestone              │
+│ └──┘ Description here...        │
+└─────────────────────────────────┘
 ```
 
 ---
@@ -126,7 +126,7 @@ Created a visual color picker component with:
 
 ```typescript
 // Gradient
-User picks: #3FABDE â†’ #2E8BC0
+User picks: #3FABDE → #2E8BC0
 Generated: "from-[#3FABDE] to-[#2E8BC0]"
 
 // Solid
@@ -140,10 +140,10 @@ The ColorPicker can parse existing Tailwind classes:
 
 ```typescript
 // Parse gradient
-"from-[#3FABDE] to-[#2E8BC0]" â†’ { from: "#3FABDE", to: "#2E8BC0" }
+"from-[#3FABDE] to-[#2E8BC0]" → { from: "#3FABDE", to: "#2E8BC0" }
 
 // Parse solid
-"bg-[#3FABDE]" â†’ "#3FABDE"
+"bg-[#3FABDE]" → "#3FABDE"
 ```
 
 ---
@@ -152,28 +152,28 @@ The ColorPicker can parse existing Tailwind classes:
 
 ### Before (Technical)
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Badge Gradient Class                    â”‚
-â”‚ [from-blue-500 to-blue-600]            â”‚
-â”‚ Tailwind gradient classes               â”‚
-â”‚                                         â”‚
-â”‚ Year Badge Class                        â”‚
-â”‚ [bg-blue-500]                          â”‚
-â”‚ Tailwind background class               â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────┐
+│ Badge Gradient Class                    │
+│ [from-blue-500 to-blue-600]            │
+│ Tailwind gradient classes               │
+│                                         │
+│ Year Badge Class                        │
+│ [bg-blue-500]                          │
+│ Tailwind background class               │
+└─────────────────────────────────────────┘
 ```
 
 ### After (User-Friendly)
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Badge Gradient                          â”‚
-â”‚ [ðŸŽ¨ #3FABDE â†’ #2E8BC0]  â–¼              â”‚
-â”‚ Icon badge background gradient          â”‚
-â”‚                                         â”‚
-â”‚ Year Badge Color                        â”‚
-â”‚ [ðŸŽ¨ #3FABDE]  â–¼                        â”‚
-â”‚ Year badge background color             â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────┐
+│ Badge Gradient                          │
+│ [🎨 #3FABDE → #2E8BC0]  ▼              │
+│ Icon badge background gradient          │
+│                                         │
+│ Year Badge Color                        │
+│ [🎨 #3FABDE]  ▼                        │
+│ Year badge background color             │
+└─────────────────────────────────────────┘
 ```
 
 ---
@@ -267,25 +267,25 @@ interface ColorPickerProps {
 ## Future Enhancements
 
 ### Possible Improvements
-1. ðŸ”„ Add color palette themes (brand colors, seasonal, etc.)
-2. ðŸ”„ Color accessibility checker (contrast ratio)
-3. ðŸ”„ Recently used colors
-4. ðŸ”„ Color naming/labeling
-5. ðŸ”„ Import/export color schemes
-6. ðŸ”„ Gradient angle selector
-7. ðŸ”„ Opacity/transparency support
+1. 🔄 Add color palette themes (brand colors, seasonal, etc.)
+2. 🔄 Color accessibility checker (contrast ratio)
+3. 🔄 Recently used colors
+4. 🔄 Color naming/labeling
+5. 🔄 Import/export color schemes
+6. 🔄 Gradient angle selector
+7. 🔄 Opacity/transparency support
 
 ---
 
-## ðŸŽ‰ Result
+## 🎉 Result
 
 The Timeline Manager is now **user-friendly** and **accessible** to non-technical users!
 
 **Before**: Required Tailwind CSS knowledge  
 **After**: Visual color picker with presets
 
-**User Experience**: â­â­â­â­â­  
-**Ease of Use**: â­â­â­â­â­  
-**Visual Feedback**: â­â­â­â­â­
+**User Experience**: ⭐⭐⭐⭐⭐  
+**Ease of Use**: ⭐⭐⭐⭐⭐  
+**Visual Feedback**: ⭐⭐⭐⭐⭐
 
-**No more technical barriers for content editors!** ðŸš€
+**No more technical barriers for content editors!** 🚀

@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Security Architecture"
+title: "deessa Foundation — Conference Module: Security Architecture"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Security Architecture
+# deessa Foundation — Conference Module: Security Architecture
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -57,14 +57,14 @@ This system follows these core security principles:
 
 **Partial Protection**:
 
-- âš ï¸ DDoS (Vercel has some protection, but not enterprise-grade WAF)
-- âš ï¸ Webhook replay attacks (idempotency table prevents duplicate processing, but no timestamp check)
+- ⚠️ DDoS (Vercel has some protection, but not enterprise-grade WAF)
+- ⚠️ Webhook replay attacks (idempotency table prevents duplicate processing, but no timestamp check)
 
 **NOT Protected Against** (out of scope):
 
-- âŒ Physical access to Vercel/Supabase data centers (rely on vendor security)
-- âŒ Compromised admin credentials (no 2FA currently, see improvements)
-- âŒ Social engineering (user training required)
+- ❌ Physical access to Vercel/Supabase data centers (rely on vendor security)
+- ❌ Compromised admin credentials (no 2FA currently, see improvements)
+- ❌ Social engineering (user training required)
 
 ### 1.3 Security Responsibility Matrix
 
@@ -87,28 +87,28 @@ This system follows these core security principles:
 **Flow**:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚   Admin    â”‚         â”‚  Supabase Authâ”‚         â”‚  Next.js App â”‚
-â”‚   User     â”‚         â”‚   Service     â”‚         â”‚   (Server)   â”‚
-â””â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
-      â”‚                        â”‚                        â”‚
-      â”œâ”€ POST /auth/signin â”€â”€â”€>â”‚                        â”‚
-      â”‚  email, password        â”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚<â”€â”€â”€ JWT access_token â”€â”€â”¤                        â”‚
-      â”‚     + refresh_token     â”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”œâ”€ GET /admin/conference â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€>  â”‚
-      â”‚  Cookie: sb-access-tokenâ”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚                        â”‚<â”€ Verify JWT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-      â”‚                        â”‚   (check signature,     â”‚
-      â”‚                        â”‚    expiry, role)        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚                        â”œâ”€ Valid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€>â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚<â”€â”€ Admin Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-      â”‚                        â”‚                        â”‚
+┌────────────┐         ┌───────────────┐         ┌──────────────┐
+│   Admin    │         │  Supabase Auth│         │  Next.js App │
+│   User     │         │   Service     │         │   (Server)   │
+└─────┬──────┘         └───────┬───────┘         └──────┬───────┘
+      │                        │                        │
+      ├─ POST /auth/signin ───>│                        │
+      │  email, password        │                        │
+      │                        │                        │
+      │<─── JWT access_token ──┤                        │
+      │     + refresh_token     │                        │
+      │                        │                        │
+      ├─ GET /admin/conference ──────────────────────>  │
+      │  Cookie: sb-access-token│                        │
+      │                        │                        │
+      │                        │<─ Verify JWT ──────────┤
+      │                        │   (check signature,     │
+      │                        │    expiry, role)        │
+      │                        │                        │
+      │                        ├─ Valid ───────────────>│
+      │                        │                        │
+      │<── Admin Dashboard ────────────────────────────┤
+      │                        │                        │
 ```
 
 **Token Lifecycle**:
@@ -189,7 +189,7 @@ if (!data) {
   });
 }
 
-// Both matched â†’ authorized
+// Both matched → authorized
 ```
 
 ### 2.3 Cron Authentication
@@ -221,7 +221,7 @@ export async function GET(req: Request) {
     });
   }
   
-  // Authorized â†’ run cron job
+  // Authorized → run cron job
 }
 ```
 
@@ -275,7 +275,7 @@ WITH CHECK (true);
 
 **Security Trade-off**:
 
-- âŒ **Lost**: Database-level enforcement (RLS would block invalid queries)
+- ❌ **Lost**: Database-level enforcement (RLS would block invalid queries)
 -  **Gained**: Flexibility (can implement custom auth logic)
 -  **Mitigation**: Thorough application-level validation before database queries
 
@@ -291,7 +291,7 @@ WITH CHECK (true);
 
 **Role Assignment**:
 
-- Manual: Supabase dashboard â†’ Authentication â†’ Users â†’ Invite user
+- Manual: Supabase dashboard → Authentication → Users → Invite user
 - No self-registration (closed system)
 - Only deessa staff have accounts
 
@@ -389,10 +389,10 @@ openssl s_client -connect deessafoundation.com:443 -tls1_3
 
 **NOT Collected** (by design):
 
-- âŒ Credit card numbers (handled by payment gateways)
-- âŒ Government IDs (not needed)
-- âŒ Home address (only country collected)
-- âŒ Date of birth (not needed)
+- ❌ Credit card numbers (handled by payment gateways)
+- ❌ Government IDs (not needed)
+- ❌ Home address (only country collected)
+- ❌ Date of birth (not needed)
 
 **Data Retention**:
 
@@ -426,7 +426,7 @@ openssl s_client -connect deessafoundation.com:443 -tls1_3
 
 ```bash
 # View who accessed secrets (Vercel dashboard)
-# Audit Log â†’ Filter: "Environment Variables"
+# Audit Log → Filter: "Environment Variables"
 # Shows: Who, When, What changed
 ```
 
@@ -554,7 +554,7 @@ module.exports = {
 
 **Who Handles Card Data**:
 
-- âŒ deessa system does NOT store, process, or transmit card data
+- ❌ deessa system does NOT store, process, or transmit card data
 -  Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
 
 **Compliance Status**:
@@ -576,10 +576,10 @@ module.exports = {
 
 **NO CARD DATA** stored:
 
-- âŒ Card number
-- âŒ CVV
-- âŒ Expiry date
-- âŒ Cardholder name
+- ❌ Card number
+- ❌ CVV
+- ❌ Expiry date
+- ❌ Cardholder name
 
 ### 6.2 Webhook Security (HMAC)
 
@@ -609,7 +609,7 @@ export async function POST(req: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
   
-  // Signature valid â†’ process event
+  // Signature valid → process event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     // Update database
@@ -624,7 +624,7 @@ export async function POST(req: Request) {
 1. Stripe signs webhook payload with shared secret (`STRIPE_WEBHOOK_SECRET`)
 2. Stripe sends payload + signature in `stripe-signature` header
 3. Server recomputes signature using same secret + payload
-4. If computed signature matches header signature â†’ request is authentic
+4. If computed signature matches header signature → request is authentic
 
 **Protection Against**:
 
@@ -633,7 +633,7 @@ export async function POST(req: Request) {
 
 **Khalti/eSewa**:
 
-- âŒ NO webhook signature verification (they don't offer webhooks)
+- ❌ NO webhook signature verification (they don't offer webhooks)
 -  Mitigation: Dual-path verification (polling + manual check in gateway dashboard)
 
 ### 6.3 Amount Verification
@@ -674,13 +674,13 @@ const session = await stripe.checkout.sessions.create({
 
 ```
 Client says: "Charge $1"
-       â†“
+       ↓
 Server ignores client amount
-       â†“
-Server calculates: attendanceMode="In-person" â†’ $20
-       â†“
+       ↓
+Server calculates: attendanceMode="In-person" → $20
+       ↓
 Server creates Stripe session for $20
-       â†“
+       ↓
 User pays $20 (cannot pay $1)
 ```
 
@@ -697,11 +697,11 @@ const expectedAmount = calculateAmount(...);
 
 // Compare (with rounding tolerance)
 if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
-  // Amount mismatch â†’ Set payment_status = 'review'
+  // Amount mismatch → Set payment_status = 'review'
   await updatePaymentStatus(registration.id, 'review');
   await notifyAdmin('Amount mismatch detected for ' + registration.id);
 } else {
-  // Amount correct â†’ Confirm
+  // Amount correct → Confirm
   await confirmRegistration(registration.id);
 }
 ```
@@ -725,7 +725,7 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 16 (Right to Rectification)**:
 
-- âš ï¸ PARTIALLY: Users must contact admin to update (no self-service edit)
+- ⚠️ PARTIALLY: Users must contact admin to update (no self-service edit)
 -  Admin can update registration details
 
 **Article 17 (Right to Erasure)**:
@@ -746,7 +746,7 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 33 (Breach Notification)**:
 
-- âš ï¸ Process documented but not tested
+- ⚠️ Process documented but not tested
 -  Breach notification within 72 hours (manual process)
 
 **Data Processing Agreement (DPA)**:
@@ -763,18 +763,18 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 -  All forms navigable with Tab
 -  Enter key submits forms
-- âš ï¸ Modal dialogs need Escape key support
+- ⚠️ Modal dialogs need Escape key support
 
 **Screen Readers**:
 
-- âš ï¸ Missing ARIA labels on some buttons
-- âš ï¸ Form errors not announced (need aria-live)
+- ⚠️ Missing ARIA labels on some buttons
+- ⚠️ Form errors not announced (need aria-live)
 -  Semantic HTML used (`<button>`, `<form>`, `<label>`)
 
 **Color Contrast**:
 
 -  Text meets 4.5:1 ratio (checked with WebAIM tool)
-- âš ï¸ Some status badges may fail for colorblind users (rely on color only)
+- ⚠️ Some status badges may fail for colorblind users (rely on color only)
 
 **Recommended Improvements**:
 
@@ -826,8 +826,8 @@ ORDER BY created_at DESC;
 
 **Current Limitation**:
 
-- âš ï¸ No dedicated `audit_log` table (actions logged via updated_at timestamps)
-- âš ï¸ Admin actions not explicitly logged (IMPROVEMENT NEEDED)
+- ⚠️ No dedicated `audit_log` table (actions logged via updated_at timestamps)
+- ⚠️ Admin actions not explicitly logged (IMPROVEMENT NEEDED)
 
 ---
 

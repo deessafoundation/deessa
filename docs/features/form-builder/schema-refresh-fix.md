@@ -1,6 +1,6 @@
 ---
 title: "Form Schema Refresh Issue - Complete Fix"
-description: "When users applied a template, made changes, saved as draft, published, and then refreshed the page â€” the form buil..."
+description: "When users applied a template, made changes, saved as draft, published, and then refreshed the page — the form buil..."
 owner: "deessa Team"
 status: active
 category: feature
@@ -10,7 +10,7 @@ last_updated: 2026-09-12
 # Form Schema Refresh Issue - Complete Fix
 
 ## Problem Summary
-When users applied a template, made changes, saved as draft, published, and then refreshed the page â€” the form builder reverted to the default schema (just name, email, phone fields) instead of showing the saved work.
+When users applied a template, made changes, saved as draft, published, and then refreshed the page — the form builder reverted to the default schema (just name, email, phone fields) instead of showing the saved work.
 
 ## Root Cause Analysis
 
@@ -143,13 +143,13 @@ The combination of both fixes ensures:
 - [ ] Apply a template
 - [ ] Make changes to the form
 - [ ] Save as draft
-- [ ] Refresh the page â†’ Form should show draft changes
+- [ ] Refresh the page → Form should show draft changes
 - [ ] Publish the form
-- [ ] Refresh the page â†’ Form should show published version
+- [ ] Refresh the page → Form should show published version
 - [ ] Switch tabs
-- [ ] Return to form-builder tab â†’ State should be preserved
+- [ ] Return to form-builder tab → State should be preserved
 - [ ] Make changes without saving
-- [ ] Refresh page â†’ Should show last saved version (unsaved changes lost, as expected)
+- [ ] Refresh page → Should show last saved version (unsaved changes lost, as expected)
 
 ## Additional Notes
 

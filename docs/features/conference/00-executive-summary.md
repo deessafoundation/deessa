@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Executive Summary"
+title: "deessa Foundation — Conference Module: Executive Summary"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Executive Summary
+# deessa Foundation — Conference Module: Executive Summary
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  

@@ -396,7 +396,7 @@ export function StoriesSections({
                             )}
                           </div>
                           <span className="text-[11px] font-bold text-teal opacity-0 transition-all duration-300 group-hover:opacity-100">
-                            READ �,
+                            READ ↗
                           </span>
                         </div>
                       </div>

@@ -39,7 +39,7 @@ Before starting credential rotation:
 
 1. **Generate New Webhook Secret in Stripe Dashboard**
    - Log in to [Stripe Dashboard](https://dashboard.stripe.com/)
-   - Navigate to **Developers** â†’ **Webhooks**
+   - Navigate to **Developers** → **Webhooks**
    - Locate your webhook endpoint (e.g., `https://yourdomain.com/api/webhooks/stripe`)
    - Click on the webhook endpoint
    - Click **Roll secret** button
@@ -112,7 +112,7 @@ Before starting credential rotation:
 
 1. **Generate New Secret Key in Khalti Dashboard**
    - Log in to [Khalti Merchant Dashboard](https://khalti.com/)
-   - Navigate to **Settings** â†’ **API Keys**
+   - Navigate to **Settings** → **API Keys**
    - Click **Regenerate Secret Key**
    - Copy the new secret key
    - **Important:** Old key is immediately invalidated
@@ -183,7 +183,7 @@ Before starting credential rotation:
 
 1. **Generate New Secret Key in eSewa Dashboard**
    - Log in to [eSewa Merchant Dashboard](https://esewa.com.np/)
-   - Navigate to **Settings** â†’ **API Configuration**
+   - Navigate to **Settings** → **API Configuration**
    - Click **Regenerate Secret Key**
    - Copy the new secret key
    - Note: Old key may remain valid for 24 hours (verify with eSewa)
@@ -578,13 +578,13 @@ If issues occur during rotation:
 -  Document rotation procedures
 
 ### DON'T:
-- âŒ Commit credentials to git
-- âŒ Share credentials via email or chat
-- âŒ Use production credentials in development
-- âŒ Hardcode credentials in source code
-- âŒ Store credentials in plain text files
-- âŒ Reuse credentials across environments
-- âŒ Share credentials with third parties
+- ❌ Commit credentials to git
+- ❌ Share credentials via email or chat
+- ❌ Use production credentials in development
+- ❌ Hardcode credentials in source code
+- ❌ Store credentials in plain text files
+- ❌ Reuse credentials across environments
+- ❌ Share credentials with third parties
 
 ---
 

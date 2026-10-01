@@ -32,13 +32,13 @@ This guide defines how to write, organize, and maintain documentation in this pr
 | Rule | Standard | Example |
 |------|----------|---------|
 | Casing | `kebab-case` always | `credential-rotation-guide.md` |
-| Extension | `.md` always | â€” |
+| Extension | `.md` always | — |
 | Length | Max 4 words | `receipt-access-control.md` |
 | No status | Never COMPLETE, FINAL, DONE | ~~`feature-complete.md`~~ |
 | No dates | Never 2026-03-15-*.md | ~~`2026-03-15-deploy.md`~~ |
 | No versions | Never _v2, -v2 | ~~`payment-v2.md`~~ |
 | No screaming snake | Never SCREAMING_SNAKE_CASE | ~~`PAYMENT_GUIDE.md`~~ |
-| Exception | `README.md` only | â€” |
+| Exception | `README.md` only | — |
 | Numbered prefix | Only for ordered sequences | `001-use-supabase.md` |
 
 **Why kebab-case?**
@@ -66,25 +66,25 @@ This guide defines how to write, organize, and maintain documentation in this pr
 
 ```
 Is it about how the ENTIRE system works?
-  â†’ architecture/
+  → architecture/
 
 Is it about a SPECIFIC feature?
-  â†’ features/<feature>/
+  → features/<feature>/
 
 Is it about DEPLOYING or OPERATING the system?
-  â†’ operations/
+  → operations/
 
 Is it a TEAM CONVENTION or DECISION?
-  â†’ standards/
+  → standards/
 
 Is it an ACTIVE PLAN for work not yet done?
-  â†’ planning/
+  → planning/
 
 Is it a RELEASE NOTE or CHANGELOG entry?
-  â†’ releases/
+  → releases/
 
 Is it HISTORICAL but still valuable?
-  â†’ archive/
+  → archive/
 ```
 
 ### What Goes Where
@@ -104,10 +104,10 @@ Is it HISTORICAL but still valuable?
 
 | Mistake | Fix |
 |---------|-----|
-| Putting a payment troubleshooting guide in `how-to/` | Put it in `features/payments/` â€” it's about payments |
-| Putting architecture docs in `features/` | Put them in `architecture/` â€” they're system-wide |
+| Putting a payment troubleshooting guide in `how-to/` | Put it in `features/payments/` — it's about payments |
+| Putting architecture docs in `features/` | Put them in `architecture/` — they're system-wide |
 | Putting a runbook in `operations/` when it's feature-specific | Put it in `features/<feature>/` if it only covers one feature |
-| Putting active planning in `archive/` | Put it in `planning/` â€” archive is for old stuff |
+| Putting active planning in `archive/` | Put it in `planning/` — archive is for old stuff |
 
 ---
 
@@ -273,8 +273,8 @@ Organize with clear headings. Use H2 for major sections, H3 for subsections.
 
 ## Related Documentation
 
-- [Link 1](path) â€” Brief description
-- [Link 2](path) â€” Brief description
+- [Link 1](path) — Brief description
+- [Link 2](path) — Brief description
 ```
 
 ### Heading Rules
@@ -282,7 +282,7 @@ Organize with clear headings. Use H2 for major sections, H3 for subsections.
 - One H1 per document (the title)
 - H2 for major sections
 - H3 for subsections
-- Never skip levels (H2 â†’ H4)
+- Never skip levels (H2 → H4)
 - Use sentence case for headings (not Title Case)
 
 ### Link Rules
@@ -490,7 +490,7 @@ last_updated: 2026-07-22
 ---
 ```
 
-Filename: `stripe-setup.md` âœ“
+Filename: `stripe-setup.md` ✓
 
 ### Bad Document
 
@@ -500,7 +500,7 @@ title: "STRIPE_SETUP_GUIDE_V2_FINAL.md"
 ---
 ```
 
-Filename: `STRIPE_SETUP_GUIDE_V2_FINAL.md` âœ— (SCREAMING_SNAKE, version, status, extension in title)
+Filename: `STRIPE_SETUP_GUIDE_V2_FINAL.md` ✗ (SCREAMING_SNAKE, version, status, extension in title)
 
 ---
 
@@ -508,9 +508,9 @@ Filename: `STRIPE_SETUP_GUIDE_V2_FINAL.md` âœ— (SCREAMING_SNAKE, version, st
 
 This standard is enforced through:
 
-1. **PR reviews** â€” All doc PRs must follow these standards
-2. **Frontmatter validation** â€” CI can validate required fields
-3. **Naming checks** â€” Verify kebab-case, no status words
-4. **Link checking** â€” Automated link verification
+1. **PR reviews** — All doc PRs must follow these standards
+2. **Frontmatter validation** — CI can validate required fields
+3. **Naming checks** — Verify kebab-case, no status words
+4. **Link checking** — Automated link verification
 
 Non-compliant docs should be flagged in PR review and fixed before merge.

@@ -43,7 +43,7 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 - Pricing tiers (ticket types)
 - Email template customization
 - Registration management
-- Event lifecycle (draft â†’ published â†’ disabled â†’ archived)
+- Event lifecycle (draft → published → disabled → archived)
 
 **Public Features:**
 - Event browsing (`/events`)
@@ -55,27 +55,27 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 ### 1.3 System Context Diagram
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    deessa Foundation Platform                â”‚
-â”‚                                                              â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”‚
-â”‚  â”‚  Conference System   â”‚      â”‚  Event Management    â”‚    â”‚
-â”‚  â”‚    (Legacy)          â”‚      â”‚     Module (New)     â”‚    â”‚
-â”‚  â”‚                      â”‚      â”‚                      â”‚    â”‚
-â”‚  â”‚  /conference/*       â”‚      â”‚  /events/*           â”‚    â”‚
-â”‚  â”‚  conference_* tables â”‚      â”‚  event_* tables      â”‚    â”‚
-â”‚  â”‚                      â”‚      â”‚                      â”‚    â”‚
-â”‚  â”‚   Production       â”‚      â”‚  ðŸ—ï¸ In Development   â”‚    â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
-â”‚           â”‚                              â”‚                   â”‚
-â”‚           â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                   â”‚
-â”‚                          â”‚                                   â”‚
-â”‚                    Shared Layer:                             â”‚
-â”‚              - Payment Providers (Stripe, Khalti, eSewa)    â”‚
-â”‚              - Email Service                                 â”‚
-â”‚              - Admin Authentication                          â”‚
-â”‚              - Storage (Supabase)                            â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                    deessa Foundation Platform                │
+│                                                              │
+│  ┌──────────────────────┐      ┌──────────────────────┐    │
+│  │  Conference System   │      │  Event Management    │    │
+│  │    (Legacy)          │      │     Module (New)     │    │
+│  │                      │      │                      │    │
+│  │  /conference/*       │      │  /events/*           │    │
+│  │  conference_* tables │      │  event_* tables      │    │
+│  │                      │      │                      │    │
+│  │   Production       │      │  🏗️ In Development   │    │
+│  └──────────────────────┘      └──────────────────────┘    │
+│           │                              │                   │
+│           └──────────────┬───────────────┘                   │
+│                          │                                   │
+│                    Shared Layer:                             │
+│              - Payment Providers (Stripe, Khalti, eSewa)    │
+│              - Email Service                                 │
+│              - Admin Authentication                          │
+│              - Storage (Supabase)                            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -117,10 +117,10 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 ### 2.4 Progressive Enhancement
 
 **Build in Phases:**
-1. Schema â†’ Actions â†’ Admin CRUD
-2. Form builder â†’ Pricing â†’ Emails
-3. Public pages â†’ Registration â†’ Payments
-4. Polish â†’ Testing â†’ Deployment
+1. Schema → Actions → Admin CRUD
+2. Form builder → Pricing → Emails
+3. Public pages → Registration → Payments
+4. Polish → Testing → Deployment
 
 **Why:** Each phase delivers value, reduces risk
 
@@ -141,22 +141,22 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 
 ### 3.2 Out of Scope
 
-âŒ Modifications to conference system
-âŒ Real-time seat availability
-âŒ Check-in / QR code scanning
-âŒ Event series / recurring events
-âŒ Multi-language support (Phase 1)
-âŒ Mobile app
-âŒ Waitlist management (future)
+❌ Modifications to conference system
+❌ Real-time seat availability
+❌ Check-in / QR code scanning
+❌ Event series / recurring events
+❌ Multi-language support (Phase 1)
+❌ Mobile app
+❌ Waitlist management (future)
 
 ### 3.3 Deferred to Later Phases
 
-ðŸ”„ Email campaign management
-ðŸ”„ Advanced reporting & analytics
-ðŸ”„ Integration with external calendars
-ðŸ”„ Social media integration
-ðŸ”„ Refund processing
-ðŸ”„ Group discounts / promo codes
+🔄 Email campaign management
+🔄 Advanced reporting & analytics
+🔄 Integration with external calendars
+🔄 Social media integration
+🔄 Refund processing
+🔄 Group discounts / promo codes
 
 ---
 
@@ -176,26 +176,26 @@ The Event Management Module is a standalone, CMS-like platform for creating and 
 
 ```
 events (extended - shared)
-  â”œâ”€ source_system = 'events_module' | 'legacy_conference'
-  â””â”€ New columns: status, banner_url, gallery, venue details
+  ├─ source_system = 'events_module' | 'legacy_conference'
+  └─ New columns: status, banner_url, gallery, venue details
   
 event_agenda_items (new)
-  â””â”€ Ordered list of sessions/schedule per event
+  └─ Ordered list of sessions/schedule per event
   
 event_form_schemas (new)
-  â””â”€ Versioned form definitions per event
+  └─ Versioned form definitions per event
   
 event_form_templates (new)
-  â””â”€ Reusable form starting points
+  └─ Reusable form starting points
   
 event_registrations (new)
-  â””â”€ Slimmer than conference_registrations (more JSONB)
+  └─ Slimmer than conference_registrations (more JSONB)
   
 event_ticket_types (new)
-  â””â”€ Pricing tiers per event
+  └─ Pricing tiers per event
   
 event_email_templates (new)
-  â””â”€ Customizable email content per event
+  └─ Customizable email content per event
 ```
 
 **See:** `04-DATABASE-SCHEMA.md` for complete schema
@@ -238,36 +238,36 @@ event_email_templates (new)
 
 ```
 components/events/
-â”œâ”€â”€ public/                      # Public-facing components
-â”‚   â”œâ”€â”€ EventCard.tsx
-â”‚   â”œâ”€â”€ EventsGrid.tsx
-â”‚   â”œâ”€â”€ EventBanner.tsx
-â”‚   â”œâ”€â”€ EventAgenda.tsx
-â”‚   â”œâ”€â”€ EventMap.tsx
-â”‚   â”œâ”€â”€ EventRegisterCta.tsx
-â”‚   â””â”€â”€ event-registration-form.tsx
-â”‚
-â””â”€â”€ admin/                       # Admin components
-    â”œâ”€â”€ EventTable.tsx
-    â”œâ”€â”€ EventBasicInfoForm.tsx
-    â”œâ”€â”€ AgendaEditor.tsx
-    â”œâ”€â”€ LocationEditor.tsx
-    â”œâ”€â”€ PricingEditor.tsx
-    â”œâ”€â”€ EmailTemplateEditor.tsx
-    â”œâ”€â”€ EventFormBuilder.tsx
-    â””â”€â”€ EventStatusControls.tsx
+├── public/                      # Public-facing components
+│   ├── EventCard.tsx
+│   ├── EventsGrid.tsx
+│   ├── EventBanner.tsx
+│   ├── EventAgenda.tsx
+│   ├── EventMap.tsx
+│   ├── EventRegisterCta.tsx
+│   └── event-registration-form.tsx
+│
+└── admin/                       # Admin components
+    ├── EventTable.tsx
+    ├── EventBasicInfoForm.tsx
+    ├── AgendaEditor.tsx
+    ├── LocationEditor.tsx
+    ├── PricingEditor.tsx
+    ├── EmailTemplateEditor.tsx
+    ├── EventFormBuilder.tsx
+    └── EventStatusControls.tsx
 ```
 
 ### 5.3 Server Actions Structure
 
 ```
 lib/actions/events-module/
-â”œâ”€â”€ event-crud.ts                # Core CRUD operations
-â”œâ”€â”€ event-agenda.ts              # Agenda management
-â”œâ”€â”€ event-form-schema.ts         # Form versioning
-â”œâ”€â”€ event-registration.ts        # Registration handling
-â”œâ”€â”€ event-pricing.ts             # Ticket types
-â””â”€â”€ event-email-templates.ts     # Email management
+├── event-crud.ts                # Core CRUD operations
+├── event-agenda.ts              # Agenda management
+├── event-form-schema.ts         # Form versioning
+├── event-registration.ts        # Registration handling
+├── event-pricing.ts             # Ticket types
+└── event-email-templates.ts     # Email management
 ```
 
 ---
@@ -293,7 +293,7 @@ import { startStripeCheckout } from "@/lib/payments/stripe"
 
 **Event-Specific Logic:**
 ```typescript
-// âŒ Do NOT import and modify
+// ❌ Do NOT import and modify
 //  DO rebuild as EventFormBuilder.tsx
 components/events/admin/EventFormBuilder.tsx
 
@@ -306,8 +306,8 @@ components/events/admin/EventFormBuilder.tsx
 ### 6.3 Conditional Strategy
 
 **Payment Provider Code:**
-- If in separate `lib/payments/` â†’ Import directly
-- If inline in conference actions â†’ Duplicate minimal glue code
+- If in separate `lib/payments/` → Import directly
+- If inline in conference actions → Duplicate minimal glue code
 - Document for future consolidation
 
 ---

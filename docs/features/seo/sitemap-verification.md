@@ -34,7 +34,7 @@ npm run dev
 
 - [ ] **Check Admin Page Meta Tags:**
   - Visit http://localhost:3000/admin
-  - Right-click â†’ "View Page Source"
+  - Right-click → "View Page Source"
   - Search for `<meta name="robots"`
   - Should find: `<meta name="robots" content="noindex, nofollow">`
 
@@ -68,7 +68,7 @@ After deploying to your production or staging environment:
   - Review "Sitemaps" page for processing status
 
 - [ ] Verify exclusions (after ~1 week):
-  - Go to "Coverage" â†’ "Excluded"
+  - Go to "Coverage" → "Excluded"
   - Should see admin pages marked as "Excluded by 'noindex' tag"
 
 ### 4. Content Verification
@@ -118,7 +118,7 @@ Check a few entries in the sitemap:
   - Should redirect to `/admin/login`
 
 - [ ] Verify service role key is not exposed:
-  - Check browser DevTools â†’ Network tab
+  - Check browser DevTools → Network tab
   - Ensure `SUPABASE_SERVICE_ROLE_KEY` never appears in any response
 
 ### 7. Performance Check
@@ -148,7 +148,7 @@ echo $SUPABASE_SERVICE_ROLE_KEY
 
 **Solution:**
 - This is expected initially - Google needs to re-crawl
-- Request URL removal in Search Console: "Removals" â†’ "Temporarily remove URL"
+- Request URL removal in Search Console: "Removals" → "Temporarily remove URL"
 - Allow 1-2 weeks for full re-crawl and de-indexing
 
 ### Issue: Sitemap uses localhost URLs in production
@@ -184,7 +184,7 @@ Use these online tools to validate your implementation:
   - Test individual pages to see how Google sees them
 
 - [ ] **Robots.txt Tester:** In Google Search Console
-  - Go to Settings â†’ robots.txt Tester
+  - Go to Settings → robots.txt Tester
   - Test specific URLs to see if they're blocked
 
 ## Sign-Off
@@ -201,4 +201,4 @@ Once all checklist items are complete:
 **Tested by:** _________________  
 **Date:** _________________  
 **Environment:** Development / Staging / Production  
-**Status:**  Approved / âš ï¸ Issues Found / âŒ Failed
+**Status:**  Approved / ⚠️ Issues Found / ❌ Failed

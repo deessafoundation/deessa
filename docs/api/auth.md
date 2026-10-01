@@ -121,7 +121,7 @@ Admin endpoints require additional role verification:
 ### Role Check Flow
 
 ```
-Request â†’ Validate JWT â†’ Check admin_users â†’ Verify role â†’ Allow/Deny
+Request → Validate JWT → Check admin_users → Verify role → Allow/Deny
 ```
 
 ## Endpoint Auth Requirements

@@ -43,8 +43,8 @@ last_updated: 2026-09-12
 -  JPG/JPEG
 -  PNG
 -  WebP
-- âŒ GIF (not supported)
-- âŒ PDF (not supported)
+- ❌ GIF (not supported)
+- ❌ PDF (not supported)
 
 ### File Size
 - **Maximum**: 2MB
@@ -65,18 +65,18 @@ last_updated: 2026-09-12
 
 ## Common Issues & Solutions
 
-### âŒ "Invalid file type"
+### ❌ "Invalid file type"
 **Problem**: File format not supported  
 **Solution**: Convert image to JPG, PNG, or WebP
 
-### âŒ "File too large"
+### ❌ "File too large"
 **Problem**: Image exceeds 2MB  
 **Solution**: 
 - Compress image using online tools
 - Reduce image dimensions
 - Save with lower quality setting
 
-### âŒ "Upload failed"
+### ❌ "Upload failed"
 **Problem**: Network or server error  
 **Solution**:
 - Check internet connection
@@ -84,11 +84,11 @@ last_updated: 2026-09-12
 - Try a different image
 - Contact support if persists
 
-### âŒ "Unauthorized"
+### ❌ "Unauthorized"
 **Problem**: Admin session expired  
 **Solution**: Logout and login again
 
-### âš ï¸ Image not showing in preview
+### ⚠️ Image not showing in preview
 **Problem**: Invalid URL or upload failed  
 **Solution**:
 - Check URL is correct
@@ -127,20 +127,20 @@ last_updated: 2026-09-12
 
 ## Tips & Tricks
 
-### ðŸ’¡ Quick Image Optimization
+### 💡 Quick Image Optimization
 Use free online tools:
 - **TinyPNG** - Compress PNG/JPG
 - **Squoosh** - Convert to WebP
 - **Canva** - Crop to square
 - **Remove.bg** - Remove backgrounds
 
-### ðŸ’¡ Finding Good Images
+### 💡 Finding Good Images
 - Use professional headshots
 - Request photos from testimonial givers
 - Use stock photos (with license)
 - Hire photographer for consistency
 
-### ðŸ’¡ Maintaining Consistency
+### 💡 Maintaining Consistency
 - Use same dimensions for all
 - Apply similar cropping style
 - Match lighting/color tone

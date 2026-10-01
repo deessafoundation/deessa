@@ -1,5 +1,5 @@
 ---
-title: "ðŸš€ Homepage CMS Deployment Checklist"
+title: "🚀 Homepage CMS Deployment Checklist"
 description: "- x SQL migration file created scripts/db/migrations/037-homepage-cms-schema.sql"
 owner: "deessa Team"
 status: operational
@@ -7,7 +7,7 @@ category: operations
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸš€ Homepage CMS Deployment Checklist
+# 🚀 Homepage CMS Deployment Checklist
 
 ## Pre-Deployment Verification
 
@@ -429,9 +429,9 @@ Before marking as complete:
 
 ---
 
-**Status**: Ready for deployment! ðŸš€
+**Status**: Ready for deployment! 🚀
 
-**Risk Level**: ðŸŸ¢ Low (full fallback support)
+**Risk Level**: 🟢 Low (full fallback support)
 
 **Estimated Time**: 30-60 minutes
 

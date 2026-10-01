@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: API Reference"
+title: "deessa Foundation — Conference Module: API Reference"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: API Reference
+# deessa Foundation — Conference Module: API Reference
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -72,7 +72,7 @@ last_updated: 2026-09-12
 
 **Purpose**: Initiate payment session with chosen provider
 
-**Authentication**: None (public) â€” dual-key verified in server action
+**Authentication**: None (public) — dual-key verified in server action
 
 **Rate Limit**: 10 requests per 60 seconds per IP
 
@@ -157,7 +157,7 @@ curl -X POST https://deessafoundation.com/api/conference/start-payment \
 
 **Purpose**: Verify Stripe payment directly after redirect (client-side verification)
 
-**Authentication**: None (public) â€” session ID verified against DB
+**Authentication**: None (public) — session ID verified against DB
 
 **Request Body**:
 
@@ -232,7 +232,7 @@ curl -X POST https://deessafoundation.com/api/conference/confirm-stripe-session 
 
 **Purpose**: Lookup registration for payment link page
 
-**Authentication**: None (public) â€” dual-key verification
+**Authentication**: None (public) — dual-key verification
 
 **Rate Limit**: 60 requests per 60 seconds per IP
 
@@ -284,7 +284,7 @@ curl "https://deessafoundation.com/api/conference/verify-registration?rid=a1b2c3
 
 **Purpose**: Lightweight status poll endpoint for payment-success page
 
-**Authentication**: None (public) â€” by `rid` only (no email required post-payment)
+**Authentication**: None (public) — by `rid` only (no email required post-payment)
 
 **Query Parameters**:
 
@@ -324,7 +324,7 @@ curl "https://deessafoundation.com/api/conference/status?rid=a1b2c3d4"
 
 **Purpose**: Re-send payment link email to registrant
 
-**Authentication**: None â€” security in server action (dual-key)
+**Authentication**: None — security in server action (dual-key)
 
 **Request Body**:
 
@@ -705,21 +705,21 @@ async function callAPI() {
 
 **Happy Path**:
 
-1. Register â†’ verify-registration â†’ start-payment â†’ confirm-stripe-session â†’ status (confirmed)
+1. Register → verify-registration → start-payment → confirm-stripe-session → status (confirmed)
 
 **Error Paths**:
 
-1. start-payment with expired registration â†’ 400 error
-2. confirm-stripe-session with wrong sessionId â†’ 403 error
-3. verify-registration with wrong email â†’ 404 error
-4. status polling after cancellation â†’ status = "cancelled"
+1. start-payment with expired registration → 400 error
+2. confirm-stripe-session with wrong sessionId → 403 error
+3. verify-registration with wrong email → 404 error
+4. status polling after cancellation → status = "cancelled"
 
 **Edge Cases**:
 
 1. Duplicate webhook + direct verify (both should succeed due to idempotency)
-2. Amount mismatch â†’ status = "review"
-3. Rate limit violation â†’ 429 error
-4. Payment after expiry â†’ blocked
+2. Amount mismatch → status = "review"
+3. Rate limit violation → 429 error
+4. Payment after expiry → blocked
 
 ### 7.3 Example Test (Jest)\*\*
 

@@ -256,7 +256,7 @@ For certified training programs:
 
 ### Saving as Template
 1. Build your form in the builder
-2. Click "Templates" â†’ "Save Current" tab
+2. Click "Templates" → "Save Current" tab
 3. Enter name, description, category
 4. Optionally make public for other admins
 5. Click "Save Template"
@@ -278,7 +278,7 @@ After applying a template, you can:
 - Change step structure
 - Add new steps
 
-The template is just a starting point â€” the form is fully editable.
+The template is just a starting point — the form is fully editable.
 
 ---
 

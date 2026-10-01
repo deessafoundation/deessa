@@ -180,9 +180,9 @@ const handleRemoveImage = async (index: number) => {
    - Shows image preview
    - Shows filename
    - Warns about permanent deletion
-4. User clicks "Cancel" â†’ Nothing happens
+4. User clicks "Cancel" → Nothing happens
    OR
-   User clicks "Delete Permanently" â†’ Image deleted
+   User clicks "Delete Permanently" → Image deleted
 5. Success notification appears
 6. Testimonial shows no image
 ```
@@ -280,9 +280,9 @@ testimonials/john-doe_2026-06-01_14-30-45_a3f9b2c1.jpg
 -  Files uploaded through our system
 
 **What doesn't get deleted**:
-- âŒ External URLs (e.g., unsplash.com)
-- âŒ Files in other buckets
-- âŒ Invalid URLs
+- ❌ External URLs (e.g., unsplash.com)
+- ❌ Files in other buckets
+- ❌ Invalid URLs
 
 ### Safety Checks
 

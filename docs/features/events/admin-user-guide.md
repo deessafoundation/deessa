@@ -1,5 +1,5 @@
 ---
-title: "Events Module â€” Admin User Guide"
+title: "Events Module — Admin User Guide"
 description: "The Events Module allows you to create, manage, and publish events with custom registration forms. This guide covers ..."
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Events Module â€” Admin User Guide
+# Events Module — Admin User Guide
 
 ## Overview
 
@@ -29,18 +29,18 @@ The Events Module allows you to create, manage, and publish events with custom r
 
 1. Click **Create Event** button
 2. Fill in the basic information:
-   - **Event Title** â€” Required. The name of your event.
-   - **URL Slug** â€” Auto-generated from title. Customize if needed.
-   - **Short Description** â€” Brief summary shown on event cards (1-2 sentences).
-   - **Full Description** â€” Detailed description for the event detail page.
+   - **Event Title** — Required. The name of your event.
+   - **URL Slug** — Auto-generated from title. Customize if needed.
+   - **Short Description** — Brief summary shown on event cards (1-2 sentences).
+   - **Full Description** — Detailed description for the event detail page.
 3. Set **Date & Location**:
-   - **Event Date** â€” Required. When the event takes place.
-   - **Time** â€” Optional. e.g., "09:00 AM - 05:00 PM"
-   - **Location** â€” Required. e.g., "Kathmandu, Nepal"
+   - **Event Date** — Required. When the event takes place.
+   - **Time** — Optional. e.g., "09:00 AM - 05:00 PM"
+   - **Location** — Required. e.g., "Kathmandu, Nepal"
 4. Configure **Settings**:
-   - **Category** â€” Conference, Workshop, Seminar, Meetup, or General
-   - **Free Event** â€” Toggle on for free events, off for paid events
-   - **Contact Email** â€” Optional. Shown on the registration page.
+   - **Category** — Conference, Workshop, Seminar, Meetup, or General
+   - **Free Event** — Toggle on for free events, off for paid events
+   - **Contact Email** — Optional. Shown on the registration page.
 5. Click **Create Event**
 
 ---
@@ -59,9 +59,9 @@ After creating an event, you'll see the event dashboard with tabs:
 - Save changes
 
 ### Media Tab
-- **Banner Image** â€” Hero image for the detail page (1920x600px recommended)
-- **Card Thumbnail** â€” Image shown on event cards (400x300px recommended)
-- **Gallery** â€” Additional images for the detail page
+- **Banner Image** — Hero image for the detail page (1920x600px recommended)
+- **Card Thumbnail** — Image shown on event cards (400x300px recommended)
+- **Gallery** — Additional images for the detail page
 - Enter image URLs or upload to Supabase Storage
 
 ### Location Tab
@@ -77,11 +77,11 @@ After creating an event, you'll see the event dashboard with tabs:
 
 ### Form Builder Tab
 - Create custom registration forms
-- **Field Palette** â€” Add fields from 12 types (text, email, phone, number, select, radio, checkbox, toggle, date, URL, file, heading, paragraph)
-- **Canvas** â€” Arrange fields in steps
-- **Properties** â€” Edit field label, placeholder, required, options
-- **Save Draft** â€” Save without publishing
-- **Publish** â€” Make the form live for registrants
+- **Field Palette** — Add fields from 12 types (text, email, phone, number, select, radio, checkbox, toggle, date, URL, file, heading, paragraph)
+- **Canvas** — Arrange fields in steps
+- **Properties** — Edit field label, placeholder, required, options
+- **Save Draft** — Save without publishing
+- **Publish** — Make the form live for registrants
 
 ### Pricing Tab
 - For paid events, manage ticket types
@@ -92,10 +92,10 @@ After creating an event, you'll see the event dashboard with tabs:
 ### Email Templates Tab
 - Customize emails sent to registrants
 - 4 template types:
-  - **Confirmation** â€” Sent when registration is confirmed
-  - **Payment Receipt** â€” Sent after successful payment
-  - **Reminder** â€” Sent before the event date
-  - **Cancellation** â€” Sent when registration is cancelled
+  - **Confirmation** — Sent when registration is confirmed
+  - **Payment Receipt** — Sent after successful payment
+  - **Reminder** — Sent before the event date
+  - **Cancellation** — Sent when registration is cancelled
 - Use variables: `{{full_name}}`, `{{event_title}}`, `{{event_date}}`, `{{ticket_name}}`
 
 ### Registrations Tab
@@ -105,28 +105,28 @@ After creating an event, you'll see the event dashboard with tabs:
 
 ### Settings Tab
 - **Status Controls**:
-  - **Publish** â€” Make event visible to public
-  - **Disable** â€” Pause registration without deleting
-  - **Archive** â€” Hide from active list (restore to draft anytime)
-- **Duplicate Event** â€” Clone as new draft (copies details, agenda, forms, pricing, email templates)
-- **Delete Event** â€” Only available if no registrations exist
+  - **Publish** — Make event visible to public
+  - **Disable** — Pause registration without deleting
+  - **Archive** — Hide from active list (restore to draft anytime)
+- **Duplicate Event** — Clone as new draft (copies details, agenda, forms, pricing, email templates)
+- **Delete Event** — Only available if no registrations exist
 
 ---
 
 ## Event Status Flow
 
 ```
-Draft â†’ Published â†’ Disabled â†’ Archived
-                â†‘         â†“
-                â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+Draft → Published → Disabled → Archived
+                ↑         ↓
+                └─────────┘
                   
-Archived â†’ Restore to Draft
+Archived → Restore to Draft
 ```
 
-- **Draft** â€” Not visible to public
-- **Published** â€” Visible, registration open
-- **Disabled** â€” Hidden from public, registration paused
-- **Archived** â€” Hidden from admin list, historical record
+- **Draft** — Not visible to public
+- **Published** — Visible, registration open
+- **Disabled** — Hidden from public, registration paused
+- **Archived** — Hidden from admin list, historical record
 
 ---
 
@@ -138,10 +138,10 @@ Archived â†’ Restore to Draft
 3. Click the field to edit its properties
 
 ### Field Properties
-- **Label** â€” Display name
-- **Placeholder** â€” Hint text
-- **Help Text** â€” Additional guidance
-- **Required** â€” Whether the field must be filled
+- **Label** — Display name
+- **Placeholder** — Hint text
+- **Help Text** — Additional guidance
+- **Required** — Whether the field must be filled
 
 ### Managing Steps
 - Add new steps with "Add Step" button
@@ -150,8 +150,8 @@ Archived â†’ Restore to Draft
 - Delete steps (cannot delete the last step)
 
 ### Saving
-- **Save Draft** â€” Saves without making it live
-- **Publish** â€” Saves and makes it the active form for registration
+- **Save Draft** — Saves without making it live
+- **Publish** — Saves and makes it the active form for registration
 
 ---
 
@@ -173,30 +173,30 @@ Archived â†’ Restore to Draft
 ## Email Templates
 
 ### Available Variables
-- `{{full_name}}` â€” Registrant's name
-- `{{email}}` â€” Registrant's email
-- `{{event_title}}` â€” Event title
-- `{{event_date}}` â€” Event date
-- `{{event_location}}` â€” Event location
-- `{{ticket_name}}` â€” Ticket type name
-- `{{ticket_price}}` â€” Ticket price
+- `{{full_name}}` — Registrant's name
+- `{{email}}` — Registrant's email
+- `{{event_title}}` — Event title
+- `{{event_date}}` — Event date
+- `{{event_location}}` — Event location
+- `{{ticket_name}}` — Ticket type name
+- `{{ticket_price}}` — Ticket price
 
 ### Template Types
-- **Confirmation** â€” Sent on successful registration
-- **Payment Receipt** â€” Sent after payment
-- **Reminder** â€” Sent before event (configure timing later)
-- **Cancellation** â€” Sent when registration is cancelled
+- **Confirmation** — Sent on successful registration
+- **Payment Receipt** — Sent after payment
+- **Reminder** — Sent before event (configure timing later)
+- **Cancellation** — Sent when registration is cancelled
 
 ---
 
 ## Tips
 
-1. **Start with the form builder** â€” Create your registration form before publishing
-2. **Use short descriptions** â€” They appear on event cards (1-2 sentences)
-3. **Set banner images** â€” They make your event detail pages look professional
-4. **Test registration** â€” Create a test event and register yourself
-5. **Save drafts often** â€” The form builder supports save without publishing
-6. **Use categories** â€” Help users find relevant events
+1. **Start with the form builder** — Create your registration form before publishing
+2. **Use short descriptions** — They appear on event cards (1-2 sentences)
+3. **Set banner images** — They make your event detail pages look professional
+4. **Test registration** — Create a test event and register yourself
+5. **Save drafts often** — The form builder supports save without publishing
+6. **Use categories** — Help users find relevant events
 
 ---
 

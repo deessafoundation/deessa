@@ -19,14 +19,14 @@ Comprehensive email and in-app notification system for support report assignment
 **Behavior**:
 -  Sends email to new assignee (green theme, action required)
 -  Creates in-app notification for new assignee
--  Email subject: `ðŸ”” New Support Assignment: [Report Subject]`
+-  Email subject: `🔔 New Support Assignment: [Report Subject]`
 
 ### 2. Reassignment
 **When**: Admin changes assignee from one person to another
 **Behavior**:
 -  Detects reassignment automatically (checks if report already has assignee)
 -  Sends email to **new assignee** (purple theme, action required)
-  - Shows assignment history (Previous â†’ Current)
+  - Shows assignment history (Previous → Current)
   - "Action Required" message
   - "View & Respond" button
 -  Sends email to **previous assignee** (amber theme, informational)
@@ -34,8 +34,8 @@ Comprehensive email and in-app notification system for support report assignment
   - "No Action Required" message
   - "View Report (Read-Only)" button
 -  Creates in-app notifications for both admins
--  Email subject for new assignee: `ðŸ”„ Support Report Reassigned to You: [Report Subject]`
--  Email subject for previous assignee: `â†©ï¸ Support Report Reassigned: [Report Subject]`
+-  Email subject for new assignee: `🔄 Support Report Reassigned to You: [Report Subject]`
+-  Email subject for previous assignee: `↩️ Support Report Reassigned: [Report Subject]`
 
 ### 3. Unassignment
 **When**: Admin removes assignee from a report
@@ -43,7 +43,7 @@ Comprehensive email and in-app notification system for support report assignment
 -  Sends email to previous assignee (gray theme, informational)
 -  Creates in-app notification for previous assignee
 -  "No Action Required" message
--  Email subject: `ðŸ”“ Unassigned from Support Report: [Report Subject]`
+-  Email subject: `🔓 Unassigned from Support Report: [Report Subject]`
 
 ## Files Created
 
@@ -51,7 +51,7 @@ Comprehensive email and in-app notification system for support report assignment
 1. **`lib/email/templates/support-reassignment.ts`**
    - Dual-purpose template with `isNewAssignee` flag
    - Different content/styling for new vs previous assignee
-   - Shows assignment history (Previous â†’ Current)
+   - Shows assignment history (Previous → Current)
 
 2. **`lib/email/templates/support-unassignment.ts`**
    - Gray theme for informational message
@@ -101,10 +101,10 @@ IF INITIAL ASSIGNMENT:
 
 | Scenario | Theme Color | Icon | Action Required |
 |----------|-------------|------|-----------------|
-| Initial Assignment | Green | ðŸ”” | Yes |
-| Reassignment (New) | Purple | ðŸ”„ | Yes |
-| Reassignment (Previous) | Amber | â†©ï¸ | No |
-| Unassignment | Gray | ðŸ”“ | No |
+| Initial Assignment | Green | 🔔 | Yes |
+| Reassignment (New) | Purple | 🔄 | Yes |
+| Reassignment (Previous) | Amber | ↩️ | No |
+| Unassignment | Gray | 🔓 | No |
 
 ## Notification Metadata
 
@@ -164,7 +164,7 @@ IF INITIAL ASSIGNMENT:
 3. **Expected**: 
    - Admin receives green-themed email
    - Admin sees notification in notification bell
-   - Email subject: "ðŸ”” New Support Assignment: ..."
+   - Email subject: "🔔 New Support Assignment: ..."
 
 ### Test 2: Reassignment
 1. Open assigned support report
@@ -173,7 +173,7 @@ IF INITIAL ASSIGNMENT:
    - New admin receives purple-themed email with "Action Required"
    - Previous admin receives amber-themed email with "No Action Required"
    - Both admins see notifications
-   - Email subjects: "ðŸ”„ Support Report Reassigned to You: ..." and "â†©ï¸ Support Report Reassigned: ..."
+   - Email subjects: "🔄 Support Report Reassigned to You: ..." and "↩️ Support Report Reassigned: ..."
 
 ### Test 3: Unassignment
 1. Open assigned support report
@@ -181,7 +181,7 @@ IF INITIAL ASSIGNMENT:
 3. **Expected**:
    - Previous admin receives gray-themed email
    - Previous admin sees notification
-   - Email subject: "ðŸ”“ Unassigned from Support Report: ..."
+   - Email subject: "🔓 Unassigned from Support Report: ..."
 
 ## Database Tables Used
 

@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Improvements, Risks & Limitations"
+title: "deessa Foundation — Conference Module: Improvements, Risks & Limitations"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Improvements, Risks & Limitations
+# deessa Foundation — Conference Module: Improvements, Risks & Limitations
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -87,21 +87,21 @@ last_updated: 2026-09-12
 
 ```
 lib/conference/
-â”œâ”€â”€ services/
-â”‚   â”œâ”€â”€ registration-service.ts      # Core registration logic
-â”‚   â”œâ”€â”€ payment-service.ts            # Payment gateway orchestration
-â”‚   â”œâ”€â”€ email-service.ts              # Email template + send logic
-â”‚   â””â”€â”€ settings-service.ts           # Settings retrieval + caching
-â”œâ”€â”€ validators/
-â”‚   â”œâ”€â”€ registration-schema.ts        # Zod schemas
-â”‚   â””â”€â”€ payment-schema.ts
-â”œâ”€â”€ gateways/
-â”‚   â”œâ”€â”€ stripe.ts                     # Stripe integration
-â”‚   â”œâ”€â”€ khalti.ts                     # Khalti integration
-â”‚   â””â”€â”€ esewa.ts                      # eSewa integration
-â””â”€â”€ db/
-    â”œâ”€â”€ queries.ts                    # Prepared SQL queries
-    â””â”€â”€ models.ts                     # TypeScript types
+├── services/
+│   ├── registration-service.ts      # Core registration logic
+│   ├── payment-service.ts            # Payment gateway orchestration
+│   ├── email-service.ts              # Email template + send logic
+│   └── settings-service.ts           # Settings retrieval + caching
+├── validators/
+│   ├── registration-schema.ts        # Zod schemas
+│   └── payment-schema.ts
+├── gateways/
+│   ├── stripe.ts                     # Stripe integration
+│   ├── khalti.ts                     # Khalti integration
+│   └── esewa.ts                      # eSewa integration
+└── db/
+    ├── queries.ts                    # Prepared SQL queries
+    └── models.ts                     # TypeScript types
 ```
 
 **Estimated Effort**: 1 week (high risk of introducing bugs during refactor)
@@ -562,7 +562,7 @@ ADD COLUMN conference_id uuid REFERENCES conferences(id);
 - Registration trends over time (line chart)
 - Payment method breakdown (pie chart)
 - Attendance mode split (bar chart)
-- Conversion funnel (registrations â†’ payments)
+- Conversion funnel (registrations → payments)
 
 ### 6.2 Medium Priority (6-12 months)
 
@@ -630,7 +630,7 @@ const finalAmount = applyDiscount(baseAmount, discount);
 **Analytics Dashboard**:
 
 - Google Analytics integration
-- Conversion tracking (views â†’ registrations â†’ payments)
+- Conversion tracking (views → registrations → payments)
 - A/B testing different registration flows
 
 ---

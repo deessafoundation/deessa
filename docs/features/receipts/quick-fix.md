@@ -11,23 +11,23 @@ last_updated: 2026-09-12
 
 ## Problem: Receipts not being generated in Vercel
 
-### ðŸ” Quick Diagnosis (2 minutes)
+### 🔍 Quick Diagnosis (2 minutes)
 
 1. **Check if webhooks are being received:**
-   - Go to Stripe Dashboard â†’ Webhooks â†’ Your endpoint
+   - Go to Stripe Dashboard → Webhooks → Your endpoint
    - Look at "Recent deliveries"
-   - If empty or showing errors â†’ **Issue A: Webhook not configured**
-   - If showing 200 OK â†’ **Issue B: Receipt generation failing**
+   - If empty or showing errors → **Issue A: Webhook not configured**
+   - If showing 200 OK → **Issue B: Receipt generation failing**
 
 2. **Check environment variables:**
    - Visit: `https://your-domain.vercel.app/api/webhooks/stripe/test`
-   - If any value is `false` â†’ **Issue C: Missing environment variables**
+   - If any value is `false` → **Issue C: Missing environment variables**
 
 3. **Check Vercel logs:**
-   - Vercel Dashboard â†’ Your Project â†’ Logs
+   - Vercel Dashboard → Your Project → Logs
    - Search for "Receipt generated" or "Receipt generation failed"
-   - If no logs â†’ **Issue A: Webhook not configured**
-   - If error logs â†’ **Issue D: Specific error**
+   - If no logs → **Issue A: Webhook not configured**
+   - If error logs → **Issue D: Specific error**
 
 ---
 
@@ -43,7 +43,7 @@ last_updated: 2026-09-12
 4. Events: Select `checkout.session.completed` and `invoice.payment_succeeded`
 5. Click "Add endpoint"
 6. Copy the "Signing secret" (starts with `whsec_`)
-7. Go to Vercel â†’ Settings â†’ Environment Variables
+7. Go to Vercel → Settings → Environment Variables
 8. Add/Update: `STRIPE_WEBHOOK_SECRET` = the signing secret
 9. Redeploy or wait for auto-deploy
 
@@ -65,7 +65,7 @@ last_updated: 2026-09-12
    - Copy the 16-character password
 
 2. Add to Vercel:
-   - Go to Vercel â†’ Settings â†’ Environment Variables
+   - Go to Vercel → Settings → Environment Variables
    - Add: `GOOGLE_EMAIL` = your-email@gmail.com
    - Add: `GOOGLE_APP_PASSWORD` = the 16-char password (with spaces)
    - Select all environments (Production, Preview, Development)
@@ -86,11 +86,11 @@ last_updated: 2026-09-12
 ### Required Variables:
 
 ```bash
-# Supabase (get from Supabase Dashboard â†’ Settings â†’ API)
+# Supabase (get from Supabase Dashboard → Settings → API)
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-# Stripe (get from Stripe Dashboard â†’ Developers â†’ API keys)
+# Stripe (get from Stripe Dashboard → Developers → API keys)
 STRIPE_SECRET_KEY=sk_live_...  # Use sk_live_ for production
 STRIPE_WEBHOOK_SECRET=whsec_...  # From webhook endpoint settings
 
@@ -108,7 +108,7 @@ RECEIPT_TOKEN_SECRET=your-random-secret
 ```
 
 **Steps:**
-1. Go to Vercel â†’ Settings â†’ Environment Variables
+1. Go to Vercel → Settings → Environment Variables
 2. Add each missing variable
 3. Select all environments
 4. Save
@@ -126,7 +126,7 @@ RECEIPT_TOKEN_SECRET=your-random-secret
 - Receipt download button doesn't work
 
 **Fix:**
-1. Go to Vercel â†’ Settings â†’ Environment Variables
+1. Go to Vercel → Settings → Environment Variables
 2. Add or update:
    ```
    NEXT_PUBLIC_APP_URL=https://your-actual-domain.com
@@ -143,7 +143,7 @@ RECEIPT_TOKEN_SECRET=your-random-secret
 ### Error: "Missing Supabase service role credentials"
 
 **Fix:**
-1. Go to Supabase Dashboard â†’ Settings â†’ API
+1. Go to Supabase Dashboard → Settings → API
 2. Copy the "service_role" key (starts with `eyJ...`)
 3. Add to Vercel as `SUPABASE_SERVICE_ROLE_KEY`
 4. Redeploy
@@ -151,7 +151,7 @@ RECEIPT_TOKEN_SECRET=your-random-secret
 ### Error: "Invalid signature"
 
 **Fix:**
-1. Go to Stripe Dashboard â†’ Webhooks â†’ Your endpoint
+1. Go to Stripe Dashboard → Webhooks → Your endpoint
 2. Click "Reveal" next to "Signing secret"
 3. Copy the secret
 4. Update `STRIPE_WEBHOOK_SECRET` in Vercel
@@ -199,7 +199,7 @@ After fixing, verify everything works:
 
 ### Check Vercel Logs for Specific Errors
 
-1. Go to Vercel Dashboard â†’ Your Project â†’ Logs
+1. Go to Vercel Dashboard → Your Project → Logs
 2. Filter by "Runtime Logs"
 3. Look for errors after making a donation
 4. Common errors and fixes:

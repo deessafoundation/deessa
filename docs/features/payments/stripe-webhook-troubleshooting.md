@@ -21,11 +21,11 @@ Use this checklist to quickly identify webhook configuration issues:
   - If you get 404, the endpoint isn't deployed correctly
 
 - [ ] **Environment variables are configured in Vercel**
-  - Go to Vercel Dashboard â†’ Your Project â†’ Settings â†’ Environment Variables
+  - Go to Vercel Dashboard → Your Project → Settings → Environment Variables
   - Verify all required variables are present (see section below)
 
 - [ ] **Webhook is registered in Stripe Dashboard**
-  - Go to [Stripe Dashboard â†’ Webhooks](https://dashboard.stripe.com/webhooks)
+  - Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
   - Verify your production URL is listed
   - Check that status shows "Enabled"
 
@@ -58,7 +58,7 @@ Your Vercel project needs these environment variables configured:
 
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your project
-3. Click **Settings** â†’ **Environment Variables**
+3. Click **Settings** → **Environment Variables**
 4. For each variable:
    - Click **Add New**
    - Enter the **Key** (e.g., `STRIPE_WEBHOOK_SECRET`)
@@ -101,7 +101,7 @@ If any value shows `false`, that environment variable is missing or not loaded c
 
 ### Step 1: Create Webhook Endpoint
 
-1. Go to [Stripe Dashboard â†’ Webhooks](https://dashboard.stripe.com/webhooks)
+1. Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
 2. Click **Add endpoint**
 3. Enter your webhook URL:
    ```
@@ -183,7 +183,7 @@ Logs are essential for debugging webhook issues.
 
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your project
-3. Click **Logs** tab (or **Deployments** â†’ Click deployment â†’ **Logs**)
+3. Click **Logs** tab (or **Deployments** → Click deployment → **Logs**)
 4. Filter by:
    - **Source:** Select your production deployment
    - **Search:** Enter "webhook" or "stripe"
@@ -243,7 +243,7 @@ grep "donation-id-here" vercel-logs.txt
 3. Webhook secret not updated after rotation
 
 **Solutions:**
-1. Get the correct secret from Stripe Dashboard â†’ Webhooks â†’ Your endpoint â†’ Signing secret
+1. Get the correct secret from Stripe Dashboard → Webhooks → Your endpoint → Signing secret
 2. Update `STRIPE_WEBHOOK_SECRET` in Vercel
 3. Redeploy application
 4. Test again
@@ -260,7 +260,7 @@ grep "donation-id-here" vercel-logs.txt
 3. Application not redeployed after adding variable
 
 **Solutions:**
-1. Add `STRIPE_WEBHOOK_SECRET` in Vercel â†’ Settings â†’ Environment Variables
+1. Add `STRIPE_WEBHOOK_SECRET` in Vercel → Settings → Environment Variables
 2. Verify exact spelling (case-sensitive)
 3. Redeploy application
 4. Test diagnostic endpoint
@@ -278,7 +278,7 @@ grep "donation-id-here" vercel-logs.txt
 3. Webhook endpoint not deployed
 
 **Solutions:**
-1. Verify webhook exists in Stripe Dashboard â†’ Webhooks
+1. Verify webhook exists in Stripe Dashboard → Webhooks
 2. Check URL matches your Vercel deployment: `https://yourdomain.com/api/webhooks/stripe`
 3. Test endpoint accessibility: `curl https://yourdomain.com/api/webhooks/stripe/test`
 4. Check Stripe Dashboard webhook status (should be "Enabled")
@@ -297,7 +297,7 @@ grep "donation-id-here" vercel-logs.txt
 
 **Solutions:**
 1. Check Vercel logs for webhook processing
-2. Check Stripe Dashboard â†’ Webhooks â†’ Recent deliveries
+2. Check Stripe Dashboard → Webhooks → Recent deliveries
 3. Verify `SUPABASE_SERVICE_ROLE_KEY` is configured
 4. Test with diagnostic endpoint
 5. Check database permissions
@@ -354,16 +354,16 @@ All values should be `true`
 - [ ] Receipt generated
 
 **5. Failure Scenarios**
-- [ ] Cancel payment â†’ status updates to "cancelled"
-- [ ] Declined card â†’ status updates to "failed"
-- [ ] Expired session â†’ status updates to "cancelled"
+- [ ] Cancel payment → status updates to "cancelled"
+- [ ] Declined card → status updates to "failed"
+- [ ] Expired session → status updates to "cancelled"
 
 ## 7. Getting Help
 
 If you've followed all steps and webhooks still aren't working:
 
 1. **Check Stripe Status:** [https://status.stripe.com](https://status.stripe.com)
-2. **Review Stripe Logs:** Dashboard â†’ Developers â†’ Logs
+2. **Review Stripe Logs:** Dashboard → Developers → Logs
 3. **Check Vercel Status:** [https://www.vercel-status.com](https://www.vercel-status.com)
 4. **Contact Stripe Support:** They're very responsive and can check webhook delivery from their end
 
@@ -381,7 +381,7 @@ When seeking help, provide:
 
 For security, rotate webhook secrets quarterly:
 
-1. In Stripe Dashboard â†’ Webhooks â†’ Your endpoint
+1. In Stripe Dashboard → Webhooks → Your endpoint
 2. Click **Roll secret**
 3. Copy the new secret
 4. Update `STRIPE_WEBHOOK_SECRET` in Vercel
@@ -405,7 +405,7 @@ For security, rotate webhook secrets quarterly:
 
 ### Regular Checks
 
-- **Daily:** Check Stripe Dashboard â†’ Webhooks for failed deliveries
+- **Daily:** Check Stripe Dashboard → Webhooks for failed deliveries
 - **Weekly:** Review Vercel logs for webhook errors
 - **Monthly:** Verify diagnostic endpoint returns all `true`
 - **Quarterly:** Rotate webhook secrets
@@ -452,8 +452,8 @@ POST https://yourdomain.com/api/webhooks/stripe
 - Logs: https://dashboard.stripe.com/logs
 
 **Vercel Dashboard:**
-- Logs: https://vercel.com/dashboard â†’ Your Project â†’ Logs
-- Environment Variables: https://vercel.com/dashboard â†’ Your Project â†’ Settings â†’ Environment Variables
+- Logs: https://vercel.com/dashboard → Your Project → Logs
+- Environment Variables: https://vercel.com/dashboard → Your Project → Settings → Environment Variables
 
 **Test Cards:**
 - Success: `4242 4242 4242 4242`

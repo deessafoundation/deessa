@@ -159,11 +159,11 @@ const [isSkipping, setIsSkipping] = useState(false)
 4. Test keyboard accessibility
 
 ### Specific Scenarios:
-- Load page â†’ click anywhere â†’ sound should enable
-- Load page â†’ click skip â†’ video should stop immediately
-- Load page â†’ rapid click skip multiple times â†’ should only skip once
-- Load page â†’ wait for autoplay â†’ click â†’ sound enables on playing video
-- Load page on slow connection â†’ click before video loads â†’ should start with sound
+- Load page → click anywhere → sound should enable
+- Load page → click skip → video should stop immediately
+- Load page → rapid click skip multiple times → should only skip once
+- Load page → wait for autoplay → click → sound enables on playing video
+- Load page on slow connection → click before video loads → should start with sound
 
 ## Expected Behavior
 

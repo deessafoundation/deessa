@@ -1,5 +1,5 @@
 ---
-title: "Story Editor â€” Developer Documentation"
+title: "Story Editor — Developer Documentation"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Story Editor â€” Developer Documentation
+# Story Editor — Developer Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
@@ -35,57 +35,57 @@ last_updated: 2026-09-12
 ### 1.1 System Architecture
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                     Admin Panel (Next.js)                    â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”          â”‚
-â”‚  â”‚   Story Form     â”‚â”€â”€â”€â”€â”€â”€â”€â”€â–¶â”‚  Rich Text       â”‚          â”‚
-â”‚  â”‚   Component      â”‚         â”‚  Editor          â”‚          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜          â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â–¼                            â–¼                     â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”          â”‚
-â”‚  â”‚  Server Actions  â”‚         â”‚  Tiptap Core     â”‚          â”‚
-â”‚  â”‚  (Form Submit)   â”‚         â”‚  + Extensions    â”‚          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜          â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â–¼                            â–¼                     â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”          â”‚
-â”‚  â”‚   Supabase DB    â”‚         â”‚  HTML Output     â”‚          â”‚
-â”‚  â”‚  (stories table) â”‚â—€â”€â”€â”€â”€â”€â”€â”€â”€â”‚  (Serialized)    â”‚          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜          â”‚
-â”‚                                                               â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                              â”‚
-                              â”‚
-                              â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    Public Site (Next.js)                     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”          â”‚
-â”‚  â”‚  Story Detail    â”‚â”€â”€â”€â”€â”€â”€â”€â”€â–¶â”‚  Content         â”‚          â”‚
-â”‚  â”‚  Page            â”‚         â”‚  Sanitizer       â”‚          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜          â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â”‚                            â”‚                     â”‚
-â”‚           â–¼                            â–¼                     â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”          â”‚
-â”‚  â”‚   Fetch Story    â”‚         â”‚  Safe HTML       â”‚          â”‚
-â”‚  â”‚   from DB        â”‚         â”‚  Output          â”‚          â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜          â”‚
-â”‚                                        â”‚                     â”‚
-â”‚                                        â”‚                     â”‚
-â”‚                                        â–¼                     â”‚
-â”‚                              â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”            â”‚
-â”‚                              â”‚  Render to       â”‚            â”‚
-â”‚                              â”‚  Public Page     â”‚            â”‚
-â”‚                              â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜            â”‚
-â”‚                                                               â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                     Admin Panel (Next.js)                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────────┐         ┌──────────────────┐          │
+│  │   Story Form     │────────▶│  Rich Text       │          │
+│  │   Component      │         │  Editor          │          │
+│  └──────────────────┘         └──────────────────┘          │
+│           │                            │                     │
+│           │                            │                     │
+│           ▼                            ▼                     │
+│  ┌──────────────────┐         ┌──────────────────┐          │
+│  │  Server Actions  │         │  Tiptap Core     │          │
+│  │  (Form Submit)   │         │  + Extensions    │          │
+│  └──────────────────┘         └──────────────────┘          │
+│           │                            │                     │
+│           │                            │                     │
+│           ▼                            ▼                     │
+│  ┌──────────────────┐         ┌──────────────────┐          │
+│  │   Supabase DB    │         │  HTML Output     │          │
+│  │  (stories table) │◀────────│  (Serialized)    │          │
+│  └──────────────────┘         └──────────────────┘          │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Public Site (Next.js)                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────────┐         ┌──────────────────┐          │
+│  │  Story Detail    │────────▶│  Content         │          │
+│  │  Page            │         │  Sanitizer       │          │
+│  └──────────────────┘         └──────────────────┘          │
+│           │                            │                     │
+│           │                            │                     │
+│           ▼                            ▼                     │
+│  ┌──────────────────┐         ┌──────────────────┐          │
+│  │   Fetch Story    │         │  Safe HTML       │          │
+│  │   from DB        │         │  Output          │          │
+│  └──────────────────┘         └──────────────────┘          │
+│                                        │                     │
+│                                        │                     │
+│                                        ▼                     │
+│                              ┌──────────────────┐            │
+│                              │  Render to       │            │
+│                              │  Public Page     │            │
+│                              └──────────────────┘            │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### 1.2 Technology Stack
@@ -106,25 +106,25 @@ last_updated: 2026-09-12
 
 **Create/Edit Flow:**
 ```
-User Input â†’ Tiptap Editor â†’ HTML Serialization â†’ Hidden Form Field â†’ 
-Server Action â†’ Database (stories.content)
+User Input → Tiptap Editor → HTML Serialization → Hidden Form Field → 
+Server Action → Database (stories.content)
 ```
 
 **Image Upload Flow:**
 ```
-File Selection â†’ FileUpload Component â†’ Supabase Storage â†’ 
-Public URL â†’ Editor Image Node
+File Selection → FileUpload Component → Supabase Storage → 
+Public URL → Editor Image Node
 ```
 
 **Public Rendering Flow:**
 ```
-Database â†’ Story Content (HTML) â†’ Content Sanitizer â†’ 
-Safe HTML â†’ Public Page Render
+Database → Story Content (HTML) → Content Sanitizer → 
+Safe HTML → Public Page Render
 ```
 
 **Legacy Story Flow:**
 ```
-Plain Text Content â†’ Detect No HTML Tags â†’ Convert \n to <br> â†’ Render
+Plain Text Content → Detect No HTML Tags → Convert \n to <br> → Render
 ```
 
 ---
@@ -135,26 +135,26 @@ Plain Text Content â†’ Detect No HTML Tags â†’ Convert \n to <br> â�
 
 ```
 components/admin/
-â”œâ”€â”€ story-form.tsx                    # Main form container
-â””â”€â”€ rich-text-editor/
-    â”œâ”€â”€ rich-text-editor.tsx          # Main editor component
-    â”œâ”€â”€ toolbar.tsx                   # Formatting toolbar
-    â”œâ”€â”€ slash-menu.tsx                # Slash command menu
-    â”œâ”€â”€ bubble-toolbar.tsx            # Floating selection toolbar
-    â”œâ”€â”€ extensions/
-    â”‚   â”œâ”€â”€ image-extension.ts        # Custom image node
-    â”‚   â”œâ”€â”€ two-column-extension.ts   # Two-column layout
-    â”‚   â”œâ”€â”€ callout-extension.ts      # Callout boxes
-    â”‚   â”œâ”€â”€ highlight-quote-extension.ts  # Highlight quotes
-    â”‚   â””â”€â”€ divider-extension.ts      # Dividers
-    â”œâ”€â”€ nodes/
-    â”‚   â”œâ”€â”€ image-node.tsx            # Image rendering component
-    â”‚   â”œâ”€â”€ two-column-node.tsx       # Two-column rendering
-    â”‚   â”œâ”€â”€ callout-node.tsx          # Callout rendering
-    â”‚   â””â”€â”€ highlight-quote-node.tsx  # Quote rendering
-    â””â”€â”€ hooks/
-        â”œâ”€â”€ use-autosave.ts           # Autosave logic
-        â””â”€â”€ use-unsaved-changes.ts    # Navigation guard
+├── story-form.tsx                    # Main form container
+└── rich-text-editor/
+    ├── rich-text-editor.tsx          # Main editor component
+    ├── toolbar.tsx                   # Formatting toolbar
+    ├── slash-menu.tsx                # Slash command menu
+    ├── bubble-toolbar.tsx            # Floating selection toolbar
+    ├── extensions/
+    │   ├── image-extension.ts        # Custom image node
+    │   ├── two-column-extension.ts   # Two-column layout
+    │   ├── callout-extension.ts      # Callout boxes
+    │   ├── highlight-quote-extension.ts  # Highlight quotes
+    │   └── divider-extension.ts      # Dividers
+    ├── nodes/
+    │   ├── image-node.tsx            # Image rendering component
+    │   ├── two-column-node.tsx       # Two-column rendering
+    │   ├── callout-node.tsx          # Callout rendering
+    │   └── highlight-quote-node.tsx  # Quote rendering
+    └── hooks/
+        ├── use-autosave.ts           # Autosave logic
+        └── use-unsaved-changes.ts    # Navigation guard
 ```
 
 ### 2.2 Key Components
@@ -906,7 +906,7 @@ console.log('Sanitized:', sanitized)
 5. Stop recording and analyze
 
 **Chrome Performance Tab:**
-1. Open DevTools â†’ Performance
+1. Open DevTools → Performance
 2. Start recording
 3. Type in editor, add images, etc.
 4. Stop recording

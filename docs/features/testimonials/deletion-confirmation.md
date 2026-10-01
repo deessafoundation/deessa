@@ -18,7 +18,7 @@ Added confirmation dialog for deleting entire testimonials to prevent accidental
 
 ### Confirmation Dialog
 
-**Triggers**: When user clicks the trash icon (ðŸ—‘ï¸) on a testimonial card
+**Triggers**: When user clicks the trash icon (🗑️) on a testimonial card
 
 **Dialog Content**:
 1. **Title**: "Delete Testimonial?"
@@ -46,7 +46,7 @@ Added confirmation dialog for deleting entire testimonials to prevent accidental
 
 2. **Image Handling**:
    -  **Uploaded images**: Deleted from storage
-   - âŒ **External URLs**: Not deleted (not in our storage)
+   - ❌ **External URLs**: Not deleted (not in our storage)
 
 3. **Automatic Cleanup**:
    - Checks if image is from our storage
@@ -61,22 +61,22 @@ Added confirmation dialog for deleting entire testimonials to prevent accidental
 ### Dialog Layout
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  Delete Testimonial?                    â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                         â”‚
-â”‚  This will permanently delete this      â”‚
-â”‚  testimonial and its image...           â”‚
-â”‚                                         â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
-â”‚  â”‚  [Photo]  John Doe                â”‚ â”‚
-â”‚  â”‚           Parent, Kathmandu       â”‚ â”‚
-â”‚  â”‚  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€    â”‚ â”‚
-â”‚  â”‚  "This foundation changed..."     â”‚ â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
-â”‚                                         â”‚
-â”‚              [Cancel] [Delete]          â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────┐
+│  Delete Testimonial?                    │
+├─────────────────────────────────────────┤
+│                                         │
+│  This will permanently delete this      │
+│  testimonial and its image...           │
+│                                         │
+│  ┌───────────────────────────────────┐ │
+│  │  [Photo]  John Doe                │ │
+│  │           Parent, Kathmandu       │ │
+│  │  ─────────────────────────────    │ │
+│  │  "This foundation changed..."     │ │
+│  └───────────────────────────────────┘ │
+│                                         │
+│              [Cancel] [Delete]          │
+└─────────────────────────────────────────┘
 ```
 
 ### Styling Details

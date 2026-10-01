@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Technical Overview"
+title: "deessa Foundation — Conference Module: Technical Overview"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Technical Overview
+# deessa Foundation — Conference Module: Technical Overview
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -270,73 +270,73 @@ Auth: GOOGLE_EMAIL + GOOGLE_EMAIL_APP_PASSWORD
 
 ```
 User visits /conference
-    â””â”€â–¶ Fetches conference_settings from DB (SSR)
+    └─▶ Fetches conference_settings from DB (SSR)
 
 User submits registration form
-    â””â”€â–¶ Calls registerForConference() server action
-        â””â”€â–¶ Inserts row in conference_registrations table
-        â””â”€â–¶ Sends registration email (non-blocking)
-        â””â”€â–¶ Returns { success, paymentRequired, registrationId }
+    └─▶ Calls registerForConference() server action
+        └─▶ Inserts row in conference_registrations table
+        └─▶ Sends registration email (non-blocking)
+        └─▶ Returns { success, paymentRequired, registrationId }
 
 If paymentRequired:
-    â””â”€â–¶ Redirects to /payment-options with query params
+    └─▶ Redirects to /payment-options with query params
 
 User clicks "Pay Now"
-    â””â”€â–¶ Redirects to /pending-payment
+    └─▶ Redirects to /pending-payment
 
 User selects payment provider
-    â””â”€â–¶ POST /api/conference/start-payment
-        â””â”€â–¶ Calls startConferencePayment() server action
-            â””â”€â–¶ Creates Stripe/Khalti/eSewa session
-            â””â”€â–¶ Updates registration with provider refs
-            â””â”€â–¶ Returns { redirectUrl, formData }
-        â””â”€â–¶ Browser redirects to gateway URL
+    └─▶ POST /api/conference/start-payment
+        └─▶ Calls startConferencePayment() server action
+            └─▶ Creates Stripe/Khalti/eSewa session
+            └─▶ Updates registration with provider refs
+            └─▶ Returns { redirectUrl, formData }
+        └─▶ Browser redirects to gateway URL
 
 User completes payment at gateway
-    â””â”€â–¶ Gateway redirects back to /payment-success
+    └─▶ Gateway redirects back to /payment-success
 
 /payment-success page confirms payment
-    â””â”€â–¶ Direct verify (POST /api/conference/confirm-stripe-session)
-    â””â”€â–¶ Polls status (GET /api/conference/status?rid=...)
-        â””â”€â–¶ Returns { status, paymentStatus, ... }
+    └─▶ Direct verify (POST /api/conference/confirm-stripe-session)
+    └─▶ Polls status (GET /api/conference/status?rid=...)
+        └─▶ Returns { status, paymentStatus, ... }
 
 Webhook fires in parallel (production reliability)
-    â””â”€â–¶ POST /api/webhooks/stripe (or Khalti webhook)
-        â””â”€â–¶ Verifies signature
-        â””â”€â–¶ Idempotency check via payment_events table
-        â””â”€â–¶ Updates conference_registrations
-        â””â”€â–¶ Sends confirmation email
+    └─▶ POST /api/webhooks/stripe (or Khalti webhook)
+        └─▶ Verifies signature
+        └─▶ Idempotency check via payment_events table
+        └─▶ Updates conference_registrations
+        └─▶ Sends confirmation email
 ```
 
 ### 5.2 Admin Confirmation Flow (High-Level)
 
 ```
 Admin opens /admin/conference/[id]
-    â””â”€â–¶ Fetches registration via getConferenceRegistration(id)
-    â””â”€â–¶ Displays full detail + action buttons
+    └─▶ Fetches registration via getConferenceRegistration(id)
+    └─▶ Displays full detail + action buttons
 
 Admin clicks "Confirm Registration"
-    â””â”€â–¶ Calls confirmConferenceRegistration(id, force=false)
-        â””â”€â–¶ Validates current status
-        â””â”€â–¶ Updates status = 'confirmed'
-        â””â”€â–¶ Sends confirmation email (non-blocking)
-        â””â”€â–¶ Revalidates page
+    └─▶ Calls confirmConferenceRegistration(id, force=false)
+        └─▶ Validates current status
+        └─▶ Updates status = 'confirmed'
+        └─▶ Sends confirmation email (non-blocking)
+        └─▶ Revalidates page
 ```
 
 ### 5.3 Expiry Flow (Automated)
 
 ```
 Vercel Cron triggers hourly
-    â””â”€â–¶ GET /api/cron/expire-conference-registrations
-        â””â”€â–¶ Validates CRON_SECRET Bearer token
-        â””â”€â–¶ Bulk UPDATE:
+    └─▶ GET /api/cron/expire-conference-registrations
+        └─▶ Validates CRON_SECRET Bearer token
+        └─▶ Bulk UPDATE:
             conference_registrations
             SET status = 'expired'
             WHERE status IN ('pending_payment', 'pending')
               AND payment_status = 'unpaid'
               AND expires_at < now()
               AND expires_at IS NOT NULL
-        â””â”€â–¶ Returns { ok: true, expired: count }
+        └─▶ Returns { ok: true, expired: count }
 ```
 
 ---
@@ -488,13 +488,13 @@ Vercel Cron triggers hourly
 ### 8.3 Critical Test Scenarios
 
 1. **Registration with free event** (fee = 0)
-2. **Registration with payment required** â†’ Pay Now â†’ Stripe success
-3. **Registration with payment required** â†’ Pay Later â†’ email sent
-4. **Payment amount mismatch** â†’ Review status
-5. **Payment expiry** â†’ Cron marks expired
-6. **Admin manual confirmation** â†’ Confirmation email sent
-7. **Admin cancel** â†’ Cancellation email sent
-8. **Webhook duplicate** â†’ Idempotency prevents double-processing
+2. **Registration with payment required** → Pay Now → Stripe success
+3. **Registration with payment required** → Pay Later → email sent
+4. **Payment amount mismatch** → Review status
+5. **Payment expiry** → Cron marks expired
+6. **Admin manual confirmation** → Confirmation email sent
+7. **Admin cancel** → Cancellation email sent
+8. **Webhook duplicate** → Idempotency prevents double-processing
 
 ---
 

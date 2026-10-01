@@ -35,7 +35,7 @@ Example
 
 Admin UI
 --------
-- Go to `/admin/settings` â†’ Photo Wall tab.
+- Go to `/admin/settings` → Photo Wall tab.
 - The form provides 9 upload slots. Use the built-in uploader (recommended) or paste an external URL.
 - Edit `Title`, `Label`, `Alt`, and optional `Tint` for each slot.
 - Click "Save Photo Wall" to persist. Only users with role `ADMIN` or `SUPER_ADMIN` can save.

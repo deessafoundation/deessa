@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Appendix & Reference"
+title: "deessa Foundation — Conference Module: Appendix & Reference"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Appendix & Reference
+# deessa Foundation — Conference Module: Appendix & Reference
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -309,8 +309,8 @@ TypeScript-first schema validation library. Used to validate user input before p
 ### 4.1 Registration Status Flow
 
 ```
-pending â†’ pending_payment â†’ confirmed
-  â†“            â†“               â†“
+pending → pending_payment → confirmed
+  ↓            ↓               ↓
 cancelled   expired       (final state)
 ```
 
@@ -342,9 +342,9 @@ cancelled   expired       (final state)
 | **Payment Methods** | Cards, Wallets, Bank | Cards, Wallet | Wallet only |
 | **Fee**             | 2.9% + $0.30         | 3.5% + NPR 15 | 2%          |
 | **Settlement**      | 2-7 days             | 3-5 days      | 1-2 days    |
-| **Webhook**         |  Yes               | âŒ No         | âŒ No       |
-| **Refund API**      |  Automated         |  Automated  | âŒ Manual   |
-| **Metadata**        |  Yes               | âŒ No         | âŒ No       |
+| **Webhook**         |  Yes               | ❌ No         | ❌ No       |
+| **Refund API**      |  Automated         |  Automated  | ❌ Manual   |
+| **Metadata**        |  Yes               | ❌ No         | ❌ No       |
 
 ### 4.5 Admin Quick Actions
 

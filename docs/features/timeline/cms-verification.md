@@ -262,14 +262,14 @@ DEFAULT_TIMELINE = {
 
 ---
 
-## ðŸŽ‰ Conclusion
+## 🎉 Conclusion
 
 The Timeline section is **100% integrated** with the CMS. All data flows correctly from:
 
 ```
-Database â†’ Data Layer â†’ Homepage â†’ Component â†’ UI
-    â†‘                                           â†“
-    â””â”€â”€â”€â”€â”€â”€â”€ Admin UI â† API â† Save Action â”€â”€â”€â”€â”€â”˜
+Database → Data Layer → Homepage → Component → UI
+    ↑                                           ↓
+    └─────── Admin UI ← API ← Save Action ─────┘
 ```
 
 **No issues found. Everything is working as expected!** 

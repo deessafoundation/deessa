@@ -75,18 +75,18 @@ export function getAppBaseUrl(): string {
 ### Before (Broken):
 
 ```
-Local: NEXT_PUBLIC_APP_URL set â†’ Works 
-Vercel: NEXT_PUBLIC_APP_URL not set â†’ localhost:3000 â†’ ERR_BLOCKED_BY_CLIENT âŒ
+Local: NEXT_PUBLIC_APP_URL set → Works 
+Vercel: NEXT_PUBLIC_APP_URL not set → localhost:3000 → ERR_BLOCKED_BY_CLIENT ❌
 ```
 
 ### After (Fixed):
 
 ```
-Local: NEXT_PUBLIC_APP_URL set â†’ Uses configured URL 
-Vercel: VERCEL_URL automatically available â†’ Uses vercel URL 
+Local: NEXT_PUBLIC_APP_URL set → Uses configured URL 
+Vercel: VERCEL_URL automatically available → Uses vercel URL 
 ```
 
-## No Configuration Required! ðŸŽ‰
+## No Configuration Required! 🎉
 
 The fix automatically works in Vercel deployments because:
 
@@ -102,7 +102,7 @@ The fix automatically works in Vercel deployments because:
 # Should work as before
 npm run dev
 # Visit: http://localhost:3000/donate
-# Make a donation â†’ Receipt download will use localhost:3000 
+# Make a donation → Receipt download will use localhost:3000 
 ```
 
 ### Vercel Deployment
@@ -117,14 +117,14 @@ git push
 After deployment:
 
 1. Make a test donation on your Vercel site
-2. Click "Download Receipt" â†’ Should work without `ERR_BLOCKED_BY_CLIENT` 
-3. Check email download link â†’ Should use your Vercel URL 
+2. Click "Download Receipt" → Should work without `ERR_BLOCKED_BY_CLIENT` 
+3. Check email download link → Should use your Vercel URL 
 
 ## Optional: Set Custom Domain
 
 If you want to use a custom domain instead of `.vercel.app`:
 
-1. Go to Vercel Dashboard â†’ Settings â†’ Environment Variables
+1. Go to Vercel Dashboard → Settings → Environment Variables
 2. Add:
    ```
    NEXT_PUBLIC_APP_URL=https://your-custom-domain.com

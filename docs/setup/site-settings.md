@@ -11,11 +11,11 @@ last_updated: 2026-09-12
 
 ## Overview
 
-The admin site settings have been significantly expanded to give you full control over all images and content displayed on your website. You can now configure homepage images, page hero sections, press gallery, and branding assetsâ€”all through the admin panel!
+The admin site settings have been significantly expanded to give you full control over all images and content displayed on your website. You can now configure homepage images, page hero sections, press gallery, and branding assets—all through the admin panel!
 
 ---
 
-## ðŸš€ Setup Instructions
+## 🚀 Setup Instructions
 
 ### Step 1: Run SQL Scripts in Supabase
 
@@ -65,7 +65,7 @@ All should be marked as **Public**
 
 ---
 
-## ðŸŽ¨ Admin Panel Features
+## 🎨 Admin Panel Features
 
 ### New Tabs in Site Settings (/admin/settings)
 
@@ -75,14 +75,14 @@ The Site Settings page now has **8 tabs** instead of 4:
 2. **Contact** _(existing)_ - Email, phone, address, office hours
 3. **Social** _(existing)_ - Social media links
 4. **SEO** _(existing)_ - Meta tags, keywords
-5. **Homepage** _(NEW)_ ðŸ†• - Hero images, initiative cards
-6. **Page Heroes** _(NEW)_ ðŸ†• - Hero images for all 9 pages
-7. **Press & Media** _(NEW)_ ðŸ†• - Press gallery with captions
-8. **Branding** _(NEW)_ ðŸ†• - Logos, favicon, OG image
+5. **Homepage** _(NEW)_ 🆕 - Hero images, initiative cards
+6. **Page Heroes** _(NEW)_ 🆕 - Hero images for all 9 pages
+7. **Press & Media** _(NEW)_ 🆕 - Press gallery with captions
+8. **Branding** _(NEW)_ 🆕 - Logos, favicon, OG image
 
 ---
 
-## ðŸ“¸ What You Can Configure
+## 📸 What You Can Configure
 
 ### Homepage Tab
 
@@ -134,7 +134,7 @@ Each page hero includes:
 
 ---
 
-## ðŸ”„ Fallback System
+## 🔄 Fallback System
 
 **Important:** All pages have been designed with fallback support. This means:
 
@@ -147,7 +147,7 @@ Pages will automatically use database settings when available, or fall back to d
 
 ---
 
-## ðŸ“‹ How to Use
+## 📋 How to Use
 
 ### Uploading Images
 
@@ -171,13 +171,13 @@ Pages will automatically use database settings when available, or fall back to d
 1. Go to **Press & Media** tab
 2. Click upload area to add multiple images
 3. Add captions and credits for each
-4. Use â†‘ â†“ buttons to reorder
+4. Use ↑ ↓ buttons to reorder
 5. Click X to remove unwanted images
 6. Click **Save Press Gallery**
 
 ---
 
-## ðŸ’¾ File Changes Summary
+## 💾 File Changes Summary
 
 ### New Files Created
 
@@ -211,11 +211,11 @@ app/(public)/donate/page.tsx                 # Donate page hero
 
 ---
 
-## âš ï¸ Important Notes
+## ⚠️ Important Notes
 
 1. **Run SQL Scripts First**: You must run both SQL scripts before using the new admin features
 2. **No Breaking Changes**: Existing features continue to work exactly as before
-3. **Gradual Migration**: You can update pages to use settings graduallyâ€”no rush
+3. **Gradual Migration**: You can update pages to use settings gradually—no rush
 4. **Storage Costs**: With Supabase free tier (1GB), you can store ~1000 high-quality images
 5. **Image Optimization**: Recommended image sizes:
    - Hero images: 1920x1080px (landscape)
@@ -225,7 +225,7 @@ app/(public)/donate/page.tsx                 # Donate page hero
 
 ---
 
-## ðŸ”’ Security
+## 🔒 Security
 
 All storage buckets have proper RLS policies:
 
@@ -237,7 +237,7 @@ All storage buckets have proper RLS policies:
 
 ---
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 **Issue: "Upload failed" error**
 
@@ -261,7 +261,7 @@ All storage buckets have proper RLS policies:
 
 ---
 
-## ðŸ“ž Next Steps
+## 📞 Next Steps
 
 1.  Run both SQL scripts in Supabase
 2.  Verify storage buckets created
@@ -272,7 +272,7 @@ All storage buckets have proper RLS policies:
 
 ---
 
-## ðŸŽ‰ Benefits
+## 🎉 Benefits
 
 -  No more code changes needed for image updates
 -  Non-technical admins can manage images

@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 **Version:** 1.1  
 **Date:** July 23, 2026  
-**Status:**  Approved â€” All 7 decisions approved
+**Status:**  Approved — All 7 decisions approved
 
 ---
 
@@ -19,7 +19,7 @@ last_updated: 2026-09-12
 
 Each decision follows this format:
 - **Decision ID:** Unique identifier
-- **Status:** ðŸŸ¢ Approved | ðŸŸ¡ Pending | ðŸ”´ Rejected
+- **Status:** 🟢 Approved | 🟡 Pending | 🔴 Rejected
 - **Context:** Why this decision is needed
 - **Options:** Alternatives considered
 - **Recommendation:** Suggested approach
@@ -32,7 +32,7 @@ Each decision follows this format:
 ## Decision 1: Database Table Strategy
 
 **ID:** `DEC-001`  
-**Status:** ðŸŸ¢ APPROVED - Create New Table  
+**Status:** 🟢 APPROVED - Create New Table  
 **Category:** Data Architecture  
 **Decided By:** Product Owner  
 **Date:** July 23, 2026  
@@ -120,7 +120,7 @@ CREATE TABLE events (
 ## Decision 2: Component Reuse Strategy
 
 **ID:** `DEC-002`  
-**Status:** ðŸŸ¢ APPROVED - Import Components  
+**Status:** 🟢 APPROVED - Import Components  
 **Category:** Frontend Architecture  
 **Decided By:** Frontend Lead  
 **Date:** July 23, 2026  
@@ -130,7 +130,7 @@ CREATE TABLE events (
 **IMPORT field components from conference system (read-only)**
 
 ### User's Decision
-> "d2: A" â€” Import field components from conference system (read-only)
+> "d2: A" — Import field components from conference system (read-only)
 
 ### Context
 - Conference system has 14+ generic field components
@@ -180,7 +180,7 @@ import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
 ## Decision 3: Card Register Button Behavior
 
 **ID:** `DEC-003`  
-**Status:** ðŸŸ¢ APPROVED - Direct to Form  
+**Status:** 🟢 APPROVED - Direct to Form  
 **Category:** UX Design  
 **Decided By:** UX Designer  
 **Date:** July 23, 2026  
@@ -190,14 +190,14 @@ import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
 **Register button = Direct fast-path to registration form**
 
 ### User's Decision
-> "d3: A" â€” Register button directly navigates to registration form
+> "d3: A" — Register button directly navigates to registration form
 
 ### User Flow
 ```
-Click Register button â†’ /events/[slug]/register (direct)
-Click card body       â†’ /events/[slug] (detail page)
+Click Register button → /events/[slug]/register (direct)
+Click card body       → /events/[slug] (detail page)
 
-Detail page also has Register CTA â†’ /events/[slug]/register
+Detail page also has Register CTA → /events/[slug]/register
 ```
 
 ### Implementation
@@ -230,7 +230,7 @@ Detail page also has Register CTA â†’ /events/[slug]/register
 ## Decision 4: Payment Provider Code Location
 
 **ID:** `DEC-004`  
-**Status:** ðŸŸ¡ DEFERRED - Payment Module in Development  
+**Status:** 🟡 DEFERRED - Payment Module in Development  
 **Category:** Backend Architecture  
 **Decided By:** Tech Lead  
 **Date:** July 23, 2026  
@@ -262,14 +262,14 @@ async function processPayment(data) {
 ### Integration Plan
 **When payment module is complete:**
 1. Review payment module API
-2. If modular â†’ Import directly
-3. If not modular â†’ Request refactoring
+2. If modular → Import directly
+3. If not modular → Request refactoring
 4. Integrate into event registration flow
 5. Test with all 3 providers (Stripe, Khalti, eSewa)
 
 ### Consequences
-- âš ï¸ Phase 1-5 will have mock/placeholder payment
-- âš ï¸ Cannot fully test registration flow until integrated
+- ⚠️ Phase 1-5 will have mock/placeholder payment
+- ⚠️ Cannot fully test registration flow until integrated
 -  Avoids duplicate work
 -  Gets modular payment system for free
 
@@ -289,7 +289,7 @@ async function processPayment(data) {
 ## Decision 5: Free Events Handling
 
 **ID:** `DEC-005`  
-**Status:** ðŸŸ¢ APPROVED - Explicit is_free Flag  
+**Status:** 🟢 APPROVED - Explicit is_free Flag  
 **Category:** Business Logic  
 **Decided By:** Product Owner  
 **Date:** July 23, 2026  
@@ -368,7 +368,7 @@ if (event.is_free) {
 ## Decision 6: Event Capacity & Waitlist
 
 **ID:** `DEC-006`  
-**Status:** ðŸŸ¢ APPROVED - Defer to Phase 2+  
+**Status:** 🟢 APPROVED - Defer to Phase 2+  
 **Category:** Feature Scope  
 **Decided By:** Product Owner  
 **Date:** July 23, 2026  
@@ -378,16 +378,16 @@ if (event.is_free) {
 **DEFER capacity management and waitlist to future phase**
 
 ### User's Decision
-> "d6: b" â€” Defer capacity management and waitlist to future phase
+> "d6: b" — Defer capacity management and waitlist to future phase
 
 ### Phase 1 Scope (Approved)
 -  Basic event creation & management
 -  Dynamic form builder
 -  Registration submission
 -  Payment integration (when ready)
-- âŒ Capacity limits
-- âŒ Waitlist management
-- âŒ Sold-out handling
+- ❌ Capacity limits
+- ❌ Waitlist management
+- ❌ Sold-out handling
 
 ### Future Phase 2+ Features
 ```sql
@@ -415,7 +415,7 @@ CREATE TABLE event_waitlist (
 -  Faster Phase 1 delivery
 -  Simpler initial implementation
 -  Focus on core features first
-- âš ï¸ Unlimited registration (admin monitors manually)
+- ⚠️ Unlimited registration (admin monitors manually)
 
 ### Actions Completed
 - [x] Confirmed deferral to future phase
@@ -433,7 +433,7 @@ CREATE TABLE event_waitlist (
 ## Decision 7: Multi-Day Event Handling
 
 **ID:** `DEC-007`  
-**Status:** ðŸŸ¢ APPROVED - Single Table with day_number  
+**Status:** 🟢 APPROVED - Single Table with day_number  
 **Category:** Data Modeling  
 **Decided By:** Backend Lead  
 **Date:** July 23, 2026  
@@ -443,7 +443,7 @@ CREATE TABLE event_waitlist (
 **USE SINGLE AGENDA TABLE with `day_number` column**
 
 ### User's Decision
-> "d7: A" â€” Use single agenda table with day_number column
+> "d7: A" — Use single agenda table with day_number column
 
 ### Schema Design
 ```sql
@@ -518,7 +518,7 @@ ORDER BY day_number;
 | DEC-001 | Drop events table, rebuild fresh |  Approved | d1 - Drop table, drop/refactor routes | Product Owner | July 23, 2026 |
 | DEC-002 | Import field components (read-only) |  Approved | d2 - A (Import) | Frontend Lead | July 23, 2026 |
 | DEC-003 | Register button = Direct to form |  Approved | d3 - A (Direct) | UX Designer | July 23, 2026 |
-| DEC-004 | Defer payment integration | ðŸŸ¡ Deferred | d4 - Skip for now, integrate later | Tech Lead | TBD (after payment module) |
+| DEC-004 | Defer payment integration | 🟡 Deferred | d4 - Skip for now, integrate later | Tech Lead | TBD (after payment module) |
 | DEC-005 | Admin decides free/paid/free-then-paid |  Approved | d5 - B (Admin decides) | Product Owner | July 23, 2026 |
 | DEC-006 | Defer capacity/waitlist to Phase 2+ |  Approved | d6 - b (Defer) | Product Owner | July 23, 2026 |
 | DEC-007 | Single agenda table with day_number |  Approved | d7 - A (Single table) | Backend Lead | July 23, 2026 |
@@ -528,18 +528,18 @@ ORDER BY day_number;
 ## Decision Log
 
 ### Approved Decisions
-- **DEC-001** â€” Drop existing `events` table (no production data), drop or rebuild `/events` and `/admin/events` routes fresh. Conference system has its own tables, completely independent.
-- **DEC-002** â€” Import field components from conference system as read-only. Zero coupling, avoids 1000+ lines of duplication.
-- **DEC-003** â€” Register button directly navigates to `/events/[slug]/register`. Card body navigates to detail page `/events/[slug]`.
-- **DEC-005** â€” Admin explicitly decides pricing mode via `is_free` flag: free event, paid event, or free-for-a-period-then-paid (time-limited early bird).
-- **DEC-006** â€” Defer capacity management and waitlist to Phase 2+. Phase 1 focuses on core features only.
-- **DEC-007** â€” Use single `event_agenda_items` table with `day_number` column for multi-day support. Simpler queries, no JOINs needed.
+- **DEC-001** — Drop existing `events` table (no production data), drop or rebuild `/events` and `/admin/events` routes fresh. Conference system has its own tables, completely independent.
+- **DEC-002** — Import field components from conference system as read-only. Zero coupling, avoids 1000+ lines of duplication.
+- **DEC-003** — Register button directly navigates to `/events/[slug]/register`. Card body navigates to detail page `/events/[slug]`.
+- **DEC-005** — Admin explicitly decides pricing mode via `is_free` flag: free event, paid event, or free-for-a-period-then-paid (time-limited early bird).
+- **DEC-006** — Defer capacity management and waitlist to Phase 2+. Phase 1 focuses on core features only.
+- **DEC-007** — Use single `event_agenda_items` table with `day_number` column for multi-day support. Simpler queries, no JOINs needed.
 
 ### Rejected Decisions
 _None_
 
 ### Deferred Decisions
-- **DEC-004** â€” Payment module integration deferred. Another developer is currently building a modular payment system. Once complete, we will integrate it into the event registration flow. If the payment module is not modular, we will request refactoring before integration.
+- **DEC-004** — Payment module integration deferred. Another developer is currently building a modular payment system. Once complete, we will integrate it into the event registration flow. If the payment module is not modular, we will request refactoring before integration.
 
 ---
 

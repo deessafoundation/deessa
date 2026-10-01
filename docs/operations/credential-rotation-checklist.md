@@ -26,7 +26,7 @@ Quick reference checklist for quarterly credential rotation.
 ## Stripe Webhook Secret
 
 - [ ] Log in to Stripe Dashboard
-- [ ] Navigate to Developers â†’ Webhooks
+- [ ] Navigate to Developers → Webhooks
 - [ ] Click "Roll secret" on webhook endpoint
 - [ ] Copy new webhook secret (starts with `whsec_`)
 - [ ] Update `STRIPE_WEBHOOK_SECRET` in staging
@@ -41,7 +41,7 @@ Quick reference checklist for quarterly credential rotation.
 ## Khalti Secret Key
 
 - [ ] Log in to Khalti Merchant Dashboard
-- [ ] Navigate to Settings â†’ API Keys
+- [ ] Navigate to Settings → API Keys
 - [ ] Click "Regenerate Secret Key"
 - [ ] Copy new secret key
 - [ ] Update `KHALTI_SECRET_KEY` in staging
@@ -56,7 +56,7 @@ Quick reference checklist for quarterly credential rotation.
 ## eSewa Secret Key
 
 - [ ] Log in to eSewa Merchant Dashboard
-- [ ] Navigate to Settings â†’ API Configuration
+- [ ] Navigate to Settings → API Configuration
 - [ ] Click "Regenerate Secret Key"
 - [ ] Copy new secret key
 - [ ] Update `ESEWA_SECRET_KEY` in staging
@@ -113,9 +113,9 @@ _Use this space to document any issues or observations during rotation:_
 
 ---
 
-**Rotation Completed:** â˜ Yes â˜ No  
-**Issues Encountered:** â˜ Yes â˜ No  
-**Rollback Required:** â˜ Yes â˜ No
+**Rotation Completed:** ☐ Yes ☐ No  
+**Issues Encountered:** ☐ Yes ☐ No  
+**Rollback Required:** ☐ Yes ☐ No
 
 ---
 

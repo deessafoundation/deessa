@@ -249,7 +249,7 @@ All routes under `/api/*` are not indexable by design.
 ### `/support` Page
 **Current Status:** NOT included in sitemap
 **Reason:** Need to confirm if this is a public support/help page or internal support ticket system
-**Action:** If public help page â†’ Add to sitemap. If internal tickets â†’ Leave excluded.
+**Action:** If public help page → Add to sitemap. If internal tickets → Leave excluded.
 
 ---
 
@@ -257,10 +257,10 @@ All routes under `/api/*` are not indexable by design.
 
 ### Content Updates
 The sitemap automatically regenerates on each request in production (or at build time for static exports). When you:
-- Publish a new story â†’ Automatically appears in sitemap
-- Publish a new program â†’ Automatically appears in sitemap
-- Publish a new podcast â†’ Automatically appears in sitemap
-- Unpublish content â†’ Automatically removed from sitemap
+- Publish a new story → Automatically appears in sitemap
+- Publish a new program → Automatically appears in sitemap
+- Publish a new podcast → Automatically appears in sitemap
+- Unpublish content → Automatically removed from sitemap
 
 ### Additional Dynamic Content
 If you add new content types (e.g., blog posts, team member profiles), update `app/sitemap.ts` to include:

@@ -9,11 +9,11 @@ last_updated: 2026-09-12
 ---
 # Accessibility Toolbar - Quick Start Guide
 
-## ðŸ“ Location
+## 📍 Location
 
 The accessibility toolbar appears at the top of podcast pages (can be added to any page).
 
-## ðŸŽ¯ Features
+## 🎯 Features
 
 ### 1. Text Size Adjustment
 - **Normal**: Default 16px base font size
@@ -61,7 +61,7 @@ All accessibility preferences are:
 - Click the "X" to minimize the toolbar to a floating button
 - Click the floating button to restore full toolbar
 
-## ðŸŽ¨ Design Integration
+## 🎨 Design Integration
 
 ### Ocean Blue Theme
 The toolbar uses your brand colors:
@@ -75,7 +75,7 @@ The toolbar uses your brand colors:
 - Touch-friendly button sizes
 - Sticky positioning
 
-## ðŸ”§ Technical Details
+## 🔧 Technical Details
 
 ### Implementation
 ```tsx
@@ -110,7 +110,7 @@ body.high-contrast
 -  Safari (latest)
 -  Mobile browsers
 
-## ðŸ“± Adding to Other Pages
+## 📱 Adding to Other Pages
 
 To add the accessibility toolbar to any page:
 
@@ -148,7 +148,7 @@ export default function PublicLayout({ children }) {
 }
 ```
 
-## ðŸŽ¯ User Benefits
+## 🎯 User Benefits
 
 ### For Users with Visual Impairments
 -  Larger text reduces eye strain
@@ -170,14 +170,14 @@ export default function PublicLayout({ children }) {
 -  No account needed
 -  Works instantly
 
-## âš¡ Performance
+## ⚡ Performance
 
 - **Initial load**: ~2KB gzipped
 - **Minimal re-renders**: Uses React state efficiently
 - **No external dependencies**: Pure React + Tailwind
 - **Optimized**: CSS changes only affect necessary elements
 
-## â™¿ WCAG Compliance
+## ♿ WCAG Compliance
 
 The toolbar helps achieve:
 - **WCAG 2.1 Level AA** compliance
@@ -190,7 +190,7 @@ Specific criteria met:
 -  1.4.8 Visual Presentation - User control over presentation
 -  2.1.1 Keyboard - All controls keyboard accessible
 
-## ðŸš€ Future Enhancements
+## 🚀 Future Enhancements
 
 Possible additions:
 - [ ] Font family switcher (serif/sans-serif/dyslexic)
@@ -200,7 +200,7 @@ Possible additions:
 - [ ] Reading mode (focus current paragraph)
 - [ ] Text-to-speech integration
 
-## ðŸ“ž Support
+## 📞 Support
 
 If users report accessibility issues:
 1. Verify browser compatibility

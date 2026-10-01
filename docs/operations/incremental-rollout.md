@@ -406,7 +406,7 @@ After successful 100% rollout:
 ### After Rollout
 - [ ] Final status report
 - [ ] Lessons learned document
-- [ ] Celebrate success! ðŸŽ‰
+- [ ] Celebrate success! 🎉
 
 ## Rollout Log Template
 

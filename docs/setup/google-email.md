@@ -185,7 +185,7 @@ To customize the email template:
 - Use a dedicated email account if possible
 - Monitor email sending logs
 
-âŒ **Don't:**
+❌ **Don't:**
 - Commit `.env.local` to git
 - Share App Passwords
 - Use regular Gmail password
@@ -262,6 +262,6 @@ If you encounter issues:
 
 ---
 
-**Email configuration complete!** ðŸŽ‰
+**Email configuration complete!** 🎉
 
 Your receipt system is now ready to send emails via Google Email.

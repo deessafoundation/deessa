@@ -26,15 +26,15 @@ Successfully removed all V1 legacy code and feature flags from the payment syste
 ### 1. Stripe Webhook Handler (`app/api/webhooks/stripe/route.ts`)
 
 #### Removed:
-- âŒ `confirmDonationV1()` function (210 lines of legacy code)
-- âŒ Feature flag checks (`PAYMENT_V2_ENABLED`)
-- âŒ V1 branch in `checkout.session.completed` handler
-- âŒ V1 branch in `invoice.payment_succeeded` handler
-- âŒ All V1-specific idempotency helpers
-- âŒ All V1-specific database update logic
+- ❌ `confirmDonationV1()` function (210 lines of legacy code)
+- ❌ Feature flag checks (`PAYMENT_V2_ENABLED`)
+- ❌ V1 branch in `checkout.session.completed` handler
+- ❌ V1 branch in `invoice.payment_succeeded` handler
+- ❌ All V1-specific idempotency helpers
+- ❌ All V1-specific database update logic
 
 #### Renamed:
--  `confirmDonationV2()` â†’ `confirmDonation()` (it's just "the payment system" now)
+-  `confirmDonationV2()` → `confirmDonation()` (it's just "the payment system" now)
 
 #### Added:
 -  Comprehensive documentation comments explaining the architecture
@@ -45,19 +45,19 @@ Successfully removed all V1 legacy code and feature flags from the payment syste
 ### 2. Environment Configuration
 
 #### `.env.example`:
-- âŒ Removed `PAYMENT_V2_ENABLED` variable
-- âŒ Removed V2 feature flag documentation
+- ❌ Removed `PAYMENT_V2_ENABLED` variable
+- ❌ Removed V2 feature flag documentation
 
 #### `.env`:
-- âŒ Removed `PAYMENT_V2_ENABLED=true` line
+- ❌ Removed `PAYMENT_V2_ENABLED=true` line
 
 ### 3. Code Quality Improvements
 
 #### Better Comments:
 ```typescript
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════════════════════════════════════════
 // Payment Confirmation
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════════════════════════════════════════
 ```
 
 #### Detailed Function Documentation:
@@ -207,8 +207,8 @@ Recovery time: < 5 minutes
 
 ### Before (V1 + V2 with Feature Flag):
 ```
-Webhook â†’ Feature Flag Check â†’ V1 or V2 Path â†’ Database
-                                â†“
+Webhook → Feature Flag Check → V1 or V2 Path → Database
+                                ↓
                          Inline Updates
                          No Transactions
                          No Adapters
@@ -216,8 +216,8 @@ Webhook â†’ Feature Flag Check â†’ V1 or V2 Path â†’ Database
 
 ### After (Clean V2):
 ```
-Webhook â†’ StripeAdapter â†’ PaymentService â†’ Database Transaction
-                â†“              â†“                â†“
+Webhook → StripeAdapter → PaymentService → Database Transaction
+                ↓              ↓                ↓
          Verification    State Machine    Atomic Updates
          Normalization   Idempotency      Row Locking
                                           Event Logging

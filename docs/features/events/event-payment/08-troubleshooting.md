@@ -1,5 +1,5 @@
 ---
-title: "Event Payment Integration â€” Troubleshooting"
+title: "Event Payment Integration — Troubleshooting"
 description: "Cause: No payment providers are configured or their env vars are missing."
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Event Payment Integration â€” Troubleshooting
+# Event Payment Integration — Troubleshooting
 
 ## Common Issues
 
@@ -84,7 +84,7 @@ SET sold_count = (
 **Cause**: Webhook URL not configured in Stripe dashboard, or webhook secret mismatch.
 
 **Fix**:
-1. Check Stripe dashboard â†’ Developers â†’ Webhooks
+1. Check Stripe dashboard → Developers → Webhooks
 2. Verify URL: `https://your-domain.com/api/webhooks/stripe`
 3. Verify `STRIPE_WEBHOOK_SECRET` matches the signing secret
 4. Check Stripe webhook logs for delivery failures
@@ -134,7 +134,7 @@ SET sold_count = (
      AND is_active = true;
    ```
 3. Check server logs for `"Non-fatal: payment link email failed"` warnings
-4. Emails are fire-and-forget â€” a failure doesn't affect the payment flow
+4. Emails are fire-and-forget — a failure doesn't affect the payment flow
 
 ---
 
@@ -283,8 +283,8 @@ vercel logs | grep "\[Payment"
 ### Index Usage
 
 The following indexes are critical for performance:
-- `idx_event_reg_stripe_session` â€” webhook lookups
-- `idx_event_reg_khalti_pidx` â€” Khalti verification lookups
-- `idx_event_reg_esewa_uuid` â€” eSewa callback lookups
-- `idx_event_reg_expires` â€” scheduled expiry scans
-- `idx_payment_events_event_reg` â€” idempotency checks
+- `idx_event_reg_stripe_session` — webhook lookups
+- `idx_event_reg_khalti_pidx` — Khalti verification lookups
+- `idx_event_reg_esewa_uuid` — eSewa callback lookups
+- `idx_event_reg_expires` — scheduled expiry scans
+- `idx_payment_events_event_reg` — idempotency checks

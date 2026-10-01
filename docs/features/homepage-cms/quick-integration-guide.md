@@ -1,5 +1,5 @@
 ---
-title: "ðŸš€ Quick Integration Guide - Adding More CMS Sections"
+title: "🚀 Quick Integration Guide - Adding More CMS Sections"
 description: "Follow this 3-step pattern to integrate any section that already has a CMS loader:"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸš€ Quick Integration Guide - Adding More CMS Sections
+# 🚀 Quick Integration Guide - Adding More CMS Sections
 
 ## Pattern for Integrating Existing CMS Loaders
 
@@ -98,7 +98,7 @@ export default async function HomePage() {
 
 ---
 
-## ðŸŽ¯ Ready-to-Integrate Sections
+## 🎯 Ready-to-Integrate Sections
 
 These sections already have CMS loaders and admin UI - just need integration:
 
@@ -123,7 +123,7 @@ const heroSettings = await getHomeHeroSettings()
 ### 2. Programs Section
 **Loader:** `getHomepagePrograms()` (in `lib/data/homepage-settings.ts`)  
 **Admin UI:**  ProgramsManager  
-**Component:** `components/homepage-sections.tsx` â†’ `ProgramsSection`
+**Component:** `components/homepage-sections.tsx` → `ProgramsSection`
 
 **Integration:**
 ```typescript
@@ -152,7 +152,7 @@ export function ProgramsSection({ programs }: ProgramsSectionProps) {
 ### 3. Partners Section
 **Loader:** `getHomepageMarqueeSettings()` (in `lib/data/homepage-settings.ts`)  
 **Admin UI:**  MarqueeManager  
-**Component:** `components/homepage-sections.tsx` â†’ `PartnersSection`
+**Component:** `components/homepage-sections.tsx` → `PartnersSection`
 
 **Integration:**
 ```typescript
@@ -178,7 +178,7 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
 ---
 
-## ðŸ”§ Common Patterns
+## 🔧 Common Patterns
 
 ### Pattern 1: Array Data (Stats, Programs, CTAs)
 ```typescript
@@ -244,9 +244,9 @@ export function Component({ hero }: Props) {
 
 ---
 
-## âš ï¸ Common Mistakes to Avoid
+## ⚠️ Common Mistakes to Avoid
 
-### âŒ Don't: Remove fallback data
+### ❌ Don't: Remove fallback data
 ```typescript
 // BAD - breaks if CMS unavailable
 export function Component({ data }: Props) {
@@ -265,7 +265,7 @@ export function Component({ data }: Props) {
 
 ---
 
-### âŒ Don't: Make props required
+### ❌ Don't: Make props required
 ```typescript
 // BAD - forces all callers to provide data
 interface Props {
@@ -283,7 +283,7 @@ interface Props {
 
 ---
 
-### âŒ Don't: Forget to import types
+### ❌ Don't: Forget to import types
 ```typescript
 // BAD - no type safety
 interface Props {
@@ -303,26 +303,26 @@ interface Props {
 
 ---
 
-## ðŸŽ¯ Integration Priority
+## 🎯 Integration Priority
 
 ### High Priority (Do First):
 1.  **Impact Stats Bar** - DONE
-2. â¬œ **Hero Carousel** - Loader exists, just needs integration
-3. â¬œ **Programs Section** - Loader exists, just needs integration
+2. ⬜ **Hero Carousel** - Loader exists, just needs integration
+3. ⬜ **Programs Section** - Loader exists, just needs integration
 
 ### Medium Priority (Do Next):
-4. â¬œ **Partners Section** - Loader exists, needs partner data in DB
-5. â¬œ **Hero CTAs** - Loader exists, needs integration
-6. â¬œ **CTA Cards** - Loader exists, needs integration
+4. ⬜ **Partners Section** - Loader exists, needs partner data in DB
+5. ⬜ **Hero CTAs** - Loader exists, needs integration
+6. ⬜ **CTA Cards** - Loader exists, needs integration
 
 ### Low Priority (Future):
-7. â¬œ **Testimonials** - Needs new loader + admin UI
-8. â¬œ **Timeline** - Needs new loader + admin UI
-9. â¬œ **Banners** - Loader exists, needs integration
+7. ⬜ **Testimonials** - Needs new loader + admin UI
+8. ⬜ **Timeline** - Needs new loader + admin UI
+9. ⬜ **Banners** - Loader exists, needs integration
 
 ---
 
-## ðŸ“š Reference Files
+## 📚 Reference Files
 
 - **Types:** `lib/types/homepage-settings.ts`
 - **Loaders:** `lib/data/homepage-settings.ts`
@@ -332,7 +332,7 @@ interface Props {
 
 ---
 
-## ðŸŽ‰ Success Checklist
+## 🎉 Success Checklist
 
 After integrating a section, verify:
 

@@ -294,6 +294,6 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ---
 
-**Deployment complete!** ðŸŽ‰
+**Deployment complete!** 🎉
 
 Your receipt system is ready to send tax-deductible receipts via Google Email.

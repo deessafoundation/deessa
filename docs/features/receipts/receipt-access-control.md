@@ -139,11 +139,11 @@ LEGACY_RECEIPT_ACCESS=false
 ## Security Improvements
 
 ### Before Implementation
-- âŒ Unauthenticated receipt downloads via sequential numbers
-- âŒ No rate limiting on receipt resend
-- âŒ No email verification for resend requests
-- âŒ Enumeration attacks possible on receipt numbers
-- âŒ No token expiry or time-limited access
+- ❌ Unauthenticated receipt downloads via sequential numbers
+- ❌ No rate limiting on receipt resend
+- ❌ No email verification for resend requests
+- ❌ Enumeration attacks possible on receipt numbers
+- ❌ No token expiry or time-limited access
 
 ### After Implementation
 -  Token-based authentication with cryptographic signing

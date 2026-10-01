@@ -71,9 +71,9 @@ Comprehensive links in footer:
   - Terms of Service
 
 **Benefits:**
-- âœ“ Every page is 3 clicks or less from home
-- âœ“ Clear site hierarchy
-- âœ“ Consistent navigation
+- ✓ Every page is 3 clicks or less from home
+- ✓ Clear site hierarchy
+- ✓ Consistent navigation
 
 ---
 
@@ -86,28 +86,28 @@ Comprehensive links in footer:
 - Links to impact page or programs
 
 **Our Story Section:**
-- "Read Our Full Story" â†’ `/our-story`
-- "Learn About Our Work" â†’ `/programs`
+- "Read Our Full Story" → `/our-story`
+- "Learn About Our Work" → `/programs`
 
 **Programs Section:**
-- Individual program cards â†’ `/programs/[slug]`
-- "View All Programs" â†’ `/programs`
+- Individual program cards → `/programs/[slug]`
+- "View All Programs" → `/programs`
 
 **Stories Section:**
-- Featured story â†’ `/stories/[slug]`
-- "Read More Stories" â†’ `/stories`
+- Featured story → `/stories/[slug]`
+- "Read More Stories" → `/stories`
 
 **Events Section:**
-- Upcoming events â†’ `/events/[slug]`
-- "View All Events" â†’ `/events`
+- Upcoming events → `/events/[slug]`
+- "View All Events" → `/events`
 
 **Testimonials Section:**
 - Optional links to related stories
 
 **Call-to-Action Sections:**
-- "Donate Now" â†’ `/donate`
-- "Contact Us" â†’ `/contact`
-- "Get Involved" â†’ `/get-involved`
+- "Donate Now" → `/donate`
+- "Contact Us" → `/contact`
+- "Get Involved" → `/get-involved`
 
 ---
 
@@ -140,7 +140,7 @@ Comprehensive links in footer:
 
 **Implemented Links:**
 - "Back to Programs" link
-- Donation CTA â†’ `/donate`
+- Donation CTA → `/donate`
 - Related programs (if implemented)
 - Contact link for more info
 - Footer navigation
@@ -154,7 +154,7 @@ Comprehensive links in footer:
 
 **Implemented Links:**
 - "Back to Events" link
-- Registration button â†’ `/events/[slug]/register`
+- Registration button → `/events/[slug]/register`
 - Location links (if applicable)
 - Related events (upcoming/past)
 - Footer navigation
@@ -180,14 +180,14 @@ Comprehensive links in footer:
 - Story grid with multiple stories
 - Pagination (if many stories)
 - Category filters (if implemented)
-- Individual story cards â†’ detail pages
+- Individual story cards → detail pages
 
 #### Programs Page (`/programs`)
 
 **Implemented Links:**
 - Program category cards
-- Individual program details â†’ `/programs/[slug]`
-- "Support This Program" â†’ `/donate`
+- Individual program details → `/programs/[slug]`
+- "Support This Program" → `/donate`
 
 #### Events Page (`/events`)
 
@@ -195,8 +195,8 @@ Comprehensive links in footer:
 - Featured upcoming event
 - Event grid
 - Event categories
-- Register links â†’ `/events/[slug]/register`
-- Individual event details â†’ `/events/[slug]`
+- Register links → `/events/[slug]/register`
+- Individual event details → `/events/[slug]`
 
 #### Podcasts Page (`/podcasts`)
 
@@ -204,8 +204,8 @@ Comprehensive links in footer:
 - Latest episode featured
 - Episode archive
 - Highlights carousel
-- All episodes â†’ `/podcasts/episodes`
-- All highlights â†’ `/podcasts/highlights`
+- All episodes → `/podcasts/episodes`
+- All highlights → `/podcasts/highlights`
 
 ---
 
@@ -250,7 +250,7 @@ Comprehensive links in footer:
    - Use proper contrast ratios
    - Include focus states for keyboard navigation
 
-### âŒ DON'T:
+### ❌ DON'T:
 
 1. **Don't Use Generic Anchor Text**
    - Avoid "click here", "read more", "this page"
@@ -571,11 +571,11 @@ export default function StoryPage({ story }: Props) {
 
 ### Success Indicators
 
-- âœ“ Average 3-5 internal links per content page
-- âœ“ <5% broken links site-wide
-- âœ“ No orphan pages (0 internal links)
-- âœ“ Key pages have >10 internal links pointing to them
-- âœ“ New content receives links within 1 week of publishing
+- ✓ Average 3-5 internal links per content page
+- ✓ <5% broken links site-wide
+- ✓ No orphan pages (0 internal links)
+- ✓ Key pages have >10 internal links pointing to them
+- ✓ New content receives links within 1 week of publishing
 
 ---
 
@@ -613,10 +613,10 @@ Stories like Maya's inspire our continued work. Learn how you can
 support our mission to empower every child in Nepal."
 
 Links:
-- "autism support program in Kathmandu" â†’ /programs/autism-support
-- "parent training workshops" â†’ /events/parent-training
-- "inclusive education initiative" â†’ /programs/inclusive-education
-- "support our mission" â†’ /donate
+- "autism support program in Kathmandu" → /programs/autism-support
+- "parent training workshops" → /events/parent-training
+- "inclusive education initiative" → /programs/inclusive-education
+- "support our mission" → /donate
 ```
 
 ### Example 2: Program with Related Content

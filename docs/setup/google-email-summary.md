@@ -148,6 +148,6 @@ For issues:
 
 ---
 
-**Everything is ready!** ðŸŽ‰
+**Everything is ready!** 🎉
 
 Just follow the 4 steps above and you're done.

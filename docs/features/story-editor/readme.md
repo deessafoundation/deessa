@@ -1,5 +1,5 @@
 ---
-title: "Story Editor Modernization â€” Documentation"
+title: "Story Editor Modernization — Documentation"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Story Editor Modernization â€” Documentation
+# Story Editor Modernization — Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
@@ -15,27 +15,27 @@ last_updated: 2026-09-12
 
 ---
 
-## ðŸ“š Documentation Index
+## 📚 Documentation Index
 
 This comprehensive documentation suite covers the deessa Foundation Story Editor Modernization from user guides to technical implementation details.
 
 ### Quick Navigation by Role
 
-**âœï¸ For Content Editors & Admin Users**
+**✍️ For Content Editors & Admin Users**
 - Start here: [**Admin User Guide**](admin-user-guide.md)
 - Key tasks: Creating stories, formatting content, uploading images, using layout blocks
 
-**ðŸ‘¨â€ðŸ’» For Developers**
+**👨‍💻 For Developers**
 - Start here: [**Developer Documentation**](developer-documentation.md)
 - Key resources: Architecture, component structure, extension points, testing
 
-**ðŸ”§ For Support Staff**
+**🔧 For Support Staff**
 - Start here: [**Troubleshooting Guide**](troubleshooting-guide.md)
 - Key tasks: Resolving common issues, error recovery, browser compatibility
 
 ---
 
-## ðŸ“– Complete Documentation Files
+## 📖 Complete Documentation Files
 
 ### [Admin User Guide](admin-user-guide.md)
 **Audience**: Content editors, admin users, story managers
@@ -87,7 +87,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸš€ Quick Start
+## 🚀 Quick Start
 
 ### For New Content Editors
 
@@ -105,7 +105,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 2. Review the spec files in `.kiro/specs/story-editor-modernization/`
 3. Check component structure in `components/admin/rich-text-editor/`
 4. Review sanitization logic in `lib/sanitize/story-content.ts`
-5. Test the editor locally: `npm run dev` â†’ navigate to `/admin/stories/new`
+5. Test the editor locally: `npm run dev` → navigate to `/admin/stories/new`
 
 ### For Support Staff
 
@@ -117,7 +117,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸŽ¯ Common Tasks
+## 🎯 Common Tasks
 
 ### Content Editors
 
@@ -146,7 +146,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸ“Š System Quick Facts
+## 📊 System Quick Facts
 
 | Category | Details |
 |----------|---------|
@@ -163,7 +163,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸ” Key Features
+## 🔍 Key Features
 
 ### Text Formatting
 - **Inline formatting**: Bold, italic, underline, strikethrough
@@ -200,7 +200,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸ“ Documentation Maintenance
+## 📝 Documentation Maintenance
 
 ### When to Update This Documentation
 
@@ -217,7 +217,7 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸ“ž Support & Contact
+## 📞 Support & Contact
 
 ### For User Issues
 - **Admin Support**: Contact deessa Foundation IT team
@@ -235,10 +235,10 @@ This comprehensive documentation suite covers the deessa Foundation Story Editor
 
 ---
 
-## ðŸ“„ License & Copyright
+## 📄 License & Copyright
 
 **System**: Developed for deessa Foundation  
-**Documentation**: Â© 2026 deessa Foundation  
+**Documentation**: © 2026 deessa Foundation  
 **Maintainer**: Development Partner
 
 This documentation is proprietary to deessa Foundation. Do not distribute without permission.

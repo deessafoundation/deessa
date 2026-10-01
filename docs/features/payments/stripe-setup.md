@@ -15,7 +15,7 @@ This guide will help you set up Stripe payment integration for the deessa Founda
 
 Your project already has Stripe payment integration built in! This guide will help you configure it properly.
 
-## ðŸŽ¯ What's Already Implemented
+## 🎯 What's Already Implemented
 
  Stripe checkout flow in the donation form  
  Webhook handling for payment verification  
@@ -24,13 +24,13 @@ Your project already has Stripe payment integration built in! This guide will he
  Success and cancel pages  
  Mock mode for testing without API keys  
 
-## ðŸ“‹ Prerequisites
+## 📋 Prerequisites
 
 - A Stripe account (sign up at [stripe.com](https://stripe.com))
 - Node.js and npm/pnpm installed
 - Access to your Supabase database
 
-## ðŸš€ Quick Start
+## 🚀 Quick Start
 
 ### Step 1: Create a Stripe Account
 
@@ -41,7 +41,7 @@ Your project already has Stripe payment integration built in! This guide will he
 ### Step 2: Get Your Stripe API Keys
 
 1. Log in to your [Stripe Dashboard](https://dashboard.stripe.com)
-2. Navigate to **Developers** â†’ **API keys**
+2. Navigate to **Developers** → **API keys**
 3. You'll see two keys:
    - **Publishable key** (starts with `pk_test_` or `pk_live_`)
    - **Secret key** (starts with `sk_test_` or `sk_live_`)
@@ -111,7 +111,7 @@ Webhooks allow Stripe to notify your application when payment events occur.
 1. Deploy your application to production
 
 2. In your [Stripe Dashboard](https://dashboard.stripe.com):
-   - Go to **Developers** â†’ **Webhooks**
+   - Go to **Developers** → **Webhooks**
    - Click **Add endpoint**
    - Enter your webhook URL: `https://yourdomain.com/api/webhooks/stripe`
    - Select events to listen to:
@@ -144,7 +144,7 @@ When you're ready to accept real payments:
 
 4. Test with a real card (Stripe provides test cards even in live mode for testing)
 
-## ðŸ§ª Testing
+## 🧪 Testing
 
 ### Test Card Numbers (Test Mode)
 
@@ -170,7 +170,7 @@ Use these test cards in test mode:
 6. Complete the Stripe checkout (use test card in test mode)
 7. You'll be redirected to `/donate/success`
 
-## ðŸ“Š Monitoring Payments
+## 📊 Monitoring Payments
 
 ### In Your Stripe Dashboard
 
@@ -192,7 +192,7 @@ Payment statuses:
 - `completed` - Payment successful (updated via webhook)
 - `failed` - Payment failed
 
-## ðŸ”’ Security Best Practices
+## 🔒 Security Best Practices
 
 1. **Never commit `.env.local`** to version control
 2. **Use environment-specific keys** (test keys for development, live keys for production)
@@ -200,7 +200,7 @@ Payment statuses:
 4. **Use HTTPS in production** for webhook endpoints
 5. **Keep your secret keys secure** - never expose them in client-side code
 
-## ðŸŽ¨ Customization
+## 🎨 Customization
 
 ### Changing Payment Success/Cancel URLs
 
@@ -216,8 +216,8 @@ const cancelUrl = process.env.STRIPE_CANCEL_URL ||
 ### Customizing the Checkout Page
 
 Stripe Checkout is hosted by Stripe, but you can customize:
-- Logo (in Stripe Dashboard â†’ Branding)
-- Colors (in Stripe Dashboard â†’ Branding)
+- Logo (in Stripe Dashboard → Branding)
+- Colors (in Stripe Dashboard → Branding)
 - Payment methods accepted
 
 ### Customizing Donation Amounts
@@ -226,13 +226,13 @@ Edit [app/(public)/donate/page.tsx](app/(public)/donate/page.tsx):
 
 ```typescript
 const donationTiers = [
-  { amount: 25, impact: "School supplies for 5 children", icon: "ðŸ“š" },
-  { amount: 50, impact: "Medical checkup for a family", icon: "ðŸ¥" },
+  { amount: 25, impact: "School supplies for 5 children", icon: "📚" },
+  { amount: 50, impact: "Medical checkup for a family", icon: "🏥" },
   // Add more tiers...
 ]
 ```
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 ### "No redirect URL generated for donation"
 
@@ -245,7 +245,7 @@ const donationTiers = [
 - Verify webhook URL is correct and accessible
 - Check that `STRIPE_WEBHOOK_SECRET` matches your endpoint
 - Verify your webhook endpoint is listening to the correct events
-- Check Stripe Dashboard â†’ Webhooks â†’ Recent events for delivery status
+- Check Stripe Dashboard → Webhooks → Recent events for delivery status
 
 ### "STRIPE_SECRET_KEY is not configured"
 
@@ -258,16 +258,16 @@ const donationTiers = [
 - Check webhook is configured and receiving events
 - Verify `STRIPE_WEBHOOK_SECRET` is correct
 - Check webhook handler logs in your server console
-- Check Stripe Dashboard â†’ Webhooks â†’ Recent events for errors
+- Check Stripe Dashboard → Webhooks → Recent events for errors
 
-## ðŸ“š Additional Resources
+## 📚 Additional Resources
 
 - [Stripe Documentation](https://stripe.com/docs)
 - [Stripe Checkout Guide](https://stripe.com/docs/payments/checkout)
 - [Stripe Webhooks Guide](https://stripe.com/docs/webhooks)
 - [Stripe Testing Guide](https://stripe.com/docs/testing)
 
-## ðŸ†˜ Need Help?
+## 🆘 Need Help?
 
 If you encounter issues:
 
@@ -294,4 +294,4 @@ Before going live with real payments:
 
 ---
 
-**Ready to accept donations!** ðŸŽ‰
+**Ready to accept donations!** 🎉

@@ -48,8 +48,8 @@ https://deessafoundation.com
 
 Make sure to set this for:
 -  **Production** (most important!)
-- âš ï¸ **Preview** (optional - can use Vercel URL for preview deployments)
-- âš ï¸ **Development** (optional - keep as localhost or Vercel URL)
+- ⚠️ **Preview** (optional - can use Vercel URL for preview deployments)
+- ⚠️ **Development** (optional - keep as localhost or Vercel URL)
 
 **Recommended Setup:**
 
@@ -161,13 +161,13 @@ After making all changes and redeploying:
 
 ## Common Mistakes to Avoid
 
-âŒ **Don't** update the environment variable in `.env.local` only - this is local development
- **Do** update it in Vercel Dashboard â†’ Settings â†’ Environment Variables
+❌ **Don't** update the environment variable in `.env.local` only - this is local development
+ **Do** update it in Vercel Dashboard → Settings → Environment Variables
 
-âŒ **Don't** forget to redeploy after changing environment variables
+❌ **Don't** forget to redeploy after changing environment variables
  **Do** trigger a new deployment (Vercel doesn't auto-deploy on env changes)
 
-âŒ **Don't** use the Vercel URL (`deessa-foundation.vercel.app`) for production
+❌ **Don't** use the Vercel URL (`deessa-foundation.vercel.app`) for production
  **Do** use your custom domain (`deessafoundation.com`)
 
 ---
@@ -178,6 +178,6 @@ After making all changes and redeploying:
 
 **Variable:** `NEXT_PUBLIC_SITE_URL`  
 **Production Value:** `https://deessafoundation.com`  
-**Action:** Click **Save** â†’ Click **Redeploy**
+**Action:** Click **Save** → Click **Redeploy**
 
-That's it! ðŸŽ‰
+That's it! 🎉

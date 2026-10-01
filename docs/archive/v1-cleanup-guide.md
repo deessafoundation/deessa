@@ -15,7 +15,7 @@ This guide provides instructions for removing V1 payment code and feature flags 
 
 ## Prerequisites
 
-âš ï¸ **DO NOT proceed unless ALL of the following are true:**
+⚠️ **DO NOT proceed unless ALL of the following are true:**
 
 -  V2 enabled at 100% for at least 7 days
 -  No critical issues in V2
@@ -224,7 +224,7 @@ vercel --prod
 
 ## Phase 3: Database Cleanup (Optional)
 
-âš ï¸ **HIGH RISK: Only proceed if absolutely necessary**
+⚠️ **HIGH RISK: Only proceed if absolutely necessary**
 
 ### Step 3.1: Identify Deprecated Columns
 
@@ -426,7 +426,7 @@ After cleanup, update:
 - [ ] Runbooks
 - [ ] Environment variable documentation
 
-## Celebration! ðŸŽ‰
+## Celebration! 🎉
 
 Once V1 cleanup is complete:
 

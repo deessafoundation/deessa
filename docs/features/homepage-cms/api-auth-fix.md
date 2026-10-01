@@ -12,7 +12,7 @@ last_updated: 2026-09-12
 ## Issue
 The `/api/admin/homepage-settings` endpoint was returning:
 ```
-âŒ Forbidden - Admin access required
+❌ Forbidden - Admin access required
 ```
 
 Even though the user was logged in as an admin.
@@ -24,7 +24,7 @@ Even though the user was logged in as an admin.
 The API route was manually querying the `admin_users` table:
 
 ```typescript
-// âŒ PROBLEMATIC CODE
+// ❌ PROBLEMATIC CODE
 const { data: adminUser } = await supabase
   .from("admin_users")
   .select("id, role")
@@ -182,7 +182,7 @@ This change makes the homepage settings API consistent with other admin routes:
 - `/api/admin/notifications/mark-all-read` 
 - **`/api/admin/homepage-settings`**  (NOW FIXED)
 
-### âŒ Routes Still Using Manual Query
+### ❌ Routes Still Using Manual Query
 - `/api/admin/settings/support`
 - `/api/admin/donations`
 - `/api/admin/donations/export`
@@ -210,7 +210,7 @@ This change makes the homepage settings API consistent with other admin routes:
 
 ### Before Fix
 ```
-âŒ Forbidden - Admin access required
+❌ Forbidden - Admin access required
 ```
 
 ### After Fix
@@ -231,7 +231,7 @@ Homepage settings have been updated.
 
 ---
 
-## ðŸŽ‰ Result
+## 🎉 Result
 
 The Homepage Manager now works correctly! Admins can:
 -  Access the homepage manager
@@ -240,4 +240,4 @@ The Homepage Manager now works correctly! Admins can:
 -  See success/error notifications
 -  Have changes persist to the database
 
-**Authentication issue resolved!** ðŸš€
+**Authentication issue resolved!** 🚀

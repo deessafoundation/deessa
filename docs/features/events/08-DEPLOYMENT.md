@@ -64,7 +64,7 @@ psql -f scripts/db/migrations/053-ticket-sold-count.sql
 psql -f scripts/db/migrations/055-event-form-template-seeds.sql
 ```
 
-Or via Supabase Dashboard â†’ SQL Editor.
+Or via Supabase Dashboard → SQL Editor.
 
 ---
 

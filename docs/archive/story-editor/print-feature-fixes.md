@@ -58,7 +58,7 @@ Added `type="button"` to the PrintButton component to prevent form submission
 
 ```tsx
 <Button
-  type="button"  // â† Added this
+  type="button"  // ← Added this
   variant={variant}
   size={size}
   onClick={handlePrint}

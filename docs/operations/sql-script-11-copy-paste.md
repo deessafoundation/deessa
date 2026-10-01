@@ -258,4 +258,4 @@ You can copy it from there if needed.
 
 ---
 
-**That's it!** Just copy, paste, and run. ��
+**That's it!** Just copy, paste, and run.

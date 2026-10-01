@@ -1,5 +1,5 @@
 ---
-title: "deessa Foundation â€” Conference Module: Payment Flows & State Machines"
+title: "deessa Foundation — Conference Module: Payment Flows & State Machines"
 description: " Version: 1.0.0"
 owner: "deessa Team"
 status: active
@@ -7,7 +7,7 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# deessa Foundation â€” Conference Module: Payment Flows & State Machines
+# deessa Foundation — Conference Module: Payment Flows & State Machines
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -213,7 +213,7 @@ stateDiagram-v2
 | `unpaid` | Gateway declined                 | `failed` | Set `status` to `cancelled` or leave as `pending_payment` (retry allowed) |
 | `unpaid` | Amount mismatch detected         | `review` | Flag for admin investigation                                              |
 | `unpaid` | Admin "Mark as Paid"             | `paid`   | Set `payment_override_by` = admin email, send confirmation                |
-| `failed` | User retries â†’ success           | `paid`   | Normal flow                                                               |
+| `failed` | User retries → success           | `paid`   | Normal flow                                                               |
 | `review` | Admin approves                   | `paid`   | Admin manually confirms after validating with gateway dashboard           |
 | `review` | Admin rejects                    | `failed` | Initiate refund via gateway dashboard                                     |
 
@@ -407,7 +407,7 @@ sequenceDiagram
             DirectAPI->>DB: Skip (idempotent)
         end
         DirectAPI-->>Browser: { ok: true, status: 'confirmed' }
-        Browser->>User: Show success âœ“
+        Browser->>User: Show success ✓
     and Webhook Path (Parallel)
         Gateway->>WebhookAPI: POST /webhooks/stripe
         WebhookAPI->>WebhookAPI: Verify HMAC signature

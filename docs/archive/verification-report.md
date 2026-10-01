@@ -23,14 +23,14 @@ last_updated: 2026-09-12
 
 | Scenario                     | Expected Behavior            | Result  |
 | ---------------------------- | ---------------------------- | ------- |
-| ðŸ  Local Dev (no env vars)   | Falls back to localhost:3000 |  Pass |
-| ðŸ  Local Dev (with env vars) | Uses configured URL          |  Pass |
-| â˜ï¸ Vercel Preview            | Auto-detects VERCEL_URL      |  Pass |
-| â˜ï¸ Vercel Production         | Auto-detects VERCEL_URL      |  Pass |
-| ðŸŽ¯ Custom Domain (APP_URL)   | Respects override            |  Pass |
-| ðŸŽ¯ Custom Domain (SITE_URL)  | Respects override            |  Pass |
-| âš¡ Priority Test             | APP_URL > SITE_URL           |  Pass |
-| ðŸ”„ Fallback Chain            | All 4 priorities work        |  Pass |
+| 🏠 Local Dev (no env vars)   | Falls back to localhost:3000 |  Pass |
+| 🏠 Local Dev (with env vars) | Uses configured URL          |  Pass |
+| ☁️ Vercel Preview            | Auto-detects VERCEL_URL      |  Pass |
+| ☁️ Vercel Production         | Auto-detects VERCEL_URL      |  Pass |
+| 🎯 Custom Domain (APP_URL)   | Respects override            |  Pass |
+| 🎯 Custom Domain (SITE_URL)  | Respects override            |  Pass |
+| ⚡ Priority Test             | APP_URL > SITE_URL           |  Pass |
+| 🔄 Fallback Chain            | All 4 priorities work        |  Pass |
 
 ### 2. TypeScript Compilation 
 
@@ -70,13 +70,13 @@ last_updated: 2026-09-12
 ## Priority Chain (Working as Designed)
 
 ```
-1. NEXT_PUBLIC_APP_URL (if set) â†’ Use this
-   â†“
-2. NEXT_PUBLIC_SITE_URL (if set) â†’ Use this
-   â†“
-3. VERCEL_URL (if available) â†’ Use https://{VERCEL_URL}
-   â†“
-4. Development Fallback â†’ Use http://localhost:3000
+1. NEXT_PUBLIC_APP_URL (if set) → Use this
+   ↓
+2. NEXT_PUBLIC_SITE_URL (if set) → Use this
+   ↓
+3. VERCEL_URL (if available) → Use https://{VERCEL_URL}
+   ↓
+4. Development Fallback → Use http://localhost:3000
 ```
 
 ---
@@ -91,8 +91,8 @@ last_updated: 2026-09-12
 
 ###  Existing Vercel Deployments
 
-- If you have `NEXT_PUBLIC_APP_URL` set â†’ Uses that (priority 1)
-- If you have `NEXT_PUBLIC_SITE_URL` set â†’ Uses that (priority 2)
+- If you have `NEXT_PUBLIC_APP_URL` set → Uses that (priority 1)
+- If you have `NEXT_PUBLIC_SITE_URL` set → Uses that (priority 2)
 - No configuration changes break existing setup
 
 ###  New Vercel Deployments
@@ -143,19 +143,19 @@ last_updated: 2026-09-12
 
 ## Risk Assessment
 
-### ðŸŸ¢ Low Risk Areas
+### 🟢 Low Risk Areas
 
 - **Local Development:** No changes to behavior
 - **Existing Deployments:** Configuration priority unchanged
 - **Type Safety:** All types correct, no anys introduced
 
-### ðŸŸ¡ Medium Risk (Mitigated)
+### 🟡 Medium Risk (Mitigated)
 
 - **New Vercel Deployments:** May use different URL
   - **Mitigation:** VERCEL_URL is always correct for the environment
   - **Override:** Can set NEXT_PUBLIC_APP_URL if needed
 
-### ðŸ”´ High Risk
+### 🔴 High Risk
 
 - **None identified**
 
@@ -208,7 +208,7 @@ git push origin main
 # Or redeploy previous version in Vercel dashboard
 1. Go to Deployments
 2. Find previous working deployment
-3. Click "..." â†’ "Promote to Production"
+3. Click "..." → "Promote to Production"
 ```
 
 **Note:** Rollback is unlikely to be needed. All tests passed.
@@ -248,5 +248,5 @@ The implementation is solid, well-tested, and backward compatible. The fix will 
 ---
 
 **Verified by:** Automated tests + Manual code review  
-**Confidence Level:** ðŸŸ¢ High (8/8 tests passed)  
+**Confidence Level:** 🟢 High (8/8 tests passed)  
 **Ready for Production:**  Yes

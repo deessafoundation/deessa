@@ -1,5 +1,5 @@
 ---
-title: "Events Module â€” Payment Integration Plan"
+title: "Events Module — Payment Integration Plan"
 description: " Status: Approved, pending implementation"
 owner: "deessa Team"
 status: active
@@ -7,12 +7,12 @@ category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Events Module â€” Payment Integration Plan
+# Events Module — Payment Integration Plan
 
 > **Status:** Approved, pending implementation
 > **Date:** 2025-07-26
 > **Scope:** Integrate Stripe, Khalti, eSewa payments into the events management module
-> **Approach:** Copy conference payment flow â†’ adapt for events (self-contained, no conference dependency)
+> **Approach:** Copy conference payment flow → adapt for events (self-contained, no conference dependency)
 
 ---
 
@@ -39,7 +39,7 @@ Critical differences between `conference_registrations` and `event_registrations
 
 | Gap | Conference | Events (Current) | Risk |
 |-----|-----------|------------------|------|
-| Provider session columns | `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid` (separate) | Only `provider_session_ref` (generic) | No unique constraints per provider â€” can't detect duplicate session references |
+| Provider session columns | `stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid` (separate) | Only `provider_session_ref` (generic) | No unique constraints per provider — can't detect duplicate session references |
 | Unique constraints | `uq_conf_reg_stripe_session_id`, `uq_conf_reg_khalti_pidx`, `uq_conf_reg_esewa_uuid` | **None** | Can't enforce one-session-per-registration at DB level |
 | `payment_events` linkage | `conference_registration_id` column exists | **No `event_registration_id` column** | Webhooks can't link to event registrations for idempotency |
 | `PaymentStatus` type | Includes `"review"` | Only `"unpaid" \| "paid" \| "refunded" \| "failed"` | No way to flag amount mismatches for admin review |
@@ -55,8 +55,8 @@ From the conference payment security audit:
 | H1 | HIGH | eSewa mock mode bypasses HMAC in production (`?mock=1` skips signature) | Block `?mock=1` when `NODE_ENV=production` |
 | M1 | MED | In-memory rate limiter on start-payment (not distributed across serverless instances) | Use distributed `checkRateLimit` instead |
 | M2 | MED | No rate limiting on confirm-stripe-session | Add distributed rate limit |
-| M3 | MED | payment_events insert failure silently continues â€” could allow duplicate confirmation | Make idempotency check atomic with status update |
-| M4 | MED | No proactive expiry cron â€” expired registrations stay in pending_payment | Add SQL function + cron suggestion |
+| M3 | MED | payment_events insert failure silently continues — could allow duplicate confirmation | Make idempotency check atomic with status update |
+| M4 | MED | No proactive expiry cron — expired registrations stay in pending_payment | Add SQL function + cron suggestion |
 | M5 | MED | Status endpoint accessible by rid only (no email required) | Accept rid-only (UUID not guessable) but add rate limiting |
 | M7 | MED | Double-payment race on concurrent startConferencePayment calls | Add distributed advisory lock |
 
@@ -106,11 +106,11 @@ CREATE INDEX IF NOT EXISTS idx_event_reg_esewa_uuid
 
 ## 4. Phase 1: Server Actions
 
-**File: `lib/actions/events-module/event-registration.ts`** â€” Add 3 new functions
+**File: `lib/actions/events-module/event-registration.ts`** — Add 3 new functions
 
 ### 1a. `getEventRegistrationForPayment(registrationId, email)`
 
-- Dual-key lookup (id + email) â€” same pattern as `getConferenceRegistrationByToken`
+- Dual-key lookup (id + email) — same pattern as `getConferenceRegistrationByToken`
 - Returns minimal public shape (no full PII beyond name)
 - Uses service-role client for integrity
 - Returns: `{ id, fullName, status, paymentStatus, paymentAmount, paymentCurrency, expiresAt, eventName }`
@@ -126,7 +126,7 @@ Security measures (copied from conference, hardened):
 | Inline expiry check | If `expires_at < now`, mark expired and reject |
 | Fee resolution | Read from `payment_amount` already stored on registration |
 | Provider validation | Check against `getSupportedProviders()` |
-| Currency forcing | Khalti/eSewa â†’ NPR only |
+| Currency forcing | Khalti/eSewa → NPR only |
 | **Distributed lock** (NEW) | Use `checkRateLimit` with key `event-pay-start:{registrationId}` to prevent concurrent session creation |
 | Provider session storage | Store in provider-specific columns (`stripe_session_id`, `khalti_pidx`, `esewa_transaction_uuid`) + `provider_session_ref` |
 | Idempotency | If `stripe_session_id` already set and registration unpaid, return existing session instead of creating new one |
@@ -137,7 +137,7 @@ Security measures (copied from conference, hardened):
 
 - Read-only status fetch for polling endpoint
 - Returns: `status`, `paymentStatus`, `fullName`, `eventName`, `expiresAt`
-- rid-only access (low risk â€” UUID v4 not guessable)
+- rid-only access (low risk — UUID v4 not guessable)
 
 ---
 
@@ -151,7 +151,7 @@ Copy from `app/api/conference/start-payment/route.ts`, adapt:
 |--------|-----------|--------|
 | Action function | `startConferencePayment` | `startEventPayment` |
 | Verify function | `getConferenceRegistrationByToken` | `getEventRegistrationForPayment` |
-| Rate limiter | In-memory (M1 vulnerability) | **Distributed** via `checkRateLimit` â€” 10/min per IP |
+| Rate limiter | In-memory (M1 vulnerability) | **Distributed** via `checkRateLimit` — 10/min per IP |
 | Input validation | Same | Same |
 
 ### 2b. `app/api/events/confirm-stripe-session/route.ts` (NEW)
@@ -162,8 +162,8 @@ Copy from `app/api/conference/confirm-stripe-session/route.ts`, adapt:
 |--------|-----------|--------|
 | Table | `conference_registrations` | `event_registrations` |
 | Session column | `stripe_session_id` | `stripe_session_id` (new) |
-| Amount verification | Same | Same â€” fail-closed |
-| **Rate limiting** (NEW) | None (M2 vulnerability) | **Distributed** â€” 20/min per IP |
+| Amount verification | Same | Same — fail-closed |
+| **Rate limiting** (NEW) | None (M2 vulnerability) | **Distributed** — 20/min per IP |
 | Email ownership | Same pattern | Same pattern |
 | Confirmation email | `sendConferenceConfirmationEmail` | `sendEventConfirmationEmail` (from event-mailer.ts) |
 
@@ -175,13 +175,13 @@ Copy from `app/api/conference/status/route.ts`, adapt:
 |--------|-----------|--------|
 | Table | `conference_registrations` | `event_registrations` |
 | Returns | `fullName`, `attendanceMode` | `fullName`, `eventName` (from JOIN with events table) |
-| **Rate limiting** (NEW) | None (M5 vulnerability) | **Distributed** â€” 60/min per IP |
+| **Rate limiting** (NEW) | None (M5 vulnerability) | **Distributed** — 60/min per IP |
 
 ---
 
 ## 6. Phase 3: Webhook Updates
 
-**File: `app/api/webhooks/stripe/route.ts`** â€” Add event routing
+**File: `app/api/webhooks/stripe/route.ts`** — Add event routing
 
 In the `checkout.session.completed` handler, after the existing `conference_registration_id` check, add:
 
@@ -197,10 +197,10 @@ New function `confirmEventRegistrationFromWebhook()`:
 
 | Check | Implementation |
 |-------|---------------|
-| Idempotency | Insert into `payment_events` with `event_registration_id` â€” catch `23505` duplicate |
+| Idempotency | Insert into `payment_events` with `event_registration_id` — catch `23505` duplicate |
 | State guard | Skip if `payment_status === "paid"` or `status === "confirmed"` |
 | Payment status | Only proceed if `session.payment_status === "paid"` |
-| Amount verification | `reg.payment_amount * 100` vs `session.amount_total` â€” fail-closed |
+| Amount verification | `reg.payment_amount * 100` vs `session.amount_total` — fail-closed |
 | Currency mismatch | Non-fatal sync (same as conference) |
 | Confirmation | Update to `status: "confirmed"`, `payment_status: "paid"`, set `payment_paid_at`, `confirmed_at` |
 | Email | Fire-and-forget `sendEventConfirmationEmail()` |
@@ -209,9 +209,9 @@ New function `confirmEventRegistrationFromWebhook()`:
 
 ## 7. Phase 4: eSewa Handler (H1 Fix)
 
-**File: `app/api/payments/esewa/success/event-handler.ts`** (NEW â€” adapted from `conference-handler.ts`)
+**File: `app/api/payments/esewa/success/event-handler.ts`** (NEW — adapted from `conference-handler.ts`)
 
-**Critical fix â€” Block mock mode in production:**
+**Critical fix — Block mock mode in production:**
 
 ```ts
 if (process.env.NODE_ENV === "production" && searchParams.get("mock") === "1") {
@@ -224,8 +224,8 @@ Handler flow:
 2. Parse eSewa callback data (base64 response)
 3. Verify HMAC-SHA256 signature using `crypto.timingSafeEqual()`
 4. Look up `event_registrations` by `esewa_transaction_uuid`
-5. Verify amount with `verifyAmountMatch(expected, actual, "NPR", 0.01)` â€” 1 paisa tolerance
-6. Amount mismatch â†’ set `payment_status: "review"`, return
+5. Verify amount with `verifyAmountMatch(expected, actual, "NPR", 0.01)` — 1 paisa tolerance
+6. Amount mismatch → set `payment_status: "review"`, return
 7. Confirm: `status: "confirmed"`, `payment_status: "paid"`, set timestamps
 8. Send confirmation email via event-mailer (fire-and-forget)
 
@@ -265,7 +265,7 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 | Aspect | Conference | Events |
 |--------|-----------|--------|
 | Stripe verify API | `/api/conference/confirm-stripe-session` | `/api/events/confirm-stripe-session` |
-| Khalti verify API | `/api/payments/khalti/verify` | `/api/payments/khalti/verify` (shared â€” already handles events) |
+| Khalti verify API | `/api/payments/khalti/verify` | `/api/payments/khalti/verify` (shared — already handles events) |
 | Status polling API | `/api/conference/status` | `/api/events/status` |
 | Back link | `/conference` | `/events/${slug}` |
 | Confirmation display | `attendanceMode` | `eventName` + `ticketName` |
@@ -304,19 +304,19 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 | # | File | Action | Source |
 |---|------|--------|--------|
 | 0 | `scripts/XX-event-payment-integration.sql` | **CREATE** | New migration |
-| 1 | `lib/actions/events-module/event-registration.ts` | **EDIT** â€” add 3 functions | Adapted from conference-registration.ts |
+| 1 | `lib/actions/events-module/event-registration.ts` | **EDIT** — add 3 functions | Adapted from conference-registration.ts |
 | 2 | `app/api/events/start-payment/route.ts` | **CREATE** | Copied from conference/start-payment |
 | 3 | `app/api/events/confirm-stripe-session/route.ts` | **CREATE** | Copied from conference/confirm-stripe-session |
 | 4 | `app/api/events/status/route.ts` | **CREATE** | Copied from conference/status |
 | 5 | `app/api/events/verify-registration/route.ts` | **CREATE** | Copied from conference/verify-registration |
 | 6 | `app/api/events/resend-payment-link/route.ts` | **CREATE** | Copied from conference/resend-payment-link |
-| 7 | `app/api/webhooks/stripe/route.ts` | **EDIT** â€” add event routing | New `confirmEventRegistrationFromWebhook` |
+| 7 | `app/api/webhooks/stripe/route.ts` | **EDIT** — add event routing | New `confirmEventRegistrationFromWebhook` |
 | 8 | `app/api/payments/esewa/success/event-handler.ts` | **CREATE** | Adapted from conference-handler.ts + H1 fix |
 | 9 | `events/[slug]/register/payment-options/page.tsx` | **REWRITE** | Copied from conference/payment-options |
 | 10 | `events/[slug]/register/pending-payment/page.tsx` | **REWRITE** | Copied from conference/pending-payment |
 | 11 | `events/[slug]/register/payment-success/page.tsx` | **REWRITE** | Copied from conference/payment-success |
 | 12 | `events/[slug]/register/failure/page.tsx` | **EDIT** | Minor fixes |
-| 13 | `lib/types/events-module.ts` | **EDIT** â€” add `"review"` to PaymentStatus | Type fix |
+| 13 | `lib/types/events-module.ts` | **EDIT** — add `"review"` to PaymentStatus | Type fix |
 
 **Total: 8 new files, 5 edits, 1 migration**
 
@@ -342,22 +342,22 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 
 ## 12. Execution Order
 
-1. **Phase 0** â€” Migration first (schema must be ready before any code)
-2. **Phase 1** â€” Server actions (backend logic foundation)
-3. **Phase 2** â€” API routes (expose backend to frontend)
-4. **Phase 3** â€” Webhook (production reliability)
-5. **Phase 4** â€” eSewa handler (security fix)
-6. **Phase 5** â€” Frontend pages (user-facing)
-7. **Phase 6** â€” Supporting routes (verify, resend)
+1. **Phase 0** — Migration first (schema must be ready before any code)
+2. **Phase 1** — Server actions (backend logic foundation)
+3. **Phase 2** — API routes (expose backend to frontend)
+4. **Phase 3** — Webhook (production reliability)
+5. **Phase 4** — eSewa handler (security fix)
+6. **Phase 5** — Frontend pages (user-facing)
+7. **Phase 6** — Supporting routes (verify, resend)
 
 ---
 
-## Conference vs Events â€” Key Adaptation Reference
+## Conference vs Events — Key Adaptation Reference
 
 | Aspect | Conference | Events |
 |--------|-----------|--------|
 | Table | `conference_registrations` | `event_registrations` |
-| Fee source | `getConferenceSettings()` â†’ `registrationFeeByMode` | `event_ticket_types.price` (already in `payment_amount`) |
+| Fee source | `getConferenceSettings()` → `registrationFeeByMode` | `event_ticket_types.price` (already in `payment_amount`) |
 | Name format | `deessa-2026-{rid.slice(0,6)}` | Dynamic from event title |
 | URL pattern | `/conference/register/...` | `/events/[slug]/register/...` |
 | Metadata key | `conference_registration_id` | `event_registration_id` |
@@ -369,13 +369,13 @@ Copy from `conference/register/payment-success/page.tsx`, adapt:
 
 ## Shared Libraries (No Changes Needed)
 
-These are reused directly â€” no copying needed:
+These are reused directly — no copying needed:
 
-- `lib/payments/stripe.ts` â€” `startStripeCheckout()`, `verifyStripeSession()`
-- `lib/payments/khalti.ts` â€” `startKhaltiPayment()`
-- `lib/payments/esewa.ts` â€” `startEsewaPayment()`
-- `lib/payments/config.ts` â€” `getPaymentSettings()`, `getSupportedProviders()`
-- `lib/payments/security.ts` â€” `validateAmount()`, `verifyAmountMatch()`, `maskSensitiveData()`, `logPaymentEvent()`
-- `lib/payments/errors.ts` â€” `KhaltiError`, `EsewaError`
-- `lib/rate-limit.ts` â€” `checkRateLimit()` (distributed)
-- `lib/utils.ts` â€” `getAppBaseUrl()`
+- `lib/payments/stripe.ts` — `startStripeCheckout()`, `verifyStripeSession()`
+- `lib/payments/khalti.ts` — `startKhaltiPayment()`
+- `lib/payments/esewa.ts` — `startEsewaPayment()`
+- `lib/payments/config.ts` — `getPaymentSettings()`, `getSupportedProviders()`
+- `lib/payments/security.ts` — `validateAmount()`, `verifyAmountMatch()`, `maskSensitiveData()`, `logPaymentEvent()`
+- `lib/payments/errors.ts` — `KhaltiError`, `EsewaError`
+- `lib/rate-limit.ts` — `checkRateLimit()` (distributed)
+- `lib/utils.ts` — `getAppBaseUrl()`

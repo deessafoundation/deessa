@@ -35,7 +35,7 @@ This ensures donations are marked as completed even in development where webhook
 
 ```bash
 1. User completes payment on Stripe
-2. Stripe sends webhook â†’ /api/webhooks/stripe
+2. Stripe sends webhook → /api/webhooks/stripe
 3. Webhook updates donation status to "completed"
 4. User redirected to success page
 5. Success page verifies and shows "completed" status
@@ -126,7 +126,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://....supabase.co
 
 When deploying to production, set up Stripe webhooks:
 
-1. Go to Stripe Dashboard â†’ Webhooks
+1. Go to Stripe Dashboard → Webhooks
 2. Add endpoint: `https://yourdomain.com/api/webhooks/stripe`
 3. Select events:
    - `checkout.session.completed`
@@ -185,7 +185,7 @@ Already handles status updates correctly in `/api/payments/esewa/success/route.t
 
 ### How to verify webhook is working (production)?
 
-1. Go to Stripe Dashboard â†’ Webhooks
+1. Go to Stripe Dashboard → Webhooks
 2. Click on your webhook endpoint
 3. Check "Recent deliveries" tab
 4. Should see successful (200) responses for events

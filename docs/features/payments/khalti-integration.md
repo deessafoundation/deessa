@@ -163,10 +163,10 @@ The verification endpoint (`app/api/payments/khalti/verify/route.ts`):
 3. **Calls Khalti lookup API**: `POST /epayment/lookup/`
 4. **Verifies amount** matches donation amount
 5. **Handles all status codes:**
-   - `Completed` â†’ `payment_status = "completed"`
-   - `Pending` / `Initiated` â†’ Keep as `pending` (hold transaction)
-   - `Refunded` / `Partially Refunded` â†’ `payment_status = "failed"`
-   - `Expired` / `User canceled` â†’ `payment_status = "failed"`
+   - `Completed` → `payment_status = "completed"`
+   - `Pending` / `Initiated` → Keep as `pending` (hold transaction)
+   - `Refunded` / `Partially Refunded` → `payment_status = "failed"`
+   - `Expired` / `User canceled` → `payment_status = "failed"`
 6. **Updates database** with final status
 
 ## API Reference

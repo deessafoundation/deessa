@@ -40,14 +40,14 @@ Cleaned up unnecessary console logs in the Stripe webhook handler while keeping 
 ## Logs Removed (Unnecessary Noise)
 
 ### Removed Verbose Logs
-- âŒ "Starting receipt generation" (redundant - we log success/failure)
-- âŒ "Receipt URL" in success logs (not needed for monitoring)
-- âŒ "Full result object" in errors (too verbose)
-- âŒ Stack traces in non-critical errors (clutters logs)
-- âŒ "Payment session expired (no action)" (expected behavior)
-- âŒ "Already processed" for idempotency (expected behavior)
-- âŒ "Unhandled event type" (not actionable)
-- âŒ Duplicate information in error messages
+- ❌ "Starting receipt generation" (redundant - we log success/failure)
+- ❌ "Receipt URL" in success logs (not needed for monitoring)
+- ❌ "Full result object" in errors (too verbose)
+- ❌ Stack traces in non-critical errors (clutters logs)
+- ❌ "Payment session expired (no action)" (expected behavior)
+- ❌ "Already processed" for idempotency (expected behavior)
+- ❌ "Unhandled event type" (not actionable)
+- ❌ Duplicate information in error messages
 
 ### Simplified Messages
 - Before: `"Stripe webhook (conference): payment session expired (no action)"`
@@ -103,16 +103,16 @@ Cleaned up unnecessary console logs in the Stripe webhook handler while keeping 
 ### Error Logs (Actionable)
 
 ```
-âŒ Stripe webhook: Payment confirmation failed { donationId: 'xxx', sessionId: 'xxx', error: 'xxx' }
-âŒ Stripe webhook: Receipt generation failed { donationId: 'xxx', reason: 'xxx' }
-âŒ STRIPE_WEBHOOK_SECRET is not configured
+❌ Stripe webhook: Payment confirmation failed { donationId: 'xxx', sessionId: 'xxx', error: 'xxx' }
+❌ Stripe webhook: Receipt generation failed { donationId: 'xxx', reason: 'xxx' }
+❌ STRIPE_WEBHOOK_SECRET is not configured
 ```
 
 ### Warning Logs (Monitor)
 
 ```
-âš ï¸  Stripe webhook: No donation ID found in session xxx
-âš ï¸  Stripe webhook (conference): session not paid { registrationId: 'xxx', sessionId: 'xxx' }
+⚠️  Stripe webhook: No donation ID found in session xxx
+⚠️  Stripe webhook (conference): session not paid { registrationId: 'xxx', sessionId: 'xxx' }
 ```
 
 ## Benefits of Cleanup
@@ -141,7 +141,7 @@ Cleaned up unnecessary console logs in the Stripe webhook handler while keeping 
 
 ### Vercel Log Filters
 
-Use these filters in Vercel Dashboard â†’ Logs:
+Use these filters in Vercel Dashboard → Logs:
 
 ```
 # Show only errors

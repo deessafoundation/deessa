@@ -48,7 +48,7 @@ Both routes were trying to handle the `/sitemap` path, causing a build conflict.
 - Purpose: Dynamic XML sitemap for Google, Bing, etc.
 - Status: Active and functional
 
-âŒ **Human-Readable Sitemap Page:**
+❌ **Human-Readable Sitemap Page:**
 - Route: `/sitemap` (removed)
 - File: `app/(public)/sitemap/page.tsx` (deleted)
 - Purpose: Was a placeholder "coming soon" page
@@ -67,13 +67,13 @@ If you decide you want a user-facing sitemap page in the future, create it at a 
 
 **Option 1: Different path**
 ```
-app/(public)/site-map/page.tsx  â†’ /site-map
+app/(public)/site-map/page.tsx  → /site-map
 ```
 
 **Option 2: Alternative names**
 ```
-app/(public)/pages/page.tsx     â†’ /pages
-app/(public)/site-index/page.tsx â†’ /site-index
+app/(public)/pages/page.tsx     → /pages
+app/(public)/site-index/page.tsx → /site-index
 ```
 
 **Do NOT use:**
@@ -90,7 +90,7 @@ npm run dev
 # Test these URLs:
  http://localhost:3000/sitemap.xml - Should return XML sitemap
  http://localhost:3000/robots.txt - Should return robots rules
-âŒ http://localhost:3000/sitemap - Should return 404 (page removed)
+❌ http://localhost:3000/sitemap - Should return 404 (page removed)
 ```
 
 ## Summary

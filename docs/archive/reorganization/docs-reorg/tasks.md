@@ -1,15 +1,15 @@
 ---
-title: "Documentation Architecture â€” Complete Rewrite"
-description: " Status: Planning only â€” no files moved or renamed yet."
+title: "Documentation Architecture — Complete Rewrite"
+description: " Status: Planning only — no files moved or renamed yet."
 owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
 last_updated: 2026-09-12
 ---
-# Documentation Architecture â€” Complete Rewrite
+# Documentation Architecture — Complete Rewrite
 
-> **Status:** Planning only â€” no files moved or renamed yet.
+> **Status:** Planning only — no files moved or renamed yet.
 > **Created:** 2026-07-22
 > **Goal:** Design a professional, scalable documentation system for a Next.js + Supabase production application that can be handed over to an enterprise client and maintained for years.
 
@@ -17,7 +17,7 @@ last_updated: 2026-09-12
 
 ## Table of Contents
 
-1. [Architecture Review â€” What Was Wrong](#1-architecture-review--what-was-wrong)
+1. [Architecture Review — What Was Wrong](#1-architecture-review--what-was-wrong)
 2. [Refined Folder Structure](#2-refined-folder-structure)
 3. [Naming Standard](#3-naming-standard)
 4. [Document Lifecycle](#4-document-lifecycle)
@@ -37,13 +37,13 @@ last_updated: 2026-09-12
 
 ---
 
-## 1. Architecture Review â€” What Was Wrong
+## 1. Architecture Review — What Was Wrong
 
 The previous plan had six fundamental architectural flaws:
 
 ### Flaw 1: Mixed Classification Systems
 
-The previous structure mixed **subject-area folders** (`payments/`, `conference/`) with **document-type folders** (`how-to/`, `architecture/`). This is like organizing a library by putting fiction books in one room, cookbooks in another, and then "large books" in a third. A document about payment troubleshooting could be in `payments/` or `how-to/` â€” the structure doesn't tell you which.
+The previous structure mixed **subject-area folders** (`payments/`, `conference/`) with **document-type folders** (`how-to/`, `architecture/`). This is like organizing a library by putting fiction books in one room, cookbooks in another, and then "large books" in a third. A document about payment troubleshooting could be in `payments/` or `how-to/` — the structure doesn't tell you which.
 
 **Fix:** Every top-level folder is a **subject area**. Document type is expressed through frontmatter `category` field, not folder placement.
 
@@ -55,7 +55,7 @@ Payment documentation was split across `architecture/` (system design), `payment
 
 ### Flaw 3: The `how-to/` Grab Bag
 
-`how-to/` was becoming a second dump folder â€” anything that looked like a "guide" went there regardless of what feature it supported. This is the same problem as `archive/` but for a different document type.
+`how-to/` was becoming a second dump folder — anything that looked like a "guide" went there regardless of what feature it supported. This is the same problem as `archive/` but for a different document type.
 
 **Fix:** Eliminated. How-to content lives within its feature or system area. A `setup-guide.md` for payments lives in `features/payments/`, not in `how-to/`.
 
@@ -83,178 +83,178 @@ The project had no coding standards, no ADRs, and no documentation standards. A 
 
 ```
 docs/
-â”œâ”€â”€ README.md                           # Documentation homepage â€” navigation hub
-â”‚
-â”œâ”€â”€ getting-started/                    # Onboarding: new developers, new contributors
-â”‚   â”œâ”€â”€ README.md                       # Index: "Start here"
-â”‚   â”œâ”€â”€ development-setup.md            # Local dev environment setup
-â”‚   â”œâ”€â”€ environment-variables.md        # All env vars documented (MISSING â€” referenced but never created)
-â”‚   â””â”€â”€ project-structure.md            # Codebase layout and conventions
-â”‚
-â”œâ”€â”€ architecture/                       # System-wide design (NOT feature-specific)
-â”‚   â”œâ”€â”€ README.md                       # Index: "How the system is designed"
-â”‚   â”œâ”€â”€ overview.md                     # High-level architecture (MISSING â€” needs creation)
-â”‚   â”œâ”€â”€ authentication.md               # Auth system: Supabase Auth + RBAC (MISSING)
-â”‚   â”œâ”€â”€ database.md                     # Schema overview, migrations, RLS (MISSING)
-â”‚   â”œâ”€â”€ payment-system.md               # Cross-cutting payment architecture
-â”‚   â”œâ”€â”€ receipt-system.md               # Cross-cutting receipt architecture
-â”‚   â”œâ”€â”€ email-system.md                 # Email sending: Resend/SendGrid (MISSING)
-â”‚   â”œâ”€â”€ storage.md                      # Supabase Storage setup (MISSING)
-â”‚   â”œâ”€â”€ api-design.md                   # API conventions, error handling (MISSING)
-â”‚   â””â”€â”€ backend-analysis.md             # Existing backend analysis
-â”‚
-â”œâ”€â”€ features/                           # Feature-specific documentation
-â”‚   â”œâ”€â”€ README.md                       # Index: "Feature documentation"
-â”‚   â”‚
-â”‚   â”œâ”€â”€ payments/                       # Payment integrations (Stripe, Khalti, eSewa)
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ stripe-setup.md
-â”‚   â”‚   â”œâ”€â”€ khalti-integration.md
-â”‚   â”‚   â”œâ”€â”€ esewa-integration.md
-â”‚   â”‚   â”œâ”€â”€ rate-limiting.md
-â”‚   â”‚   â”œâ”€â”€ receipt-implementation.md
-â”‚   â”‚   â”œâ”€â”€ receipt-deployment.md
-â”‚   â”‚   â”œâ”€â”€ receipt-troubleshooting.md
-â”‚   â”‚   â”œâ”€â”€ receipt-webhook-integration.md
-â”‚   â”‚   â”œâ”€â”€ receipt-access-control.md
-â”‚   â”‚   â”œâ”€â”€ receipt-token-migration.md
-â”‚   â”‚   â”œâ”€â”€ reconciliation.md
-â”‚   â”‚   â”œâ”€â”€ go-live-checklist.md
-â”‚   â”‚   â””â”€â”€ system-audit.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ donations/                      # Donation management (admin + public)
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ admin/
-â”‚   â”‚   â”‚   â”œâ”€â”€ API.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”‚   â””â”€â”€ USER_GUIDE.md
-â”‚   â”‚   â”œâ”€â”€ stripe-enhancement-deployment.md
-â”‚   â”‚   â”œâ”€â”€ schema-analysis.md
-â”‚   â”‚   â”œâ”€â”€ stripe-payment-intent-solution.md
-â”‚   â”‚   â””â”€â”€ verification-checklist.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ conference/                     # Conference registration & management
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ reference/                  # Existing numbered suite (kept as-is)
-â”‚   â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 00-executive-summary.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 01-overview.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 02-architecture.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 03-database-schema.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 04-page-documentation.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 05-api-documentation.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 06-payment-flows.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 07-admin-documentation.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 08-security.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 09-deployment-operations.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 10-improvements-risks.md
-â”‚   â”‚   â”‚   â”œâ”€â”€ 11-appendix.md
-â”‚   â”‚   â”‚   â””â”€â”€ Master-Doc.md
-â”‚   â”‚   â””â”€â”€ dynamic-form/              # Active planning
-â”‚   â”‚       â”œâ”€â”€ tasks.md
-â”‚   â”‚       â”œâ”€â”€ phase-2-implementation.md
-â”‚   â”‚       â”œâ”€â”€ phase-2-complete.md
-â”‚   â”‚       â”œâ”€â”€ phase-2-visual-guide.md
-â”‚   â”‚       â””â”€â”€ phase-3-complete.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ homepage-cms/                   # Homepage content management
-â”‚   â”‚   â”œâ”€â”€ README.md                   # Consolidated from best existing docs
-â”‚   â”‚   â”œâ”€â”€ content-management.md       # Content management reference
-â”‚   â”‚   â””â”€â”€ impact-page.md             # Impact page integration
-â”‚   â”‚
-â”‚   â”œâ”€â”€ story-editor/                   # Story editor feature
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ admin-user-guide.md
-â”‚   â”‚   â”œâ”€â”€ developer-docs.md
-â”‚   â”‚   â”œâ”€â”€ implementation-status.md
-â”‚   â”‚   â”œâ”€â”€ print-feature.md
-â”‚   â”‚   â”œâ”€â”€ print-feature-fixes.md
-â”‚   â”‚   â”œâ”€â”€ print-troubleshooting.md
-â”‚   â”‚   â””â”€â”€ troubleshooting.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ testimonials/                   # Testimonial management
-â”‚   â”‚   â”œâ”€â”€ admin-upload-guide.md
-â”‚   â”‚   â”œâ”€â”€ image-upload.md
-â”‚   â”‚   â””â”€â”€ ui-improvements.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ seo/                            # SEO, sitemaps, robots
-â”‚   â”‚   â”œâ”€â”€ sitemap-robots.md
-â”‚   â”‚   â”œâ”€â”€ domain-update.md
-â”‚   â”‚   â”œâ”€â”€ sitemap-conflict.md
-â”‚   â”‚   â””â”€â”€ verification-checklist.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ podcasts/                       # Podcast system
-â”‚   â”‚   â”œâ”€â”€ implementation.md
-â”‚   â”‚   â””â”€â”€ highlights.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ accessibility/                  # Accessibility toolbar & features
-â”‚   â”‚   â””â”€â”€ toolbar-guide.md
-â”‚   â”‚
-â”‚   â”œâ”€â”€ media/                          # Image cleanup, photo wall, video
-â”‚   â”‚   â”œâ”€â”€ image-cleanup.md
-â”‚   â”‚   â”œâ”€â”€ photo-wall-admin.md
-â”‚   â”‚   â””â”€â”€ toast-notifications.md
-â”‚   â”‚
-â”‚   â””â”€â”€ theme/                          # Brand theme, Tailwind config
-â”‚       â”œâ”€â”€ brand-theme.md
-â”‚       â”œâ”€â”€ theme-migration.md
-â”‚       â””â”€â”€ tailwind-config.ts          # Code reference file
-â”‚
-â”œâ”€â”€ operations/                         # Deployment, monitoring, incident response
-â”‚   â”œâ”€â”€ README.md                       # Index: "Operating the system"
-â”‚   â”œâ”€â”€ deployment/
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ deployment-guide.md
-â”‚   â”‚   â”œâ”€â”€ staging-checklist.md
-â”‚   â”‚   â”œâ”€â”€ production-checklist.md
-â”‚   â”‚   â”œâ”€â”€ smoke-test-guide.md
-â”‚   â”‚   â”œâ”€â”€ incremental-rollout.md
-â”‚   â”‚   â”œâ”€â”€ v1-cleanup-guide.md
-â”‚   â”‚   â””â”€â”€ vercel-domain-fix.md
-â”‚   â”œâ”€â”€ security/
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ credential-rotation-guide.md
-â”‚   â”‚   â”œâ”€â”€ credential-rotation-checklist.md
-â”‚   â”‚   â””â”€â”€ credential-rotation-implementation.md
-â”‚   â”œâ”€â”€ runbook.md                      # Incident response runbook
-â”‚   â”œâ”€â”€ monitoring.md                   # Monitoring & alerting (MISSING)
-â”‚   â””â”€â”€ github-actions-roadmap.md
-â”‚
-â”œâ”€â”€ standards/                          # Team conventions and decisions
-â”‚   â”œâ”€â”€ README.md                       # Index: "How we work"
-â”‚   â”œâ”€â”€ coding-standards.md             # TypeScript, React, Next.js conventions (MISSING)
-â”‚   â”œâ”€â”€ documentation-standards.md      # How to write docs (this file's companion)
-â”‚   â”œâ”€â”€ decisions/                      # Architecture Decision Records
-â”‚   â”‚   â”œâ”€â”€ README.md                   # ADR process explanation
-â”‚   â”‚   â”œâ”€â”€ 001-use-supabase.md
-â”‚   â”‚   â”œâ”€â”€ 002-auth-design.md
-â”‚   â”‚   â”œâ”€â”€ 003-storage-strategy.md
-â”‚   â”‚   â”œâ”€â”€ 004-payment-providers.md
-â”‚   â”‚   â””â”€â”€ 005-email-service.md
-â”‚   â””â”€â”€ templates/                      # Doc templates
-â”‚       â”œâ”€â”€ feature-doc.md
-â”‚       â”œâ”€â”€ adr.md
-â”‚       â””â”€â”€ runbook.md
-â”‚
-â”œâ”€â”€ planning/                           # Active work â€” NOT shipped yet
-â”‚   â”œâ”€â”€ README.md
-â”‚   â””â”€â”€ component-reorg/
-â”‚       â””â”€â”€ tasks.md
-â”‚
-â”œâ”€â”€ releases/                           # Version history and changelogs
-â”‚   â”œâ”€â”€ README.md
-â”‚   â””â”€â”€ CHANGELOG.md
-â”‚
-â””â”€â”€ archive/                            # Historical docs with ongoing educational value
-    â”œâ”€â”€ README.md                       # Manifest: what's here and why
-    â”œâ”€â”€ payments/                       # Archived payment docs
-    â”‚   â””â”€â”€ payment-mode-removal-fix.md
-    â”œâ”€â”€ homepage-cms/                   # Archived CMS docs
-    â”‚   â””â”€â”€ (only docs with historical value)
-    â”œâ”€â”€ receipts/                       # Archived receipt docs
-    â”‚   â””â”€â”€ receipt-system-files.txt
-    â””â”€â”€ legacy/                         # Other archived docs
-        â””â”€â”€ (only docs with historical value)
+├── README.md                           # Documentation homepage — navigation hub
+│
+├── getting-started/                    # Onboarding: new developers, new contributors
+│   ├── README.md                       # Index: "Start here"
+│   ├── development-setup.md            # Local dev environment setup
+│   ├── environment-variables.md        # All env vars documented (MISSING — referenced but never created)
+│   └── project-structure.md            # Codebase layout and conventions
+│
+├── architecture/                       # System-wide design (NOT feature-specific)
+│   ├── README.md                       # Index: "How the system is designed"
+│   ├── overview.md                     # High-level architecture (MISSING — needs creation)
+│   ├── authentication.md               # Auth system: Supabase Auth + RBAC (MISSING)
+│   ├── database.md                     # Schema overview, migrations, RLS (MISSING)
+│   ├── payment-system.md               # Cross-cutting payment architecture
+│   ├── receipt-system.md               # Cross-cutting receipt architecture
+│   ├── email-system.md                 # Email sending: Resend/SendGrid (MISSING)
+│   ├── storage.md                      # Supabase Storage setup (MISSING)
+│   ├── api-design.md                   # API conventions, error handling (MISSING)
+│   └── backend-analysis.md             # Existing backend analysis
+│
+├── features/                           # Feature-specific documentation
+│   ├── README.md                       # Index: "Feature documentation"
+│   │
+│   ├── payments/                       # Payment integrations (Stripe, Khalti, eSewa)
+│   │   ├── README.md
+│   │   ├── stripe-setup.md
+│   │   ├── khalti-integration.md
+│   │   ├── esewa-integration.md
+│   │   ├── rate-limiting.md
+│   │   ├── receipt-implementation.md
+│   │   ├── receipt-deployment.md
+│   │   ├── receipt-troubleshooting.md
+│   │   ├── receipt-webhook-integration.md
+│   │   ├── receipt-access-control.md
+│   │   ├── receipt-token-migration.md
+│   │   ├── reconciliation.md
+│   │   ├── go-live-checklist.md
+│   │   └── system-audit.md
+│   │
+│   ├── donations/                      # Donation management (admin + public)
+│   │   ├── README.md
+│   │   ├── admin/
+│   │   │   ├── API.md
+│   │   │   ├── README.md
+│   │   │   └── USER_GUIDE.md
+│   │   ├── stripe-enhancement-deployment.md
+│   │   ├── schema-analysis.md
+│   │   ├── stripe-payment-intent-solution.md
+│   │   └── verification-checklist.md
+│   │
+│   ├── conference/                     # Conference registration & management
+│   │   ├── README.md
+│   │   ├── reference/                  # Existing numbered suite (kept as-is)
+│   │   │   ├── README.md
+│   │   │   ├── 00-executive-summary.md
+│   │   │   ├── 01-overview.md
+│   │   │   ├── 02-architecture.md
+│   │   │   ├── 03-database-schema.md
+│   │   │   ├── 04-page-documentation.md
+│   │   │   ├── 05-api-documentation.md
+│   │   │   ├── 06-payment-flows.md
+│   │   │   ├── 07-admin-documentation.md
+│   │   │   ├── 08-security.md
+│   │   │   ├── 09-deployment-operations.md
+│   │   │   ├── 10-improvements-risks.md
+│   │   │   ├── 11-appendix.md
+│   │   │   └── Master-Doc.md
+│   │   └── dynamic-form/              # Active planning
+│   │       ├── tasks.md
+│   │       ├── phase-2-implementation.md
+│   │       ├── phase-2-complete.md
+│   │       ├── phase-2-visual-guide.md
+│   │       └── phase-3-complete.md
+│   │
+│   ├── homepage-cms/                   # Homepage content management
+│   │   ├── README.md                   # Consolidated from best existing docs
+│   │   ├── content-management.md       # Content management reference
+│   │   └── impact-page.md             # Impact page integration
+│   │
+│   ├── story-editor/                   # Story editor feature
+│   │   ├── README.md
+│   │   ├── admin-user-guide.md
+│   │   ├── developer-docs.md
+│   │   ├── implementation-status.md
+│   │   ├── print-feature.md
+│   │   ├── print-feature-fixes.md
+│   │   ├── print-troubleshooting.md
+│   │   └── troubleshooting.md
+│   │
+│   ├── testimonials/                   # Testimonial management
+│   │   ├── admin-upload-guide.md
+│   │   ├── image-upload.md
+│   │   └── ui-improvements.md
+│   │
+│   ├── seo/                            # SEO, sitemaps, robots
+│   │   ├── sitemap-robots.md
+│   │   ├── domain-update.md
+│   │   ├── sitemap-conflict.md
+│   │   └── verification-checklist.md
+│   │
+│   ├── podcasts/                       # Podcast system
+│   │   ├── implementation.md
+│   │   └── highlights.md
+│   │
+│   ├── accessibility/                  # Accessibility toolbar & features
+│   │   └── toolbar-guide.md
+│   │
+│   ├── media/                          # Image cleanup, photo wall, video
+│   │   ├── image-cleanup.md
+│   │   ├── photo-wall-admin.md
+│   │   └── toast-notifications.md
+│   │
+│   └── theme/                          # Brand theme, Tailwind config
+│       ├── brand-theme.md
+│       ├── theme-migration.md
+│       └── tailwind-config.ts          # Code reference file
+│
+├── operations/                         # Deployment, monitoring, incident response
+│   ├── README.md                       # Index: "Operating the system"
+│   ├── deployment/
+│   │   ├── README.md
+│   │   ├── deployment-guide.md
+│   │   ├── staging-checklist.md
+│   │   ├── production-checklist.md
+│   │   ├── smoke-test-guide.md
+│   │   ├── incremental-rollout.md
+│   │   ├── v1-cleanup-guide.md
+│   │   └── vercel-domain-fix.md
+│   ├── security/
+│   │   ├── README.md
+│   │   ├── credential-rotation-guide.md
+│   │   ├── credential-rotation-checklist.md
+│   │   └── credential-rotation-implementation.md
+│   ├── runbook.md                      # Incident response runbook
+│   ├── monitoring.md                   # Monitoring & alerting (MISSING)
+│   └── github-actions-roadmap.md
+│
+├── standards/                          # Team conventions and decisions
+│   ├── README.md                       # Index: "How we work"
+│   ├── coding-standards.md             # TypeScript, React, Next.js conventions (MISSING)
+│   ├── documentation-standards.md      # How to write docs (this file's companion)
+│   ├── decisions/                      # Architecture Decision Records
+│   │   ├── README.md                   # ADR process explanation
+│   │   ├── 001-use-supabase.md
+│   │   ├── 002-auth-design.md
+│   │   ├── 003-storage-strategy.md
+│   │   ├── 004-payment-providers.md
+│   │   └── 005-email-service.md
+│   └── templates/                      # Doc templates
+│       ├── feature-doc.md
+│       ├── adr.md
+│       └── runbook.md
+│
+├── planning/                           # Active work — NOT shipped yet
+│   ├── README.md
+│   └── component-reorg/
+│       └── tasks.md
+│
+├── releases/                           # Version history and changelogs
+│   ├── README.md
+│   └── CHANGELOG.md
+│
+└── archive/                            # Historical docs with ongoing educational value
+    ├── README.md                       # Manifest: what's here and why
+    ├── payments/                       # Archived payment docs
+    │   └── payment-mode-removal-fix.md
+    ├── homepage-cms/                   # Archived CMS docs
+    │   └── (only docs with historical value)
+    ├── receipts/                       # Archived receipt docs
+    │   └── receipt-system-files.txt
+    └── legacy/                         # Other archived docs
+        └── (only docs with historical value)
 ```
 
 ### Why This Structure
@@ -332,7 +332,7 @@ Every document exists in exactly one lifecycle state. State is declared in front
 2. Status transitions must be documented in commit messages
 3. `deprecated` documents must include `superseded_by` pointing to the replacement
 4. `archived` documents must include `archive_reason` explaining why they were archived
-5. `deleted` documents are removed from the repository entirely â€” no archive needed
+5. `deleted` documents are removed from the repository entirely — no archive needed
 6. Documents in `planning` status should be reviewed every 30 days
 7. Documents in `active` status should be reviewed every 90 days
 
@@ -456,15 +456,15 @@ What other options were evaluated?
 
 ### Problem
 
-The current docs have ~20 "COMPLETE" and "SUMMARY" files that are really completion reports from past work sessions. These are not documentation â€” they're session artifacts.
+The current docs have ~20 "COMPLETE" and "SUMMARY" files that are really completion reports from past work sessions. These are not documentation — they're session artifacts.
 
 ### Strategy
 
 | Document Type | Current State | New Home |
 |--------------|---------------|----------|
-| Completion reports with zero long-term value | Scattered in docs/ | **Deleted** â€” no archive needed |
+| Completion reports with zero long-term value | Scattered in docs/ | **Deleted** — no archive needed |
 | Completion reports with architectural insight | Mixed in docs/ | **Merged** into canonical feature docs or `releases/CHANGELOG.md` |
-| Status reports | Mixed in docs/ | **Deleted** â€” current status is in code, not docs |
+| Status reports | Mixed in docs/ | **Deleted** — current status is in code, not docs |
 | Implementation summaries | Mixed in docs/ | **Merged** into canonical feature docs |
 
 ### CHANGELOG Format
@@ -505,88 +505,88 @@ The current docs have ~20 "COMPLETE" and "SUMMARY" files that are really complet
 
 | File | Action | Reason |
 |------|--------|--------|
-| `RECEIPT_SYSTEM.md` | **CANONICAL** â†’ `architecture/receipt-system.md` | Comprehensive system design |
+| `RECEIPT_SYSTEM.md` | **CANONICAL** → `architecture/receipt-system.md` | Comprehensive system design |
 | `RECEIPT_SYSTEM_SETUP.md` | **MERGE** into `features/payments/receipt-implementation.md` | Setup is part of implementation |
 | `RECEIPT_SYSTEM_IMPLEMENTATION.md` | **MERGE** into `features/payments/receipt-implementation.md` | Duplicate of setup guide |
 | `RECEIPT_SYSTEM_COMPLETE.md` | **DELETE** | Completion summary, no ongoing value |
-| `RECEIPT_SYSTEM_FILES.txt` | **ARCHIVE** â†’ `archive/receipts/` | Historical file listing |
+| `RECEIPT_SYSTEM_FILES.txt` | **ARCHIVE** → `archive/receipts/` | Historical file listing |
 | `RECEIPT_SYSTEM_GOOGLE_EMAIL_READY.md` | **DELETE** | Status report, no value |
 | `RECEIPT_SYSTEM_NOW_WORKING.md` | **DELETE** | Status report, no value |
-| `RECEIPT_DEPLOYMENT_GUIDE.md` | **CANONICAL** â†’ `features/payments/receipt-deployment.md` | Deployment guide |
-| `RECEIPT_GENERATION_TROUBLESHOOTING.md` | **CANONICAL** â†’ `features/payments/receipt-troubleshooting.md` | Troubleshooting |
+| `RECEIPT_DEPLOYMENT_GUIDE.md` | **CANONICAL** → `features/payments/receipt-deployment.md` | Deployment guide |
+| `RECEIPT_GENERATION_TROUBLESHOOTING.md` | **CANONICAL** → `features/payments/receipt-troubleshooting.md` | Troubleshooting |
 | `RECEIPT_QUICK_FIX.md` | **DELETE** | Superseded |
-| `RECEIPT_STAMP_VERIFICATION_PLAN.md` | **CANONICAL** â†’ `features/payments/receipt-stamp-verification.md` | Active guide |
+| `RECEIPT_STAMP_VERIFICATION_PLAN.md` | **CANONICAL** → `features/payments/receipt-stamp-verification.md` | Active guide |
 | `RECEIPT_URL_FIX.md` | **DELETE** | Historical fix, no ongoing value |
-| `RECEIPT_WEBHOOK_INTEGRATION.md` | **CANONICAL** â†’ `features/payments/receipt-webhook-integration.md` | Integration guide |
-| `payments-v2/RECEIPT_ACCESS_CONTROL_IMPLEMENTATION.md` | **CANONICAL** â†’ `features/payments/receipt-access-control.md` | Security reference |
-| `payments-v2/RECEIPT_TOKEN_MIGRATION.md` | **CANONICAL** â†’ `features/payments/receipt-token-migration.md` | Migration guide |
+| `RECEIPT_WEBHOOK_INTEGRATION.md` | **CANONICAL** → `features/payments/receipt-webhook-integration.md` | Integration guide |
+| `payments-v2/RECEIPT_ACCESS_CONTROL_IMPLEMENTATION.md` | **CANONICAL** → `features/payments/receipt-access-control.md` | Security reference |
+| `payments-v2/RECEIPT_TOKEN_MIGRATION.md` | **CANONICAL** → `features/payments/receipt-token-migration.md` | Migration guide |
 | `payments-v2/RECEIPT_TOKEN_QUICK_START.md` | **MERGE** into receipt-token-migration.md | Quick start is subset of migration |
 | `VERCEL_RECEIPT_DEPLOYMENT_CHECKLIST.md` | **MERGE** into receipt-deployment.md | Duplicate deployment content |
 
-**Result:** 17 files â†’ 6 canonical files + 1 archive + 10 deleted
+**Result:** 17 files → 6 canonical files + 1 archive + 10 deleted
 
 ### Cluster 2: Homepage CMS (25 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `README_HOMEPAGE_CMS.md` | **CANONICAL** â†’ `features/homepage-cms/README.md` | Best overview (423 lines) |
-| `QUICK_START_HOMEPAGE_CMS.md` | **CANONICAL** â†’ `features/homepage-cms/quick-start.md` | Quick start guide |
-| `HOMEPAGE_CONTENT_MANAGEMENT.md` | **CANONICAL** â†’ `features/homepage-cms/content-management.md` | Content management reference |
-| `IMPACT_PAGE_CMS_INTEGRATION.md` | **CANONICAL** â†’ `features/homepage-cms/impact-page.md` | Specific integration |
+| `README_HOMEPAGE_CMS.md` | **CANONICAL** → `features/homepage-cms/README.md` | Best overview (423 lines) |
+| `QUICK_START_HOMEPAGE_CMS.md` | **CANONICAL** → `features/homepage-cms/quick-start.md` | Quick start guide |
+| `HOMEPAGE_CONTENT_MANAGEMENT.md` | **CANONICAL** → `features/homepage-cms/content-management.md` | Content management reference |
+| `IMPACT_PAGE_CMS_INTEGRATION.md` | **CANONICAL** → `features/homepage-cms/impact-page.md` | Specific integration |
 | All other 21 files | **DELETE** | Completion summaries, status reports, duplicate quick starts |
 | `DEPLOYMENT_CHECKLIST.md:384` reference | **FIX** | Update broken link to new canonical doc |
 
-**Result:** 25 files â†’ 4 canonical files + 21 deleted
+**Result:** 25 files → 4 canonical files + 21 deleted
 
 ### Cluster 3: Podcast System (5 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `PODCAST_SYSTEM_IMPLEMENTATION.md` | **CANONICAL** â†’ `features/podcasts/implementation.md` | Main implementation doc |
-| `PODCAST_HIGHLIGHTS_IMPLEMENTATION.md` | **CANONICAL** â†’ `features/podcasts/highlights.md` | Highlights feature |
+| `PODCAST_SYSTEM_IMPLEMENTATION.md` | **CANONICAL** → `features/podcasts/implementation.md` | Main implementation doc |
+| `PODCAST_HIGHLIGHTS_IMPLEMENTATION.md` | **CANONICAL** → `features/podcasts/highlights.md` | Highlights feature |
 | `PODCAST_COMPLETE_SUMMARY.md` | **DELETE** | Completion summary |
 | `PODCAST_KEY_TOPICS_IMPLEMENTATION.md` | **MERGE** into implementation.md | Subset of main doc |
 
-**Result:** 5 files â†’ 2 canonical files + 2 deleted + 1 merged
+**Result:** 5 files → 2 canonical files + 2 deleted + 1 merged
 
 ### Cluster 4: Testimonials (5 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `TESTIMONIALS_IMAGE_UPLOAD.md` | **CANONICAL** â†’ `features/testimonials/image-upload.md` | Feature doc |
-| `TESTIMONIALS_UI_IMPROVEMENTS.md` | **CANONICAL** â†’ `features/testimonials/ui-improvements.md` | Feature doc |
-| `ADMIN_GUIDE_TESTIMONIALS_UPLOAD.md` | **CANONICAL** â†’ `features/testimonials/admin-upload-guide.md` | Admin guide |
+| `TESTIMONIALS_IMAGE_UPLOAD.md` | **CANONICAL** → `features/testimonials/image-upload.md` | Feature doc |
+| `TESTIMONIALS_UI_IMPROVEMENTS.md` | **CANONICAL** → `features/testimonials/ui-improvements.md` | Feature doc |
+| `ADMIN_GUIDE_TESTIMONIALS_UPLOAD.md` | **CANONICAL** → `features/testimonials/admin-upload-guide.md` | Admin guide |
 | `TESTIMONIAL_DELETION_CONFIRMATION.md` | **DELETE** | Status report |
-| `PHOTO_WALL_ADMIN.md` | **CANONICAL** â†’ `features/media/photo-wall-admin.md` | Feature doc |
+| `PHOTO_WALL_ADMIN.md` | **CANONICAL** → `features/media/photo-wall-admin.md` | Feature doc |
 
-**Result:** 5 files â†’ 4 canonical files + 1 deleted
+**Result:** 5 files → 4 canonical files + 1 deleted
 
 ### Cluster 5: Stripe/Payment Fixes (multiple files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `STRIPE_SETUP_GUIDE.md` | **CANONICAL** â†’ `features/payments/stripe-setup.md` | Setup guide |
-| `STRIPE_PAYMENT_INTENT_ANALYSIS.md` | **CANONICAL** â†’ `features/payments/stripe-payment-intent-analysis.md` | Analysis |
-| `STRIPE_WEBHOOK_TROUBLESHOOTING.md` | **CANONICAL** â†’ `features/payments/stripe-webhook-troubleshooting.md` | Troubleshooting |
+| `STRIPE_SETUP_GUIDE.md` | **CANONICAL** → `features/payments/stripe-setup.md` | Setup guide |
+| `STRIPE_PAYMENT_INTENT_ANALYSIS.md` | **CANONICAL** → `features/payments/stripe-payment-intent-analysis.md` | Analysis |
+| `STRIPE_WEBHOOK_TROUBLESHOOTING.md` | **CANONICAL** → `features/payments/stripe-webhook-troubleshooting.md` | Troubleshooting |
 | `PAYMENT_STATUS_FIX.md` | **DELETE** | Historical fix |
-| `PAYMENT_SYSTEM_AUDIT.md` | **CANONICAL** â†’ `features/payments/system-audit.md` | Audit doc |
-| `KHALTI_INTEGRATION.md` | **CANONICAL** â†’ `features/payments/khalti-integration.md` | Integration doc |
-| `ESEWA_INTEGRATION.md` | **CANONICAL** â†’ `features/payments/esewa-integration.md` | Integration doc |
-| `GO_LIVE_PAYMENTS.md` | **CANONICAL** â†’ `features/payments/go-live-checklist.md` | Checklist |
+| `PAYMENT_SYSTEM_AUDIT.md` | **CANONICAL** → `features/payments/system-audit.md` | Audit doc |
+| `KHALTI_INTEGRATION.md` | **CANONICAL** → `features/payments/khalti-integration.md` | Integration doc |
+| `ESEWA_INTEGRATION.md` | **CANONICAL** → `features/payments/esewa-integration.md` | Integration doc |
+| `GO_LIVE_PAYMENTS.md` | **CANONICAL** → `features/payments/go-live-checklist.md` | Checklist |
 
-**Result:** 8 files â†’ 7 canonical files + 1 deleted
+**Result:** 8 files → 7 canonical files + 1 deleted
 
 ### Cluster 6: Theme/Brand (5 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `NEW_THEME_README.md` | **CANONICAL** â†’ `features/theme/new-theme.md` | Theme overview |
+| `NEW_THEME_README.md` | **CANONICAL** → `features/theme/new-theme.md` | Theme overview |
 | `NEW_BRAND_THEME_PLAN.md` | **MERGE** into new-theme.md | Plan is subset of overview |
-| `THEME_MIGRATION_GUIDE.md` | **CANONICAL** â†’ `features/theme/theme-migration.md` | Migration guide |
-| `VISUAL_SETUP_GUIDE.md` | **CANONICAL** â†’ `features/theme/visual-setup.md` | Visual setup |
-| `tailwind-ocean-theme-config.ts` | **CANONICAL** â†’ `features/theme/tailwind-config.ts` | Code reference |
+| `THEME_MIGRATION_GUIDE.md` | **CANONICAL** → `features/theme/theme-migration.md` | Migration guide |
+| `VISUAL_SETUP_GUIDE.md` | **CANONICAL** → `features/theme/visual-setup.md` | Visual setup |
+| `tailwind-ocean-theme-config.ts` | **CANONICAL** → `features/theme/tailwind-config.ts` | Code reference |
 
-**Result:** 5 files â†’ 4 canonical files + 1 merged
+**Result:** 5 files → 4 canonical files + 1 merged
 
 ### Cluster 7: SQL Scripts (3 files)
 
@@ -596,29 +596,29 @@ The current docs have ~20 "COMPLETE" and "SUMMARY" files that are really complet
 | `SQL_SCRIPT_11_ERROR_FIXED.md` | **DELETE** | Historical fix |
 | `SQL_SCRIPT_11_FIX.md` | **DELETE** | Historical fix |
 
-**Result:** 3 files â†’ 0 (all deleted)
+**Result:** 3 files → 0 (all deleted)
 
 ### Cluster 8: Google Email (5 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `GOOGLE_EMAIL_SETUP.md` | **CANONICAL** â†’ `getting-started/google-email-setup.md` | Setup guide (cross-cutting) |
+| `GOOGLE_EMAIL_SETUP.md` | **CANONICAL** → `getting-started/google-email-setup.md` | Setup guide (cross-cutting) |
 | `GOOGLE_EMAIL_SETUP_SUMMARY.md` | **MERGE** into setup.md | Duplicate |
 | `START_HERE_GOOGLE_EMAIL.md` | **DELETE** | Redirect, not real doc |
 | `INDEX_GOOGLE_EMAIL_SETUP.md` | **DELETE** | Index, not real doc |
 | `QUICK_DEPLOYMENT_GOOGLE_EMAIL.md` | **DELETE** | Quick ref, superseded |
 
-**Result:** 5 files â†’ 1 canonical file + 1 merged + 3 deleted
+**Result:** 5 files → 1 canonical file + 1 merged + 3 deleted
 
 ### Cluster 9: V1 Cleanup (3 files)
 
 | File | Action | Reason |
 |------|--------|--------|
-| `V1_CLEANUP_ANALYSIS.md` | **ARCHIVE** â†’ `archive/legacy/` | Historical analysis |
+| `V1_CLEANUP_ANALYSIS.md` | **ARCHIVE** → `archive/legacy/` | Historical analysis |
 | `V1_CLEANUP_COMPLETED.md` | **DELETE** | Completion summary |
-| `deployment/V1_CLEANUP_GUIDE.md` | **CANONICAL** â†’ `operations/deployment/v1-cleanup-guide.md` | Active guide |
+| `deployment/V1_CLEANUP_GUIDE.md` | **CANONICAL** → `operations/deployment/v1-cleanup-guide.md` | Active guide |
 
-**Result:** 3 files â†’ 1 canonical + 1 archive + 1 deleted
+**Result:** 3 files → 1 canonical + 1 archive + 1 deleted
 
 ### Consolidation Summary
 
@@ -635,7 +635,7 @@ The current docs have ~20 "COMPLETE" and "SUMMARY" files that are really complet
 | V1 Cleanup | 3 | 1 | 0 | 1 | 1 |
 | **Total** | **76** | **29** | **6** | **2** | **42** |
 
-**Net reduction:** 76 files â†’ 29 canonical + 2 archived + 37 deleted
+**Net reduction:** 76 files → 29 canonical + 2 archived + 37 deleted
 
 ---
 
@@ -681,16 +681,16 @@ This folder contains documentation with historical value that is no longer activ
 ## Contents
 
 ### payments/
-- `payment-mode-removal-fix.md` â€” Documents the 2026-03 refactor that removed PAYMENT_MODE env var
+- `payment-mode-removal-fix.md` — Documents the 2026-03 refactor that removed PAYMENT_MODE env var
 
 ### homepage-cms/
-- (Currently empty â€” 21 docs were deleted, not archived)
+- (Currently empty — 21 docs were deleted, not archived)
 
 ### receipts/
-- `receipt-system-files.txt` â€” Historical file listing from initial receipt system implementation
+- `receipt-system-files.txt` — Historical file listing from initial receipt system implementation
 
 ### legacy/
-- `v1-cleanup-analysis.md` â€” Analysis of v1 codebase cleanup decisions
+- `v1-cleanup-analysis.md` — Analysis of v1 codebase cleanup decisions
 
 ## Policy
 
@@ -709,39 +709,39 @@ This folder contains documentation with historical value that is no longer activ
 
 | Question | Current Coverage | Gap |
 |----------|-----------------|-----|
-| What does this application do? | README.md â€” decent | **Minor gap** â€” README covers features well |
-| How do I set up the dev environment? | README.md â€” basic | **Gap** â€” needs dedicated getting-started/development-setup.md |
-| How is the system architected? | Nowhere | **CRITICAL GAP** â€” no architecture overview |
-| How does authentication work? | Scattered across payment docs | **CRITICAL GAP** â€” no dedicated auth doc |
-| How does the database work? | `DATABASE_MIGRATION_GUIDE.md` | **Gap** â€” no schema overview, no RLS documentation |
-| How do payments work? | `payments-v2/PAYMENT_ARCHITECTURE_V2_README.md` | **Partial** â€” exists but buried and has broken refs |
-| How do I deploy? | `deployment/DEPLOYMENT_GUIDE.md` | **Adequate** â€” could be better organized |
-| How do I troubleshoot issues? | Scattered troubleshooting docs | **Gap** â€” no systematic troubleshooting guide |
-| Why were technical decisions made? | Nowhere | **CRITICAL GAP** â€” no ADRs |
-| What are the coding standards? | Nowhere | **CRITICAL GAP** â€” no standards doc |
-| How do I write documentation? | Nowhere | **Gap** â€” no documentation standards |
-| What environment variables exist? | Referenced but file doesn't exist | **CRITICAL GAP** â€” `ENVIRONMENT_VARIABLES.md` was never created |
-| What's the API design? | `api/PAYMENT_API.md` (partial) | **Gap** â€” no general API design standards |
-| How does email sending work? | Scattered in receipt docs | **Gap** â€” no dedicated email system doc |
-| How does file storage work? | `STORAGE_SETUP_GUIDE.md` | **Partial** â€” exists but minimal |
+| What does this application do? | README.md — decent | **Minor gap** — README covers features well |
+| How do I set up the dev environment? | README.md — basic | **Gap** — needs dedicated getting-started/development-setup.md |
+| How is the system architected? | Nowhere | **CRITICAL GAP** — no architecture overview |
+| How does authentication work? | Scattered across payment docs | **CRITICAL GAP** — no dedicated auth doc |
+| How does the database work? | `DATABASE_MIGRATION_GUIDE.md` | **Gap** — no schema overview, no RLS documentation |
+| How do payments work? | `payments-v2/PAYMENT_ARCHITECTURE_V2_README.md` | **Partial** — exists but buried and has broken refs |
+| How do I deploy? | `deployment/DEPLOYMENT_GUIDE.md` | **Adequate** — could be better organized |
+| How do I troubleshoot issues? | Scattered troubleshooting docs | **Gap** — no systematic troubleshooting guide |
+| Why were technical decisions made? | Nowhere | **CRITICAL GAP** — no ADRs |
+| What are the coding standards? | Nowhere | **CRITICAL GAP** — no standards doc |
+| How do I write documentation? | Nowhere | **Gap** — no documentation standards |
+| What environment variables exist? | Referenced but file doesn't exist | **CRITICAL GAP** — `ENVIRONMENT_VARIABLES.md` was never created |
+| What's the API design? | `api/PAYMENT_API.md` (partial) | **Gap** — no general API design standards |
+| How does email sending work? | Scattered in receipt docs | **Gap** — no dedicated email system doc |
+| How does file storage work? | `STORAGE_SETUP_GUIDE.md` | **Partial** — exists but minimal |
 
 ### Priority Gaps to Fill
 
-1. **`architecture/overview.md`** â€” High-level system architecture (MISSING â€” must create)
-2. **`architecture/authentication.md`** â€” Auth system design (MISSING â€” must create)
-3. **`getting-started/environment-variables.md`** â€” All env vars (MISSING â€” referenced but never created)
-4. **`standards/decisions/`** â€” ADRs (MISSING â€” must create)
-5. **`standards/coding-standards.md`** â€” Team conventions (MISSING â€” must create)
-6. **`architecture/database.md`** â€” Schema and RLS overview (MISSING â€” must create)
-7. **`architecture/email-system.md`** â€” Email architecture (MISSING â€” must create)
+1. **`architecture/overview.md`** — High-level system architecture (MISSING — must create)
+2. **`architecture/authentication.md`** — Auth system design (MISSING — must create)
+3. **`getting-started/environment-variables.md`** — All env vars (MISSING — referenced but never created)
+4. **`standards/decisions/`** — ADRs (MISSING — must create)
+5. **`standards/coding-standards.md`** — Team conventions (MISSING — must create)
+6. **`architecture/database.md`** — Schema and RLS overview (MISSING — must create)
+7. **`architecture/email-system.md`** — Email architecture (MISSING — must create)
 
 ### What Exists and Is Adequate
 
-- README.md â€” Good project overview
-- `deployment/DEPLOYMENT_GUIDE.md` â€” Good deployment guide
-- `operations/CREDENTIAL_ROTATION_GUIDE.md` â€” Excellent security doc
-- `conference-docs/` suite â€” Excellent reference documentation
-- `features/story-editor/` â€” Good feature documentation
+- README.md — Good project overview
+- `deployment/DEPLOYMENT_GUIDE.md` — Good deployment guide
+- `operations/CREDENTIAL_ROTATION_GUIDE.md` — Excellent security doc
+- `conference-docs/` suite — Excellent reference documentation
+- `features/story-editor/` — Good feature documentation
 
 ---
 
@@ -751,12 +751,12 @@ This folder contains documentation with historical value that is no longer activ
 
 Every folder with 3+ documents gets a `README.md` that serves as a local index. The top-level `docs/README.md` is the documentation homepage.
 
-### docs/README.md â€” Documentation Homepage
+### docs/README.md — Documentation Homepage
 
 ```markdown
 # Documentation
 
-> deessa Foundation â€” Technical Documentation
+> deessa Foundation — Technical Documentation
 
 ## Quick Links
 
@@ -776,15 +776,15 @@ System design, authentication, database, payment architecture, email, storage.
 
 ### [Features](features/)
 Feature-specific documentation organized by feature area.
-- [Payments](features/payments/) â€” Stripe, Khalti, eSewa integrations
-- [Donations](features/donations/) â€” Donation management and admin
-- [Conference](features/conference/) â€” Registration and event management
-- [Homepage CMS](features/homepage-cms/) â€” Content management system
-- [Story Editor](features/story-editor/) â€” Rich text story editing
-- [Testimonials](features/testimonials/) â€” Testimonial management
-- [SEO](features/seo/) â€” Sitemaps, robots, domain management
-- [Podcasts](features/podcasts/) â€” Podcast system
-- [Theme](features/theme/) â€” Brand theme and styling
+- [Payments](features/payments/) — Stripe, Khalti, eSewa integrations
+- [Donations](features/donations/) — Donation management and admin
+- [Conference](features/conference/) — Registration and event management
+- [Homepage CMS](features/homepage-cms/) — Content management system
+- [Story Editor](features/story-editor/) — Rich text story editing
+- [Testimonials](features/testimonials/) — Testimonial management
+- [SEO](features/seo/) — Sitemaps, robots, domain management
+- [Podcasts](features/podcasts/) — Podcast system
+- [Theme](features/theme/) — Brand theme and styling
 
 ### [Operations](operations/)
 Deployment guides, security procedures, runbooks.
@@ -878,14 +878,14 @@ Each feature README follows this template:
 | `payments-v2/REQUIREMENTS_VERIFICATION_REPORT.md` | `features/payments/requirements-verification.md` | MOVE + rename | reference |
 | `payments-v2/RECEIPT_ACCESS_CONTROL_IMPLEMENTATION.md` | `features/payments/receipt-access-control.md` | MOVE + rename | reference |
 | `payments-v2/RECEIPT_TOKEN_MIGRATION.md` | `features/payments/receipt-token-migration.md` | MOVE + rename | reference |
-| `payments-v2/RECEIPT_TOKEN_QUICK_START.md` | (MERGE into receipt-token-migration.md) | MERGE | â€” |
+| `payments-v2/RECEIPT_TOKEN_QUICK_START.md` | (MERGE into receipt-token-migration.md) | MERGE | — |
 | `RECEIPT_DEPLOYMENT_GUIDE.md` | `features/payments/receipt-deployment.md` | MOVE + rename | active |
 | `RECEIPT_GENERATION_TROUBLESHOOTING.md` | `features/payments/receipt-troubleshooting.md` | MOVE + rename | active |
 | `RECEIPT_STAMP_VERIFICATION_PLAN.md` | `features/payments/receipt-stamp-verification.md` | MOVE + rename | reference |
-| `RECEIPT_SYSTEM_SETUP.md` | (MERGE into receipt-implementation.md) | MERGE | â€” |
+| `RECEIPT_SYSTEM_SETUP.md` | (MERGE into receipt-implementation.md) | MERGE | — |
 | `RECEIPT_SYSTEM_IMPLEMENTATION.md` | `features/payments/receipt-implementation.md` | MOVE + rename | reference |
 | `RECEIPT_WEBHOOK_INTEGRATION.md` | `features/payments/receipt-webhook-integration.md` | MOVE + rename | reference |
-| `VERCEL_RECEIPT_DEPLOYMENT_CHECKLIST.md` | (MERGE into receipt-deployment.md) | MERGE | â€” |
+| `VERCEL_RECEIPT_DEPLOYMENT_CHECKLIST.md` | (MERGE into receipt-deployment.md) | MERGE | — |
 
 ### features/donations/
 
@@ -936,7 +936,7 @@ Each feature README follows this template:
 | `homepage-cms-integrations/HOMEPAGE_CONTENT_MANAGEMENT.md` | `features/homepage-cms/content-management.md` | MOVE + rename | reference |
 | `homepage-cms-integrations/IMPACT_PAGE_CMS_INTEGRATION.md` | `features/homepage-cms/impact-page.md` | MOVE + rename | reference |
 | `homepage-cms-integrations/QUICK_START_HOMEPAGE_CMS.md` | `features/homepage-cms/quick-start.md` | MOVE + rename | reference |
-| All other 21 homepage-cms files | â€” | **DELETE** | â€” |
+| All other 21 homepage-cms files | — | **DELETE** | — |
 
 ### features/story-editor/
 
@@ -951,8 +951,8 @@ Each feature README follows this template:
 | `story-editor/PRINT_FEATURE_FIXES.md` | `features/story-editor/print-feature-fixes.md` | MOVE + rename | reference |
 | `story-editor/PRINT_TROUBLESHOOTING.md` | `features/story-editor/print-troubleshooting.md` | MOVE + rename | reference |
 | `story-editor/troubleshooting-guide.md` | `features/story-editor/troubleshooting.md` | MOVE + rename | reference |
-| `story-editor/PRINT_FEATURE_COMPLETE.md` | â€” | **DELETE** | â€” |
-| `story-editor/PRINT_FEATURE_SUMMARY.md` | â€” | **DELETE** | â€” |
+| `story-editor/PRINT_FEATURE_COMPLETE.md` | — | **DELETE** | — |
+| `story-editor/PRINT_FEATURE_SUMMARY.md` | — | **DELETE** | — |
 
 ### features/testimonials/
 
@@ -977,8 +977,8 @@ Each feature README follows this template:
 |-------------|----------|--------|--------|
 | `PODCAST_SYSTEM_IMPLEMENTATION.md` | `features/podcasts/implementation.md` | MOVE + rename | reference |
 | `PODCAST_HIGHLIGHTS_IMPLEMENTATION.md` | `features/podcasts/highlights.md` | MOVE + rename | reference |
-| `PODCAST_KEY_TOPICS_IMPLEMENTATION.md` | (MERGE into implementation.md) | MERGE | â€” |
-| `PODCAST_COMPLETE_SUMMARY.md` | â€” | **DELETE** | â€” |
+| `PODCAST_KEY_TOPICS_IMPLEMENTATION.md` | (MERGE into implementation.md) | MERGE | — |
+| `PODCAST_COMPLETE_SUMMARY.md` | — | **DELETE** | — |
 
 ### features/accessibility/
 
@@ -994,15 +994,15 @@ Each feature README follows this template:
 | `PHOTO_WALL_ADMIN.md` | `features/media/photo-wall-admin.md` | MOVE + rename | reference |
 | `TOAST_NOTIFICATIONS.md` | `features/media/toast-notifications.md` | MOVE + rename | reference |
 | `TIMELINE_COLOR_PICKER_FEATURE.md` | `features/media/timeline-color-picker.md` | MOVE + rename | reference |
-| `TIMELINE_CMS_VERIFICATION.md` | â€” | **DELETE** | â€” |
-| `INTRO_VIDEO_FIX.md` | â€” | **DELETE** | â€” |
+| `TIMELINE_CMS_VERIFICATION.md` | — | **DELETE** | — |
+| `INTRO_VIDEO_FIX.md` | — | **DELETE** | — |
 
 ### features/theme/
 
 | Current Path | New Path | Action | Status |
 |-------------|----------|--------|--------|
 | `NEW_THEME_README.md` | `features/theme/new-theme.md` | MOVE + rename | reference |
-| `NEW_BRAND_THEME_PLAN.md` | (MERGE into new-theme.md) | MERGE | â€” |
+| `NEW_BRAND_THEME_PLAN.md` | (MERGE into new-theme.md) | MERGE | — |
 | `THEME_MIGRATION_GUIDE.md` | `features/theme/theme-migration.md` | MOVE + rename | reference |
 | `VISUAL_SETUP_GUIDE.md` | `features/theme/visual-setup.md` | MOVE + rename | reference |
 | `tailwind-ocean-theme-config.ts` | `features/theme/tailwind-config.ts` | MOVE + rename | reference |
@@ -1137,12 +1137,12 @@ Each feature README follows this template:
 **Goal:** Move subfolders that are already well-structured and just need renaming.
 
 **Scope:**
-- `conference-docs/` â†’ `features/conference/reference/` (14 files, no external refs)
-- `new-conference/` â†’ `features/conference/dynamic-form/` (5 files, no external refs)
-- `component-reorg/` â†’ `planning/component-reorg/` (1 file)
-- `plans/` â†’ `planning/story-editor-modernization.md` (1 file)
+- `conference-docs/` → `features/conference/reference/` (14 files, no external refs)
+- `new-conference/` → `features/conference/dynamic-form/` (5 files, no external refs)
+- `component-reorg/` → `planning/component-reorg/` (1 file)
+- `plans/` → `planning/story-editor-modernization.md` (1 file)
 - `operations/` subfolders restructure (rename files to kebab-case)
-- `deployment/` â†’ `operations/deployment/` (rename files to kebab-case)
+- `deployment/` → `operations/deployment/` (rename files to kebab-case)
 
 **Effort:** ~1.5 hours
 
@@ -1150,13 +1150,13 @@ Each feature README follows this template:
 
 ### Phase 3: Consolidate Payments + Receipt Docs (2 hours)
 
-**Goal:** The largest consolidation â€” merge 17 receipt files + 8 payment files into organized feature docs.
+**Goal:** The largest consolidation — merge 17 receipt files + 8 payment files into organized feature docs.
 
 **Scope:**
-- Move `payments-v2/*` â†’ `features/payments/` (merge with existing payment docs)
-- Move `api/PAYMENT_API.md` â†’ `architecture/payment-api.md`
-- Move root-level receipt docs â†’ `features/payments/` (merge duplicates)
-- Move root-level payment docs â†’ `features/payments/`
+- Move `payments-v2/*` → `features/payments/` (merge with existing payment docs)
+- Move `api/PAYMENT_API.md` → `architecture/payment-api.md`
+- Move root-level receipt docs → `features/payments/` (merge duplicates)
+- Move root-level payment docs → `features/payments/`
 - Execute merge operations for receipt cluster
 - Delete 10 receipt completion/status files
 - Update internal cross-refs in `architecture/payment-system.md`
@@ -1170,15 +1170,15 @@ Each feature README follows this template:
 **Goal:** Move feature-specific docs into their feature folders.
 
 **Scope:**
-- Move testimonials docs â†’ `features/testimonials/`
-- Move SEO docs â†’ `features/seo/`
-- Move podcast docs â†’ `features/podcasts/` (merge duplicates)
-- Move story-editor docs â†’ `features/story-editor/` (delete completion summaries)
-- Move accessibility docs â†’ `features/accessibility/`
-- Move media docs â†’ `features/media/`
-- Move theme docs â†’ `features/theme/` (merge duplicates)
-- Move Google email setup â†’ `getting-started/google-email-setup.md`
-- Move testing docs â†’ appropriate feature/operations folders
+- Move testimonials docs → `features/testimonials/`
+- Move SEO docs → `features/seo/`
+- Move podcast docs → `features/podcasts/` (merge duplicates)
+- Move story-editor docs → `features/story-editor/` (delete completion summaries)
+- Move accessibility docs → `features/accessibility/`
+- Move media docs → `features/media/`
+- Move theme docs → `features/theme/` (merge duplicates)
+- Move Google email setup → `getting-started/google-email-setup.md`
+- Move testing docs → appropriate feature/operations folders
 
 **Effort:** ~1.5 hours
 
@@ -1187,12 +1187,12 @@ Each feature README follows this template:
 **Goal:** Handle the largest single folder (25 homepage-cms files) and remaining root-level docs.
 
 **Scope:**
-- Pick 3-4 best homepage-cms docs â†’ `features/homepage-cms/`
+- Pick 3-4 best homepage-cms docs → `features/homepage-cms/`
 - Delete 21 homepage-cms completion/status files
 - Move remaining root-level docs to appropriate locations
-- Move `DATABASE_MIGRATION_GUIDE.md` â†’ `architecture/database.md` (rename)
-- Move `SITE_SETTINGS_SETUP_GUIDE.md` â†’ `features/media/site-settings.md`
-- Handle `DEPLOYMENT_CHECKLIST.md` (root-level) â€” update broken ref
+- Move `DATABASE_MIGRATION_GUIDE.md` → `architecture/database.md` (rename)
+- Move `SITE_SETTINGS_SETUP_GUIDE.md` → `features/media/site-settings.md`
+- Handle `DEPLOYMENT_CHECKLIST.md` (root-level) — update broken ref
 
 **Effort:** ~1 hour
 
@@ -1329,66 +1329,66 @@ rg "^---$" docs/ -l | xargs -I{} sh -c 'grep -q "status:" {} || echo "MISSING st
 - [ ] Write ADR 004: Payment Providers
 - [ ] Write ADR 005: Email Service
 - [ ] Create `releases/CHANGELOG.md` (skeleton)
-- [ ] Move `tailwind-ocean-theme-config.ts` â†’ `features/theme/tailwind-config.ts`
+- [ ] Move `tailwind-ocean-theme-config.ts` → `features/theme/tailwind-config.ts`
 
 ### Phase 2: Move Well-Organized Subfolders
 
-- [ ] Move `conference-docs/` â†’ `features/conference/reference/` (14 files)
-- [ ] Move `new-conference/` â†’ `features/conference/dynamic-form/` (5 files)
+- [ ] Move `conference-docs/` → `features/conference/reference/` (14 files)
+- [ ] Move `new-conference/` → `features/conference/dynamic-form/` (5 files)
 - [ ] Create `features/conference/README.md`
-- [ ] Move `component-reorg/` â†’ `planning/component-reorg/`
-- [ ] Move `plans/story-editor-modernization-plan.md` â†’ `planning/story-editor-modernization.md`
+- [ ] Move `component-reorg/` → `planning/component-reorg/`
+- [ ] Move `plans/story-editor-modernization-plan.md` → `planning/story-editor-modernization.md`
 - [ ] Rename `deployment/*.md` to kebab-case
-- [ ] Move `deployment/` â†’ `operations/deployment/`
-- [ ] Move `deployment/TASK_28_COMPLETION_SUMMARY.md` â†’ DELETE
-- [ ] Move `deployment/DEPLOYMENT_SUMMARY.md` â†’ DELETE
+- [ ] Move `deployment/` → `operations/deployment/`
+- [ ] Move `deployment/TASK_28_COMPLETION_SUMMARY.md` → DELETE
+- [ ] Move `deployment/DEPLOYMENT_SUMMARY.md` → DELETE
 - [ ] Rename `operations/*.md` to kebab-case
 - [ ] Create `operations/security/` directory
-- [ ] Move credential rotation docs â†’ `operations/security/`
+- [ ] Move credential rotation docs → `operations/security/`
 
 ### Phase 3: Consolidate Payments + Receipt Docs
 
-- [ ] Move `payments-v2/PAYMENT_ARCHITECTURE_V2_README.md` â†’ `architecture/payment-system.md`
-- [ ] Move `payments-v2/RATE_LIMITING*.md` â†’ `features/payments/`
-- [ ] Move `payments-v2/RECEIPT_*.md` â†’ `features/payments/` (merge quick-start)
-- [ ] Move `payments-v2/RECONCILIATION.md` â†’ `features/payments/`
-- [ ] Move `payments-v2/REQUIREMENTS_VERIFICATION_REPORT.md` â†’ `features/payments/`
-- [ ] Move `api/PAYMENT_API.md` â†’ `architecture/payment-api.md`
-- [ ] Move `RECEIPT_SYSTEM.md` â†’ `architecture/receipt-system.md`
-- [ ] Merge `RECEIPT_SYSTEM_SETUP.md` + `RECEIPT_SYSTEM_IMPLEMENTATION.md` â†’ `features/payments/receipt-implementation.md`
+- [ ] Move `payments-v2/PAYMENT_ARCHITECTURE_V2_README.md` → `architecture/payment-system.md`
+- [ ] Move `payments-v2/RATE_LIMITING*.md` → `features/payments/`
+- [ ] Move `payments-v2/RECEIPT_*.md` → `features/payments/` (merge quick-start)
+- [ ] Move `payments-v2/RECONCILIATION.md` → `features/payments/`
+- [ ] Move `payments-v2/REQUIREMENTS_VERIFICATION_REPORT.md` → `features/payments/`
+- [ ] Move `api/PAYMENT_API.md` → `architecture/payment-api.md`
+- [ ] Move `RECEIPT_SYSTEM.md` → `architecture/receipt-system.md`
+- [ ] Merge `RECEIPT_SYSTEM_SETUP.md` + `RECEIPT_SYSTEM_IMPLEMENTATION.md` → `features/payments/receipt-implementation.md`
 - [ ] Merge `VERCEL_RECEIPT_DEPLOYMENT_CHECKLIST.md` into `features/payments/receipt-deployment.md`
-- [ ] Move `RECEIPT_DEPLOYMENT_GUIDE.md` â†’ `features/payments/receipt-deployment.md`
-- [ ] Move `RECEIPT_GENERATION_TROUBLESHOOTING.md` â†’ `features/payments/receipt-troubleshooting.md`
-- [ ] Move `RECEIPT_STAMP_VERIFICATION_PLAN.md` â†’ `features/payments/receipt-stamp-verification.md`
-- [ ] Move `RECEIPT_WEBHOOK_INTEGRATION.md` â†’ `features/payments/receipt-webhook-integration.md`
-- [ ] Move root payment docs (STRIPE, KHALTI, ESEWA, GO_LIVE, PAYMENT_*) â†’ `features/payments/`
+- [ ] Move `RECEIPT_DEPLOYMENT_GUIDE.md` → `features/payments/receipt-deployment.md`
+- [ ] Move `RECEIPT_GENERATION_TROUBLESHOOTING.md` → `features/payments/receipt-troubleshooting.md`
+- [ ] Move `RECEIPT_STAMP_VERIFICATION_PLAN.md` → `features/payments/receipt-stamp-verification.md`
+- [ ] Move `RECEIPT_WEBHOOK_INTEGRATION.md` → `features/payments/receipt-webhook-integration.md`
+- [ ] Move root payment docs (STRIPE, KHALTI, ESEWA, GO_LIVE, PAYMENT_*) → `features/payments/`
 - [ ] Delete 10 receipt completion/status files
-- [ ] Move `RECEIPT_SYSTEM_FILES.txt` â†’ `archive/receipts/`
+- [ ] Move `RECEIPT_SYSTEM_FILES.txt` → `archive/receipts/`
 - [ ] Create `features/payments/README.md`
 - [ ] Update cross-refs in `architecture/payment-system.md`
 
 ### Phase 4: Consolidate Feature Docs
 
-- [ ] Move testimonials docs â†’ `features/testimonials/` (3 files)
-- [ ] Move SEO docs â†’ `features/seo/` (4 files)
-- [ ] Move podcast docs â†’ `features/podcasts/` (merge key-topics into implementation)
-- [ ] Move story-editor docs â†’ `features/story-editor/` (delete 2 completion summaries)
-- [ ] Move accessibility docs â†’ `features/accessibility/`
-- [ ] Move media docs â†’ `features/media/` (4 files)
-- [ ] Move theme docs â†’ `features/theme/` (merge brand-theme-plan)
-- [ ] Move `GOOGLE_EMAIL_SETUP.md` â†’ `getting-started/google-email-setup.md`
-- [ ] Move testing docs â†’ appropriate feature/operations folders
+- [ ] Move testimonials docs → `features/testimonials/` (3 files)
+- [ ] Move SEO docs → `features/seo/` (4 files)
+- [ ] Move podcast docs → `features/podcasts/` (merge key-topics into implementation)
+- [ ] Move story-editor docs → `features/story-editor/` (delete 2 completion summaries)
+- [ ] Move accessibility docs → `features/accessibility/`
+- [ ] Move media docs → `features/media/` (4 files)
+- [ ] Move theme docs → `features/theme/` (merge brand-theme-plan)
+- [ ] Move `GOOGLE_EMAIL_SETUP.md` → `getting-started/google-email-setup.md`
+- [ ] Move testing docs → appropriate feature/operations folders
 - [ ] Delete `TIMELINE_CMS_VERIFICATION.md`, `INTRO_VIDEO_FIX.md`
 
 ### Phase 5: Homepage CMS Cleanup + Remaining Docs
 
-- [ ] Move `README_HOMEPAGE_CMS.md` â†’ `features/homepage-cms/README.md`
-- [ ] Move `HOMEPAGE_CONTENT_MANAGEMENT.md` â†’ `features/homepage-cms/content-management.md`
-- [ ] Move `IMPACT_PAGE_CMS_INTEGRATION.md` â†’ `features/homepage-cms/impact-page.md`
-- [ ] Move `QUICK_START_HOMEPAGE_CMS.md` â†’ `features/homepage-cms/quick-start.md`
+- [ ] Move `README_HOMEPAGE_CMS.md` → `features/homepage-cms/README.md`
+- [ ] Move `HOMEPAGE_CONTENT_MANAGEMENT.md` → `features/homepage-cms/content-management.md`
+- [ ] Move `IMPACT_PAGE_CMS_INTEGRATION.md` → `features/homepage-cms/impact-page.md`
+- [ ] Move `QUICK_START_HOMEPAGE_CMS.md` → `features/homepage-cms/quick-start.md`
 - [ ] Delete 21 homepage-cms completion/status files
-- [ ] Move `DATABASE_MIGRATION_GUIDE.md` â†’ `architecture/database.md`
-- [ ] Move `SITE_SETTINGS_SETUP_GUIDE.md` â†’ `features/media/site-settings.md`
+- [ ] Move `DATABASE_MIGRATION_GUIDE.md` → `architecture/database.md`
+- [ ] Move `SITE_SETTINGS_SETUP_GUIDE.md` → `features/media/site-settings.md`
 - [ ] Move remaining root-level docs to appropriate locations
 - [ ] Delete all remaining completion summaries and status reports
 - [ ] Verify root docs/ is empty (except docs-reorg/ and new dirs)
@@ -1437,20 +1437,20 @@ rg "^---$" docs/ -l | xargs -I{} sh -c 'grep -q "status:" {} || echo "MISSING st
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| **Broken README links** | High (10 already broken) | Medium â€” new contributors can't find docs | Fix in Phase 1 before any moves |
-| **Broken internal cross-refs** | High (many docs reference each other) | Low â€” only affects readers | Update all cross-refs in Phase 6; grep to verify |
-| **Merge content loss** | Medium | High â€” important details could be lost | Review every merge target; keep both docs open during merge |
-| **Deleting docs with hidden value** | Low | Medium â€” lose historical context | Review each deletion candidate; err on side of archive |
-| **CI/CD references to docs** | Low (no docs/ refs found in workflows) | High â€” deploys could fail | Grep `.github/` before starting |
-| **Merge conflicts with in-flight work** | Medium | High â€” could lose active planning work | Do `new-conference/` and `component-reorg/` moves last; coordinate with team |
-| **Missing a reference update** | Medium | Low â€” broken link, not broken code | Multiple grep passes in Phase 6; manual spot-check |
-| **Frontmatter inconsistency** | Medium | Low â€” metadata is optional for readers | Use templates; validate with grep |
+| **Broken README links** | High (10 already broken) | Medium — new contributors can't find docs | Fix in Phase 1 before any moves |
+| **Broken internal cross-refs** | High (many docs reference each other) | Low — only affects readers | Update all cross-refs in Phase 6; grep to verify |
+| **Merge content loss** | Medium | High — important details could be lost | Review every merge target; keep both docs open during merge |
+| **Deleting docs with hidden value** | Low | Medium — lose historical context | Review each deletion candidate; err on side of archive |
+| **CI/CD references to docs** | Low (no docs/ refs found in workflows) | High — deploys could fail | Grep `.github/` before starting |
+| **Merge conflicts with in-flight work** | Medium | High — could lose active planning work | Do `new-conference/` and `component-reorg/` moves last; coordinate with team |
+| **Missing a reference update** | Medium | Low — broken link, not broken code | Multiple grep passes in Phase 6; manual spot-check |
+| **Frontmatter inconsistency** | Medium | Low — metadata is optional for readers | Use templates; validate with grep |
 
 ### Pre-flight Checks
 
 Before starting any moves:
 
-1. `git status` â€” ensure clean working tree
+1. `git status` — ensure clean working tree
 2. `git stash` any in-progress work
 3. Grep `.github/` for any docs/ references
 4. Grep `package.json` for any docs/ references
@@ -1466,9 +1466,9 @@ Before starting any moves:
 **Question:** The plan creates 6 new architecture docs (overview, auth, database, email, storage, API design) that don't exist today. These require significant writing effort. Should we create them as part of this reorg, or create stubs and fill them in later?
 
 **Options:**
-- **A) Create full docs** â€” Write complete architecture documentation. ~4-6 hours additional work.
-- **B) Create stubs with TODO** â€” Create the files with structure but minimal content. Fill in later.
-- **C) Defer entirely** â€” Just create the folder structure; write docs separately.
+- **A) Create full docs** — Write complete architecture documentation. ~4-6 hours additional work.
+- **B) Create stubs with TODO** — Create the files with structure but minimal content. Fill in later.
+- **C) Defer entirely** — Just create the folder structure; write docs separately.
 
 **My recommendation:** Option B. Create stubs with the right structure, headings, and frontmatter. This establishes the architecture without blocking the reorg. Fill in content as a separate task.
 
@@ -1477,9 +1477,9 @@ Before starting any moves:
 **Question:** The plan keeps 3-4 homepage-cms docs out of 25. Should we keep more for historical detail?
 
 **Options:**
-- **A) Keep 3-4** (current plan) â€” README, quick-start, content-management, impact-page
-- **B) Keep 6-8** â€” Add integration guides and phase-specific docs
-- **C) Keep 1-2** â€” Just README and quick-start
+- **A) Keep 3-4** (current plan) — README, quick-start, content-management, impact-page
+- **B) Keep 6-8** — Add integration guides and phase-specific docs
+- **C) Keep 1-2** — Just README and quick-start
 
 **My recommendation:** Option A. The 4 docs cover overview, quick start, content management, and a specific integration. Additional docs are completion summaries with no ongoing value.
 
@@ -1488,18 +1488,18 @@ Before starting any moves:
 **Question:** The plan creates `operations/security/` for credential rotation docs. Is this warranted with only 3 files?
 
 **Options:**
-- **A) Create `operations/security/`** â€” Clean separation, room to grow
-- **B) Keep in `operations/`** â€” Simpler structure, 3 files don't need a subfolder
+- **A) Create `operations/security/`** — Clean separation, room to grow
+- **B) Keep in `operations/`** — Simpler structure, 3 files don't need a subfolder
 
-**My recommendation:** Option A. Security documentation will grow. Credential rotation, security policies, incident response â€” these belong together. The subfolder makes the separation clear.
+**My recommendation:** Option A. Security documentation will grow. Credential rotation, security policies, incident response — these belong together. The subfolder makes the separation clear.
 
 ### D4: Should We Create `features/payments/` or Keep Payments at Top Level?
 
 **Question:** Payments is a large feature area (14+ files). Does it deserve top-level treatment like the original plan suggested?
 
 **Options:**
-- **A) Keep in `features/payments/`** â€” Consistent with other features
-- **B) Elevate to top-level `payments/`** â€” Acknowledges its cross-cutting nature
+- **A) Keep in `features/payments/`** — Consistent with other features
+- **B) Elevate to top-level `payments/`** — Acknowledges its cross-cutting nature
 
 **My recommendation:** Option A. Payments is a feature, not a system-wide concern. The architecture doc (`architecture/payment-system.md`) handles the cross-cutting aspects. Feature implementation docs belong in `features/`.
 
@@ -1508,8 +1508,8 @@ Before starting any moves:
 **Question:** The `conference/reference/` suite uses `00-`, `01-`, etc. Should we rename to kebab-case for consistency?
 
 **Options:**
-- **A) Keep numbered** â€” Preserves reading order, familiar to team
-- **B) Rename to kebab-case** â€” Consistent naming, but loses implicit ordering
+- **A) Keep numbered** — Preserves reading order, familiar to team
+- **B) Rename to kebab-case** — Consistent naming, but loses implicit ordering
 
 **My recommendation:** Option A. The numbered convention is intentional for this reference suite. The `order:` field in frontmatter can supplement if needed, but the filenames should stay as-is.
 
@@ -1518,8 +1518,8 @@ Before starting any moves:
 **Question:** There's a `DEPLOYMENT_CHECKLIST.md` at the project root (not in docs/). It has a broken docs/ reference. Should we fix the reference and leave it, or move it to docs?
 
 **Options:**
-- **A) Fix reference, leave at root** â€” It's a deployment checklist, belongs at root for visibility
-- **B) Move to `operations/deployment/`** â€” All deployment docs should be in docs/
+- **A) Fix reference, leave at root** — It's a deployment checklist, belongs at root for visibility
+- **B) Move to `operations/deployment/`** — All deployment docs should be in docs/
 
 **My recommendation:** Option A. Root-level deployment checklists are common and visible. Just fix the broken reference.
 
@@ -1528,8 +1528,8 @@ Before starting any moves:
 **Question:** The archive has subfolders (payments/, homepage-cms/, receipts/, legacy/). Is this too granular for ~3 archived files?
 
 **Options:**
-- **A) Subfolders** (current plan) â€” Mirrors live structure, scales if more docs get archived
-- **B) Flat archive** â€” Simpler, only 3 files today
+- **A) Subfolders** (current plan) — Mirrors live structure, scales if more docs get archived
+- **B) Flat archive** — Simpler, only 3 files today
 
 **My recommendation:** Option A. The subfolders are low-cost and the structure scales. When the 4th or 5th doc gets archived, you'll be glad the structure exists.
 

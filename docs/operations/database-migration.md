@@ -1,5 +1,5 @@
 ---
-title: "ðŸ—„ï¸ Database Migration Guide"
+title: "🗄️ Database Migration Guide"
 description: "Before using the new Homepage Content Management System, you MUST run this database migration."
 owner: "deessa Team"
 status: operational
@@ -7,9 +7,9 @@ category: operations
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸ—„ï¸ Database Migration Guide
+# 🗄️ Database Migration Guide
 
-## Run This First! âš ï¸
+## Run This First! ⚠️
 
 Before using the new Homepage Content Management System, you **MUST** run this database migration.
 
@@ -135,7 +135,7 @@ Expected result: 4 policies (view, insert, update, delete)
 
 ---
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 ### **Error: "relation already exists"**
 
@@ -159,7 +159,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## ðŸ“Š What Gets Created
+## 📊 What Gets Created
 
 ### **Tables**
 
@@ -191,7 +191,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## ðŸ”’ Security Notes
+## 🔒 Security Notes
 
  **Row Level Security (RLS)** is enabled  
  Only authenticated admins can access  
@@ -200,7 +200,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## ðŸ“ Migration Details
+## 📝 Migration Details
 
 **File**: `scripts/db/migrations/006-media-assets.sql`  
 **Lines**: ~150  
@@ -210,7 +210,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## â®ï¸ Rollback (If Needed)
+## ⏮️ Rollback (If Needed)
 
 If something goes wrong, you can rollback:
 
@@ -241,7 +241,7 @@ Once migration is complete:
 
 ---
 
-## ðŸŽ‰ Success
+## 🎉 Success
 
 If you see this, you're ready:
 

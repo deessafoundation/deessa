@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 **Project:** deessa Foundation (Next.js 16 / Supabase)  
 **Audit Date:** 2026-06-27  
-**Scope:** Full codebase â€” API routes, server actions, middleware, configuration, database scripts  
+**Scope:** Full codebase — API routes, server actions, middleware, configuration, database scripts  
 
 ---
 
@@ -19,22 +19,22 @@ last_updated: 2026-09-12
 
 | Severity | Count |
 |----------|-------|
-| ðŸ”´ Critical | 2 |
-| ðŸŸ  High | 4 |
-| ðŸŸ¡ Medium | 7 |
-| ðŸ”µ Low | 6 |
-| â„¹ï¸ Informational | 3 |
+| 🔴 Critical | 2 |
+| 🟠 High | 4 |
+| 🟡 Medium | 7 |
+| 🔵 Low | 6 |
+| ℹ️ Informational | 3 |
 | **Total** | **22** |
 
 ---
 
-## ðŸ”´ CRITICAL
+## 🔴 CRITICAL
 
 ---
 
-### CRIT-1 â€” Hardcoded Fallback Admin Setup Key
+### CRIT-1 — Hardcoded Fallback Admin Setup Key
 
-**File:** `lib/actions/admin-setup.ts` â€” line 28  
+**File:** `lib/actions/admin-setup.ts` — line 28  
 **Code:**
 ```ts
 const expectedKey = process.env.ADMIN_SETUP_KEY || "deessa-foundation-2024"
@@ -60,9 +60,9 @@ Remove the fallback entirely. Fail loudly if the env var is missing.
 
 ---
 
-### CRIT-2 â€” `deleteConferenceRegistration` Uses Service Role Without Any Auth Check
+### CRIT-2 — `deleteConferenceRegistration` Uses Service Role Without Any Auth Check
 
-**File:** `lib/actions/conference-registration.ts` â€” `deleteConferenceRegistration` function  
+**File:** `lib/actions/conference-registration.ts` — `deleteConferenceRegistration` function  
 **Code:**
 ```ts
 export async function deleteConferenceRegistration(
@@ -78,7 +78,7 @@ export async function deleteConferenceRegistration(
 ```
 
 **Description:**  
-This server action creates a service-role Supabase client (which bypasses all Row Level Security policies) and deletes a conference registration without first verifying that the caller is an authenticated admin. Next.js server actions can be directly invoked via HTTP POST to their endpoint URL, bypassing the admin UI. The only "guard" is knowing the registration ID and email â€” both of which may be discoverable.
+This server action creates a service-role Supabase client (which bypasses all Row Level Security policies) and deletes a conference registration without first verifying that the caller is an authenticated admin. Next.js server actions can be directly invoked via HTTP POST to their endpoint URL, bypassing the admin UI. The only "guard" is knowing the registration ID and email — both of which may be discoverable.
 
 **Impact:**  
 Any actor who knows or can guess a registrant's UUID and email address can permanently delete their conference registration.
@@ -94,11 +94,11 @@ export async function deleteConferenceRegistration(...) {
 
 ---
 
-## ðŸŸ  HIGH
+## 🟠 HIGH
 
 ---
 
-### HIGH-1 â€” Multiple Admin Conference Server Actions Lack Authorization Checks
+### HIGH-1 — Multiple Admin Conference Server Actions Lack Authorization Checks
 
 **File:** `lib/actions/conference-registration.ts`  
 **Affected functions:**
@@ -133,7 +133,7 @@ export async function confirmConferenceRegistration(id: string, ...) {
 
 ---
 
-### HIGH-2 â€” In-Memory Rate Limiter Ineffective on Serverless
+### HIGH-2 — In-Memory Rate Limiter Ineffective on Serverless
 
 **File:** `app/api/conference/start-payment/route.ts`  
 **Code:**
@@ -167,7 +167,7 @@ if (!rateLimit.allowed) {
 
 ---
 
-### HIGH-3 â€” Wildcard Image `remotePatterns` Enables SSRF
+### HIGH-3 — Wildcard Image `remotePatterns` Enables SSRF
 
 **File:** `next.config.mjs`  
 **Code:**
@@ -179,7 +179,7 @@ if (!rateLimit.allowed) {
 ```
 
 **Description:**  
-The Next.js Image Optimization API (`/_next/image?url=...`) will proxy and cache images from any HTTPS host when this wildcard pattern is present. An attacker can craft a URL that forces the Next.js server to issue requests to arbitrary HTTPS endpoints, including internal services (e.g., cloud metadata APIs like `https://169.254.169.254` â€” though this is HTTP, variation with internal HTTPS services is still possible), third-party APIs that log inbound requests, or endpoints used for exfiltration.
+The Next.js Image Optimization API (`/_next/image?url=...`) will proxy and cache images from any HTTPS host when this wildcard pattern is present. An attacker can craft a URL that forces the Next.js server to issue requests to arbitrary HTTPS endpoints, including internal services (e.g., cloud metadata APIs like `https://169.254.169.254` — though this is HTTP, variation with internal HTTPS services is still possible), third-party APIs that log inbound requests, or endpoints used for exfiltration.
 
 **Impact:**  
 Server-Side Request Forgery (SSRF). Potential exposure of internal network services, cloud metadata, and unintended proxying of attacker-controlled content.
@@ -196,7 +196,7 @@ remotePatterns: [
 
 ---
 
-### HIGH-4 â€” TypeScript Build Errors Silently Ignored
+### HIGH-4 — TypeScript Build Errors Silently Ignored
 
 **File:** `next.config.mjs`  
 **Code:**
@@ -217,11 +217,11 @@ Remove `ignoreBuildErrors: true`. Fix any existing TypeScript errors to re-enabl
 
 ---
 
-## ðŸŸ¡ MEDIUM
+## 🟡 MEDIUM
 
 ---
 
-### MED-1 â€” No Root-Level `middleware.ts` Found
+### MED-1 — No Root-Level `middleware.ts` Found
 
 **Situation:**  
 The Supabase session management logic lives in `lib/supabase/middleware.ts` as a utility function (`updateSession`). For Next.js to execute middleware on every request, a `middleware.ts` file must exist at the project root (or `src/`). No such root-level file was found.
@@ -249,9 +249,9 @@ export const config = {
 
 ---
 
-### MED-2 â€” Email Enumeration via Admin Login Error Messages
+### MED-2 — Email Enumeration via Admin Login Error Messages
 
-**File:** `lib/actions/admin-auth.ts` â€” line 40  
+**File:** `lib/actions/admin-auth.ts` — line 40  
 **Code:**
 ```ts
 if (adminError || !adminUser) {
@@ -261,7 +261,7 @@ if (adminError || !adminUser) {
 ```
 
 **Description:**  
-When a valid email/password pair belongs to a non-admin Supabase user, the error message `"You do not have admin access"` confirms that the credentials are correct. An attacker can distinguish between "wrong password", "email not found", and "valid credentials but not admin" â€” enabling targeted credential stuffing against known non-admin accounts.
+When a valid email/password pair belongs to a non-admin Supabase user, the error message `"You do not have admin access"` confirms that the credentials are correct. An attacker can distinguish between "wrong password", "email not found", and "valid credentials but not admin" — enabling targeted credential stuffing against known non-admin accounts.
 
 **Impact:**  
 User account enumeration; aids in targeted attacks.
@@ -274,13 +274,13 @@ return { error: "Invalid credentials" }
 
 ---
 
-### MED-3 â€” No Rate Limiting on Public Form Submissions
+### MED-3 — No Rate Limiting on Public Form Submissions
 
 **Files:**
-- `lib/actions/contact.ts` â€” `submitContactForm`
-- `lib/actions/newsletter.ts` â€” `subscribeToNewsletter`
-- `lib/actions/volunteer.ts` â€” `submitVolunteerApplication`
-- `lib/actions/event-registration.ts` â€” `registerForEvent` (inferred)
+- `lib/actions/contact.ts` — `submitContactForm`
+- `lib/actions/newsletter.ts` — `subscribeToNewsletter`
+- `lib/actions/volunteer.ts` — `submitVolunteerApplication`
+- `lib/actions/event-registration.ts` — `registerForEvent` (inferred)
 
 **Description:**  
 These public server actions accept user-submitted data and write to the database without any rate limiting. The distributed `checkRateLimit` utility (`lib/rate-limit.ts`) is already in use for the support form and receipt download endpoints, but has not been applied to these higher-traffic public-facing forms.
@@ -293,9 +293,9 @@ Apply `checkRateLimit` (by email or IP) to each of these actions, mirroring the 
 
 ---
 
-### MED-4 â€” Weak XSS Sanitization in Support Form
+### MED-4 — Weak XSS Sanitization in Support Form
 
-**File:** `lib/actions/support.ts` â€” line 31  
+**File:** `lib/actions/support.ts` — line 31  
 **Code:**
 ```ts
 function sanitizeText(value: string) {
@@ -320,9 +320,9 @@ function sanitizeText(value: string) {
 
 ---
 
-### MED-5 â€” `window.location.origin` Used Inside a Server Action
+### MED-5 — `window.location.origin` Used Inside a Server Action
 
-**File:** `lib/actions/admin-setup.ts` â€” line 57  
+**File:** `lib/actions/admin-setup.ts` — line 57  
 **Code:**
 ```ts
 options: {
@@ -333,7 +333,7 @@ options: {
 ```
 
 **Description:**  
-This file is a server action (`"use server"`). `window` is never defined in the Node.js runtime, so the ternary always evaluates to `""`, producing `emailRedirectTo: "/admin"` â€” a relative URL that Supabase's email service cannot use. New admin users created via signup will receive an email confirmation link pointing to an invalid URL.
+This file is a server action (`"use server"`). `window` is never defined in the Node.js runtime, so the ternary always evaluates to `""`, producing `emailRedirectTo: "/admin"` — a relative URL that Supabase's email service cannot use. New admin users created via signup will receive an email confirmation link pointing to an invalid URL.
 
 **Impact:**  
 Admin email confirmation links are broken, preventing email verification on newly created admin accounts (except when `NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL` is set).
@@ -347,15 +347,15 @@ emailRedirectTo:
 
 ---
 
-### MED-6 â€” `LEGACY_RECEIPT_ACCESS` Can Expose Receipts Without Token Auth
+### MED-6 — `LEGACY_RECEIPT_ACCESS` Can Expose Receipts Without Token Auth
 
-**File:** `app/api/receipts/download/route.ts` â€” line 66  
+**File:** `app/api/receipts/download/route.ts` — line 66  
 **Code:**
 ```ts
 const legacyAccessEnabled = process.env.LEGACY_RECEIPT_ACCESS === "true"
 // ...
 else if (legacyReceiptNumber && legacyAccessEnabled) {
-  // Fetches donation by receipt_number only â€” no JWT required
+  // Fetches donation by receipt_number only — no JWT required
 }
 ```
 
@@ -370,9 +370,9 @@ Remove or disable `LEGACY_RECEIPT_ACCESS` in production. If needed for migration
 
 ---
 
-### MED-7 â€” Admin Rejection Email Injects Unsanitized Admin Notes as HTML
+### MED-7 — Admin Rejection Email Injects Unsanitized Admin Notes as HTML
 
-**File:** `lib/actions/admin-donation-review.ts` â€” lines 183â€“189  
+**File:** `lib/actions/admin-donation-review.ts` — lines 183–189  
 **Code:**
 ```ts
 html: `
@@ -397,11 +397,11 @@ const safeNotes = DOMPurify.sanitize(input.notes, { ALLOWED_TAGS: [], ALLOWED_AT
 
 ---
 
-## ðŸ”µ LOW
+## 🔵 LOW
 
 ---
 
-### LOW-1 â€” Missing Security HTTP Headers
+### LOW-1 — Missing Security HTTP Headers
 
 **File:** `next.config.mjs` (no `headers()` export found)
 
@@ -439,9 +439,9 @@ async headers() {
 
 ---
 
-### LOW-2 â€” `getReviewStats()` Accesses Donation Data Without Auth Check
+### LOW-2 — `getReviewStats()` Accesses Donation Data Without Auth Check
 
-**File:** `lib/actions/admin-donation-review.ts` â€” `getReviewStats` function  
+**File:** `lib/actions/admin-donation-review.ts` — `getReviewStats` function  
 **Code:**
 ```ts
 export async function getReviewStats() {
@@ -466,7 +466,7 @@ if (!admin) return { totalInReview: 0, oldReviews: 0, needsEscalation: false }
 
 ---
 
-### LOW-3 â€” Hardcoded Internal Network IP in `allowedDevOrigins`
+### LOW-3 — Hardcoded Internal Network IP in `allowedDevOrigins`
 
 **File:** `next.config.mjs`  
 **Code:**
@@ -482,7 +482,7 @@ Remove `allowedDevOrigins` from the committed config and manage it via `.env.loc
 
 ---
 
-### LOW-4 â€” No Audit Trail for Most Conference Admin Actions
+### LOW-4 — No Audit Trail for Most Conference Admin Actions
 
 **File:** `lib/actions/conference-registration.ts`
 
@@ -497,7 +497,7 @@ Insert into `activity_logs` for all state-changing conference admin actions, fol
 
 ---
 
-### LOW-5 â€” Service Role Client Instantiated on Every Call (No Singleton)
+### LOW-5 — Service Role Client Instantiated on Every Call (No Singleton)
 
 **Files:**  
 `lib/actions/donation.ts`, `lib/actions/admin-donation-review.ts`, `lib/actions/conference-registration.ts`, `lib/actions/storage-browser.ts`, and others.
@@ -510,7 +510,7 @@ Consolidate all service role client creation through `lib/supabase/service.ts`. 
 
 ---
 
-### LOW-6 â€” Verbose Error Messages in `console.error` May Leak Sensitive Data
+### LOW-6 — Verbose Error Messages in `console.error` May Leak Sensitive Data
 
 **Files:** Multiple server actions and API routes
 
@@ -522,13 +522,13 @@ Ensure production log levels are configured to suppress verbose error detail. Us
 
 ---
 
-## â„¹ï¸ INFORMATIONAL
+## ℹ️ INFORMATIONAL
 
 ---
 
-### INFO-1 â€” No `CRON_SECRET` Will Crash the Cron Route
+### INFO-1 — No `CRON_SECRET` Will Crash the Cron Route
 
-**File:** `app/api/cron/expire-conference-registrations/route.ts` â€” line 13  
+**File:** `app/api/cron/expire-conference-registrations/route.ts` — line 13  
 **Code:**
 ```ts
 if (!cronSecret) {
@@ -536,14 +536,14 @@ if (!cronSecret) {
   return NextResponse.json({ error: "Cron not configured" }, { status: 500 })
 }
 ```
-This is handled correctly â€” the cron returns 500 if unconfigured.   
+This is handled correctly — the cron returns 500 if unconfigured.   
 **Recommendation:** Document `CRON_SECRET` as a required production environment variable in the deployment guide.
 
 ---
 
-### INFO-2 â€” Password Minimum Length of 8 May Be Too Weak
+### INFO-2 — Password Minimum Length of 8 May Be Too Weak
 
-**File:** `lib/actions/admin-setup.ts` â€” line 38  
+**File:** `lib/actions/admin-setup.ts` — line 38  
 **Code:**
 ```ts
 if (password.length < 8) {
@@ -551,15 +551,15 @@ if (password.length < 8) {
 }
 ```
 
-OWASP recommends a minimum of 12 characters for administrative accounts. Consider enforcing stricter complexity requirements (length â‰¥ 12, mixed case, numbers, special characters) for admin passwords.
+OWASP recommends a minimum of 12 characters for administrative accounts. Consider enforcing stricter complexity requirements (length ≥ 12, mixed case, numbers, special characters) for admin passwords.
 
 ---
 
-### INFO-3 â€” `.env.example` File Not Found at Root
+### INFO-3 — `.env.example` File Not Found at Root
 
 The explore subagent could not find `.env.example` at the repository root. Ensure it exists and documents all required environment variables including:
 
-- `ADMIN_SETUP_KEY` (required â€” not optional)
+- `ADMIN_SETUP_KEY` (required — not optional)
 - `CRON_SECRET`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `GOOGLE_EMAIL` / `GOOGLE_APP_PASSWORD`

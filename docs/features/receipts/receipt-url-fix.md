@@ -27,7 +27,7 @@ The `NEXT_PUBLIC_SITE_URL` or `NEXT_PUBLIC_APP_URL` environment variable is not 
 
 ### Step 1: Add Environment Variable in Vercel
 
-1. Go to Vercel Dashboard â†’ Your Project â†’ Settings â†’ Environment Variables
+1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 
 2. Add this variable:
    ```
@@ -116,7 +116,7 @@ The receipt system will automatically regenerate the URL when:
 
 ### Option 2: Manual Database Update
 
-**âš ï¸ Use with caution - test on a single record first!**
+**⚠️ Use with caution - test on a single record first!**
 
 ```sql
 -- First, verify the current URLs

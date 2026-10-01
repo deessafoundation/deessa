@@ -29,7 +29,7 @@ last_updated: 2026-09-12
 // Extract transaction ID (session ID or subscription ID)
 const transactionId = session.subscription && typeof session.subscription === 'string'
   ? session.subscription
-  : session.id  // â† This stores the session ID (cs_xxx)
+  : session.id  // ← This stores the session ID (cs_xxx)
 ```
 
 **Result:** The `payments.transaction_id` field contains:
@@ -46,7 +46,7 @@ const transactionId = session.subscription && typeof session.subscription === 's
 
 For Stripe Dashboard links and financial operations, we need:
 - **Payment Intent ID**: `pi_xxx` (for one-time payments)
-- **Subscription ID**: `sub_xxx` (for recurring payments) âœ“ Already correct
+- **Subscription ID**: `sub_xxx` (for recurring payments) ✓ Already correct
 
 ## Solution Design
 
@@ -196,7 +196,7 @@ describe('StripeAdapter - Payment Intent ID', () => {
   it('should extract payment intent ID from checkout session', () => {
     const mockSession = {
       id: 'cs_test_xxx',
-      payment_intent: 'pi_test_yyy',  // â† Should extract this
+      payment_intent: 'pi_test_yyy',  // ← Should extract this
       mode: 'payment',
       // ... other fields
     }
@@ -206,7 +206,7 @@ describe('StripeAdapter - Payment Intent ID', () => {
   it('should use subscription ID for recurring payments', () => {
     const mockSession = {
       id: 'cs_test_xxx',
-      subscription: 'sub_test_zzz',  // â† Should extract this
+      subscription: 'sub_test_zzz',  // ← Should extract this
       mode: 'subscription',
       // ... other fields
     }
@@ -283,7 +283,7 @@ If issues occur:
 
 - **Phase 1 (Adapter Update):** 2 hours
 - **Phase 2 (Webhook Update):** 1 hour
-- **Phase 3 (Dashboard Utility):** Already done âœ“
+- **Phase 3 (Dashboard Utility):** Already done ✓
 - **Phase 4 (Testing):** 2 hours
 - **Phase 5 (Deployment):** 1 hour
 - **Total:** ~6 hours
