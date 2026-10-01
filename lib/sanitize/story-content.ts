@@ -1,146 +1,75 @@
-// NOTE: DOMPurify pulls in JSDOM on the server. To keep the page module evaluable
-// without loading JSDOM at import time we load DOMPurify lazily on first use.
-export type DOMPurifyInstance = {
-  sanitize: (html: string, config?: Record<string, unknown>) => string
-  addHook: (name: string, cb: (node: any) => void) => void
-}
+import sanitizeHtml from "sanitize-html"
 
-let purifyPromise: Promise<DOMPurifyInstance> | null = null
-
-function getPurify(): Promise<DOMPurifyInstance> {
-  if (purifyPromise) return purifyPromise
-  purifyPromise = (async () => {
-    // Server-only: use dompurify with jsdom
-    const { JSDOM } = await import("jsdom")
-    const createDOMPurify = (await import("dompurify")).default
-    const window = new JSDOM("").window
-    const instance = createDOMPurify(window as unknown as Window) as DOMPurifyInstance
-
-    // Configure DOMPurify hooks once
-    instance.addHook("afterSanitizeAttributes", (node: any) => {
-      // Add rel="noopener noreferrer" to external links for security
-      if (node.tagName === "A") {
-        const href = node.getAttribute("href")
-        if (href && (href.startsWith("http://") || href.startsWith("https://"))) {
-          node.setAttribute("rel", "noopener noreferrer")
-          node.setAttribute("target", "_blank")
-        }
-      }
-
-      // Validate iframe sources - only allow YouTube
-      if (node.tagName === "IFRAME") {
-        const src = node.getAttribute("src")
-        if (src && !isAllowedIframeSrc(src)) {
-          // Remove the iframe if source is not allowed
-          node.remove()
-          console.warn("Removed iframe with disallowed source:", src)
-        } else if (src) {
-          // Add sandbox attribute for security
-          if (!node.getAttribute("sandbox")) {
-            node.setAttribute(
-              "sandbox",
-              "allow-scripts allow-same-origin allow-presentation"
-            )
-          }
-        }
-      }
-    })
-
-    return instance
-  })()
-  return purifyPromise
-}
-
-const SANITIZE_CONFIG: Record<string, unknown> = {
-  ALLOWED_TAGS: [
+const SANITIZE_CONFIG: sanitizeHtml.IOptions = {
+  allowedTags: [
     // Text formatting
-    "p",
-    "br",
-    "strong",
-    "em",
-    "u",
-    "s",
+    "p", "br", "strong", "em", "u", "s",
     // Headings
-    "h1",
-    "h2",
-    "h3",
-    "h4",
+    "h1", "h2", "h3", "h4",
     // Lists
-    "ul",
-    "ol",
-    "li",
+    "ul", "ol", "li",
     // Quotes
-    "blockquote",
-    "cite",
+    "blockquote", "cite",
     // Links and media
-    "a",
-    "img",
-    "figure",
-    "figcaption",
-    "iframe",
+    "a", "img", "figure", "figcaption", "iframe",
     // Layout
-    "div",
-    "span",
-    "hr",
+    "div", "span", "hr",
     // Tables
-    "table",
-    "thead",
-    "tbody",
-    "tr",
-    "th",
-    "td",
+    "table", "thead", "tbody", "tr", "th", "td",
   ],
-  ALLOWED_ATTR: [
-    // Link attributes
-    "href",
-    "rel",
-    "target",
-    // Media attributes
-    "src",
-    "alt",
-    "title",
-    "width",
-    "height",
-    // Styling
-    "class",
-    "style",
-    // Layout block attributes
-    "data-type",
-    "data-align",
-    "data-width",
-    "data-callout-type",
-    // Iframe attributes
-    "frameborder",
-    "allow",
-    "allowfullscreen",
-    "sandbox",
-    // Table attributes
-    "colspan",
-    "rowspan",
+  allowedAttributes: {
+    a: ["href", "rel", "target"],
+    img: ["src", "alt", "title", "width", "height"],
+    iframe: ["src", "frameborder", "allow", "allowfullscreen", "sandbox", "width", "height"],
+    div: ["class", "data-type", "data-align", "data-width", "data-callout-type"],
+    span: ["class", "style"],
+    td: ["colspan", "rowspan"],
+    th: ["colspan", "rowspan"],
+    "*": ["class", "data-*"],
+  },
+  allowedSchemes: ["http", "https", "mailto", "tel", "callto", "sms"],
+  allowedSchemesByTag: {
+    img: ["http", "https", "data"],
+  },
+  allowedIframeHostnames: [
+    "www.youtube.com",
+    "youtube.com",
+    "www.youtube-nocookie.com",
+    "youtube-nocookie.com",
   ],
-  ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-  ALLOW_DATA_ATTR: true,
-  ADD_ATTR: ["rel"],
-  FORBID_TAGS: ["script", "style", "object", "embed", "form", "input", "button"],
-  FORBID_ATTR: [
-    "onerror",
-    "onload",
-    "onclick",
-    "onmouseover",
-    "onmouseout",
-    "onmouseenter",
-    "onmouseleave",
-    "onfocus",
-    "onblur",
-    "onchange",
-    "onsubmit",
-  ],
+  transformTags: {
+    a: (tagName, attribs) => {
+      // Add security attributes to external links
+      if (attribs.href && (attribs.href.startsWith("http://") || attribs.href.startsWith("https://"))) {
+        return {
+          tagName,
+          attribs: {
+            ...attribs,
+            rel: "noopener noreferrer",
+            target: "_blank",
+          },
+        }
+      }
+      return { tagName, attribs }
+    },
+    iframe: (tagName, attribs) => {
+      // Add sandbox to iframes if not present
+      if (!attribs.sandbox) {
+        return {
+          tagName,
+          attribs: {
+            ...attribs,
+            sandbox: "allow-scripts allow-same-origin allow-presentation",
+          },
+        }
+      }
+      return { tagName, attribs }
+    },
+  },
 }
 
 /**
  * Sanitizes story HTML content before public rendering to prevent XSS attacks.
- * Async because DOMPurify is loaded lazily to avoid pulling JSDOM into the
- * module graph at import time (see header comment).
  *
  * @param html - The HTML content to sanitize
  * @param storyId - Optional story ID for logging purposes
@@ -150,8 +79,7 @@ export async function sanitizeStoryContent(
   html: string,
   storyId?: string
 ): Promise<string> {
-  const purify = await getPurify()
-  const clean = purify.sanitize(html, SANITIZE_CONFIG)
+  const clean = sanitizeHtml(html, SANITIZE_CONFIG)
 
   // Log if content was modified during sanitization
   if (clean !== html) {
