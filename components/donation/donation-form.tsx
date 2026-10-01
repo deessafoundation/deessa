@@ -200,6 +200,7 @@ export function DonationForm({
           <div className="bg-muted/50 p-1.5 rounded-full inline-flex gap-1 shadow-inner">
             <button
               type="button"
+              aria-pressed={!isMonthly}
               onClick={() => setIsMonthly(false)}
               className={cn(
                 "px-6 py-3 rounded-full text-sm font-bold transition-all duration-200 flex items-center gap-2",
@@ -212,6 +213,7 @@ export function DonationForm({
             </button>
             <button
               type="button"
+              aria-pressed={isMonthly}
               onClick={() => setIsMonthly(true)}
               className={cn(
                 "px-6 py-3 rounded-full text-sm font-bold transition-all duration-200 flex items-center gap-2",
@@ -293,6 +295,7 @@ export function DonationForm({
               <button
                 type="button"
                 key={amount}
+                aria-pressed={selectedAmount === amount}
                 onClick={() => handleAmountSelect(amount)}
                 className={cn(
                   "py-4 rounded-xl font-bold text-lg transition-all duration-200 border-2 relative overflow-hidden",

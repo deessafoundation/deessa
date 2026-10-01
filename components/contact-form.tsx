@@ -56,7 +56,7 @@ export function ContactForm({ initialSubject = "", initialMessage = "" }: Contac
 
   if (isSubmitted) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+      <div role="status" className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
         <CheckCircle className="size-12 text-green-500 mx-auto mb-4" />
         <h3 className="text-xl font-bold text-green-800 mb-2">Message Sent!</h3>
         <p className="text-green-700">Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
@@ -82,7 +82,7 @@ export function ContactForm({ initialSubject = "", initialMessage = "" }: Contac
         </div>
       )}
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField
           id="firstName"
           type="text"

@@ -201,7 +201,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
+    <form aria-label="Support report" aria-busy={isLoading} onSubmit={handleSubmit} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50">
       <div className="border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 px-6 py-6 sm:px-8 sm:py-7">
         <div className="flex items-start gap-4">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 text-white shadow-xl shadow-slate-900/20">
@@ -264,6 +264,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
               What Best Describes It?
             </label>
             <FancySelect
+              id="issueType"
               value={formData.issueType}
               onValueChange={(val) => setFormData((prev) => ({ ...prev, issueType: val }))}
               options={ISSUE_TYPE_OPTIONS}
