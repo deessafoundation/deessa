@@ -1,4 +1,4 @@
-import { JSDOM } from 'jsdom'
+import { parse } from 'node-html-parser'
 import { dictionarySource, type DictionaryResult } from './terms'
 
 export class DictionaryError extends Error {
@@ -6,12 +6,22 @@ export class DictionaryError extends Error {
 }
 
 function plainText(html: string) {
-  // fragment() has no browsing context: scripts cannot execute and resources cannot load.
-  const fragment = JSDOM.fragment(html)
-  fragment.querySelectorAll('script, style, iframe, object, template, .reference, .mw-editsection').forEach(node => node.remove())
-  fragment.querySelectorAll('br').forEach(node => node.replaceWith(' '))
-  fragment.querySelectorAll('p, div, li').forEach(node => node.append(' '))
-  const text = (fragment.textContent ?? '').replace(/\s+/g, ' ').trim()
+  const root = parse(html)
+  // Remove unwanted elements
+  root.querySelectorAll('script, style, iframe, object, template, .reference, .mw-editsection').forEach(node => node.remove())
+  // Replace br tags with space
+  root.querySelectorAll('br').forEach(node => {
+    const parent = node.parentNode
+    if (parent) {
+      const textNode = parse(' ')
+      parent.exchangeChild(node, textNode)
+    }
+  })
+  // Add space after block elements
+  root.querySelectorAll('p, div, li').forEach(node => {
+    node.insertAdjacentHTML('beforeend', ' ')
+  })
+  const text = (root.textContent ?? '').replace(/\s+/g, ' ').trim()
   return text.length > 600 ? `${text.slice(0, 599).trimEnd()}…` : text
 }
 

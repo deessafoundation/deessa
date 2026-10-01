@@ -6,8 +6,6 @@ const nextConfig = {
   // runtime directly, not inlined by webpack.
   serverExternalPackages: [
     "@react-pdf/renderer",
-    "jsdom",
-    "dompurify",
   ],
   experimental: {
     serverActions: {
