@@ -692,7 +692,7 @@ export function PodcastSection() {
       className="relative overflow-hidden bg-[#005581]"
       data-tts-section=""
       data-tts-priority="heading"
-      data-tts-text="The Deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
+      data-tts-text="The deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
     >
       {/* Keep the backdrop on the full-width section so it has no container seams. */}
       <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
@@ -709,7 +709,7 @@ export function PodcastSection() {
               >
                 <Image
                   src="/home/podcast/deessa-podcast-studio.png"
-                  alt="Living With Autism: Real Voices, Real Stories. Sarita and Merina seated at microphones in the podcast studio, with Deessa Foundation and SDG Studio branding."
+                  alt="Living With Autism: Real Voices, Real Stories. Sarita and Merina seated at microphones in the podcast studio, with deessa Foundation and SDG Studio branding."
                   fill
                   sizes="(min-width: 1320px) 634px, (min-width: 1024px) 48vw, 100vw"
                   className="object-cover object-center"
@@ -723,7 +723,7 @@ export function PodcastSection() {
               <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-7 font-comic text-white sm:px-8 lg:py-6 lg:pl-8 lg:pr-10">
                 <div data-podcast-badge className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
                   <Mic2 className="size-4 shrink-0" aria-hidden="true" />
-                  THE DEESSA PODCAST
+                  THE deessa PODCAST
                 </div>
 
                 <h2 id="home-podcast-title" className="font-marissa text-[30px] font-normal leading-[1.2] text-white sm:text-[34px]">Living With Autism</h2>
@@ -1227,7 +1227,7 @@ export function ContactSection() {
             <div
               className={`${styles.mapCard} h-[300px] md:h-[420px] lg:h-[520px]`}
               role="region"
-              aria-label="Interactive map showing Deesha Foundation office location"
+              aria-label="Interactive map showing deessa Foundation office location"
               data-tts-ignore=""
             >
               <iframe
@@ -1236,7 +1236,7 @@ export function ContactSection() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Deesha Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
+                title="deessa Foundation Office Location, Dhobighat Nayabato, Sanepa, Lalitpur 44600"
               />
 
               {/* Floating info badge */}
@@ -1246,7 +1246,7 @@ export function ContactSection() {
                     <MapPin className="size-2.5 shrink-0" aria-hidden="true" />
                     Lalitpur, Nepal
                   </span>
-                  <p className={styles.mapName}>Deesha Foundation HQ</p>
+                  <p className={styles.mapName}>deessa Foundation HQ</p>
                   <p className={styles.mapAddr}>Dhobighat Nayabato, Sanepa, Lalitpur 44600</p>
                 </div>
                 <a
@@ -1254,7 +1254,7 @@ export function ContactSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.mapBtn}
-                  aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)"
+                  aria-label="Open deessa Foundation office location in Google Maps (opens in new tab)"
                 >
                   <span>Open in Maps</span>
                   <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />

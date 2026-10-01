@@ -1,7 +1,7 @@
 ---
 title: "Receipt System - Quick Deployment Guide (Google Email)"
 description: "File: scripts/db/migrations/010-receipt-system.sql"
-owner: "Deesha Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin
@@ -284,16 +284,16 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ## Next Steps
 
-1. âœ… Run SQL script
-2. âœ… Configure Google email
-3. âœ… Set organization details
-4. âœ… Integrate webhooks
-5. âœ… Test system
-6. âœ… Monitor email delivery
-7. âœ… Gather donor feedback
+1.  Run SQL script
+2.  Configure Google email
+3.  Set organization details
+4.  Integrate webhooks
+5.  Test system
+6.  Monitor email delivery
+7.  Gather donor feedback
 
 ---
 
-**Deployment complete!** ðŸŽ‰
+**Deployment complete!** 🎉
 
 Your receipt system is ready to send tax-deductible receipts via Google Email.

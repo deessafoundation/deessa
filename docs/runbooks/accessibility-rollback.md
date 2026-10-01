@@ -47,7 +47,7 @@ vercel env add NEXT_PUBLIC_ENABLE_NEW_A11Y production
 vercel --prod --force
 
 # 3. Verify deployment
-curl -I https://deeshafoundation.org
+curl -I https://deessafoundation.com
 
 # 4. Check monitoring
 # Visit: [Your monitoring dashboard URL]

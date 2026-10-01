@@ -1,6 +1,6 @@
 # Accessibility Features Guide
 
-**Welcome!** This guide explains how to customize your browsing experience on the Deesha Foundation website to meet your individual needs.
+**Welcome!** This guide explains how to customize your browsing experience on the deessa Foundation website to meet your individual needs.
 
 ---
 
@@ -261,7 +261,7 @@ Your accessibility settings are stored **locally on your device** using your bro
 
 **Method 2: Clear Browser Storage**
 - Your browser's "Clear browsing data" settings
-- Select "Cookies and site data" for deeshafoundation.org
+- Select "Cookies and site data" for deessafoundation.com
 
 ### Private/Incognito Browsing
 
@@ -497,7 +497,7 @@ We may add new features over time, but your existing settings will be preserved.
 
 ### Storage
 
-- **Key:** `deesha-a11y-preferences`
+- **Key:** `deessa-a11y-preferences`
 - **Location:** Browser localStorage (persistent)
 - **Fallback:** sessionStorage (session-only) if localStorage unavailable
 - **Size:** ~150 bytes (well within limits)
@@ -573,4 +573,4 @@ We thank everyone who provided feedback to make our website more accessible!
 
 ---
 
-© 2026 Deesha Foundation. Making our website accessible to all is a continuous journey. We welcome your feedback and suggestions.
+© 2026 deessa Foundation. Making our website accessible to all is a continuous journey. We welcome your feedback and suggestions.

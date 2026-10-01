@@ -1,7 +1,7 @@
 ---
 title: "Print Feature Bug Fixes"
 description: " Date: April 5, 2026"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -10,7 +10,7 @@ last_updated: 2026-09-12
 # Print Feature Bug Fixes
 
 > **Date:** April 5, 2026  
-> **Status:** âœ… FIXED
+> **Status:**  FIXED
 
 ---
 
@@ -58,7 +58,7 @@ Added `type="button"` to the PrintButton component to prevent form submission
 
 ```tsx
 <Button
-  type="button"  // â† Added this
+  type="button"  // ← Added this
   variant={variant}
   size={size}
   onClick={handlePrint}
@@ -156,7 +156,7 @@ form > div:has(.story-editor-wrapper) > div:first-child {
 
 ## Testing Checklist
 
-### âœ… Fixed Issues
+###  Fixed Issues
 - [x] Print shows full story content (not blank)
 - [x] Print shows story metadata (title, category, etc.)
 - [x] Print shows editor content in admin pages
@@ -166,7 +166,7 @@ form > div:has(.story-editor-wrapper) > div:first-child {
 - [x] No save notification when canceling print dialog
 - [x] Build passes without errors
 
-### âœ… Regression Testing
+###  Regression Testing
 - [x] Print button still works on public pages
 - [x] Print button still works on admin pages
 - [x] Form submission still works normally
@@ -222,10 +222,10 @@ This is essential for print styles because we need to:
 ## Browser Compatibility
 
 All fixes tested and working on:
-- âœ… Chrome 90+
-- âœ… Firefox 88+
-- âœ… Safari 14+
-- âœ… Edge 90+
+-  Chrome 90+
+-  Firefox 88+
+-  Safari 14+
+-  Edge 90+
 
 Note: The `:has()` selector is supported in all modern browsers (2023+)
 
@@ -234,9 +234,9 @@ Note: The `:has()` selector is supported in all modern browsers (2023+)
 ## Conclusion
 
 All three issues have been resolved:
-1. âœ… Print now shows full content with proper formatting
-2. âœ… DRAFT watermark displays correctly for unpublished stories
-3. âœ… No unwanted save notifications when using print button
+1.  Print now shows full content with proper formatting
+2.  DRAFT watermark displays correctly for unpublished stories
+3.  No unwanted save notifications when using print button
 
 The print feature is now fully functional and ready for production use.
 

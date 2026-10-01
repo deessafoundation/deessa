@@ -7,7 +7,7 @@
 
 ## Introduction
 
-As a content author at Deesha Foundation, you play a crucial role in maintaining an accessible website. This guide provides practical tips and checklists to ensure the content you create is accessible to all users, including those with disabilities.
+As a content author at deessa Foundation, you play a crucial role in maintaining an accessible website. This guide provides practical tips and checklists to ensure the content you create is accessible to all users, including those with disabilities.
 
 **Remember:** Accessibility features (like text scaling and high contrast) work alongside well-structured content. Both are needed for full accessibility!
 
@@ -45,7 +45,7 @@ Alt text is a text description of an image that screen readers announce to blind
 - End with punctuation (helps screen readers pause)
 
 ```
-✅ Good: "Students participating in a science workshop at Deesha Foundation."
+✅ Good: "Students participating in a science workshop at deessa Foundation."
 ❌ Bad: "Image123.jpg"
 ❌ Bad: "Students"
 ❌ Bad: "A group of people doing something in a room with tables."
@@ -196,7 +196,7 @@ Better: "View donation information and payment options."
 
 **3. Avoid URLs as Link Text:**
 ```
-❌ Bad: "Visit https://www.deeshafoundation.org/donate"
+❌ Bad: "Visit https://www.deessafoundation.org/donate"
 ✅ Good: "Visit our donation page"
 ```
 

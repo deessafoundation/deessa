@@ -1,13 +1,13 @@
 ---
-title: "Event Payment Integration â€” API Reference"
+title: "Event Payment Integration — API Reference"
 description: "All endpoints return JSON with { ok: boolean } shape. Errors include error: string."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
 last_updated: 2026-09-12
 ---
-# Event Payment Integration â€” API Reference
+# Event Payment Integration — API Reference
 
 All endpoints return JSON with `{ ok: boolean }` shape. Errors include `error: string`.
 
@@ -105,7 +105,7 @@ Verifies a Stripe checkout session directly and confirms the registration.
 
 ## GET `/api/events/status?rid={rid}`
 
-Public status-polling endpoint. Returns minimal data â€” no PII.
+Public status-polling endpoint. Returns minimal data — no PII.
 
 **Rate Limit:** 60 requests/minute/IP  
 **Auth:** Registration UUID (not guessable)
@@ -206,7 +206,7 @@ Resends the payment link email. Returns the link in the response even if email f
 {
   "ok": true,
   "message": "Payment link has been sent to user@example.com.",
-  "paymentLink": "https://deessa.org/events/my-event/register/pending-payment?rid=xxx&email=xxx"
+  "paymentLink": "https://deessafoundation.com/events/my-event/register/pending-payment?rid=xxx&email=xxx"
 }
 ```
 

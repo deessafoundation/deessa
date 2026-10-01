@@ -1,7 +1,7 @@
 ---
 title: "V1 Code Cleanup Guide - Payment Architecture V2"
 description: "This guide provides instructions for removing V1 payment code and feature flags after V2 has been successfully runnin..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: developer
@@ -15,14 +15,14 @@ This guide provides instructions for removing V1 payment code and feature flags 
 
 ## Prerequisites
 
-âš ï¸ **DO NOT proceed unless ALL of the following are true:**
+⚠️ **DO NOT proceed unless ALL of the following are true:**
 
-- âœ… V2 enabled at 100% for at least 7 days
-- âœ… No critical issues in V2
-- âœ… All metrics meeting targets
-- âœ… Team consensus to remove V1
-- âœ… Backup plan prepared
-- âœ… Rollback strategy documented
+-  V2 enabled at 100% for at least 7 days
+-  No critical issues in V2
+-  All metrics meeting targets
+-  Team consensus to remove V1
+-  Backup plan prepared
+-  Rollback strategy documented
 
 ## Cleanup Phases
 
@@ -224,7 +224,7 @@ vercel --prod
 
 ## Phase 3: Database Cleanup (Optional)
 
-âš ï¸ **HIGH RISK: Only proceed if absolutely necessary**
+⚠️ **HIGH RISK: Only proceed if absolutely necessary**
 
 ### Step 3.1: Identify Deprecated Columns
 
@@ -426,7 +426,7 @@ After cleanup, update:
 - [ ] Runbooks
 - [ ] Environment variable documentation
 
-## Celebration! ðŸŽ‰
+## Celebration! 🎉
 
 Once V1 cleanup is complete:
 

@@ -277,7 +277,7 @@ export function ConferenceQuickActions({
                 className="w-full resize-none rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               />
               <p className="text-xs text-muted-foreground">
-                Your message will be wrapped in the DEESSA branded email template.
+                Your message will be wrapped in the deessa branded email template.
               </p>
             </div>
           </div>

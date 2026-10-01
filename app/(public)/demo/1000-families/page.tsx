@@ -3,10 +3,10 @@ import { CampaignDemo } from '@/components/programs/demo/ProgramDemos'
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
-  title: 'Campaign Design Preview - DEESSA Foundation',
+  title: 'Campaign Design Preview - deessa Foundation',
   description: 'A sample campaign page exploring the Programs CMS design system.',
   openGraph: {
-    title: 'Campaign Design Preview - DEESSA Foundation',
+    title: 'Campaign Design Preview - deessa Foundation',
     description: 'Join us in supporting 1000 families across Nepal. 82% complete!',
     images: [
       {

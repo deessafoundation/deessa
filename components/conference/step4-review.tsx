@@ -139,14 +139,14 @@ export function Step4Review({ data, onEdit, onSubmit, onBack, isSubmitting, erro
               />
               {/* TODO: Update the links to the actual terms and privacy policy of the conference */}              <span className="text-sm text-foreground-muted">
                 I agree to the{" "}
-                <a href="https://deessa.org/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
+                <a href="https://deessafoundation.com/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
                   Terms and Conditions
                 </a>{" "}
                 and the{" "}
-                <a href="https://deessa.org/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
+                <a href="https://deessafoundation.com/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
                   Data Privacy Policy
                 </a>{" "}
-                of the DEESSA Foundation Conference.
+                of the deessa Foundation Conference.
               </span>
             </label>
             <label className="flex cursor-pointer items-start gap-3">
@@ -157,7 +157,7 @@ export function Step4Review({ data, onEdit, onSubmit, onBack, isSubmitting, erro
                 className="mt-0.5 size-5 rounded border-border text-primary focus:ring-primary"
               />
               <span className="text-sm text-foreground-muted">
-                I consent to receiving future newsletters and updates about upcoming DEESSA Foundation
+                I consent to receiving future newsletters and updates about upcoming deessa Foundation
                 events via email.
               </span>
             </label>

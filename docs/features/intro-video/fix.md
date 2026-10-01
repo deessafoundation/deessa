@@ -1,7 +1,7 @@
 ---
 title: "Intro Video Component - Bug Fixes"
 description: "The intro video component had several critical issues preventing proper functionality, especially on mobile devices:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
@@ -159,11 +159,11 @@ const [isSkipping, setIsSkipping] = useState(false)
 4. Test keyboard accessibility
 
 ### Specific Scenarios:
-- Load page â†’ click anywhere â†’ sound should enable
-- Load page â†’ click skip â†’ video should stop immediately
-- Load page â†’ rapid click skip multiple times â†’ should only skip once
-- Load page â†’ wait for autoplay â†’ click â†’ sound enables on playing video
-- Load page on slow connection â†’ click before video loads â†’ should start with sound
+- Load page → click anywhere → sound should enable
+- Load page → click skip → video should stop immediately
+- Load page → rapid click skip multiple times → should only skip once
+- Load page → wait for autoplay → click → sound enables on playing video
+- Load page on slow connection → click before video loads → should start with sound
 
 ## Expected Behavior
 
@@ -179,18 +179,18 @@ const [isSkipping, setIsSkipping] = useState(false)
 4. **Mobile Touch**: All interactions work same as desktop clicks
 
 ## UI Impact
-âœ… **No visual changes** - All fixes are functional only:
+ **No visual changes** - All fixes are functional only:
 - Same layout and styling
 - Same animations and transitions
 - Same text and button appearance
 - Only added minimum sizing to skip button (maintains visual appearance while meeting accessibility standards)
 
 ## Browser Compatibility
-- âœ… iOS Safari
-- âœ… Android Chrome
-- âœ… Desktop Chrome/Firefox/Edge
-- âœ… Brave Browser
-- âœ… Privacy-focused browsers
+-  iOS Safari
+-  Android Chrome
+-  Desktop Chrome/Firefox/Edge
+-  Brave Browser
+-  Privacy-focused browsers
 
 ## Files Modified
 - `components/intro-video.tsx`

@@ -189,7 +189,7 @@ export async function POST(request: Request) {
           });
 
           await transporter.sendMail({
-            from: `"DEESSA Foundation" <${user}>`,
+            from: `"deessa Foundation" <${user}>`,
             to: emailTrimmed,
             subject,
             html,

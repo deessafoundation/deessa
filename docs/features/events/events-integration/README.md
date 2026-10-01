@@ -1,7 +1,7 @@
 ---
 title: "V2 PaymentService Events Integration — Documentation Hub"
 description: "| Document | Purpose | Audience |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

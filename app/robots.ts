@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 /**
- * Robots.txt configuration for Deessa Foundation
+ * Robots.txt configuration for deessa Foundation
  * 
  * Allows crawling of public marketing pages while explicitly disallowing:
  * - Admin panel (/admin/*)

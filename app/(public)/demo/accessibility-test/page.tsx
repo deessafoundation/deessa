@@ -492,7 +492,7 @@ export default function AccessibilityTestPage() {
               <ol className="text-sm text-purple-700 space-y-2 list-decimal list-inside">
                 <li>Open browser DevTools (F12) → Application/Storage → Local Storage</li>
                 <li>
-                  Find key: <code className="bg-purple-100 px-1 rounded">deesha-a11y-preferences</code>
+                  Find key: <code className="bg-purple-100 px-1 rounded">deessa-a11y-preferences</code>
                 </li>
                 <li>
                   Note the <code className="bg-purple-100 px-1 rounded">version</code> field (should be{" "}
@@ -505,7 +505,7 @@ export default function AccessibilityTestPage() {
 
             <div className="bg-slate-100 rounded-lg p-4 font-mono text-xs overflow-x-auto">
               <p className="text-slate-600 mb-2">// Paste this in DevTools Console to create V1 data:</p>
-              <code className="text-slate-800">{`localStorage.setItem('deesha-a11y-preferences', JSON.stringify({
+              <code className="text-slate-800">{`localStorage.setItem('deessa-a11y-preferences', JSON.stringify({
   version: "1.0",
   preferences: {
     textScale: 1.2,

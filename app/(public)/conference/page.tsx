@@ -30,9 +30,9 @@ const WHY_ATTEND = [
 ]
 
 export const metadata = {
-  title: "DEESSA National Conference 2026 | DEESSA Foundation",
+  title: "deessa National Conference 2026 | deessa Foundation",
   description:
-    "Join industry leaders at the DEESSA National Conference 2026. Three days of innovation, connection, and hands-on learning.",
+    "Join industry leaders at the deessa National Conference 2026. Three days of innovation, connection, and hands-on learning.",
 }
 
 // Build a Google Maps embed URL from a maps.app.goo.gl short link or any Google Maps URL
@@ -52,7 +52,7 @@ export default async function ConferencePage() {
   const agenda = Array.isArray(cfg.agenda) ? cfg.agenda : []
   const venue = cfg.venue || ""
   const venueAddress = cfg.venueAddress || ""
-  const name = cfg.name || "DEESSA National Conference 2026"
+  const name = cfg.name || "deessa National Conference 2026"
   const dateDisplay = cfg.dateDisplay || ""
   const mapsUrl = cfg.mapsUrl || "#"
   const contactEmail = cfg.contactEmail || "conference@deessa.org.np"

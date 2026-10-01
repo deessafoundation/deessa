@@ -360,7 +360,7 @@ if (preferences.reduceMotion) {
 
 ## 📞 Support Information
 
-**Storage Key:** `deesha-a11y-preferences`  
+**Storage Key:** `deessa-a11y-preferences`  
 **Schema Version:** 2 (integer)  
 **Migration:** Automatic on first load  
 **Build Command:** `pnpm build`  

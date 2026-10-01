@@ -1,7 +1,7 @@
 ---
 title: "Form Builder System"
 description: "Version: 2.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
@@ -26,38 +26,38 @@ The Form Builder is a dynamic, schema-driven system that allows admins to create
 
 ```
 EventFormBuilder/
-â”œâ”€â”€ index.tsx                 # Main builder (3-panel layout)
-â”œâ”€â”€ FieldPalette.tsx          # Left panel - field type selector
-â”œâ”€â”€ FormCanvas.tsx            # Center panel - sortable steps
-â”œâ”€â”€ SortableStepCard.tsx      # Sortable step with inline editing
-â”œâ”€â”€ SortableFieldCard.tsx     # Sortable field with actions
-â”œâ”€â”€ FieldPropertiesPanel.tsx  # Right panel - field configuration
-â”œâ”€â”€ OptionsEditor.tsx         # Inline option list editor
-â”œâ”€â”€ SchemaImportExport.tsx    # JSON import/export
-â”œâ”€â”€ useBuilderState.ts        # State management with undo/redo
-â””â”€â”€ builder-actions.ts        # Pure helper functions
+├── index.tsx                 # Main builder (3-panel layout)
+├── FieldPalette.tsx          # Left panel - field type selector
+├── FormCanvas.tsx            # Center panel - sortable steps
+├── SortableStepCard.tsx      # Sortable step with inline editing
+├── SortableFieldCard.tsx     # Sortable field with actions
+├── FieldPropertiesPanel.tsx  # Right panel - field configuration
+├── OptionsEditor.tsx         # Inline option list editor
+├── SchemaImportExport.tsx    # JSON import/export
+├── useBuilderState.ts        # State management with undo/redo
+└── builder-actions.ts        # Pure helper functions
 ```
 
 ### Data Flow
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ FieldPaletteâ”‚â”€â”€â”€â”€>â”‚  FormCanvas  â”‚â”€â”€â”€â”€>â”‚  Properties â”‚
-â”‚  (Add Field)â”‚     â”‚ (Drag/Drop)  â”‚     â”‚  (Configure)â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-                   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                   â”‚ useBuilder   â”‚
-                   â”‚ State        â”‚
-                   â”‚ (useReducer) â”‚
-                   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-                   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                   â”‚  Save/Publishâ”‚
-                   â”‚  (API Call)  â”‚
-                   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│ FieldPalette│────>│  FormCanvas  │────>│  Properties │
+│  (Add Field)│     │ (Drag/Drop)  │     │  (Configure)│
+└─────────────┘     └──────────────┘     └─────────────┘
+                          │
+                          ▼
+                   ┌──────────────┐
+                   │ useBuilder   │
+                   │ State        │
+                   │ (useReducer) │
+                   └──────────────┘
+                          │
+                          ▼
+                   ┌──────────────┐
+                   │  Save/Publish│
+                   │  (API Call)  │
+                   └──────────────┘
 ```
 
 ---
@@ -67,30 +67,30 @@ EventFormBuilder/
 The builder uses a 3-panel layout:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Action Bar: [Templates] [Export] [Import] [Undo] [Redo]     â”‚
-â”‚             [Save Draft] [Publish]                            â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Palette  â”‚       Form Canvas        â”‚   Field Properties     â”‚
-â”‚ (220px)  â”‚        (1fr)             â”‚      (340px)           â”‚
-â”‚          â”‚                          â”‚                        â”‚
-â”‚ [Input]  â”‚ â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚ â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
-â”‚  Text    â”‚ â”‚ Step 1: Personal     â”‚ â”‚ â”‚ Field Type: select â”‚ â”‚
-â”‚  Email   â”‚ â”‚  â—‹ Full Name *       â”‚ â”‚ â”‚                    â”‚ â”‚
-â”‚  Phone   â”‚ â”‚  â—‹ Email *           â”‚ â”‚ â”‚ Label: Your Role   â”‚ â”‚
-â”‚  ...     â”‚ â”‚  â—‹ Phone             â”‚ â”‚ â”‚ Required: [ON]     â”‚ â”‚
-â”‚          â”‚ â”‚                      â”‚ â”‚ â”‚                    â”‚ â”‚
-â”‚ [Choice] â”‚ â”‚ â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚ â”‚ â”‚ Options            â”‚ â”‚
-â”‚  Select  â”‚ â”‚ â”‚ + Add option     â”‚ â”‚ â”‚ â”‚ â—‹ Attendee         â”‚ â”‚
-â”‚  Radio   â”‚ â”‚ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚ â”‚ â”‚ â—‹ Speaker          â”‚ â”‚
-â”‚  ...     â”‚ â”‚                      â”‚ â”‚ â”‚ â—‹ Panelist         â”‚ â”‚
-â”‚          â”‚ â”‚ Step 2: Preferences  â”‚ â”‚ â”‚ + Add option       â”‚ â”‚
-â”‚          â”‚ â”‚  ...                 â”‚ â”‚ â”‚                    â”‚ â”‚
-â”‚          â”‚ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚ â”‚ Width: [Full][Half]â”‚ â”‚
-â”‚          â”‚                          â”‚ â”‚                    â”‚ â”‚
-â”‚          â”‚ [+ Add Step]             â”‚ â”‚ [Delete Field]     â”‚ â”‚
-â”‚          â”‚                          â”‚ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌──────────────────────────────────────────────────────────────┐
+│ Action Bar: [Templates] [Export] [Import] [Undo] [Redo]     │
+│             [Save Draft] [Publish]                            │
+├──────────┬──────────────────────────┬────────────────────────┤
+│ Palette  │       Form Canvas        │   Field Properties     │
+│ (220px)  │        (1fr)             │      (340px)           │
+│          │                          │                        │
+│ [Input]  │ ┌──────────────────────┐ │ ┌────────────────────┐ │
+│  Text    │ │ Step 1: Personal     │ │ │ Field Type: select │ │
+│  Email   │ │  ○ Full Name *       │ │ │                    │ │
+│  Phone   │ │  ○ Email *           │ │ │ Label: Your Role   │ │
+│  ...     │ │  ○ Phone             │ │ │ Required: [ON]     │ │
+│          │ │                      │ │ │                    │ │
+│ [Choice] │ │ ┌──────────────────┐ │ │ │ Options            │ │
+│  Select  │ │ │ + Add option     │ │ │ │ ○ Attendee         │ │
+│  Radio   │ │ └──────────────────┘ │ │ │ ○ Speaker          │ │
+│  ...     │ │                      │ │ │ ○ Panelist         │ │
+│          │ │ Step 2: Preferences  │ │ │ + Add option       │ │
+│          │ │  ...                 │ │ │                    │ │
+│          │ └──────────────────────┘ │ │ Width: [Full][Half]│ │
+│          │                          │ │                    │ │
+│          │ [+ Add Step]             │ │ [Delete Field]     │ │
+│          │                          │ └────────────────────┘ │
+└──────────┴──────────────────────────┴────────────────────────┘
 ```
 
 ---
@@ -129,8 +129,8 @@ The builder uses a 3-panel layout:
 
 ### 3. Undo/Redo
 
-- **Ctrl+Z** â€” Undo last action (50 steps)
-- **Ctrl+Shift+Z** â€” Redo
+- **Ctrl+Z** — Undo last action (50 steps)
+- **Ctrl+Shift+Z** — Redo
 - Visual indicators show undo/redo availability
 
 ### 4. Preview Mode
@@ -138,7 +138,7 @@ The builder uses a 3-panel layout:
 - Toggle between Builder and Preview views
 - Preview shows actual field components (not placeholders)
 - Responsive preview: Desktop / Tablet / Mobile
-- Interactive â€” you can fill in fields to test
+- Interactive — you can fill in fields to test
 
 ### 5. Templates
 
@@ -149,13 +149,13 @@ The builder uses a 3-panel layout:
 
 ### 6. Import/Export
 
-- **Export** â€” Downloads schema as JSON file
-- **Import** â€” Upload JSON file to load schema
+- **Export** — Downloads schema as JSON file
+- **Import** — Upload JSON file to load schema
 - Confirmation dialog before import
 
 ### 7. Conditional Logic
 
-- Click a field â†’ expand "Conditional Logic" section
+- Click a field → expand "Conditional Logic" section
 - Set conditions: Show field when another field equals/is empty/etc.
 - Supports AND/OR logic for multiple conditions
 - 10 comparison operators
@@ -228,8 +228,8 @@ See [04-FIELD-TYPES.md](./04-FIELD-TYPES.md) for complete reference.
 
 ## Known Issues
 
-1. **Rich Text in Preview** â€” Preview shows HTML content from `helpText` property
-2. **Repeating Section** â€” Sub-fields render as typed components (was text-only before fix)
+1. **Rich Text in Preview** — Preview shows HTML content from `helpText` property
+2. **Repeating Section** — Sub-fields render as typed components (was text-only before fix)
 
 ---
 

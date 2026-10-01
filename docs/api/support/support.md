@@ -1,7 +1,7 @@
 ---
 title: "Support API"
 description: "The Support API handles public support ticket submissions from the website's contact/support page."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin
@@ -138,10 +138,10 @@ Files are stored in Supabase Storage with the following structure:
 
 ```
 support-attachments/
-â””â”€â”€ {ticket-id}/
-    â”œâ”€â”€ file1.pdf
-    â”œâ”€â”€ screenshot.png
-    â””â”€â”€ document.docx
+└── {ticket-id}/
+    ├── file1.pdf
+    ├── screenshot.png
+    └── document.docx
 ```
 
 ---

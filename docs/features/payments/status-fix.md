@@ -1,7 +1,7 @@
 ---
 title: "Payment Status Update Fix"
 description: "After successful Stripe payments, donation status remained \"pending\" instead of updating to \"completed\"."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -35,7 +35,7 @@ This ensures donations are marked as completed even in development where webhook
 
 ```bash
 1. User completes payment on Stripe
-2. Stripe sends webhook â†’ /api/webhooks/stripe
+2. Stripe sends webhook → /api/webhooks/stripe
 3. Webhook updates donation status to "completed"
 4. User redirected to success page
 5. Success page verifies and shows "completed" status
@@ -49,7 +49,7 @@ This ensures donations are marked as completed even in development where webhook
 3. User redirected to success page
 4. Success page calls /api/payments/stripe/verify
 5. Verify endpoint checks Stripe session
-6. âœ… NEW: Verify endpoint updates status to "completed"
+6.  NEW: Verify endpoint updates status to "completed"
 7. Success page shows "completed" status
 ```
 
@@ -96,9 +96,9 @@ if (isPaymentComplete) {
 4. Enter test amount (e.g., $50)
 5. Complete payment (use Stripe test cards)
 6. You should be redirected to success page
-7. âœ… Status should now show "completed" immediately
+7.  Status should now show "completed" immediately
 8. Check admin dashboard `/admin/donations`
-9. âœ… Donation should show as "completed"
+9.  Donation should show as "completed"
 
 ### Test Cards (Stripe)
 
@@ -126,7 +126,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://....supabase.co
 
 When deploying to production, set up Stripe webhooks:
 
-1. Go to Stripe Dashboard â†’ Webhooks
+1. Go to Stripe Dashboard → Webhooks
 2. Add endpoint: `https://yourdomain.com/api/webhooks/stripe`
 3. Select events:
    - `checkout.session.completed`
@@ -140,11 +140,11 @@ When deploying to production, set up Stripe webhooks:
 
 ## Other Payment Providers
 
-### Khalti âœ…
+### Khalti 
 
 Already handles status updates correctly in `/api/payments/khalti/verify/route.ts`
 
-### eSewa âœ…
+### eSewa 
 
 Already handles status updates correctly in `/api/payments/esewa/success/route.ts`
 
@@ -185,7 +185,7 @@ Already handles status updates correctly in `/api/payments/esewa/success/route.t
 
 ### How to verify webhook is working (production)?
 
-1. Go to Stripe Dashboard â†’ Webhooks
+1. Go to Stripe Dashboard → Webhooks
 2. Click on your webhook endpoint
 3. Check "Recent deliveries" tab
 4. Should see successful (200) responses for events
@@ -208,11 +208,11 @@ PAYMENT_MODE=mock  # or 'live'
 
 ## Benefits
 
-1. âœ… Works in development without ngrok/tunneling
-2. âœ… Doesn't require webhook setup for local testing
-3. âœ… Backwards compatible with production webhooks
-4. âœ… Prevents "stuck" pending donations
-5. âœ… Provides immediate feedback to users
+1.  Works in development without ngrok/tunneling
+2.  Doesn't require webhook setup for local testing
+3.  Backwards compatible with production webhooks
+4.  Prevents "stuck" pending donations
+5.  Provides immediate feedback to users
 
 ## Notes
 

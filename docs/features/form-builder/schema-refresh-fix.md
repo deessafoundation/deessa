@@ -1,7 +1,7 @@
 ---
 title: "Form Schema Refresh Issue - Complete Fix"
-description: "When users applied a template, made changes, saved as draft, published, and then refreshed the page â€” the form buil..."
-owner: "Deessa Team"
+description: "When users applied a template, made changes, saved as draft, published, and then refreshed the page — the form buil..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -10,16 +10,16 @@ last_updated: 2026-09-12
 # Form Schema Refresh Issue - Complete Fix
 
 ## Problem Summary
-When users applied a template, made changes, saved as draft, published, and then refreshed the page â€” the form builder reverted to the default schema (just name, email, phone fields) instead of showing the saved work.
+When users applied a template, made changes, saved as draft, published, and then refreshed the page — the form builder reverted to the default schema (just name, email, phone fields) instead of showing the saved work.
 
 ## Root Cause Analysis
 
 ### Previous Fixes (Partial)
 The original issue description mentioned 4 breaks that were supposedly fixed:
-1. âœ… **API route using wrong Supabase client** - Changed to service role client
-2. âœ… **API only fetching active schemas** - Added fallback to latest version
-3. âœ… **Component unmounting on tab switch** - Changed to hidden div pattern
-4. âœ… **Parent state not synced after save** - Added onSchemaSaved callback
+1.  **API route using wrong Supabase client** - Changed to service role client
+2.  **API only fetching active schemas** - Added fallback to latest version
+3.  **Component unmounting on tab switch** - Changed to hidden div pattern
+4.  **Parent state not synced after save** - Added onSchemaSaved callback
 
 ### The Real Problem (The 5th Break)
 Despite the above fixes, the issue persisted on page refresh. The actual problem was:
@@ -98,7 +98,7 @@ This effect:
 4. `formSchema` state updates with fetched data
 5. `EventFormBuilder` receives updated `initialSchema` prop
 6. `useEffect` in `EventFormBuilder` detects the change and updates internal state
-7. User sees their saved form schema âœ…
+7. User sees their saved form schema 
 
 ### On Tab Switch
 1. Tab switches to form-builder
@@ -114,7 +114,7 @@ This effect:
 
 ### On Refresh After Save
 1. Same as "On Page Load/Refresh" flow
-2. Latest schema is fetched and displayed correctly âœ…
+2. Latest schema is fetched and displayed correctly 
 
 ## Files Modified
 
@@ -143,13 +143,13 @@ The combination of both fixes ensures:
 - [ ] Apply a template
 - [ ] Make changes to the form
 - [ ] Save as draft
-- [ ] Refresh the page â†’ Form should show draft changes
+- [ ] Refresh the page → Form should show draft changes
 - [ ] Publish the form
-- [ ] Refresh the page â†’ Form should show published version
+- [ ] Refresh the page → Form should show published version
 - [ ] Switch tabs
-- [ ] Return to form-builder tab â†’ State should be preserved
+- [ ] Return to form-builder tab → State should be preserved
 - [ ] Make changes without saving
-- [ ] Refresh page â†’ Should show last saved version (unsaved changes lost, as expected)
+- [ ] Refresh page → Should show last saved version (unsaved changes lost, as expected)
 
 ## Additional Notes
 

@@ -138,7 +138,7 @@ function PaymentSuccessContent() {
           </div>
           <h1 className="mb-2 text-2xl font-extrabold text-foreground">You&apos;re Confirmed!</h1>
           <p className="mb-6 text-sm text-muted-foreground">
-            Your payment was received and your spot is secured for the DEESSA National Conference 2026.
+            Your payment was received and your spot is secured for the deessa National Conference 2026.
           </p>
           {reg && (
             <div className="mb-8 rounded-xl bg-muted/60 p-5 text-left">

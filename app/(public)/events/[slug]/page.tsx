@@ -711,7 +711,7 @@ export default async function EventDetailPage({
           </div>
           <h2 className="mb-4 text-3xl font-black text-white sm:text-4xl">Don&apos;t miss future events</h2>
           <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-white/80">
-            Stay connected with Deessa Foundation and be the first to know about upcoming gatherings, workshops, and community events.
+            Stay connected with deessa Foundation and be the first to know about upcoming gatherings, workshops, and community events.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/events" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-bold text-primary shadow-lg transition-transform hover:-translate-y-0.5">

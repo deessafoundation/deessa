@@ -5,7 +5,7 @@
  * Design system matched to conference email template:
  * - Inline styles only (email-client safe, no <style> block)
  * - Ocean Blue brand colors (#3FABDE / #0B5F8A)
- * - DEESSA brand badge with Foundation name
+ * - deessa brand badge with Foundation name
  * - Ticket-style receipt with dashed dividers
  * - Consistent CTA button hierarchy
  * - Proper currency formatting with spacing
@@ -68,7 +68,7 @@ export function ReceiptEmailTemplate({
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Donation Receipt — DEESSA Foundation</title>
+  <title>Donation Receipt — deessa Foundation</title>
 </head>
 <body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:40px 0;">
@@ -80,7 +80,7 @@ export function ReceiptEmailTemplate({
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
-                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+                <img src="${siteUrl}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
               </a>
             </td>
           </tr>
@@ -98,7 +98,7 @@ export function ReceiptEmailTemplate({
                     Thank You, ${firstName}!
                   </h1>
                   <p style="margin:0;color:rgba(255,255,255,0.9);font-size:16px;line-height:1.5;">
-                    Your generous donation to <strong>DEESSA Foundation</strong><br />has been successfully received and recorded.
+                    Your generous donation to <strong>deessa Foundation</strong><br />has been successfully received and recorded.
                   </p>
                 </td>
               </tr>
@@ -119,7 +119,7 @@ export function ReceiptEmailTemplate({
                   <!-- Personal message -->
                   <p style="margin:0 0 24px;font-size:15px;color:#334155;line-height:1.7;">
                     Dear <strong>${safeDonorName}</strong>,<br /><br />
-                    On behalf of everyone at <strong>DEESSA Foundation</strong>, we sincerely appreciate your contribution
+                    On behalf of everyone at <strong>deessa Foundation</strong>, we sincerely appreciate your contribution
                     of <strong>${currencyInfo.symbol}&nbsp;${formattedAmount}</strong>. Every donation, no matter the size,
                     directly fuels our mission to empower communities through education, healthcare, and sustainable development
                     across Nepal.<br /><br />
@@ -222,7 +222,7 @@ export function ReceiptEmailTemplate({
                       <td style="padding:20px 24px;">
                         <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#0B5F8A;">📋 Tax Information</p>
                         <p style="margin:0;font-size:13px;color:#1E6FA8;line-height:1.7;">
-                          DEESSA Foundation is a registered nonprofit organization in Nepal.
+                          deessa Foundation is a registered nonprofit organization in Nepal.
                           Your donation of <strong>${currencyInfo.symbol}&nbsp;${formattedAmount}</strong> is tax-deductible
                           under Section 12 of the Income Tax Act, 2058 (Nepal). Please download and retain
                           your receipt above for your tax filing records.
@@ -237,7 +237,7 @@ export function ReceiptEmailTemplate({
                       <td style="padding:20px 24px;">
                         <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#15803D;">💚 Your Impact Matters</p>
                         <p style="margin:0 0 6px;font-size:13px;color:#166534;line-height:1.7;">
-                          Your donation to DEESSA Foundation helps us:
+                          Your donation to deessa Foundation helps us:
                         </p>
                         <table cellpadding="0" cellspacing="0" style="margin-top:4px;">
                           <tr>
@@ -319,7 +319,7 @@ export function ReceiptEmailTemplate({
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="${siteUrl}" style="color:#3FABDE;">deessafoundation.com</a>
               </p>

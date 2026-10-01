@@ -4,7 +4,7 @@
 **Status:** ✅ Production Ready  
 **Last Updated:** 2026-09-14  
 
-Welcome to the comprehensive documentation for the Deesha Foundation accessibility system.
+Welcome to the comprehensive documentation for the deessa Foundation accessibility system.
 
 ---
 

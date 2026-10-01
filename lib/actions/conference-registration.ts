@@ -337,7 +337,7 @@ export async function registerForConference(
     return {
       success: true,
 
-      message: `You have successfully registered for the DEESSA National Conference 2026!`,
+      message: `You have successfully registered for the deessa National Conference 2026!`,
 
       registrationId: registration.id,
 

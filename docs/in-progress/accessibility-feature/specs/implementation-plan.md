@@ -1,7 +1,7 @@
 ---
 title: "Website Accessibility — Implementation Plan"
 description: "Accessible defaults, personalization, user flows, state contracts and acceptance criteria"
-owner: "Deesha Development Team"
+owner: "deessa Development Team"
 status: planning
 category: feature
 audience: developer
@@ -182,7 +182,7 @@ Remove competing mutations from both existing widgets only after the shared prov
 
 ## 6. Canonical preferences and storage
 
-**Storage key:** deesha-a11y-preferences  
+**Storage key:** deessa-a11y-preferences  
 **Version:** integer 1  
 **Maximum accepted raw record:** 4 KiB
 

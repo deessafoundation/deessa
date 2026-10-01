@@ -1,7 +1,7 @@
 ---
 title: "Testimonials UI Improvements"
 description: "Location: components/admin/homepage-manager/components/TestimonialsManager.tsx"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Changes Made
 
-### 1. Enhanced File Upload Button âœ…
+### 1. Enhanced File Upload Button 
 
 **Location**: `components/admin/homepage-manager/components/TestimonialsManager.tsx`
 
@@ -50,7 +50,7 @@ last_updated: 2026-09-12
 
 ---
 
-### 2. Fixed Image Size Flash on Reload âœ…
+### 2. Fixed Image Size Flash on Reload 
 
 **Location**: `components/circular-testimonials.tsx`
 
@@ -86,11 +86,11 @@ When page reloaded, testimonial images would:
 ```
 
 #### Benefits
-- âœ… No more size flash on reload
-- âœ… Proper space reservation
-- âœ… Smoother animations
-- âœ… Better performance
-- âœ… Improved Core Web Vitals (CLS score)
+-  No more size flash on reload
+-  Proper space reservation
+-  Smoother animations
+-  Better performance
+-  Improved Core Web Vitals (CLS score)
 
 ---
 
@@ -149,18 +149,18 @@ When page reloaded, testimonial images would:
 
 **Before:**
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Choose File    No file chosen       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│ Choose File    No file chosen       │
+└─────────────────────────────────────┘
 ```
 
 **After:**
 ```
-â”Œ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”
-â”‚  [Choose File]  No file chosen      â”‚
-â”‚   (Ocean Blue                       â”‚
-â”‚    Gradient)                        â”‚
-â”” â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”€ â”˜
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+│  [Choose File]  No file chosen      │
+│   (Ocean Blue                       │
+│    Gradient)                        │
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
      Dashed Border with Hover
 ```
 
@@ -168,13 +168,13 @@ When page reloaded, testimonial images would:
 
 **Before:**
 ```
-Page Load â†’ [HUGE IMAGE] â†’ [Shrinks] â†’ [Correct Size]
+Page Load → [HUGE IMAGE] → [Shrinks] → [Correct Size]
             (Flash!)       (Jarring)    (Finally OK)
 ```
 
 **After:**
 ```
-Page Load â†’ [Correct Size] â†’ [Smooth Animation]
+Page Load → [Correct Size] → [Smooth Animation]
             (Reserved)        (No Flash!)
 ```
 
@@ -207,14 +207,14 @@ Page Load â†’ [Correct Size] â†’ [Smooth Animation]
 ## Browser Compatibility
 
 ### File Upload Button
-- âœ… Chrome/Edge (Chromium)
-- âœ… Firefox
-- âœ… Safari
-- âœ… Mobile browsers
+-  Chrome/Edge (Chromium)
+-  Firefox
+-  Safari
+-  Mobile browsers
 
 ### Image Attributes
-- âœ… All modern browsers
-- âœ… Graceful degradation in older browsers
+-  All modern browsers
+-  Graceful degradation in older browsers
 
 ---
 

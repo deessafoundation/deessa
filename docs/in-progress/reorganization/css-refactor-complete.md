@@ -1,7 +1,23 @@
 # CSS Architecture Refactor - Completion Summary
 
-**Date Completed:** September 27, 2026  
-**Status:** ✅ Complete  
+> **⛔ STATUS: ABANDONED — REVERTED (September 30, 2026)**
+>
+> This refactor was executed as described below, but **it broke the design and was
+> abandoned**. The extraction script only preserved plain single-class rules and
+> silently dropped **~417 of 519 selectors** — element resets, descendant rules,
+> every media-query block, hover/focus states, `prefers-reduced-motion` and
+> `body.high-contrast` overrides. The import-rewriting script also corrupted
+> identifiers (`sections` → `sectionbase`, `facts` → `factbase`, `words` →
+> `wordbase`), causing runtime errors. The split modules and the `.ARCHIVE` copy
+> were deleted; the monolith was restored and renamed to
+> `components/programs/demo/programs.module.css` (commit `8978a50`). The one-off
+> scripts listed at the bottom of this document were removed too.
+>
+> **Do not re-split that file without a selector-coverage check.** This document
+> is retained as a historical record only.
+
+**Date Completed:** September 27, 2026 (reverted September 30, 2026)  
+**Status:** ⛔ Abandoned — reverted to monolith  
 **Build Status:** ✅ Passing (31.7s)
 
 ## Overview
@@ -138,13 +154,14 @@ The `.ARCHIVE` file can be used to:
 
 ## Scripts Created (for reference)
 
+**All of these were deleted when the refactor was reverted (September 30, 2026):**
+
 - `scripts/map-css-classes.mjs` - Class usage mapping
 - `scripts/extract-css-modules.mjs` - CSS extraction
 - `scripts/update-imports.mjs` - Import updates
 - `scripts/verify-css-refactor.mjs` - Verification suite
 - `scripts/class-mapping.json` - Mapping output
-
-These can be deleted or archived once the refactor is confirmed stable.
+- `css-refactor-files.txt` - File manifest
 
 ## Related Documentation
 

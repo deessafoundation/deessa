@@ -11,15 +11,16 @@ import {
   EditorialText,
   SectionCopy,
 } from "./EditorialParts"
-import base from "../demo/program-base.module.css"
-import research from "../demo/research-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const research = base
 import photoStyles from "./editorial-photo.module.css"
 
 export function ResearchTemplate({ document }: { document: ProgramDocument }) {
   const { hero } = document
   const visual = hero.editorial
   const sections = document.sections.filter((section) => section.enabled)
-  const question = sections.find((section) => section.content.type === "rich_text")
+  const question = document.sections.find((section) => section.content.type === "rich_text")
   const approach = sections.find(
     (section) => section.content.type === "how_it_works" || section.content.type === "timeline",
   )

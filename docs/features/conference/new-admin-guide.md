@@ -1,13 +1,13 @@
 ---
-title: "Conference Form Builder â€” Admin User Guide"
+title: "Conference Form Builder — Admin User Guide"
 description: " For: Conference administrators and event organizers"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Conference Form Builder â€” Admin User Guide
+# Conference Form Builder — Admin User Guide
 
 > **For:** Conference administrators and event organizers  
 > **Purpose:** Learn how to create and manage dynamic registration forms  
@@ -64,7 +64,7 @@ Forms are organized into steps (pages). Each step can contain multiple fields.
 
 **To delete a step:**
 - Click the trash icon (you'll be asked to confirm)
-- âš ï¸ **Warning:** Deleting a step removes all its fields
+- ⚠️ **Warning:** Deleting a step removes all its fields
 
 ### Step 2: Add Fields
 
@@ -118,70 +118,70 @@ Click any field in the canvas to edit in the right panel:
 
 ### 13 Available Field Types
 
-#### 1. **Text Input** ðŸ“
+#### 1. **Text Input** 📝
 Single-line text entry (names, titles, short answers)
 
 **Best for:** Names, job titles, company names  
 **Validation:** Min/max length, pattern matching  
 **Example:** "Full Name", "Job Title"
 
-#### 2. **Text Area** ðŸ“„
+#### 2. **Text Area** 📄
 Multi-line text entry (long descriptions, comments)
 
 **Best for:** Bio, comments, additional information  
 **Validation:** Min/max length  
 **Example:** "Tell us about yourself"
 
-#### 3. **Email** âœ‰ï¸
+#### 3. **Email** ✉️
 Email address with automatic validation
 
 **Best for:** Contact email, alternate email  
 **Validation:** Email format automatically checked  
 **Example:** "Email Address" (required field)
 
-#### 4. **Phone** â˜Žï¸
+#### 4. **Phone** ☎️
 Phone number input
 
 **Best for:** Contact number, emergency contact  
 **Validation:** Phone format (flexible, supports international)  
 **Example:** "Mobile Number"
 
-#### 5. **Number** #ï¸âƒ£
+#### 5. **Number** #️⃣
 Numeric input with up/down controls
 
 **Best for:** Age, quantity, years of experience  
 **Validation:** Min/max value, decimal places  
 **Example:** "Years of Experience"
 
-#### 6. **Dropdown** â¬‡ï¸
+#### 6. **Dropdown** ⬇️
 Single choice from a list
 
 **Best for:** Role, dietary preference, country (long lists)  
 **Configuration:** Add options with value + label  
 **Example:** "What's your role?"
 
-#### 7. **Radio Buttons** â­•
+#### 7. **Radio Buttons** ⭕
 Single choice displayed as buttons
 
 **Best for:** Attendance mode, yes/no questions (short lists)  
 **Configuration:** Add 2-5 options  
 **Example:** "Will you attend in person or virtually?"
 
-#### 8. **Checkboxes** â˜‘ï¸
+#### 8. **Checkboxes** ☑️
 Multiple choice (select many)
 
 **Best for:** Workshop selections, interests, preferences  
 **Configuration:** Add options + set min/max selections  
 **Example:** "Select workshops to attend (max 3)"
 
-#### 9. **Toggle** ðŸ”˜
+#### 9. **Toggle** 🔘
 Single yes/no checkbox
 
 **Best for:** Consent, agreements, single choices  
 **Validation:** Can make required  
 **Example:** "I agree to terms and conditions"
 
-#### 10. **Date Picker** ðŸ“… *NEW*
+#### 10. **Date Picker** 📅 *NEW*
 Calendar date selection
 
 **Best for:** Birth date, preferred dates  
@@ -192,7 +192,7 @@ Calendar date selection
 
 **Example:** "Preferred arrival date"
 
-#### 11. **URL Input** ðŸ”— *NEW*
+#### 11. **URL Input** 🔗 *NEW*
 Website link with validation
 
 **Best for:** LinkedIn profile, portfolio, company website  
@@ -200,7 +200,7 @@ Website link with validation
 **Features:** Preview link icon when valid  
 **Example:** "LinkedIn Profile URL"
 
-#### 12. **File Upload** ðŸ“Ž *NEW*
+#### 12. **File Upload** 📎 *NEW*
 Upload documents or images
 
 **Best for:** Resume, photo, certificate  
@@ -211,7 +211,7 @@ Upload documents or images
 
 **Example:** "Upload your resume (PDF only, max 5MB)"
 
-#### 13. **Heading** / **Paragraph** ðŸ“‹
+#### 13. **Heading** / **Paragraph** 📋
 Non-input fields for information
 
 **Best for:** Section titles, instructions  
@@ -236,13 +236,13 @@ Show or hide fields based on other field values.
 6. Save
 
 **Available Operators:**
-- **Equals** â€” Field value exactly matches
-- **Not Equals** â€” Field value does not match
-- **Is Empty** â€” Field has no value
-- **Is Not Empty** â€” Field has any value
-- **Contains** â€” Text includes substring *(advanced)*
-- **Greater Than** â€” Numeric comparison *(advanced)*
-- **Less Than** â€” Numeric comparison *(advanced)*
+- **Equals** — Field value exactly matches
+- **Not Equals** — Field value does not match
+- **Is Empty** — Field has no value
+- **Is Not Empty** — Field has any value
+- **Contains** — Text includes substring *(advanced)*
+- **Greater Than** — Numeric comparison *(advanced)*
+- **Less Than** — Numeric comparison *(advanced)*
 
 ### Advanced Conditionals (AND/OR)
 
@@ -281,14 +281,14 @@ Save time by reusing form structures.
 8. Publish when ready
 
 **Default Templates:**
-- **Basic Registration** â€” Name, email, consent only
-- **Workshop Registration** â€” Personal info + workshop preferences
+- **Basic Registration** — Name, email, consent only
+- **Workshop Registration** — Personal info + workshop preferences
 
 ### Creating a Template
 
 **To save your form as a template:**
 1. Build your form
-2. Click "Templates" â†’ "Save as Template" tab
+2. Click "Templates" → "Save as Template" tab
 3. Enter template name (required)
 4. Add description (optional but recommended)
 5. Choose category (e.g., "workshop", "seminar")
@@ -303,14 +303,14 @@ Save time by reusing form structures.
 
 ### Form Design
 
-âœ… **DO:**
+ **DO:**
 - Keep steps focused (5-7 fields per step max)
 - Use clear, descriptive labels
 - Add help text for complex fields
 - Test your form before publishing
 - Use conditional logic to reduce clutter
 
-âŒ **DON'T:**
+❌ **DON'T:**
 - Create 20-field single-step forms (use multiple steps)
 - Use jargon in field labels
 - Make everything required (only essentials)
@@ -382,16 +382,16 @@ A: Consider:
 
 | Action | Steps |
 |--------|-------|
-| Add field | Select step â†’ Click field type in palette |
-| Edit field | Click field in canvas â†’ Edit in right panel |
-| Delete field | Click field â†’ Click trash icon in right panel |
+| Add field | Select step → Click field type in palette |
+| Edit field | Click field in canvas → Edit in right panel |
+| Delete field | Click field → Click trash icon in right panel |
 | Add step | Click "+ Add Step" button |
 | Reorder steps | Use up/down arrows next to step name |
 | Preview form | Click "Preview" button at top |
 | Save draft | Click "Save Draft" (not visible to users) |
 | Publish | Click "Publish" (goes live immediately) |
-| Apply template | Click "Templates" â†’ Browse â†’ Select â†’ Apply |
-| Save template | Click "Templates" â†’ Save as Template tab |
+| Apply template | Click "Templates" → Browse → Select → Apply |
+| Save template | Click "Templates" → Save as Template tab |
 
 ---
 
@@ -421,11 +421,11 @@ A: Consider:
 
 ## Changelog
 
-- **Phase 5** â€” Added: Accessibility features, performance improvements
-- **Phase 4** â€” Added: Date, URL, file upload fields; advanced conditionals; templates
-- **Phase 3** â€” Added: Custom field data visibility in admin dashboard
-- **Phase 2** â€” Initial form builder release
-- **Phase 1** â€” Dynamic form rendering foundation
+- **Phase 5** — Added: Accessibility features, performance improvements
+- **Phase 4** — Added: Date, URL, file upload fields; advanced conditionals; templates
+- **Phase 3** — Added: Custom field data visibility in admin dashboard
+- **Phase 2** — Initial form builder release
+- **Phase 1** — Dynamic form rendering foundation
 
 ---
 

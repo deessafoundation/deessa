@@ -46,7 +46,7 @@ export interface ConferenceSettings {
 }
 
 export const CONFERENCE_DEFAULTS: ConferenceSettings = {
-  name: "DEESSA National Conference 2026",
+  name: "deessa National Conference 2026",
   dateDisplay: "Oct 15–17, 2026",
   dateStart: "2026-10-15",
   dateEnd: "2026-10-17",
@@ -95,8 +95,8 @@ export const CONFERENCE_DEFAULTS: ConferenceSettings = {
 
   emailTemplates: {
     general: {
-      subject: "DEESSA National Conference 2026 — Important Information",
-      body: `We want to share some important information regarding the DEESSA National Conference 2026.
+      subject: "deessa National Conference 2026 — Important Information",
+      body: `We want to share some important information regarding the deessa National Conference 2026.
 
 📅 Dates: {{dateDisplay}}
 📍 Venue: {{venue}}
@@ -108,8 +108,8 @@ If you have any questions or require any assistance before the event, please don
 We look forward to seeing you at the conference!`,
     },
     reminder: {
-      subject: "Reminder: DEESSA National Conference 2026 — See You Soon!",
-      body: `This is a friendly reminder that the DEESSA National Conference 2026 is coming up!
+      subject: "Reminder: deessa National Conference 2026 — See You Soon!",
+      body: `This is a friendly reminder that the deessa National Conference 2026 is coming up!
 
 📅 Conference Dates: {{dateDisplay}}
 📍 Venue: {{venue}}
@@ -123,8 +123,8 @@ If you have not yet arranged your travel or accommodation, we recommend doing so
 We look forward to welcoming you!`,
     },
     directions: {
-      subject: "Getting to the DEESSA National Conference 2026",
-      body: `Here is everything you need to know to get to the DEESSA National Conference 2026 venue.
+      subject: "Getting to the deessa National Conference 2026",
+      body: `Here is everything you need to know to get to the deessa National Conference 2026 venue.
 
 🏨 Venue: {{venue}}
 📍 Address: {{venueAddress}}

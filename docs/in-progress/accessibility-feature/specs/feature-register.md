@@ -9,7 +9,7 @@
 
 ## 📊 Overview
 
-This register tracks all accessibility features across the Deesha Foundation website, including:
+This register tracks all accessibility features across the deessa Foundation website, including:
 - ✅ **Core features** (implemented in Phase 1)
 - 📋 **Extension features** (E1-E10, evaluated for Phase 2+)
 - 🎯 **Status and ownership** for each feature

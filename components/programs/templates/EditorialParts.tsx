@@ -3,8 +3,9 @@ import { ArrowDown, ArrowUpRight, Check, Heart, MapPin, MessageCircle, Plus, Spa
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 import { CommunicationBoard } from "../demo/DemoInteractions"
 import { SafeImage } from "../SafeImage"
-import base from "../demo/program-base.module.css"
-import research from "../demo/research-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const research = base
 
 export type ImageRef = ProgramDocument["hero"]["image"]
 export type Action = ProgramDocument["hero"]["actions"][number]
@@ -373,7 +374,7 @@ export function EditorialSection({ section }: { section: ProgramSection }) {
   }
 }
 
-// Keep demo anchors working with existing generated CMS section IDbase.
+// Keep demo anchors working with existing generated CMS section IDs.
 export function AnchorAlias({ id, section }: { id: string; section: ProgramSection | undefined }) {
   return section && section.id !== id ? <span id={id} style={{ display: "block", scrollMarginTop: 110 }} /> : null
 }

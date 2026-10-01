@@ -210,7 +210,7 @@ export function ConferenceSettingsForm({ settings }: ConferenceSettingsFormProps
                 className={inputCls}
                 value={details.name}
                 onChange={(e) => setDetails((d) => ({ ...d, name: e.target.value }))}
-                placeholder="e.g. DEESSA National Conference 2026"
+                placeholder="e.g. deessa National Conference 2026"
               />
             </Field>
 
@@ -668,7 +668,7 @@ export function ConferenceSettingsForm({ settings }: ConferenceSettingsFormProps
               />
             </Field>
 
-            <Field label="Message Body" hint="Sent as plain text wrapped in the DEESSA branded template">
+            <Field label="Message Body" hint="Sent as plain text wrapped in the deessa branded template">
               <textarea
                 rows={12}
                 className={`${inputCls} resize-y font-mono text-xs leading-relaxed`}

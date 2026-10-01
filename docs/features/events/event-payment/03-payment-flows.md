@@ -1,13 +1,13 @@
 ---
-title: "Event Payment Integration â€” Payment Flows"
+title: "Event Payment Integration — Payment Flows"
 description: "- Frontend sends POST /api/events/start-payment with {registrationId, email, provider: \"stripe\"}"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Event Payment Integration â€” Payment Flows
+# Event Payment Integration — Payment Flows
 
 ## Flow 1: Stripe Payment
 
@@ -39,13 +39,13 @@ last_updated: 2026-09-12
 - Sends `POST /api/events/confirm-stripe-session` with `{rid, sessionId}`
 - Server:
   1. Fetches registration from DB
-  2. Checks idempotency (already `paid` + `confirmed` â†’ return early)
-  3. Checks guards (cancelled â†’ 400, expired â†’ 400)
-  4. Calls `verifyStripeSession(sessionId)` â€” retrieves session from Stripe API
+  2. Checks idempotency (already `paid` + `confirmed` → return early)
+  3. Checks guards (cancelled → 400, expired → 400)
+  4. Calls `verifyStripeSession(sessionId)` — retrieves session from Stripe API
   5. Verifies `session.mode === "payment"` (rejects subscription sessions)
   6. Verifies ownership (email match or stored session ID match)
-  7. Verifies amount: `reg.payment_amount Ã— 100 === session.amount_total`
-     - Mismatch â†’ sets `payment_status = "review"`, returns `{status: "review"}`
+  7. Verifies amount: `reg.payment_amount × 100 === session.amount_total`
+     - Mismatch → sets `payment_status = "review"`, returns `{status: "review"}`
   8. Syncs currency if different from DB
   9. Updates registration: `status = "confirmed"`, `payment_status = "paid"`
   10. Sends confirmation email (fire-and-forget)
@@ -70,7 +70,7 @@ last_updated: 2026-09-12
 | User closes browser before redirect | Webhook confirms later |
 | Stripe session expires (24h) | `checkout.session.expired` webhook fires; registration stays `unpaid` |
 | Amount mismatch | `payment_status = "review"`, admin investigates |
-| Duplicate webhook | Idempotent â€” skipped via `payment_events` |
+| Duplicate webhook | Idempotent — skipped via `payment_events` |
 | Registration cancelled before webhook | Status guard: `WHERE status NOT IN ('cancelled','expired')` |
 
 ---
@@ -85,7 +85,7 @@ last_updated: 2026-09-12
 #### 2. start-payment Creates Khalti Payment
 - Validates registration + acquires optimistic lock
 - Calls `startKhaltiPayment()`:
-  - Validates amount â‰¥ Rs. 10 (1000 paisa)
+  - Validates amount ≥ Rs. 10 (1000 paisa)
   - Validates email and name
   - Detects sandbox/production key mismatch
   - POSTs to `{KHALTI_BASE_URL}/epayment/initiate/` with:
@@ -109,8 +109,8 @@ last_updated: 2026-09-12
   1. Fetches registration by `khalti_pidx`
   2. Calls Khalti lookup API: `POST /epayment/lookup/` with `{pidx}`
   3. Verifies Khalti response status is `"Completed"`
-  4. Verifies amount: `reg.payment_amount Ã— 100 === lookupData.total_amount`
-     - Mismatch â†’ `payment_status = "review"`
+  4. Verifies amount: `reg.payment_amount × 100 === lookupData.total_amount`
+     - Mismatch → `payment_status = "review"`
   5. Updates registration
   6. Returns `{ok: true, status: "completed"}`
 
@@ -138,7 +138,7 @@ Khalti does not have a separate webhook mechanism. The verification endpoint act
 #### 2. start-payment Creates eSewa Payment
 - Validates registration + acquires optimistic lock
 - Calls `startEsewaPayment()`:
-  - Validates amount (Rs. 10 â€“ Rs. 1,000,000)
+  - Validates amount (Rs. 10 – Rs. 1,000,000)
   - Generates `transaction_uuid`: `{Date.now()}-{registrationId}`
   - Generates HMAC-SHA256 signature over `total_amount,transaction_uuid,product_code`
   - Builds form data for browser-side POST
@@ -163,13 +163,13 @@ Khalti does not have a separate webhook mechanism. The verification endpoint act
      - Constructs message from `signed_field_names` and response data
      - Computes HMAC-SHA256 using `ESEWA_SECRET_KEY`
      - Compares via `crypto.timingSafeEqual()`
-     - Invalid signature â†’ redirect to `/failure?reason=invalid_signature` (NO state change)
+     - Invalid signature → redirect to `/failure?reason=invalid_signature` (NO state change)
   4. **Status check** (after signature verified):
-     - If `status !== "COMPLETE"` â†’ sets `payment_status = "failed"`, redirects to failure
+     - If `status !== "COMPLETE"` → sets `payment_status = "failed"`, redirects to failure
   5. **Amount verification** (after signature verified):
      - Compares `reg.payment_amount` vs `total_amount` with tolerance 0.01 NPR
-     - Mismatch â†’ sets `payment_status = "review"`
-  6. **Idempotency**: If already `paid` â†’ redirect to success
+     - Mismatch → sets `payment_status = "review"`
+  6. **Idempotency**: If already `paid` → redirect to success
   7. Updates registration: `status = "confirmed"`, `payment_status = "paid"`
   8. Sends confirmation email (fire-and-forget)
   9. Redirects to `/events/{slug}/register/payment-success?rid={rid}&paid=1`

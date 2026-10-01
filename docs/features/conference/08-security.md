@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Security Architecture"
+title: "deessa Foundation — Conference Module: Security Architecture"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Security Architecture
+# deessa Foundation — Conference Module: Security Architecture
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -47,24 +47,24 @@ This system follows these core security principles:
 
 **Protected Against**:
 
-- âœ… SQL injection (parameterized queries + Supabase ORM)
-- âœ… XSS (React auto-escaping + Content Security Policy)
-- âœ… CSRF (SameSite cookies + token validation)
-- âœ… Brute force (rate limiting)
-- âœ… Unauthorized data access (RLS policies + dual-key auth)
-- âœ… Man-in-the-middle (TLS 1.3)
-- âœ… Payment data theft (no local storage, gateway-handled)
+-  SQL injection (parameterized queries + Supabase ORM)
+-  XSS (React auto-escaping + Content Security Policy)
+-  CSRF (SameSite cookies + token validation)
+-  Brute force (rate limiting)
+-  Unauthorized data access (RLS policies + dual-key auth)
+-  Man-in-the-middle (TLS 1.3)
+-  Payment data theft (no local storage, gateway-handled)
 
 **Partial Protection**:
 
-- âš ï¸ DDoS (Vercel has some protection, but not enterprise-grade WAF)
-- âš ï¸ Webhook replay attacks (idempotency table prevents duplicate processing, but no timestamp check)
+- ⚠️ DDoS (Vercel has some protection, but not enterprise-grade WAF)
+- ⚠️ Webhook replay attacks (idempotency table prevents duplicate processing, but no timestamp check)
 
 **NOT Protected Against** (out of scope):
 
-- âŒ Physical access to Vercel/Supabase data centers (rely on vendor security)
-- âŒ Compromised admin credentials (no 2FA currently, see improvements)
-- âŒ Social engineering (user training required)
+- ❌ Physical access to Vercel/Supabase data centers (rely on vendor security)
+- ❌ Compromised admin credentials (no 2FA currently, see improvements)
+- ❌ Social engineering (user training required)
 
 ### 1.3 Security Responsibility Matrix
 
@@ -72,7 +72,7 @@ This system follows these core security principles:
 |---|---|---|
 | **Infrastructure Security** | Vercel, Supabase | Physical security, network security, patching |
 | **Application Security** | Development Partner | Code security, authentication, authorization |
-| **Data Security** | DEESSA Foundation | Access control, data retention, backup |
+| **Data Security** | deessa Foundation | Access control, data retention, backup |
 | **Endpoint Security** | Stripe, Khalti, eSewa | Payment processing, PCI compliance, fraud detection |
 | **User Security** | End Users | Strong passwords, email security, phishing awareness |
 
@@ -87,28 +87,28 @@ This system follows these core security principles:
 **Flow**:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚   Admin    â”‚         â”‚  Supabase Authâ”‚         â”‚  Next.js App â”‚
-â”‚   User     â”‚         â”‚   Service     â”‚         â”‚   (Server)   â”‚
-â””â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
-      â”‚                        â”‚                        â”‚
-      â”œâ”€ POST /auth/signin â”€â”€â”€>â”‚                        â”‚
-      â”‚  email, password        â”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚<â”€â”€â”€ JWT access_token â”€â”€â”¤                        â”‚
-      â”‚     + refresh_token     â”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”œâ”€ GET /admin/conference â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€>  â”‚
-      â”‚  Cookie: sb-access-tokenâ”‚                        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚                        â”‚<â”€ Verify JWT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-      â”‚                        â”‚   (check signature,     â”‚
-      â”‚                        â”‚    expiry, role)        â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚                        â”œâ”€ Valid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€>â”‚
-      â”‚                        â”‚                        â”‚
-      â”‚<â”€â”€ Admin Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-      â”‚                        â”‚                        â”‚
+┌────────────┐         ┌───────────────┐         ┌──────────────┐
+│   Admin    │         │  Supabase Auth│         │  Next.js App │
+│   User     │         │   Service     │         │   (Server)   │
+└─────┬──────┘         └───────┬───────┘         └──────┬───────┘
+      │                        │                        │
+      ├─ POST /auth/signin ───>│                        │
+      │  email, password        │                        │
+      │                        │                        │
+      │<─── JWT access_token ──┤                        │
+      │     + refresh_token     │                        │
+      │                        │                        │
+      ├─ GET /admin/conference ──────────────────────>  │
+      │  Cookie: sb-access-token│                        │
+      │                        │                        │
+      │                        │<─ Verify JWT ──────────┤
+      │                        │   (check signature,     │
+      │                        │    expiry, role)        │
+      │                        │                        │
+      │                        ├─ Valid ───────────────>│
+      │                        │                        │
+      │<── Admin Dashboard ────────────────────────────┤
+      │                        │                        │
 ```
 
 **Token Lifecycle**:
@@ -162,7 +162,7 @@ export default async function AdminPage() {
 **Example Request**:
 
 ```bash
-curl -X POST https://deessa.org/api/conference/status \
+curl -X POST https://deessafoundation.com/api/conference/status \
   -H "Content-Type: application/json" \
   -d '{
     "registrationId": "550e8400-e29b-41d4-a716-446655440000",
@@ -189,7 +189,7 @@ if (!data) {
   });
 }
 
-// Both matched â†’ authorized
+// Both matched → authorized
 ```
 
 ### 2.3 Cron Authentication
@@ -205,7 +205,7 @@ CRON_SECRET=your-secure-random-string-here
 **Request**:
 
 ```bash
-curl -X GET https://deessa.org/api/cron/expire-conference-registrations \
+curl -X GET https://deessafoundation.com/api/cron/expire-conference-registrations \
   -H "Authorization: Bearer your-secure-random-string-here"
 ```
 
@@ -221,7 +221,7 @@ export async function GET(req: Request) {
     });
   }
   
-  // Authorized â†’ run cron job
+  // Authorized → run cron job
 }
 ```
 
@@ -240,7 +240,7 @@ export async function GET(req: Request) {
 **What is RLS**:
 PostgreSQL feature that restricts database rows visible to a query based on user role/session.
 
-**DEESSA Implementation**:
+**deessa Implementation**:
 
 ```sql
 -- Enable RLS on table
@@ -275,9 +275,9 @@ WITH CHECK (true);
 
 **Security Trade-off**:
 
-- âŒ **Lost**: Database-level enforcement (RLS would block invalid queries)
-- âœ… **Gained**: Flexibility (can implement custom auth logic)
-- âœ… **Mitigation**: Thorough application-level validation before database queries
+- ❌ **Lost**: Database-level enforcement (RLS would block invalid queries)
+-  **Gained**: Flexibility (can implement custom auth logic)
+-  **Mitigation**: Thorough application-level validation before database queries
 
 ### 3.2 Admin Role Authorization
 
@@ -291,9 +291,9 @@ WITH CHECK (true);
 
 **Role Assignment**:
 
-- Manual: Supabase dashboard â†’ Authentication â†’ Users â†’ Invite user
+- Manual: Supabase dashboard → Authentication → Users → Invite user
 - No self-registration (closed system)
-- Only DEESSA staff have accounts
+- Only deessa staff have accounts
 
 **Permission Escalation Protection**:
 
@@ -331,10 +331,10 @@ const supabase = createClient(
 
 **Protection Mechanisms**:
 
-- âœ… Stored in Vercel environment variables (encrypted)
-- âœ… Never committed to Git (`.env.local` in `.gitignore`)
-- âœ… Only used in server-side code (API routes, Server Components)
-- âœ… Never sent to client (Next.js `NEXT_PUBLIC_` prefix not used)
+-  Stored in Vercel environment variables (encrypted)
+-  Never committed to Git (`.env.local` in `.gitignore`)
+-  Only used in server-side code (API routes, Server Components)
+-  Never sent to client (Next.js `NEXT_PUBLIC_` prefix not used)
 
 **Verification** (that key is not exposed):
 
@@ -366,11 +366,11 @@ grep -r "SUPABASE_SERVICE_ROLE_KEY" app/
 
 ```bash
 # Check TLS version
-curl -I https://deessa.org | grep -i "strict-transport"
+curl -I https://deessafoundation.com | grep -i "strict-transport"
 # Should return: strict-transport-security: max-age=31536000
 
 # Test TLS connection
-openssl s_client -connect deessa.org:443 -tls1_3
+openssl s_client -connect deessafoundation.com:443 -tls1_3
 # Should succeed (TLS 1.3 supported)
 ```
 
@@ -380,19 +380,19 @@ openssl s_client -connect deessa.org:443 -tls1_3
 
 | Field | Sensitivity | Encrypted at Rest | Access Control |
 |---|---|---|---|
-| **Full Name** | Medium | âœ… Yes (database-level) | Admins + User (dual-key) |
-| **Email** | High | âœ… Yes | Admins + User (dual-key) |
-| **Phone** | High | âœ… Yes | Admins + User (dual-key) |
-| **Country** | Low | âœ… Yes | Admins + User (dual-key) |
-| **Organization** | Low | âœ… Yes | Admins + User (dual-key) |
-| **Dietary Restrictions** | Medium | âœ… Yes | Admins + User (dual-key) |
+| **Full Name** | Medium |  Yes (database-level) | Admins + User (dual-key) |
+| **Email** | High |  Yes | Admins + User (dual-key) |
+| **Phone** | High |  Yes | Admins + User (dual-key) |
+| **Country** | Low |  Yes | Admins + User (dual-key) |
+| **Organization** | Low |  Yes | Admins + User (dual-key) |
+| **Dietary Restrictions** | Medium |  Yes | Admins + User (dual-key) |
 
 **NOT Collected** (by design):
 
-- âŒ Credit card numbers (handled by payment gateways)
-- âŒ Government IDs (not needed)
-- âŒ Home address (only country collected)
-- âŒ Date of birth (not needed)
+- ❌ Credit card numbers (handled by payment gateways)
+- ❌ Government IDs (not needed)
+- ❌ Home address (only country collected)
+- ❌ Date of birth (not needed)
 
 **Data Retention**:
 
@@ -426,7 +426,7 @@ openssl s_client -connect deessa.org:443 -tls1_3
 
 ```bash
 # View who accessed secrets (Vercel dashboard)
-# Audit Log â†’ Filter: "Environment Variables"
+# Audit Log → Filter: "Environment Variables"
 # Shows: Who, When, What changed
 ```
 
@@ -511,9 +511,9 @@ if (!result.success) {
 
 **SQL Injection Prevention**:
 
-- âœ… All queries use parameterized statements (Supabase ORM)
-- âœ… No raw SQL with user input
-- âœ… Example safe query:
+-  All queries use parameterized statements (Supabase ORM)
+-  No raw SQL with user input
+-  Example safe query:
 
   ```typescript
   supabase
@@ -534,7 +534,7 @@ module.exports = {
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Origin', value: 'https://deessa.org' },
+          { key: 'Access-Control-Allow-Origin', value: 'https://deessafoundation.com' },
           { key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' }
         ]
@@ -544,7 +544,7 @@ module.exports = {
 };
 ```
 
-**Effect**: Only `https://deessa.org` can call APIs from browser (blocks 3rd-party sites)
+**Effect**: Only `https://deessafoundation.com` can call APIs from browser (blocks 3rd-party sites)
 
 ---
 
@@ -554,19 +554,19 @@ module.exports = {
 
 **Who Handles Card Data**:
 
-- âŒ DEESSA system does NOT store, process, or transmit card data
-- âœ… Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
+- ❌ deessa system does NOT store, process, or transmit card data
+-  Stripe, Khalti, eSewa handle all card data (PCI Level 1 certified)
 
 **Compliance Status**:
 
 | Entity | PCI DSS Level | Responsibility |
 |---|---|---|
-| **DEESSA Foundation** | SAQ A (simplest) | No card data handling |
+| **deessa Foundation** | SAQ A (simplest) | No card data handling |
 | **Stripe** | Level 1 Service Provider | Card processing, storage, transmission |
 | **Khalti** | Level 1 Service Provider | Card processing (via partner banks) |
-| **eSewa** | Wallet provider | Wallet balance processing (no cards stored by DEESSA) |
+| **eSewa** | Wallet provider | Wallet balance processing (no cards stored by deessa) |
 
-**What DEESSA Stores** (payment-related):
+**What deessa Stores** (payment-related):
 
 - `payment_provider`: "stripe" / "khalti" / "esewa"
 - `payment_id`: Gateway transaction ID (e.g., "cs_live_abc123")
@@ -576,10 +576,10 @@ module.exports = {
 
 **NO CARD DATA** stored:
 
-- âŒ Card number
-- âŒ CVV
-- âŒ Expiry date
-- âŒ Cardholder name
+- ❌ Card number
+- ❌ CVV
+- ❌ Expiry date
+- ❌ Cardholder name
 
 ### 6.2 Webhook Security (HMAC)
 
@@ -609,7 +609,7 @@ export async function POST(req: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
   
-  // Signature valid â†’ process event
+  // Signature valid → process event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     // Update database
@@ -624,17 +624,17 @@ export async function POST(req: Request) {
 1. Stripe signs webhook payload with shared secret (`STRIPE_WEBHOOK_SECRET`)
 2. Stripe sends payload + signature in `stripe-signature` header
 3. Server recomputes signature using same secret + payload
-4. If computed signature matches header signature â†’ request is authentic
+4. If computed signature matches header signature → request is authentic
 
 **Protection Against**:
 
-- âœ… Spoofed webhooks (attacker can't sign without secret)
-- âœ… Replay attacks (partially - idempotency table prevents duplicate processing)
+-  Spoofed webhooks (attacker can't sign without secret)
+-  Replay attacks (partially - idempotency table prevents duplicate processing)
 
 **Khalti/eSewa**:
 
-- âŒ NO webhook signature verification (they don't offer webhooks)
-- âœ… Mitigation: Dual-path verification (polling + manual check in gateway dashboard)
+- ❌ NO webhook signature verification (they don't offer webhooks)
+-  Mitigation: Dual-path verification (polling + manual check in gateway dashboard)
 
 ### 6.3 Amount Verification
 
@@ -674,13 +674,13 @@ const session = await stripe.checkout.sessions.create({
 
 ```
 Client says: "Charge $1"
-       â†“
+       ↓
 Server ignores client amount
-       â†“
-Server calculates: attendanceMode="In-person" â†’ $20
-       â†“
+       ↓
+Server calculates: attendanceMode="In-person" → $20
+       ↓
 Server creates Stripe session for $20
-       â†“
+       ↓
 User pays $20 (cannot pay $1)
 ```
 
@@ -697,11 +697,11 @@ const expectedAmount = calculateAmount(...);
 
 // Compare (with rounding tolerance)
 if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
-  // Amount mismatch â†’ Set payment_status = 'review'
+  // Amount mismatch → Set payment_status = 'review'
   await updatePaymentStatus(registration.id, 'review');
   await notifyAdmin('Amount mismatch detected for ' + registration.id);
 } else {
-  // Amount correct â†’ Confirm
+  // Amount correct → Confirm
   await confirmRegistration(registration.id);
 }
 ```
@@ -714,24 +714,24 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 13 (Right to be Informed)**:
 
-- âœ… Privacy policy published at `/privacy`
-- âœ… Registration form includes consent checkbox: "I agree to privacy policy"
-- âœ… Users informed: data collected, purpose, retention, contact for questions
+-  Privacy policy published at `/privacy`
+-  Registration form includes consent checkbox: "I agree to privacy policy"
+-  Users informed: data collected, purpose, retention, contact for questions
 
 **Article 15 (Right of Access)**:
 
-- âœ… Users can access their data via dual-key (registrationId + email)
-- âœ… Admin can export user's data (CSV)
+-  Users can access their data via dual-key (registrationId + email)
+-  Admin can export user's data (CSV)
 
 **Article 16 (Right to Rectification)**:
 
-- âš ï¸ PARTIALLY: Users must contact admin to update (no self-service edit)
-- âœ… Admin can update registration details
+- ⚠️ PARTIALLY: Users must contact admin to update (no self-service edit)
+-  Admin can update registration details
 
 **Article 17 (Right to Erasure)**:
 
-- âœ… Users can request deletion via email
-- âœ… Admin can delete registration:
+-  Users can request deletion via email
+-  Admin can delete registration:
 
   ```sql
   DELETE FROM conference_registrations WHERE email = 'user@example.com';
@@ -739,21 +739,21 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Article 32 (Security of Processing)**:
 
-- âœ… Encryption at rest (AES-256)
-- âœ… Encryption in transit (TLS 1.3)
-- âœ… Access control (RLS, dual-key, admin auth)
-- âœ… Regular backups (daily)
+-  Encryption at rest (AES-256)
+-  Encryption in transit (TLS 1.3)
+-  Access control (RLS, dual-key, admin auth)
+-  Regular backups (daily)
 
 **Article 33 (Breach Notification)**:
 
-- âš ï¸ Process documented but not tested
-- âœ… Breach notification within 72 hours (manual process)
+- ⚠️ Process documented but not tested
+-  Breach notification within 72 hours (manual process)
 
 **Data Processing Agreement (DPA)**:
 
-- âœ… Vercel DPA signed (for hosting)
-- âœ… Supabase DPA signed (for database)
-- âœ… Stripe DPA signed (for payments)
+-  Vercel DPA signed (for hosting)
+-  Supabase DPA signed (for database)
+-  Stripe DPA signed (for payments)
 
 ### 7.2 Accessibility (WCAG 2.1 AA)
 
@@ -761,20 +761,20 @@ if (Math.abs(paidAmount - expectedAmount.amount) > 0.01) {
 
 **Keyboard Navigation**:
 
-- âœ… All forms navigable with Tab
-- âœ… Enter key submits forms
-- âš ï¸ Modal dialogs need Escape key support
+-  All forms navigable with Tab
+-  Enter key submits forms
+- ⚠️ Modal dialogs need Escape key support
 
 **Screen Readers**:
 
-- âš ï¸ Missing ARIA labels on some buttons
-- âš ï¸ Form errors not announced (need aria-live)
-- âœ… Semantic HTML used (`<button>`, `<form>`, `<label>`)
+- ⚠️ Missing ARIA labels on some buttons
+- ⚠️ Form errors not announced (need aria-live)
+-  Semantic HTML used (`<button>`, `<form>`, `<label>`)
 
 **Color Contrast**:
 
-- âœ… Text meets 4.5:1 ratio (checked with WebAIM tool)
-- âš ï¸ Some status badges may fail for colorblind users (rely on color only)
+-  Text meets 4.5:1 ratio (checked with WebAIM tool)
+- ⚠️ Some status badges may fail for colorblind users (rely on color only)
 
 **Recommended Improvements**:
 
@@ -826,8 +826,8 @@ ORDER BY created_at DESC;
 
 **Current Limitation**:
 
-- âš ï¸ No dedicated `audit_log` table (actions logged via updated_at timestamps)
-- âš ï¸ Admin actions not explicitly logged (IMPROVEMENT NEEDED)
+- ⚠️ No dedicated `audit_log` table (actions logged via updated_at timestamps)
+- ⚠️ Admin actions not explicitly logged (IMPROVEMENT NEEDED)
 
 ---
 
@@ -850,18 +850,18 @@ ORDER BY created_at DESC;
 
 ```bash
 # Test SQL injection
-curl -X POST https://deessa.org/api/conference/status \
+curl -X POST https://deessafoundation.com/api/conference/status \
   -d '{"email":"'; DROP TABLE conference_registrations; --"}'
 # Should return validation error (not execute SQL)
 
 # Test XSS
-curl -X POST https://deessa.org/api/conference/start-payment \
+curl -X POST https://deessafoundation.com/api/conference/start-payment \
   -d '{"fullName":"<script>alert(1)</script>"}'
 # Should be escaped in HTML (not execute script)
 
 # Test rate limiting
 for i in {1..20}; do
-  curl https://deessa.org/api/conference/status -d '{"registrationId":"...","email":"..."}'
+  curl https://deessafoundation.com/api/conference/status -d '{"registrationId":"...","email":"..."}'
 done
 # Should return 429 after 10 requests
 ```
@@ -960,4 +960,4 @@ done
 3. Implement additional security controls
 4. Train team on new procedures
 
-**Contact**: Incident response should be led by development partner in coordination with DEESSA IT team.
+**Contact**: Incident response should be led by development partner in coordination with deessa IT team.

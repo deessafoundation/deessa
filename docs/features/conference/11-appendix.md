@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Appendix & Reference"
+title: "deessa Foundation — Conference Module: Appendix & Reference"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Appendix & Reference
+# deessa Foundation — Conference Module: Appendix & Reference
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -86,7 +86,7 @@ Third-party service that processes online payments (Stripe, Khalti, eSewa). Hand
 Same as Payment Gateway. Service that facilitates money transfer from user to merchant.
 
 **PCI Compliance**  
-Payment Card Industry security standard. Ensures card data is handled securely. (DEESSA does NOT store card data locally.)
+Payment Card Industry security standard. Ensures card data is handled securely. (deessa does NOT store card data locally.)
 
 **Polling**  
 Repeatedly checking status by making API requests at intervals (e.g., every 5 seconds for 90 seconds).
@@ -241,16 +241,16 @@ TypeScript-first schema validation library. Used to validate user input before p
 
 **Features**:
 
-- âœ… Registration with 8 custom fields
-- âœ… Dual attendance mode (In-person USD / Virtual NPR)
-- âœ… Three payment gateways (Stripe, Khalti, eSewa)
-- âœ… Dual-path payment verification
-- âœ… Automated confirmation emails (Nodemailer + Gmail)
-- âœ… Admin dashboard (list, detail, CSV export)
-- âœ… Database-driven settings (no code deploy for config changes)
-- âœ… 24-hour expiry with hourly cron job
-- âœ… Responsive design (mobile-first)
-- âœ… GDPR-ready (data export, retention policies)
+-  Registration with 8 custom fields
+-  Dual attendance mode (In-person USD / Virtual NPR)
+-  Three payment gateways (Stripe, Khalti, eSewa)
+-  Dual-path payment verification
+-  Automated confirmation emails (Nodemailer + Gmail)
+-  Admin dashboard (list, detail, CSV export)
+-  Database-driven settings (no code deploy for config changes)
+-  24-hour expiry with hourly cron job
+-  Responsive design (mobile-first)
+-  GDPR-ready (data export, retention policies)
 
 **Technical Stack**:
 
@@ -274,7 +274,7 @@ TypeScript-first schema validation library. Used to validate user input before p
 **Contributors**:
 
 - Architecture & Implementation: Development Partner
-- Requirements & Testing: DEESSA Program Team
+- Requirements & Testing: deessa Program Team
 - Payment Gateway Setup: Finance Team
 
 ---
@@ -309,8 +309,8 @@ TypeScript-first schema validation library. Used to validate user input before p
 ### 4.1 Registration Status Flow
 
 ```
-pending â†’ pending_payment â†’ confirmed
-  â†“            â†“               â†“
+pending → pending_payment → confirmed
+  ↓            ↓               ↓
 cancelled   expired       (final state)
 ```
 
@@ -342,9 +342,9 @@ cancelled   expired       (final state)
 | **Payment Methods** | Cards, Wallets, Bank | Cards, Wallet | Wallet only |
 | **Fee**             | 2.9% + $0.30         | 3.5% + NPR 15 | 2%          |
 | **Settlement**      | 2-7 days             | 3-5 days      | 1-2 days    |
-| **Webhook**         | âœ… Yes               | âŒ No         | âŒ No       |
-| **Refund API**      | âœ… Automated         | âœ… Automated  | âŒ Manual   |
-| **Metadata**        | âœ… Yes               | âŒ No         | âŒ No       |
+| **Webhook**         |  Yes               | ❌ No         | ❌ No       |
+| **Refund API**      |  Automated         |  Automated  | ❌ Manual   |
+| **Metadata**        |  Yes               | ❌ No         | ❌ No       |
 
 ### 4.5 Admin Quick Actions
 
@@ -437,9 +437,9 @@ cancelled   expired       (final state)
 
 **Lead Developer**: Development Partner  
 **Role**: System architecture, implementation, documentation  
-**Contact**: [via DEESSA Foundation]
+**Contact**: [via deessa Foundation]
 
-**DEESSA Foundation Team**:
+**deessa Foundation Team**:
 
 - **Program Manager**: Requirements, user acceptance testing
 - **Finance Officer**: Payment gateway setup, reconciliation

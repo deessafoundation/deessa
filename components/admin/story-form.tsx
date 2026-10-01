@@ -172,7 +172,7 @@ export function StoryForm({ story }: StoryFormProps) {
     <form action={handleSubmit} className="space-y-8">
       {/* Print-only header */}
       <div className="print-header hidden">
-        <div className="logo">DEESSA Foundation - Admin Preview</div>
+        <div className="logo">deessa Foundation - Admin Preview</div>
         <div className="url">Internal Document</div>
       </div>
 

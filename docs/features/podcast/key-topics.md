@@ -1,7 +1,7 @@
 ---
 title: "Podcast Key Topics & Structured Show Notes - Implementation Complete"
 description: "- Added keytopics column to store timestamp-topic pairs in text format"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

@@ -1,7 +1,7 @@
 ---
 title: "Form Builder Refresh Fix - Complete Solution"
-description: "When admins applied a template, made changes, saved as draft, and refreshed the page â€” the form builder reverted to..."
-owner: "Deessa Team"
+description: "When admins applied a template, made changes, saved as draft, and refreshed the page — the form builder reverted to..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -10,7 +10,7 @@ last_updated: 2026-09-12
 # Form Builder Refresh Fix - Complete Solution
 
 ## Problem Summary
-When admins applied a template, made changes, saved as draft, and refreshed the page â€” the form builder reverted to the default schema (name, email, phone) instead of showing the saved work.
+When admins applied a template, made changes, saved as draft, and refreshed the page — the form builder reverted to the default schema (name, email, phone) instead of showing the saved work.
 
 ## Root Cause Analysis
 
@@ -25,9 +25,9 @@ The component rendering logic had a critical flaw:
 ```
 
 **What happened:**
-1. Page loads â†’ `formSchema` state is `null`
+1. Page loads → `formSchema` state is `null`
 2. EventFormBuilder mounts with `DEFAULT_SCHEMA` as `initialSchema`
-3. API fetch completes â†’ `formSchema` state updates with saved data
+3. API fetch completes → `formSchema` state updates with saved data
 4. BUT: EventFormBuilder already mounted and ignores the new `initialSchema` prop
 5. Result: User sees default schema instead of their saved work
 
@@ -92,21 +92,21 @@ This prevents losing unsaved changes when users switch tabs.
 
 ### API Route Fix
 **File:** `app/api/admin/events/[id]/form-schema/route.ts`
-- âœ… Changed to `createServiceRoleClient()` (bypasses RLS)
-- âœ… Added fallback to fetch latest draft if no active schema exists
+-  Changed to `createServiceRoleClient()` (bypasses RLS)
+-  Added fallback to fetch latest draft if no active schema exists
 
 ### Parent State Sync
 **File:** `components/events/admin/EventSettingsClient.tsx`
-- âœ… Added `onSchemaSaved` callback to update parent state immediately
+-  Added `onSchemaSaved` callback to update parent state immediately
 
 ## Testing Checklist
 
-- [x] Apply a template â†’ Save draft â†’ Refresh page â†’ Schema persists âœ…
-- [x] Edit fields â†’ Save draft â†’ Refresh page â†’ Edits persist âœ…
-- [x] Switch tabs â†’ Form builder preserves local state âœ…
-- [x] Save draft â†’ Switch tabs â†’ Come back â†’ Edits still there âœ…
-- [x] Can edit field labels, options, validation rules âœ…
-- [x] Publish form â†’ Refresh â†’ Shows published version âœ…
+- [x] Apply a template → Save draft → Refresh page → Schema persists 
+- [x] Edit fields → Save draft → Refresh page → Edits persist 
+- [x] Switch tabs → Form builder preserves local state 
+- [x] Save draft → Switch tabs → Come back → Edits still there 
+- [x] Can edit field labels, options, validation rules 
+- [x] Publish form → Refresh → Shows published version 
 
 ## Key Takeaways
 
@@ -129,7 +129,7 @@ This prevents losing unsaved changes when users switch tabs.
 
 ## Result
 
-âœ… **Form builder now correctly loads saved schemas on page refresh**  
-âœ… **All field editing functionality works as expected**  
-âœ… **Tab switching preserves unsaved changes**  
-âœ… **No more reverting to default schema**
+ **Form builder now correctly loads saved schemas on page refresh**  
+ **All field editing functionality works as expected**  
+ **Tab switching preserves unsaved changes**  
+ **No more reverting to default schema**

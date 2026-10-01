@@ -32,7 +32,7 @@ export async function sendUnassignmentEmail(opts: {
   })
 
   await transporter.sendMail({
-    from: `"DEESSA Foundation Admin" <${orgEmail}>`,
+    from: `"deessa Foundation Admin" <${orgEmail}>`,
     to: opts.assigneeEmail,
     subject: `🔓 Unassigned from Support Report: ${opts.reportSubject}`,
     html,

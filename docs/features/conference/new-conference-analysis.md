@@ -1,7 +1,7 @@
 ---
 title: "Conference System - Complete Architecture Analysis"
 description: "Date: July 23, 2026"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

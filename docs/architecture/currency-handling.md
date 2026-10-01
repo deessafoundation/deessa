@@ -1,7 +1,7 @@
 ---
 title: "Currency Handling Documentation"
-description: "This document explains how multi-currency donations are handled in the Deessa Foundation platform, particularly for S..."
-owner: "Deessa Team"
+description: "This document explains how multi-currency donations are handled in the deessa Foundation platform, particularly for S..."
+owner: "deessa Team"
 status: active
 category: architecture
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Overview
 
-This document explains how multi-currency donations are handled in the Deessa Foundation platform, particularly for Stripe (USD) and local payment gateways (NPR).
+This document explains how multi-currency donations are handled in the deessa Foundation platform, particularly for Stripe (USD) and local payment gateways (NPR).
 
 ## Problem Statement
 
@@ -22,7 +22,7 @@ Previously, when donations were made through Stripe in USD (e.g., $250), they we
 We've implemented a comprehensive multi-currency system that:
 
 1. **Properly stores currency information** in the database
-2. **Displays correct currency symbols** ($ for USD, â‚¨ for NPR, â‚¹ for INR)
+2. **Displays correct currency symbols** ($ for USD, ₨ for NPR, ₹ for INR)
 3. **Supports multiple currencies** in the admin dashboard
 4. **Provides utility functions** for consistent currency formatting across the app
 
@@ -61,10 +61,10 @@ A comprehensive set of utility functions for currency handling:
 **Supported Currencies:**
 
 - USD (US Dollar) - $
-- NPR (Nepali Rupee) - â‚¨
-- INR (Indian Rupee) - â‚¹
-- EUR (Euro) - â‚¬
-- GBP (British Pound) - Â£
+- NPR (Nepali Rupee) - ₨
+- INR (Indian Rupee) - ₹
+- EUR (Euro) - €
+- GBP (British Pound) - £
 
 ### 3. Admin Dashboard Updates
 
@@ -78,14 +78,14 @@ A comprehensive set of utility functions for currency handling:
 **Before:**
 
 ```tsx
-â‚¹{donation.amount.toLocaleString()}
+₹{donation.amount.toLocaleString()}
 ```
 
 **After:**
 
 ```tsx
 {formatCurrency(donation.amount, donation.currency, { showCode: true })}
-// Displays: $250.00 USD or â‚¨250.00 NPR
+// Displays: $250.00 USD or ₨250.00 NPR
 ```
 
 ### 4. Success Page Updates
@@ -101,9 +101,9 @@ A comprehensive set of utility functions for currency handling:
 ### Donation Flow
 
 1. **User selects payment provider:**
-   - Stripe â†’ Currency: USD
-   - Khalti â†’ Currency: NPR
-   - eSewa â†’ Currency: NPR
+   - Stripe → Currency: USD
+   - Khalti → Currency: NPR
+   - eSewa → Currency: NPR
 
 2. **Donation record is created:**
 
@@ -125,8 +125,8 @@ A comprehensive set of utility functions for currency handling:
    formatCurrency(donation.amount, donation.currency, { showCode: true })
    // Results:
    // Stripe: $250.00 USD
-   // Khalti: â‚¨250.00 NPR
-   // eSewa: â‚¨250.00 NPR
+   // Khalti: ₨250.00 NPR
+   // eSewa: ₨250.00 NPR
    ```
 
 ### Multi-Currency Totals
@@ -136,7 +136,7 @@ The admin dashboard now shows separate totals for each currency:
 ```bash
 Total Donations
 $5,250.00 USD
-â‚¨125,000.00 NPR
+₨125,000.00 NPR
 ```
 
 This prevents mixing currencies and provides clear visibility into donations by currency.
@@ -150,11 +150,11 @@ import { formatCurrency } from "@/lib/utils/currency"
 
 // With currency code
 formatCurrency(250, "USD") // "$250.00"
-formatCurrency(250, "NPR") // "â‚¨250.00"
+formatCurrency(250, "NPR") // "₨250.00"
 
 // With options
 formatCurrency(250, "USD", { showCode: true }) // "$250.00 USD"
-formatCurrency(250.50, "NPR", { decimals: 0 }) // "â‚¨251"
+formatCurrency(250.50, "NPR", { decimals: 0 }) // "₨251"
 ```
 
 ### Get currency symbol
@@ -163,9 +163,9 @@ formatCurrency(250.50, "NPR", { decimals: 0 }) // "â‚¨251"
 import { getCurrencySymbol } from "@/lib/utils/currency"
 
 getCurrencySymbol("USD") // "$"
-getCurrencySymbol("NPR") // "â‚¨"
-getCurrencySymbol("INR") // "â‚¹"
-getCurrencySymbol(null) // "â‚¨" (default)
+getCurrencySymbol("NPR") // "₨"
+getCurrencySymbol("INR") // "₹"
+getCurrencySymbol(null) // "₨" (default)
 ```
 
 ### Display multi-currency totals
@@ -179,14 +179,14 @@ const totals = {
 }
 
 formatMultiCurrencyTotal(totals)
-// "$5,250.00 USD + â‚¨125,000.00 NPR"
+// "$5,250.00 USD + ₨125,000.00 NPR"
 
 // With conversion display
 formatMultiCurrencyTotal(totals, { 
   showConversion: true, 
   baseCurrency: "USD" 
 })
-// "$5,250.00 USD + â‚¨125,000.00 NPR (â‰ˆ$943.40)"
+// "$5,250.00 USD + ₨125,000.00 NPR (≈$943.40)"
 ```
 
 ## Testing
@@ -205,7 +205,7 @@ formatMultiCurrencyTotal(totals, {
    - Select Khalti payment method
    - Enter amount (e.g., 2500)
    - Complete payment
-   - Check admin dashboard shows: `â‚¨2,500.00 NPR`
+   - Check admin dashboard shows: `₨2,500.00 NPR`
 
 3. **Check multi-currency totals:**
    - Admin dashboard should show separate totals for USD and NPR

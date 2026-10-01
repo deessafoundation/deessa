@@ -1,7 +1,7 @@
 ---
 title: "Google Email Configuration Guide for Receipt System"
 description: "The receipt system is configured to send emails using Google Email Gmail or Google Workspace. This guide walks you th..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin
@@ -178,14 +178,14 @@ To customize the email template:
 
 ## Security Best Practices
 
-âœ… **Do:**
+ **Do:**
 - Use App Passwords, not regular passwords
 - Keep `.env.local` out of version control
 - Rotate App Passwords periodically
 - Use a dedicated email account if possible
 - Monitor email sending logs
 
-âŒ **Don't:**
+❌ **Don't:**
 - Commit `.env.local` to git
 - Share App Passwords
 - Use regular Gmail password
@@ -246,12 +246,12 @@ If you encounter issues:
 
 ## Next Steps
 
-1. âœ… Complete setup above
-2. âœ… Test email configuration
-3. âœ… Make test donation
-4. âœ… Verify receipt email received
-5. âœ… Monitor email delivery
-6. âœ… Gather donor feedback
+1.  Complete setup above
+2.  Test email configuration
+3.  Make test donation
+4.  Verify receipt email received
+5.  Monitor email delivery
+6.  Gather donor feedback
 
 ## Additional Resources
 
@@ -262,6 +262,6 @@ If you encounter issues:
 
 ---
 
-**Email configuration complete!** ðŸŽ‰
+**Email configuration complete!** 🎉
 
 Your receipt system is now ready to send emails via Google Email.

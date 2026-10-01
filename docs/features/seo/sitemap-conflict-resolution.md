@@ -1,7 +1,7 @@
 ---
 title: "Sitemap Conflict Resolution"
 description: "Documentation for sitemap conflict resolution"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
@@ -42,13 +42,13 @@ Both routes were trying to handle the `/sitemap` path, causing a build conflict.
 
 ## Current State
 
-âœ… **XML Sitemap for Search Engines:**
+ **XML Sitemap for Search Engines:**
 - Route: `/sitemap.xml`
 - File: `app/sitemap.ts`
 - Purpose: Dynamic XML sitemap for Google, Bing, etc.
 - Status: Active and functional
 
-âŒ **Human-Readable Sitemap Page:**
+❌ **Human-Readable Sitemap Page:**
 - Route: `/sitemap` (removed)
 - File: `app/(public)/sitemap/page.tsx` (deleted)
 - Purpose: Was a placeholder "coming soon" page
@@ -67,13 +67,13 @@ If you decide you want a user-facing sitemap page in the future, create it at a 
 
 **Option 1: Different path**
 ```
-app/(public)/site-map/page.tsx  â†’ /site-map
+app/(public)/site-map/page.tsx  → /site-map
 ```
 
 **Option 2: Alternative names**
 ```
-app/(public)/pages/page.tsx     â†’ /pages
-app/(public)/site-index/page.tsx â†’ /site-index
+app/(public)/pages/page.tsx     → /pages
+app/(public)/site-index/page.tsx → /site-index
 ```
 
 **Do NOT use:**
@@ -88,17 +88,17 @@ After this fix, verify:
 npm run dev
 
 # Test these URLs:
-âœ… http://localhost:3000/sitemap.xml - Should return XML sitemap
-âœ… http://localhost:3000/robots.txt - Should return robots rules
-âŒ http://localhost:3000/sitemap - Should return 404 (page removed)
+ http://localhost:3000/sitemap.xml - Should return XML sitemap
+ http://localhost:3000/robots.txt - Should return robots rules
+❌ http://localhost:3000/sitemap - Should return 404 (page removed)
 ```
 
 ## Summary
 
-âœ… Conflict resolved  
-âœ… XML sitemap working at `/sitemap.xml`  
-âœ… Robots.txt updated  
-âœ… Documentation updated  
-âœ… No routing conflicts  
+ Conflict resolved  
+ XML sitemap working at `/sitemap.xml`  
+ Robots.txt updated  
+ Documentation updated  
+ No routing conflicts  
 
 The Next.js app should now build and run without the sitemap conflict error.

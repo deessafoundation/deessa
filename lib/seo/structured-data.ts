@@ -122,7 +122,7 @@ type Place = {
 }
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
-const ORGANIZATION_NAME = 'Deessa Foundation'
+const ORGANIZATION_NAME = 'deessa Foundation'
 
 /**
  * Organization structured data for the main website
@@ -133,7 +133,7 @@ export function getOrganizationStructuredData(): WithContext<Organization> {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: ORGANIZATION_NAME,
-    alternateName: 'DEESSA Foundation',
+    alternateName: 'deessa Foundation',
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.png`,
     description: 'A non-profit organization dedicated to sustainable development, quality education, and social upliftment for the most vulnerable in Nepal, with a special focus on children with disabilities and autism.',

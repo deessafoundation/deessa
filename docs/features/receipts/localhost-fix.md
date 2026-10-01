@@ -1,7 +1,7 @@
 ---
 title: "URGENT FIX: Receipt URLs Using Localhost Instead of Production Domain"
 description: "Error: Failed to load resource: net::ERRBLOCKEDBYCLIENT"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -18,13 +18,13 @@ last_updated: 2026-09-12
 
 ---
 
-## ðŸš€ Quick Fix (3 minutes)
+## 🚀 Quick Fix (3 minutes)
 
 ### Step 1: Add Environment Variable to Vercel
 
 1. Go to https://vercel.com/dashboard
 2. Select your project
-3. Click **Settings** â†’ **Environment Variables**
+3. Click **Settings** → **Environment Variables**
 4. Click **Add New**
 5. Enter:
    - **Key:** `NEXT_PUBLIC_APP_URL`
@@ -58,13 +58,13 @@ git push
 ### Before (Broken):
 ```
 Receipt URL: http://localhost:3000/api/receipts/download?token=...
-Browser: âŒ ERR_BLOCKED_BY_CLIENT (can't access localhost from production)
+Browser: ❌ ERR_BLOCKED_BY_CLIENT (can't access localhost from production)
 ```
 
 ### After (Fixed):
 ```
 Receipt URL: https://your-domain.com/api/receipts/download?token=...
-Browser: âœ… Downloads receipt successfully
+Browser:  Downloads receipt successfully
 ```
 
 ---
@@ -110,12 +110,12 @@ After deploying:
 ## If Still Not Working
 
 1. **Check the environment variable is saved:**
-   - Go to Vercel â†’ Settings â†’ Environment Variables
+   - Go to Vercel → Settings → Environment Variables
    - Verify `NEXT_PUBLIC_APP_URL` shows your domain
 
 2. **Verify deployment used the new variable:**
-   - Go to Vercel â†’ Deployments â†’ Latest deployment
-   - Click on it â†’ Environment Variables tab
+   - Go to Vercel → Deployments → Latest deployment
+   - Click on it → Environment Variables tab
    - Should show `NEXT_PUBLIC_APP_URL` with your domain
 
 3. **Clear browser cache:**
@@ -158,4 +158,4 @@ See [Receipt Quick Fix Guide](./docs/RECEIPT_QUICK_FIX.md) for details on each v
 1. Add environment variable
 2. Redeploy
 3. Test receipt download
-4. âœ… Done!
+4.  Done!

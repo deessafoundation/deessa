@@ -1,7 +1,7 @@
 ---
 title: "Podcast System Implementation - Setup Guide"
 description: "Complete podcast management system with dedicated pages, database integration, search functionality, and Ocean Blue b..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -9,11 +9,11 @@ last_updated: 2026-09-12
 ---
 # Podcast System Implementation - Setup Guide
 
-## ðŸŽ¯ Overview
+## 🎯 Overview
 
 Complete podcast management system with dedicated pages, database integration, search functionality, and Ocean Blue brand styling.
 
-## âœ… What Has Been Implemented
+##  What Has Been Implemented
 
 ### 1. Database Schema
 - **Location**: `database/migrations/create_podcasts_table.sql`
@@ -89,7 +89,7 @@ Complete podcast management system with dedicated pages, database integration, s
 ### 7. Integration
 - Stories page (`app/(public)/stories/page.tsx`) updated to use new podcast system
 
-## ðŸš€ Setup Instructions
+## 🚀 Setup Instructions
 
 ### Step 1: Run Database Migrations
 
@@ -123,7 +123,7 @@ Visit:
 - `/podcasts/[slug]` - Individual episode pages (after seeding data)
 - `/stories` - Updated stories page with new podcast section
 
-## ðŸŽ¨ Design Features
+## 🎨 Design Features
 
 ### Ocean Blue Brand Colors
 - Primary: `#3FABDE` (Ocean Blue)
@@ -139,50 +139,50 @@ Visit:
 6. **Animations**: Scroll-triggered, staggered delays
 7. **Typography**: Comic Neue (body) + Marissa Font (headings)
 
-## ðŸ“‹ Features by Page
+## 📋 Features by Page
 
 ### Podcasts Landing Page (`/podcasts`)
-âœ… Hero section with featured episode video
-âœ… Format filter (All/Video/Audio tabs)
-âœ… Topic checkboxes for filtering
-âœ… Episode count display
-âœ… 3-column responsive grid
-âœ… "Load More" pagination
-âœ… "Support Our Mission" CTA card
-âœ… Newsletter subscription form
+ Hero section with featured episode video
+ Format filter (All/Video/Audio tabs)
+ Topic checkboxes for filtering
+ Episode count display
+ 3-column responsive grid
+ "Load More" pagination
+ "Support Our Mission" CTA card
+ Newsletter subscription form
 
 ### Podcast Detail Page (`/podcasts/[slug]`)
-âœ… Back to podcasts navigation
-âœ… Episode metadata (number, date, duration, views, format)
-âœ… Topics display
-âœ… Full-width YouTube video player
-âœ… Sticky mini player (appears on scroll)
-âœ… Show notes with HTML support
-âœ… Searchable transcript with timestamps
-âœ… Guest profile card with social links
-âœ… Related episodes section
-âœ… Share functionality (copy link, Twitter)
-âœ… View count incrementing
+ Back to podcasts navigation
+ Episode metadata (number, date, duration, views, format)
+ Topics display
+ Full-width YouTube video player
+ Sticky mini player (appears on scroll)
+ Show notes with HTML support
+ Searchable transcript with timestamps
+ Guest profile card with social links
+ Related episodes section
+ Share functionality (copy link, Twitter)
+ View count incrementing
 
 ### Stories Page Integration (`/stories`)
-âœ… Podcast section now pulls from database
-âœ… Shows latest 6 episodes
-âœ… Maintains existing animations and styling
-âœ… Links to full podcast pages
+ Podcast section now pulls from database
+ Shows latest 6 episodes
+ Maintains existing animations and styling
+ Links to full podcast pages
 
-## ðŸ”„ Data Flow
+## 🔄 Data Flow
 
 ```
 Database (Supabase)
-    â†“
+    ↓
 lib/data/podcasts.ts (Data access layer)
-    â†“
+    ↓
 Server Components (Pages)
-    â†“
+    ↓
 Client Components (Interactive features)
 ```
 
-## ðŸ“ Content Management
+## 📝 Content Management
 
 ### Adding New Podcasts
 
@@ -212,7 +212,7 @@ INSERT INTO public.podcasts (
 - Manage related episodes
 - Set featured episode
 
-## ðŸŽ¯ Next Steps (Admin Dashboard)
+## 🎯 Next Steps (Admin Dashboard)
 
 After you're happy with the design and functionality, we'll build:
 
@@ -230,7 +230,7 @@ After you're happy with the design and functionality, we'll build:
    - Search queries
    - User engagement metrics
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 ### Podcasts not showing?
 - Check if database migrations ran successfully
@@ -247,34 +247,34 @@ After you're happy with the design and functionality, we'll build:
 - Verify all imports are correct
 - Check that types match database schema
 
-## ðŸ“š File Structure
+## 📚 File Structure
 
 ```
 app/(public)/podcasts/
-â”œâ”€â”€ page.tsx                    # Landing page
-â””â”€â”€ [slug]/page.tsx             # Detail page
+├── page.tsx                    # Landing page
+└── [slug]/page.tsx             # Detail page
 
 components/
-â”œâ”€â”€ podcast-card.tsx            # Episode card (updated)
-â”œâ”€â”€ podcast-section.tsx         # Homepage section (updated)
-â”œâ”€â”€ podcast-video-modal.tsx     # Video modal (updated)
-â”œâ”€â”€ podcast-hero-section.tsx    # New: Hero component
-â”œâ”€â”€ podcast-filter-sidebar.tsx  # New: Filter UI
-â”œâ”€â”€ podcast-grid.tsx            # New: Episode grid
-â”œâ”€â”€ podcast-sticky-player.tsx   # New: Mini player
-â”œâ”€â”€ podcast-transcript.tsx      # New: Transcript viewer
-â””â”€â”€ podcast-guest-card.tsx      # New: Guest profile
+├── podcast-card.tsx            # Episode card (updated)
+├── podcast-section.tsx         # Homepage section (updated)
+├── podcast-video-modal.tsx     # Video modal (updated)
+├── podcast-hero-section.tsx    # New: Hero component
+├── podcast-filter-sidebar.tsx  # New: Filter UI
+├── podcast-grid.tsx            # New: Episode grid
+├── podcast-sticky-player.tsx   # New: Mini player
+├── podcast-transcript.tsx      # New: Transcript viewer
+└── podcast-guest-card.tsx      # New: Guest profile
 
 lib/
-â”œâ”€â”€ data/podcasts.ts            # Data access functions
-â””â”€â”€ types/podcast.ts            # TypeScript interfaces
+├── data/podcasts.ts            # Data access functions
+└── types/podcast.ts            # TypeScript interfaces
 
 database/migrations/
-â”œâ”€â”€ create_podcasts_table.sql   # Schema creation
-â””â”€â”€ seed_podcasts.sql           # Initial data
+├── create_podcasts_table.sql   # Schema creation
+└── seed_podcasts.sql           # Initial data
 ```
 
-## âœ¨ Key Improvements Over HTML Templates
+## ✨ Key Improvements Over HTML Templates
 
 1. **Database Integration**: Dynamic content vs hardcoded
 2. **Next.js Optimization**: Image optimization, static generation
@@ -287,7 +287,7 @@ database/migrations/
 9. **Search**: Full-text search across all fields
 10. **Analytics**: View tracking built-in
 
-## ðŸŽ‰ Success Checklist
+## 🎉 Success Checklist
 
 - [ ] Database tables created
 - [ ] Seed data inserted

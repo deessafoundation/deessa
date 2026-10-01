@@ -1,7 +1,7 @@
 ---
 title: "Fix Sitemap Domain in Vercel Production"
 description: "Google Search Console shows this error when submitting the sitemap:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer
@@ -47,9 +47,9 @@ https://deessafoundation.com
 ### Step 3: Set Environment Scope
 
 Make sure to set this for:
-- âœ… **Production** (most important!)
-- âš ï¸ **Preview** (optional - can use Vercel URL for preview deployments)
-- âš ï¸ **Development** (optional - keep as localhost or Vercel URL)
+-  **Production** (most important!)
+- ⚠️ **Preview** (optional - can use Vercel URL for preview deployments)
+- ⚠️ **Development** (optional - keep as localhost or Vercel URL)
 
 **Recommended Setup:**
 
@@ -99,7 +99,7 @@ Once redeployed:
 6. Click **Submit**
 7. Wait a few minutes for Google to fetch and validate
 
-âœ… The error should now be resolved!
+ The error should now be resolved!
 
 ---
 
@@ -161,14 +161,14 @@ After making all changes and redeploying:
 
 ## Common Mistakes to Avoid
 
-âŒ **Don't** update the environment variable in `.env.local` only - this is local development
-âœ… **Do** update it in Vercel Dashboard â†’ Settings â†’ Environment Variables
+❌ **Don't** update the environment variable in `.env.local` only - this is local development
+ **Do** update it in Vercel Dashboard → Settings → Environment Variables
 
-âŒ **Don't** forget to redeploy after changing environment variables
-âœ… **Do** trigger a new deployment (Vercel doesn't auto-deploy on env changes)
+❌ **Don't** forget to redeploy after changing environment variables
+ **Do** trigger a new deployment (Vercel doesn't auto-deploy on env changes)
 
-âŒ **Don't** use the Vercel URL (`deessa-foundation.vercel.app`) for production
-âœ… **Do** use your custom domain (`deessafoundation.com`)
+❌ **Don't** use the Vercel URL (`deessa-foundation.vercel.app`) for production
+ **Do** use your custom domain (`deessafoundation.com`)
 
 ---
 
@@ -178,6 +178,6 @@ After making all changes and redeploying:
 
 **Variable:** `NEXT_PUBLIC_SITE_URL`  
 **Production Value:** `https://deessafoundation.com`  
-**Action:** Click **Save** â†’ Click **Redeploy**
+**Action:** Click **Save** → Click **Redeploy**
 
-That's it! ðŸŽ‰
+That's it! 🎉

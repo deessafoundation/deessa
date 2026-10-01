@@ -1,7 +1,7 @@
 ---
 title: "Story Print Feature"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
-> **Status:** âœ… Implemented
+> **Status:**  Implemented
 
 ---
 
@@ -23,7 +23,7 @@ The print feature allows users to print stories in a clean, professional format 
 
 ## Features
 
-### âœ… Implemented
+###  Implemented
 
 1. **Print Button**
    - Located in the sidebar "Share" section
@@ -37,7 +37,7 @@ The print feature allows users to print stories in a clean, professional format 
    - Proper margins (1.5cm)
 
 3. **Print Header**
-   - DEESSA Foundation logo
+   - deessa Foundation logo
    - Website URL
    - Only visible when printing
 
@@ -71,12 +71,12 @@ The print feature allows users to print stories in a clean, professional format 
 
 1. **Navigate to a story:**
    - Go to any published story page
-   - Example: `https://deessafoundation.org/stories/story-slug`
+   - Example: `https://deessafoundation.com/stories/story-slug`
 
 2. **Click the Print button:**
    - Located in the right sidebar
    - Under the "Share" section
-   - Icon: ðŸ–¨ï¸ Printer
+   - Icon: 🖨️ Printer
 
 3. **Print dialog opens:**
    - Browser's native print dialog
@@ -87,7 +87,7 @@ The print feature allows users to print stories in a clean, professional format 
    - Click "Print" to send to printer
    - Or "Save as PDF" to create a PDF file
 
-### How to Print a Story (Admin Page) âœ¨ NEW
+### How to Print a Story (Admin Page) ✨ NEW
 
 1. **Navigate to story editor:**
    - Go to `/admin/stories/[id]`
@@ -96,7 +96,7 @@ The print feature allows users to print stories in a clean, professional format 
 2. **Click "Print Draft" button:**
    - Located in bottom action bar
    - Next to Preview and Save buttons
-   - Icon: ðŸ–¨ï¸ Printer
+   - Icon: 🖨️ Printer
 
 3. **Print dialog opens:**
    - Shows story with metadata
@@ -141,7 +141,7 @@ The print feature allows users to print stories in a clean, professional format 
    - Added print-only metadata
    - Added print-only header
 
-4. **Updated Admin Story Form** âœ¨ NEW
+4. **Updated Admin Story Form** ✨ NEW
    - Location: `components/admin/story-form.tsx`
    - Added "Print Draft" button
    - Added DRAFT watermark for unpublished stories
@@ -183,7 +183,7 @@ The print styles handle:
 
 ## Browser Compatibility
 
-### âœ… Fully Supported
+###  Fully Supported
 
 - **Chrome/Edge:** Excellent print preview and PDF export
 - **Firefox:** Good print support
@@ -193,10 +193,10 @@ The print styles handle:
 
 | Browser | Print Preview | Save as PDF | Page Setup |
 |---------|--------------|-------------|------------|
-| Chrome  | âœ… Excellent  | âœ… Yes      | âœ… Yes     |
-| Firefox | âœ… Good       | âœ… Yes      | âœ… Yes     |
-| Safari  | âœ… Good       | âœ… Yes      | âœ… Yes     |
-| Edge    | âœ… Excellent  | âœ… Yes      | âœ… Yes     |
+| Chrome  |  Excellent  |  Yes      |  Yes     |
+| Firefox |  Good       |  Yes      |  Yes     |
+| Safari  |  Good       |  Yes      |  Yes     |
+| Edge    |  Excellent  |  Yes      |  Yes     |
 
 ---
 
@@ -204,8 +204,8 @@ The print styles handle:
 
 ### What's Included
 
-âœ… **Printed:**
-- DEESSA Foundation header
+ **Printed:**
+- deessa Foundation header
 - Story title
 - Published date, category, read time
 - Story excerpt
@@ -215,7 +215,7 @@ The print styles handle:
 - Blockquotes
 - Layout blocks (simplified)
 
-âŒ **Not Printed:**
+❌ **Not Printed:**
 - Navigation bars
 - Sidebars
 - Buttons
@@ -228,23 +228,23 @@ The print styles handle:
 ### Page Layout
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  DEESSA Foundation                  â”‚
-â”‚  www.deessafoundation.org           â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                     â”‚
-â”‚  Story Title                        â”‚
-â”‚  Published: Date | Category | Time â”‚
-â”‚  Excerpt text...                    â”‚
-â”‚                                     â”‚
-â”‚  Story content starts here...       â”‚
-â”‚  Paragraphs, headings, images...    â”‚
-â”‚                                     â”‚
-â”‚  [Image with caption]               â”‚
-â”‚                                     â”‚
-â”‚  More content...                    â”‚
-â”‚                                     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│  deessa Foundation                  │
+│  www.deessafoundation.org           │
+├─────────────────────────────────────┤
+│                                     │
+│  Story Title                        │
+│  Published: Date | Category | Time │
+│  Excerpt text...                    │
+│                                     │
+│  Story content starts here...       │
+│  Paragraphs, headings, images...    │
+│                                     │
+│  [Image with caption]               │
+│                                     │
+│  More content...                    │
+│                                     │
+└─────────────────────────────────────┘
 ```
 
 ---
@@ -340,4 +340,4 @@ The print styles handle:
 
 **Last Updated:** April 4, 2026  
 **Version:** 1.0.0  
-**Status:** âœ… Ready for use
+**Status:**  Ready for use

@@ -1,7 +1,7 @@
 ---
 title: "Incremental V2 Rollout Guide - Payment Architecture V2"
 description: "This guide provides step-by-step instructions for incrementally enabling Payment Architecture V2 in production. The i..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer
@@ -15,12 +15,12 @@ This guide provides step-by-step instructions for incrementally enabling Payment
 
 ## Prerequisites
 
-- âœ… Production deployment completed (Task 28.4)
-- âœ… V1 flow verified working in production
-- âœ… No critical errors in first 2 hours
-- âœ… Team approval for V2 enablement
-- âœ… Monitoring dashboards ready
-- âœ… Rollback plan prepared
+-  Production deployment completed (Task 28.4)
+-  V1 flow verified working in production
+-  No critical errors in first 2 hours
+-  Team approval for V2 enablement
+-  Monitoring dashboards ready
+-  Rollback plan prepared
 
 ## Rollout Strategy
 
@@ -406,7 +406,7 @@ After successful 100% rollout:
 ### After Rollout
 - [ ] Final status report
 - [ ] Lessons learned document
-- [ ] Celebrate success! ðŸŽ‰
+- [ ] Celebrate success! 🎉
 
 ## Rollout Log Template
 

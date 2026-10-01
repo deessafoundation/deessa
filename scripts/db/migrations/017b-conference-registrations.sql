@@ -1,5 +1,5 @@
 -- ==========================================================
--- DEESSA Foundation — Conference Registrations Table
+-- deessa Foundation — Conference Registrations Table
 -- Run this in the Supabase SQL Editor for your project.
 -- This is SEPARATE from the existing event_registrations table.
 --

@@ -1,7 +1,7 @@
 ---
 title: "Payment Reconciliation System"
 description: "The reconciliation system automatically checks and resolves stuck/pending donations by verifying their status with pa..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -24,9 +24,9 @@ The reconciliation system handles:
 1. **Query**: Finds donations in PENDING status older than 1 hour
 2. **Lookup**: Checks transaction status with payment provider API
 3. **Reconcile**: Updates donation status based on provider response
-   - `paid` â†’ Confirms donation (calls PaymentService)
-   - `failed/expired/canceled` â†’ Marks donation as failed
-   - `pending` â†’ No action (still processing)
+   - `paid` → Confirms donation (calls PaymentService)
+   - `failed/expired/canceled` → Marks donation as failed
+   - `pending` → No action (still processing)
 4. **Alert**: Sends admin notification for each reconciliation action
 
 ## Usage
@@ -174,12 +174,12 @@ Detailed Results:
 --------------------------------------------------------------------------------
 [CONFIRMED] abc123
   Provider: stripe
-  Status: pending â†’ confirmed
+  Status: pending → confirmed
   Transaction: cs_test_123
 
 [FAILED] def456
   Provider: khalti
-  Status: pending â†’ failed
+  Status: pending → failed
   Transaction: pidx_456
 
 Reconciliation completed successfully
@@ -309,41 +309,41 @@ Administrators receive alerts for:
 ### Flow Diagram
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    Reconciliation Cron                      â”‚
-â”‚                  (Runs every hour)                          â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                         â”‚
-                         â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              Query Pending Donations                        â”‚
-â”‚         (payment_status = 'pending' AND                     â”‚
-â”‚          created_at < NOW() - 1 hour)                       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                         â”‚
-                         â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              For Each Donation:                             â”‚
-â”‚                                                             â”‚
-â”‚  1. Get provider reference (session_id, pidx, uuid)        â”‚
-â”‚  2. Call provider adapter.lookupTransaction()              â”‚
-â”‚  3. Determine action based on status:                      â”‚
-â”‚     - paid â†’ Confirm donation                              â”‚
-â”‚     - failed/expired â†’ Fail donation                       â”‚
-â”‚     - pending â†’ No action                                  â”‚
-â”‚  4. Call PaymentService.confirmDonation()                  â”‚
-â”‚  5. Send admin alert                                       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                         â”‚
-                         â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                  Return Summary                             â”‚
-â”‚  - Total checked                                            â”‚
-â”‚  - Confirmed count                                          â”‚
-â”‚  - Failed count                                             â”‚
-â”‚  - No change count                                          â”‚
-â”‚  - Errors count                                             â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                    Reconciliation Cron                      │
+│                  (Runs every hour)                          │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Query Pending Donations                        │
+│         (payment_status = 'pending' AND                     │
+│          created_at < NOW() - 1 hour)                       │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              For Each Donation:                             │
+│                                                             │
+│  1. Get provider reference (session_id, pidx, uuid)        │
+│  2. Call provider adapter.lookupTransaction()              │
+│  3. Determine action based on status:                      │
+│     - paid → Confirm donation                              │
+│     - failed/expired → Fail donation                       │
+│     - pending → No action                                  │
+│  4. Call PaymentService.confirmDonation()                  │
+│  5. Send admin alert                                       │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  Return Summary                             │
+│  - Total checked                                            │
+│  - Confirmed count                                          │
+│  - Failed count                                             │
+│  - No change count                                          │
+│  - Errors count                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Provider Lookup Methods

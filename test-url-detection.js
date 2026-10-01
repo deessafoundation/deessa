@@ -50,18 +50,18 @@ const scenarios = [
   {
     name: '🎯 Custom Domain (NEXT_PUBLIC_APP_URL override)',
     env: { 
-      NEXT_PUBLIC_APP_URL: 'https://deessafoundation.org',
+      NEXT_PUBLIC_APP_URL: 'https://deessafoundation.com',
       VERCEL_URL: 'my-app.vercel.app'
     },
-    expected: 'https://deessafoundation.org'
+    expected: 'https://deessafoundation.com'
   },
   {
     name: '🎯 Custom Domain (NEXT_PUBLIC_SITE_URL override)',
     env: { 
-      NEXT_PUBLIC_SITE_URL: 'https://deessafoundation.org',
+      NEXT_PUBLIC_SITE_URL: 'https://deessafoundation.com',
       VERCEL_URL: 'my-app.vercel.app'
     },
-    expected: 'https://deessafoundation.org'
+    expected: 'https://deessafoundation.com'
   },
   {
     name: '⚡ Priority Test (APP_URL beats SITE_URL)',

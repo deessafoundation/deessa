@@ -1,7 +1,7 @@
 ---
 title: "Receipt System - Google Email Setup - Visual Guide"
 description: "Documentation for receipt system - google email setup - visual guide"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin
@@ -9,101 +9,101 @@ last_updated: 2026-09-12
 ---
 # Receipt System - Google Email Setup - Visual Guide
 
-## ðŸŽ¯ Your 4-Step Setup
+## 🎯 Your 4-Step Setup
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    STEP 1: RUN SQL SCRIPT                       â”‚
-â”‚                         (5 minutes)                              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                   â”‚
-â”‚  1. Open: https://app.supabase.com                              â”‚
-â”‚  2. Go to: SQL Editor â†’ New Query                               â”‚
-â”‚  3. Copy: SQL_SCRIPT_11_COPY_PASTE.md                           â”‚
-â”‚  4. Paste into SQL Editor                                       â”‚
-â”‚  5. Click: "Run"                                                â”‚
-â”‚  6. âœ… Done!                                                     â”‚
-â”‚                                                                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                              â†“
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                 STEP 2: CONFIGURE GOOGLE EMAIL                  â”‚
-â”‚                        (10 minutes)                              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                   â”‚
-â”‚  1. Enable 2FA: https://myaccount.google.com/security           â”‚
-â”‚  2. Generate App Password:                                      â”‚
-â”‚     https://myaccount.google.com/apppasswords                   â”‚
-â”‚  3. Add to .env.local:                                          â”‚
-â”‚     GOOGLE_EMAIL=your-email@gmail.com                           â”‚
-â”‚     GOOGLE_APP_PASSWORD=xxxx xxxx xxxx xxxx                     â”‚
-â”‚  4. Restart: npm run dev                                        ï¿½ï¿½
-â”‚  5. âœ… Done!                                                     â”‚
-â”‚                                                                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                              â†“
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚            STEP 3: SET ORGANIZATION DETAILS                     â”‚
-â”‚                        (10 minutes)                              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                   â”‚
-â”‚  1. Go to: http://localhost:3000/admin/settings/organization   â”‚
-â”‚  2. Fill in all fields:                                         â”‚
-â”‚     - Organization name                                         â”‚
-â”‚     - Email & Phone                                             â”‚
-â”‚     - Address                                                   â”‚
-â”‚     - Tax numbers (VAT, PAN, SWC)                               â”‚
-â”‚     - Logo URL                                                  â”‚
-â”‚     - Receipt settings                                          â”‚
-â”‚  3. Click: "Save Organization Details"                         â”‚
-â”‚  4. âœ… Done!                                                     â”‚
-â”‚                                                                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                              â†“
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              STEP 4: INTEGRATE WITH WEBHOOKS                    â”‚
-â”‚                        (15 minutes)                              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                   â”‚
-â”‚  Add to your payment webhook handlers:                          â”‚
-â”‚                                                                   â”‚
-â”‚  import { generateReceiptForDonation }                          â”‚
-â”‚    from "@/lib/actions/donation-receipt"                       â”‚
-â”‚                                                                   â”‚
-â”‚  // After payment confirmed                                    â”‚
-â”‚  await generateReceiptForDonation({ donationId })              â”‚
-â”‚                                                                   â”‚
-â”‚  See: docs/RECEIPT_WEBHOOK_INTEGRATION.md                      â”‚
-â”‚  âœ… Done!                                                        â”‚
-â”‚                                                                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                              â†“
-                    ðŸŽ‰ SETUP COMPLETE! ðŸŽ‰
+┌─────────────────────────────────────────────────────────────────┐
+│                    STEP 1: RUN SQL SCRIPT                       │
+│                         (5 minutes)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  1. Open: https://app.supabase.com                              │
+│  2. Go to: SQL Editor → New Query                               │
+│  3. Copy: SQL_SCRIPT_11_COPY_PASTE.md                           │
+│  4. Paste into SQL Editor                                       │
+│  5. Click: "Run"                                                │
+│  6.  Done!                                                     │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                 STEP 2: CONFIGURE GOOGLE EMAIL                  │
+│                        (10 minutes)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  1. Enable 2FA: https://myaccount.google.com/security           │
+│  2. Generate App Password:                                      │
+│     https://myaccount.google.com/apppasswords                   │
+│  3. Add to .env.local:                                          │
+│     GOOGLE_EMAIL=your-email@gmail.com                           │
+│     GOOGLE_APP_PASSWORD=xxxx xxxx xxxx xxxx                     │
+│  4. Restart: npm run dev                                        │
+│  5.  Done!                                                     │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│            STEP 3: SET ORGANIZATION DETAILS                     │
+│                        (10 minutes)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  1. Go to: http://localhost:3000/admin/settings/organization   │
+│  2. Fill in all fields:                                         │
+│     - Organization name                                         │
+│     - Email & Phone                                             │
+│     - Address                                                   │
+│     - Tax numbers (VAT, PAN, SWC)                               │
+│     - Logo URL                                                  │
+│     - Receipt settings                                          │
+│  3. Click: "Save Organization Details"                         │
+│  4.  Done!                                                     │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              STEP 4: INTEGRATE WITH WEBHOOKS                    │
+│                        (15 minutes)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  Add to your payment webhook handlers:                          │
+│                                                                   │
+│  import { generateReceiptForDonation }                          │
+│    from "@/lib/actions/donation-receipt"                       │
+│                                                                   │
+│  // After payment confirmed                                    │
+│  await generateReceiptForDonation({ donationId })              │
+│                                                                   │
+│  See: docs/RECEIPT_WEBHOOK_INTEGRATION.md                      │
+│   Done!                                                        │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+                    🎉 SETUP COMPLETE! 🎉
 ```
 
 ---
 
-## ðŸ“‹ File Reference
+## 📋 File Reference
 
 ```
 START HERE
-    â†“
+    ↓
 GOOGLE_EMAIL_SETUP_SUMMARY.md
-    â†“
-SQL_SCRIPT_11_COPY_PASTE.md â† Copy & Paste SQL
-    â†“
-docs/GOOGLE_EMAIL_SETUP.md â† Configure Email
-    â†“
-docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md â† Complete Guide
-    â†“
-docs/RECEIPT_WEBHOOK_INTEGRATION.md â† Webhook Integration
-    â†“
-docs/RECEIPT_SYSTEM.md â† Full Reference
+    ↓
+SQL_SCRIPT_11_COPY_PASTE.md ← Copy & Paste SQL
+    ↓
+docs/GOOGLE_EMAIL_SETUP.md ← Configure Email
+    ↓
+docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md ← Complete Guide
+    ↓
+docs/RECEIPT_WEBHOOK_INTEGRATION.md ← Webhook Integration
+    ↓
+docs/RECEIPT_SYSTEM.md ← Full Reference
 ```
 
 ---
 
-## ðŸ”§ Environment Variables
+## 🔧 Environment Variables
 
 ```env
 # Add to .env.local
@@ -118,142 +118,142 @@ NEXT_PUBLIC_SITE_URL=https://dessafoundation.org
 
 ---
 
-## âœ… Testing Checklist
+##  Testing Checklist
 
 ```
 Database Setup
-  â˜ SQL script executed
-  â˜ All verification queries passed
-  â˜ receipt_audit_log table created
-  â˜ receipts storage bucket created
+  ☐ SQL script executed
+  ☐ All verification queries passed
+  ☐ receipt_audit_log table created
+  ☐ receipts storage bucket created
 
 Email Configuration
-  â˜ 2FA enabled on Gmail
-  â˜ App Password generated
-  â˜ Environment variables set
-  â˜ Dev server restarted
-  â˜ Email configuration test passed
+  ☐ 2FA enabled on Gmail
+  ☐ App Password generated
+  ☐ Environment variables set
+  ☐ Dev server restarted
+  ☐ Email configuration test passed
 
 Organization Setup
-  â˜ Organization details filled in
-  â˜ Settings saved successfully
-  â˜ Details display in admin panel
+  ☐ Organization details filled in
+  ☐ Settings saved successfully
+  ☐ Details display in admin panel
 
 Webhook Integration
-  â˜ Receipt generation added to webhooks
-  â˜ Code deployed
+  ☐ Receipt generation added to webhooks
+  ☐ Code deployed
 
 Testing
-  â˜ Test donation made
-  â˜ Payment completed
-  â˜ Receipt generated
-  â˜ Email received
-  â˜ Receipt displays on success page
-  â˜ Download works
-  â˜ Resend email works
-  â˜ No errors in logs
+  ☐ Test donation made
+  ☐ Payment completed
+  ☐ Receipt generated
+  ☐ Email received
+  ☐ Receipt displays on success page
+  ☐ Download works
+  ☐ Resend email works
+  ☐ No errors in logs
 ```
 
 ---
 
-## ðŸš€ What Happens Next
+## 🚀 What Happens Next
 
 ```
 Donor Makes Donation
-        â†“
+        ↓
 Completes Payment
-        â†“
+        ↓
 Webhook Triggered
-        â†“
+        ↓
 Receipt Generated
-        â†“
+        ↓
 Email Sent (via Google Email)
-        â†“
+        ↓
 Success Page Shows Receipt
-        â†“
+        ↓
 Donor Can:
-  â€¢ Download Receipt
-  â€¢ Resend Email
-  â€¢ Copy Link
+  • Download Receipt
+  • Resend Email
+  • Copy Link
 ```
 
 ---
 
-## ðŸ“Š Receipt Content
+## 📊 Receipt Content
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚         DONATION RECEIPT            â”‚
-â”‚                                     â”‚
-â”‚  Receipt #: RCP-2024-001           â”‚
-â”‚  Date: January 15, 2024            â”‚
-â”‚                                     â”‚
-â”‚  Organization: Dessa Foundation    â”‚
-â”‚  VAT: 610123456789                 â”‚
-â”‚  PAN: 610123456                    â”‚
-â”‚                                     â”‚
-â”‚  Donor: John Doe                   â”‚
-â”‚  Email: john@example.com           â”‚
-â”‚  Phone: +977-1-XXXXXXX             â”‚
-â”‚                                     â”‚
-â”‚  Amount: $100.00                   â”‚
-â”‚  Type: One-Time Donation           â”‚
-â”‚                                     â”‚
-â”‚  Tax Deductible: Yes               â”‚
-â”‚                                     â”‚
-â”‚  [Download] [Resend] [Copy Link]   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
----
-
-## ðŸŽ¯ Key Features
-
-```
-âœ… Automatic Receipt Generation
-   â””â”€ After successful payment
-
-âœ… Google Email Integration
-   â””â”€ Via Gmail or Google Workspace
-
-âœ… Professional Receipts
-   â””â”€ Organization branding
-   â””â”€ Tax compliance info
-   â””â”€ Donor details
-
-âœ… Admin Management
-   â””â”€ Organization settings
-   â””â”€ Audit logging
-   â””â”€ Resend emails
-
-âœ… Security
-   â””â”€ Row-level security
-   â””â”€ Audit trail
-   â””â”€ No data exposure
+┌─────────────────────────────────────┐
+│         DONATION RECEIPT            │
+│                                     │
+│  Receipt #: RCP-2024-001           │
+│  Date: January 15, 2024            │
+│                                     │
+│  Organization: Dessa Foundation    │
+│  VAT: 610123456789                 │
+│  PAN: 610123456                    │
+│                                     │
+│  Donor: John Doe                   │
+│  Email: john@example.com           │
+│  Phone: +977-1-XXXXXXX             │
+│                                     │
+│  Amount: $100.00                   │
+│  Type: One-Time Donation           │
+│                                     │
+│  Tax Deductible: Yes               │
+│                                     │
+│  [Download] [Resend] [Copy Link]   │
+└─────────────────────────────────────┘
 ```
 
 ---
 
-## ðŸ“ž Support
+## 🎯 Key Features
+
+```
+ Automatic Receipt Generation
+   └─ After successful payment
+
+ Google Email Integration
+   └─ Via Gmail or Google Workspace
+
+ Professional Receipts
+   └─ Organization branding
+   └─ Tax compliance info
+   └─ Donor details
+
+ Admin Management
+   └─ Organization settings
+   └─ Audit logging
+   └─ Resend emails
+
+ Security
+   └─ Row-level security
+   └─ Audit trail
+   └─ No data exposure
+```
+
+---
+
+## 📞 Support
 
 ### SQL Issues
-â†’ See: `SQL_SCRIPT_11_COPY_PASTE.md` â†’ "If You See Errors"
+→ See: `SQL_SCRIPT_11_COPY_PASTE.md` → "If You See Errors"
 
 ### Email Issues
-â†’ See: `docs/GOOGLE_EMAIL_SETUP.md` â†’ "Troubleshooting"
+→ See: `docs/GOOGLE_EMAIL_SETUP.md` → "Troubleshooting"
 
 ### Setup Issues
-â†’ See: `docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md` â†’ "Troubleshooting"
+→ See: `docs/QUICK_DEPLOYMENT_GOOGLE_EMAIL.md` → "Troubleshooting"
 
 ### Webhook Issues
-â†’ See: `docs/RECEIPT_WEBHOOK_INTEGRATION.md`
+→ See: `docs/RECEIPT_WEBHOOK_INTEGRATION.md`
 
 ### General Questions
-â†’ See: `docs/RECEIPT_SYSTEM.md`
+→ See: `docs/RECEIPT_SYSTEM.md`
 
 ---
 
-## â±ï¸ Timeline
+## ⏱️ Timeline
 
 ```
 Step 1 (SQL):              5 minutes
@@ -261,13 +261,13 @@ Step 2 (Email):           10 minutes
 Step 3 (Organization):    10 minutes
 Step 4 (Webhooks):        15 minutes
 Testing:                  20 minutes
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+─────────────────────────────────
 TOTAL:                    60 minutes
 ```
 
 ---
 
-## ðŸŽ‰ You're Ready!
+## 🎉 You're Ready!
 
 Everything is set up and ready to go.
 
@@ -279,4 +279,4 @@ Then follow the 4 steps above.
 
 ---
 
-**Happy receipting!** ðŸ“„âœ¨
+**Happy receipting!** 📄✨

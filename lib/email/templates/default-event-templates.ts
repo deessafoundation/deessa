@@ -7,7 +7,7 @@
  * Design system:
  * - Inline styles only (email-client safe)
  * - Ocean Blue brand (#3FABDE / #0B5F8A)
- * - DEESSA brand badge
+ * - deessa brand badge
  * - Ticket-style cards with dashed dividers
  * - Consistent CTA button hierarchy
  * - Table-based layout (Outlook/Gmail/Apple Mail compatible)
@@ -22,13 +22,13 @@ interface DefaultTemplate {
 
 const BRANDBadge = `
 <a href="{{site_url}}" target="_blank" style="text-decoration:none;display:inline-block;">
-  <img src="{{site_url}}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+  <img src="{{site_url}}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
 </a>`
 
 const FOOTER = `
 <tr>
   <td align="center" style="padding:28px 0;">
-    <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+    <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
     <p style="margin:0;font-size:11px;color:#CBD5E1;">
       You're receiving this because you registered at
       <a href="{{event_url}}" style="color:#3FABDE;">deessafoundation.com</a>
@@ -588,7 +588,7 @@ export function defaultCancellationTemplate(): DefaultTemplate {
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="{{event_url}}" style="color:#DC2626;">deessafoundation.com</a>
               </p>

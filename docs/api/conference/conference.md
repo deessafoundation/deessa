@@ -1,7 +1,7 @@
 ---
 title: "Conference API"
 description: "The Conference API handles conference registration, payment, and status checking. This is separate from the Events mo..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: developer

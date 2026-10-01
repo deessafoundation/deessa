@@ -14,7 +14,7 @@ The font files are NOT included in the repository. You must download them:
 
 ```bash
 # Navigate to project root
-cd "d:\Web Codes\Projects\Deesha Foundation"
+cd "d:\Web Codes\Projects\deessa Foundation"
 
 # Download OpenDyslexic
 curl -L https://github.com/antijingoist/opendyslexic/releases/download/v2.001/opendyslexic-0.91.12-web.zip -o opendyslexic.zip

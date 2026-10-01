@@ -1,7 +1,7 @@
 ---
 title: "Admin - Content API"
 description: "| Method | Endpoint | Description |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

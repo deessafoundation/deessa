@@ -1,7 +1,7 @@
 ---
 title: "deessa Foundation – Payments Architecture & Go-Live Guide"
 description: "This document explains how the donation payment system works Stripe + Khalti + eSewa, how to configure it per environ..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -142,7 +142,7 @@ Admin UI:
 - `PAYMENT_MODE`  
   - `"mock"` (default-safe for local dev) or `"live"`.
 - `NEXT_PUBLIC_SITE_URL`  
-  - Base site URL for building return URLs (e.g. `https://deessa.org`).
+  - Base site URL for building return URLs (e.g. `https://deessafoundation.com`).
 
 ### 4.2 Stripe
 
@@ -153,9 +153,9 @@ Required for live mode:
 - `STRIPE_WEBHOOK_SECRET`  
   - Provided by Stripe when you configure a webhook endpoint.
 - `STRIPE_SUCCESS_URL`  
-  - e.g. `https://deessa.org/donate/success`
+  - e.g. `https://deessafoundation.com/donate/success`
 - `STRIPE_CANCEL_URL`  
-  - e.g. `https://deessa.org/donate/cancel`
+  - e.g. `https://deessafoundation.com/donate/cancel`
 
 Used files:
 
@@ -178,7 +178,7 @@ Required for live mode:
   - Sandbox: `https://dev.khalti.com/api/v2`
   - Production: `https://khalti.com/api/v2`
 - `KHALTI_RETURN_URL`  
-  - e.g. `https://deessa.org/payments/khalti/return`
+  - e.g. `https://deessafoundation.com/payments/khalti/return`
   - This is where users are redirected after payment completion
   - The return page calls the verification API endpoint
 - `KHALTI_SANDBOX_MODE` (optional)
@@ -219,11 +219,11 @@ Required for live mode:
   - Sandbox: `https://uat.esewa.com.np`
   - Production: `https://esewa.com.np`
 - `ESEWA_SUCCESS_URL`  
-  - e.g. `https://deessa.org/api/payments/esewa/success`
+  - e.g. `https://deessafoundation.com/api/payments/esewa/success`
   - Must be publicly accessible from eSewa servers
   - Must use HTTPS in production
 - `ESEWA_FAILURE_URL`  
-  - e.g. `https://deessa.org/api/payments/esewa/failure`
+  - e.g. `https://deessafoundation.com/api/payments/esewa/failure`
   - Must be publicly accessible from eSewa servers
   - Must use HTTPS in production
 
@@ -552,6 +552,6 @@ For detailed provider-specific documentation, see:
 3. Verify environment variables are set correctly
 4. Test in sandbox/staging environment
 5. Contact provider support if issue persists
-6. Contact Deessa Foundation technical team
+6. Contact deessa Foundation technical team
 
 This document should give future maintainers everything needed to understand, audit, and safely evolve the payment system without re-reading all of the implementation code. If you change any payment-related logic, please update this file accordingly.

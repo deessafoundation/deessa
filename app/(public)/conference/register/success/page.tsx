@@ -3,7 +3,7 @@ import { Mic } from "lucide-react"
 import { getConferenceSettings } from "@/lib/actions/conference-settings"
 
 export const metadata = {
-  title: "Registration Confirmed | DEESSA National Conference 2026",
+  title: "Registration Confirmed | deessa National Conference 2026",
 }
 
 interface SuccessPageProps {
@@ -29,7 +29,7 @@ export default async function RegistrationSuccessPage({ searchParams }: SuccessP
   const firstName = name.split(" ")[0]
   const shortId = registrationId
     ? `deessa-2026-${registrationId.slice(0, 6).toUpperCase()}`
-    : "DEESSA-2026-??????"
+    : "deessa-2026-??????"
   // Calendar links, built server-side (no client JS needed)
   const cfg = await getConferenceSettings()
   const gcalTitle = encodeURIComponent(cfg.name)

@@ -3,7 +3,7 @@
 **Created:** 2026-09-16  
 **Last Updated:** 2026-09-16  
 **Status:** Core Implementation Complete - Ready for Staging Deployment  
-**Goal:** Deliver the core Deesha accessibility experience and a tracked path to every feature observed in the Autism Speaks UserWay menu.  
+**Goal:** Deliver the core deessa accessibility experience and a tracked path to every feature observed in the Autism Speaks UserWay menu.  
 **Research:** [Reference analysis and roadmap](./autism-speaks-analysis-and-roadmap.md)  
 **Core behavior:** [README.md](./README.md)  
 **Verification:** [VALIDATION.md](./VALIDATION.md)
@@ -130,7 +130,7 @@ Priority describes delivery order, not the importance of a person's access needs
 | Dictionary | E8 |
 | Saturation | A4-13–17, E3 |
 | Move/Hide widget | E2 |
-| Additional Deesha reading/sensory modes | A4-13–17, A4-26–33 |
+| Additional deessa reading/sensory modes | A4-13–17, A4-26–33 |
 
 The reference menu was inspected, but individual feature effects and profile contents were not exhaustively tested. This is a functional implementation backlog, not a promise to duplicate proprietary algorithms.
 
@@ -248,7 +248,7 @@ New component/module names should follow the repository conventions found during
 - [x] A2-06 Preserve future-version records and provide memory-only mode with explicit reset recovery. ✅ **DONE 2026-09-16** - Future versions kept in memory, no destructive writes
 - [x] A2-07 Implement guarded storage read/write/remove results, including access and quota errors. ✅ **DONE 2026-09-16** - Try-catch on all localStorage operations
 - [x] A2-08 Implement a migration only if inventory proves a shipped format; test mapping and successful-write-before-cleanup. ✅ **DONE 2026-09-16** - `migrateV1toV2()` function with safe mapping: `dyslexiaFont: true` → `fontFamily: 'opendyslexic'`, text scale clamped
-- [x] A2-09 Preserve unrelated keys, including accessibility-seen and intro-specific records. ✅ **DONE 2026-09-16** - Only touches `deesha-a11y-preferences` key
+- [x] A2-09 Preserve unrelated keys, including accessibility-seen and intro-specific records. ✅ **DONE 2026-09-16** - Only touches `deessa-a11y-preferences` key
 - [ ] A2-10 Unit-test every parser branch and range boundary with representative fixtures.
 
 ### Provider and lifecycle
@@ -597,7 +597,7 @@ New component/module names should follow the repository conventions found during
 
 ### Optional guide and cursor
 
-- [ ] E5-08 Define reading-guide size, contrast, position controls and dismissal; mark it as an additional Deesha feature.
+- [ ] E5-08 Define reading-guide size, contrast, position controls and dismissal; mark it as an additional deessa feature.
 - [ ] E5-09 Render the guide as non-interactive decoration that cannot intercept clicks or receive focus.
 - [ ] E5-10 Provide keyboard adjustment without trapping navigation or hijacking ordinary typing.
 - [ ] E5-11 Keep focused controls, tooltips and modal actions visible through or outside the guide.

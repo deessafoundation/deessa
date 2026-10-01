@@ -10,8 +10,9 @@ import {
   EditorialText,
   SectionCopy,
 } from "./EditorialParts"
-import base from "../demo/program-base.module.css"
-import outreach from "../demo/outreach-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const outreach = base
 
 export function OutreachTemplate({ document }: { document: ProgramDocument }) {
   const { hero } = document

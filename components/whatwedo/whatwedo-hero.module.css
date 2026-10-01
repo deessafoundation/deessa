@@ -32,6 +32,8 @@
   text-underline-offset: 0.12em !important;
 }
 
+:global(body.high-contrast) #whatwedo-hero a.primaryBtn,
+:global(body.high-contrast) .hero a.primaryBtn,
 :global(body.high-contrast) .primaryBtn,
 :global(body.high-contrast) a.primaryBtn {
   background: #000 !important;
@@ -39,8 +41,19 @@
   color: #fff !important;
   border: 2px solid #000 !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
+:global(body.high-contrast) #whatwedo-hero a.primaryBtn *,
+:global(body.high-contrast) .hero a.primaryBtn *,
+:global(body.high-contrast) .primaryBtn *,
+:global(body.high-contrast) a.primaryBtn * {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.high-contrast) #whatwedo-hero a.secondaryBtn,
+:global(body.high-contrast) .hero a.secondaryBtn,
 :global(body.high-contrast) .secondaryBtn,
 :global(body.high-contrast) a.secondaryBtn {
   background: #fff !important;
@@ -48,6 +61,15 @@
   color: #000 !important;
   border: 2px solid #000 !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.high-contrast) #whatwedo-hero a.secondaryBtn *,
+:global(body.high-contrast) .hero a.secondaryBtn *,
+:global(body.high-contrast) .secondaryBtn *,
+:global(body.high-contrast) a.secondaryBtn * {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
 :global(body.high-contrast) .photo {
@@ -83,6 +105,8 @@
   text-underline-offset: 0.12em !important;
 }
 
+:global(body.inverted-contrast) #whatwedo-hero a.primaryBtn,
+:global(body.inverted-contrast) .hero a.primaryBtn,
 :global(body.inverted-contrast) .primaryBtn,
 :global(body.inverted-contrast) a.primaryBtn {
   background: #fff !important;
@@ -90,8 +114,19 @@
   color: #000 !important;
   border: 2px solid #fff !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #000 !important;
 }
 
+:global(body.inverted-contrast) #whatwedo-hero a.primaryBtn *,
+:global(body.inverted-contrast) .hero a.primaryBtn *,
+:global(body.inverted-contrast) .primaryBtn *,
+:global(body.inverted-contrast) a.primaryBtn * {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+:global(body.inverted-contrast) #whatwedo-hero a.secondaryBtn,
+:global(body.inverted-contrast) .hero a.secondaryBtn,
 :global(body.inverted-contrast) .secondaryBtn,
 :global(body.inverted-contrast) a.secondaryBtn {
   background: #000 !important;
@@ -99,6 +134,15 @@
   color: #fff !important;
   border: 2px solid #fff !important;
   text-decoration: underline !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+:global(body.inverted-contrast) #whatwedo-hero a.secondaryBtn *,
+:global(body.inverted-contrast) .hero a.secondaryBtn *,
+:global(body.inverted-contrast) .secondaryBtn *,
+:global(body.inverted-contrast) a.secondaryBtn * {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
 }
 
 :global(body.inverted-contrast) .photo {

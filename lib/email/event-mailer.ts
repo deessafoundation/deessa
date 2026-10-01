@@ -45,7 +45,7 @@ async function sendEmail(
     const transporter = createGmailTransporter()
 
     const info = await transporter.sendMail({
-      from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+      from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
       to: params.to,
       subject: params.subject,
       html: params.html,
@@ -265,7 +265,7 @@ export async function sendEventCustomEmail(params: {
         </div>
         <hr style="margin:24px 0;border:none;border-top:1px solid #eee;">
         <p style="font-size:12px;color:#999;">
-          Sent by DEESSA Foundation Admin
+          Sent by deessa Foundation Admin
         </p>
       </div>
     </body>

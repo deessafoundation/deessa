@@ -1,7 +1,7 @@
 ---
 title: "Site Settings Enhancement - Setup Guide"
 description: "The admin site settings have been significantly expanded to give you full control over all images and content display..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin
@@ -11,11 +11,11 @@ last_updated: 2026-09-12
 
 ## Overview
 
-The admin site settings have been significantly expanded to give you full control over all images and content displayed on your website. You can now configure homepage images, page hero sections, press gallery, and branding assetsâ€”all through the admin panel!
+The admin site settings have been significantly expanded to give you full control over all images and content displayed on your website. You can now configure homepage images, page hero sections, press gallery, and branding assets—all through the admin panel!
 
 ---
 
-## ðŸš€ Setup Instructions
+## 🚀 Setup Instructions
 
 ### Step 1: Run SQL Scripts in Supabase
 
@@ -50,22 +50,22 @@ This populates the database with default settings for all pages (using your curr
 
 1. In Supabase Dashboard, go to **Storage** (left sidebar)
 2. You should now see 10 total buckets (6 old + 4 new):
-   - âœ… project-images
-   - âœ… story-images
-   - âœ… team-photos
-   - âœ… event-images
-   - âœ… partner-logos
-   - âœ… videos
-   - âœ… **hero-images** (NEW)
-   - âœ… **site-assets** (NEW)
-   - âœ… **press-gallery** (NEW)
-   - âœ… **og-images** (NEW)
+   -  project-images
+   -  story-images
+   -  team-photos
+   -  event-images
+   -  partner-logos
+   -  videos
+   -  **hero-images** (NEW)
+   -  **site-assets** (NEW)
+   -  **press-gallery** (NEW)
+   -  **og-images** (NEW)
 
-All should be marked as **Public** âœ…
+All should be marked as **Public** 
 
 ---
 
-## ðŸŽ¨ Admin Panel Features
+## 🎨 Admin Panel Features
 
 ### New Tabs in Site Settings (/admin/settings)
 
@@ -75,14 +75,14 @@ The Site Settings page now has **8 tabs** instead of 4:
 2. **Contact** _(existing)_ - Email, phone, address, office hours
 3. **Social** _(existing)_ - Social media links
 4. **SEO** _(existing)_ - Meta tags, keywords
-5. **Homepage** _(NEW)_ ðŸ†• - Hero images, initiative cards
-6. **Page Heroes** _(NEW)_ ðŸ†• - Hero images for all 9 pages
-7. **Press & Media** _(NEW)_ ðŸ†• - Press gallery with captions
-8. **Branding** _(NEW)_ ðŸ†• - Logos, favicon, OG image
+5. **Homepage** _(NEW)_ 🆕 - Hero images, initiative cards
+6. **Page Heroes** _(NEW)_ 🆕 - Hero images for all 9 pages
+7. **Press & Media** _(NEW)_ 🆕 - Press gallery with captions
+8. **Branding** _(NEW)_ 🆕 - Logos, favicon, OG image
 
 ---
 
-## ðŸ“¸ What You Can Configure
+## 📸 What You Can Configure
 
 ### Homepage Tab
 
@@ -134,20 +134,20 @@ Each page hero includes:
 
 ---
 
-## ðŸ”„ Fallback System
+## 🔄 Fallback System
 
 **Important:** All pages have been designed with fallback support. This means:
 
-- âœ… If settings aren't configured, pages use the existing hardcoded images
-- âœ… If SQL scripts aren't run, nothing breaks
-- âœ… Old functionality remains 100% intact
-- âœ… No breaking changes to existing features
+-  If settings aren't configured, pages use the existing hardcoded images
+-  If SQL scripts aren't run, nothing breaks
+-  Old functionality remains 100% intact
+-  No breaking changes to existing features
 
 Pages will automatically use database settings when available, or fall back to defaults.
 
 ---
 
-## ðŸ“‹ How to Use
+## 📋 How to Use
 
 ### Uploading Images
 
@@ -171,13 +171,13 @@ Pages will automatically use database settings when available, or fall back to d
 1. Go to **Press & Media** tab
 2. Click upload area to add multiple images
 3. Add captions and credits for each
-4. Use â†‘ â†“ buttons to reorder
+4. Use ↑ ↓ buttons to reorder
 5. Click X to remove unwanted images
 6. Click **Save Press Gallery**
 
 ---
 
-## ðŸ’¾ File Changes Summary
+## 💾 File Changes Summary
 
 ### New Files Created
 
@@ -211,11 +211,11 @@ app/(public)/donate/page.tsx                 # Donate page hero
 
 ---
 
-## âš ï¸ Important Notes
+## ⚠️ Important Notes
 
 1. **Run SQL Scripts First**: You must run both SQL scripts before using the new admin features
 2. **No Breaking Changes**: Existing features continue to work exactly as before
-3. **Gradual Migration**: You can update pages to use settings graduallyâ€”no rush
+3. **Gradual Migration**: You can update pages to use settings gradually—no rush
 4. **Storage Costs**: With Supabase free tier (1GB), you can store ~1000 high-quality images
 5. **Image Optimization**: Recommended image sizes:
    - Hero images: 1920x1080px (landscape)
@@ -225,63 +225,63 @@ app/(public)/donate/page.tsx                 # Donate page hero
 
 ---
 
-## ðŸ”’ Security
+## 🔒 Security
 
 All storage buckets have proper RLS policies:
 
-- âœ… Public read access (for website display)
-- âœ… Authenticated admin write access only
-- âœ… File size limits enforced
-- âœ… MIME type restrictions (only images)
-- âœ… Per-user folders (organized by admin user ID)
+-  Public read access (for website display)
+-  Authenticated admin write access only
+-  File size limits enforced
+-  MIME type restrictions (only images)
+-  Per-user folders (organized by admin user ID)
 
 ---
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 **Issue: "Upload failed" error**
 
-- âœ… Solution: Ensure SQL scripts were run to create buckets
+-  Solution: Ensure SQL scripts were run to create buckets
 
 **Issue: "Unauthorized" error**
 
-- âœ… Solution: Make sure you're logged in as admin
+-  Solution: Make sure you're logged in as admin
 
 **Issue: Settings not saving**
 
-- âœ… Solution: Check browser console for errors, refresh page
+-  Solution: Check browser console for errors, refresh page
 
 **Issue: Images not displaying**
 
-- âœ… Solution: Verify buckets are set to "Public" in Supabase
+-  Solution: Verify buckets are set to "Public" in Supabase
 
 **Issue: Old images still showing**
 
-- âœ… Solution: Clear browser cache or hard refresh (Ctrl+F5)
+-  Solution: Clear browser cache or hard refresh (Ctrl+F5)
 
 ---
 
-## ðŸ“ž Next Steps
+## 📞 Next Steps
 
-1. âœ… Run both SQL scripts in Supabase
-2. âœ… Verify storage buckets created
-3. âœ… Login to admin panel `/admin/settings`
-4. âœ… Test uploading images in each tab
-5. âœ… (Optional) Update page components to use settings
-6. âœ… Enjoy full control over your website images!
+1.  Run both SQL scripts in Supabase
+2.  Verify storage buckets created
+3.  Login to admin panel `/admin/settings`
+4.  Test uploading images in each tab
+5.  (Optional) Update page components to use settings
+6.  Enjoy full control over your website images!
 
 ---
 
-## ðŸŽ‰ Benefits
+## 🎉 Benefits
 
-- âœ… No more code changes needed for image updates
-- âœ… Non-technical admins can manage images
-- âœ… Centralized control through admin panel
-- âœ… Professional image management
-- âœ… Gallery support with captions & credits
-- âœ… Proper version control and backup
-- âœ… Scalable for future growth
-- âœ… SEO-friendly with proper metadata
+-  No more code changes needed for image updates
+-  Non-technical admins can manage images
+-  Centralized control through admin panel
+-  Professional image management
+-  Gallery support with captions & credits
+-  Proper version control and backup
+-  Scalable for future growth
+-  SEO-friendly with proper metadata
 
 ---
 

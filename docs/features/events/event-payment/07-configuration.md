@@ -1,13 +1,13 @@
 ---
-title: "Event Payment Integration â€” Configuration"
+title: "Event Payment Integration — Configuration"
 description: "| Variable | Description | Example |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
 last_updated: 2026-09-12
 ---
-# Event Payment Integration â€” Configuration
+# Event Payment Integration — Configuration
 
 ## Environment Variables
 
@@ -22,8 +22,8 @@ last_updated: 2026-09-12
 
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|
-| `STRIPE_SECRET_KEY` | **Yes** | Stripe API secret key | â€” |
-| `STRIPE_WEBHOOK_SECRET` | For webhooks | Stripe webhook signing secret | â€” |
+| `STRIPE_SECRET_KEY` | **Yes** | Stripe API secret key | — |
+| `STRIPE_WEBHOOK_SECRET` | For webhooks | Stripe webhook signing secret | — |
 
 **Key format:**
 - Test: `sk_test_...`
@@ -35,8 +35,8 @@ last_updated: 2026-09-12
 
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|
-| `KHALTI_SECRET_KEY` | **Yes** | Khalti API secret key (â‰¥ 10 chars) | â€” |
-| `KHALTI_BASE_URL` | **Yes** | Khalti API base URL | â€” |
+| `KHALTI_SECRET_KEY` | **Yes** | Khalti API secret key (≥ 10 chars) | — |
+| `KHALTI_BASE_URL` | **Yes** | Khalti API base URL | — |
 
 **Base URLs:**
 - Sandbox: `https://dev.khalti.com/api/v2`
@@ -49,7 +49,7 @@ last_updated: 2026-09-12
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|
 | `ESEWA_MERCHANT_ID` | **Yes** | eSewa merchant ID | `EPAYTEST` |
-| `ESEWA_SECRET_KEY` | **Yes** | eSewa HMAC-SHA256 secret key | â€” |
+| `ESEWA_SECRET_KEY` | **Yes** | eSewa HMAC-SHA256 secret key | — |
 | `ESEWA_BASE_URL` | No | eSewa API base URL | Sandbox: `https://rc-epay.esewa.com.np` |
 
 **Base URLs:**
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 
 1. **Return URL**: Set to `https://your-domain.com/events/{slug}/register/payment-success?rid={rid}`
    - Note: Khalti return URL is set per-payment, not globally
-2. **API keys**: Copy secret key from Khalti dashboard â†’ Settings â†’ API Keys
+2. **API keys**: Copy secret key from Khalti dashboard → Settings → API Keys
 
 ### eSewa Dashboard Settings
 
@@ -206,13 +206,13 @@ If a user requests a provider that isn't available, they're silently switched to
 2. Use Stripe test card numbers:
    - Success: `4242 4242 4242 4242`
    - Failure: `4000 0000 0000 0002`
-3. Check Stripe dashboard â†’ Payments â†’ Test mode
+3. Check Stripe dashboard → Payments → Test mode
 
 ### Khalti
 
 1. Use sandbox key and `https://dev.khalti.com/api/v2`
 2. Use Khalti test credentials from dashboard
-3. Check Khalti dashboard â†’ Transactions â†’ Sandbox
+3. Check Khalti dashboard → Transactions → Sandbox
 
 ### eSewa
 

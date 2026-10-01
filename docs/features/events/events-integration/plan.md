@@ -1,7 +1,7 @@
 ---
 title: "V2 PaymentService Integration for Event Registrations"
 description: "Revision History:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -285,7 +285,7 @@ This migration ONLY adds the `payments` table extension.
 
 ```sql
 -- ============================================================
--- DEESSA Foundation — Extend Payments Table for Event Registrations
+-- deessa Foundation — Extend Payments Table for Event Registrations
 -- Migration: XXX-extend-payments-for-registrations.sql
 -- Adds event_registration_id FK with polymorphic integrity constraints
 -- ============================================================
@@ -1835,7 +1835,7 @@ The following improvements are NOT part of this plan but should be considered fo
 
 ```sql
 -- ============================================================
--- DEESSA Foundation — Extend Payments Table for Event Registrations
+-- deessa Foundation — Extend Payments Table for Event Registrations
 -- Migration: XXX-extend-payments-for-registrations.sql
 -- Adds event_registration_id FK with polymorphic integrity constraints
 -- ============================================================

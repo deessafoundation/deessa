@@ -9,7 +9,7 @@
 ## The 4 Program Categories
 
 ### 1. 🟢 **Services & Programs**
-**What:** Direct support DEESSA provides to children, families, caregivers
+**What:** Direct support deessa provides to children, families, caregivers
 **Examples:** Autism support, AAC communication, parent training, therapy programs
 
 **Visual Language:**
@@ -78,7 +78,7 @@ CTA (Join Next Event / Get Involved)
 
 ### 3. 🔵 **Research & Innovation**
 **What:** Research projects, digital tools, pilot programs, partnerships
-**Examples:** DEESSA Companion app, research studies, innovative methodologies
+**Examples:** deessa Companion app, research studies, innovative methodologies
 
 **Visual Language:**
 - Modern, editorial

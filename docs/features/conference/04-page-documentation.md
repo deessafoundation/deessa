@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Page Documentation"
+title: "deessa Foundation — Conference Module: Page Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Page Documentation
+# deessa Foundation — Conference Module: Page Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -75,31 +75,31 @@ export default async function ConferencePage() {
 
 ```
 ConferencePage (Server Component)
-â”œâ”€ Hero Section
-â”‚  â”œâ”€ Conference name (from settings.conferenceName)
-â”‚  â”œâ”€ Date display (from settings.dateDisplay)
-â”‚  â”œâ”€ Venue (from settings.venue)
-â”‚  â””â”€ CTA button â†’ /conference/register
-â”‚
-â”œâ”€ Why Attend Section
-â”‚  â”œâ”€ Networking card
-â”‚  â”œâ”€ Learning card
-â”‚  â”œâ”€ Innovation card
-â”‚  â””â”€ Community card
-â”‚
-â”œâ”€ Agenda Section
-â”‚  â””â”€ Timeline component
-â”‚     â””â”€ Map over settings.agenda[]
-â”‚        â””â”€ Time + Title + Description (only if active: true)
-â”‚
-â”œâ”€ Venue Section
-â”‚  â”œâ”€ Address (from settings.address)
-â”‚  â”œâ”€ Google Maps iframe (from settings.mapsUrl)
-â”‚  â””â”€ Directions link
-â”‚
-â””â”€ CTA Banner
-   â”œâ”€ Registration deadline (from settings.registrationDeadline)
-   â””â”€ Register button â†’ /conference/register
+├─ Hero Section
+│  ├─ Conference name (from settings.conferenceName)
+│  ├─ Date display (from settings.dateDisplay)
+│  ├─ Venue (from settings.venue)
+│  └─ CTA button → /conference/register
+│
+├─ Why Attend Section
+│  ├─ Networking card
+│  ├─ Learning card
+│  ├─ Innovation card
+│  └─ Community card
+│
+├─ Agenda Section
+│  └─ Timeline component
+│     └─ Map over settings.agenda[]
+│        └─ Time + Title + Description (only if active: true)
+│
+├─ Venue Section
+│  ├─ Address (from settings.address)
+│  ├─ Google Maps iframe (from settings.mapsUrl)
+│  └─ Directions link
+│
+└─ CTA Banner
+   ├─ Registration deadline (from settings.registrationDeadline)
+   └─ Register button → /conference/register
 ```
 
 ### 2.4 Key Features
@@ -255,7 +255,7 @@ const handleSubmit = async () => {
 <StepProgressBar currentStep={currentStep} />
 
 // Renders:
-// 1 â”€â”€â”€â”€â”€â— 2 â”€â”€â”€â”€â”€ 3 â”€â”€â”€â”€â”€ 4     (on step 2)
+// 1 ─────● 2 ───── 3 ───── 4     (on step 2)
 ```
 
 ---
@@ -288,25 +288,25 @@ const handleSubmit = async () => {
 
 ```
 PaymentOptionsPage
-â”œâ”€ Header
-â”‚  â”œâ”€ Success checkmark icon
-â”‚  â””â”€ "Registration Received!" heading
-â”‚
-â”œâ”€ Info Card
-â”‚  â”œâ”€ Name
-â”‚  â”œâ”€ Email
-â”‚  â”œâ”€ Amount to pay (formatted with currency)
-â”‚  â””â”€ Expiry warning (e.g., "Complete payment within 24 hours")
-â”‚
-â”œâ”€ Option 1: Pay Now (Primary Button)
-â”‚  â””â”€ Link to /conference/register/pending-payment?rid=...&email=...
-â”‚
-â”œâ”€ Option 2: Pay Later (Secondary Button)
-â”‚  â””â”€ Trigger: POST /api/conference/resend-payment-link
-â”‚  â””â”€ Shows: "Email sent!" confirmation
-â”‚
-â””â”€ Footer
-   â””â”€ Contact support link
+├─ Header
+│  ├─ Success checkmark icon
+│  └─ "Registration Received!" heading
+│
+├─ Info Card
+│  ├─ Name
+│  ├─ Email
+│  ├─ Amount to pay (formatted with currency)
+│  └─ Expiry warning (e.g., "Complete payment within 24 hours")
+│
+├─ Option 1: Pay Now (Primary Button)
+│  └─ Link to /conference/register/pending-payment?rid=...&email=...
+│
+├─ Option 2: Pay Later (Secondary Button)
+│  └─ Trigger: POST /api/conference/resend-payment-link
+│  └─ Shows: "Email sent!" confirmation
+│
+└─ Footer
+   └─ Contact support link
 ```
 
 ### 4.4 Pay Later Logic
@@ -533,11 +533,11 @@ const pollInterval = setInterval(() => {
 | ---------- | -------------- | ------------------------------------------------------------ |
 | Loading    | -              | Spinner + "Verifying payment..."                             |
 | Processing | unpaid         | Spinner + "Processing payment..." (polling)                  |
-| Confirmed  | paid           | âœ“ Success card + "Registration Confirmed!"                   |
-| Review     | review         | âš ï¸ Warning card + "Payment under review"                     |
-| Cancelled  | -              | âœ— Error card + "Registration cancelled"                      |
-| Expired    | -              | âœ— Error card + "Registration expired"                        |
-| Timeout    | -              | â±ï¸ Timeout card + "Verification taking longer than expected" |
+| Confirmed  | paid           | ✓ Success card + "Registration Confirmed!"                   |
+| Review     | review         | ⚠️ Warning card + "Payment under review"                     |
+| Cancelled  | -              | ✗ Error card + "Registration cancelled"                      |
+| Expired    | -              | ✗ Error card + "Registration expired"                        |
+| Timeout    | -              | ⏱️ Timeout card + "Verification taking longer than expected" |
 
 ### 6.6 Success State Content
 
@@ -718,7 +718,7 @@ const pollInterval = setInterval(() => {
 ### 9.3 Admin: Conference Settings
 
 **File**: `app/admin/conference/settings/page.tsx`  
-**Rendering**: Client Component wrapper â†’ `ConferenceSettingsForm`  
+**Rendering**: Client Component wrapper → `ConferenceSettingsForm`  
 **Authentication**: Required  
 **Purpose**: Configure all conference details
 
@@ -738,38 +738,38 @@ const pollInterval = setInterval(() => {
 
 ```
 components/conference/
-â”œâ”€ conference-registration-form.tsx       [Client] Main orchestrator
-â”‚  â”œâ”€ step-progress-bar.tsx              [Client] Progress indicator
-â”‚  â”œâ”€ step1-personal-details.tsx         [Client] Form fields
-â”‚  â”œâ”€ step2-participation.tsx            [Client] Form fields
-â”‚  â”œâ”€ step3-additional-info.tsx          [Client] Form fields
-â”‚  â””â”€ step4-review.tsx                   [Client] Review + submit
+├─ conference-registration-form.tsx       [Client] Main orchestrator
+│  ├─ step-progress-bar.tsx              [Client] Progress indicator
+│  ├─ step1-personal-details.tsx         [Client] Form fields
+│  ├─ step2-participation.tsx            [Client] Form fields
+│  ├─ step3-additional-info.tsx          [Client] Form fields
+│  └─ step4-review.tsx                   [Client] Review + submit
 ```
 
 ### 10.2 Admin Components
 
 ```
 components/admin/
-â”œâ”€ conference-status-actions.tsx          [Client] Confirm/Cancel/Override buttons
-â”œâ”€ conference-quick-actions.tsx           [Client] Copy ID, Send Email, etc.
-â”œâ”€ conference-notes.tsx                   [Client] Admin notes textarea
-â””â”€ conference-settings-form.tsx           [Client] Settings configuration
+├─ conference-status-actions.tsx          [Client] Confirm/Cancel/Override buttons
+├─ conference-quick-actions.tsx           [Client] Copy ID, Send Email, etc.
+├─ conference-notes.tsx                   [Client] Admin notes textarea
+└─ conference-settings-form.tsx           [Client] Settings configuration
 ```
 
 ### 10.3 Shared Components
 
 ```
 components/ui/  (Shadcn/ui)
-â”œâ”€ button.tsx
-â”œâ”€ card.tsx
-â”œâ”€ input.tsx
-â”œâ”€ label.tsx
-â”œâ”€ select.tsx
-â”œâ”€ checkbox.tsx
-â”œâ”€ radio-group.tsx
-â”œâ”€ dialog.tsx
-â”œâ”€ alert.tsx
-â””â”€ ... (20+ UI primitives)
+├─ button.tsx
+├─ card.tsx
+├─ input.tsx
+├─ label.tsx
+├─ select.tsx
+├─ checkbox.tsx
+├─ radio-group.tsx
+├─ dialog.tsx
+├─ alert.tsx
+└─ ... (20+ UI primitives)
 ```
 
 ---

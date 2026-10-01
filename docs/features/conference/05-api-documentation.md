@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: API Reference"
+title: "deessa Foundation — Conference Module: API Reference"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: API Reference
+# deessa Foundation — Conference Module: API Reference
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -30,7 +30,7 @@ last_updated: 2026-09-12
 
 ### 1.1 Base URL
 
-**Production**: `https://deessa.org`  
+**Production**: `https://deessafoundation.com`  
 **Development**: `http://localhost:3000`
 
 ### 1.2 Authentication Methods
@@ -72,7 +72,7 @@ last_updated: 2026-09-12
 
 **Purpose**: Initiate payment session with chosen provider
 
-**Authentication**: None (public) â€” dual-key verified in server action
+**Authentication**: None (public) — dual-key verified in server action
 
 **Rate Limit**: 10 requests per 60 seconds per IP
 
@@ -116,8 +116,8 @@ last_updated: 2026-09-12
     "product_code": "EPAYTEST",
     "product_service_charge": "0",
     "product_delivery_charge": "0",
-    "success_url": "https://deessa.org/conference/register/payment-success?rid=...",
-    "failure_url": "https://deessa.org/conference/register/failure?rid=...",
+    "success_url": "https://deessafoundation.com/conference/register/payment-success?rid=...",
+    "failure_url": "https://deessafoundation.com/conference/register/failure?rid=...",
     "signed_field_names": "total_amount,transaction_uuid,product_code",
     "signature": "base64-encoded-hmac"
   },
@@ -142,7 +142,7 @@ last_updated: 2026-09-12
 **Example cURL**:
 
 ```bash
-curl -X POST https://deessa.org/api/conference/start-payment \
+curl -X POST https://deessafoundation.com/api/conference/start-payment \
   -H "Content-Type: application/json" \
   -d '{
     "registrationId": "a1b2c3d4-...",
@@ -157,7 +157,7 @@ curl -X POST https://deessa.org/api/conference/start-payment \
 
 **Purpose**: Verify Stripe payment directly after redirect (client-side verification)
 
-**Authentication**: None (public) â€” session ID verified against DB
+**Authentication**: None (public) — session ID verified against DB
 
 **Request Body**:
 
@@ -218,7 +218,7 @@ curl -X POST https://deessa.org/api/conference/start-payment \
 **Example cURL**:
 
 ```bash
-curl -X POST https://deessa.org/api/conference/confirm-stripe-session \
+curl -X POST https://deessafoundation.com/api/conference/confirm-stripe-session \
   -H "Content-Type: application/json" \
   -d '{
     "rid": "a1b2c3d4-...",
@@ -232,7 +232,7 @@ curl -X POST https://deessa.org/api/conference/confirm-stripe-session \
 
 **Purpose**: Lookup registration for payment link page
 
-**Authentication**: None (public) â€” dual-key verification
+**Authentication**: None (public) — dual-key verification
 
 **Rate Limit**: 60 requests per 60 seconds per IP
 
@@ -275,7 +275,7 @@ curl -X POST https://deessa.org/api/conference/confirm-stripe-session \
 **Example cURL**:
 
 ```bash
-curl "https://deessa.org/api/conference/verify-registration?rid=a1b2c3d4&email=user@example.com"
+curl "https://deessafoundation.com/api/conference/verify-registration?rid=a1b2c3d4&email=user@example.com"
 ```
 
 ---
@@ -284,7 +284,7 @@ curl "https://deessa.org/api/conference/verify-registration?rid=a1b2c3d4&email=u
 
 **Purpose**: Lightweight status poll endpoint for payment-success page
 
-**Authentication**: None (public) â€” by `rid` only (no email required post-payment)
+**Authentication**: None (public) — by `rid` only (no email required post-payment)
 
 **Query Parameters**:
 
@@ -315,7 +315,7 @@ curl "https://deessa.org/api/conference/verify-registration?rid=a1b2c3d4&email=u
 **Example cURL**:
 
 ```bash
-curl "https://deessa.org/api/conference/status?rid=a1b2c3d4"
+curl "https://deessafoundation.com/api/conference/status?rid=a1b2c3d4"
 ```
 
 ---
@@ -324,7 +324,7 @@ curl "https://deessa.org/api/conference/status?rid=a1b2c3d4"
 
 **Purpose**: Re-send payment link email to registrant
 
-**Authentication**: None â€” security in server action (dual-key)
+**Authentication**: None — security in server action (dual-key)
 
 **Request Body**:
 
@@ -359,7 +359,7 @@ curl "https://deessa.org/api/conference/status?rid=a1b2c3d4"
 **Example cURL**:
 
 ```bash
-curl -X POST https://deessa.org/api/conference/resend-payment-link \
+curl -X POST https://deessafoundation.com/api/conference/resend-payment-link \
   -H "Content-Type: application/json" \
   -d '{
     "registrationId": "a1b2c3d4-...",
@@ -400,7 +400,7 @@ a1b2c3d4-...,Jane Doe,jane@example.com,+9771234567890,ACME Corp,attendee,in-pers
 **Example cURL**:
 
 ```bash
-curl "https://deessa.org/api/admin/conference/export" \
+curl "https://deessafoundation.com/api/admin/conference/export" \
   -H "Cookie: sb-access-token=..." \
   -o registrations.csv
 ```
@@ -456,7 +456,7 @@ RETURNING id;
 **Example cURL**:
 
 ```bash
-curl "https://deessa.org/api/cron/expire-conference-registrations" \
+curl "https://deessafoundation.com/api/cron/expire-conference-registrations" \
   -H "Authorization: Bearer your-cron-secret-here"
 ```
 
@@ -705,21 +705,21 @@ async function callAPI() {
 
 **Happy Path**:
 
-1. Register â†’ verify-registration â†’ start-payment â†’ confirm-stripe-session â†’ status (confirmed)
+1. Register → verify-registration → start-payment → confirm-stripe-session → status (confirmed)
 
 **Error Paths**:
 
-1. start-payment with expired registration â†’ 400 error
-2. confirm-stripe-session with wrong sessionId â†’ 403 error
-3. verify-registration with wrong email â†’ 404 error
-4. status polling after cancellation â†’ status = "cancelled"
+1. start-payment with expired registration → 400 error
+2. confirm-stripe-session with wrong sessionId → 403 error
+3. verify-registration with wrong email → 404 error
+4. status polling after cancellation → status = "cancelled"
 
 **Edge Cases**:
 
 1. Duplicate webhook + direct verify (both should succeed due to idempotency)
-2. Amount mismatch â†’ status = "review"
-3. Rate limit violation â†’ 429 error
-4. Payment after expiry â†’ blocked
+2. Amount mismatch → status = "review"
+3. Rate limit violation → 429 error
+4. Payment after expiry → blocked
 
 ### 7.3 Example Test (Jest)\*\*
 

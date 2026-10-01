@@ -1,7 +1,7 @@
 ---
 title: "Receipt Token Migration Guide"
 description: "This guide outlines the migration from legacy receipt number-based access to secure token-based authentication for re..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

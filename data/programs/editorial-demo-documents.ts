@@ -2,7 +2,7 @@ import type { ProgramDocument, ProgramSection } from '@/lib/programs/content'
 import { outreachStops, researchStages } from '@/components/programs/demo/demo-content'
 
 const children = { url: '/twins-together.jpg', alt: 'Two children sharing a moment outdoors; illustrative photograph' }
-const family = { url: '/deesa-resources/IMG_8102.JPG', alt: 'Two children together near bookshelves; illustrative photograph' }
+const family = { url: '/deessa-resources/IMG_8102.JPG', alt: 'Two children together near bookshelves; illustrative photograph' }
 const community = { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&q=85', alt: 'Friends gathered outdoors; illustrative photograph' }
 const learning = { url: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1200&q=85', alt: 'Children learning together; illustrative photograph' }
 const hands = { url: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1800&q=85', alt: 'Hands gathered together; illustrative photograph' }

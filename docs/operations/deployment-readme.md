@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 - Deployment Documentation"
 description: "This directory contains all documentation and guides for deploying Payment Architecture V2 to staging and production ..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: operator
@@ -133,38 +133,38 @@ See `scripts/db/payments-v2/README.md` for detailed migration documentation.
 ## Deployment Workflow
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   Staging Deployment                    â”‚
-â”‚                                                         â”‚
-â”‚  1. Pre-deployment checks                              â”‚
-â”‚  2. Database migrations                                â”‚
-â”‚  3. Application deployment                             â”‚
-â”‚  4. Smoke tests                                        â”‚
-â”‚  5. Enable V2                                          â”‚
-â”‚  6. Monitor 24-48 hours                                â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                 Production Deployment                   â”‚
-â”‚                                                         â”‚
-â”‚  1. Pre-deployment checks                              â”‚
-â”‚  2. Database migrations                                â”‚
-â”‚  3. Application deployment (V2 disabled)               â”‚
-â”‚  4. Verify V1 working                                  â”‚
-â”‚  5. Enable V2 incrementally                            â”‚
-â”‚  6. Monitor 7+ days                                    â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â”‚
-                          â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    V1 Code Cleanup                      â”‚
-â”‚                                                         â”‚
-â”‚  1. Remove feature flags                               â”‚
-â”‚  2. Remove V1 code                                     â”‚
-â”‚  3. Database cleanup (optional)                        â”‚
-â”‚  4. Final verification                                 â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────┐
+│                   Staging Deployment                    │
+│                                                         │
+│  1. Pre-deployment checks                              │
+│  2. Database migrations                                │
+│  3. Application deployment                             │
+│  4. Smoke tests                                        │
+│  5. Enable V2                                          │
+│  6. Monitor 24-48 hours                                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                 Production Deployment                   │
+│                                                         │
+│  1. Pre-deployment checks                              │
+│  2. Database migrations                                │
+│  3. Application deployment (V2 disabled)               │
+│  4. Verify V1 working                                  │
+│  5. Enable V2 incrementally                            │
+│  6. Monitor 7+ days                                    │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                    V1 Code Cleanup                      │
+│                                                         │
+│  1. Remove feature flags                               │
+│  2. Remove V1 code                                     │
+│  3. Database cleanup (optional)                        │
+│  4. Final verification                                 │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Commands
@@ -351,20 +351,20 @@ See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed troubleshooting.
 ## Success Criteria
 
 ### Staging Success
-- âœ… All smoke tests passed
-- âœ… No critical errors in 24-48 hours
-- âœ… All metrics meeting targets
+-  All smoke tests passed
+-  No critical errors in 24-48 hours
+-  All metrics meeting targets
 
 ### Production Success
-- âœ… V1 working after deployment
-- âœ… V2 enabled successfully
-- âœ… No critical errors in 7 days
-- âœ… All metrics meeting targets
+-  V1 working after deployment
+-  V2 enabled successfully
+-  No critical errors in 7 days
+-  All metrics meeting targets
 
 ### Cleanup Success
-- âœ… All V1 code removed
-- âœ… All feature flags removed
-- âœ… Metrics stable for 7 days
+-  All V1 code removed
+-  All feature flags removed
+-  Metrics stable for 7 days
 
 ## Contributing
 

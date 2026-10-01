@@ -1,15 +1,15 @@
 ---
-title: "ðŸ—„ï¸ Database Migration Guide"
+title: "🗄️ Database Migration Guide"
 description: "Before using the new Homepage Content Management System, you MUST run this database migration."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸ—„ï¸ Database Migration Guide
+# 🗄️ Database Migration Guide
 
-## Run This First! âš ï¸
+## Run This First! ⚠️
 
 Before using the new Homepage Content Management System, you **MUST** run this database migration.
 
@@ -21,7 +21,7 @@ Before using the new Homepage Content Management System, you **MUST** run this d
 
 1. **Open Supabase Dashboard**
    - Go to: <https://supabase.com/dashboard>
-   - Select your project: "Deessa Foundation"
+   - Select your project: "deessa Foundation"
 
 2. **Open SQL Editor**
    - Click "SQL Editor" in the left sidebar
@@ -58,7 +58,7 @@ supabase login
 
 ```bash
 # From project root directory
-cd "d:\Web Codes\Projects\Deessa Foundation"
+cd "d:\Web Codes\Projects\deessa Foundation"
 
 # Link to your project (first time only)
 supabase link --project-ref YOUR_PROJECT_REF
@@ -89,7 +89,7 @@ psql -U postgres -d deessa_foundation
 
 ---
 
-## âœ… Verification Steps
+##  Verification Steps
 
 After running the migration, verify it worked:
 
@@ -135,7 +135,7 @@ Expected result: 4 policies (view, insert, update, delete)
 
 ---
 
-## ðŸ› Troubleshooting
+## 🐛 Troubleshooting
 
 ### **Error: "relation already exists"**
 
@@ -159,7 +159,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## ðŸ“Š What Gets Created
+## 📊 What Gets Created
 
 ### **Tables**
 
@@ -191,16 +191,16 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## ðŸ”’ Security Notes
+## 🔒 Security Notes
 
-âœ… **Row Level Security (RLS)** is enabled  
-âœ… Only authenticated admins can access  
-âœ… Policies enforce permission checks  
-âœ… Soft delete prevents accidental data loss  
+ **Row Level Security (RLS)** is enabled  
+ Only authenticated admins can access  
+ Policies enforce permission checks  
+ Soft delete prevents accidental data loss  
 
 ---
 
-## ðŸ“ Migration Details
+## 📝 Migration Details
 
 **File**: `scripts/db/migrations/006-media-assets.sql`  
 **Lines**: ~150  
@@ -210,7 +210,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ---
 
-## â®ï¸ Rollback (If Needed)
+## ⏮️ Rollback (If Needed)
 
 If something goes wrong, you can rollback:
 
@@ -226,14 +226,14 @@ DROP FUNCTION IF EXISTS update_media_assets_updated_at() CASCADE;
 
 ---
 
-## âœ… After Migration
+##  After Migration
 
 Once migration is complete:
 
-1. âœ… Restart your Next.js dev server
-2. âœ… Go to `/admin/media`
-3. âœ… Try uploading a file
-4. âœ… Check it appears in the table:
+1.  Restart your Next.js dev server
+2.  Go to `/admin/media`
+3.  Try uploading a file
+4.  Check it appears in the table:
 
    ```sql
    SELECT * FROM media_assets LIMIT 5;
@@ -241,15 +241,15 @@ Once migration is complete:
 
 ---
 
-## ðŸŽ‰ Success
+## 🎉 Success
 
 If you see this, you're ready:
 
-- âœ… Table `media_assets` exists
-- âœ… 15 columns present
-- âœ… 5+ indexes created
-- âœ… 4 RLS policies active
-- âœ… Trigger function working
+-  Table `media_assets` exists
+-  15 columns present
+-  5+ indexes created
+-  4 RLS policies active
+-  Trigger function working
 
 **You can now use the Homepage Content Management System!**
 

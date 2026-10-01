@@ -1,7 +1,7 @@
 ---
 title: "Conference Dynamic Form System - Analysis & Proposal"
 description: "Located at: /conference/register"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -45,16 +45,16 @@ Located at: `/conference/register`
 Located at: `/admin/conference/settings`
 
 **Current Capabilities:**
-âœ… Event Details (name, dates, venue, contact)
-âœ… Payment Configuration (fees, currency, expiry)
-âœ… Agenda/Timeline Management (add/remove/reorder items)
-âœ… Email Templates (3 types: general, reminder, directions)
+ Event Details (name, dates, venue, contact)
+ Payment Configuration (fees, currency, expiry)
+ Agenda/Timeline Management (add/remove/reorder items)
+ Email Templates (3 types: general, reminder, directions)
 
 **What's Missing:**
-âŒ No form field management
-âŒ No ability to add/remove/modify registration form fields
-âŒ No control over field types, validation, or options
-âŒ No conditional field logic
+❌ No form field management
+❌ No ability to add/remove/modify registration form fields
+❌ No control over field types, validation, or options
+❌ No conditional field logic
 
 ### 3. **Database Schema**
 Table: `conference_registrations`
@@ -109,40 +109,40 @@ consent_terms, consent_newsletter, status, notes
 ### Architecture Overview
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    Admin Panel                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-â”‚  â”‚  Form Builder UI                                       â”‚  â”‚
-â”‚  â”‚  - Add/Remove Fields                                   â”‚  â”‚
-â”‚  â”‚  - Configure Field Types                               â”‚  â”‚
-â”‚  â”‚  - Set Validation Rules                                â”‚  â”‚
-â”‚  â”‚  - Organize into Steps                                 â”‚  â”‚
-â”‚  â”‚  - Preview Form                                        â”‚  â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-â”‚                          â†“                                   â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-â”‚  â”‚  Database: conference_form_schema                      â”‚  â”‚
-â”‚  â”‚  - Stores JSON configuration                           â”‚  â”‚
-â”‚  â”‚  - Version control                                     â”‚  â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                          â†“
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚              Public Registration Form                        â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-â”‚  â”‚  Dynamic Form Renderer                                 â”‚  â”‚
-â”‚  â”‚  - Reads JSON schema                                   â”‚  â”‚
-â”‚  â”‚  - Renders appropriate field types                     â”‚  â”‚
-â”‚  â”‚  - Applies validation rules                            â”‚  â”‚
-â”‚  â”‚  - Handles conditional logic                           â”‚  â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-â”‚                          â†“                                   â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-â”‚  â”‚  Database: conference_registrations                    â”‚  â”‚
-â”‚  â”‚  - Fixed columns for core fields                       â”‚  â”‚
-â”‚  â”‚  - JSONB column for custom field responses            â”‚  â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                    Admin Panel                               │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  Form Builder UI                                       │  │
+│  │  - Add/Remove Fields                                   │  │
+│  │  - Configure Field Types                               │  │
+│  │  - Set Validation Rules                                │  │
+│  │  - Organize into Steps                                 │  │
+│  │  - Preview Form                                        │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                          ↓                                   │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  Database: conference_form_schema                      │  │
+│  │  - Stores JSON configuration                           │  │
+│  │  - Version control                                     │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│              Public Registration Form                        │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  Dynamic Form Renderer                                 │  │
+│  │  - Reads JSON schema                                   │  │
+│  │  - Renders appropriate field types                     │  │
+│  │  - Applies validation rules                            │  │
+│  │  - Handles conditional logic                           │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                          ↓                                   │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  Database: conference_registrations                    │  │
+│  │  - Fixed columns for core fields                       │  │
+│  │  - JSONB column for custom field responses            │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Database Changes Required
@@ -479,23 +479,23 @@ export async function updateFormSchema(schema: FormSchema): Promise<Result> {
 ## Benefits
 
 ### For Admins
-âœ… **Full control** over registration form without code changes
-âœ… **Easy customization** for different events or conferences
-âœ… **Quick iterations** - test different questions, reorder fields
-âœ… **Version history** - rollback to previous form versions
-âœ… **Better data collection** - ask exactly what you need
+ **Full control** over registration form without code changes
+ **Easy customization** for different events or conferences
+ **Quick iterations** - test different questions, reorder fields
+ **Version history** - rollback to previous form versions
+ **Better data collection** - ask exactly what you need
 
 ### For Developers
-âœ… **Reduced maintenance** - no code changes for form updates
-âœ… **Reusable system** - can extend to other forms (volunteer, contact, etc.)
-âœ… **Clean separation** - form structure decoupled from rendering logic
-âœ… **Type-safe** - schema validation ensures data integrity
+ **Reduced maintenance** - no code changes for form updates
+ **Reusable system** - can extend to other forms (volunteer, contact, etc.)
+ **Clean separation** - form structure decoupled from rendering logic
+ **Type-safe** - schema validation ensures data integrity
 
 ### For Users (Registrants)
-âœ… **Faster forms** - only relevant fields shown
-âœ… **Better UX** - conditional logic reduces clutter
-âœ… **Clear guidance** - custom help text per field
-âœ… **No unnecessary questions** - admins can remove unused fields
+ **Faster forms** - only relevant fields shown
+ **Better UX** - conditional logic reduces clutter
+ **Clear guidance** - custom help text per field
+ **No unnecessary questions** - admins can remove unused fields
 
 ---
 

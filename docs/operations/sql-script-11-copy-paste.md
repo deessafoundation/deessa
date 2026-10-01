@@ -1,7 +1,7 @@
 ---
 title: "SQL SCRIPT 11 - COMPLETE COPY & PASTE READY (FIXED VERSION)"
 description: "1. Open Supabase Dashboard: https://app.supabase.com"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin
@@ -258,4 +258,4 @@ You can copy it from there if needed.
 
 ---
 
-**That's it!** Just copy, paste, and run. ��
+**That's it!** Just copy, paste, and run.

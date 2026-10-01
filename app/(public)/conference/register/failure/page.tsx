@@ -9,7 +9,7 @@ function safeDecodeURIComponent(value: string): string {
 }
 
 export const metadata = {
-  title: "Registration Failed | DEESSA National Conference 2026",
+  title: "Registration Failed | deessa National Conference 2026",
 }
 
 interface FailurePageProps {
@@ -88,7 +88,7 @@ export default async function RegistrationFailurePage({ searchParams }: FailureP
                 <p className="mx-auto max-w-md text-lg text-foreground-muted">
                   We couldn&apos;t complete your registration for the{" "}
                   <span className="font-semibold text-foreground">
-                    DEESSA National Conference 2026.
+                    deessa National Conference 2026.
                   </span>
                   {" "}Don&apos;t worry, no data was saved.
                 </p>

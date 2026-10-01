@@ -1,7 +1,7 @@
 ---
 title: "Authentication"
-description: "Deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authen..."
-owner: "Deessa Team"
+description: "deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authen..."
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin
@@ -11,7 +11,7 @@ last_updated: 2026-09-12
 
 ## Overview
 
-Deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authentication methods depending on the endpoint.
+deessa Foundation uses Supabase Auth for user authentication and session management. The API supports multiple authentication methods depending on the endpoint.
 
 ## Authentication Methods
 
@@ -121,7 +121,7 @@ Admin endpoints require additional role verification:
 ### Role Check Flow
 
 ```
-Request â†’ Validate JWT â†’ Check admin_users â†’ Verify role â†’ Allow/Deny
+Request → Validate JWT → Check admin_users → Verify role → Allow/Deny
 ```
 
 ## Endpoint Auth Requirements

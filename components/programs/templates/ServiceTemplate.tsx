@@ -2,8 +2,9 @@ import type { Program, ProgramSection } from "@/lib/types/program-prototype"
 import { ArrowDown, ArrowUpRight, Plus } from "lucide-react"
 import { EditorialText, EditorialIcon } from "./EditorialParts"
 import { SafeImage } from "../SafeImage"
-import base from "../demo/program-base.module.css"
-import service from "../demo/service-concept.module.css"
+import base from "../demo/programs.module.css"
+
+const service = base
 
 interface ServiceTemplateProps {
   program: Program

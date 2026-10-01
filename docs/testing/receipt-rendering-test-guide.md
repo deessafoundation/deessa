@@ -1,7 +1,7 @@
 ---
 title: "Receipt Rendering Test Guide"
 description: "This document provides manual testing procedures for receipt rendering with stamps, signatures, and verification feat..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: reference
 audience: admin

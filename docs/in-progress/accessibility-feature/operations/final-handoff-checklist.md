@@ -1,7 +1,7 @@
 # Accessibility Feature - Final Handoff Checklist
 
 **Date:** 2026-09-16  
-**Project:** Deesha Foundation Accessibility Features V2.0  
+**Project:** deessa Foundation Accessibility Features V2.0  
 **Status:** Ready for Production Deployment Review
 
 ---
@@ -590,4 +590,4 @@ All documents located in `docs/in-progress/accessibility-feature/`:
 
 ---
 
-© 2026 Deesha Foundation Development Team
+© 2026 deessa Foundation Development Team

@@ -1,13 +1,13 @@
 ---
-title: "Story Editor â€” Admin User Guide"
+title: "Story Editor — Admin User Guide"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Story Editor â€” Admin User Guide
+# Story Editor — Admin User Guide
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
@@ -35,7 +35,7 @@ last_updated: 2026-09-12
 
 ### 1.1 Accessing the Story Editor
 
-1. Log in to the admin panel at `https://deessa.org/admin`
+1. Log in to the admin panel at `https://deessafoundation.com/admin`
 2. Navigate to **Stories** in the sidebar
 3. Click **Add Story** to create a new story, or click **Edit** on an existing story
 
@@ -153,7 +153,7 @@ Add visual separators between sections:
 
 **To add a link to selected text:**
 1. Select the text you want to link
-2. Click the link button in the toolbar (ðŸ”—)
+2. Click the link button in the toolbar (🔗)
 3. Enter the URL in the popup
 4. Click "Insert" or press Enter
 
@@ -193,7 +193,7 @@ Add visual separators between sections:
 ### 4.1 Uploading Images
 
 **To upload an image:**
-1. Click the image button in the toolbar (ðŸ–¼ï¸)
+1. Click the image button in the toolbar (🖼️)
 2. Choose "Upload" tab
 3. Click "Choose File" or drag and drop an image
 4. Wait for upload to complete (progress bar shown)
@@ -218,11 +218,11 @@ After inserting an image, you can configure:
 
 **Alt Text** (required for accessibility):
 - Describes the image for screen readers
-- Click on image â†’ enter alt text in the field
+- Click on image → enter alt text in the field
 
 **Caption** (optional):
 - Displayed below the image
-- Click on image â†’ enter caption in the field
+- Click on image → enter caption in the field
 
 **Alignment:**
 - Left: Image floats to the left
@@ -317,7 +317,7 @@ Insert styled horizontal dividers to separate sections:
 ### 6.1 Embedding YouTube Videos
 
 **How to embed a video:**
-1. Click the video button in the toolbar (â–¶ï¸)
+1. Click the video button in the toolbar (▶️)
 2. Paste the YouTube URL
 3. Click "Insert"
 4. Video preview appears in the editor

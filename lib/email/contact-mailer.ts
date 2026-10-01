@@ -108,7 +108,7 @@ function buildInternalEmail(params: ContactEmailParams): string {
       </div>
     </div>
     <div class="footer">
-      DEESSA Foundation — replies should go to the sender's address above. For internal routing, use your normal inbox labels.
+      deessa Foundation — replies should go to the sender's address above. For internal routing, use your normal inbox labels.
     </div>
   </div>
 </body>
@@ -152,7 +152,7 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
     </div>
     <div class="body">
       <p>Hi <strong>${escapeHtml(params.name)}</strong>,</p>
-      <p>Thanks for contacting DEESSA Foundation. We've received your message and will respond within <strong>1–2 business days</strong>. If your request is urgent, please email <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a> with the word <strong>URGENT</strong> in the subject line.</p>
+      <p>Thanks for contacting deessa Foundation. We've received your message and will respond within <strong>1–2 business days</strong>. If your request is urgent, please email <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a> with the word <strong>URGENT</strong> in the subject line.</p>
 
       <div class="summary">
         <div class="summary-row">
@@ -170,10 +170,10 @@ function buildConfirmationEmail(params: ContactEmailParams): string {
 
       <hr class="divider" />
       <p style="font-size:14px; margin-bottom:8px;">What happens next: our team will review your message, and a reply will be sent to this email address. If we need additional details, we may follow up requesting clarification.</p>
-      <p style="font-size:14px;">Warm regards,<br /><strong>DEESSA Foundation Team</strong></p>
+      <p style="font-size:14px;">Warm regards,<br /><strong>deessa Foundation Team</strong></p>
     </div>
     <div class="footer">
-      DEESSA Foundation · Thamel, Kathmandu, Nepal 44600<br />
+      deessa Foundation · Thamel, Kathmandu, Nepal 44600<br />
       This is an automated confirmation. To follow up, reply to this message or contact <a href="mailto:support@deessafoundation.com">support@deessafoundation.com</a>.
     </div>
   </div>
@@ -201,7 +201,7 @@ export async function sendContactEmails(params: ContactEmailParams): Promise<Ema
     const [internalResult] = await Promise.allSettled([
       // 1. Internal notification (reply-to: sender so the team can reply directly)
       transporter.sendMail({
-        from: `"DEESSA Foundation Website" <${orgEmail}>`,
+        from: `"deessa Foundation Website" <${orgEmail}>`,
         to: contactEmail,
         replyTo: `"${params.name}" <${params.email}>`,
         subject: `[Contact Form] ${params.subject} — ${params.name}`,
@@ -214,9 +214,9 @@ export async function sendContactEmails(params: ContactEmailParams): Promise<Ema
 
       // 2. Confirmation to the sender
       transporter.sendMail({
-        from: `"DEESSA Foundation" <${orgEmail}>`,
+        from: `"deessa Foundation" <${orgEmail}>`,
         to: params.email,
-        subject: `We received your message — DEESSA Foundation`,
+        subject: `We received your message — deessa Foundation`,
         html: buildConfirmationEmail(params),
         headers: {
           'List-Unsubscribe': `<mailto:unsubscribe@deessafoundation.com?subject=unsubscribe>`,

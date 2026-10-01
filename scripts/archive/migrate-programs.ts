@@ -182,7 +182,7 @@ function transformLegacyProject(project: LegacyProject) {
 
   // Build SEO
   const seo = {
-    title: `${project.title} | DEESSA Foundation`,
+    title: `${project.title} | deessa Foundation`,
     description: stripHtml(project.description || project.long_description || "").slice(0, 160),
   }
 
@@ -239,7 +239,7 @@ function transformHardcodedProgram(program: HardcodedProgram) {
     hero: program.hero,
     sections: program.sections,
     seo: {
-      title: `${program.title} | DEESSA Foundation`,
+      title: `${program.title} | deessa Foundation`,
       description: program.shortDescription?.slice(0, 160) || "",
     },
     card: {

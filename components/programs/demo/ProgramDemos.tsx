@@ -24,15 +24,16 @@ import {
   researchStages,
   type DemoCategory,
 } from "./demo-content"
-import base from "./program-base.module.css"
-import service from "./service-concept.module.css"
-import outreach from "./outreach-concept.module.css"
-import research from "./research-concept.module.css"
+import s from "./programs.module.css"
 import { CampaignConcept } from "./CampaignConcept"
+
+const service = s
+const outreach = s
+const research = s
 
 const photos = {
   children: "/twins-together.jpg",
-  family: "/deesa-resources/IMG_8102.JPG",
+  family: "/deessa-resources/IMG_8102.JPG",
   community: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&q=85",
   learning: "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1200&q=85",
   hands: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1800&q=85",
@@ -58,7 +59,7 @@ function Photo({
 
 function Shell({ category, children }: { category: DemoCategory; children: ReactNode }) {
   return (
-    <div className={`${s.root} ${base[category]}`}>
+    <div className={`${s.root} ${s[category]}`}>
       <div className={s.demoBar}>
         <div className={s.container}>
           <span>
@@ -761,7 +762,7 @@ export function ProgramDemoIndex() {
         <Link className={s.textLink} href="/demo">
           ← All demos
         </Link>
-        <Eyebrow>DEESSA / PROGRAM DESIGN EXPLORATIONS</Eyebrow>
+        <Eyebrow>deessa / PROGRAM DESIGN EXPLORATIONS</Eyebrow>
         <h1>
           One foundation.
           <br />
@@ -770,7 +771,7 @@ export function ProgramDemoIndex() {
         <p>Explore four ways to bring our work to life. All pages use sample content and illustrative imagery.</p>
         <div className={s.indexCards}>
           {demoPages.map((page) => (
-            <Link key={page.slug} href={`/demo/${page.slug}`} className={base[page.category]}>
+            <Link key={page.slug} href={`/demo/${page.slug}`} className={s[page.category]}>
               <div>
                 <span>
                   {page.number} / {page.label}

@@ -148,6 +148,6 @@ Superseded or outdated documentation retained for reference.
 
 - **Task Tracker:** `tasks.md` (root, do not move)
 - **Schema:** V2 with `fontFamily` enum, 100-200% text scale, null spacing support
-- **Storage Key:** `deesha-a11y-preferences`
+- **Storage Key:** `deessa-a11y-preferences`
 - **Build Command:** `pnpm build`
 - **Test Page:** `/demo/accessibility-test`

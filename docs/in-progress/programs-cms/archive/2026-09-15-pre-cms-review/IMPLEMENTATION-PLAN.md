@@ -721,7 +721,7 @@ interface CTAButton {
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ DEESSA Foundation - Programs CMS                            │
+│ deessa Foundation - Programs CMS                            │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  Programs                                                   │
@@ -809,7 +809,7 @@ interface CTAButton {
 │                                                             │
 │ SEO & METADATA                                              │
 │ ─────────────────────────────────────────────────────────── │
-│  Meta Title:   [AAC Communication Support - DEESSA      ]   │
+│  Meta Title:   [AAC Communication Support - deessa      ]   │
 │  Meta Desc:    [Supporting children and families thro... ]  │
 │  OG Image:     [Choose Image]                               │
 │                                                             │

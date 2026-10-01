@@ -1,17 +1,17 @@
 ---
-title: "SEO Implementation Guide - Deessa Foundation Website"
-description: "This guide documents the SEO improvements implemented for the Deessa Foundation website, following Google's SEO Start..."
-owner: "Deessa Team"
+title: "SEO Implementation Guide - deessa Foundation Website"
+description: "This guide documents the SEO improvements implemented for the deessa Foundation website, following Google's SEO Start..."
+owner: "deessa Team"
 status: active
 category: standards
 audience: admin
 last_updated: 2026-09-12
 ---
-# SEO Implementation Guide - Deessa Foundation Website
+# SEO Implementation Guide - deessa Foundation Website
 
 ## Overview
 
-This guide documents the SEO improvements implemented for the Deessa Foundation website, following Google's SEO Starter Guide best practices. The implementation focuses on making the site more discoverable, understandable, and valuable to both users and search engines.
+This guide documents the SEO improvements implemented for the deessa Foundation website, following Google's SEO Starter Guide best practices. The implementation focuses on making the site more discoverable, understandable, and valuable to both users and search engines.
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ Defines the organization's basic information, contact points, and social media p
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Deessa Foundation",
+  "name": "deessa Foundation",
   "url": "https://deessafoundation.com",
   "logo": "https://deessafoundation.com/favicon.png",
   "description": "A non-profit organization dedicated to...",
@@ -92,7 +92,7 @@ const structuredData = getArticleStructuredData({
 
 #### Title Tags
 - **Length**: 50-60 characters (including site name)
-- **Format**: `Page Title | Deessa Foundation`
+- **Format**: `Page Title | deessa Foundation`
 - **Guidelines**:
   - Be descriptive and concise
   - Include primary keyword naturally
@@ -201,12 +201,12 @@ Next.js Image component handles lazy loading automatically. Only use `priority` 
 Our URLs follow a logical, descriptive pattern:
 
 ```
-âœ“ GOOD:
+✓ GOOD:
 /stories/helping-children-with-autism
 /programs/education-in-karnali
 /events/annual-conference-2026
 
-âœ— BAD:
+✗ BAD:
 /stories/123
 /p/abc456
 /event?id=789
@@ -429,7 +429,7 @@ Before publishing new content, verify:
 - [ ] Featured image with alt text
 - [ ] All images have descriptive alt text
 - [ ] Content is at least 300 words
-- [ ] Headings follow hierarchy (h1 â†’ h2 â†’ h3)
+- [ ] Headings follow hierarchy (h1 → h2 → h3)
 - [ ] Internal links to related content
 - [ ] No broken links
 - [ ] Mobile-friendly
@@ -439,7 +439,7 @@ Before publishing new content, verify:
 
 ## Common SEO Mistakes to Avoid
 
-### âŒ DON'T
+### ❌ DON'T
 
 1. **Keyword Stuffing**: Unnaturally repeating keywords
 2. **Duplicate Content**: Copy-pasting content from other pages
@@ -450,7 +450,7 @@ Before publishing new content, verify:
 7. **No Mobile Optimization**: Content not mobile-friendly
 8. **Hidden Content**: Using CSS to hide keyword-stuffed text
 
-### âœ“ DO
+### ✓ DO
 
 1. **Write for Humans First**: Focus on user value
 2. **Use Natural Language**: Write conversationally
@@ -467,17 +467,17 @@ Before publishing new content, verify:
 
 ```
 SEO Implementation Files:
-â”œâ”€â”€ lib/seo/
-â”‚   â”œâ”€â”€ structured-data.ts         # Schema.org generators
-â”‚   â””â”€â”€ metadata-utils.ts          # Metadata helpers
-â”œâ”€â”€ components/seo/
-â”‚   â””â”€â”€ structured-data.tsx        # Structured data component
-â”œâ”€â”€ app/
-â”‚   â”œâ”€â”€ layout.tsx                 # Global metadata & structured data
-â”‚   â”œâ”€â”€ robots.ts                  # Robots.txt config
-â”‚   â””â”€â”€ sitemap.ts                 # Sitemap generator
-â””â”€â”€ docs/
-    â””â”€â”€ SEO_GUIDE.md               # This document
+├── lib/seo/
+│   ├── structured-data.ts         # Schema.org generators
+│   └── metadata-utils.ts          # Metadata helpers
+├── components/seo/
+│   └── structured-data.tsx        # Structured data component
+├── app/
+│   ├── layout.tsx                 # Global metadata & structured data
+│   ├── robots.ts                  # Robots.txt config
+│   └── sitemap.ts                 # Sitemap generator
+└── docs/
+    └── SEO_GUIDE.md               # This document
 ```
 
 ---
@@ -511,15 +511,15 @@ For SEO questions or issues:
 ## Changelog
 
 ### Version 1.0 (September 2026)
-- âœ… Implemented structured data (Organization, WebSite, Article, Event, Breadcrumbs)
-- âœ… Enhanced metadata across all pages
-- âœ… Dynamic metadata for CMS content
-- âœ… Created SEO utility functions
-- âœ… Updated sitemap and robots.txt
-- âœ… Improved image handling
-- âœ… Added canonical URLs
-- âœ… Implemented Core Web Vitals monitoring
-- âœ… Created comprehensive documentation
+-  Implemented structured data (Organization, WebSite, Article, Event, Breadcrumbs)
+-  Enhanced metadata across all pages
+-  Dynamic metadata for CMS content
+-  Created SEO utility functions
+-  Updated sitemap and robots.txt
+-  Improved image handling
+-  Added canonical URLs
+-  Implemented Core Web Vitals monitoring
+-  Created comprehensive documentation
 
 ---
 

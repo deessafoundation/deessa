@@ -1,7 +1,7 @@
 ---
 title: "Health API"
 description: "The Health API provides system health status including database connectivity, payment configuration, and provider ava..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

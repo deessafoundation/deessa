@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This document validates the keyboard accessibility and screen reader compatibility of the Deesha Foundation accessibility panel and features through comprehensive code analysis. All critical accessibility patterns have been verified against WCAG 2.2 AA requirements.
+This document validates the keyboard accessibility and screen reader compatibility of the deessa Foundation accessibility panel and features through comprehensive code analysis. All critical accessibility patterns have been verified against WCAG 2.2 AA requirements.
 
 ---
 

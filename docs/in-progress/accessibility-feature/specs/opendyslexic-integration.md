@@ -43,7 +43,7 @@ Illustrative structure only; replace paths with verified assets:
 
 ~~~css
 @font-face {
-  font-family: "Deesha OpenDyslexic";
+  font-family: "deessa OpenDyslexic";
   src: url("/fonts/opendyslexic/VERIFIED-REGULAR.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
@@ -64,7 +64,7 @@ The provider stores fontFamily as default, system or opendyslexic. The DOM adapt
 
 - Default restores the site's original heading/body font behavior.
 - System uses a tested system-ui/sans-serif stack.
-- OpenDyslexic uses "Deesha OpenDyslexic" followed by tested system/script fallbacks.
+- OpenDyslexic uses "deessa OpenDyslexic" followed by tested system/script fallbacks.
 - Audit headings, .font-comic-num, buttons, labels, rich text and existing explicit !important font rules.
 - Use explicit scoped text selectors or tokens. Do not blindly override every descendant, including icons and code.
 - Portals/toasts must inherit the selected presentation while the public scope is active.

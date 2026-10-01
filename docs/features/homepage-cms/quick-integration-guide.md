@@ -1,13 +1,13 @@
 ---
-title: "ðŸš€ Quick Integration Guide - Adding More CMS Sections"
+title: "🚀 Quick Integration Guide - Adding More CMS Sections"
 description: "Follow this 3-step pattern to integrate any section that already has a CMS loader:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸš€ Quick Integration Guide - Adding More CMS Sections
+# 🚀 Quick Integration Guide - Adding More CMS Sections
 
 ## Pattern for Integrating Existing CMS Loaders
 
@@ -51,10 +51,10 @@ export function MySection({ data }: MySectionProps) {
 ```
 
 **Key Points:**
-- âœ… Import type from `@/lib/types/homepage-settings`
-- âœ… Make prop optional with `?`
-- âœ… Keep default data as fallback
-- âœ… Use `displayData = data || defaultData` pattern
+-  Import type from `@/lib/types/homepage-settings`
+-  Make prop optional with `?`
+-  Keep default data as fallback
+-  Use `displayData = data || defaultData` pattern
 
 ---
 
@@ -79,10 +79,10 @@ export default async function HomePage() {
 ```
 
 **Key Points:**
-- âœ… Import loader from `@/lib/data/homepage-settings`
-- âœ… Make component `async`
-- âœ… Await the loader function
-- âœ… Pass data as props
+-  Import loader from `@/lib/data/homepage-settings`
+-  Make component `async`
+-  Await the loader function
+-  Pass data as props
 
 ---
 
@@ -98,13 +98,13 @@ export default async function HomePage() {
 
 ---
 
-## ðŸŽ¯ Ready-to-Integrate Sections
+## 🎯 Ready-to-Integrate Sections
 
 These sections already have CMS loaders and admin UI - just need integration:
 
 ### 1. Hero Carousel
 **Loader:** `getHomeHeroSettings()` (in `lib/data/site-settings.ts`)  
-**Admin UI:** âœ… HeroManager  
+**Admin UI:**  HeroManager  
 **Component:** `components/hero-carousel.tsx`
 
 **Integration:**
@@ -122,8 +122,8 @@ const heroSettings = await getHomeHeroSettings()
 
 ### 2. Programs Section
 **Loader:** `getHomepagePrograms()` (in `lib/data/homepage-settings.ts`)  
-**Admin UI:** âœ… ProgramsManager  
-**Component:** `components/homepage-sections.tsx` â†’ `ProgramsSection`
+**Admin UI:**  ProgramsManager  
+**Component:** `components/homepage-sections.tsx` → `ProgramsSection`
 
 **Integration:**
 ```typescript
@@ -151,8 +151,8 @@ export function ProgramsSection({ programs }: ProgramsSectionProps) {
 
 ### 3. Partners Section
 **Loader:** `getHomepageMarqueeSettings()` (in `lib/data/homepage-settings.ts`)  
-**Admin UI:** âœ… MarqueeManager  
-**Component:** `components/homepage-sections.tsx` â†’ `PartnersSection`
+**Admin UI:**  MarqueeManager  
+**Component:** `components/homepage-sections.tsx` → `PartnersSection`
 
 **Integration:**
 ```typescript
@@ -178,7 +178,7 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
 ---
 
-## ðŸ”§ Common Patterns
+## 🔧 Common Patterns
 
 ### Pattern 1: Array Data (Stats, Programs, CTAs)
 ```typescript
@@ -244,9 +244,9 @@ export function Component({ hero }: Props) {
 
 ---
 
-## âš ï¸ Common Mistakes to Avoid
+## ⚠️ Common Mistakes to Avoid
 
-### âŒ Don't: Remove fallback data
+### ❌ Don't: Remove fallback data
 ```typescript
 // BAD - breaks if CMS unavailable
 export function Component({ data }: Props) {
@@ -254,7 +254,7 @@ export function Component({ data }: Props) {
 }
 ```
 
-### âœ… Do: Always provide fallback
+###  Do: Always provide fallback
 ```typescript
 // GOOD - works even if CMS unavailable
 export function Component({ data }: Props) {
@@ -265,7 +265,7 @@ export function Component({ data }: Props) {
 
 ---
 
-### âŒ Don't: Make props required
+### ❌ Don't: Make props required
 ```typescript
 // BAD - forces all callers to provide data
 interface Props {
@@ -273,7 +273,7 @@ interface Props {
 }
 ```
 
-### âœ… Do: Make props optional
+###  Do: Make props optional
 ```typescript
 // GOOD - allows gradual migration
 interface Props {
@@ -283,7 +283,7 @@ interface Props {
 
 ---
 
-### âŒ Don't: Forget to import types
+### ❌ Don't: Forget to import types
 ```typescript
 // BAD - no type safety
 interface Props {
@@ -291,7 +291,7 @@ interface Props {
 }
 ```
 
-### âœ… Do: Import proper types
+###  Do: Import proper types
 ```typescript
 // GOOD - full type safety
 import type { HomepageStat } from "@/lib/types/homepage-settings"
@@ -303,26 +303,26 @@ interface Props {
 
 ---
 
-## ðŸŽ¯ Integration Priority
+## 🎯 Integration Priority
 
 ### High Priority (Do First):
-1. âœ… **Impact Stats Bar** - DONE
-2. â¬œ **Hero Carousel** - Loader exists, just needs integration
-3. â¬œ **Programs Section** - Loader exists, just needs integration
+1.  **Impact Stats Bar** - DONE
+2. ⬜ **Hero Carousel** - Loader exists, just needs integration
+3. ⬜ **Programs Section** - Loader exists, just needs integration
 
 ### Medium Priority (Do Next):
-4. â¬œ **Partners Section** - Loader exists, needs partner data in DB
-5. â¬œ **Hero CTAs** - Loader exists, needs integration
-6. â¬œ **CTA Cards** - Loader exists, needs integration
+4. ⬜ **Partners Section** - Loader exists, needs partner data in DB
+5. ⬜ **Hero CTAs** - Loader exists, needs integration
+6. ⬜ **CTA Cards** - Loader exists, needs integration
 
 ### Low Priority (Future):
-7. â¬œ **Testimonials** - Needs new loader + admin UI
-8. â¬œ **Timeline** - Needs new loader + admin UI
-9. â¬œ **Banners** - Loader exists, needs integration
+7. ⬜ **Testimonials** - Needs new loader + admin UI
+8. ⬜ **Timeline** - Needs new loader + admin UI
+9. ⬜ **Banners** - Loader exists, needs integration
 
 ---
 
-## ðŸ“š Reference Files
+## 📚 Reference Files
 
 - **Types:** `lib/types/homepage-settings.ts`
 - **Loaders:** `lib/data/homepage-settings.ts`
@@ -332,19 +332,19 @@ interface Props {
 
 ---
 
-## ðŸŽ‰ Success Checklist
+## 🎉 Success Checklist
 
 After integrating a section, verify:
 
-- [ ] âœ… Component accepts optional props
-- [ ] âœ… Fallback data is provided
-- [ ] âœ… CMS data is fetched in page.tsx
-- [ ] âœ… Props are passed to component
-- [ ] âœ… No TypeScript errors
-- [ ] âœ… Admin UI can edit the data
-- [ ] âœ… Changes reflect on homepage
-- [ ] âœ… Site works if CMS unavailable
-- [ ] âœ… No breaking changes
+- [ ]  Component accepts optional props
+- [ ]  Fallback data is provided
+- [ ]  CMS data is fetched in page.tsx
+- [ ]  Props are passed to component
+- [ ]  No TypeScript errors
+- [ ]  Admin UI can edit the data
+- [ ]  Changes reflect on homepage
+- [ ]  Site works if CMS unavailable
+- [ ]  No breaking changes
 
 ---
 

@@ -223,7 +223,7 @@ const labels: Record<keyof AccessibilityPreferences, string> = {
 1. **Test Migration:**
    ```javascript
    // In browser console:
-   localStorage.setItem('deesha-a11y-preferences', JSON.stringify({
+   localStorage.setItem('deessa-a11y-preferences', JSON.stringify({
      version: "1.0",
      preferences: {
        textScale: 1.2,

@@ -106,7 +106,7 @@ function PaymentOptionsContent() {
           <div className="flex size-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
             D
           </div>
-          <span className="font-bold">DEESSA Foundation</span>
+          <span className="font-bold">deessa Foundation</span>
         </div>
 
         {/* Success header */}

@@ -9,7 +9,7 @@ Updated September 15, 2026. This filename is retained for compatibility; the ear
 | /demo/deessa-companion | ResearchDemo in components/programs/demo/ProgramDemos.tsx |
 | /demo/1000-families | components/programs/demo/CampaignConcept.tsx |
 
-Shared styles: components/programs/demo/program-demo.module.css.
+Shared styles: components/programs/demo/programs.module.css.
 Campaign styles: components/programs/demo/campaign-concept.module.css.
 Interactive examples: components/programs/demo/DemoInteractions.tsx.
 Entry points: /demo and /demo/programs.

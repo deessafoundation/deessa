@@ -1,7 +1,7 @@
 ---
 title: "Webhooks API"
 description: "Webhook endpoints receive notifications from payment providers Stripe, Khalti, eSewa. These endpoints are called by t..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: admin

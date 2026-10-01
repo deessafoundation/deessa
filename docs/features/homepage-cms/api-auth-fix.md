@@ -1,18 +1,18 @@
 ---
-title: "Homepage Settings API - Authentication Fix âœ…"
+title: "Homepage Settings API - Authentication Fix "
 description: "The /api/admin/homepage-settings endpoint was returning:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Homepage Settings API - Authentication Fix âœ…
+# Homepage Settings API - Authentication Fix 
 
 ## Issue
 The `/api/admin/homepage-settings` endpoint was returning:
 ```
-âŒ Forbidden - Admin access required
+❌ Forbidden - Admin access required
 ```
 
 Even though the user was logged in as an admin.
@@ -24,7 +24,7 @@ Even though the user was logged in as an admin.
 The API route was manually querying the `admin_users` table:
 
 ```typescript
-// âŒ PROBLEMATIC CODE
+// ❌ PROBLEMATIC CODE
 const { data: adminUser } = await supabase
   .from("admin_users")
   .select("id, role")
@@ -44,7 +44,7 @@ const { data: adminUser } = await supabase
 Use the standardized `getCurrentAdmin()` function that's used throughout the application:
 
 ```typescript
-// âœ… CORRECT CODE
+//  CORRECT CODE
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 
 const currentAdmin = await getCurrentAdmin()
@@ -162,11 +162,11 @@ export async function getCurrentAdmin() {
 ```
 
 **Benefits**:
-1. âœ… **Centralized logic** - All admin routes use the same authentication
-2. âœ… **Proper error handling** - Returns `null` if not authenticated
-3. âœ… **Consistent pattern** - Matches other admin API routes
-4. âœ… **RLS-aware** - Handles Row Level Security policies correctly
-5. âœ… **Full admin data** - Returns complete admin user object
+1.  **Centralized logic** - All admin routes use the same authentication
+2.  **Proper error handling** - Returns `null` if not authenticated
+3.  **Consistent pattern** - Matches other admin API routes
+4.  **RLS-aware** - Handles Row Level Security policies correctly
+5.  **Full admin data** - Returns complete admin user object
 
 ---
 
@@ -174,15 +174,15 @@ export async function getCurrentAdmin() {
 
 This change makes the homepage settings API consistent with other admin routes:
 
-### âœ… Routes Using `getCurrentAdmin()`
-- `/api/admin/support/[id]` âœ…
-- `/api/admin/support/actions` âœ…
-- `/api/admin/notifications` âœ…
-- `/api/admin/notifications/[id]` âœ…
-- `/api/admin/notifications/mark-all-read` âœ…
-- **`/api/admin/homepage-settings`** âœ… (NOW FIXED)
+###  Routes Using `getCurrentAdmin()`
+- `/api/admin/support/[id]` 
+- `/api/admin/support/actions` 
+- `/api/admin/notifications` 
+- `/api/admin/notifications/[id]` 
+- `/api/admin/notifications/mark-all-read` 
+- **`/api/admin/homepage-settings`**  (NOW FIXED)
 
-### âŒ Routes Still Using Manual Query
+### ❌ Routes Still Using Manual Query
 - `/api/admin/settings/support`
 - `/api/admin/donations`
 - `/api/admin/donations/export`
@@ -210,12 +210,12 @@ This change makes the homepage settings API consistent with other admin routes:
 
 ### Before Fix
 ```
-âŒ Forbidden - Admin access required
+❌ Forbidden - Admin access required
 ```
 
 ### After Fix
 ```
-âœ… Saved successfully
+ Saved successfully
 Homepage settings have been updated.
 ```
 
@@ -231,13 +231,13 @@ Homepage settings have been updated.
 
 ---
 
-## ðŸŽ‰ Result
+## 🎉 Result
 
 The Homepage Manager now works correctly! Admins can:
-- âœ… Access the homepage manager
-- âœ… Make changes to any section
-- âœ… Save changes successfully
-- âœ… See success/error notifications
-- âœ… Have changes persist to the database
+-  Access the homepage manager
+-  Make changes to any section
+-  Save changes successfully
+-  See success/error notifications
+-  Have changes persist to the database
 
-**Authentication issue resolved!** ðŸš€
+**Authentication issue resolved!** 🚀

@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic"
 /* ──────────────────  METADATA  ────────────────── */
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Deessa Foundation - Empowering Nepal Through Education & Social Development",
+  title: "deessa Foundation - Empowering Nepal Through Education & Social Development",
   description: "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for vulnerable communities in Nepal. Focused on autism support and disability rights.",
   path: "/",
   keywords: [

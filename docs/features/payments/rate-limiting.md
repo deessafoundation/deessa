@@ -1,7 +1,7 @@
 ---
 title: "Rate Limiting Implementation"
 description: "The payment system uses Supabase-backed distributed rate limiting to protect API endpoints from abuse. This implement..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

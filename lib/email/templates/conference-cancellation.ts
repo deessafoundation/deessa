@@ -25,7 +25,7 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registration Cancelled — DEESSA National Conference 2026</title>
+  <title>Registration Cancelled — deessa National Conference 2026</title>
 </head>
 <body style="margin:0;padding:0;background:#FFF5F5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF5F5;padding:40px 0;">
@@ -37,7 +37,7 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
-                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+                <img src="${siteUrl}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
               </a>
             </td>
           </tr>
@@ -63,7 +63,7 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
                   </h1>
                   <p style="margin:0;color:rgba(255,255,255,0.92);font-size:15px;line-height:1.6;">
                     Hi ${safeFirstName}, your registration for the<br />
-                    <strong>DEESSA National Conference 2026</strong><br />
+                    <strong>deessa National Conference 2026</strong><br />
                     has been cancelled.
                   </p>
                 </td>
@@ -153,7 +153,7 @@ export function ConferenceCancellationTemplate(props: ConferenceCancellationTemp
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#9CA3AF;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="${siteUrl}" style="color:#DC2626;">deessafoundation.com</a>
               </p>

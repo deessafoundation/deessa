@@ -1,42 +1,42 @@
 ---
-title: "ðŸš€ Event Management Module - Get Started"
+title: "🚀 Event Management Module - Get Started"
 description: "Welcome This is your starting point for the Event Management Module project."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# ðŸš€ Event Management Module - Get Started
+# 🚀 Event Management Module - Get Started
 
 **Welcome!** This is your starting point for the Event Management Module project.
 
 ---
 
-## âœ… What's Been Set Up
+##  What's Been Set Up
 
 Your professional development environment is ready:
 
 ```
 docs/event-management-module/
-â”œâ”€â”€ 00-GET-STARTED.md          â† You are here!
-â”œâ”€â”€ README.md                   â† Project overview & status
-â”œâ”€â”€ 01-ARCHITECTURE.md          â† Complete system architecture
-â”œâ”€â”€ 02-DECISIONS.md             â† 7 decisions needing approval
-â”œâ”€â”€ CHANGELOG.md                â† Progress tracking log
-â”‚
-â””â”€â”€ Coming Next:
-    â”œâ”€â”€ 03-PLANNING.md          â† Phase timeline & tasks
-    â”œâ”€â”€ 04-DATABASE-SCHEMA.md   â† Complete SQL design
-    â”œâ”€â”€ 05-API-SPECIFICATION.md â† Server actions spec
-    â”œâ”€â”€ 06-UI-COMPONENTS.md     â† Component design
-    â”œâ”€â”€ 07-TESTING-STRATEGY.md  â† Test approach
-    â””â”€â”€ 08-DEPLOYMENT-GUIDE.md  â† Go-live checklist
+├── 00-GET-STARTED.md          ← You are here!
+├── README.md                   ← Project overview & status
+├── 01-ARCHITECTURE.md          ← Complete system architecture
+├── 02-DECISIONS.md             ← 7 decisions needing approval
+├── CHANGELOG.md                ← Progress tracking log
+│
+└── Coming Next:
+    ├── 03-PLANNING.md          ← Phase timeline & tasks
+    ├── 04-DATABASE-SCHEMA.md   ← Complete SQL design
+    ├── 05-API-SPECIFICATION.md ← Server actions spec
+    ├── 06-UI-COMPONENTS.md     ← Component design
+    ├── 07-TESTING-STRATEGY.md  ← Test approach
+    └── 08-DEPLOYMENT-GUIDE.md  ← Go-live checklist
 ```
 
 ---
 
-## ðŸ“– Read This First
+## 📖 Read This First
 
 ### 1. Understand the Goal (5 minutes)
 **Read:** `README.md`
@@ -69,26 +69,26 @@ docs/event-management-module/
 
 ---
 
-## ðŸŽ¯ Your Next Steps
+## 🎯 Your Next Steps
 
 ### Immediate (Today)
 
 - [x] **Read** `README.md` (5 min)
 - [x] **Read** `01-ARCHITECTURE.md` (15 min)
-- [x] **Review** `02-DECISIONS.md` (10 min) â€” All 6 decisions approved, 1 deferred
-- [x] **Review** `tasks.md` â€” Comprehensive implementation plan
+- [x] **Review** `02-DECISIONS.md` (10 min) — All 6 decisions approved, 1 deferred
+- [x] **Review** `tasks.md` — Comprehensive implementation plan
 
 ### Before Development Starts
 
-- [x] All critical decisions approved âœ…
-- [x] Database schema finalized âœ…
-- [x] Implementation plan created âœ…
+- [x] All critical decisions approved 
+- [x] Database schema finalized 
+- [x] Implementation plan created 
 - [ ] Development environment ready
 - [ ] Begin Phase 0: Create migration file
 
 ---
 
-## ðŸŽ¬ Quick Start for Developers
+## 🎬 Quick Start for Developers
 
 ### If You're Ready to Code
 
@@ -110,49 +110,49 @@ docs/event-management-module/
 # Follow: 05-API-SPECIFICATION.md (when created)
 ```
 
-**Not ready yet?** â†’ Focus on completing decisions first
+**Not ready yet?** → Focus on completing decisions first
 
 ---
 
-## ðŸ“‹ Decision Tracking
+## 📋 Decision Tracking
 
 | ID | Decision | Status | Choice |
 |----|----------|--------|--------|
-| DEC-001 | Database strategy | âœ… Approved | Drop & recreate events table |
-| DEC-002 | Component reuse | âœ… Approved | Import field components (read-only) |
-| DEC-003 | Register button | âœ… Approved | Direct to form |
-| DEC-004 | Payment integration | ðŸŸ¡ Deferred | Wait for payment module developer |
-| DEC-005 | Free events flag | âœ… Approved | is_free flag |
-| DEC-006 | Capacity/waitlist | âœ… Approved | Defer to Phase 2+ |
-| DEC-007 | Agenda model | âœ… Approved | Single table with day_number |
+| DEC-001 | Database strategy |  Approved | Drop & recreate events table |
+| DEC-002 | Component reuse |  Approved | Import field components (read-only) |
+| DEC-003 | Register button |  Approved | Direct to form |
+| DEC-004 | Payment integration | 🟡 Deferred | Wait for payment module developer |
+| DEC-005 | Free events flag |  Approved | is_free flag |
+| DEC-006 | Capacity/waitlist |  Approved | Defer to Phase 2+ |
+| DEC-007 | Agenda model |  Approved | Single table with day_number |
 
 **Update:** See `02-DECISIONS.md` for full details
 
 ---
 
-## ðŸš« Ground Rules (Critical!)
+## 🚫 Ground Rules (Critical!)
 
 ### Do NOT Touch These Files:
 
 ```
-âŒ app/(public)/conference/**
-âŒ app/admin/conference/**
-âŒ components/conference/** (except read-only imports)
-âŒ components/admin/conference-form-builder/**
-âŒ lib/actions/conference-*.ts
-âŒ lib/types/conference.ts
-âŒ scripts/db/migrations/001-043-*.sql (existing migrations)
+❌ app/(public)/conference/**
+❌ app/admin/conference/**
+❌ components/conference/** (except read-only imports)
+❌ components/admin/conference-form-builder/**
+❌ lib/actions/conference-*.ts
+❌ lib/types/conference.ts
+❌ scripts/db/migrations/001-043-*.sql (existing migrations)
 ```
 
 ### Why?
-The conference system is production-ready for DEESSA 2026 Conference. We're building a separate, reusable platform for all future events.
+The conference system is production-ready for deessa 2026 Conference. We're building a separate, reusable platform for all future events.
 
 **Safe:** Read-only imports from conference components  
 **Forbidden:** Editing or refactoring conference files
 
 ---
 
-## ðŸ†˜ Need Help?
+## 🆘 Need Help?
 
 ### Questions About:
 
@@ -178,15 +178,15 @@ The conference system is production-ready for DEESSA 2026 Conference. We're buil
 
 ---
 
-## ðŸ“… Typical Project Timeline
+## 📅 Typical Project Timeline
 
-**Phase 0 - Planning:** 3-5 days â† **You are here**
+**Phase 0 - Planning:** 3-5 days ← **You are here**
 - Decisions: 2 days
 - Schema design: 1 day
 - Planning doc: 1 day
 - Team assignments: 1 day
 
-**Phase 0 - Schema & Foundation:** 3-4 days â† **Start here**
+**Phase 0 - Schema & Foundation:** 3-4 days ← **Start here**
 **Phase 1 - Admin CRUD Shell:** 5-7 days
 **Phase 2 - Form Builder & Config:** 7-10 days
 **Phase 3 - Public Pages:** 3-5 days
@@ -197,21 +197,21 @@ The conference system is production-ready for DEESSA 2026 Conference. We're buil
 
 ---
 
-## âœ¨ Success Criteria
+## ✨ Success Criteria
 
 You'll know you're ready to start development when:
 
-- âœ… All critical decisions approved (6/7, 1 deferred)
-- âœ… Database schema is finalized in tasks.md
-- âœ… Implementation plan (tasks.md) is complete
-- âœ… Everyone has read Architecture & Decisions docs
-- âœ… Development environment is configured
+-  All critical decisions approved (6/7, 1 deferred)
+-  Database schema is finalized in tasks.md
+-  Implementation plan (tasks.md) is complete
+-  Everyone has read Architecture & Decisions docs
+-  Development environment is configured
 
-**Then:** Start Phase 0 â€” Create `050-events-module-schema.sql`!
+**Then:** Start Phase 0 — Create `050-events-module-schema.sql`!
 
 ---
 
-## ðŸ“ž Contacts
+## 📞 Contacts
 
 **Project Owner:** [TBD]  
 **Tech Lead:** [TBD]  

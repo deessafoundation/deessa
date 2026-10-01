@@ -27,7 +27,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
   const siteUrl = getAppBaseUrl()
 
   // Google Calendar link
-  const gcalTitle = encodeURIComponent("DEESSA National Conference 2026")
+  const gcalTitle = encodeURIComponent("deessa National Conference 2026")
   const gcalDates = encodeURIComponent("20261015T000000Z/20261018T000000Z") // Oct 15–17 (end exclusive)
   const gcalDetails = encodeURIComponent(`Your registration: ${shortId}`)
   const gcalLocation = encodeURIComponent("Hyatt Regency, Kathmandu, Nepal")
@@ -38,7 +38,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registration Confirmed — DEESSA National Conference 2026</title>
+  <title>Registration Confirmed — deessa National Conference 2026</title>
 </head>
 <body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:40px 0;">
@@ -50,7 +50,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
           <tr>
             <td align="center" style="padding-bottom:24px;">
               <a href="${siteUrl}" target="_blank" style="text-decoration:none;display:inline-block;">
-                <img src="${siteUrl}/logo.png" alt="DEESSA Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
+                <img src="${siteUrl}/logo.png" alt="deessa Foundation" height="40" style="display:block;height:40px;width:auto;border:0;" />
               </a>
             </td>
           </tr>
@@ -68,7 +68,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
                     You're Confirmed, ${firstName}!
                   </h1>
                   <p style="margin:0;color:rgba(255,255,255,0.9);font-size:16px;line-height:1.5;">
-                    Your spot at the <strong>DEESSA National Conference 2026</strong><br />is officially secured.
+                    Your spot at the <strong>deessa National Conference 2026</strong><br />is officially secured.
                   </p>
                 </td>
               </tr>
@@ -91,7 +91,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
                     <!-- Ticket Header -->
                     <tr style="background:linear-gradient(90deg,#EFF8FF,#F8FAFC);">
                       <td style="padding:16px 20px;">
-                        <p style="margin:0;font-size:11px;font-weight:700;color:#3FABDE;text-transform:uppercase;letter-spacing:1px;">DEESSA NATIONAL CONFERENCE 2026</p>
+                        <p style="margin:0;font-size:11px;font-weight:700;color:#3FABDE;text-transform:uppercase;letter-spacing:1px;">deessa NATIONAL CONFERENCE 2026</p>
                         <p style="margin:4px 0 0;font-size:20px;font-weight:800;color:#0F172A;">Oct 15–17, 2026</p>
                         <p style="margin:2px 0 0;font-size:13px;color:#64748B;">Hyatt Regency, Kathmandu, Nepal</p>
                       </td>
@@ -191,7 +191,7 @@ export function ConferenceConfirmationTemplate(props: ConferenceConfirmationTemp
           <!-- Footer -->
           <tr>
             <td align="center" style="padding:28px 0;">
-              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">DEESSA Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
+              <p style="margin:0 0 4px;font-size:12px;color:#94A3B8;">deessa Foundation — Empowering Communities Across Nepal<br/>Thamel, Kathmandu, Nepal 44600</p>
               <p style="margin:0;font-size:11px;color:#CBD5E1;">
                 <a href="${siteUrl}" style="color:#3FABDE;">deessafoundation.com</a>
               </p>

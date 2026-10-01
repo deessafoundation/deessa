@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ],
       publishedTime: story.published_at || story.created_at,
       modifiedTime: story.updated_at,
-      authors: ['Deessa Foundation'],
+      authors: ['deessa Foundation'],
       section: story.category || 'Stories',
     },
     twitter: {
@@ -141,8 +141,8 @@ export default async function StoryDetailPage({ params }: PageProps) {
       
       {/* Print-only header */}
       <div className="print-header hidden">
-        <div className="logo">DEESSA Foundation</div>
-        <div className="url">www.deessafoundation.org</div>
+        <div className="logo">deessa Foundation</div>
+        <div className="url">www.deessafoundation.com</div>
       </div>
 
       <section data-a11y-region="neutral" className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
@@ -263,19 +263,19 @@ export default async function StoryDetailPage({ params }: PageProps) {
                 <div className="mt-3 flex flex-col gap-2">
                   <PrintButton variant="outline" className="justify-start bg-transparent" />
                   <Button asChild variant="outline" className="justify-start bg-transparent">
-                    <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(story.title)}&url=${encodeURIComponent(`https://deessafoundation.org/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
+                    <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(story.title)}&url=${encodeURIComponent(`https://deessafoundation.com/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
                       <Share2 className="mr-2 size-4" />
                       Twitter
                     </a>
                   </Button>
                   <Button asChild variant="outline" className="justify-start bg-transparent">
-                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://deessafoundation.org/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://deessafoundation.com/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
                       <Facebook className="mr-2 size-4" />
                       Facebook
                     </a>
                   </Button>
                   <Button asChild variant="outline" className="justify-start bg-transparent">
-                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://deessafoundation.org/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
+                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://deessafoundation.com/stories/${story.slug}`)}`} target="_blank" rel="noreferrer">
                       <Linkedin className="mr-2 size-4" />
                       LinkedIn
                     </a>

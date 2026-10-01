@@ -1,13 +1,13 @@
 ---
-title: "Story Editor â€” Troubleshooting Guide"
+title: "Story Editor — Troubleshooting Guide"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Story Editor â€” Troubleshooting Guide
+# Story Editor — Troubleshooting Guide
 
 > **Version:** 1.0.0  
 > **Last Updated:** April 4, 2026  
@@ -49,14 +49,14 @@ last_updated: 2026-09-12
 
 1. **Refresh the page** (Ctrl+R or Cmd+R)
 2. **Clear browser cache:**
-   - Chrome: Ctrl+Shift+Delete â†’ Clear cached images and files
-   - Firefox: Ctrl+Shift+Delete â†’ Cached Web Content
+   - Chrome: Ctrl+Shift+Delete → Clear cached images and files
+   - Firefox: Ctrl+Shift+Delete → Cached Web Content
    - Safari: Cmd+Option+E
 3. **Disable browser extensions temporarily:**
    - Especially ad blockers and privacy extensions
    - Try in incognito/private mode
 4. **Check browser console for errors:**
-   - Press F12 â†’ Console tab
+   - Press F12 → Console tab
    - Look for red error messages
    - Share with technical support if needed
 
@@ -253,15 +253,15 @@ last_updated: 2026-09-12
 ### 3.3 Checking Browser Version
 
 **Chrome:**
-1. Click three dots (â‹®) â†’ Help â†’ About Google Chrome
+1. Click three dots (⋮) → Help → About Google Chrome
 2. Version number displayed
 
 **Firefox:**
-1. Click menu (â˜°) â†’ Help â†’ About Firefox
+1. Click menu (☰) → Help → About Firefox
 2. Version number displayed
 
 **Safari:**
-1. Safari menu â†’ About Safari
+1. Safari menu → About Safari
 2. Version number displayed
 
 **If browser is outdated:**
@@ -382,7 +382,7 @@ If you accidentally close the browser or tab:
    - Press F12
    - Go to Console tab
 2. **Check local storage:**
-   - Application tab â†’ Local Storage
+   - Application tab → Local Storage
    - Look for story-related keys
 3. **Contact technical support:**
    - They can help extract content
@@ -459,7 +459,7 @@ If you accidentally close the browser or tab:
 **Solutions:**
 
 1. **Check file extension:**
-   - Right-click file â†’ Properties
+   - Right-click file → Properties
    - Verify it's a supported format
 2. **Convert to supported format:**
    - Use image editor
@@ -487,7 +487,7 @@ If you accidentally close the browser or tab:
    - Delete broken image
    - Upload again
 4. **Check browser console:**
-   - Press F12 â†’ Console
+   - Press F12 → Console
    - Look for image loading errors
 
 ---
@@ -513,7 +513,7 @@ If you accidentally close the browser or tab:
    - Click Save Draft button
    - Verify save succeeds
 4. **Check browser console:**
-   - Press F12 â†’ Console
+   - Press F12 → Console
    - Look for autosave errors
 
 ### 7.2 "Autosave Failed" Message
@@ -699,13 +699,13 @@ When reporting issues, include:
    - If issue with specific story
    - Helps support investigate
 6. **Console errors:**
-   - Press F12 â†’ Console
+   - Press F12 → Console
    - Screenshot any red errors
 
 ### 10.3 Contact Information
 
 **For urgent issues:**
-- Contact DEESSA Foundation IT team
+- Contact deessa Foundation IT team
 - Email: [IT support email]
 - Phone: [Support phone number]
 

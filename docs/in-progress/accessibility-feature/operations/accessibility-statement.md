@@ -1,4 +1,4 @@
-# Accessibility Statement for Deesha Foundation
+# Accessibility Statement for deessa Foundation
 
 **Last Updated:** September 16, 2026  
 **Next Review:** March 16, 2027
@@ -7,7 +7,7 @@
 
 ## Our Commitment to Accessibility
 
-Deesha Foundation is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards to ensure we provide equal access to all of our users.
+deessa Foundation is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards to ensure we provide equal access to all of our users.
 
 ---
 
@@ -15,7 +15,7 @@ Deesha Foundation is committed to ensuring digital accessibility for people with
 
 The Web Content Accessibility Guidelines (WCAG) define requirements for designers and developers to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA.
 
-**The Deesha Foundation website is partially conformant with WCAG 2.2 Level AA.**
+**The deessa Foundation website is partially conformant with WCAG 2.2 Level AA.**
 
 - **Partially conformant** means that some parts of the content do not fully conform to the accessibility standard.
 - Our goal is to achieve and maintain full conformance with WCAG 2.2 Level AA.
@@ -191,7 +191,7 @@ Your feedback helps us improve accessibility for everyone. Please let us know if
 **Contact Form:** [Link to /contact page]
 
 **Mailing Address:**  
-Deesha Foundation  
+deessa Foundation  
 [Street Address]  
 [City, State/Province, Postal Code]  
 [Country]
@@ -444,15 +444,15 @@ We welcome feedback and are committed to continuous improvement to ensure everyo
 
 ---
 
-**This statement was prepared on September 16, 2026, based on an evaluation conducted by Deesha Foundation development team using a combination of automated tools and manual testing.**
+**This statement was prepared on September 16, 2026, based on an evaluation conducted by deessa Foundation development team using a combination of automated tools and manual testing.**
 
 For questions or concerns about this statement or our accessibility practices, please contact:
 
-**Deesha Foundation Accessibility Team**  
+**deessa Foundation Accessibility Team**  
 Email: [accessibility@deeshafoundation.org]  
 Phone: [+977-XXX-XXXX]
 
 ---
 
-© 2026 Deesha Foundation. All rights reserved.  
+© 2026 deessa Foundation. All rights reserved.  
 Accessibility is a fundamental right, and we are committed to ensuring our digital presence reflects this value.

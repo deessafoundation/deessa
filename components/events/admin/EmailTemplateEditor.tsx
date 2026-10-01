@@ -95,7 +95,7 @@ const SAMPLE_DATA: Record<string, string> = {
   contact_email: "events@deessa.org.np",
   ticket_name: "Early Bird",
   ticket_price: "NPR 5,000",
-  registration_id: "DEESSA-2026-ABC123",
+  registration_id: "deessa-2026-ABC123",
   event_url: "https://deessafoundation.com/events/sample-event",
   site_url: "https://deessafoundation.com",
 }

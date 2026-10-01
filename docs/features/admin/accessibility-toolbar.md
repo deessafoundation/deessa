@@ -1,7 +1,7 @@
 ---
 title: "Accessibility Toolbar - Quick Start Guide"
 description: "The accessibility toolbar appears at the top of podcast pages can be added to any page."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
@@ -9,11 +9,11 @@ last_updated: 2026-09-12
 ---
 # Accessibility Toolbar - Quick Start Guide
 
-## ðŸ“ Location
+## 📍 Location
 
 The accessibility toolbar appears at the top of podcast pages (can be added to any page).
 
-## ðŸŽ¯ Features
+## 🎯 Features
 
 ### 1. Text Size Adjustment
 - **Normal**: Default 16px base font size
@@ -52,16 +52,16 @@ Shows/hides the full episode transcript.
 
 ### 4. Persistent Settings
 All accessibility preferences are:
-- âœ… Saved automatically
-- âœ… Applied across all pages
-- âœ… Persistent across browser sessions
-- âœ… Specific to your device
+-  Saved automatically
+-  Applied across all pages
+-  Persistent across browser sessions
+-  Specific to your device
 
 ### 5. Minimize/Show
 - Click the "X" to minimize the toolbar to a floating button
 - Click the floating button to restore full toolbar
 
-## ðŸŽ¨ Design Integration
+## 🎨 Design Integration
 
 ### Ocean Blue Theme
 The toolbar uses your brand colors:
@@ -75,7 +75,7 @@ The toolbar uses your brand colors:
 - Touch-friendly button sizes
 - Sticky positioning
 
-## ðŸ”§ Technical Details
+## 🔧 Technical Details
 
 ### Implementation
 ```tsx
@@ -105,12 +105,12 @@ body.high-contrast
 ```
 
 ### Browser Support
-- âœ… Chrome/Edge (latest)
-- âœ… Firefox (latest)
-- âœ… Safari (latest)
-- âœ… Mobile browsers
+-  Chrome/Edge (latest)
+-  Firefox (latest)
+-  Safari (latest)
+-  Mobile browsers
 
-## ðŸ“± Adding to Other Pages
+## 📱 Adding to Other Pages
 
 To add the accessibility toolbar to any page:
 
@@ -148,36 +148,36 @@ export default function PublicLayout({ children }) {
 }
 ```
 
-## ðŸŽ¯ User Benefits
+## 🎯 User Benefits
 
 ### For Users with Visual Impairments
-- âœ… Larger text reduces eye strain
-- âœ… High contrast improves readability
-- âœ… All features keyboard accessible
+-  Larger text reduces eye strain
+-  High contrast improves readability
+-  All features keyboard accessible
 
 ### For Dyslexic Users
-- âœ… Comic Neue font (dyslexia-friendly)
-- âœ… Adjustable spacing via text size
-- âœ… High contrast reduces visual noise
+-  Comic Neue font (dyslexia-friendly)
+-  Adjustable spacing via text size
+-  High contrast reduces visual noise
 
 ### For Senior Users
-- âœ… Larger touch targets
-- âœ… Clear, simple controls
-- âœ… Immediate visual feedback
+-  Larger touch targets
+-  Clear, simple controls
+-  Immediate visual feedback
 
 ### For All Users
-- âœ… Personal reading preferences
-- âœ… No account needed
-- âœ… Works instantly
+-  Personal reading preferences
+-  No account needed
+-  Works instantly
 
-## âš¡ Performance
+## ⚡ Performance
 
 - **Initial load**: ~2KB gzipped
 - **Minimal re-renders**: Uses React state efficiently
 - **No external dependencies**: Pure React + Tailwind
 - **Optimized**: CSS changes only affect necessary elements
 
-## â™¿ WCAG Compliance
+## ♿ WCAG Compliance
 
 The toolbar helps achieve:
 - **WCAG 2.1 Level AA** compliance
@@ -185,12 +185,12 @@ The toolbar helps achieve:
 - **ADA** digital accessibility standards
 
 Specific criteria met:
-- âœ… 1.4.3 Contrast (Minimum) - High contrast mode
-- âœ… 1.4.4 Resize Text - Text size adjustment
-- âœ… 1.4.8 Visual Presentation - User control over presentation
-- âœ… 2.1.1 Keyboard - All controls keyboard accessible
+-  1.4.3 Contrast (Minimum) - High contrast mode
+-  1.4.4 Resize Text - Text size adjustment
+-  1.4.8 Visual Presentation - User control over presentation
+-  2.1.1 Keyboard - All controls keyboard accessible
 
-## ðŸš€ Future Enhancements
+## 🚀 Future Enhancements
 
 Possible additions:
 - [ ] Font family switcher (serif/sans-serif/dyslexic)
@@ -200,7 +200,7 @@ Possible additions:
 - [ ] Reading mode (focus current paragraph)
 - [ ] Text-to-speech integration
 
-## ðŸ“ž Support
+## 📞 Support
 
 If users report accessibility issues:
 1. Verify browser compatibility

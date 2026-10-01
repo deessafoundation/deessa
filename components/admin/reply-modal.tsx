@@ -34,8 +34,8 @@ function buildDefaults(mode: ReplyMode, params: { toName?: string | null; report
     
     return {
       subject: isResolved 
-        ? `${type} Resolved — Ticket #${shortId.slice(0, 8)} | DEESSA Foundation`
-        : `Update on Your ${type} — Ticket #${shortId.slice(0, 8)} | DEESSA Foundation`,
+        ? `${type} Resolved — Ticket #${shortId.slice(0, 8)} | deessa Foundation`
+        : `Update on Your ${type} — Ticket #${shortId.slice(0, 8)} | deessa Foundation`,
       message: isResolved 
         ? `Hello ${recipient},
 
@@ -54,10 +54,10 @@ Status: ✅ Resolved
 
 Thank you for bringing this to our attention. Your ${type.toLowerCase()} has been addressed and the fix is now live on our website.
 
-We appreciate your help in making DEESSA Foundation better. If you notice the issue is still occurring or have any other concerns, please don't hesitate to reply to this email.
+We appreciate your help in making deessa Foundation better. If you notice the issue is still occurring or have any other concerns, please don't hesitate to reply to this email.
 
 Best regards,
-DEESSA Foundation Support Team
+deessa Foundation Support Team
 
 ---
 Your feedback helps us improve. Thank you for being part of our community!`
@@ -81,7 +81,7 @@ Our team is actively working on your ${type.toLowerCase()}. We're making progres
 If you have any additional information that might help us, or if you have questions, simply reply to this email.
 
 Best regards,
-DEESSA Foundation Support Team
+deessa Foundation Support Team
 
 ---
 We appreciate your patience as we work to address your concern.`,
@@ -89,10 +89,10 @@ We appreciate your patience as we work to address your concern.`,
   }
 
   return {
-    subject: `Re: Your ${type} — Ticket #${shortId.slice(0, 8)} | DEESSA Foundation`,
+    subject: `Re: Your ${type} — Ticket #${shortId.slice(0, 8)} | deessa Foundation`,
     message: `Hello ${recipient},
 
-Thank you for reaching out to DEESSA Foundation. We've reviewed your ${type.toLowerCase()} and wanted to provide you with a personalized response.
+Thank you for reaching out to deessa Foundation. We've reviewed your ${type.toLowerCase()} and wanted to provide you with a personalized response.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 YOUR TICKET
@@ -115,7 +115,7 @@ Status: ${statusDisplay}
 If you have any questions or need further assistance, please reply to this email and we'll be happy to help.
 
 Best regards,
-DEESSA Foundation Support Team
+deessa Foundation Support Team
 
 ---
 Ticket reference: ${shortId.slice(0, 8)}`,

@@ -1,7 +1,7 @@
 ---
 title: "Khalti Payment Gateway Integration Guide"
-description: "This document provides a comprehensive guide for integrating and managing Khalti payments in the Deessa Foundation ap..."
-owner: "Deessa Team"
+description: "This document provides a comprehensive guide for integrating and managing Khalti payments in the deessa Foundation ap..."
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Khalti Payment Gateway Integration Guide
 
-This document provides a comprehensive guide for integrating and managing Khalti payments in the Deessa Foundation application.
+This document provides a comprehensive guide for integrating and managing Khalti payments in the deessa Foundation application.
 
 ## Table of Contents
 
@@ -163,10 +163,10 @@ The verification endpoint (`app/api/payments/khalti/verify/route.ts`):
 3. **Calls Khalti lookup API**: `POST /epayment/lookup/`
 4. **Verifies amount** matches donation amount
 5. **Handles all status codes:**
-   - `Completed` â†’ `payment_status = "completed"`
-   - `Pending` / `Initiated` â†’ Keep as `pending` (hold transaction)
-   - `Refunded` / `Partially Refunded` â†’ `payment_status = "failed"`
-   - `Expired` / `User canceled` â†’ `payment_status = "failed"`
+   - `Completed` → `payment_status = "completed"`
+   - `Pending` / `Initiated` → Keep as `pending` (hold transaction)
+   - `Refunded` / `Partially Refunded` → `payment_status = "failed"`
+   - `Expired` / `User canceled` → `payment_status = "failed"`
 6. **Updates database** with final status
 
 ## API Reference
@@ -190,7 +190,7 @@ Content-Type: application/json
   "website_url": "https://yoursite.com",
   "amount": 1000,
   "purchase_order_id": "donation-uuid",
-  "purchase_order_name": "Donation to Deessa Foundation",
+  "purchase_order_name": "Donation to deessa Foundation",
   "customer_info": {
     "name": "John Doe",
     "email": "john@example.com",
@@ -205,7 +205,7 @@ Content-Type: application/json
   "product_details": [
     {
       "identity": "donation-uuid",
-      "name": "Donation to Deessa Foundation",
+      "name": "Donation to deessa Foundation",
       "total_price": 1000,
       "quantity": 1,
       "unit_price": 1000
@@ -459,4 +459,4 @@ For issues or questions:
 1. Check this documentation
 2. Review server logs
 3. Contact Khalti support
-4. Contact Deessa Foundation technical team
+4. Contact deessa Foundation technical team

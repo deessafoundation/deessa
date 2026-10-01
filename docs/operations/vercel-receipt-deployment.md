@@ -1,7 +1,7 @@
 ---
 title: "Vercel Receipt Generation Deployment Checklist"
 description: "This checklist ensures that receipt generation works correctly in your Vercel production deployment. Follow each step..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer
@@ -29,7 +29,7 @@ This checklist ensures that receipt generation works correctly in your Vercel pr
 
 - [ ] Have Supabase project URL (format: `https://xxx.supabase.co`)
 - [ ] Have Supabase Service Role Key (starts with `eyJ...`)
-  - Found in: Supabase Dashboard â†’ Project Settings â†’ API â†’ service_role key
+  - Found in: Supabase Dashboard → Project Settings → API → service_role key
 - [ ] Verified Service Role Key has full database access (bypasses RLS)
 
 ### 3. Stripe Configuration
@@ -55,7 +55,7 @@ Add each of these variables. For each one:
 - Click "Add New"
 - Enter the key name
 - Enter the value
-- Select environments: âœ… Production, âœ… Preview, âœ… Development
+- Select environments:  Production,  Preview,  Development
 - Click "Save"
 
 #### Required Variables:
@@ -114,13 +114,13 @@ After adding all variables, verify they're set:
    - Replace `your-domain.com` with your actual Vercel domain
 4. Click "Select events"
 5. Select these events:
-   - âœ… `checkout.session.completed`
-   - âœ… `checkout.session.expired`
-   - âœ… `invoice.payment_succeeded`
-   - âœ… `invoice.payment_failed`
-   - âœ… `payment_intent.payment_failed`
-   - âœ… `customer.subscription.created`
-   - âœ… `customer.subscription.deleted`
+   -  `checkout.session.completed`
+   -  `checkout.session.expired`
+   -  `invoice.payment_succeeded`
+   -  `invoice.payment_failed`
+   -  `payment_intent.payment_failed`
+   -  `customer.subscription.created`
+   -  `customer.subscription.deleted`
 6. Click "Add events"
 7. Click "Add endpoint"
 
@@ -129,14 +129,14 @@ After adding all variables, verify they're set:
 1. Click on the newly created endpoint
 2. Click "Reveal" next to "Signing secret"
 3. Copy the secret (starts with `whsec_...`)
-4. Go back to Vercel â†’ Environment Variables
+4. Go back to Vercel → Environment Variables
 5. Update `STRIPE_WEBHOOK_SECRET` with this value
 6. Click "Save"
 
 ### Step 3: Verify Webhook Status
 
 1. In Stripe Dashboard, verify the endpoint shows:
-   - Status: âœ… Enabled
+   - Status:  Enabled
    - Events: 7 events selected
    - URL: Your production URL
 
@@ -188,13 +188,13 @@ Expected response:
 ```
 
 **If any value is `false`:**
-- Go back to Vercel â†’ Environment Variables
+- Go back to Vercel → Environment Variables
 - Add the missing variable
 - Redeploy (or wait for auto-deploy)
 
 ### Step 2: Test Webhook Delivery
 
-1. Go to Stripe Dashboard â†’ Webhooks
+1. Go to Stripe Dashboard → Webhooks
 2. Click on your endpoint
 3. Click "Send test webhook"
 4. Select event type: `checkout.session.completed`
@@ -214,7 +214,7 @@ Expected response:
 Use Stripe test mode first:
 
 1. Temporarily switch to test mode:
-   - Vercel â†’ Environment Variables
+   - Vercel → Environment Variables
    - Change `STRIPE_SECRET_KEY` to test key (`sk_test_...`)
    - Change `STRIPE_WEBHOOK_SECRET` to test webhook secret
    - Redeploy
@@ -233,7 +233,7 @@ Use Stripe test mode first:
    - [ ] Receipt email received
 
 4. Check Vercel logs:
-   - Go to Vercel Dashboard â†’ Your Project â†’ Logs
+   - Go to Vercel Dashboard → Your Project → Logs
    - Filter by "Runtime Logs"
    - Look for:
      ```
@@ -264,9 +264,9 @@ Use Stripe test mode first:
 Once test mode works:
 
 1. Update Vercel environment variables:
-   - `STRIPE_SECRET_KEY` â†’ Live key (`sk_live_...`)
-   - `STRIPE_WEBHOOK_SECRET` â†’ Live webhook secret
-   - `PAYMENT_MODE` â†’ `live`
+   - `STRIPE_SECRET_KEY` → Live key (`sk_live_...`)
+   - `STRIPE_WEBHOOK_SECRET` → Live webhook secret
+   - `PAYMENT_MODE` → `live`
 
 2. Update Stripe webhook endpoint:
    - Ensure it's pointing to production URL
@@ -295,7 +295,7 @@ Once test mode works:
 ### Issue: Webhooks Not Received
 
 **Check:**
-1. Stripe Dashboard â†’ Webhooks â†’ Recent deliveries
+1. Stripe Dashboard → Webhooks → Recent deliveries
 2. Look for failed deliveries or timeouts
 
 **Common causes:**
@@ -347,7 +347,7 @@ Expected: 100% receipt generation and email sending rate.
 
 ### Weekly Checks
 
-1. Check Stripe Dashboard â†’ Webhooks for any failed deliveries
+1. Check Stripe Dashboard → Webhooks for any failed deliveries
 2. Check Vercel logs for any recurring errors
 3. Verify email sending is working (check Gmail sent folder)
 
@@ -363,7 +363,7 @@ If issues occur in production:
 
 ## Success Criteria
 
-âœ… Deployment is successful when:
+ Deployment is successful when:
 
 - [ ] Diagnostic endpoint returns all green
 - [ ] Test donation completes successfully

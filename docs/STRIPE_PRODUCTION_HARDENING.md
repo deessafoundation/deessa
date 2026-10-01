@@ -56,7 +56,7 @@ restart the dev server, and re-run until it prints ✅. Then Resend Email works.
 
 **The webhook secret is the #1 thing people get wrong.** The `whsec_…` that
 `stripe listen` prints only exists while that terminal is running and is **not** the
-production secret. In production you register `https://deessa.org/api/webhooks/stripe`
+production secret. In production you register `https://deessafoundation.com/api/webhooks/stripe`
 in Dashboard → Webhooks, select the 9 events this code handles (see §4), and copy
 *that endpoint's* signing secret into Vercel.
 
@@ -209,7 +209,7 @@ nothing.
 - [ ] Stripe account activated (business + bank account)
 - [ ] Live keys in Vercel (`sk_live_`, `pk_live_`)
 - [ ] Live webhook endpoint registered + its signing secret in Vercel
-- [ ] `NEXT_PUBLIC_APP_URL=https://deessa.org` in Vercel, redeployed
+- [ ] `NEXT_PUBLIC_APP_URL=https://deessafoundation.com` in Vercel, redeployed
 - [ ] `reconcile-payments` cron added to `vercel.json`
 - [ ] One real small live donation, end-to-end, verified in DB + inbox
 

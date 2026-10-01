@@ -1,7 +1,7 @@
 ---
 title: "Receipt Generation Troubleshooting Guide"
 description: "This guide helps diagnose and fix issues where receipts are not being generated after successful payments in producti..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
@@ -17,16 +17,16 @@ This guide helps diagnose and fix issues where receipts are not being generated 
 
 ### 1. Check Environment Variables in Vercel
 
-Go to your Vercel project â†’ Settings â†’ Environment Variables and verify these are set:
+Go to your Vercel project → Settings → Environment Variables and verify these are set:
 
 **Required for Receipt Generation:**
-- âœ… `SUPABASE_SERVICE_ROLE_KEY` - Required for database writes
-- âœ… `GOOGLE_EMAIL` - Gmail address for sending receipts
-- âœ… `GOOGLE_APP_PASSWORD` - Gmail app-specific password
-- âœ… `STRIPE_WEBHOOK_SECRET` - Production webhook secret (not CLI secret)
-- âœ… `STRIPE_SECRET_KEY` - Production Stripe key (sk_live_...)
-- âœ… `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- âœ… `PAYMENT_MODE` - Should be "live" for production
+-  `SUPABASE_SERVICE_ROLE_KEY` - Required for database writes
+-  `GOOGLE_EMAIL` - Gmail address for sending receipts
+-  `GOOGLE_APP_PASSWORD` - Gmail app-specific password
+-  `STRIPE_WEBHOOK_SECRET` - Production webhook secret (not CLI secret)
+-  `STRIPE_SECRET_KEY` - Production Stripe key (sk_live_...)
+-  `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+-  `PAYMENT_MODE` - Should be "live" for production
 
 ### 2. Test Environment Configuration
 
@@ -53,7 +53,7 @@ If any value is `false`, that environment variable is missing in Vercel.
 
 ### 3. Check Vercel Logs
 
-1. Go to Vercel Dashboard â†’ Your Project â†’ Logs
+1. Go to Vercel Dashboard → Your Project → Logs
 2. Filter by "Runtime Logs"
 3. Look for these messages after a payment:
 
@@ -74,13 +74,13 @@ Failed to update donation with receipt
 
 ### 4. Check Stripe Dashboard
 
-1. Go to Stripe Dashboard â†’ Developers â†’ Webhooks
+1. Go to Stripe Dashboard → Developers → Webhooks
 2. Click on your production webhook endpoint
 3. Check "Recent deliveries" tab
 4. Look for:
-   - âœ… Status 200 (success)
-   - âŒ Status 400/500 (error)
-   - âŒ Timeout (webhook taking too long)
+   -  Status 200 (success)
+   - ❌ Status 400/500 (error)
+   - ❌ Timeout (webhook taking too long)
 
 ## Common Issues and Solutions
 
@@ -118,7 +118,7 @@ Failed to update donation with receipt
 **Solution:**
 
 1. Get your Supabase Service Role Key:
-   - Go to Supabase Dashboard â†’ Project Settings â†’ API
+   - Go to Supabase Dashboard → Project Settings → API
    - Copy the "service_role" key (starts with "eyJ...")
 
 2. Add to Vercel environment variables:
@@ -138,7 +138,7 @@ Failed to update donation with receipt
 **Solution:**
 
 1. Get the correct production webhook secret:
-   - Go to Stripe Dashboard â†’ Developers â†’ Webhooks
+   - Go to Stripe Dashboard → Developers → Webhooks
    - Click on your production endpoint
    - Click "Reveal" next to "Signing secret"
    - Copy the secret (starts with "whsec_")
@@ -163,14 +163,14 @@ Failed to update donation with receipt
 **Solution:**
 
 1. Create webhook endpoint in Stripe Dashboard:
-   - Go to Stripe Dashboard â†’ Developers â†’ Webhooks
+   - Go to Stripe Dashboard → Developers → Webhooks
    - Click "Add endpoint"
    - Enter URL: `https://your-domain.vercel.app/api/webhooks/stripe`
    - Select events:
-     - âœ… `checkout.session.completed`
-     - âœ… `invoice.payment_succeeded`
-     - âœ… `checkout.session.expired`
-     - âœ… `payment_intent.payment_failed`
+     -  `checkout.session.completed`
+     -  `invoice.payment_succeeded`
+     -  `checkout.session.expired`
+     -  `payment_intent.payment_failed`
    - Click "Add endpoint"
 
 2. Copy the webhook signing secret and add to Vercel (see Issue 3)
@@ -227,8 +227,8 @@ The code already handles this with fire-and-forget receipt generation. If you se
 After fixing issues, verify the complete flow:
 
 - [ ] Make a test donation using Stripe test card (4242 4242 4242 4242)
-- [ ] Check Stripe Dashboard â†’ Payments (payment should show as succeeded)
-- [ ] Check Stripe Dashboard â†’ Webhooks â†’ Recent deliveries (should show 200 OK)
+- [ ] Check Stripe Dashboard → Payments (payment should show as succeeded)
+- [ ] Check Stripe Dashboard → Webhooks → Recent deliveries (should show 200 OK)
 - [ ] Check Vercel logs (should show "Payment confirmed" and "Receipt generated")
 - [ ] Check database: `SELECT * FROM donations WHERE id = 'donation-id'`
   - [ ] `payment_status` should be "completed"
@@ -291,7 +291,7 @@ If receipts failed to generate automatically, you can trigger them manually:
 
 ### Option 1: Using Admin Dashboard
 (If implemented)
-1. Go to Admin â†’ Donations
+1. Go to Admin → Donations
 2. Find the donation
 3. Click "Generate Receipt" or "Resend Receipt"
 

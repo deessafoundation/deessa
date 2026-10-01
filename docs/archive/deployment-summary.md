@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 - Deployment Summary"
 description: "This document provides a comprehensive summary of the Payment Architecture V2 deployment process, including all scrip..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: archived
 category: archived
 audience: operator

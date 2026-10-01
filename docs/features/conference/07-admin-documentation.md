@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Admin Documentation"
+title: "deessa Foundation — Conference Module: Admin Documentation"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Admin Documentation
+# deessa Foundation — Conference Module: Admin Documentation
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -30,7 +30,7 @@ last_updated: 2026-09-12
 
 ### 1.1 Accessing Admin Dashboard
 
-**URL**: `https://deessa.org/admin/conference`
+**URL**: `https://deessafoundation.com/admin/conference`
 
 **Authentication**:
 
@@ -48,29 +48,29 @@ last_updated: 2026-09-12
 ### 1.2 Dashboard Layout
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ DEESSA Foundation Admin                         â”‚
-â”‚ [Home] [Conference] [Settings] [Logout]         â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                  â”‚
-â”‚  Conference Registrations                       â”‚
-â”‚                                                  â”‚
-â”‚  [Export CSV] [Settings]                        â”‚
-â”‚                                                  â”‚
-â”‚  Filters:                                       â”‚
-â”‚  [All] [Confirmed] [Pending Payment] [Expired] â”‚
-â”‚                                                  â”‚
-â”‚  Search: [_____________________] ðŸ”             â”‚
-â”‚                                                  â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
-â”‚  â”‚ Name        | Email      | Status | Date  â”‚ â”‚
-â”‚  â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤ â”‚
-â”‚  â”‚ John Doe    | j@ex.com   | Confirmed | ... â”‚ â”‚
-â”‚  â”‚ Jane Smith  | jane@ex... | Pending   | ... â”‚ â”‚
-â”‚  â”‚ ...                                        â”‚ â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
-â”‚                                                  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────┐
+│ deessa Foundation Admin                         │
+│ [Home] [Conference] [Settings] [Logout]         │
+├─────────────────────────────────────────────────┤
+│                                                  │
+│  Conference Registrations                       │
+│                                                  │
+│  [Export CSV] [Settings]                        │
+│                                                  │
+│  Filters:                                       │
+│  [All] [Confirmed] [Pending Payment] [Expired] │
+│                                                  │
+│  Search: [_____________________] 🔍             │
+│                                                  │
+│  ┌───────────────────────────────────────────┐ │
+│  │ Name        | Email      | Status | Date  │ │
+│  ├───────────────────────────────────────────┤ │
+│  │ John Doe    | j@ex.com   | Confirmed | ... │ │
+│  │ Jane Smith  | jane@ex... | Pending   | ... │ │
+│  │ ...                                        │ │
+│  └───────────────────────────────────────────┘ │
+│                                                  │
+└─────────────────────────────────────────────────┘
 ```
 
 ### 1.3 Key Features
@@ -108,10 +108,10 @@ last_updated: 2026-09-12
 
 **Status Badge Colors**:
 
-- ðŸŸ¢ **Green**: Confirmed (payment received)
-- ðŸŸ¡ **Yellow**: Pending Payment (awaiting payment)
-- ðŸ”´ **Red**: Expired (payment not received within 24h)
-- âš« **Gray**: Cancelled (manually cancelled by admin)
+- 🟢 **Green**: Confirmed (payment received)
+- 🟡 **Yellow**: Pending Payment (awaiting payment)
+- 🔴 **Red**: Expired (payment not received within 24h)
+- ⚫ **Gray**: Cancelled (manually cancelled by admin)
 
 ### 2.2 Registration Detail Page
 
@@ -120,50 +120,50 @@ last_updated: 2026-09-12
 **Layout**:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ â† Back to List                                  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                  â”‚
-â”‚ Registration Details                            â”‚
-â”‚ Status: [Confirmed] | Payment: [Paid]           â”‚
-â”‚                                                  â”‚
-â”‚ â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”â”‚
-â”‚ â”‚ Personal Information                         â”‚â”‚
-â”‚ â”‚ Full Name:    John Doe                       â”‚â”‚
-â”‚ â”‚ Email:        john@example.com               â”‚â”‚
-â”‚ â”‚ Phone:        +1 234-567-8900                â”‚â”‚
-â”‚ â”‚ Country:      United States                  â”‚â”‚
-â”‚ â”‚ Organization: Example Corp                   â”‚â”‚
-â”‚ â”‚                                              â”‚â”‚
-â”‚ â”‚ Conference Details                           â”‚â”‚
-â”‚ â”‚ Attendance:   In-person                      â”‚â”‚
-â”‚ â”‚ Dietary:      Vegetarian, No nuts            â”‚â”‚
-â”‚ â”‚                                              â”‚â”‚
-â”‚ â”‚ Payment Information                          â”‚â”‚
-â”‚ â”‚ Provider:     Stripe                         â”‚â”‚
-â”‚ â”‚ Amount:       $20.00 USD                     â”‚â”‚
-â”‚ â”‚ Payment ID:   stripe:cs_live_abc123...       â”‚â”‚
-â”‚ â”‚ Paid At:      Feb 28, 2026 10:35 AM          â”‚â”‚
-â”‚ â”‚                                              â”‚â”‚
-â”‚ â”‚ System Information                           â”‚â”‚
-â”‚ â”‚ Registration ID: 550e8400-e29b-41d4-a716-... â”‚â”‚
-â”‚ â”‚ Created:      Feb 28, 2026 10:30 AM          â”‚â”‚
-â”‚ â”‚ Updated:      Feb 28, 2026 10:35 AM          â”‚â”‚
-â”‚ â”‚ Expires:      (none - confirmed)             â”‚â”‚
-â”‚ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜â”‚
-â”‚                                                  â”‚
-â”‚ Quick Actions                                   â”‚
-â”‚ [ðŸ“§ Resend Email] [ðŸ“‹ Copy ID] [âœ‰ï¸ Custom Email]â”‚
-â”‚                                                  â”‚
-â”‚ Admin Actions                                   â”‚
-â”‚ [âœ… Confirm] [âŒ Cancel] [ðŸ’° Mark as Paid]       â”‚
-â”‚ [â° Extend Expiry +24h]                         â”‚
-â”‚                                                  â”‚
-â”‚ Admin Notes                                     â”‚
-â”‚ [Text area for private notes...]                â”‚
-â”‚ [Save Notes]                                    â”‚
-â”‚                                                  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────┐
+│ ← Back to List                                  │
+├─────────────────────────────────────────────────┤
+│                                                  │
+│ Registration Details                            │
+│ Status: [Confirmed] | Payment: [Paid]           │
+│                                                  │
+│ ┌─────────────────────────────────────────────┐│
+│ │ Personal Information                         ││
+│ │ Full Name:    John Doe                       ││
+│ │ Email:        john@example.com               ││
+│ │ Phone:        +1 234-567-8900                ││
+│ │ Country:      United States                  ││
+│ │ Organization: Example Corp                   ││
+│ │                                              ││
+│ │ Conference Details                           ││
+│ │ Attendance:   In-person                      ││
+│ │ Dietary:      Vegetarian, No nuts            ││
+│ │                                              ││
+│ │ Payment Information                          ││
+│ │ Provider:     Stripe                         ││
+│ │ Amount:       $20.00 USD                     ││
+│ │ Payment ID:   stripe:cs_live_abc123...       ││
+│ │ Paid At:      Feb 28, 2026 10:35 AM          ││
+│ │                                              ││
+│ │ System Information                           ││
+│ │ Registration ID: 550e8400-e29b-41d4-a716-... ││
+│ │ Created:      Feb 28, 2026 10:30 AM          ││
+│ │ Updated:      Feb 28, 2026 10:35 AM          ││
+│ │ Expires:      (none - confirmed)             ││
+│ └─────────────────────────────────────────────┘│
+│                                                  │
+│ Quick Actions                                   │
+│ [📧 Resend Email] [📋 Copy ID] [✉️ Custom Email]│
+│                                                  │
+│ Admin Actions                                   │
+│ [ Confirm] [❌ Cancel] [💰 Mark as Paid]       │
+│ [⏰ Extend Expiry +24h]                         │
+│                                                  │
+│ Admin Notes                                     │
+│ [Text area for private notes...]                │
+│ [Save Notes]                                    │
+│                                                  │
+└─────────────────────────────────────────────────┘
 ```
 
 **Information Sections**:
@@ -192,7 +192,7 @@ last_updated: 2026-09-12
 
 ### 3.1 Quick Actions (Always Available)
 
-#### **Resend Email (ðŸ“§)**
+#### **Resend Email (📧)**
 
 **What it does**: Resends the registration confirmation email to the user
 
@@ -218,7 +218,7 @@ last_updated: 2026-09-12
 
 ---
 
-#### **Copy ID (ðŸ“‹)**
+#### **Copy ID (📋)**
 
 **What it does**: Copies registration UUID to clipboard
 
@@ -238,7 +238,7 @@ last_updated: 2026-09-12
 
 ---
 
-#### **Send Custom Email (âœ‰ï¸)**
+#### **Send Custom Email (✉️)**
 
 **What it does**: Allows free-form email to specific user
 
@@ -262,7 +262,7 @@ last_updated: 2026-09-12
 **Best Practices**:
 
 - Keep subject concise (< 50 characters)
-- Sign with "DEESSA Foundation Team"
+- Sign with "deessa Foundation Team"
 - Include action items clearly
 - Provide contact info for follow-up
 
@@ -270,7 +270,7 @@ last_updated: 2026-09-12
 
 ### 3.2 Admin Actions (Status-Dependent)
 
-#### **Confirm (âœ…)**
+#### **Confirm ()**
 
 **Button appears when**: Status is "Pending" or "Pending Payment"
 
@@ -278,7 +278,7 @@ last_updated: 2026-09-12
 
 **When to use**:
 
-- User paid via bank transfer (offline) â†’ admin verifies â†’ confirms
+- User paid via bank transfer (offline) → admin verifies → confirms
 - Payment webhook failed but payment verified in gateway dashboard
 - Special case: VIP invited guest (no payment needed)
 
@@ -292,7 +292,7 @@ UPDATE conference_registrations SET
 WHERE id = 'registration-id';
 ```
 
-**âš ï¸ Warning**: This action is **irreversible** from UI. If done by mistake, must update database directly.
+**⚠️ Warning**: This action is **irreversible** from UI. If done by mistake, must update database directly.
 
 **After confirmation**:
 
@@ -303,7 +303,7 @@ WHERE id = 'registration-id';
 
 ---
 
-#### **Cancel (âŒ)**
+#### **Cancel (❌)**
 
 **Button appears when**: Status is NOT "Cancelled"
 
@@ -325,7 +325,7 @@ UPDATE conference_registrations SET
 WHERE id = 'registration-id';
 ```
 
-**âš ï¸ Important**: This does NOT:
+**⚠️ Important**: This does NOT:
 
 - Process refund in payment gateway (must do manually)
 - Send cancellation email (optional, use "Custom Email")
@@ -342,7 +342,7 @@ WHERE id = 'registration-id';
 
 ---
 
-#### **Mark as Paid (ðŸ’°)**
+#### **Mark as Paid (💰)**
 
 **Button appears when**: Payment status is "Unpaid" or "Review"
 
@@ -372,11 +372,11 @@ WHERE id = 'registration-id';
 
 6. Confirmation email sent
 
-**âš ï¸ Critical**: Only use after verifying payment in gateway dashboard. Do NOT mark as paid without proof of payment.
+**⚠️ Critical**: Only use after verifying payment in gateway dashboard. Do NOT mark as paid without proof of payment.
 
 ---
 
-#### **Extend Expiry +24h (â°)**
+#### **Extend Expiry +24h (⏰)**
 
 **Button appears when**: Status is "Pending Payment" and expiry not yet passed
 
@@ -449,7 +449,7 @@ WHERE id = 'registration-id';
 
 | Field                     | Type     | Description                                  | Example                         |
 | ------------------------- | -------- | -------------------------------------------- | ------------------------------- |
-| **Conference Name**       | Text     | Event title                                  | "DEESSA Global Conference 2026" |
+| **Conference Name**       | Text     | Event title                                  | "deessa Global Conference 2026" |
 | **Conference Date**       | Date     | Event start date                             | "2026-06-15"                    |
 | **Conference End Date**   | Date     | Event end date (optional)                    | "2026-06-17"                    |
 | **Location**              | Text     | Physical address (for in-person)             | "Kathmandu, Nepal"              |
@@ -479,7 +479,7 @@ WHERE id = 'registration-id';
 6. Success toast appears
 7. Changes immediately affect public registration page
 
-**âš ï¸ Important**:
+**⚠️ Important**:
 
 - Settings are **NOT versioned** (changes are immediate)
 - If users are mid-registration when you change pricing, they see OLD price (calculated at form load)
@@ -535,8 +535,8 @@ WHERE id = 'registration-id';
 4. **For paid registrations**:
    - Note `payment_provider` and `payment_id` from detail page
    - Go to gateway dashboard:
-     - **Stripe**: Payments â†’ Search by session â†’ Click â†’ "Refund"
-     - **Khalti**: Login â†’ Merchant Dashboard â†’ Transactions â†’ Find â†’ Refund
+     - **Stripe**: Payments → Search by session → Click → "Refund"
+     - **Khalti**: Login → Merchant Dashboard → Transactions → Find → Refund
      - **eSewa**: Contact eSewa support (refund via email request)
    - Issue full or partial refund
    - Return to admin dashboard

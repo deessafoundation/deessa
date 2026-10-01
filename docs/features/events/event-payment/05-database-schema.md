@@ -1,13 +1,13 @@
 ---
-title: "Event Payment Integration â€” Database Schema"
+title: "Event Payment Integration — Database Schema"
 description: "Core table for event registrations. Payment-related columns are documented here."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# Event Payment Integration â€” Database Schema
+# Event Payment Integration — Database Schema
 
 ## Tables
 
@@ -18,14 +18,14 @@ Core table for event registrations. Payment-related columns are documented here.
 | Column | Type | Default | Constraints | Description |
 |--------|------|---------|-------------|-------------|
 | `id` | `UUID` | `gen_random_uuid()` | PK | Registration identifier |
-| `event_id` | `UUID` | â€” | FK â†’ `events(id)` | Event reference |
-| `full_name` | `TEXT` | â€” | NOT NULL | Registrant full name |
-| `email` | `TEXT` | â€” | NOT NULL | Registrant email |
+| `event_id` | `UUID` | — | FK → `events(id)` | Event reference |
+| `full_name` | `TEXT` | — | NOT NULL | Registrant full name |
+| `email` | `TEXT` | — | NOT NULL | Registrant email |
 | `phone` | `TEXT` | `NULL` | | Phone number |
 | `organization` | `TEXT` | `NULL` | | Organization name |
 | `custom_fields` | `JSONB` | `'{}'` | | Dynamic form data |
 | `form_schema_version` | `INT` | `NULL` | | Version of form schema used |
-| `ticket_type_id` | `UUID` | `NULL` | FK â†’ `event_ticket_types(id)` | Ticket type selected |
+| `ticket_type_id` | `UUID` | `NULL` | FK → `event_ticket_types(id)` | Ticket type selected |
 | `status` | `TEXT` | `'pending'` | CHECK: `pending`, `confirmed`, `cancelled`, `expired` | Registration status |
 | `payment_status` | `TEXT` | `'unpaid'` | CHECK: `unpaid`, `paid`, `refunded`, `failed`, `review` | Payment status |
 | `payment_amount` | `DECIMAL` | `NULL` | | Amount due |
@@ -90,8 +90,8 @@ Ticket types for events.
 | Column | Type | Default | Constraints | Description |
 |--------|------|---------|-------------|-------------|
 | `id` | `UUID` | `gen_random_uuid()` | PK | Ticket type ID |
-| `event_id` | `UUID` | â€” | FK â†’ `events(id)` ON DELETE CASCADE | Event reference |
-| `name` | `TEXT` | â€” | NOT NULL | e.g. "Early Bird", "Student" |
+| `event_id` | `UUID` | — | FK → `events(id)` ON DELETE CASCADE | Event reference |
+| `name` | `TEXT` | — | NOT NULL | e.g. "Early Bird", "Student" |
 | `price` | `DECIMAL` | `0` | NOT NULL | Price per ticket |
 | `currency` | `TEXT` | `'NPR'` | NOT NULL | Currency code |
 | `capacity` | `INT` | `NULL` | | NULL = unlimited |
@@ -118,11 +118,11 @@ Audit trail for payment events. Links to donations, conference registrations, an
 | Column | Type | Default | Constraints | Description |
 |--------|------|---------|-------------|-------------|
 | `id` | `UUID` | `gen_random_uuid()` | PK | Event ID |
-| `provider` | `TEXT` | â€” | NOT NULL | `stripe`, `khalti`, `esewa` |
-| `event_id` | `TEXT` | â€” | NOT NULL | Provider's session/event ID |
-| `donation_id` | `UUID` | `NULL` | FK â†’ `donations(id)` ON DELETE CASCADE | Donation link |
-| `conference_registration_id` | `UUID` | `NULL` | FK â†’ `conference_registrations(id)` ON DELETE SET NULL | Conference link |
-| `event_registration_id` | `UUID` | `NULL` | FK â†’ `event_registrations(id)` ON DELETE SET NULL | Event link |
+| `provider` | `TEXT` | — | NOT NULL | `stripe`, `khalti`, `esewa` |
+| `event_id` | `TEXT` | — | NOT NULL | Provider's session/event ID |
+| `donation_id` | `UUID` | `NULL` | FK → `donations(id)` ON DELETE CASCADE | Donation link |
+| `conference_registration_id` | `UUID` | `NULL` | FK → `conference_registrations(id)` ON DELETE SET NULL | Conference link |
+| `event_registration_id` | `UUID` | `NULL` | FK → `event_registrations(id)` ON DELETE SET NULL | Event link |
 | `created_at` | `TIMESTAMPTZ` | `NOW()` | NOT NULL | Creation timestamp |
 
 #### Constraints
@@ -146,7 +146,7 @@ Email templates for event communications.
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `UUID` | PK |
-| `event_id` | `UUID` | FK â†’ `events(id)` |
+| `event_id` | `UUID` | FK → `events(id)` |
 | `template_type` | `TEXT` | `confirmation`, `payment_receipt`, `reminder`, `cancellation`, `custom` |
 | `subject` | `TEXT` | Email subject (supports `{{variable}}` interpolation) |
 | `body_html` | `TEXT` | HTML body (supports `{{variable}}` interpolation) |
@@ -172,7 +172,7 @@ Distributed rate limiting table.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `identifier` | `TEXT` | PK â€” composite key (e.g., `event-start-payment:ip:192.168.1.1`) |
+| `identifier` | `TEXT` | PK — composite key (e.g., `event-start-payment:ip:192.168.1.1`) |
 | `attempts` | `INT` | Request count in current window |
 | `expires_at` | `TIMESTAMPTZ` | Window expiry timestamp |
 

@@ -1,7 +1,7 @@
 ---
 title: "Supabase Storage Setup Guide"
 description: "File upload functionality has been successfully integrated into your admin panel. Here's what was done:"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin

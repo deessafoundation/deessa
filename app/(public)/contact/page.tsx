@@ -9,12 +9,12 @@ import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 import styles from "./contact.module.css"
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: "Contact Us - Get in Touch with Deesha Foundation",
+  title: "Contact Us - Get in Touch with deessa Foundation",
   description:
-    "Get in touch with Deesha Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
+    "Get in touch with deessa Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
   path: "/contact",
   keywords: [
-    "contact Deesha Foundation",
+    "contact deessa Foundation",
     "Nepal NGO contact",
     "volunteer Nepal",
     "donate to Nepal",
@@ -63,7 +63,7 @@ const credentials = [
     num: "01",
     title: "SWC Registered",
     desc: "Officially registered with Nepal's Social Welfare Council, operating with full legal standing and government oversight.",
-    href: "/deesa-resources/SWC.jpg",
+    href: "/deessa-resources/SWC.jpg",
     download: true,
     linkLabel: "View Certificate",
   },
@@ -76,7 +76,7 @@ const credentials = [
     num: "02",
     title: "PAN Registered",
     desc: "Valid PAN registration ensuring complete financial transparency and accountability for every rupee we spend.",
-    href: "/deesa-resources/PAN.pdf",
+    href: "/deessa-resources/PAN.pdf",
     download: true,
     linkLabel: "View PAN",
   },
@@ -89,7 +89,7 @@ const credentials = [
     num: "03",
     title: "Organization Bio",
     desc: "Download our comprehensive biography to learn about our mission, history, and impact across communities in Nepal.",
-    href: "/deesa-resources/deessa Foundation_ Short Bio -2.pdf",
+    href: "/deessa-resources/deessa Foundation_ Short Bio -2.pdf",
     download: true,
     linkLabel: "Download Bio",
   },
@@ -241,11 +241,11 @@ export default async function ContactPage() {
                 <div
                   className={styles.locationCard}
                   role="region"
-                  aria-label="Interactive map showing Deesha Foundation office location"
+                  aria-label="Interactive map showing deessa Foundation office location"
                 >
                   <iframe
                     src="https://maps.google.com/maps?q=Dhobighat%20Nayabato%2C%20Sanepa%2C%20Lalitpur%2C%20Nepal&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                    title="Google Map showing Deesha Foundation office in Dhobighat Nayabato, Sanepa, Lalitpur, Nepal"
+                    title="Google Map showing deessa Foundation office in Dhobighat Nayabato, Sanepa, Lalitpur, Nepal"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     className={styles.mapIframe}
@@ -259,7 +259,7 @@ export default async function ContactPage() {
                         <MapPin size={9} aria-hidden="true" />
                         Lalitpur, Nepal
                       </span>
-                      <h3 className={styles.locationName}>Deesha Foundation HQ</h3>
+                      <h3 className={styles.locationName}>deessa Foundation HQ</h3>
                       <p className={styles.locationAddr}>Dhobighat Nayabato, Sanepa, Lalitpur 44600</p>
                     </div>
 
@@ -268,7 +268,7 @@ export default async function ContactPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.locationMapBtn}
-                      aria-label="Open Deesha Foundation office location in Google Maps (opens in new tab)"
+                      aria-label="Open deessa Foundation office location in Google Maps (opens in new tab)"
                     >
                       <span>Open in Maps</span>
                       <ExternalLink size={12} aria-hidden="true" />
@@ -411,7 +411,7 @@ export default async function ContactPage() {
                   <a
                     href="mailto:deessa.social@gmail.com"
                     className={`${styles.ctaActionBtn} ${styles.ctaActionPrimary}`}
-                    aria-label="Send email to Deesha Foundation"
+                    aria-label="Send email to deessa Foundation"
                   >
                     <span className="flex items-center gap-2">
                       <Mail size={15} aria-hidden="true" />

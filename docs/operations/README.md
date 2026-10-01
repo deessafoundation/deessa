@@ -1,7 +1,7 @@
 ---
 title: "Operations Documentation"
-description: "This directory contains operational documentation for the Deessa Foundation platform."
-owner: "Deessa Team"
+description: "This directory contains operational documentation for the deessa Foundation platform."
+owner: "deessa Team"
 status: operational
 category: operations
 audience: developer
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Operations Documentation
 
-This directory contains operational documentation for the Deessa Foundation platform.
+This directory contains operational documentation for the deessa Foundation platform.
 
 ## 📚 Documentation Index
 

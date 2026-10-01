@@ -1,4 +1,4 @@
-# Autism Speaks accessibility: analysis and Deesha implementation roadmap
+# Autism Speaks accessibility: analysis and deessa implementation roadmap
 
 **Reviewed:** 16 September 2026  
 **Status:** Research and implementation proposal; application code unchanged.  
@@ -9,21 +9,21 @@
 
 ## 1. Recommendation
 
-We can achieve a similarly capable experience by extending Deesha's existing React accessibility system. The reference site uses **UserWay**, verified from the open menu's branding, its `userwayAccessibilityIcon` control, and its `cdn.userway.org` iframe. It is a third-party personalization widget rather than evidence that every part of the underlying site is accessible.
+We can achieve a similarly capable experience by extending deessa's existing React accessibility system. The reference site uses **UserWay**, verified from the open menu's branding, its `userwayAccessibilityIcon` control, and its `cdn.userway.org` iframe. It is a third-party personalization widget rather than evidence that every part of the underlying site is accessible.
 
-For Deesha, prioritize a reliable shared panel, accessible default pages, typography, contrast, and complete motion control. Add navigation and reading aids after that foundation. Consider a vendor only if advanced voice/dictionary features justify its ongoing cost and integration requirements.
+For deessa, prioritize a reliable shared panel, accessible default pages, typography, contrast, and complete motion control. Add navigation and reading aids after that foundation. Consider a vendor only if advanced voice/dictionary features justify its ongoing cost and integration requirements.
 
 The visible breadth of the reference is achievable. Equivalent usability requires testing entire journeys, including forms, media, documents and payment handoffs; installing a menu does not establish that result.
 
 ## 2. What was actually inspected
 
-The homepage was loaded in a live browser, the floating bottom-left accessibility button was opened, and the UserWay menu was scrolled. Both a screenshot and the accessibility tree were inspected. Public page text and official W3C guidance were also reviewed. Deesha findings below come from source inspection, not a running-site audit.
+The homepage was loaded in a live browser, the floating bottom-left accessibility button was opened, and the UserWay menu was scrolled. Both a screenshot and the accessibility tree were inspected. Public page text and official W3C guidance were also reviewed. deessa findings below come from source inspection, not a running-site audit.
 
 **Evidence limits:** Menu presence and exposed descriptions were verified. Individual transformations, speech output, persistence, mobile behavior, profile contents and full keyboard/screen-reader compatibility were not tested. The profiles expansion could not be completed because the browser tool rejected iframe input coordinates. A feature being listed below does not mean its effectiveness was verified. No conformance score is assigned to either site.
 
 ### Verified reference menu inventory
 
-| Visible feature | Observed detail | How to approach it in Deesha |
+| Visible feature | Observed detail | How to approach it in deessa |
 | --- | --- | --- |
 | Accessibility launcher | Floating icon; menu title advertises CTRL+U | Shared launcher plus footer link; avoid copying a shortcut that conflicts with browser commands |
 | Widget language | English (USA) selector | Translate panel labels and help through our content strategy; menu translation is separate from translating the website |
@@ -53,7 +53,7 @@ This inventory records the live [Autism Speaks homepage menu](https://www.autism
 
 The homepage exposes a skip link, named navigation controls, descriptive image alternatives, search, and prominent help routes. It groups resources by audience and topic. These reduce navigation effort and deserve attention alongside visual settings. This observation does not establish correct focus behavior or complete image-alternative quality.
 
-## 3. What Deesha already has
+## 3. What deessa already has
 
 | Source | Existing implementation | Implication |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ The repository already has a detailed accessibility implementation plan. Histori
 7. **Broad sensory styling:** A rule reduces opacity on `[aria-hidden="true"]:not(svg)`. That attribute does not mean an element is visually decorative; backdrops and other UI can be affected. Use explicit decorative markers.
 8. **Lifecycle and initial rendering:** Preferences load in effects, and the inspected root/body style effects do not restore prior values on provider unmount. Implement the existing plan's initial-paint strategy and public-scope cleanup; verify navigation into admin.
 
-These are source findings and test targets. No running Deesha browser session was audited during this documentation task.
+These are source findings and test targets. No running deessa browser session was audited during this documentation task.
 
 ## 4. Proposed user experience
 

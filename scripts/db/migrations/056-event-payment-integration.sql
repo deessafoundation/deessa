@@ -1,5 +1,5 @@
 -- ============================================================
--- DEESSA Foundation — Event Registration: Payment Integration
+-- deessa Foundation — Event Registration: Payment Integration
 -- Migration: 056-event-payment-integration.sql
 -- Run in Supabase SQL Editor. Safe to run multiple times (IF NOT EXISTS).
 -- ============================================================

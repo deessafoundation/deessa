@@ -8,7 +8,7 @@
 
 ## Overview
 
-Sensory-Friendly Mode is the **flagship autism-specific feature** of the Deesha Foundation accessibility system. It goes beyond standard WCAG compliance to address sensory processing challenges common in autism.
+Sensory-Friendly Mode is the **flagship autism-specific feature** of the deessa Foundation accessibility system. It goes beyond standard WCAG compliance to address sensory processing challenges common in autism.
 
 ### Key Differentiator
 

@@ -1,15 +1,15 @@
 ---
-title: "ðŸŽ¨ Theme Migration Quick Reference"
+title: "🎨 Theme Migration Quick Reference"
 description: "| Old Theme | New Theme | Purpose |"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: developer
 last_updated: 2026-09-12
 ---
-# ðŸŽ¨ Theme Migration Quick Reference
+# 🎨 Theme Migration Quick Reference
 
-## Color Comparison: Old â†’ New
+## Color Comparison: Old → New
 
 ### Primary Colors
 
@@ -44,9 +44,9 @@ The new theme introduces three pillar colors from the logo:
 
 | Pillar | Color | Hex | Usage |
 |--------|-------|-----|-------|
-| ðŸ©· Empowerment | Pink/Magenta | `#D6336C` | Women's programs, community |
-| ðŸŒ¿ Environment | Lime Green | `#95C11F` | Sustainability, eco projects |
-| ðŸ“š Education | Amber | `#F59E0B` | Learning, skill development |
+| 🩷 Empowerment | Pink/Magenta | `#D6336C` | Women's programs, community |
+| 🌿 Environment | Lime Green | `#95C11F` | Sustainability, eco projects |
+| 📚 Education | Amber | `#F59E0B` | Learning, skill development |
 
 ---
 
@@ -316,9 +316,9 @@ background: radial-gradient(circle at top right, rgb(63 171 222 / 0.1) 0%, trans
   <CardContent className="p-6">
     <div className="mb-4">
       <div className="flex justify-between mb-2 text-sm">
-        <span style={{ color: 'rgb(108 117 125)' }}>â‚¹45,000 raised</span>
+        <span style={{ color: 'rgb(108 117 125)' }}>₹45,000 raised</span>
         <span style={{ color: 'rgb(11 95 138)' }} className="font-semibold">
-          â‚¹100,000 goal
+          ₹100,000 goal
         </span>
       </div>
       {/* Progress with light background */}

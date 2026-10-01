@@ -1,13 +1,13 @@
 ---
-title: "DEESSA Foundation â€” Conference Module: Architecture & System Responsibilities"
+title: "deessa Foundation — Conference Module: Architecture & System Responsibilities"
 description: " Version: 1.0.0"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin
 last_updated: 2026-09-12
 ---
-# DEESSA Foundation â€” Conference Module: Architecture & System Responsibilities
+# deessa Foundation — Conference Module: Architecture & System Responsibilities
 
 > **Version:** 1.0.0  
 > **Last Updated:** February 28, 2026  
@@ -34,56 +34,56 @@ last_updated: 2026-09-12
 **Pattern**: Monolithic Next.js Application with API Routes
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                        VERCEL EDGE NETWORK                     â”‚
-â”‚                    (Global CDN + Edge Functions)               â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                             â”‚
-                â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                â”‚  NEXT.JS 14 APPLICATION  â”‚
-                â”‚  (App Router + API)      â”‚
-                â”‚                          â”‚
-                â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-                â”‚  â”‚ Public Pages       â”‚  â”‚
-                â”‚  â”‚ â€¢ Landing          â”‚  â”‚
-                â”‚  â”‚ â€¢ Registration     â”‚  â”‚
-                â”‚  â”‚ â€¢ Payment Flow     â”‚  â”‚
-                â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-                â”‚                          â”‚
-                â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-                â”‚  â”‚ Admin Pages        â”‚  â”‚
-                â”‚  â”‚ â€¢ Dashboard        â”‚  â”‚
-                â”‚  â”‚ â€¢ Detail View      â”‚  â”‚
-                â”‚  â”‚ â€¢ Settings         â”‚  â”‚
-                â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-                â”‚                          â”‚
-                â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-                â”‚  â”‚ API Routes         â”‚  â”‚
-                â”‚  â”‚ â€¢ Payment Init     â”‚  â”‚
-                â”‚  â”‚ â€¢ Webhooks         â”‚  â”‚
-                â”‚  â”‚ â€¢ Status Polling   â”‚  â”‚
-                â”‚  â”‚ â€¢ Cron Jobs        â”‚  â”‚
-                â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-                â”‚                          â”‚
-                â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
-                â”‚  â”‚ Server Actions     â”‚  â”‚
-                â”‚  â”‚ â€¢ Registration     â”‚  â”‚
-                â”‚  â”‚ â€¢ Admin Actions    â”‚  â”‚
-                â”‚  â”‚ â€¢ Settings Mgmt    â”‚  â”‚
-                â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
-                â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚
-            â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-            â”‚              â”‚              â”‚
-            â–¼              â–¼              â–¼
-    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-    â”‚  SUPABASE    â”‚  â”‚ GMAIL  â”‚  â”‚   PAYMENT    â”‚
-    â”‚  PostgreSQL  â”‚  â”‚ SMTP   â”‚  â”‚   GATEWAYS   â”‚
-    â”‚  + Auth      â”‚  â”‚        â”‚  â”‚              â”‚
-    â”‚  + Storage   â”‚  â”‚  587   â”‚  â”‚ â€¢ Stripe     â”‚
-    â”‚              â”‚  â”‚        â”‚  â”‚ â€¢ Khalti     â”‚
-    â”‚  RLS + Pools â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚ â€¢ eSewa      â”‚
-    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜              â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌────────────────────────────────────────────────────────────────┐
+│                        VERCEL EDGE NETWORK                     │
+│                    (Global CDN + Edge Functions)               │
+└────────────────────────────┬───────────────────────────────────┘
+                             │
+                ┌────────────▼─────────────┐
+                │  NEXT.JS 14 APPLICATION  │
+                │  (App Router + API)      │
+                │                          │
+                │  ┌────────────────────┐  │
+                │  │ Public Pages       │  │
+                │  │ • Landing          │  │
+                │  │ • Registration     │  │
+                │  │ • Payment Flow     │  │
+                │  └────────────────────┘  │
+                │                          │
+                │  ┌────────────────────┐  │
+                │  │ Admin Pages        │  │
+                │  │ • Dashboard        │  │
+                │  │ • Detail View      │  │
+                │  │ • Settings         │  │
+                │  └────────────────────┘  │
+                │                          │
+                │  ┌────────────────────┐  │
+                │  │ API Routes         │  │
+                │  │ • Payment Init     │  │
+                │  │ • Webhooks         │  │
+                │  │ • Status Polling   │  │
+                │  │ • Cron Jobs        │  │
+                │  └────────────────────┘  │
+                │                          │
+                │  ┌────────────────────┐  │
+                │  │ Server Actions     │  │
+                │  │ • Registration     │  │
+                │  │ • Admin Actions    │  │
+                │  │ • Settings Mgmt    │  │
+                │  └────────────────────┘  │
+                └──────────┬───────────────┘
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+            ▼              ▼              ▼
+    ┌──────────────┐  ┌────────┐  ┌──────────────┐
+    │  SUPABASE    │  │ GMAIL  │  │   PAYMENT    │
+    │  PostgreSQL  │  │ SMTP   │  │   GATEWAYS   │
+    │  + Auth      │  │        │  │              │
+    │  + Storage   │  │  587   │  │ • Stripe     │
+    │              │  │        │  │ • Khalti     │
+    │  RLS + Pools │  └────────┘  │ • eSewa      │
+    └──────────────┘              └──────────────┘
 ```
 
 ### 1.2 Architectural Principles
@@ -101,29 +101,29 @@ last_updated: 2026-09-12
 ### 1.3 Technology Stack Summary
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   PRESENTATION                      â”‚
-â”‚  React 18 + TypeScript + Tailwind CSS               â”‚
-â”‚  Shadcn/ui Components + React Hook Form             â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                     â”‚
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                  APPLICATION                        â”‚
-â”‚  Next.js 14 App Router                              â”‚
-â”‚  Server Components + Server Actions + API Routes    â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                     â”‚
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   PERSISTENCE                       â”‚
-â”‚  Supabase (PostgreSQL 15)                           â”‚
-â”‚  Row-Level Security + Indexes + Migrations          â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-       â”‚                    â”‚                    â”‚
-       â–¼                    â–¼                    â–¼
- â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
- â”‚ Supabase â”‚        â”‚  Gmail   â”‚        â”‚ Payment  â”‚
- â”‚   Auth   â”‚        â”‚   SMTP   â”‚        â”‚ Gateways â”‚
- â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────┐
+│                   PRESENTATION                      │
+│  React 18 + TypeScript + Tailwind CSS               │
+│  Shadcn/ui Components + React Hook Form             │
+└────────────────────┬────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────┐
+│                  APPLICATION                        │
+│  Next.js 14 App Router                              │
+│  Server Components + Server Actions + API Routes    │
+└────────────────────┬────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────┐
+│                   PERSISTENCE                       │
+│  Supabase (PostgreSQL 15)                           │
+│  Row-Level Security + Indexes + Migrations          │
+└─────────────────────────────────────────────────────┘
+       │                    │                    │
+       ▼                    ▼                    ▼
+ ┌──────────┐        ┌──────────┐        ┌──────────┐
+ │ Supabase │        │  Gmail   │        │ Payment  │
+ │   Auth   │        │   SMTP   │        │ Gateways │
+ └──────────┘        └──────────┘        └──────────┘
 ```
 
 ---
@@ -134,20 +134,20 @@ last_updated: 2026-09-12
 
 ```
 components/
-â”‚
-â”œâ”€ conference/                      # Public-Facing Components
-â”‚  â”œâ”€ conference-registration-form.tsx   # Main Form Orchestrator
-â”‚  â”œâ”€ step1-personal-details.tsx         # Step 1 Fields
-â”‚  â”œâ”€ step2-participation.tsx            # Step 2 Fields
-â”‚  â”œâ”€ step3-additional-info.tsx          # Step 3 Fields
-â”‚  â”œâ”€ step4-review.tsx                   # Review + Submit
-â”‚  â””â”€ step-progress-bar.tsx              # Progress Indicator
-â”‚
-â””â”€ admin/                           # Admin-Only Components
-   â”œâ”€ conference-status-actions.tsx      # Action Buttons (Confirm, Cancel, etc.)
-   â”œâ”€ conference-quick-actions.tsx       # Copy ID, Send Email, etc.
-   â”œâ”€ conference-notes.tsx               # Admin Notes TextArea
-   â””â”€ conference-settings-form.tsx       # Settings Configuration Form
+│
+├─ conference/                      # Public-Facing Components
+│  ├─ conference-registration-form.tsx   # Main Form Orchestrator
+│  ├─ step1-personal-details.tsx         # Step 1 Fields
+│  ├─ step2-participation.tsx            # Step 2 Fields
+│  ├─ step3-additional-info.tsx          # Step 3 Fields
+│  ├─ step4-review.tsx                   # Review + Submit
+│  └─ step-progress-bar.tsx              # Progress Indicator
+│
+└─ admin/                           # Admin-Only Components
+   ├─ conference-status-actions.tsx      # Action Buttons (Confirm, Cancel, etc.)
+   ├─ conference-quick-actions.tsx       # Copy ID, Send Email, etc.
+   ├─ conference-notes.tsx               # Admin Notes TextArea
+   └─ conference-settings-form.tsx       # Settings Configuration Form
 ```
 
 **Component Characteristics**:
@@ -160,76 +160,76 @@ components/
 
 ```
 lib/
-â”‚
-â”œâ”€ actions/                         # Server Actions
-â”‚  â”œâ”€ conference-registration.ts        # Core Business Logic (6,228 lines)
-â”‚  â”‚   â”œâ”€ registerForConference()
-â”‚  â”‚   â”œâ”€ getConferenceRegistration()
-â”‚  â”‚   â”œâ”€ getConferenceRegistrationByToken()
-â”‚  â”‚   â”œâ”€ startConferencePayment()
-â”‚  â”‚   â”œâ”€ confirmConferenceRegistration()
-â”‚  â”‚   â”œâ”€ cancelConferenceRegistration()
-â”‚  â”‚   â”œâ”€ markConferencePaymentManual()
-â”‚  â”‚   â”œâ”€ resendConferencePaymentLink()
-â”‚  â”‚   â”œâ”€ extendConferenceRegistrationExpiry()
-â”‚  â”‚   â””â”€ updateConferenceRegistrationNotes()
-â”‚  â”‚
-â”‚  â””â”€ conference-settings.ts            # Settings Management
-â”‚      â”œâ”€ getConferenceSettings()
-â”‚      â””â”€ updateConferenceSettings()
-â”‚
-â”œâ”€ email/                           # Email Services
-â”‚  â”œâ”€ conference-mailer.ts              # Send Functions
-â”‚  â”‚   â”œâ”€ sendConferenceRegistrationEmail()
-â”‚  â”‚   â”œâ”€ sendConferenceConfirmationEmail()
-â”‚  â”‚   â”œâ”€ sendConferenceCancellationEmail()
-â”‚  â”‚   â”œâ”€ sendConferencePaymentLinkEmail()
-â”‚  â”‚   â””â”€ sendCustomEmail()
-â”‚  â”‚
-â”‚  â””â”€ templates/                        # HTML Templates
-â”‚      â”œâ”€ conference-registration.ts
-â”‚      â”œâ”€ conference-confirmation.ts
-â”‚      â””â”€ conference-cancellation.ts
-â”‚
-â””â”€ types/                           # Type Definitions
-   â””â”€ conference.ts
-       â”œâ”€ ConferenceRegistration
-       â”œâ”€ ConferenceRegistrationPublic
-       â”œâ”€ ConferencePaymentStatus
-       â”œâ”€ ConferenceRegistrationStatus
-       â””â”€ StartConferencePaymentResult
+│
+├─ actions/                         # Server Actions
+│  ├─ conference-registration.ts        # Core Business Logic (6,228 lines)
+│  │   ├─ registerForConference()
+│  │   ├─ getConferenceRegistration()
+│  │   ├─ getConferenceRegistrationByToken()
+│  │   ├─ startConferencePayment()
+│  │   ├─ confirmConferenceRegistration()
+│  │   ├─ cancelConferenceRegistration()
+│  │   ├─ markConferencePaymentManual()
+│  │   ├─ resendConferencePaymentLink()
+│  │   ├─ extendConferenceRegistrationExpiry()
+│  │   └─ updateConferenceRegistrationNotes()
+│  │
+│  └─ conference-settings.ts            # Settings Management
+│      ├─ getConferenceSettings()
+│      └─ updateConferenceSettings()
+│
+├─ email/                           # Email Services
+│  ├─ conference-mailer.ts              # Send Functions
+│  │   ├─ sendConferenceRegistrationEmail()
+│  │   ├─ sendConferenceConfirmationEmail()
+│  │   ├─ sendConferenceCancellationEmail()
+│  │   ├─ sendConferencePaymentLinkEmail()
+│  │   └─ sendCustomEmail()
+│  │
+│  └─ templates/                        # HTML Templates
+│      ├─ conference-registration.ts
+│      ├─ conference-confirmation.ts
+│      └─ conference-cancellation.ts
+│
+└─ types/                           # Type Definitions
+   └─ conference.ts
+       ├─ ConferenceRegistration
+       ├─ ConferenceRegistrationPublic
+       ├─ ConferencePaymentStatus
+       ├─ ConferenceRegistrationStatus
+       └─ StartConferencePaymentResult
 ```
 
 ### 2.3 API Routes
 
 ```
 app/api/
-â”‚
-â”œâ”€ conference/                      # Public Conference APIs
-â”‚  â”œâ”€ start-payment/
-â”‚  â”‚  â””â”€ route.ts                       # POST: Initiate payment session
-â”‚  â”œâ”€ confirm-stripe-session/
-â”‚  â”‚  â””â”€ route.ts                       # POST: Verify Stripe payment
-â”‚  â”œâ”€ verify-registration/
-â”‚  â”‚  â””â”€ route.ts                       # GET: Lookup registration by ID+email
-â”‚  â”œâ”€ status/
-â”‚  â”‚  â””â”€ route.ts                       # GET: Poll registration status
-â”‚  â””â”€ resend-payment-link/
-â”‚     â””â”€ route.ts                       # POST: Re-send payment link email
-â”‚
-â”œâ”€ admin/conference/
-â”‚  â””â”€ export/
-â”‚     â””â”€ route.ts                       # GET: CSV export (auth required)
-â”‚
-â”œâ”€ cron/
-â”‚  â””â”€ expire-conference-registrations/
-â”‚     â””â”€ route.ts                       # GET: Hourly expiry job
-â”‚
-â””â”€ webhooks/                        # Shared with Donation Module
-   â”œâ”€ stripe/
-   â”‚  â””â”€ route.ts                       # POST: Stripe webhook receiver
-   â””â”€ khalti/
-      â””â”€ route.ts                       # POST: Khalti callback receiver
+│
+├─ conference/                      # Public Conference APIs
+│  ├─ start-payment/
+│  │  └─ route.ts                       # POST: Initiate payment session
+│  ├─ confirm-stripe-session/
+│  │  └─ route.ts                       # POST: Verify Stripe payment
+│  ├─ verify-registration/
+│  │  └─ route.ts                       # GET: Lookup registration by ID+email
+│  ├─ status/
+│  │  └─ route.ts                       # GET: Poll registration status
+│  └─ resend-payment-link/
+│     └─ route.ts                       # POST: Re-send payment link email
+│
+├─ admin/conference/
+│  └─ export/
+│     └─ route.ts                       # GET: CSV export (auth required)
+│
+├─ cron/
+│  └─ expire-conference-registrations/
+│     └─ route.ts                       # GET: Hourly expiry job
+│
+└─ webhooks/                        # Shared with Donation Module
+   ├─ stripe/
+   │  └─ route.ts                       # POST: Stripe webhook receiver
+   └─ khalti/
+      └─ route.ts                       # POST: Khalti callback receiver
 ```
 
 **API Route Patterns**:
@@ -243,36 +243,36 @@ app/api/
 
 ```
 conference_registrations
-â”œâ”€ id (uuid, PK)
-â”œâ”€ email (text)
-â”œâ”€ full_name (text)
-â”œâ”€ phone (text)
-â”œâ”€ organization (text, nullable)
-â”œâ”€ role (text)
-â”œâ”€ attendance_mode (text)
-â”œâ”€ workshops (text[], nullable)
-â”œâ”€ dietary_preference (text, nullable)
-â”œâ”€ tshirt_size (text, nullable)
-â”œâ”€ heard_via (text[], nullable)
-â”œâ”€ emergency_contact_name (text, nullable)
-â”œâ”€ emergency_contact_phone (text, nullable)
-â”œâ”€ consent (boolean)
-â”œâ”€ newsletter_opt_in (boolean)
-â”œâ”€ status (text) â€” CHECK constraint: pending, pending_payment, confirmed, cancelled, expired
-â”œâ”€ payment_status (text) â€” CHECK constraint: unpaid, paid, failed, review
-â”œâ”€ payment_amount (numeric, nullable)
-â”œâ”€ payment_currency (text, nullable)
-â”œâ”€ payment_provider (text, nullable)
-â”œâ”€ payment_id (text, nullable)
-â”œâ”€ provider_ref (text, nullable)
-â”œâ”€ stripe_session_id (text, nullable)
-â”œâ”€ khalti_pidx (text, nullable)
-â”œâ”€ esewa_transaction_uuid (text, nullable)
-â”œâ”€ payment_override_by (text, nullable)
-â”œâ”€ admin_notes (text, nullable)
-â”œâ”€ expires_at (timestamptz, nullable)
-â”œâ”€ created_at (timestamptz, default: now())
-â””â”€ updated_at (timestamptz, default: now())
+├─ id (uuid, PK)
+├─ email (text)
+├─ full_name (text)
+├─ phone (text)
+├─ organization (text, nullable)
+├─ role (text)
+├─ attendance_mode (text)
+├─ workshops (text[], nullable)
+├─ dietary_preference (text, nullable)
+├─ tshirt_size (text, nullable)
+├─ heard_via (text[], nullable)
+├─ emergency_contact_name (text, nullable)
+├─ emergency_contact_phone (text, nullable)
+├─ consent (boolean)
+├─ newsletter_opt_in (boolean)
+├─ status (text) — CHECK constraint: pending, pending_payment, confirmed, cancelled, expired
+├─ payment_status (text) — CHECK constraint: unpaid, paid, failed, review
+├─ payment_amount (numeric, nullable)
+├─ payment_currency (text, nullable)
+├─ payment_provider (text, nullable)
+├─ payment_id (text, nullable)
+├─ provider_ref (text, nullable)
+├─ stripe_session_id (text, nullable)
+├─ khalti_pidx (text, nullable)
+├─ esewa_transaction_uuid (text, nullable)
+├─ payment_override_by (text, nullable)
+├─ admin_notes (text, nullable)
+├─ expires_at (timestamptz, nullable)
+├─ created_at (timestamptz, default: now())
+└─ updated_at (timestamptz, default: now())
 
 Indexes:
 - idx_conference_registrations_email (btree on email)
@@ -295,47 +295,47 @@ Indexes:
 
 | Component                             | Owner                               | Responsibility                               | Access Level                             |
 | ------------------------------------- | ----------------------------------- | -------------------------------------------- | ---------------------------------------- |
-| **Conference Settings Configuration** | DEESSA Program Staff                | Update event details, pricing, emails        | Admin dashboard                          |
-| **Registration Approval**             | DEESSA Program Staff                | Confirm, cancel, extend expiry               | Admin dashboard                          |
-| **Payment Verification**              | DEESSA Finance Team                 | Review flagged payments, reconcile           | Admin dashboard                          |
-| **CSV Data Export**                   | DEESSA Program/Finance              | Download for reporting                       | Admin dashboard                          |
-| **Attendee Support**                  | DEESSA Program Staff                | Answer questions, resend links               | Admin dashboard                          |
+| **Conference Settings Configuration** | deessa Program Staff                | Update event details, pricing, emails        | Admin dashboard                          |
+| **Registration Approval**             | deessa Program Staff                | Confirm, cancel, extend expiry               | Admin dashboard                          |
+| **Payment Verification**              | deessa Finance Team                 | Review flagged payments, reconcile           | Admin dashboard                          |
+| **CSV Data Export**                   | deessa Program/Finance              | Download for reporting                       | Admin dashboard                          |
+| **Attendee Support**                  | deessa Program Staff                | Answer questions, resend links               | Admin dashboard                          |
 | **Code & Features**                   | Development Partner                 | Implement new features, fix bugs             | Git repository, production deploy access |
 | **Database Management**               | Development Partner                 | Schema changes, migrations, backups          | Supabase project admin                   |
 | **Hosting & Uptime**                  | Vercel (Third-Party SaaS)           | Server availability, scaling, edge network   | Vercel account owner                     |
 | **Database Hosting**                  | Supabase (Third-Party SaaS)         | Database availability, backups, replication  | Supabase project owner                   |
 | **Email Delivery**                    | Google Workspace (Third-Party SaaS) | SMTP relay, anti-spam, delivery              | Google Workspace admin                   |
-| **Payment Processing**                | Stripe/Khalti/eSewa                 | Gateway uptime, fraud detection, settlements | Gateway account owner (DEESSA)           |
+| **Payment Processing**                | Stripe/Khalti/eSewa                 | Gateway uptime, fraud detection, settlements | Gateway account owner (deessa)           |
 | **Security Monitoring**               | Development Partner                 | Vulnerability scanning, dependency updates   | Git repo, CI/CD                          |
-| **Access Control**                    | DEESSA IT Admin                     | Add/remove admin users, manage permissions   | Supabase Auth dashboard                  |
+| **Access Control**                    | deessa IT Admin                     | Add/remove admin users, manage permissions   | Supabase Auth dashboard                  |
 
-### 3.2 What DEESSA Controls Directly
+### 3.2 What deessa Controls Directly
 
 **Through Admin Dashboard** (No Developer Needed):
 
-- âœ… Conference name, dates, venue
-- âœ… Registration deadlines
-- âœ… Registration pricing (enable/disable, amount, currency)
-- âœ… Per-attendance-mode fees (in-person vs. online)
-- âœ… Agenda items (time, title, description)
-- âœ… Email template content (subject lines, body text, variables)
-- âœ… Contact email displayed to attendees
-- âœ… Google Maps URL
-- âœ… Expiry window (hours)
-- âœ… Registration approvals (confirm/cancel/extend)
-- âœ… Payment overrides (mark as paid manually)
-- âœ… Admin notes on registrations
-- âœ… Custom email sends to individual registrants
-- âœ… CSV export
+-  Conference name, dates, venue
+-  Registration deadlines
+-  Registration pricing (enable/disable, amount, currency)
+-  Per-attendance-mode fees (in-person vs. online)
+-  Agenda items (time, title, description)
+-  Email template content (subject lines, body text, variables)
+-  Contact email displayed to attendees
+-  Google Maps URL
+-  Expiry window (hours)
+-  Registration approvals (confirm/cancel/extend)
+-  Payment overrides (mark as paid manually)
+-  Admin notes on registrations
+-  Custom email sends to individual registrants
+-  CSV export
 
-**DEESSA Does NOT Control** (Requires Developer):
+**deessa Does NOT Control** (Requires Developer):
 
-- âŒ Adding new payment gateways
-- âŒ Changing registration form fields
-- âŒ Modifying workflow logic (e.g., removing expiry)
-- âŒ Creating new admin reports
-- âŒ Changing database schema
-- âŒ Modifying security policies
+- ❌ Adding new payment gateways
+- ❌ Changing registration form fields
+- ❌ Modifying workflow logic (e.g., removing expiry)
+- ❌ Creating new admin reports
+- ❌ Changing database schema
+- ❌ Modifying security policies
 
 ### 3.3 Dependency on External Services
 
@@ -728,7 +728,7 @@ const transporter = nodemailer.createTransport({
 ```typescript
 await transporter
   .sendMail({
-    from: `"DEESSA Foundation" <${process.env.GOOGLE_EMAIL}>`,
+    from: `"deessa Foundation" <${process.env.GOOGLE_EMAIL}>`,
     to: email,
     subject: "...",
     html: "...",

@@ -1,8 +1,8 @@
 ---
 title: "Conference Dynamic Form Builder — Implementation Plan"
-title: "Conference Dynamic Form Builder â€” Implementation Plan"
+title: "Conference Dynamic Form Builder — Implementation Plan"
 description: " Goal: Replace hardcoded 4-step registration form with an admin-configurable dynamic form builder, without breaking a..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: feature
 audience: admin

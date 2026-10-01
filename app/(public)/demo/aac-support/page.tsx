@@ -3,10 +3,10 @@ import { ServiceDemo } from '@/components/programs/demo/ProgramDemos'
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
-  title: 'AAC Communication Support - DEESSA Foundation',
+  title: 'AAC Communication Support - deessa Foundation',
   description: 'Supporting children and families through accessible communication tools and inclusive practices. Every mind is a gift.',
   openGraph: {
-    title: 'AAC Communication Support - DEESSA Foundation',
+    title: 'AAC Communication Support - deessa Foundation',
     description: 'Supporting children and families through accessible communication tools and inclusive practices.',
     images: [
       {

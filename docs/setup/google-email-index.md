@@ -1,7 +1,7 @@
 ---
 title: "Receipt System - Google Email Setup - Complete Index"
 description: "File: STARTHEREGOOGLEEMAIL.md"
-owner: "Deessa Team"
+owner: "deessa Team"
 status: active
 category: setup
 audience: admin

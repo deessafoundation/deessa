@@ -1,7 +1,7 @@
 ---
 title: "Payment Architecture V2 - Deployment Guide"
 description: "This guide provides step-by-step instructions for deploying the Payment Architecture V2 system to staging and product..."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: operational
 category: operations
 audience: admin
@@ -148,7 +148,7 @@ supabase db push
 
 #### Option 2: Supabase Dashboard
 
-1. Go to Supabase Dashboard â†’ SQL Editor
+1. Go to Supabase Dashboard → SQL Editor
 2. Copy contents of each migration file
 3. Execute in order (020, 021, 022, etc.)
 4. Verify each migration succeeds before proceeding
@@ -224,7 +224,7 @@ vercel env add STRIPE_SECRET_KEY production
 ```
 
 Or use Vercel Dashboard:
-1. Go to Project Settings â†’ Environment Variables
+1. Go to Project Settings → Environment Variables
 2. Add all variables from `.env.production`
 3. Set scope to "Production"
 
@@ -469,7 +469,7 @@ docker run -d \
 
 ### Database Rollback
 
-**âš ï¸ Warning:** Database rollbacks are complex. Only rollback if absolutely necessary.
+**⚠️ Warning:** Database rollbacks are complex. Only rollback if absolutely necessary.
 
 ```sql
 -- Rollback migrations (in reverse order)

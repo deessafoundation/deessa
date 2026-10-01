@@ -1,7 +1,7 @@
 ---
 title: "Scripts Folder Reorganization Plan"
-description: " Status: Planning only â€” no files moved or renamed yet."
-owner: "Deessa Team"
+description: " Status: Planning only — no files moved or renamed yet."
+owner: "deessa Team"
 status: archived
 category: archived
 audience: admin
@@ -9,7 +9,7 @@ last_updated: 2026-09-12
 ---
 # Scripts Folder Reorganization Plan
 
-> **Status:** Planning only â€” no files moved or renamed yet.
+> **Status:** Planning only — no files moved or renamed yet.
 > **Created:** 2026-07-22
 > **Goal:** Transform a messy, inconsistently organized scripts folder into a clean, professional structure with clear categories, consistent naming, and proper documentation.
 
@@ -18,7 +18,7 @@ last_updated: 2026-09-12
 ## Table of Contents
 
 1. [Current State Analysis](#1-current-state-analysis)
-2. [Architecture Review â€” What's Wrong](#2-architecture-review--whats-wrong)
+2. [Architecture Review — What's Wrong](#2-architecture-review--whats-wrong)
 3. [Refined Folder Structure](#3-refined-folder-structure)
 4. [Naming Standard](#4-naming-standard)
 5. [Migration Mapping Table](#5-migration-mapping-table)
@@ -89,22 +89,22 @@ last_updated: 2026-09-12
 - Deployment scripts (`.ps1`) mixed with database scripts
 
 #### Dead/Obsolete Scripts
-- `011-receipt-system-complete.sql` â€” Superseded by `010-receipt-system.sql` (the "complete" version is a duplicate)
-- `030-cleanup-constraint.sql` â€” One-time cleanup, no longer needed
-- `debug-verification.sql` â€” Debug script with hardcoded UUID
-- `find-valid-verification.sql` â€” Debug script
-- `fix-verification-id.sql` â€” One-time fix script
-- `fix-initiative-images.mjs` â€” One-time fix script
+- `011-receipt-system-complete.sql` — Superseded by `010-receipt-system.sql` (the "complete" version is a duplicate)
+- `030-cleanup-constraint.sql` — One-time cleanup, no longer needed
+- `debug-verification.sql` — Debug script with hardcoded UUID
+- `find-valid-verification.sql` — Debug script
+- `fix-verification-id.sql` — One-time fix script
+- `fix-initiative-images.mjs` — One-time fix script
 
 ### 1.4 Reference Analysis
 
 **References from package.json (MUST NOT BREAK):**
-- `scripts/validate-payment-config.ts` â†’ npm script `validate-config`
-- `scripts/deploy-staging.ps1` â†’ npm script `deploy:staging`
-- `scripts/deploy-production.ps1` â†’ npm script `deploy:production`
-- `scripts/smoke-tests-staging.ps1` â†’ npm script `test:staging`
-- `scripts/enable-v2-staging.ps1` â†’ npm script `enable:v2`
-- `scripts/monitor-staging.ps1` â†’ npm script `monitor:staging`
+- `scripts/validate-payment-config.ts` → npm script `validate-config`
+- `scripts/deploy-staging.ps1` → npm script `deploy:staging`
+- `scripts/deploy-production.ps1` → npm script `deploy:production`
+- `scripts/smoke-tests-staging.ps1` → npm script `test:staging`
+- `scripts/enable-v2-staging.ps1` → npm script `enable:v2`
+- `scripts/monitor-staging.ps1` → npm script `monitor:staging`
 
 **References from README.md:**
 - `scripts/generate-secrets.ps1` / `.sh`
@@ -123,7 +123,7 @@ last_updated: 2026-09-12
 
 ---
 
-## 2. Architecture Review â€” What's Wrong
+## 2. Architecture Review — What's Wrong
 
 ### Flaw 1: No Separation of Concerns
 
@@ -159,104 +159,104 @@ There's no obvious "start here" for someone new to the project. The README.md in
 
 ```
 scripts/
-â”œâ”€â”€ README.md                           # Navigation hub â€” start here
-â”‚
-â”œâ”€â”€ db/                                 # All database scripts
-â”‚   â”œâ”€â”€ README.md                       # Migration guide and execution order
-â”‚   â”œâ”€â”€ migrations/                     # Production migrations (run in order)
-â”‚   â”‚   â”œâ”€â”€ README.md                   # Execution order, dependency graph
-â”‚   â”‚   â”œâ”€â”€ 001-create-tables.sql
-â”‚   â”‚   â”œâ”€â”€ 002-admin-schema.sql
-â”‚   â”‚   â”œâ”€â”€ 003-storage-setup.sql
-â”‚   â”‚   â”œâ”€â”€ 004-site-assets-storage.sql
-â”‚   â”‚   â”œâ”€â”€ 005-expand-site-settings.sql
-â”‚   â”‚   â”œâ”€â”€ 006-media-assets.sql
-â”‚   â”‚   â”œâ”€â”€ 007-sync-existing-media.sql
-â”‚   â”‚   â”œâ”€â”€ 008-currency-support.sql
-â”‚   â”‚   â”œâ”€â”€ 009-payment-security-hardening.sql
-â”‚   â”‚   â”œâ”€â”€ 010-receipt-system.sql
-â”‚   â”‚   â”œâ”€â”€ 012-create-podcasts-table.sql        # Renamed from snake_case
-â”‚   â”‚   â”œâ”€â”€ 013-seed-podcasts.sql
-â”‚   â”‚   â”œâ”€â”€ 014-add-key-topics-and-structured-notes.sql
-â”‚   â”‚   â”œâ”€â”€ 015-add-guest-roles-and-enhance-social.sql
-â”‚   â”‚   â”œâ”€â”€ 016-add-podcast-highlights.sql
-â”‚   â”‚   â”œâ”€â”€ 017-conference-payment-columns.sql   # Moved from migrations/
-â”‚   â”‚   â”œâ”€â”€ 018-rate-limits.sql
-â”‚   â”‚   â”œâ”€â”€ 019-conference-email-timestamps.sql
-â”‚   â”‚   â”œâ”€â”€ 020-seed-real-stories.sql
-â”‚   â”‚   â”œâ”€â”€ 030-admin-transaction-detail-schema.sql
-â”‚   â”‚   â”œâ”€â”€ 031-enhance-payments-stripe-references.sql
-â”‚   â”‚   â”œâ”€â”€ 032-add-provider-and-message-to-donations.sql
-â”‚   â”‚   â”œâ”€â”€ 034-support-feedback.sql
-â”‚   â”‚   â”œâ”€â”€ 035-support-admin-actions.sql
-â”‚   â”‚   â”œâ”€â”€ 036-admin-notifications.sql
-â”‚   â”‚   â”œâ”€â”€ 037-homepage-cms-schema.sql
-â”‚   â”‚   â”œâ”€â”€ 038-homepage-cms-additional-keys.sql
-â”‚   â”‚   â”œâ”€â”€ 039-testimonials-storage-bucket.sql
-â”‚   â”‚   â”œâ”€â”€ 040-conference-form-schema.sql
-â”‚   â”‚   â”œâ”€â”€ 041-conference-file-upload-bucket.sql
-â”‚   â”‚   â””â”€â”€ 042-conference-form-templates.sql
-â”‚   â”‚
-â”‚   â”œâ”€â”€ payments-v2/                    # Payment V2 migrations (numbered 020-029)
-â”‚   â”‚   â”œâ”€â”€ README.md
-â”‚   â”‚   â”œâ”€â”€ 020-create-payments-table.sql
-â”‚   â”‚   â”œâ”€â”€ 021-create-receipts-table.sql
-â”‚   â”‚   â”œâ”€â”€ 022-create-payment-jobs-table.sql
-â”‚   â”‚   â”œâ”€â”€ 023-enhance-payment-events.sql
-â”‚   â”‚   â”œâ”€â”€ 024-add-indexes.sql
-â”‚   â”‚   â”œâ”€â”€ 025-atomic-receipt-number.sql
-â”‚   â”‚   â”œâ”€â”€ 026-create-receipt-failures-table.sql
-â”‚   â”‚   â”œâ”€â”€ 027-create-email-failures-table.sql
-â”‚   â”‚   â”œâ”€â”€ 028-add-confirmed-at-to-donations.sql
-â”‚   â”‚   â””â”€â”€ 029-add-verification-id-to-donations.sql
-â”‚   â”‚
-â”‚   â”œâ”€â”€ seeds/                          # Seed data (not migrations)
-â”‚   â”‚   â”œâ”€â”€ seed-default-form-schema.sql
-â”‚   â”‚   â”œâ”€â”€ seed-real-stories.sql       # Wait â€” this is numbered 020 in root
-â”‚   â”‚   â””â”€â”€ insert-podcasts.mjs
-â”‚   â”‚
-â”‚   â””â”€â”€ diagnostics/                    # Debug and diagnostic queries
-â”‚       â”œâ”€â”€ check-rate-limit-setup.sql
-â”‚       â”œâ”€â”€ debug-verification.sql
-â”‚       â”œâ”€â”€ diagnose-receipt-issue.sql
-â”‚       â”œâ”€â”€ find-valid-verification.sql
-â”‚       â””â”€â”€ fix-verification-id.sql
-â”‚
-â”œâ”€â”€ deploy/                             # Deployment and operations scripts
-â”‚   â”œâ”€â”€ README.md
-â”‚   â”œâ”€â”€ deploy-staging.ps1
-â”‚   â”œâ”€â”€ deploy-staging.sh
-â”‚   â”œâ”€â”€ deploy-production.ps1
-â”‚   â”œâ”€â”€ enable-v2-staging.ps1
-â”‚   â”œâ”€â”€ enable-v2-staging.sh
-â”‚   â”œâ”€â”€ monitor-staging.ps1
-â”‚   â””â”€â”€ smoke-tests-staging.ps1
-â”‚   â””â”€â”€ smoke-tests-staging.sh
-â”‚
-â”œâ”€â”€ ops/                                # Operational utilities
-â”‚   â”œâ”€â”€ README.md
-â”‚   â”œâ”€â”€ generate-secrets.ps1
-â”‚   â”œâ”€â”€ generate-secrets.sh
-â”‚   â”œâ”€â”€ test-credentials.ps1
-â”‚   â”œâ”€â”€ test-credentials.sh
-â”‚   â”œâ”€â”€ check-env-vars.js
-â”‚   â””â”€â”€ validate-payment-config.ts
-â”‚
-â”œâ”€â”€ cron/                               # Scheduled jobs
-â”‚   â”œâ”€â”€ README.md
-â”‚   â””â”€â”€ reconcile-payments.ts
-â”‚
-â”œâ”€â”€ test/                               # Test scripts
-â”‚   â”œâ”€â”€ README.md
-â”‚   â”œâ”€â”€ test-rate-limit.js
-â”‚   â”œâ”€â”€ test-esewa-signature.mjs
-â”‚   â””â”€â”€ test-khalti-connection.mjs
-â”‚
-â””â”€â”€ archive/                            # One-time fix scripts (kept for reference)
-    â”œâ”€â”€ README.md
-    â”œâ”€â”€ backfill-stripe-payment-intents.ts
-    â”œâ”€â”€ fix-initiative-images.mjs
-    â””â”€â”€ run-stories-seed.mjs
+├── README.md                           # Navigation hub — start here
+│
+├── db/                                 # All database scripts
+│   ├── README.md                       # Migration guide and execution order
+│   ├── migrations/                     # Production migrations (run in order)
+│   │   ├── README.md                   # Execution order, dependency graph
+│   │   ├── 001-create-tables.sql
+│   │   ├── 002-admin-schema.sql
+│   │   ├── 003-storage-setup.sql
+│   │   ├── 004-site-assets-storage.sql
+│   │   ├── 005-expand-site-settings.sql
+│   │   ├── 006-media-assets.sql
+│   │   ├── 007-sync-existing-media.sql
+│   │   ├── 008-currency-support.sql
+│   │   ├── 009-payment-security-hardening.sql
+│   │   ├── 010-receipt-system.sql
+│   │   ├── 012-create-podcasts-table.sql        # Renamed from snake_case
+│   │   ├── 013-seed-podcasts.sql
+│   │   ├── 014-add-key-topics-and-structured-notes.sql
+│   │   ├── 015-add-guest-roles-and-enhance-social.sql
+│   │   ├── 016-add-podcast-highlights.sql
+│   │   ├── 017-conference-payment-columns.sql   # Moved from migrations/
+│   │   ├── 018-rate-limits.sql
+│   │   ├── 019-conference-email-timestamps.sql
+│   │   ├── 020-seed-real-stories.sql
+│   │   ├── 030-admin-transaction-detail-schema.sql
+│   │   ├── 031-enhance-payments-stripe-references.sql
+│   │   ├── 032-add-provider-and-message-to-donations.sql
+│   │   ├── 034-support-feedback.sql
+│   │   ├── 035-support-admin-actions.sql
+│   │   ├── 036-admin-notifications.sql
+│   │   ├── 037-homepage-cms-schema.sql
+│   │   ├── 038-homepage-cms-additional-keys.sql
+│   │   ├── 039-testimonials-storage-bucket.sql
+│   │   ├── 040-conference-form-schema.sql
+│   │   ├── 041-conference-file-upload-bucket.sql
+│   │   └── 042-conference-form-templates.sql
+│   │
+│   ├── payments-v2/                    # Payment V2 migrations (numbered 020-029)
+│   │   ├── README.md
+│   │   ├── 020-create-payments-table.sql
+│   │   ├── 021-create-receipts-table.sql
+│   │   ├── 022-create-payment-jobs-table.sql
+│   │   ├── 023-enhance-payment-events.sql
+│   │   ├── 024-add-indexes.sql
+│   │   ├── 025-atomic-receipt-number.sql
+│   │   ├── 026-create-receipt-failures-table.sql
+│   │   ├── 027-create-email-failures-table.sql
+│   │   ├── 028-add-confirmed-at-to-donations.sql
+│   │   └── 029-add-verification-id-to-donations.sql
+│   │
+│   ├── seeds/                          # Seed data (not migrations)
+│   │   ├── seed-default-form-schema.sql
+│   │   ├── seed-real-stories.sql       # Wait — this is numbered 020 in root
+│   │   └── insert-podcasts.mjs
+│   │
+│   └── diagnostics/                    # Debug and diagnostic queries
+│       ├── check-rate-limit-setup.sql
+│       ├── debug-verification.sql
+│       ├── diagnose-receipt-issue.sql
+│       ├── find-valid-verification.sql
+│       └── fix-verification-id.sql
+│
+├── deploy/                             # Deployment and operations scripts
+│   ├── README.md
+│   ├── deploy-staging.ps1
+│   ├── deploy-staging.sh
+│   ├── deploy-production.ps1
+│   ├── enable-v2-staging.ps1
+│   ├── enable-v2-staging.sh
+│   ├── monitor-staging.ps1
+│   └── smoke-tests-staging.ps1
+│   └── smoke-tests-staging.sh
+│
+├── ops/                                # Operational utilities
+│   ├── README.md
+│   ├── generate-secrets.ps1
+│   ├── generate-secrets.sh
+│   ├── test-credentials.ps1
+│   ├── test-credentials.sh
+│   ├── check-env-vars.js
+│   └── validate-payment-config.ts
+│
+├── cron/                               # Scheduled jobs
+│   ├── README.md
+│   └── reconcile-payments.ts
+│
+├── test/                               # Test scripts
+│   ├── README.md
+│   ├── test-rate-limit.js
+│   ├── test-esewa-signature.mjs
+│   └── test-khalti-connection.mjs
+│
+└── archive/                            # One-time fix scripts (kept for reference)
+    ├── README.md
+    ├── backfill-stripe-payment-intents.ts
+    ├── fix-initiative-images.mjs
+    └── run-stories-seed.mjs
 ```
 
 ### Why This Structure
@@ -264,7 +264,7 @@ scripts/
 | Folder | Purpose | Why It Exists |
 |--------|---------|---------------|
 | `db/` | All database-related scripts | Separates database concerns from everything else |
-| `db/migrations/` | Production schema changes | The core of the database â€” must be clearly ordered |
+| `db/migrations/` | Production schema changes | The core of the database — must be clearly ordered |
 | `db/payments-v2/` | Payment V2 migrations | Separate numbering scheme, self-contained |
 | `db/seeds/` | Seed data | Distinct from schema migrations |
 | `db/diagnostics/` | Debug and diagnostic queries | Should never be run in production |
@@ -322,7 +322,7 @@ scripts/
 
 ## 5. Migration Mapping Table
 
-### Root-Level SQL Scripts â†’ `db/migrations/`
+### Root-Level SQL Scripts → `db/migrations/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -336,7 +336,7 @@ scripts/
 | `008-currency-support.sql` | `db/migrations/008-currency-support.sql` | MOVE | |
 | `009-payment-security-hardening.sql` | `db/migrations/009-payment-security-hardening.sql` | MOVE | |
 | `010-receipt-system.sql` | `db/migrations/010-receipt-system.sql` | MOVE | |
-| `011-receipt-system-complete.sql` | â€” | DELETE | Superseded by 010 |
+| `011-receipt-system-complete.sql` | — | DELETE | Superseded by 010 |
 | `012-create_podcasts_table.sql` | `db/migrations/012-create-podcasts-table.sql` | MOVE + rename | Fix snake_case |
 | `012-receipt-sequence.sql` | `db/migrations/011b-receipt-sequence.sql` | MOVE + renumber | Resolve 012 conflict |
 | `013-seed_podcasts.sql` | `db/migrations/013-seed-podcasts.sql` | MOVE + rename | Fix snake_case |
@@ -348,7 +348,7 @@ scripts/
 | `019-conference-email-timestamps.sql` | `db/migrations/019-conference-email-timestamps.sql` | MOVE | |
 | `020-seed-real-stories.sql` | `db/seeds/seed-real-stories.sql` | MOVE + rename | This is seed data, not migration |
 | `030-admin-transaction-detail-schema.sql` | `db/migrations/030-admin-transaction-detail-schema.sql` | MOVE | |
-| `030-cleanup-constraint.sql` | â€” | DELETE | One-time cleanup, no longer needed |
+| `030-cleanup-constraint.sql` | — | DELETE | One-time cleanup, no longer needed |
 | `031-enhance-payments-stripe-references.sql` | `db/migrations/031-enhance-payments-stripe-references.sql` | MOVE | |
 | `032-add-provider-and-message-to-donations.sql` | `db/migrations/032-add-provider-and-message-to-donations.sql` | MOVE | |
 | `034-support-feedback.sql` | `db/migrations/034-support-feedback.sql` | MOVE | |
@@ -361,14 +361,14 @@ scripts/
 | `041-conference-file-upload-bucket.sql` | `db/migrations/041-conference-file-upload-bucket.sql` | MOVE | |
 | `042-conference-form-templates.sql` | `db/migrations/042-conference-form-templates.sql` | MOVE | |
 
-### `migrations/` â†’ `db/migrations/`
+### `migrations/` → `db/migrations/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
 | `migrations/017-conference-payment-columns.sql` | `db/migrations/017-conference-payment-columns.sql` | MOVE | Consolidate with main migrations |
 | `migrations/conference_registrations.sql` | `db/migrations/017b-conference-registrations.sql` | MOVE + rename | Initial table, snake_case fix |
 
-### `payments-v2/` â†’ `db/payments-v2/`
+### `payments-v2/` → `db/payments-v2/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -392,7 +392,7 @@ scripts/
 | `payments-v2/RECEIPT_NUMBER_IMPROVEMENTS.md` | `docs/features/payments/receipt-number-improvements.md` | MOVE to docs | Documentation |
 | `payments-v2/WHATS_NEW.md` | `docs/features/payments/whats-new.md` | MOVE to docs | Documentation |
 
-### Diagnostic SQL â†’ `db/diagnostics/`
+### Diagnostic SQL → `db/diagnostics/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -402,7 +402,7 @@ scripts/
 | `find-valid-verification.sql` | `db/diagnostics/find-valid-verification.sql` | MOVE | |
 | `fix-verification-id.sql` | `db/diagnostics/fix-verification-id.sql` | MOVE | One-time fix |
 
-### Seed Scripts â†’ `db/seeds/`
+### Seed Scripts → `db/seeds/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -411,7 +411,7 @@ scripts/
 | `insert-podcasts.mjs` | `db/seeds/insert-podcasts.mjs` | MOVE | |
 | `run-stories-seed.mjs` | `db/seeds/run-stories-seed.mjs` | MOVE | |
 
-### Deployment Scripts â†’ `deploy/`
+### Deployment Scripts → `deploy/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -424,7 +424,7 @@ scripts/
 | `smoke-tests-staging.ps1` | `deploy/smoke-tests-staging.ps1` | MOVE | |
 | `smoke-tests-staging.sh` | `deploy/smoke-tests-staging.sh` | MOVE | |
 
-### Operational Scripts â†’ `ops/`
+### Operational Scripts → `ops/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -435,13 +435,13 @@ scripts/
 | `check-env-vars.js` | `ops/check-env-vars.js` | MOVE | |
 | `validate-payment-config.ts` | `ops/validate-payment-config.ts` | MOVE | |
 
-### Cron Jobs â†’ `cron/`
+### Cron Jobs → `cron/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
 | `cron/reconcile-payments.ts` | `cron/reconcile-payments.ts` | KEEP | Already in correct location |
 
-### Test Scripts â†’ `test/`
+### Test Scripts → `test/`
 
 | Current Path | New Path | Action | Notes |
 |-------------|----------|--------|-------|
@@ -534,8 +534,8 @@ scripts/
 **Goal:** Consolidate all database migrations into `db/migrations/`.
 
 **Scope:**
-- Move root-level numbered SQL scripts â†’ `db/migrations/`
-- Move `migrations/` contents â†’ `db/migrations/`
+- Move root-level numbered SQL scripts → `db/migrations/`
+- Move `migrations/` contents → `db/migrations/`
 - Fix snake_case filenames to kebab-case
 - Handle duplicate numbers (renumber or delete)
 - Delete superseded scripts (011, 030-cleanup)
@@ -548,8 +548,8 @@ scripts/
 **Goal:** Move payments-v2 SQL to db/payments-v2/ and documentation to docs/.
 
 **Scope:**
-- Move `payments-v2/*.sql` â†’ `db/payments-v2/`
-- Move `payments-v2/*.md` â†’ `docs/features/payments/` (7 docs)
+- Move `payments-v2/*.sql` → `db/payments-v2/`
+- Move `payments-v2/*.md` → `docs/features/payments/` (7 docs)
 - Keep `payments-v2/README.md` in `db/payments-v2/`
 - Fix 025 duplicate
 - Update all references to `scripts/payments-v2/` paths
@@ -561,10 +561,10 @@ scripts/
 **Goal:** Move debug, seed, and test scripts to their proper locations.
 
 **Scope:**
-- Move diagnostic SQL â†’ `db/diagnostics/`
-- Move seed scripts â†’ `db/seeds/`
-- Move test scripts â†’ `test/`
-- Move one-time fix scripts â†’ `archive/`
+- Move diagnostic SQL → `db/diagnostics/`
+- Move seed scripts → `db/seeds/`
+- Move test scripts → `test/`
+- Move one-time fix scripts → `archive/`
 
 **Effort:** ~1 hour
 
@@ -573,8 +573,8 @@ scripts/
 **Goal:** Move deployment and operational scripts to their folders.
 
 **Scope:**
-- Move deployment scripts â†’ `deploy/`
-- Move operational scripts â†’ `ops/`
+- Move deployment scripts → `deploy/`
+- Move operational scripts → `ops/`
 - Verify all cross-platform pairs are together (ps1 + sh)
 
 **Effort:** ~1 hour
@@ -706,97 +706,97 @@ ls scripts/*.sql scripts/*.ps1 scripts/*.sh scripts/*.js scripts/*.ts scripts/*.
 
 ### Phase 2: Move SQL Migrations
 
-- [ ] Move `001-create-tables.sql` â†’ `db/migrations/`
-- [ ] Move `002-admin-schema.sql` â†’ `db/migrations/`
-- [ ] Move `003-storage-setup.sql` â†’ `db/migrations/`
-- [ ] Move `004-site-assets-storage.sql` â†’ `db/migrations/`
-- [ ] Move `005-expand-site-settings.sql` â†’ `db/migrations/`
-- [ ] Move `006-media-assets.sql` â†’ `db/migrations/`
-- [ ] Move `007-sync-existing-media.sql` â†’ `db/migrations/`
-- [ ] Move `008-currency-support.sql` â†’ `db/migrations/`
-- [ ] Move `009-payment-security-hardening.sql` â†’ `db/migrations/`
-- [ ] Move `010-receipt-system.sql` â†’ `db/migrations/`
+- [ ] Move `001-create-tables.sql` → `db/migrations/`
+- [ ] Move `002-admin-schema.sql` → `db/migrations/`
+- [ ] Move `003-storage-setup.sql` → `db/migrations/`
+- [ ] Move `004-site-assets-storage.sql` → `db/migrations/`
+- [ ] Move `005-expand-site-settings.sql` → `db/migrations/`
+- [ ] Move `006-media-assets.sql` → `db/migrations/`
+- [ ] Move `007-sync-existing-media.sql` → `db/migrations/`
+- [ ] Move `008-currency-support.sql` → `db/migrations/`
+- [ ] Move `009-payment-security-hardening.sql` → `db/migrations/`
+- [ ] Move `010-receipt-system.sql` → `db/migrations/`
 - [ ] Delete `011-receipt-system-complete.sql` (superseded)
-- [ ] Move `012-create_podcasts_table.sql` â†’ `db/migrations/012-create-podcasts-table.sql` (rename)
-- [ ] Move `012-receipt-sequence.sql` â†’ `db/migrations/011b-receipt-sequence.sql` (renumber)
-- [ ] Move `013-seed_podcasts.sql` â†’ `db/migrations/013-seed-podcasts.sql` (rename)
-- [ ] Move `014-add_key_topics_and_structured_notes.sql` â†’ `db/migrations/014-add-key-topics-and-structured-notes.sql` (rename)
-- [ ] Move `015-add_guest_roles_and_enhance_social.sql` â†’ `db/migrations/015-add-guest-roles-and-enhance-social.sql` (rename)
-- [ ] Move `016-add_podcast_highlights.sql` â†’ `db/migrations/016-add-podcast-highlights.sql` (rename)
-- [ ] Move `migrations/017-conference-payment-columns.sql` â†’ `db/migrations/`
-- [ ] Move `migrations/conference_registrations.sql` â†’ `db/migrations/017b-conference-registrations.sql`
-- [ ] Move `018-rate-limit-function.sql` â†’ `db/migrations/`
-- [ ] Move `018-rate-limits.sql` â†’ `db/migrations/018b-rate-limits.sql` (renumber)
-- [ ] Move `019-conference-email-timestamps.sql` â†’ `db/migrations/`
-- [ ] Move `030-admin-transaction-detail-schema.sql` â†’ `db/migrations/`
+- [ ] Move `012-create_podcasts_table.sql` → `db/migrations/012-create-podcasts-table.sql` (rename)
+- [ ] Move `012-receipt-sequence.sql` → `db/migrations/011b-receipt-sequence.sql` (renumber)
+- [ ] Move `013-seed_podcasts.sql` → `db/migrations/013-seed-podcasts.sql` (rename)
+- [ ] Move `014-add_key_topics_and_structured_notes.sql` → `db/migrations/014-add-key-topics-and-structured-notes.sql` (rename)
+- [ ] Move `015-add_guest_roles_and_enhance_social.sql` → `db/migrations/015-add-guest-roles-and-enhance-social.sql` (rename)
+- [ ] Move `016-add_podcast_highlights.sql` → `db/migrations/016-add-podcast-highlights.sql` (rename)
+- [ ] Move `migrations/017-conference-payment-columns.sql` → `db/migrations/`
+- [ ] Move `migrations/conference_registrations.sql` → `db/migrations/017b-conference-registrations.sql`
+- [ ] Move `018-rate-limit-function.sql` → `db/migrations/`
+- [ ] Move `018-rate-limits.sql` → `db/migrations/018b-rate-limits.sql` (renumber)
+- [ ] Move `019-conference-email-timestamps.sql` → `db/migrations/`
+- [ ] Move `030-admin-transaction-detail-schema.sql` → `db/migrations/`
 - [ ] Delete `030-cleanup-constraint.sql` (one-time cleanup)
-- [ ] Move `031-enhance-payments-stripe-references.sql` â†’ `db/migrations/`
-- [ ] Move `032-add-provider-and-message-to-donations.sql` â†’ `db/migrations/`
-- [ ] Move `034-support-feedback.sql` â†’ `db/migrations/`
-- [ ] Move `035-support-admin-actions.sql` â†’ `db/migrations/`
-- [ ] Move `036-admin-notifications.sql` â†’ `db/migrations/`
-- [ ] Move `037-homepage-cms-schema.sql` â†’ `db/migrations/`
-- [ ] Move `038-homepage-cms-additional-keys.sql` â†’ `db/migrations/`
-- [ ] Move `039-testimonials-storage-bucket.sql` â†’ `db/migrations/`
-- [ ] Move `040-conference-form-schema.sql` â†’ `db/migrations/`
-- [ ] Move `041-conference-file-upload-bucket.sql` â†’ `db/migrations/`
-- [ ] Move `042-conference-form-templates.sql` â†’ `db/migrations/`
+- [ ] Move `031-enhance-payments-stripe-references.sql` → `db/migrations/`
+- [ ] Move `032-add-provider-and-message-to-donations.sql` → `db/migrations/`
+- [ ] Move `034-support-feedback.sql` → `db/migrations/`
+- [ ] Move `035-support-admin-actions.sql` → `db/migrations/`
+- [ ] Move `036-admin-notifications.sql` → `db/migrations/`
+- [ ] Move `037-homepage-cms-schema.sql` → `db/migrations/`
+- [ ] Move `038-homepage-cms-additional-keys.sql` → `db/migrations/`
+- [ ] Move `039-testimonials-storage-bucket.sql` → `db/migrations/`
+- [ ] Move `040-conference-form-schema.sql` → `db/migrations/`
+- [ ] Move `041-conference-file-upload-bucket.sql` → `db/migrations/`
+- [ ] Move `042-conference-form-templates.sql` → `db/migrations/`
 
 ### Phase 3: Move payments-v2 + Documentation
 
-- [ ] Move `payments-v2/020-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/021-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/022-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/023-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/024-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/025-atomic-receipt-number.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/025-create-payment-logs-table.sql` â†’ `db/payments-v2/025b-create-payment-logs-table.sql`
-- [ ] Move `payments-v2/026-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/027-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/028-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/029-*.sql` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/README.md` â†’ `db/payments-v2/`
-- [ ] Move `payments-v2/COMPATIBILITY_SUMMARY.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/ERROR_TRACKING_GUIDE.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/MIGRATION_ANALYSIS.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/MIGRATION_ORDER.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/QUICK_START.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/RECEIPT_NUMBER_IMPROVEMENTS.md` â†’ `docs/features/payments/`
-- [ ] Move `payments-v2/WHATS_NEW.md` â†’ `docs/features/payments/`
+- [ ] Move `payments-v2/020-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/021-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/022-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/023-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/024-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/025-atomic-receipt-number.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/025-create-payment-logs-table.sql` → `db/payments-v2/025b-create-payment-logs-table.sql`
+- [ ] Move `payments-v2/026-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/027-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/028-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/029-*.sql` → `db/payments-v2/`
+- [ ] Move `payments-v2/README.md` → `db/payments-v2/`
+- [ ] Move `payments-v2/COMPATIBILITY_SUMMARY.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/ERROR_TRACKING_GUIDE.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/MIGRATION_ANALYSIS.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/MIGRATION_ORDER.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/QUICK_START.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/RECEIPT_NUMBER_IMPROVEMENTS.md` → `docs/features/payments/`
+- [ ] Move `payments-v2/WHATS_NEW.md` → `docs/features/payments/`
 
 ### Phase 4: Move Diagnostic + Seed + Test Scripts
 
-- [ ] Move `check-rate-limit-setup.sql` â†’ `db/diagnostics/`
-- [ ] Move `debug-verification.sql` â†’ `db/diagnostics/`
-- [ ] Move `diagnose-receipt-issue.sql` â†’ `db/diagnostics/`
-- [ ] Move `find-valid-verification.sql` â†’ `db/diagnostics/`
-- [ ] Move `fix-verification-id.sql` â†’ `db/diagnostics/`
-- [ ] Move `seed-default-form-schema.sql` â†’ `db/seeds/`
-- [ ] Move `020-seed-real-stories.sql` â†’ `db/seeds/seed-real-stories.sql`
-- [ ] Move `insert-podcasts.mjs` â†’ `db/seeds/`
-- [ ] Move `run-stories-seed.mjs` â†’ `db/seeds/`
-- [ ] Move `test-rate-limit.js` â†’ `test/`
-- [ ] Move `test-esewa-signature.mjs` â†’ `test/`
-- [ ] Move `test-khalti-connection.mjs` â†’ `test/`
-- [ ] Move `backfill-stripe-payment-intents.ts` â†’ `archive/`
-- [ ] Move `fix-initiate-images.mjs` â†’ `archive/`
+- [ ] Move `check-rate-limit-setup.sql` → `db/diagnostics/`
+- [ ] Move `debug-verification.sql` → `db/diagnostics/`
+- [ ] Move `diagnose-receipt-issue.sql` → `db/diagnostics/`
+- [ ] Move `find-valid-verification.sql` → `db/diagnostics/`
+- [ ] Move `fix-verification-id.sql` → `db/diagnostics/`
+- [ ] Move `seed-default-form-schema.sql` → `db/seeds/`
+- [ ] Move `020-seed-real-stories.sql` → `db/seeds/seed-real-stories.sql`
+- [ ] Move `insert-podcasts.mjs` → `db/seeds/`
+- [ ] Move `run-stories-seed.mjs` → `db/seeds/`
+- [ ] Move `test-rate-limit.js` → `test/`
+- [ ] Move `test-esewa-signature.mjs` → `test/`
+- [ ] Move `test-khalti-connection.mjs` → `test/`
+- [ ] Move `backfill-stripe-payment-intents.ts` → `archive/`
+- [ ] Move `fix-initiate-images.mjs` → `archive/`
 
 ### Phase 5: Move Deployment + Ops Scripts
 
-- [ ] Move `deploy-staging.ps1` â†’ `deploy/`
-- [ ] Move `deploy-staging.sh` â†’ `deploy/`
-- [ ] Move `deploy-production.ps1` â†’ `deploy/`
-- [ ] Move `enable-v2-staging.ps1` â†’ `deploy/`
-- [ ] Move `enable-v2-staging.sh` â†’ `deploy/`
-- [ ] Move `monitor-staging.ps1` â†’ `deploy/`
-- [ ] Move `smoke-tests-staging.ps1` â†’ `deploy/`
-- [ ] Move `smoke-tests-staging.sh` â†’ `deploy/`
-- [ ] Move `generate-secrets.ps1` â†’ `ops/`
-- [ ] Move `generate-secrets.sh` â†’ `ops/`
-- [ ] Move `test-credentials.ps1` â†’ `ops/`
-- [ ] Move `test-credentials.sh` â†’ `ops/`
-- [ ] Move `check-env-vars.js` â†’ `ops/`
-- [ ] Move `validate-payment-config.ts` â†’ `ops/`
+- [ ] Move `deploy-staging.ps1` → `deploy/`
+- [ ] Move `deploy-staging.sh` → `deploy/`
+- [ ] Move `deploy-production.ps1` → `deploy/`
+- [ ] Move `enable-v2-staging.ps1` → `deploy/`
+- [ ] Move `enable-v2-staging.sh` → `deploy/`
+- [ ] Move `monitor-staging.ps1` → `deploy/`
+- [ ] Move `smoke-tests-staging.ps1` → `deploy/`
+- [ ] Move `smoke-tests-staging.sh` → `deploy/`
+- [ ] Move `generate-secrets.ps1` → `ops/`
+- [ ] Move `generate-secrets.sh` → `ops/`
+- [ ] Move `test-credentials.ps1` → `ops/`
+- [ ] Move `test-credentials.sh` → `ops/`
+- [ ] Move `check-env-vars.js` → `ops/`
+- [ ] Move `validate-payment-config.ts` → `ops/`
 
 ### Phase 6: Reference Updates + Verification
 
@@ -831,17 +831,17 @@ ls scripts/*.sql scripts/*.ps1 scripts/*.sh scripts/*.js scripts/*.ts scripts/*.
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| **Breaking npm scripts** | High (6 scripts reference old paths) | High â€” `npm run deploy:staging` etc. would fail | Update package.json atomically with file moves in Phase 1 |
-| **Breaking doc references** | High (30+ references) | Medium â€” docs would have broken links | Update all doc references in Phase 6 |
-| **Confusing migration order** | Medium | High â€” could run migrations out of order | Create comprehensive README with execution order |
-| **Losing track of numbering** | Medium | Medium â€” future migrations could conflict | Document numbering scheme; use unique numbers |
-| **One-time scripts needed again** | Low | Low â€” can recover from git history | Archive instead of delete; document in archive/README.md |
-| **Team confusion during migration** | Medium | Medium â€” concurrent work could conflict | Communicate plan; do migration in one session |
+| **Breaking npm scripts** | High (6 scripts reference old paths) | High — `npm run deploy:staging` etc. would fail | Update package.json atomically with file moves in Phase 1 |
+| **Breaking doc references** | High (30+ references) | Medium — docs would have broken links | Update all doc references in Phase 6 |
+| **Confusing migration order** | Medium | High — could run migrations out of order | Create comprehensive README with execution order |
+| **Losing track of numbering** | Medium | Medium — future migrations could conflict | Document numbering scheme; use unique numbers |
+| **One-time scripts needed again** | Low | Low — can recover from git history | Archive instead of delete; document in archive/README.md |
+| **Team confusion during migration** | Medium | Medium — concurrent work could conflict | Communicate plan; do migration in one session |
 
 ### Pre-flight Checks
 
-1. `git status` â€” ensure clean working tree
-2. `npm test` â€” ensure tests pass before changes
+1. `git status` — ensure clean working tree
+2. `npm test` — ensure tests pass before changes
 3. Verify all npm scripts work currently
 4. Grep for all `scripts/` references to understand full blast radius
 5. Communicate plan to team
@@ -946,8 +946,8 @@ When providing both PowerShell and Bash versions:
 **Question:** This script is numbered 020 but it's seed data, not a migration. Should it keep the number?
 
 **Options:**
-- **A) Remove number** â†’ `seed-real-stories.sql` in db/seeds/
-- **B) Keep number** â†’ `020-seed-real-stories.sql` in db/seeds/
+- **A) Remove number** → `seed-real-stories.sql` in db/seeds/
+- **B) Keep number** → `020-seed-real-stories.sql` in db/seeds/
 
 **My recommendation:** Option A. Seed data should not be numbered with migrations. The number implies it's part of the migration sequence.
 
@@ -956,19 +956,19 @@ When providing both PowerShell and Bash versions:
 **Question:** Debug scripts with hardcoded UUIDs (`debug-verification.sql`) are useful for debugging but clutter the repo. Should they stay?
 
 **Options:**
-- **A) Keep in db/diagnostics/** â€” Useful for troubleshooting
-- **B) Move to archive/** â€” One-time use
-- **C) Delete** â€” Recoverable from git history
+- **A) Keep in db/diagnostics/** — Useful for troubleshooting
+- **B) Move to archive/** — One-time use
+- **C) Delete** — Recoverable from git history
 
-**My recommendation:** Option A. Diagnostic scripts are useful for ongoing troubleshooting. The hardcoded UUID is a minor issue â€” it can be parameterized later.
+**My recommendation:** Option A. Diagnostic scripts are useful for ongoing troubleshooting. The hardcoded UUID is a minor issue — it can be parameterized later.
 
 ### D3: Should We Consolidate Cross-Platform Scripts?
 
 **Question:** `generate-secrets.ps1` and `generate-secrets.sh` do the same thing. Should we consolidate into one script that detects the platform?
 
 **Options:**
-- **A) Keep separate** â€” Simple, no platform detection needed
-- **B) Consolidate** â€” Single script with platform detection
+- **A) Keep separate** — Simple, no platform detection needed
+- **B) Consolidate** — Single script with platform detection
 
 **My recommendation:** Option A. Separate scripts are simpler and more reliable. Platform detection adds complexity without clear benefit.
 
@@ -977,8 +977,8 @@ When providing both PowerShell and Bash versions:
 **Question:** The payments-v2/ folder has 8 markdown files alongside SQL scripts. Should these move to docs/?
 
 **Options:**
-- **A) Move to docs/** â€” Separation of concerns
-- **B) Keep in scripts/** â€” Documentation about scripts should be near the scripts
+- **A) Move to docs/** — Separation of concerns
+- **B) Keep in scripts/** — Documentation about scripts should be near the scripts
 
 **My recommendation:** Option A. Documentation about the payment system belongs in docs/, not mixed with scripts. The scripts folder should contain only executable files.
 
@@ -987,9 +987,9 @@ When providing both PowerShell and Bash versions:
 **Question:** There's no migration 033 (goes from 032 to 034). Should we renumber or document the gap?
 
 **Options:**
-- **A) Document the gap** â€” Explain in README that 033 was removed
-- **B) Renumber** â€” Shift 034+ down to fill the gap
-- **C) Leave as-is** â€” Gaps are normal in migration numbering
+- **A) Document the gap** — Explain in README that 033 was removed
+- **B) Renumber** — Shift 034+ down to fill the gap
+- **C) Leave as-is** — Gaps are normal in migration numbering
 
 **My recommendation:** Option C. Gaps in migration numbering are normal and expected. Renumbering would break all existing references.
 

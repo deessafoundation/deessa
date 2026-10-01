@@ -1,7 +1,7 @@
 ---
 title: "Donations API"
 description: "The Donations API handles payment verification, status checking, and receipt generation for donations."
-owner: "Deessa Team"
+owner: "deessa Team"
 status: reference
 category: reference
 audience: developer
