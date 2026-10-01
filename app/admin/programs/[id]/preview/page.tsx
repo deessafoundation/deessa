@@ -8,6 +8,7 @@ import { CmsProgramRenderer } from "@/components/programs/CmsProgramRenderer"
 import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 import type { Metadata } from "next"
+import { readEditorHero } from "@/lib/programs/editor-hero"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -45,11 +46,7 @@ async function getDraftDocument(programId: string): Promise<ProgramDocument | nu
     eyebrow: (program as any).eyebrow || undefined,
     category: (program as any).category || "service",
     tags: (program as any).tags || [],
-    hero: {
-      title: hero.title || program.title,
-      description: hero.description || (program as any).short_description || "",
-      actions: hero.cta ? [hero.cta] : [],
-    },
+    hero: readEditorHero(hero, program.title, (program as any).short_description || ""),
     seo: {
       title: (draft as any).seo_title || undefined,
       description: (draft as any).seo_description || undefined,
