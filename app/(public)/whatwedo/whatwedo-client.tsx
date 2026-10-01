@@ -23,6 +23,7 @@ interface Program {
 interface WhatWeDoClientProps {
   programs: Program[]
   unavailable: boolean
+  errorMessage: string | null
 }
 
 const categories = [
@@ -81,7 +82,7 @@ const PAGE_SIZE = 9
 // Shared pill styles (tabs, pagination, empty-state button)
 const focusRing = "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#29b6c8]/40"
 
-export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
+export function WhatWeDoClient({ programs, unavailable, errorMessage }: WhatWeDoClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
@@ -357,7 +358,9 @@ export function WhatWeDoClient({ programs, unavailable }: WhatWeDoClientProps) {
                   : "No programs in this category yet."}
             </h3>
             <p className={styles.emptyDesc}>
-              {unavailable ? "Please try again shortly." : "Explore another category or check back soon."}
+              {unavailable 
+                ? `Please try again shortly.${errorMessage && process.env.NODE_ENV === "development" ? ` (${errorMessage})` : ""}` 
+                : "Explore another category or check back soon."}
             </p>
             {unavailable ? (
               <button

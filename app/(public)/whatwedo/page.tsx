@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { ArrowRight, HandHelping, Handshake, Heart, type LucideIcon } from "lucide-react"
 import { WhatWeDoClient } from "./whatwedo-client"
+import { ProgramCardsSkeleton } from "@/components/programs/ProgramLoading"
 import { getPublishedProgramCards } from "@/lib/programs/data"
 import { cn } from "@/lib/utils"
 import { WhatWeDoHero } from "@/components/whatwedo/whatwedo-hero"
@@ -97,14 +98,21 @@ async function getPrograms() {
         slug: card.slug,
       }
     })
-    return { programs, unavailable: false }
-  } catch {
-    return { programs: [], unavailable: true }
+    return { programs, unavailable: false, error: null }
+  } catch (error) {
+    // Log detailed error for debugging production issues
+    console.error("[getPrograms] Failed to fetch programs:", error)
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    return { programs: [], unavailable: true, error: errorMessage }
   }
 }
 
-export default async function ProgramsPage() {
-  const { programs, unavailable } = await getPrograms()
+async function ProgramsGrid() {
+  const { programs, unavailable, error } = await getPrograms()
+  return <WhatWeDoClient programs={programs} unavailable={unavailable} errorMessage={error} />
+}
+
+export default function ProgramsPage() {
   return (
     <>
       {/* Hero Section - editorial intro + photo strip */}
@@ -302,19 +310,8 @@ export default async function ProgramsPage() {
             </p>
           </div>
           
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-8">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-[380px] rounded-3xl border border-slate-200/80 bg-white animate-pulse motion-reduce:animate-none"
-                  />
-                ))}
-              </div>
-            }
-          >
-            <WhatWeDoClient programs={programs} unavailable={unavailable} />
+          <Suspense fallback={<ProgramCardsSkeleton />}>
+            <ProgramsGrid />
           </Suspense>
         </div>
       </section>
