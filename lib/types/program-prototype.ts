@@ -63,6 +63,8 @@ export interface Program {
 // =============================================
 
 export interface ProgramHero {
+  focalPoint?: string
+  imageCaption?: string
   eyebrow?: string
   title: string
   description: string
@@ -92,6 +94,7 @@ export interface ProgramSection {
   type: SectionType
   heading?: string
   subheading?: string
+  description?: string
   content: SectionContent
 }
 
@@ -152,6 +155,7 @@ export interface GalleryContent {
 }
 
 export interface GalleryImage {
+  focalPoint?: string
   url: string
   alt: string
   caption?: string
@@ -200,12 +204,16 @@ export interface VideoContent {
 }
 
 export interface StoryContent {
+  imageAlt?: string
+  imageCaption?: string
+  focalPoint?: string
   type: 'story'
   title: string
   context: string
   challenge: string
   approach: string
   outcome: string
+  description?: string
   image?: string
   quote?: string
   person?: string
