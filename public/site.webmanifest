@@ -1,0 +1,16 @@
+{
+  "name": "deessa Foundation",
+  "short_name": "deessa",
+  "description": "Building an autism-inclusive Nepal through awareness, training, resources, and advocacy.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#29b6c8",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}

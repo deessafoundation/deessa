@@ -1,8 +1,5 @@
-// NOTE: DOMPurify (via isomorphic-dompurify) pulls in JSDOM on the server.
-// JSDOM has heavy transitive deps (html-encoding-sniffer / @exodus/bytes) that
-// have caused ESM/CJS interop failures during Next.js page-data collection.
-// To keep the page module evaluable without loading JSDOM at import time we
-// load DOMPurify lazily on first use.
+// NOTE: DOMPurify pulls in JSDOM on the server. To keep the page module evaluable
+// without loading JSDOM at import time we load DOMPurify lazily on first use.
 export type DOMPurifyInstance = {
   sanitize: (html: string, config?: Record<string, unknown>) => string
   addHook: (name: string, cb: (node: any) => void) => void
@@ -13,8 +10,11 @@ let purifyPromise: Promise<DOMPurifyInstance> | null = null
 function getPurify(): Promise<DOMPurifyInstance> {
   if (purifyPromise) return purifyPromise
   purifyPromise = (async () => {
-    const mod = await import("isomorphic-dompurify")
-    const instance = ((mod as any).default ?? mod) as DOMPurifyInstance
+    // Server-only: use dompurify with jsdom
+    const { JSDOM } = await import("jsdom")
+    const createDOMPurify = (await import("dompurify")).default
+    const window = new JSDOM("").window
+    const instance = createDOMPurify(window as unknown as Window) as DOMPurifyInstance
 
     // Configure DOMPurify hooks once
     instance.addHook("afterSanitizeAttributes", (node: any) => {
