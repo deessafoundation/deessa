@@ -1,0 +1,78 @@
+.root {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.placeholder {
+  background: var(--muted);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+:global(body.high-contrast) .root {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .placeholder {
+  background: #dedede !important;
+  border: 1px solid #000 !important;
+  animation: none;
+}
+
+:global(body.high-contrast) .card {
+  background: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.inverted-contrast) .root,
+:global(body.inverted-contrast) .card {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+:global(body.inverted-contrast) .placeholder {
+  background: #333 !important;
+  border: 1px solid #fff !important;
+  animation: none;
+}
+
+:global(body.reduce-motion) .placeholder,
+:global(body.sensory-friendly) .placeholder {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .placeholder {
+    background: Canvas !important;
+    border: 1px solid CanvasText !important;
+    animation: none;
+  }
+
+  .card {
+    border-color: CanvasText !important;
+  }
+}
+
+@media print {
+  .placeholder {
+    animation: none;
+  }
+}

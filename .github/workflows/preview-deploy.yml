@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  issues: write
+  pull-requests: write
 
 jobs:
   preview:
@@ -46,11 +46,22 @@ jobs:
 
       - name: Comment Preview URL
         uses: actions/github-script@v9
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 Preview deployment ready!\n\n✅ Preview URL: ${{ steps.deploy.outputs.url }}'
-            })
+            const body = '🚀 Preview deployment ready!\n\n✅ Preview URL: ' + process.env.PREVIEW_URL
+            await core.summary.addRaw(body).write()
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body
+              })
+            } catch (error) {
+              if (error.status !== 403 || !error.message.includes('Resource not accessible by integration')) {
+                throw error
+              }
+              core.warning('GitHub denied permission to post the preview comment. The deployment succeeded; see the run summary for the preview URL.')
+            }

@@ -6,22 +6,45 @@ export type PublishedProgram = { id: string; slug: string; category: string; pub
 
 export async function getPublishedProgramBySlug(slug: string): Promise<PublishedProgram | null> {
   const supabase = await createClient()
+  
+  // Validate environment variables before attempting query
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("[getPublishedProgramBySlug] Missing Supabase environment variables")
+    throw new Error("Database configuration error")
+  }
+  
   const { data, error } = await supabase.from("program_publications").select("id, slug, category, published_at, document").eq("slug", slug).maybeSingle()
+  
   if (error) {
     const code = "code" in error ? error.code : undefined
-    if (code === "42P01" || code === "PGRST205") return null
-    throw new Error("Unable to load this program")
+    if (code === "42P01" || code === "PGRST205") {
+      console.warn(`[getPublishedProgramBySlug] Table not found for slug: ${slug}`)
+      return null
+    }
+    console.error("[getPublishedProgramBySlug] Supabase error:", error)
+    throw new Error(`Unable to load this program: ${error.message}`)
   }
+  
   if (!data) return null
   return { id: data.id, slug: data.slug, category: data.category, publishedAt: data.published_at, document: data.document as ProgramDocument }
 }
 
 export async function getPublishedProgramCards() {
   const supabase = await createClient()
-  const { data, error } = await supabase.from("program_publications").select("id, slug, category, title, short_description, card, published_at, display_order").order("display_order", { ascending: true }).order("published_at", { ascending: false })
-  if (error) {
-    throw new Error("Unable to load programs")
+  
+  // Validate environment variables before attempting query
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("[getPublishedProgramCards] Missing Supabase environment variables")
+    throw new Error("Database configuration error")
   }
+  
+  const { data, error } = await supabase.from("program_publications").select("id, slug, category, title, short_description, card, published_at, display_order").order("display_order", { ascending: true }).order("published_at", { ascending: false })
+  
+  if (error) {
+    console.error("[getPublishedProgramCards] Supabase error:", error)
+    throw new Error(`Unable to load programs: ${error.message}`)
+  }
+  
   return data ?? []
 }
 
