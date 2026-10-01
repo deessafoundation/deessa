@@ -5,8 +5,11 @@ let purifyPromise: Promise<DOMPurifyInstance> | null = null
 async function getPurify(): Promise<DOMPurifyInstance> {
   if (purifyPromise) return purifyPromise
   purifyPromise = (async () => {
-    const mod = await import("isomorphic-dompurify")
-    const instance = ((mod as any).default ?? mod) as DOMPurifyInstance
+    // Server-only: use dompurify with jsdom
+    const { JSDOM } = await import("jsdom")
+    const createDOMPurify = (await import("dompurify")).default
+    const window = new JSDOM("").window
+    const instance = createDOMPurify(window as unknown as Window) as DOMPurifyInstance
 
     instance.addHook("afterSanitizeAttributes", (node: any) => {
       if (node.tagName === "A") {

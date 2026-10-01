@@ -7,9 +7,7 @@ const nextConfig = {
   serverExternalPackages: [
     "@react-pdf/renderer",
     "jsdom",
-    "isomorphic-dompurify",
-    "html-encoding-sniffer",
-    "@exodus/bytes",
+    "dompurify",
   ],
   experimental: {
     serverActions: {
