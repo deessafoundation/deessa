@@ -6,9 +6,22 @@
   pointer-events: none !important;
   visibility: hidden;
 }
-.above, .below { position: absolute; left: 0; right: 0; background: rgb(0 0 0 / 65%); pointer-events: none !important; }
-.above { top: 0; height: var(--reading-top, 0px); }
-.below { top: var(--reading-bottom, 100vh); bottom: 0; }
+.above,
+.below {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: rgb(0 0 0 / 65%);
+  pointer-events: none !important;
+}
+.above {
+  top: 0;
+  height: var(--reading-top, 0px);
+}
+.below {
+  top: var(--reading-bottom, 100vh);
+  bottom: 0;
+}
 .guide {
   position: absolute;
   left: var(--guide-left, 8px);
@@ -53,13 +66,24 @@
   outline-color: rgb(0 0 0 / 80%);
 }
 @media (max-width: 480px) {
-  .marker { left: calc(50% - 20px); width: 40px; height: 40px; font-size: 28px; }
+  .marker {
+    left: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    font-size: 28px;
+  }
 }
 @media (forced-colors: active) {
-  .line, :global(body.high-contrast) .line, :global(html[data-a11y-negative="true"]) .line {
+  .line,
+  :global(body.high-contrast) .line,
+  :global(html[data-a11y-negative="true"]) .line {
     background: CanvasText;
     box-shadow: none;
     outline-color: Canvas;
   }
 }
-@media print { .layer { display: none !important; } }
+@media print {
+  .layer {
+    display: none !important;
+  }
+}

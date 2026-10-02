@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { HomepageImage } from "@/components/homepage-image"
-import styles from "./homepage-accessibility.module.css"
+import styles from "./homepage-sections.module.css"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -23,10 +23,7 @@ interface HeroCarouselProps {
   interval?: number
 }
 
-const NEWS_TICKER_ITEMS = [
-  "New sustainability initiative launched",
-  "Grant awarded for community project",
-]
+const NEWS_TICKER_ITEMS = ["New sustainability initiative launched", "Grant awarded for community project"]
 
 export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
   const { preferences } = useAccessibility()
@@ -39,7 +36,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
 
   // Check for reduced motion preference (system OR app preference)
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     // Combine system preference with app preference
     const shouldReduceMotion = mediaQuery.matches || preferences.reduceMotion || preferences.sensoryFriendly
     setPrefersReducedMotion(shouldReduceMotion)
@@ -50,8 +47,8 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
       setPrefersReducedMotion(shouldReduceMotion)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [preferences.reduceMotion, preferences.sensoryFriendly])
 
   const goTo = useCallback(
@@ -137,17 +134,20 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
               src={slide.image}
               alt=""
               fill
-              className={cn(
-                "object-cover",
-                !prefersReducedMotion && i === current && "animate-kenburns"
-              )}
+              className={cn("object-cover", !prefersReducedMotion && i === current && "animate-kenburns")}
               priority={i === 0}
               sizes="100vw"
             />
           </div>
           {/* Gradient overlay - stronger for better text readability */}
-          <div data-hero-shade="horizontal" className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30" />
-          <div data-hero-shade="vertical" className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30" />
+          <div
+            data-hero-shade="horizontal"
+            className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30"
+          />
+          <div
+            data-hero-shade="vertical"
+            className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30"
+          />
 
           {/* Content - Improved typography and hierarchy */}
           <div className="relative z-10 h-full flex items-center">
@@ -157,10 +157,13 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                 <div
                   className={cn(
                     "transition-all duration-500",
-                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
                 >
-                  <span data-hero-control className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm">
+                  <span
+                    data-hero-control
+                    className="inline-block px-3 py-1.5 mb-3 text-[10px] font-semibold text-white bg-white/20 backdrop-blur-sm rounded-full sm:px-4 sm:mb-4 sm:text-sm"
+                  >
                     Supporting Children with Autism in Nepal
                   </span>
                 </div>
@@ -169,7 +172,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                   className={cn(
                     "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5",
                     "transition-all duration-500 delay-100",
-                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
                 >
                   {slide.title}
@@ -178,7 +181,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                   className={cn(
                     "text-base sm:text-lg md:text-xl text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-lg sm:max-w-xl",
                     "transition-all duration-500 delay-200",
-                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
                 >
                   {slide.subtitle}
@@ -187,7 +190,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                   className={cn(
                     "flex flex-col gap-3 sm:flex-row sm:gap-4",
                     "transition-all duration-500 delay-300",
-                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                    i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
                 >
                   <Button
@@ -203,7 +206,9 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                     size="lg"
                     className="h-12 w-full px-6 text-base font-semibold rounded-lg border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
                   >
-                    <Link href="/whatwedo" data-hero-control>Explore Programs</Link>
+                    <Link href="/whatwedo" data-hero-control>
+                      Explore Programs
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -252,7 +257,10 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                 style={{ animationDuration: "16s" }}
               >
                 {[...NEWS_TICKER_ITEMS, ...NEWS_TICKER_ITEMS].map((text, idx) => (
-                  <span key={`${text}-${idx}`} className="flex shrink-0 items-center gap-8 whitespace-nowrap text-sm text-white/90">
+                  <span
+                    key={`${text}-${idx}`}
+                    className="flex shrink-0 items-center gap-8 whitespace-nowrap text-sm text-white/90"
+                  >
                     <span>{text}</span>
                     <span className="text-white/35" aria-hidden>
                       |
@@ -278,9 +286,7 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
             aria-current={i === current ? "true" : undefined}
             className={cn(
               "rounded-full transition-all duration-300",
-              i === current
-                ? "w-8 h-2.5 bg-white"
-                : "w-2.5 h-2.5 bg-white/50 hover:bg-white/70",
+              i === current ? "w-8 h-2.5 bg-white" : "w-2.5 h-2.5 bg-white/50 hover:bg-white/70",
             )}
           />
         ))}

@@ -25,7 +25,12 @@
 }
 
 :global(body.high-contrast) :global(#stories-hero).hero [data-hero-shade] {
-  background: linear-gradient(to right, rgb(255 255 255 / 82%), rgb(255 255 255 / 70%) 60%, rgb(255 255 255 / 55%)) !important;
+  background: linear-gradient(
+    to right,
+    rgb(255 255 255 / 82%),
+    rgb(255 255 255 / 70%) 60%,
+    rgb(255 255 255 / 55%)
+  ) !important;
 }
 
 :global(body.high-contrast) :global(#stories-hero).hero [data-hero-decoration] {
@@ -41,6 +46,7 @@
     background: rgb(255 255 255 / 80%) !important;
   }
 }
+
 :global(body.high-contrast) :global(#our-story-hero).hero img {
   filter: grayscale(1) !important;
 }

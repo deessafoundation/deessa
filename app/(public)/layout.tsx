@@ -1,5 +1,5 @@
 import type React from "react"
-import "@/components/public-accessibility.css"
+import "@/app/public-accessibility.css"
 import { NavbarWrapper } from "@/components/navbar-wrapper"
 import { Footer } from "@/components/footer"
 import { IntroVideo } from "@/components/intro-video"
@@ -7,26 +7,19 @@ import { DevelopmentNoticeModal } from "@/components/development-notice-modal"
 import { VideoModalProvider } from "@/contexts/VideoModalContext"
 import { GlobalVideoModal } from "@/components/global-video-modal"
 import { AccessibilityProvider } from "@/contexts/accessibility-provider"
-import { HomeAccessibilityButton } from "@/components/home-accessibility-button"
+import { AccessibilityPanel } from "@/components/accessibility/panel"
 import { openDyslexic } from "@/app/fonts"
 
-import { AccessibilityReadingAids } from "@/components/accessibility-reading-aids"
+import { AccessibilityReadingAids } from "@/components/accessibility/reading-aids"
 import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
 
 export const dynamic = "force-dynamic"
 
-export default function PublicLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={openDyslexic.variable}>
       {/* Skip to main content link - appears on Tab */}
-      <a
-        href="#main-content"
-        className="skip-to-main"
-      >
+      <a href="#main-content" className="skip-to-main">
         Skip to main content
       </a>
 
@@ -44,7 +37,7 @@ export default function PublicLayout({
             </div>
           </div>
           <GlobalVideoModal />
-          <HomeAccessibilityButton />
+          <AccessibilityPanel />
           <AccessibilityReadingAids />
           <AccessibilityDictionary />
         </VideoModalProvider>

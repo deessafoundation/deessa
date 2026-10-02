@@ -117,7 +117,7 @@ body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play 
   background: transparent !important;
 }
 
-body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"]>div {
+body.high-contrast #main-content [data-a11y-video-card] button[aria-label="Play video"] > div {
   background: #fff !important;
 }
 
@@ -152,7 +152,19 @@ body.high-contrast {
 
 /* Existing literal Tailwind surfaces need the same content palette. */
 /* Preserve existing white-on-photo copy and media controls, including modules. */
-body.high-contrast :is(#home-hero, #whatwedo-hero, #stories-hero, #our-story-hero, #events-hero, .about-hero-section, .contact-hero-section, [data-a11y-hero="photo"], [data-a11y-video-card], footer) {
+body.high-contrast
+  :is(
+    #home-hero,
+    #whatwedo-hero,
+    #stories-hero,
+    #our-story-hero,
+    #events-hero,
+    .about-hero-section,
+    .contact-hero-section,
+    [data-a11y-hero="photo"],
+    [data-a11y-video-card],
+    footer
+  ) {
   --a11y-ink: #000;
   --a11y-paper: #fff;
 }
@@ -166,14 +178,18 @@ body.sensory-friendly [data-a11y-reading-layer] {
 }
 
 @media (any-pointer: fine) {
-
   body[data-a11y-big-cursor="true"],
   body[data-a11y-big-cursor="true"] .website-layout {
-    cursor: url('/accessibility/cursor-arrow.svg') 5 3, auto;
+    cursor:
+      url("/accessibility/cursor-arrow.svg") 5 3,
+      auto;
   }
 
-  body[data-a11y-big-cursor="true"] :is(a[href], button, summary, select, [role="button"], [role="combobox"], label[for]) {
-    cursor: url('/accessibility/cursor-pointer.svg') 20 3, pointer;
+  body[data-a11y-big-cursor="true"]
+    :is(a[href], button, summary, select, [role="button"], [role="combobox"], label[for]) {
+    cursor:
+      url("/accessibility/cursor-pointer.svg") 20 3,
+      pointer;
   }
 
   body[data-a11y-big-cursor="true"] :is(input, textarea, [contenteditable="true"]) {
@@ -181,7 +197,9 @@ body.sensory-friendly [data-a11y-reading-layer] {
   }
 
   body[data-a11y-big-cursor="true"] :is(input[type="checkbox"], input[type="radio"], input[type="range"]) {
-    cursor: url('/accessibility/cursor-pointer.svg') 20 3, pointer;
+    cursor:
+      url("/accessibility/cursor-pointer.svg") 20 3,
+      pointer;
   }
 
   body[data-a11y-big-cursor="true"] :is(:disabled, [aria-disabled="true"]) {
@@ -254,12 +272,11 @@ html[data-a11y-scope="public"][data-a11y-negative="true"] .accessibility-panel *
 }
 
 /* Keep the reading mask a dark shade after the root inversion. */
-html[data-a11y-negative="true"] [data-a11y-reading-layer="mask"]>div {
+html[data-a11y-negative="true"] [data-a11y-reading-layer="mask"] > div {
   background: rgb(255 255 255 / 65%);
 }
 
-@media print,
-(forced-colors: active) {
+@media print, (forced-colors: active) {
   html[data-a11y-scope="public"][data-a11y-negative="true"] {
     filter: none;
   }

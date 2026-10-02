@@ -3,22 +3,48 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { HomepageImage } from "./homepage-image"
-import styles from "./homepage-accessibility.module.css"
+import styles from "./homepage-sections.module.css"
 import Link from "next/link"
 import {
-  Heart, ArrowRight, GraduationCap, MapPin, Stethoscope,
-  BookOpen, ChevronRight, Phone, Clock, Mail, Shield, Home as HomeIcon,
-  Target, Eye, Flag, Users, Leaf, ArrowUpRight, Star, Play,
-  Quote, Award, Building2, Globe, Megaphone, FileText, Scale
+  Heart,
+  ArrowRight,
+  GraduationCap,
+  MapPin,
+  Stethoscope,
+  BookOpen,
+  ChevronRight,
+  Phone,
+  Clock,
+  Mail,
+  Shield,
+  Home as HomeIcon,
+  Target,
+  Eye,
+  Flag,
+  Users,
+  Leaf,
+  ArrowUpRight,
+  Star,
+  Play,
+  Quote,
+  Award,
+  Building2,
+  Globe,
+  Megaphone,
+  FileText,
+  Scale,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  ScrollReveal,
-  CountUp,
-  BackToTop,
-} from "@/components/scroll-animations"
+import { ScrollReveal, CountUp, BackToTop } from "@/components/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
-import type { HomepageStat, HomepageMarqueeSettings, HomepageTestimonialsSettings, HomepageTimelineSettings, HomepageStorySettings, HomepageWhatWeDoSettings } from "@/lib/types/homepage-settings"
+import type {
+  HomepageStat,
+  HomepageMarqueeSettings,
+  HomepageTestimonialsSettings,
+  HomepageTimelineSettings,
+  HomepageStorySettings,
+  HomepageWhatWeDoSettings,
+} from "@/lib/types/homepage-settings"
 import { DEFAULT_HOMEPAGE_STORY, DEFAULT_WHAT_WE_DO } from "@/lib/types/homepage-settings"
 
 /* ──────────────────  IMPACT STATS BAR  ────────────────── */
@@ -37,7 +63,7 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
   ]
 
   const displayStats = stats || defaultStats
-  
+
   // Sort by order and take first 4 for homepage display
   const sortedStats = [...displayStats].sort((a, b) => a.order - b.order).slice(0, 4)
 
@@ -51,9 +77,7 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
                 <CountUp end={stat.value} suffix={stat.suffix || ""} />
               </p>
               <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
-              {stat.sublabel && (
-                <p className="text-xs text-slate-500">{stat.sublabel}</p>
-              )}
+              {stat.sublabel && <p className="text-xs text-slate-500">{stat.sublabel}</p>}
             </div>
           ))}
         </div>
@@ -92,9 +116,7 @@ export function OurStorySection({ story }: OurStorySectionProps) {
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
                 <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-6 shadow-xl animate-badge-bounce">
-                  <p className="text-2xl md:text-4xl font-black font-comic-num">
-                    {s.founded}
-                  </p>
+                  <p className="text-2xl md:text-4xl font-black font-comic-num">{s.founded}</p>
                   <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
                 </div>
               </ScrollReveal>
@@ -117,7 +139,10 @@ export function OurStorySection({ story }: OurStorySectionProps) {
                   className="w-fit mx-auto"
                 >
                   <div className="py-0 px-1.5">
-                    <h2 className="font-marissa text-2xl md:text-[34px] text-white text-center" style={{ lineHeight: 1.15 }}>
+                    <h2
+                      className="font-marissa text-2xl md:text-[34px] text-white text-center"
+                      style={{ lineHeight: 1.15 }}
+                    >
                       {s.badgeText}
                     </h2>
                   </div>
@@ -156,15 +181,16 @@ export function MissionVisionSection() {
       description: "Integrated development of the social sector in Nepal.",
       color: "border-l-4 border-l-primary",
       iconBg: "bg-primary/10",
-      iconColor: "text-primary"
+      iconColor: "text-primary",
     },
     {
       icon: Eye,
       title: "Our Vision",
-      description: "Work for social sector development through the combined effort of national and international community stakeholders.",
+      description:
+        "Work for social sector development through the combined effort of national and international community stakeholders.",
       color: "border-l-4 border-l-blue-500",
       iconBg: "bg-blue-500/10",
-      iconColor: "text-blue-500"
+      iconColor: "text-blue-500",
     },
     {
       icon: Flag,
@@ -172,7 +198,7 @@ export function MissionVisionSection() {
       description: "To focus on the social and economic problems at the grassroots level of poor people in Nepal.",
       color: "border-l-4 border-l-green-500",
       iconBg: "bg-green-500/10",
-      iconColor: "text-green-500"
+      iconColor: "text-green-500",
     },
   ]
 
@@ -209,10 +235,16 @@ export function MissionVisionSection() {
               const IconComp = card.icon
               return (
                 <ScrollReveal key={card.title} animation="fade-right" delay={i * 200}>
-                  <div className={`group ${card.color} rounded-xl bg-background/50 p-4 hover:scale-[1.02] transition-transform duration-300`}>
+                  <div
+                    className={`group ${card.color} rounded-xl bg-background/50 p-4 hover:scale-[1.02] transition-transform duration-300`}
+                  >
                     <div className="flex items-start gap-4">
-                      <div className={`w-14 h-14 rounded-2xl ${card.iconBg} flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors`}>
-                        <IconComp className={`size-7 ${card.iconColor} group-hover:rotate-[15deg] transition-transform duration-300`} />
+                      <div
+                        className={`w-14 h-14 rounded-2xl ${card.iconBg} flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors`}
+                      >
+                        <IconComp
+                          className={`size-7 ${card.iconColor} group-hover:rotate-[15deg] transition-transform duration-300`}
+                        />
                       </div>
                       <div>
                         <h3 className="text-xl font-black text-foreground mb-2">{card.title}</h3>
@@ -233,8 +265,20 @@ export function MissionVisionSection() {
 /* ──────────────────  PROGRAMS SECTION  ────────────────── */
 
 const pillarIconMap: Record<string, any> = {
-  Megaphone, BookOpen, FileText, Scale, GraduationCap, Stethoscope,
-  Shield, HomeIcon, Heart, Globe, Users, Award, Building2, Star,
+  Megaphone,
+  BookOpen,
+  FileText,
+  Scale,
+  GraduationCap,
+  Stethoscope,
+  Shield,
+  HomeIcon,
+  Heart,
+  Globe,
+  Users,
+  Award,
+  Building2,
+  Star,
 }
 
 interface ProgramsSectionProps {
@@ -243,9 +287,7 @@ interface ProgramsSectionProps {
 
 export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
   const w = whatWeDo || DEFAULT_WHAT_WE_DO
-  const corePillars = [...w.pillars]
-    .filter((p) => p.visible)
-    .sort((a, b) => a.order - b.order)
+  const corePillars = [...w.pillars].filter((p) => p.visible).sort((a, b) => a.order - b.order)
 
   return (
     <section id="what-we-do" className="py-20 md:py-28 bg-foreground text-white relative overflow-hidden scroll-mt-24">
@@ -259,11 +301,11 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
-            <span className={`${styles.darkLabel} text-primary font-bold tracking-widest uppercase text-sm mb-4 block`}>{w.eyebrow}</span>
+            <span className={`${styles.darkLabel} text-primary font-bold tracking-widest uppercase text-sm mb-4 block`}>
+              {w.eyebrow}
+            </span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{w.title}</h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
-              {w.subtitle}
-            </p>
+            <p className="text-lg text-white/60 max-w-2xl mx-auto">{w.subtitle}</p>
           </div>
         </ScrollReveal>
 
@@ -277,10 +319,14 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 delay={idx * 150}
                 className="h-full"
               >
-                <div className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}>
+                <div
+                  className={`group relative rounded-3xl overflow-hidden bg-white/5 border border-white/10 hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 h-full flex flex-col ${pillar.glowClass}`}
+                >
                   <div className="p-8 text-center flex flex-col flex-1">
                     <p className="text-xs text-white/50 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <div
+                      className={`w-16 h-16 ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}
+                    >
                       <IconComp className="size-8 text-white animate-icon-float" />
                     </div>
                     <h3 className="text-xl font-black mb-3">{pillar.title}</h3>
@@ -305,24 +351,34 @@ interface TimelineSectionProps {
 export function TimelineSection({ timeline: timelineSettings }: TimelineSectionProps) {
   // Icon mapping
   const iconMap: Record<string, any> = {
-    MapPin, GraduationCap, Stethoscope, Heart, Globe, BookOpen,
-    Users, Star, Award, Building2, Leaf, Shield
+    MapPin,
+    GraduationCap,
+    Stethoscope,
+    Heart,
+    Globe,
+    BookOpen,
+    Users,
+    Star,
+    Award,
+    Building2,
+    Leaf,
+    Shield,
   }
 
   // Helper function to parse color classes and convert to inline styles
-  const parseColorToStyle = (colorClass: string, type: 'gradient' | 'solid') => {
-    if (type === 'gradient') {
+  const parseColorToStyle = (colorClass: string, type: "gradient" | "solid") => {
+    if (type === "gradient") {
       // Parse gradient: extract all hex colors
       const colors = colorClass.match(/#[0-9A-Fa-f]{3,6}/g)
-      
+
       if (colors && colors.length >= 2) {
         return {
-          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`
+          background: `linear-gradient(to bottom right, ${colors[0]}, ${colors[1]})`,
         }
       } else if (colors && colors.length === 1) {
         // Single color gradient (fallback)
         return {
-          background: colors[0]
+          background: colors[0],
         }
       }
     } else {
@@ -330,11 +386,11 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
       const match = colorClass.match(/#[0-9A-Fa-f]{3,6}/)
       if (match) {
         return {
-          backgroundColor: match[0]
+          backgroundColor: match[0],
         }
       }
     }
-    
+
     // Fallback: return empty object (will use Tailwind classes)
     return {}
   }
@@ -352,7 +408,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2016",
       milestone: "First education program",
-      description: "Our scholarship initiative opened classroom doors for 200+ students with limited access to learning.",
+      description:
+        "Our scholarship initiative opened classroom doors for 200+ students with limited access to learning.",
       icon: GraduationCap,
       badgeClass: "from-[rgb(var(--accent-education))] to-amber-500",
       yearClass: "bg-[rgb(var(--accent-education))]",
@@ -360,7 +417,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2018",
       milestone: "Health camps expanded",
-      description: "Medical outreach scaled to 50+ remote villages, bringing care closer to families who needed it most.",
+      description:
+        "Medical outreach scaled to 50+ remote villages, bringing care closer to families who needed it most.",
       icon: Stethoscope,
       badgeClass: "from-[rgb(var(--accent-empowerment))] to-pink-500",
       yearClass: "bg-[rgb(var(--accent-empowerment))]",
@@ -368,7 +426,8 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
     {
       year: "2020",
       milestone: "COVID-19 relief",
-      description: "Emergency food, hygiene kits, and support reached 5,000+ families during Nepal's most urgent months.",
+      description:
+        "Emergency food, hygiene kits, and support reached 5,000+ families during Nepal's most urgent months.",
       icon: Heart,
       badgeClass: "from-[rgb(var(--accent-environment))] to-lime-500",
       yearClass: "bg-[rgb(var(--accent-environment))]",
@@ -394,20 +453,28 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
   // Use CMS milestones if provided, otherwise use defaults
   const milestones = timelineSettings?.milestones
     ? timelineSettings.milestones
-        .filter(m => m.visible)
+        .filter((m) => m.visible)
         .sort((a, b) => a.order - b.order)
-        .map(m => ({
+        .map((m) => ({
           ...m,
-          icon: iconMap[m.icon] || MapPin
+          icon: iconMap[m.icon] || MapPin,
         }))
     : defaultMilestones
 
   const title = timelineSettings?.title || "Our Impact through the Years"
-  const subtitle = timelineSettings?.subtitle || "For over a decade and counting, we have been transforming lives, building stronger communities, and creating lasting change."
+  const subtitle =
+    timelineSettings?.subtitle ||
+    "For over a decade and counting, we have been transforming lives, building stronger communities, and creating lasting change."
 
   return (
     <section className="py-20 md:py-24 relative overflow-hidden bg-[linear-gradient(180deg,#f6f3ed_0%,#fbfaf7_100%)]">
-      <div className="absolute inset-0 pointer-events-none opacity-30" style={{ backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.22) 2px, transparent 2px)", backgroundSize: "42px 42px" }} />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.22) 2px, transparent 2px)",
+          backgroundSize: "42px 42px",
+        }}
+      />
       <div className="absolute -left-28 top-8 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
@@ -418,9 +485,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
               Our <span className="text-primary">Impact through the Years</span>
             </h2>
-            <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">
-              {subtitle}
-            </p>
+            <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">{subtitle}</p>
           </div>
         </ScrollReveal>
 
@@ -436,43 +501,35 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
               const isLeft = i % 2 === 0
 
               return (
-                <ScrollReveal 
-                  key={`${item.year}-${i}`} 
-                  animation={isLeft ? "fade-right" : "fade-left"} 
-                  delay={i * 100}
-                >
-                  <div className={`relative flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-8`}>
+                <ScrollReveal key={`${item.year}-${i}`} animation={isLeft ? "fade-right" : "fade-left"} delay={i * 100}>
+                  <div className={`relative flex items-center ${isLeft ? "flex-row" : "flex-row-reverse"} gap-8`}>
                     {/* Card */}
-                    <div className={`w-[calc(50%-2rem)] ${isLeft ? 'text-right' : 'text-left'}`}>
+                    <div className={`w-[calc(50%-2rem)] ${isLeft ? "text-right" : "text-left"}`}>
                       <article className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                        <div className={`flex items-center gap-3 mb-4 ${isLeft ? 'flex-row-reverse' : 'flex-row'}`}>
-                          <div 
+                        <div className={`flex items-center gap-3 mb-4 ${isLeft ? "flex-row-reverse" : "flex-row"}`}>
+                          <div
                             className="size-14 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
-                            style={parseColorToStyle(item.badgeClass, 'gradient')}
+                            style={parseColorToStyle(item.badgeClass, "gradient")}
                           >
                             <IconComp className="size-7" />
                           </div>
-                          <span 
+                          <span
                             className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
-                            style={parseColorToStyle(item.yearClass, 'solid')}
+                            style={parseColorToStyle(item.yearClass, "solid")}
                           >
                             {item.year}
                           </span>
                         </div>
-                        <h4 className="text-xl font-bold text-slate-800 mb-2">
-                          {item.milestone}
-                        </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          {item.description}
-                        </p>
+                        <h4 className="text-xl font-bold text-slate-800 mb-2">{item.milestone}</h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
                       </article>
                     </div>
 
                     {/* Center dot */}
                     <div className="absolute left-1/2 -translate-x-1/2 z-10">
-                      <div 
+                      <div
                         className="size-4 rounded-full ring-4 ring-white shadow-md"
-                        style={parseColorToStyle(item.yearClass, 'solid')}
+                        style={parseColorToStyle(item.yearClass, "solid")}
                       />
                     </div>
 
@@ -498,34 +555,30 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
                 <div className="relative">
                   {/* Dot on the line */}
                   <div className="absolute -left-8 top-6">
-                    <div 
+                    <div
                       className="size-4 rounded-full ring-4 ring-white shadow-md"
-                      style={parseColorToStyle(item.yearClass, 'solid')}
+                      style={parseColorToStyle(item.yearClass, "solid")}
                     />
                   </div>
 
                   {/* Card */}
                   <article className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-3">
-                      <div 
+                      <div
                         className="size-12 rounded-full text-white shadow-md flex items-center justify-center flex-shrink-0"
-                        style={parseColorToStyle(item.badgeClass, 'gradient')}
+                        style={parseColorToStyle(item.badgeClass, "gradient")}
                       >
                         <IconComp className="size-6" />
                       </div>
-                      <span 
+                      <span
                         className="inline-flex items-center rounded-full text-white text-sm font-bold px-4 py-1.5 font-comic-num"
-                        style={parseColorToStyle(item.yearClass, 'solid')}
+                        style={parseColorToStyle(item.yearClass, "solid")}
                       >
                         {item.year}
                       </span>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-800 mb-2">
-                      {item.milestone}
-                    </h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      {item.description}
-                    </p>
+                    <h4 className="text-lg font-bold text-slate-800 mb-2">{item.milestone}</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
                   </article>
                 </div>
               </ScrollReveal>
@@ -563,18 +616,19 @@ export function PodcastSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className={`${styles.podcastPlay} flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110`}>
+                  <span
+                    className={`${styles.podcastPlay} flex size-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-xl transition-transform duration-300 group-hover:scale-110`}
+                  >
                     <Play className="ml-1 size-7 fill-current" aria-hidden="true" />
                   </span>
                 </div>
               </div>
 
               <div className="flex flex-col justify-center p-8 text-white sm:p-12 lg:p-14">
-                <h2 className="mb-5 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-                  Living With Autism
-                </h2>
+                <h2 className="mb-5 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">Living With Autism</h2>
                 <p className="mb-8 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
-                  Real voices and real stories. Listen to honest conversations about autism, inclusion, and the experiences that shape our communities.
+                  Real voices and real stories. Listen to honest conversations about autism, inclusion, and the
+                  experiences that shape our communities.
                 </p>
                 <span className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors group-hover:text-white">
                   Explore the podcast
@@ -605,7 +659,8 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Parent",
       location: "Kathmandu",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-      quote: "deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
+      quote:
+        "deessa Foundation changed my daughter's life. She now attends school regularly and dreams of becoming a teacher. The scholarship program gave us hope when we had none.",
       rating: 5,
     },
     {
@@ -613,7 +668,8 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Village Elder",
       location: "Gorkha",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      quote: "The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
+      quote:
+        "The health camp organized by deessa brought medical care to our remote village for the first time in years. Over 200 families received treatment. We are forever grateful.",
       rating: 5,
     },
     {
@@ -621,18 +677,19 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
       role: "Volunteer",
       location: "Pokhara",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80",
-      quote: "Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
+      quote:
+        "Volunteering with deessa has been the most rewarding experience of my life. Seeing the smiles on children's faces when they receive books and supplies is priceless.",
       rating: 5,
     },
   ]
 
   // Use CMS testimonials if provided, otherwise use defaults
-  const testimonials = testimonialsSettings?.testimonials
-    ?.filter(t => t.visible)
-    .sort((a, b) => a.order - b.order) || defaultTestimonials
+  const testimonials =
+    testimonialsSettings?.testimonials?.filter((t) => t.visible).sort((a, b) => a.order - b.order) ||
+    defaultTestimonials
 
   // Transform testimonials to match CircularTestimonials format
-  const circularTestimonials = testimonials.map(t => ({
+  const circularTestimonials = testimonials.map((t) => ({
     name: t.name,
     designation: `${t.role}, ${t.location}`,
     quote: t.quote,
@@ -645,9 +702,7 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-12">
             <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Testimonials</span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">
-              Voices of Impact
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-4">Voices of Impact</h2>
             <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
               Hear from the people whose lives have been touched by our work
             </p>
@@ -684,34 +739,44 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
 const WorldVisionLogo = () => (
   <svg viewBox="0 0 120 50" className="h-12 md:h-14 w-auto" fill="currentColor">
     <circle cx="15" cy="25" r="8" className="text-blue-600" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">World Vision</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      World Vision
+    </text>
   </svg>
 )
 
 const SaaltLogo = () => (
   <svg viewBox="0 0 80 50" className="h-12 md:h-14 w-auto" fill="currentColor">
-    <text x="5" y="30" className="text-xl font-bold lowercase" fill="#2D5F3F">saalt</text>
+    <text x="5" y="30" className="text-xl font-bold lowercase" fill="#2D5F3F">
+      saalt
+    </text>
   </svg>
 )
 
 const ActionAidLogo = () => (
   <svg viewBox="0 0 110 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="10" fill="#E63946" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">ActionAid</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      ActionAid
+    </text>
   </svg>
 )
 
 const RealMedicineLogo = () => (
   <svg viewBox="0 0 180 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="18" height="18" rx="3" fill="#8B4513" />
-    <text x="28" y="30" className="text-[10px] font-bold" fill="currentColor">Real Medicine Foundation</text>
+    <text x="28" y="30" className="text-[10px] font-bold" fill="currentColor">
+      Real Medicine Foundation
+    </text>
   </svg>
 )
 
 const PedalHealthLogo = () => (
   <svg viewBox="0 0 120 50" className="h-12 md:h-14 w-auto">
     <path d="M15 25 L22 18 L22 32 Z" fill="#4CAF50" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">PedalHealth</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      PedalHealth
+    </text>
   </svg>
 )
 
@@ -719,14 +784,18 @@ const WorldBicycleLogo = () => (
   <svg viewBox="0 0 160 50" className="h-12 md:h-14 w-auto">
     <circle cx="12" cy="30" r="7" stroke="#FF6B35" strokeWidth="2" fill="none" />
     <circle cx="28" cy="30" r="7" stroke="#FF6B35" strokeWidth="2" fill="none" />
-    <text x="40" y="30" className="text-[10px] font-bold" fill="currentColor">World Bicycle Relief</text>
+    <text x="40" y="30" className="text-[10px] font-bold" fill="currentColor">
+      World Bicycle Relief
+    </text>
   </svg>
 )
 
 const UBCLogo = () => (
   <svg viewBox="0 0 80 50" className="h-14 md:h-16 w-auto">
     <rect x="10" y="10" width="35" height="30" rx="2" fill="#003366" />
-    <text x="18" y="30" className="text-base font-bold" fill="white">UBC</text>
+    <text x="18" y="30" className="text-base font-bold" fill="white">
+      UBC
+    </text>
   </svg>
 )
 
@@ -734,14 +803,18 @@ const BuildingEqualityLogo = () => (
   <svg viewBox="0 0 180 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="12" height="18" fill="#6A4C93" />
     <rect x="19" y="12" width="12" height="21" fill="#6A4C93" />
-    <text x="36" y="30" className="text-[10px] font-bold" fill="currentColor">Building Equality</text>
+    <text x="36" y="30" className="text-[10px] font-bold" fill="currentColor">
+      Building Equality
+    </text>
   </svg>
 )
 
 const LSSLogo = () => (
   <svg viewBox="0 0 80 50" className="h-14 md:h-16 w-auto">
     <rect x="10" y="10" width="38" height="28" rx="3" fill="#2E7D32" />
-    <text x="18" y="30" className="text-base font-bold" fill="white">LSS</text>
+    <text x="18" y="30" className="text-base font-bold" fill="white">
+      LSS
+    </text>
   </svg>
 )
 
@@ -749,7 +822,9 @@ const RedCrossLogo = () => (
   <svg viewBox="0 0 100 50" className="h-12 md:h-14 w-auto">
     <rect x="15" y="15" width="7" height="18" fill="#E63946" />
     <rect x="11" y="19" width="15" height="7" fill="#E63946" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">Red Cross</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      Red Cross
+    </text>
   </svg>
 )
 
@@ -757,42 +832,54 @@ const UNICEFLogo = () => (
   <svg viewBox="0 0 90 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="20" r="9" fill="#00AEEF" />
     <path d="M11 25 L15 29 L19 25" stroke="white" strokeWidth="2" fill="none" />
-    <text x="8" y="43" className="text-[10px] font-bold" fill="currentColor">UNICEF</text>
+    <text x="8" y="43" className="text-[10px] font-bold" fill="currentColor">
+      UNICEF
+    </text>
   </svg>
 )
 
 const WorldBankLogo = () => (
   <svg viewBox="0 0 110 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="10" fill="#009FDA" />
-    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">World Bank</text>
+    <text x="30" y="30" className="text-xs font-bold" fill="currentColor">
+      World Bank
+    </text>
   </svg>
 )
 
 const SaveChildrenLogo = () => (
   <svg viewBox="0 0 140 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#E2231A" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Save the Children</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Save the Children
+    </text>
   </svg>
 )
 
 const OxfamLogo = () => (
   <svg viewBox="0 0 90 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#61A534" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Oxfam</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Oxfam
+    </text>
   </svg>
 )
 
 const RotaryLogo = () => (
   <svg viewBox="0 0 150 50" className="h-12 md:h-14 w-auto">
     <circle cx="15" cy="25" r="9" fill="#17458F" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Rotary International</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Rotary International
+    </text>
   </svg>
 )
 
 const CareInternationalLogo = () => (
   <svg viewBox="0 0 140 50" className="h-12 md:h-14 w-auto">
     <rect x="5" y="15" width="18" height="18" rx="3" fill="#0066A6" />
-    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">Care International</text>
+    <text x="28" y="30" className="text-xs font-bold" fill="currentColor">
+      Care International
+    </text>
   </svg>
 )
 
@@ -848,7 +935,13 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
   return (
     <section className="relative overflow-hidden py-16 md:py-24 bg-[linear-gradient(180deg,#fffaf4_0%,#f7fbff_100%)]">
-      <div className="absolute inset-0 pointer-events-none opacity-55" style={{ backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.08) 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-55"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(63,171,222,0.08) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+        }}
+      />
       <div className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-[#F7C52B]/10 blur-3xl" />
 
@@ -862,7 +955,9 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
             <div className="max-w-3xl mx-auto mb-8">
               <h3 className="text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
               <p className="text-foreground/70 leading-relaxed">
-                We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and creating lasting opportunities for communities in need. Thank you to our partners who believe in our mission and help us build a brighter future.
+                We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and
+                creating lasting opportunities for communities in need. Thank you to our partners who believe in our
+                mission and help us build a brighter future.
               </p>
             </div>
           </div>
@@ -871,98 +966,95 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
 
       <div className="relative mx-auto max-w-[1600px] px-0 sm:px-0 lg:px-0">
         <div className="relative overflow-hidden py-6 md:py-8">
-            <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#fffaf4] to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#f7fbff] to-transparent pointer-events-none z-10" />
 
-            {/* Responsive marquee: CMS-controlled settings */}
-            <MarqueeContainer 
-              partners={partners} 
-              settings={marqueeSettings}
-            />
-          </div>
+          {/* Responsive marquee: CMS-controlled settings */}
+          <MarqueeContainer partners={partners} settings={marqueeSettings} />
+        </div>
       </div>
     </section>
   )
 }
 
-  function MarqueeContainer({ 
-    partners, 
-    settings 
-  }: { 
-    partners: { name: string; Component: React.FC }[]
-    settings: HomepageMarqueeSettings
-  }) {
-    const [isPaused, setIsPaused] = useState(false)
-    const [repeatCount, setRepeatCount] = useState(3)
-    const [duration, setDuration] = useState(settings.speed || 30)
+function MarqueeContainer({
+  partners,
+  settings,
+}: {
+  partners: { name: string; Component: React.FC }[]
+  settings: HomepageMarqueeSettings
+}) {
+  const [isPaused, setIsPaused] = useState(false)
+  const [repeatCount, setRepeatCount] = useState(3)
+  const [duration, setDuration] = useState(settings.speed || 30)
 
-    useEffect(() => {
-      const calc = () => {
-        const w = typeof window !== 'undefined' ? window.innerWidth : 1200
-        if (w < 640) {
-          setRepeatCount(settings.repeatOnMobile ? 2 : 1)
-          setDuration((settings.speed || 30) * 0.6)
-        } else if (w < 1024) {
-          setRepeatCount(3)
-          setDuration((settings.speed || 30) * 0.9)
-        } else if (w < 1280) {
-          setRepeatCount(4)
-          setDuration((settings.speed || 30) * 1.1)
-        } else {
-          setRepeatCount(6)
-          setDuration((settings.speed || 30) * 1.4)
-        }
+  useEffect(() => {
+    const calc = () => {
+      const w = typeof window !== "undefined" ? window.innerWidth : 1200
+      if (w < 640) {
+        setRepeatCount(settings.repeatOnMobile ? 2 : 1)
+        setDuration((settings.speed || 30) * 0.6)
+      } else if (w < 1024) {
+        setRepeatCount(3)
+        setDuration((settings.speed || 30) * 0.9)
+      } else if (w < 1280) {
+        setRepeatCount(4)
+        setDuration((settings.speed || 30) * 1.1)
+      } else {
+        setRepeatCount(6)
+        setDuration((settings.speed || 30) * 1.4)
       }
-      calc()
-      window.addEventListener('resize', calc)
-      return () => window.removeEventListener('resize', calc)
-    }, [settings.speed, settings.repeatOnMobile])
-
-    const marqueePartners = Array.from({ length: repeatCount }).flatMap(() => partners)
-
-    // Get spacing based on CMS setting
-    const spacing = settings.spacingPresets[settings.spacing] || settings.spacingPresets.comfortable
-
-    const animationStyle: React.CSSProperties = {
-      width: 'max-content',
-      animationName: 'marquee',
-      animationDuration: `${duration}s`,
-      animationTimingFunction: 'linear',
-      animationIterationCount: 'infinite',
-      animationPlayState: isPaused ? 'paused' : 'running',
     }
+    calc()
+    window.addEventListener("resize", calc)
+    return () => window.removeEventListener("resize", calc)
+  }, [settings.speed, settings.repeatOnMobile])
 
-    return (
-      <div className="relative">
-        <div
-          className="flex items-center py-3 animate-marquee"
-          style={{
-            ...animationStyle,
-            gap: `${spacing}px`,
-          }}
-          onMouseEnter={() => settings.pauseOnHover && setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          aria-hidden="true"
-        >
-          {marqueePartners.map((partner, i) => {
-            const LogoComponent = partner.Component
-            return (
-              <div
-                key={`partner-${i}`}
-                className="group flex-none flex items-center justify-center px-2 py-1 md:px-3 md:py-2 transition-transform duration-300 hover:scale-105"
-                title={partner.name}
-                style={{ maxHeight: `${settings.maxLogoHeight}px` }}
-              >
-                <div className="flex items-center justify-center text-slate-800/95 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
-                  <LogoComponent />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    )
+  const marqueePartners = Array.from({ length: repeatCount }).flatMap(() => partners)
+
+  // Get spacing based on CMS setting
+  const spacing = settings.spacingPresets[settings.spacing] || settings.spacingPresets.comfortable
+
+  const animationStyle: React.CSSProperties = {
+    width: "max-content",
+    animationName: "marquee",
+    animationDuration: `${duration}s`,
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+    animationPlayState: isPaused ? "paused" : "running",
   }
+
+  return (
+    <div className="relative">
+      <div
+        className="flex items-center py-3 animate-marquee"
+        style={{
+          ...animationStyle,
+          gap: `${spacing}px`,
+        }}
+        onMouseEnter={() => settings.pauseOnHover && setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        aria-hidden="true"
+      >
+        {marqueePartners.map((partner, i) => {
+          const LogoComponent = partner.Component
+          return (
+            <div
+              key={`partner-${i}`}
+              className="group flex-none flex items-center justify-center px-2 py-1 md:px-3 md:py-2 transition-transform duration-300 hover:scale-105"
+              title={partner.name}
+              style={{ maxHeight: `${settings.maxLogoHeight}px` }}
+            >
+              <div className="flex items-center justify-center text-slate-800/95 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
+                <LogoComponent />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 /* ──────────────────  CONTACT SECTION (RESTORED)  ────────────────── */
 
@@ -980,9 +1072,7 @@ export function ContactSection() {
         <ScrollReveal animation="fade-up">
           <div className="text-center mb-16">
             <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
-            <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight mb-4">
-              Visit Our Office
-            </h2>
+            <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight mb-4">Visit Our Office</h2>
           </div>
         </ScrollReveal>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
