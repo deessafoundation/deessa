@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { AdminUserForm } from "@/components/admin/admin-user-form"
+import { AdminUserForm } from "@/components/admin/users/admin-user-form"
 
 export default async function NewAdminUserPage() {
   const currentAdmin = await getCurrentAdmin()

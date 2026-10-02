@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
-import { StoryForm } from "@/components/admin/story-form"
+import { StoryForm } from "@/components/admin/stories/story-form"
 
 async function getStory(id: string) {
   const supabase = await createClient()

@@ -17,7 +17,7 @@ import { Menu, LogOut, User, ExternalLink, Heart, ChevronRight } from "lucide-re
 import type { AdminUser } from "@/lib/types/admin"
 import { adminLogout } from "@/lib/actions/admin-auth"
 import { adminNavSections, canAccessAdminNavItem } from "@/components/admin/admin-nav-config"
-import NotificationBell from "@/components/admin/notification-bell"
+import NotificationBell from "@/components/admin/notifications/notification-bell"
 
 interface AdminHeaderProps {
   adminUser: AdminUser

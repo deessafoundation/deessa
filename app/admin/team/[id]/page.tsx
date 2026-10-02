@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
-import { TeamMemberForm } from "@/components/admin/team-member-form"
+import { TeamMemberForm } from "@/components/admin/team/team-member-form"
 
 async function getTeamMember(id: string) {
   const supabase = await createClient()

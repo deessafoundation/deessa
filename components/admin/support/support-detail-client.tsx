@@ -13,10 +13,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import SupportScreenshotModal from '@/components/admin/support-screenshot-modal'
-import SupportActions from '@/components/admin/support-actions'
-import InternalNoteModal from '@/components/admin/internal-note-modal'
-import ReplyModal from '../reply-modal'
+import SupportScreenshotModal from '@/components/admin/support/support-screenshot-modal'
+import SupportActions from '@/components/admin/support/support-actions'
+import InternalNoteModal from '@/components/admin/support/internal-note-modal'
+import ReplyModal from './reply-modal'
 import DeleteSupportButton from '@/components/admin/support/delete-support-button'
 import { ActivityTimeline } from '@/components/admin/donations/activity-timeline'
 import { notifications } from '@/lib/notifications'

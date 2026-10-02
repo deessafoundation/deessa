@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
-import { TeamMemberForm } from "@/components/admin/team-member-form"
+import { TeamMemberForm } from "@/components/admin/team/team-member-form"
 
 export default function NewTeamMemberPage() {
   return (

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import InternalNoteModal from "./internal-note-modal"
-import AssignModal from "./support/assign-modal"
+import AssignModal from "./assign-modal"
 import { MoreHorizontal, Download, FileJson, UserPlus } from "lucide-react"
 
 interface AdminUser {

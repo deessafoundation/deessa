@@ -1,6 +1,6 @@
 "use client"
 
-import UnauthorizedErrorPage from "@/components/error-pages/UnauthorizedErrorPage"
+import UnauthorizedErrorPage from "@/components/errors/unauthorized-error-page"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { ErrorProvider } from "@/contexts/ErrorContext"
 

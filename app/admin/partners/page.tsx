@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Eye, EyeOff, ExternalLink, Building, Heart, Award } from "lucide-react"
-import { PartnerActions } from "@/components/admin/partner-actions"
+import { PartnerActions } from "@/components/admin/partners/partner-actions"
 
 async function getPartners() {
   const supabase = await createClient()

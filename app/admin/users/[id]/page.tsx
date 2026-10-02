@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { AdminUserEditForm } from "@/components/admin/admin-user-edit-form"
+import { AdminUserEditForm } from "@/components/admin/users/admin-user-edit-form"
 
 async function getAdminUser(id: string) {
   const supabase = await createClient()

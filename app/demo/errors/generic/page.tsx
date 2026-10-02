@@ -1,6 +1,6 @@
 "use client"
 
-import GenericErrorPage from "@/components/error-pages/GenericErrorPage"
+import GenericErrorPage from "@/components/errors/generic-error-page"
 
 export default function GenericErrorDemo() {
   const mockError = new Error("This is a demo error to showcase the GenericErrorPage component")

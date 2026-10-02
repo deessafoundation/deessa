@@ -1,6 +1,6 @@
 "use client"
 
-import ServerErrorPage from "@/components/error-pages/ServerErrorPage"
+import ServerErrorPage from "@/components/errors/server-error-page"
 
 export default function ServerErrorDemo() {
   const mockError = new Error("Internal Server Error - This is a demo")

@@ -2,10 +2,10 @@
 
 import { useSearchParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SiteSettingsForm } from "@/components/admin/site-settings-form"
+import { SiteSettingsForm } from "@/components/admin/settings/site-settings-form"
 import { PaymentSettingsForm } from "@/components/admin/payment-settings-form"
-import { OrganizationSettingsForm } from "@/components/admin/organization-settings-form"
-import { SupportToggleModal } from "@/components/admin/support-toggle-modal"
+import { OrganizationSettingsForm } from "@/components/admin/settings/organization-settings-form"
+import { SupportToggleModal } from "@/components/admin/support/support-toggle-modal"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Settings, CreditCard, Building2 } from "lucide-react"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"

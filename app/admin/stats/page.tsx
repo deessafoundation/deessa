@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Eye, EyeOff, Home, BarChart3 } from "lucide-react"
-import { StatActions } from "@/components/admin/stat-actions"
+import { StatActions } from "@/components/admin/impact/stat-actions"
 import { Progress } from "@/components/ui/progress"
 
 async function getImpactStats() {

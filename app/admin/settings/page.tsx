@@ -4,7 +4,7 @@ import { getSiteSettings } from "@/lib/actions/admin-settings"
 import { getPaymentSettings, isProviderEnvConfigured, type PaymentProvider } from "@/lib/payments/config"
 import { createClient } from "@/lib/supabase/server"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
-import { SettingsTabs } from "@/components/admin/settings-tabs"
+import { SettingsTabs } from "@/components/admin/settings/settings-tabs"
 
 export default async function SiteSettingsPage() {
   const admin = await getCurrentAdmin()

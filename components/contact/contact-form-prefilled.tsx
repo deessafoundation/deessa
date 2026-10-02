@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { ContactForm } from "@/components/contact-form"
+import { ContactForm } from "@/components/contact/contact-form"
 
 /**
  * Thin client wrapper that reads ?ref= and ?subject= from the URL

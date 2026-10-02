@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Eye, EyeOff, ExternalLink } from "lucide-react"
-import { ProjectActions } from "@/components/admin/project-actions"
+import { ProjectActions } from "@/components/admin/projects/project-actions"
 import { redirect } from "next/navigation"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 

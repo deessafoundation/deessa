@@ -1,3 +1,3 @@
-import NetworkErrorPage from "@/components/error-pages/NetworkErrorPage"
+import NetworkErrorPage from "@/components/errors/network-error-page"
 
 export default NetworkErrorPage

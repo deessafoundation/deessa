@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { PartnerForm } from "@/components/admin/partner-form"
+import { PartnerForm } from "@/components/admin/partners/partner-form"
 
 export default async function NewPartnerPage() {
   const admin = await getCurrentAdmin()

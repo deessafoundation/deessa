@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Eye, EyeOff, ExternalLink, Star } from "lucide-react"
-import DeleteStoryButton from "@/components/admin/delete-story-button"
+import DeleteStoryButton from "@/components/admin/stories/delete-story-button"
 
 async function getStories() {
   const supabase = await createClient()
