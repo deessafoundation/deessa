@@ -16,4 +16,4 @@
 - `pnpm run lint` — ESLint; the repo-wide run has pre-existing errors, so gate on `npx eslint <touched-files>` instead.
 - `pnpm run typecheck` — report-only (`tsc --noEmit`); the repository has pre-existing TypeScript errors, none in the accessibility feature.
 - Accessibility test suite: `node node_modules/jest/bin/jest.js --config jest.accessibility.config.cjs --runInBand` (19 tests, must pass).
-- Commits run `lint-staged` (Prettier on staged files) through the husky pre-commit hook; hooks must never block a commit (no ESLint in the hook).
+- No git hooks are installed — run Prettier on the files you touch before committing.
