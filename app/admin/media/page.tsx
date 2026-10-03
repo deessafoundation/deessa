@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
-import { MediaLibraryClient } from "@/components/admin/media-library-client"
+import { MediaLibraryClient } from "@/components/admin/media/media-library-client"
 
 export default async function MediaLibraryPage() {
   const admin = await getCurrentAdmin()

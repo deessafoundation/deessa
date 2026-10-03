@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useSidebar } from "@/contexts/SidebarContext"
-import { adminNavSections, canAccessAdminNavItem } from "@/components/admin/admin-nav-config"
+import { adminNavSections, canAccessAdminNavItem } from "@/components/admin/layout/admin-nav-config"
 
 interface AdminSidebarProps {
   adminUser: AdminUser

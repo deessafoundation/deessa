@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Plus, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
 import type { HomepageTimelineSettings, TimelineMilestone } from "@/lib/types/homepage-settings"
-import { ColorPicker } from "./ColorPicker"
+import { ColorPicker } from "./color-picker"
 
 interface TimelineManagerProps {
   timeline: HomepageTimelineSettings

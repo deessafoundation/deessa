@@ -1,0 +1,11 @@
+{
+  "references": [
+    {
+      "from": "next.config.mjs",
+      "before": "components/receipt-preview.tsx",
+      "after": "components/donations/receipt-preview.tsx",
+      "kind": "maintenance comment",
+      "reason": "B40 mapping records this non-import reference with null specifiers; only its documented source path changes."
+    }
+  ]
+}

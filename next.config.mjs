@@ -99,7 +99,7 @@ const nextConfig = {
               "media-src 'self' data: blob: https:",
               "connect-src 'self' https://*.supabase.co https://api.stripe.com",
               // blob: is required because the app frames its own receipt PDF
-              // preview in a blob: iframe (components/receipt-preview.tsx,
+              // preview in a blob: iframe (components/donations/receipt-preview.tsx,
               // app/demo/receipt/page.tsx) — 'self' does NOT implicitly cover
               // the blob: scheme for frame-src, it must be listed explicitly.
               "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com",

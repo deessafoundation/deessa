@@ -43,7 +43,7 @@ import {
 } from "lucide-react"
 import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "@/components/social-icons"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
-import { FileUpload } from "../file-upload"
+import { FileUpload } from "../media/file-upload"
 import { GalleryManager } from "./gallery-manager"
 import { notifications } from "@/lib/notifications"
 import { cn } from "@/lib/utils"

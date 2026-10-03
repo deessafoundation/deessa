@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle, Globe, MessageCircle, Link as LinkIcon } from "lucide-react"
 import { createTeamMember, updateTeamMember, deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
-import { FileUpload } from "@/components/admin/file-upload"
+import { FileUpload } from "@/components/admin/media/file-upload"
 import { ConfirmDialog } from "@/components/admin/common/confirm-dialog"
 import type { TeamMember } from "@/lib/types/admin"
 

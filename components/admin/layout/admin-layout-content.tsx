@@ -1,7 +1,7 @@
 "use client"
 
-import { AdminSidebar } from "@/components/admin/admin-sidebar"
-import { AdminHeader } from "@/components/admin/admin-header"
+import { AdminSidebar } from "@/components/admin/layout/admin-sidebar"
+import { AdminHeader } from "@/components/admin/layout/admin-header"
 import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext"
 import type { AdminUser } from "@/lib/types/admin"
 import { cn } from "@/lib/utils"

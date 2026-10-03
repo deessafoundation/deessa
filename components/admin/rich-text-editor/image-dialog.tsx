@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, Loader2 } from "lucide-react"
-import { FileUpload } from "@/components/admin/file-upload"
+import { FileUpload } from "@/components/admin/media/file-upload"
 import type { ImageAttributes } from "./extensions/custom-image"
 
 interface ImageDialogProps {

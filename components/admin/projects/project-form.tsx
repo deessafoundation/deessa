@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createProject, updateProject } from "@/lib/actions/admin-projects"
-import { FileUpload } from "@/components/admin/file-upload"
+import { FileUpload } from "@/components/admin/media/file-upload"
 import type { Project } from "@/lib/types/admin"
 
 interface ProjectFormProps {

@@ -13,7 +13,7 @@ import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createEvent, updateEvent } from "@/lib/actions/admin-events"
-import { FileUpload } from "@/components/admin/file-upload"
+import { FileUpload } from "@/components/admin/media/file-upload"
 import type { Event } from "@/lib/types/admin"
 
 interface EventFormProps {

@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Loader2, AlertCircle } from "lucide-react"
 import { createPartner, updatePartner } from "@/lib/actions/admin-partners"
-import { FileUpload } from "@/components/admin/file-upload"
+import { FileUpload } from "@/components/admin/media/file-upload"
 import type { Partner } from "@/lib/types/admin"
 
 interface PartnerFormProps {

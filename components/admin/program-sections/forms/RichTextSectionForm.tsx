@@ -1,7 +1,7 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
-import { RichTextEditor } from "@/components/admin/rich-text-editor"
+import { RichTextEditor } from "@/components/admin/rich-text-editor/rich-text-editor"
 import type { ProgramSection } from "@/lib/programs/content"
 
 interface Props {

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import { formatCurrency } from "@/lib/utils/currency"
-import { ReceiptPreview } from "@/components/receipt-preview"
+import { ReceiptPreview } from "@/components/donations/receipt-preview"
 import {
   getReceiptForDisplay,
   getOrganizationDetailsForReceipt,
