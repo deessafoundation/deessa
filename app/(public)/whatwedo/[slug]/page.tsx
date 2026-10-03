@@ -4,7 +4,7 @@ import { getPublishedProgramBySlug, getRelatedPrograms } from "@/lib/programs/da
 import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
 import { CmsProgramRenderer } from "@/components/programs/CmsProgramRenderer"
 import type { ProgramDocument } from "@/lib/programs/content"
-import { WhatWeDoAreaDetail } from "@/components/what-we-do-area-detail"
+import { WhatWeDoAreaDetail } from "@/components/what-we-do/what-we-do-area-detail"
 import { getWhatWeDoArea, WHAT_WE_DO_AREA_IDS } from "@/lib/data/what-we-do-areas"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 import Link from "next/link"

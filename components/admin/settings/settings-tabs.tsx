@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SiteSettingsForm } from "@/components/admin/settings/site-settings-form"
-import { PaymentSettingsForm } from "@/components/admin/payment-settings-form"
+import { PaymentSettingsForm } from "@/components/admin/finance/payment-settings-form"
 import { OrganizationSettingsForm } from "@/components/admin/settings/organization-settings-form"
 import { SupportToggleModal } from "@/components/admin/support/support-toggle-modal"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"

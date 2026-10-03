@@ -3,7 +3,7 @@ import { FileText, Download, Image, Award, Newspaper, Mail } from "lucide-react"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ResourceDownloads, brandResources, legalResources } from "@/components/resource-downloads"
+import { ResourceDownloads, brandResources, legalResources } from "@/components/press/resource-downloads"
 
 export const metadata: Metadata = {
   title: "Press & Media Kit - deessa Foundation",

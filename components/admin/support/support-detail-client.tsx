@@ -18,7 +18,7 @@ import SupportActions from '@/components/admin/support/support-actions'
 import InternalNoteModal from '@/components/admin/support/internal-note-modal'
 import ReplyModal from './reply-modal'
 import DeleteSupportButton from '@/components/admin/support/delete-support-button'
-import { ActivityTimeline } from '@/components/admin/donations/activity-timeline'
+import { ActivityTimeline } from '@/components/admin/common/activity-timeline'
 import { notifications } from '@/lib/notifications'
 
 export function SupportDetailClient({ report, screenshotUrl, actions, adminUsers = [] }: any) {

@@ -10,7 +10,7 @@ import { useProgramId } from "./program-id-context"
 import { cn } from "@/lib/utils"
 import { notifications } from "@/lib/notifications"
 import { registerProgramAsset } from "@/lib/actions/program-assets"
-import { ConfirmDialog } from "@/components/admin/confirm-dialog"
+import { ConfirmDialog } from "@/components/admin/common/confirm-dialog"
 import { imageRefSchema } from "@/lib/programs/content"
 
 export interface AssetPick {

@@ -18,7 +18,7 @@ import {
 import { Plus, Pencil, Eye, EyeOff, Search, Trash2, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
 import { deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
-import { ConfirmDialog } from "../confirm-dialog"
+import { ConfirmDialog } from "../common/confirm-dialog"
 
 type TeamMember = {
   id: string

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowRight, BookOpen, Check, Heart, Users } from "lucide-react"
 import type { WhatWeDoArea, WhatWeDoLearningItem } from "@/lib/data/what-we-do-areas"
-import { WhatWeDoVideoPlayer } from "@/components/what-we-do-video-player"
+import { WhatWeDoVideoPlayer } from "@/components/what-we-do/what-we-do-video-player"
 
 const learningIconMap = {
   book: BookOpen,

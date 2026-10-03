@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Users, Heart, Briefcase, Globe, CheckCircle, ArrowRight, Shield } from "lucide-react"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
-import { VolunteerForm } from "@/components/volunteer-form"
+import { VolunteerForm } from "@/components/volunteer/volunteer-form"
 
 const volunteerRoles = [
   {

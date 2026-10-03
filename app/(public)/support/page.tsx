@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
-import { SupportForm } from "@/components/support-form"
+import { SupportForm } from "@/components/support/support-form"
 import { isSupportEnabled } from "@/lib/support/settings"
 import { notFound } from "next/navigation"
 

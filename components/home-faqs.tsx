@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { HelpCircle } from "lucide-react"
-import { ScrollReveal } from "@/components/scroll-animations"
+import { ScrollReveal } from "@/components/homepage/scroll-animations"
 
 const faqs = [
   {

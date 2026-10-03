@@ -36,7 +36,7 @@ import {
   Mic2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ScrollReveal, CountUp, BackToTop } from "@/components/scroll-animations"
+import { ScrollReveal, CountUp, BackToTop } from "@/components/homepage/scroll-animations"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import type {
   HomepageStat,

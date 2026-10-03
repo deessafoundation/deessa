@@ -13,7 +13,7 @@ import { Loader2, AlertCircle, Globe, MessageCircle, Link as LinkIcon } from "lu
 import { createTeamMember, updateTeamMember, deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
 import { FileUpload } from "@/components/admin/file-upload"
-import { ConfirmDialog } from "@/components/admin/confirm-dialog"
+import { ConfirmDialog } from "@/components/admin/common/confirm-dialog"
 import type { TeamMember } from "@/lib/types/admin"
 
 interface TeamMemberFormProps {

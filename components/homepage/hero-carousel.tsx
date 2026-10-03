@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { HomepageImage } from "@/components/homepage-image"
+import { HomepageImage } from "@/components/homepage/homepage-image"
 import styles from "./homepage-sections.module.css"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"

@@ -9,7 +9,7 @@ import PodcastShareCard from '@/components/podcasts/podcast-share-card';
 import HighlightsCarousel from '@/components/podcasts/highlights-carousel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import ShareButton from '@/components/share-button';
+import ShareButton from '@/components/podcasts/share-button';
 import { getPodcastBySlug, getRelatedPodcasts, getPodcastSlugs, incrementPodcastViews } from '@/lib/data/podcasts';
 import { format } from 'date-fns';
 import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from '@/lib/seo/metadata-utils';

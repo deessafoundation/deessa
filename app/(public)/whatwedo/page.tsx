@@ -6,7 +6,7 @@ import { WhatWeDoClient } from "./whatwedo-client"
 import { ProgramCardsSkeleton } from "@/components/programs/ProgramLoading"
 import { getPublishedProgramCards } from "@/lib/programs/data"
 import { cn } from "@/lib/utils"
-import { WhatWeDoHero } from "@/components/whatwedo/whatwedo-hero"
+import { WhatWeDoHero } from "@/components/what-we-do/whatwedo-hero"
 import programsStyles from "./whatwedo-programs.module.css"
 
 export const metadata: Metadata = {

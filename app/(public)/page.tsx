@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
-import { SecretKeyListener } from "@/components/secret-key-listener"
-import { HeroCarousel } from "@/components/hero-carousel"
-import type { HeroSlide } from "@/components/hero-carousel"
+import { SecretKeyListener } from "@/components/homepage/secret-key-listener"
+import { HeroCarousel } from "@/components/homepage/hero-carousel"
+import type { HeroSlide } from "@/components/homepage/hero-carousel"
 import {
   OurStorySection,
   MissionVisionSection,
@@ -10,7 +10,7 @@ import {
   TestimonialsSection,
   ContactSection,
   GlobalEnhancements,
-} from "@/components/homepage-sections"
+} from "@/components/homepage/homepage-sections"
 import {
   getHomepageStory,
   getHomepageWhatWeDo,
