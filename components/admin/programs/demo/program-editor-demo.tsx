@@ -1,8 +1,8 @@
 "use client"
 import { useCallback, useState } from 'react'
-import { EditorialProgramEditor } from './EditorialProgramEditor'
-import { ServiceEditForm } from './ServiceEditForm'
-import { ProgramIdProvider } from './program-sections/program-id-context'
+import { EditorialProgramEditor } from '../editorial-program-editor'
+import { ServiceEditForm } from '../service-edit-form'
+import { ProgramIdProvider } from '../../program-sections/program-id-context'
 import { programDocumentSchema, type ProgramDocument, type ProgramCategory, type ProgramSection } from '@/lib/programs/content'
 import { editorialDemoDocuments } from '@/data/programs/editorial-demo-documents'
 import { serviceDemoDocument } from '@/data/programs/service-demo-document'

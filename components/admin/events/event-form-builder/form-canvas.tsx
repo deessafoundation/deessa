@@ -6,7 +6,7 @@ import {
 } from "@dnd-kit/sortable"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { SortableStepCard } from "./SortableStepCard"
+import { SortableStepCard } from "./sortable-step-card"
 import type { FormStep } from "@/lib/types/conference-form-schema"
 
 interface FormCanvasProps {

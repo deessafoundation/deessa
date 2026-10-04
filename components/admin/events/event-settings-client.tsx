@@ -47,13 +47,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import { EventDetailsForm } from "../../admin/events/event-details-form"
-import { EventMediaForm } from "./EventMediaForm"
-import { EventLocationForm } from "./EventLocationForm"
-import { AgendaEditor } from "../../admin/events/agenda-editor"
-import { PricingEditor } from "./PricingEditor"
-import { EventFormBuilder } from "./EventFormBuilder"
-import { EmailTemplateEditor } from "../../admin/events/email-template-editor"
+import { EventDetailsForm } from "./event-details-form"
+import { EventMediaForm } from "./event-media-form"
+import { EventLocationForm } from "./event-location-form"
+import { AgendaEditor } from "./agenda-editor"
+import { PricingEditor } from "./pricing-editor"
+import { EventFormBuilder } from "./event-form-builder"
+import { EmailTemplateEditor } from "./email-template-editor"
 import {
   setEventStatus,
   deleteEvent,

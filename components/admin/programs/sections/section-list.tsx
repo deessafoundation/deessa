@@ -4,8 +4,8 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { Plus, FileText, HelpCircle, BarChart3, Image, MessageSquare, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { ProgramSection } from "@/lib/programs/content"
-import { SortableSectionCard } from "./SortableSectionCard"
-import type { SectionType } from "./types"
+import { SortableSectionCard } from "./sortable-section-card"
+import type { SectionType } from "../../program-sections/types"
 
 interface SectionListProps {
   sections: ProgramSection[]

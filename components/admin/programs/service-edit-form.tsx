@@ -1,13 +1,13 @@
 "use client"
 
-import { createEmptyContent } from "./program-sections/types"
+import { createEmptyContent } from "../program-sections/types"
 import { useState, useId, isValidElement, cloneElement } from "react"
 import { ChevronDown, ChevronRight, Plus, Trash2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ImageMetadataFields } from "@/components/admin/program-sections/ImageMetadataFields"
-import { AssetPicker, AssetPick } from "@/components/admin/program-sections/AssetPicker"
+import { ImageMetadataFields } from "@/components/admin/programs/sections/image-metadata-fields"
+import { AssetPicker, AssetPick } from "@/components/admin/programs/sections/asset-picker"
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 
 // ── Helpers ──────────────────────────────────────────────────

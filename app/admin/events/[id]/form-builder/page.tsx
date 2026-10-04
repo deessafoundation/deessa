@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { EventFormBuilder } from "@/components/events/admin/EventFormBuilder"
+import { EventFormBuilder } from "@/components/admin/events/event-form-builder"
 import type { FormSchema } from "@/lib/types/conference-form-schema"
 
 async function getEvent(id: string) {

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Trash2, ChevronDown, ChevronRight, GripVertical, Plus } from "lucide-react"
-import { OptionsEditor } from "../../../events/admin/EventFormBuilder/OptionsEditor"
+import { OptionsEditor } from "./options-editor"
 import { EnhancedConditionalEditor } from "@/components/admin/conference/form-builder/enhanced-conditional-editor"
 import type { FormField, FormStep, FieldConditional } from "@/lib/types/conference-form-schema"
 

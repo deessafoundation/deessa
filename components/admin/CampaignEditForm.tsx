@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { AssetPicker, type AssetPick } from "@/components/admin/program-sections/AssetPicker"
+import { AssetPicker, type AssetPick } from "@/components/admin/programs/sections/asset-picker"
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 
 // ── Helpers ──────────────────────────────────────────────────

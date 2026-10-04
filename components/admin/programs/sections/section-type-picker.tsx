@@ -11,8 +11,8 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { SectionType } from "./types"
-import { SECTION_CATEGORIES, SECTION_TYPE_MAP } from "./types"
+import type { SectionType } from "../../program-sections/types"
+import { SECTION_CATEGORIES, SECTION_TYPE_MAP } from "../../program-sections/types"
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   FileText, BarChart3, Images, LayoutGrid, ListOrdered, Clock,

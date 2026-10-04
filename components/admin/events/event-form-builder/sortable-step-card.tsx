@@ -9,7 +9,7 @@ import {
 } from "@dnd-kit/sortable"
 import { useDroppable } from "@dnd-kit/core"
 import { GripVertical, ChevronDown, ChevronRight, Trash2, Plus } from "lucide-react"
-import { SortableFieldCard } from "./SortableFieldCard"
+import { SortableFieldCard } from "./sortable-field-card"
 import type { FormStep, FormField, FieldType } from "@/lib/types/conference-form-schema"
 
 interface SortableStepCardProps {

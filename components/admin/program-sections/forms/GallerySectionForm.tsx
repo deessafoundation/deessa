@@ -8,7 +8,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select"
 import type { ProgramSection } from "@/lib/programs/content"
-import { AssetPicker, AssetPick } from "../AssetPicker"
+import { AssetPicker, AssetPick } from "../../programs/sections/asset-picker"
 
 interface Props {
   fixedLayout?: boolean

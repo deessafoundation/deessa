@@ -1,9 +1,9 @@
 "use client"
 
-import { TemplateSection, TemplateTextField as TextField } from "./program-sections/TemplateSection"
+import { TemplateSection, TemplateTextField as TextField } from "./sections/template-section"
 import type { ProgramCategory, ProgramDocument, ProgramSection } from "@/lib/programs/content"
-import { TemplateSectionsEditor } from "./program-sections/TemplateSectionsEditor"
-import { AssetPicker } from "./program-sections/AssetPicker"
+import { TemplateSectionsEditor } from "./sections/template-sections-editor"
+import { AssetPicker } from "./sections/asset-picker"
 
 export interface EditorialEditorData {
   hero: ProgramDocument["hero"]

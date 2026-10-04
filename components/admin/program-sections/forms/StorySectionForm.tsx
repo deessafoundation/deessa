@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { ProgramSection } from "@/lib/programs/content"
-import { AssetPicker } from "../AssetPicker"
-import { ImageMetadataFields } from "../ImageMetadataFields"
+import { AssetPicker } from "../../programs/sections/asset-picker"
+import { ImageMetadataFields } from "../../programs/sections/image-metadata-fields"
 
 interface Props {
   content: Extract<ProgramSection["content"], { type: "story" }>
