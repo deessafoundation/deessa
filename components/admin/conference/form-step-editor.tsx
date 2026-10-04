@@ -4,7 +4,7 @@ import { Plus, ChevronUp, ChevronDown, Trash2, Edit2, Check, X } from "lucide-re
 import { useState } from "react"
 import type { FormSchema, FormStep, FieldConditional } from "@/lib/types/conference-form-schema"
 import { Button } from "@/components/ui/button"
-import { EnhancedConditionalEditor } from "./conference-form-builder/EnhancedConditionalEditor"
+import { EnhancedConditionalEditor } from "./form-builder/enhanced-conditional-editor"
 
 interface FormStepEditorProps {
   schema: FormSchema

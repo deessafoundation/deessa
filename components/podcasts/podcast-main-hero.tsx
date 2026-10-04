@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Play } from 'lucide-react';
-import { Youtube } from '@/components/social-icons';
+import { Youtube } from '@/components/shared/icons/social-icons';
 import { Button } from '@/components/ui/button';
 import { Podcast } from '@/lib/types/podcast';
 import { useVideoModal } from '@/contexts/VideoModalContext';

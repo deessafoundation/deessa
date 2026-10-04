@@ -13,7 +13,7 @@ import { FormFieldPalette } from "./form-field-palette"
 import { FormCanvas } from "./form-canvas"
 import { FormFieldEditor } from "./form-field-editor"
 import { FormPreview } from "./form-preview"
-import { EventSelector } from "./conference-form-builder/EventSelector"
+import { EventSelector } from "./form-builder/event-selector"
 
 interface ConferenceFormBuilderProps {
   initialSchema: FormSchema

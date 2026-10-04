@@ -775,7 +775,7 @@ export function PodcastSection() {
 }
 /* ──────────────────  TESTIMONIALS SECTION  ────────────────── */
 
-import { CircularTestimonials } from "@/components/circular-testimonials"
+import { CircularTestimonials } from "@/components/shared/testimonials/circular-testimonials"
 
 interface TestimonialsSectionProps {
   testimonials?: HomepageTestimonialsSettings

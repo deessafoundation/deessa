@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import styles from "@/components/page-hero-contrast.module.css"
+import styles from "@/components/shared/page-hero/page-hero-contrast.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"

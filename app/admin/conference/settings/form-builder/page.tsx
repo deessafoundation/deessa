@@ -1,6 +1,6 @@
 import { getActiveFormSchema } from "@/lib/actions/conference-form-schema"
 import { getAllEvents, getCurrentEvent } from "@/lib/actions/events"
-import { ConferenceFormBuilder } from "@/components/admin/conference-form-builder"
+import { ConferenceFormBuilder } from "@/components/admin/conference/conference-form-builder"
 
 export const metadata = {
   title: "Form Builder | Conference Settings | Admin",

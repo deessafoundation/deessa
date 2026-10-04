@@ -3,7 +3,7 @@
 import { X, Lock, Plus, Trash2, GripVertical } from "lucide-react"
 import type { FormSchema, FormField, FieldOption } from "@/lib/types/conference-form-schema"
 import { Button } from "@/components/ui/button"
-import { EnhancedConditionalEditor } from "./conference-form-builder/EnhancedConditionalEditor"
+import { EnhancedConditionalEditor } from "./form-builder/enhanced-conditional-editor"
 
 interface FormFieldEditorProps {
   field: FormField

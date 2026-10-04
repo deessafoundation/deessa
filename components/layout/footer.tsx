@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter/newsletter-form"
-import { Facebook, Twitter, Instagram, Youtube } from "@/components/social-icons"
+import { Facebook, Twitter, Instagram, Youtube } from "@/components/shared/icons/social-icons"
 
 const footerLinks = {
   about: [

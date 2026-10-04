@@ -1,7 +1,7 @@
 'use client';
 
 import { User, Globe } from 'lucide-react';
-import { Linkedin, Twitter } from '@/components/social-icons';
+import { Linkedin, Twitter } from '@/components/shared/icons/social-icons';
 import { Button } from '@/components/ui/button';
 
 interface PodcastGuestCardProps {

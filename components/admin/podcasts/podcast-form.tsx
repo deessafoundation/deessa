@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, CheckCircle2, XCircle, Plus, X } from 'lucide-react';
-import { Youtube } from '@/components/social-icons';
+import { Youtube } from '@/components/shared/icons/social-icons';
 import { extractYouTubeId, fetchYouTubeMetadata, getYouTubeThumbnail, generateSlug } from '@/lib/utils/youtube';
 import { notifications } from '@/lib/notifications';
 

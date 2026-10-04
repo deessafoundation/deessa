@@ -1,5 +1,5 @@
 import { getConferenceSettings } from "@/lib/actions/conference-settings"
-import { ConferenceSettingsForm } from "@/components/admin/conference-settings-form"
+import { ConferenceSettingsForm } from "@/components/admin/conference/conference-settings-form"
 
 export const metadata = {
   title: "Conference Settings | Admin",

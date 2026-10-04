@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Play, Music } from 'lucide-react';
-import { Youtube } from '@/components/social-icons';
+import { Youtube } from '@/components/shared/icons/social-icons';
 import { Button } from '@/components/ui/button';
 import { Podcast } from '@/lib/types/podcast';
 

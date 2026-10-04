@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import Image from "next/image"
-import styles from "@/components/page-hero-contrast.module.css"
+import styles from "@/components/shared/page-hero/page-hero-contrast.module.css"
 import Link from "next/link"
 import {
   Calendar,

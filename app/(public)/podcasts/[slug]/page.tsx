@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, Calendar,Mail, Megaphone } from 'lucide-react';
-import { Linkedin, Twitter, Facebook, Instagram } from '@/components/social-icons';
+import { Linkedin, Twitter, Facebook, Instagram } from '@/components/shared/icons/social-icons';
 import PodcastStickyPlayer from '@/components/podcasts/podcast-sticky-player';
 import PodcastTranscript from '@/components/podcasts/podcast-transcript';
 import PodcastShareCard from '@/components/podcasts/podcast-share-card';

@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Play, ExternalLink, Clock, Video, Music } from "lucide-react"
-import { Youtube } from "@/components/social-icons"
+import { Youtube } from "@/components/shared/icons/social-icons"
 import { cn } from "@/lib/utils"
 import { Podcast } from "@/lib/types/podcast"
 

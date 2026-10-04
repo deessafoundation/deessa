@@ -41,7 +41,7 @@ import {
   ZoomOut,
   RefreshCw,
 } from "lucide-react"
-import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "@/components/social-icons"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "@/components/shared/icons/social-icons"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
 import { FileUpload } from "../media/file-upload"
 import { GalleryManager } from "./gallery-manager"
