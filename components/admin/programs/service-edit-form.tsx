@@ -1,6 +1,6 @@
 "use client"
 
-import { createEmptyContent } from "../program-sections/types"
+import { createEmptyContent } from "./sections/types"
 import { useState, useId, isValidElement, cloneElement } from "react"
 import { ChevronDown, ChevronRight, Plus, Trash2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"

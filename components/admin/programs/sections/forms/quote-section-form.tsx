@@ -3,8 +3,8 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { ProgramSection } from "@/lib/programs/content"
-import { AssetPicker } from "../../programs/sections/asset-picker"
-import { ImageMetadataFields } from "../../programs/sections/image-metadata-fields"
+import { AssetPicker } from "../asset-picker"
+import { ImageMetadataFields } from "../image-metadata-fields"
 
 interface Props {
   hideImage?: boolean

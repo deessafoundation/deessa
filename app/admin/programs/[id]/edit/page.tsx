@@ -28,8 +28,8 @@ import {
   deleteProgram,
 } from "@/lib/actions/program-crud"
 import { programDocumentSchema, type ProgramDocument, type ProgramSection, type ProgramCategory } from "@/lib/programs/content"
-import { SectionEditor } from "@/components/admin/program-sections"
-import { ProgramIdProvider } from "@/components/admin/program-sections/program-id-context"
+import { SectionEditor } from "@/components/admin/programs/sections"
+import { ProgramIdProvider } from "@/components/admin/programs/sections/program-id-context"
 import { ServiceEditForm } from "@/components/admin/programs/service-edit-form"
 import { EditorialProgramEditor } from "@/components/admin/programs/editorial-program-editor"
 import { readEditorHero } from "@/lib/programs/editor-hero"

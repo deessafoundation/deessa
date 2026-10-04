@@ -4,7 +4,7 @@ import type { Program } from '@/lib/types/program-prototype'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { SafeImage } from '../SafeImage'
+import { SafeImage } from '../safe-image'
 
 interface RelatedProgramsSectionProps {
   programs: NonNullable<Program['relatedPrograms']>

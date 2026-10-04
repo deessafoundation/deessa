@@ -1,7 +1,7 @@
 import type { Program, ProgramSection } from "@/lib/types/program-prototype"
 import { ArrowDown, ArrowUpRight, Plus } from "lucide-react"
-import { EditorialText, EditorialIcon } from "./EditorialParts"
-import { SafeImage } from "../SafeImage"
+import { EditorialText, EditorialIcon } from "./editorial-parts"
+import { SafeImage } from "../safe-image"
 import base from "../demo/programs.module.css"
 
 const service = base

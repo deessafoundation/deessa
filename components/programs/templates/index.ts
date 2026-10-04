@@ -1,4 +1,4 @@
-export { ServiceTemplate } from "./ServiceTemplate"
-export { CampaignTemplate } from "./CampaignTemplate"
-export { OutreachTemplate } from "./OutreachTemplate"
-export { ResearchTemplate } from "./ResearchTemplate"
+export { ServiceTemplate } from "./service-template"
+export { CampaignTemplate } from "./campaign-template"
+export { OutreachTemplate } from "./outreach-template"
+export { ResearchTemplate } from "./research-template"

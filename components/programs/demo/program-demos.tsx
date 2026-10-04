@@ -25,7 +25,7 @@ import {
   type DemoCategory,
 } from "./demo-content"
 import s from "./programs.module.css"
-import { CampaignConcept } from "./CampaignConcept"
+import { CampaignConcept } from "./campaign-concept"
 
 const service = s
 const outreach = s

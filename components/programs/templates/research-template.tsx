@@ -10,7 +10,7 @@ import {
   EditorialSection,
   EditorialText,
   SectionCopy,
-} from "./EditorialParts"
+} from "./editorial-parts"
 import base from "../demo/programs.module.css"
 
 const research = base

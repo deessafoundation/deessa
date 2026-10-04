@@ -8,8 +8,8 @@ import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ProgramSection } from "@/lib/programs/content"
-import { SECTION_TYPE_MAP } from "../../program-sections/types"
-import { SectionFormFactory } from "../../program-sections/forms/SectionFormFactory"
+import { SECTION_TYPE_MAP } from "./types"
+import { SectionFormFactory } from "./forms/section-form-factory"
 
 interface SectionPropertiesPanelProps {
   section: ProgramSection | null

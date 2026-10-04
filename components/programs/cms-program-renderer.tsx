@@ -2,7 +2,7 @@ import type { ProgramDocument } from "@/lib/programs/content"
 import { normalizeDocument } from "@/lib/programs/normalize"
 import type { RelatedProgramCard } from "@/lib/programs/data"
 import { CampaignTemplate, ServiceTemplate, OutreachTemplate, ResearchTemplate } from "./templates"
-import { RelatedProgramsSection } from './sections/RelatedProgramsSection'
+import { RelatedProgramsSection } from './sections/related-programs-section'
 import { readEditorHero } from '@/lib/programs/editor-hero'
 
 interface CmsProgramRendererProps {

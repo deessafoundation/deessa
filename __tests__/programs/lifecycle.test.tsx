@@ -2,7 +2,7 @@ import { deleteProgramAsset, registerProgramAsset, uploadProgramAsset } from '@/
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { editorialDemoDocuments } from '@/data/programs/editorial-demo-documents'
 import { serviceDemoDocument } from '@/data/programs/service-demo-document'
-import { getDefaultSectionsForCategory } from '@/components/admin/program-sections/types'
+import { getDefaultSectionsForCategory } from '@/components/admin/programs/sections/types'
 import { programDraftSchema, programDocumentSchema } from '@/lib/programs/content'
 import { createProgram, updateProgramDraft, publishProgram, unpublishProgram, archiveProgram, restoreProgram, deleteProgram, restoreProgramVersion } from '@/lib/actions/program-crud'
 

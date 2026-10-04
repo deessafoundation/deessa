@@ -4,13 +4,13 @@ import { describe, expect, it, jest } from '@jest/globals'
 import { isValidElement, type ReactElement, type ReactNode } from 'react'
 import { TemplateSectionsEditor } from '@/components/admin/programs/sections/template-sections-editor'
 import { TemplateSection, TemplateTextField } from '@/components/admin/programs/sections/template-section'
-import { SectionFormFactory } from '@/components/admin/program-sections/forms/SectionFormFactory'
+import { SectionFormFactory } from '@/components/admin/programs/sections/forms/section-form-factory'
 import { EditorialProgramEditor } from '@/components/admin/programs/editorial-program-editor'
 import { AssetPicker } from '@/components/admin/programs/sections/asset-picker'
 import { editorialDemoDocuments } from '@/data/programs/editorial-demo-documents'
 import { programDocumentSchema, type ProgramSection } from '@/lib/programs/content'
 
-jest.mock('@/components/admin/program-sections/forms/SectionFormFactory', () => ({ SectionFormFactory: () => null }))
+jest.mock('@/components/admin/programs/sections/forms/section-form-factory', () => ({ SectionFormFactory: () => null }))
 jest.mock('@/components/admin/programs/sections/asset-picker', () => ({ AssetPicker: () => null }))
 
 type Element = ReactElement<Record<string, any>>

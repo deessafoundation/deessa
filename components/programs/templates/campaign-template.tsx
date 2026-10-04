@@ -8,7 +8,7 @@ import {
   EditorialPhoto,
   EditorialSection,
   EditorialText,
-} from "./EditorialParts"
+} from "./editorial-parts"
 import s from "../demo/campaign-concept.module.css"
 import base from "../demo/programs.module.css"
 

@@ -4,7 +4,7 @@ import type { ProgramHero as ProgramHeroType, ProgramTheme } from '@/lib/types/p
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { SafeImage } from '../SafeImage'
+import { SafeImage } from '../safe-image'
 
 interface ProgramHeroProps {
   hero: ProgramHeroType

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type { ProgramSection } from "@/lib/programs/content"
-import { SECTION_TYPE_MAP } from "../../program-sections/types"
+import { SECTION_TYPE_MAP } from "./types"
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   FileText, BarChart3, Images, LayoutGrid, ListOrdered, Clock,

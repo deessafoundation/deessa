@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react"
 import { ArrowDown, ArrowUpRight, Check, Heart, MapPin, MessageCircle, Plus, Sparkles, Sun, Users } from "lucide-react"
 import type { ProgramDocument, ProgramSection } from "@/lib/programs/content"
 import { CommunicationBoard } from "../demo/DemoInteractions"
-import { SafeImage } from "../SafeImage"
+import { SafeImage } from "../safe-image"
 import base from "../demo/programs.module.css"
 
 const research = base

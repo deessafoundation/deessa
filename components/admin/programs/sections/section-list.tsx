@@ -5,7 +5,7 @@ import { Plus, FileText, HelpCircle, BarChart3, Image, MessageSquare, ArrowRight
 import { Button } from "@/components/ui/button"
 import type { ProgramSection } from "@/lib/programs/content"
 import { SortableSectionCard } from "./sortable-section-card"
-import type { SectionType } from "../../program-sections/types"
+import type { SectionType } from "./types"
 
 interface SectionListProps {
   sections: ProgramSection[]

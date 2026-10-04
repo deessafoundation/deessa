@@ -1,9 +1,9 @@
 "use client"
 import type { ProgramCategory, ProgramSection } from '@/lib/programs/content'
 import { TemplateSection, TemplateTextField } from './template-section'
-import { TEMPLATE_LAYOUTS, createTemplateSection, templateSectionDetails, type TemplateSlot } from '../../program-sections/template-layouts'
-import { SectionFormFactory } from '../../program-sections/forms/SectionFormFactory'
-import { ProgramIdProvider } from '../../program-sections/program-id-context'
+import { TEMPLATE_LAYOUTS, createTemplateSection, templateSectionDetails, type TemplateSlot } from './template-layouts'
+import { SectionFormFactory } from './forms/section-form-factory'
+import { ProgramIdProvider } from './program-id-context'
 
 // Fixed template panels: editing content never removes or replaces unrelated saved sections.
 export function TemplateSectionsEditor({ category, programId, sections, onChange }: {

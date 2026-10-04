@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createProgram } from "@/lib/actions/program-crud"
 import type { ProgramDocument, ProgramCategory } from "@/lib/programs/content"
-import { getDefaultSectionsForCategory, type ProgramCategoryType } from "@/components/admin/program-sections/types"
+import { getDefaultSectionsForCategory, type ProgramCategoryType } from "@/components/admin/programs/sections/types"
 
 const CATEGORIES = [
   { value: "service", label: "Service" },

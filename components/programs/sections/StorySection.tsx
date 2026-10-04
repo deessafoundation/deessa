@@ -3,7 +3,7 @@
 import type { StoryContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { SafeImage } from '../SafeImage'
+import { SafeImage } from '../safe-image'
 import { SectionHeading } from './SectionHeading'
 
 interface StorySectionProps {

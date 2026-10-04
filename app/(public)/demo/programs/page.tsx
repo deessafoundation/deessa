@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ProgramDemoIndex } from '@/components/programs/demo/ProgramDemos'
+import { ProgramDemoIndex } from '@/components/programs/demo/program-demos'
 
 export const metadata: Metadata = {
   title: 'Program Design Concepts - deessa Foundation',

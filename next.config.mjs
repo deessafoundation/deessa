@@ -17,7 +17,7 @@ const nextConfig = {
   },
   allowedDevOrigins: ["http://172.31.112.1:3000"],
   images: {
-    // Keep in sync with ALLOWED_HOSTS in components/programs/SafeImage.tsx —
+    // Keep in sync with ALLOWED_HOSTS in components/programs/safe-image.tsx —
     // SafeImage renders plain <img> for hosts not listed here.
     remotePatterns: [
       {
