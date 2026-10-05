@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Trash2, Loader2 } from "lucide-react"
 import { deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
-import { ConfirmDialog } from "./common/confirm-dialog"
+import { ConfirmDialog } from "../../admin/common/confirm-dialog"
 
 export function TeamDeleteButton({ id }: { id: string }) {
   const [open, setOpen] = useState(false)

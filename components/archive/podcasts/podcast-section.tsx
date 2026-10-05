@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { Headphones, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
-import { PodcastCard } from "./podcast-card"
+import { PodcastCard } from "../../podcasts/podcast-card"
 import { useVideoModal } from "@/contexts/VideoModalContext"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

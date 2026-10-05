@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { PodcastCard } from './podcast-card';
+import { PodcastCard } from '../../podcasts/podcast-card';
 import { useVideoModal } from '@/contexts/VideoModalContext';
 import { Podcast } from '@/lib/types/podcast';
 import { Button } from '@/components/ui/button';

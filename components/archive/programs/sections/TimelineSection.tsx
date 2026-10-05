@@ -3,7 +3,7 @@
 import type { TimelineContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
 import { CheckCircle, Circle } from 'lucide-react'
-import { SectionHeading } from './SectionHeading'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface TimelineSectionProps {
   heading?: string

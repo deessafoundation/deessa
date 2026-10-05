@@ -4,7 +4,7 @@ import type { ProgressTrackerContent, ProgramTheme } from '@/lib/types/program-p
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Heart } from 'lucide-react'
-import { SectionHeading } from './SectionHeading'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface ProgressTrackerSectionProps {
   heading?: string

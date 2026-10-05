@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ArchiveThumbnailImage } from './archive-thumbnail-image';
-import styles from './archive-thumbnail.module.css';
+import { ArchiveThumbnailImage } from '../../podcasts/archive-thumbnail-image';
+import styles from '../../podcasts/archive-thumbnail.module.css';
 import { Play, Calendar, Clock, FileText, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Podcast } from '@/lib/types/podcast';

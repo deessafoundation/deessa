@@ -3,7 +3,7 @@
 import type { FAQContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-import { SectionHeading } from './SectionHeading'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface FaqSectionProps {
   heading?: string

@@ -19,7 +19,7 @@ import {
   Users,
 } from "lucide-react"
 import type { EventModuleEvent } from "@/lib/types/events-module"
-import { EventSettingsTabs } from "./EventSettingsTabs"
+import { EventSettingsTabs } from "../../../events/admin/EventSettingsTabs"
 
 async function getEvent(id: string): Promise<EventModuleEvent | null> {
   const supabase = await createClient()

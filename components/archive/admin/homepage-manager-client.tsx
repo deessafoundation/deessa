@@ -42,8 +42,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
 import { notifications } from "@/lib/notifications"
-import { MediaPicker } from "./media/media-picker"
-import { VideoPicker } from "./video-picker"
+import { MediaPicker } from "../../admin/media/media-picker"
+import { VideoPicker } from "../../admin/video-picker"
 import type { MediaAsset } from "@/lib/types/media"
 
 interface HomepageManagerClientProps {

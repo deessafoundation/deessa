@@ -3,8 +3,8 @@
 import type { StoryContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { SafeImage } from '../safe-image'
-import { SectionHeading } from './SectionHeading'
+import { SafeImage } from '../../../programs/safe-image'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface StorySectionProps {
   heading?: string

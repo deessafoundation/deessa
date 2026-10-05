@@ -2,7 +2,7 @@
 
 import type { ActivitiesContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
-import { SectionHeading } from './SectionHeading'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface ActivitiesSectionProps {
   heading?: string

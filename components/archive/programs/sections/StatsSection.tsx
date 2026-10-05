@@ -2,7 +2,7 @@
 
 import type { StatsContent, ProgramTheme } from '@/lib/types/program-prototype'
 import { motion } from 'framer-motion'
-import { SectionHeading } from './SectionHeading'
+import { SectionHeading } from '../../../programs/sections/SectionHeading'
 
 interface StatsSectionProps {
   heading?: string
