@@ -1,4 +1,7 @@
 import type { Metadata } from "next"
+import artHero from "@/public/home/hero/art_banner.jpeg"
+import podcastBanner from "@/public/podcast_banner.jpeg"
+import inclusionAtHomeImage from "@/public/home/hero/inclusion-begins-at-home.jpg"
 import { SecretKeyListener } from "@/components/secret-key-listener"
 import { HeroCarousel } from "@/components/hero-carousel"
 import type { HeroSlide } from "@/components/hero-carousel"
@@ -49,11 +52,13 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default async function HomePage() {
   // Fetch CMS data for homepage
-  const storySettings = await getHomepageStory()
-  const whatWeDoSettings = await getHomepageWhatWeDo()
-  const heroCarouselSettings = await getHomepageHeroCarousel()
-  const testimonialsSettings = await getHomepageTestimonials()
-  const homeArtworks = await getHomepageArtworks()
+  const [storySettings, whatWeDoSettings, heroCarouselSettings, testimonialsSettings, homeArtworks] = await Promise.all([
+    getHomepageStory(),
+    getHomepageWhatWeDo(),
+    getHomepageHeroCarousel(),
+    getHomepageTestimonials(),
+    getHomepageArtworks(),
+  ])
   const artsContent = homeArtworks.length ? await getArtsContent() : null
 
   // Convert hero carousel settings to slides format
@@ -62,15 +67,18 @@ export default async function HomePage() {
   const normalizeSlideImage = (src: string, fallback: string) => {
     if (!src || typeof src !== "string") return fallback
     const trimmed = src.trim()
+    // Replace only the superseded CMS uploads; future admin uploads remain authoritative.
+    if (trimmed === "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/hero-images/homepage-hero/hero-slide-2_2026-09-17_05-05-14_ev8e62b8.jpg") return inclusionAtHomeImage.src
+    if (trimmed === "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/hero-images/homepage-hero/hero-slide-4_2026-09-16_15-29-11_aarw2dxz.png") return podcastBanner.src
     if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) return trimmed
     const forward = trimmed.replace(/\\/g, "/")
-    let withSlash = forward.startsWith("/") ? forward : `/${forward}`
-    // Point the old slide-2 filename at the refreshed photo. The file was
-    // replaced under the same name, so this rename busts browser + Next
-    // image caches (query strings are rejected on local images).
-    // Matches both the CMS backslash variant and the clean default path.
-    if (withSlash.split("?")[0].endsWith("home/hero/inclusion-begins-at-home.jpg")) {
-      withSlash = "/home/hero/inclusion-begins-at-home-v2.jpg"
+    const withSlash = forward.startsWith("/") ? forward : `/${forward}`
+    // Resolve both saved filenames to the current asset; its content hash prevents stale caches.
+    if (["/home/hero/inclusion-begins-at-home.jpg", "/home/hero/inclusion-begins-at-home-v2.jpg"].includes(withSlash.split("?")[0])) {
+      return inclusionAtHomeImage.src
+    }
+    if (["/podcast_banner.jpeg", "/podcast_banner.png", "/home/podcast/deessa-podcast-studio.png"].includes(withSlash.split("?")[0])) {
+      return podcastBanner.src
     }
     return withSlash
   }
@@ -80,9 +88,9 @@ export default async function HomePage() {
     .sort((a, b) => a.order - b.order)
     .map((slide) => ({
       id: slide.id,
-      image: normalizeSlideImage(slide.image, "/home/hero/real-voices-young-speaker.jpg"),
-      title: slide.title,
-      subtitle: slide.subtitle,
+      image: slide.id === "slide-1" && ["/home/hero/real-voices-young-speaker.jpg", "/home/hero/art_banner.jpeg"].includes(slide.image.replace(/\\/g, "/")) ? artHero.src : normalizeSlideImage(slide.image, artHero.src),
+      title: slide.id === "slide-1" && slide.title === "Understanding Begins with Lived Experience" ? "Every child deserves space to thrive" : slide.title,
+      subtitle: slide.id === "slide-1" && slide.title === "Understanding Begins with Lived Experience" ? "Through creativity, learning, and everyday moments of connection, deessa helps build a world where every child feels understood, included, and free to explore their potential." : slide.subtitle,
       cta: slide.cta,
       ctaHref: slide.ctaHref,
       ctaVariant: slide.ctaVariant,
@@ -108,7 +116,7 @@ export default async function HomePage() {
       {/* 5. WHAT WE DO - CMS POWERED */}
       <ProgramsSection whatWeDo={whatWeDoSettings} />
 
-      {/* 6. ART FEATURE - managed in /admin/artworks (hidden when none published) */}
+      {/* 6. ART FEATURE - CMS artwork highlights and the art activity feature */}
       <HomeArtFeature artworks={homeArtworks} content={artsContent?.home} />
 
       {/* 7. PODCAST FEATURE */}

@@ -32,6 +32,47 @@
   }
 }
 
+:global(body.reduce-motion) .tilt {
+  rotate: none !important;
+  translate: none !important;
+}
+
+/* ── Mobile torn-paper copy card (9-slice) ──
+   art-watercolor-frame.webp (683×612) is the blue frame from the watercolor sheet with the
+   paper keyed to transparency, so the card shows no paper-rectangle seams. Frame widths
+   follow its slice proportions so corners keep their natural shape; the copy padding
+   reads the same variables. */
+@media (width < 48rem) {
+  .copyCard {
+    --art-frame-t: clamp(34px, 11.5vw, 52px);
+    --art-frame-r: clamp(43px, 14.5vw, 65px);
+    --art-frame-b: clamp(72px, 24vw, 108px);
+    --art-frame-l: clamp(33px, 11vw, 50px);
+  }
+
+  .copyFrame {
+    border-style: solid;
+    border-color: transparent;
+    border-width: var(--art-frame-t) var(--art-frame-r) var(--art-frame-b) var(--art-frame-l);
+    border-image: url("/artWork/art-watercolor-frame.webp") 86 109 180 83 fill stretch;
+  }
+}
+
+/* /arts hero: the same 9-slice frame at every width (wider bands on large screens). */
+.copyCardAll {
+  --art-frame-t: clamp(34px, 11.5vw, 60px);
+  --art-frame-r: clamp(43px, 14.5vw, 76px);
+  --art-frame-b: clamp(72px, 24vw, 126px);
+  --art-frame-l: clamp(33px, 11vw, 58px);
+}
+
+.copyFrameAll {
+  border-style: solid;
+  border-color: transparent;
+  border-width: var(--art-frame-t) var(--art-frame-r) var(--art-frame-b) var(--art-frame-l);
+  border-image: url("/artWork/art-watercolor-frame.webp") 86 109 180 83 fill stretch;
+}
+
 /* ── High contrast ── */
 :global(body.high-contrast) .section,
 :global(body.high-contrast) .mat,

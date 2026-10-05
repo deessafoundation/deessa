@@ -28,24 +28,24 @@ export type ArtsContent = {
 export const DEFAULT_ARTS_CONTENT: ArtsContent = {
   home: {
     eyebrow: "Art & Expression",
-    heading: "Art that speaks",
-    headingAccent: "without words",
+    heading: "Every child has a story.",
+    headingAccent: "Art gives it a voice.",
     intro:
-      "Step into the colourful worlds of Deetya and Marissa. Each piece is a glimpse of imagination, feeling, and the joy of creating.",
-    ctaLabel: "Explore their art",
-    creditLine: "Original works by Deetya & Marissa",
+      "Art can be a way for children to communicate, explore emotions, build confidence, and express ideas when words may not always come easily. Let’s create spaces where all children, including children with autism and other disabilities can explore their creativity freely, without judgment or pressure.",
+    ctaLabel: "Explore Art",
+    creditLine: "A space for every artist and every expression",
     badge: "Made with imagination and heart",
   },
   gallery: {
-    eyebrow: "Art by Deetya & Marissa",
+    eyebrow: "Art & Expression",
     heading: "A world of colour,",
     headingAccent: "through their eyes",
     intro:
-      "A collection of paintings, playful details, and moments of expression. Take your time and see what each piece invites you to notice.",
+      "A growing collection celebrating the creativity of children and artists in our community. Every piece offers a different way of seeing, feeling, and sharing a story.",
     heroBadge: "A space for every expression",
     collectionHeading: "Little worlds,",
     collectionAccent: "big imagination",
-    collectionIntro: "Original artworks from Deetya and Marissa's creative space.",
+    collectionIntro: "Explore original artworks from our community, with room for new artists, stories, and perspectives.",
   },
 }
 
@@ -73,6 +73,24 @@ export function normalizeArtsContent(value: unknown): ArtsContent {
       const v = source[group]?.[key]
       if (typeof v === "string" && v.trim()) result[group][key] = v.trim()
     }
+  }
+  // Adopt the revised homepage copy for the original preset; retain custom CMS edits.
+  if (source.home?.heading === "Art that speaks" && source.home?.headingAccent === "without words") {
+    for (const key of ["heading", "headingAccent", "intro", "ctaLabel"] as const) {
+      result.home[key] = DEFAULT_ARTS_CONTENT.home[key]
+    }
+  }
+  // Broaden the original collection copy without replacing custom admin wording.
+  if (result.home.creditLine === "Original works by Deetya & Marissa") {
+    result.home.creditLine = DEFAULT_ARTS_CONTENT.home.creditLine
+  }
+  if (result.home.ctaLabel === "Explore their art") result.home.ctaLabel = DEFAULT_ARTS_CONTENT.home.ctaLabel
+  if (result.gallery.eyebrow === "Art by Deetya & Marissa") result.gallery.eyebrow = DEFAULT_ARTS_CONTENT.gallery.eyebrow
+  if (result.gallery.intro === "A collection of paintings, playful details, and moments of expression. Take your time and see what each piece invites you to notice.") {
+    result.gallery.intro = DEFAULT_ARTS_CONTENT.gallery.intro
+  }
+  if (result.gallery.collectionIntro === "Original artworks from Deetya and Marissa's creative space.") {
+    result.gallery.collectionIntro = DEFAULT_ARTS_CONTENT.gallery.collectionIntro
   }
   return result as unknown as ArtsContent
 }

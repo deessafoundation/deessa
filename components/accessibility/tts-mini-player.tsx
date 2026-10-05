@@ -62,7 +62,7 @@ export function TtsMiniPlayer() {
       data-tts-panel=""
       data-tts-ignore=""
       className={cn(
-        "fixed z-50 bottom-5 left-1/2 -translate-x-1/2",
+        "fixed z-50 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2",
         "w-[calc(100vw-1.5rem)] sm:w-auto max-w-md",
         "flex items-center justify-between sm:justify-start gap-2 sm:gap-3",
         "px-3.5 py-2.5 rounded-2xl sm:rounded-full",

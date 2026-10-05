@@ -1,0 +1,209 @@
+/* =====================================================
+   HOMEPAGE HERO (light editorial carousel)
+   Layout and colours are Tailwind utilities in hero-carousel.tsx.
+   This file holds the contrast-mode, forced-colors and print overrides.
+   ===================================================== */
+
+/* ── High contrast ── */
+:global(body.high-contrast) .hero,
+:global(body.high-contrast) .updates {
+  background: #fff !important;
+  background-image: none !important;
+}
+
+:global(body.high-contrast) .updates {
+  border-bottom: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .storyCard,
+:global(body.high-contrast) .benefitIcon {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000;
+}
+
+:global(body.high-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.high-contrast) .eyebrow,
+:global(body.high-contrast) .heading,
+:global(body.high-contrast) .accent,
+:global(body.high-contrast) .body,
+:global(body.high-contrast) .muted,
+:global(body.high-contrast) .updatesLabel,
+:global(body.high-contrast) .updatesLabel svg,
+:global(body.high-contrast) .updatesLink,
+:global(body.high-contrast) .updatesLink svg {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+/* The yellow paint underline is hidden; keep the emphasis visible. */
+:global(body.high-contrast) .accent {
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.06em !important;
+  text-underline-offset: 0.14em !important;
+}
+
+:global(body.high-contrast) .primaryBtn,
+:global(body.high-contrast) a.primaryBtn,
+:global(body.high-contrast) a.primaryBtn * {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.high-contrast) a.primaryBtn,
+:global(body.high-contrast) a.secondaryBtn {
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) a.secondaryBtn,
+:global(body.high-contrast) a.secondaryBtn * {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) a.secondaryBtn,
+:global(body.high-contrast) button.control {
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) button.control,
+:global(body.high-contrast) button.control * {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .indicator {
+  background: #767676 !important;
+}
+
+:global(body.high-contrast) .indicatorActive {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .divider {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .frame {
+  outline: 2px solid #000;
+}
+
+:global(body.high-contrast) .frame img {
+  filter: grayscale(1) !important;
+}
+
+/* ── Inverted contrast ── */
+:global(body.inverted-contrast) .hero,
+:global(body.inverted-contrast) .updates {
+  background: #000 !important;
+  background-image: none !important;
+}
+
+:global(body.inverted-contrast) .updates {
+  border-bottom: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .storyCard,
+:global(body.inverted-contrast) .benefitIcon {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #fff;
+}
+
+:global(body.inverted-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .eyebrow,
+:global(body.inverted-contrast) .heading,
+:global(body.inverted-contrast) .accent,
+:global(body.inverted-contrast) .body,
+:global(body.inverted-contrast) .muted,
+:global(body.inverted-contrast) .updatesLabel,
+:global(body.inverted-contrast) .updatesLabel svg,
+:global(body.inverted-contrast) .updatesLink,
+:global(body.inverted-contrast) .updatesLink svg {
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .accent {
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.06em !important;
+  text-underline-offset: 0.14em !important;
+}
+
+:global(body.inverted-contrast) a.primaryBtn,
+:global(body.inverted-contrast) a.primaryBtn * {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #fff !important;
+}
+
+:global(body.inverted-contrast) a.secondaryBtn,
+:global(body.inverted-contrast) a.secondaryBtn *,
+:global(body.inverted-contrast) button.control,
+:global(body.inverted-contrast) button.control * {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) a.secondaryBtn,
+:global(body.inverted-contrast) button.control {
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .indicator {
+  background: #8a8a8a !important;
+}
+
+:global(body.inverted-contrast) .indicatorActive,
+:global(body.inverted-contrast) .divider {
+  background: #fff !important;
+}
+
+:global(body.inverted-contrast) .frame {
+  outline: 2px solid #fff;
+}
+
+/* ── Windows High Contrast / forced colours ── */
+@media (forced-colors: active) {
+  .decor {
+    display: none;
+  }
+
+  .accent {
+    text-decoration: underline;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .control {
+    border: 2px solid ButtonText;
+  }
+
+  .indicator {
+    background: GrayText;
+  }
+
+  .indicatorActive {
+    background: Highlight;
+  }
+
+  .frame {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  .decor,
+  .control,
+  .indicator {
+    display: none;
+  }
+}

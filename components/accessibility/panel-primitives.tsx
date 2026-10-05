@@ -59,7 +59,7 @@ export function ControlButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "group flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-center transition-colors",
+        "group flex min-h-[64px] min-w-0 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2.5 text-center transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-45",
         variant === "primary"
@@ -72,7 +72,7 @@ export function ControlButton({
         {icon}
       </span>
       {/* Visible text label: icons alone are not a sufficient affordance. */}
-      <span className="text-[11px] font-semibold leading-tight">{label}</span>
+      <span className="max-w-full break-words text-[11px] font-semibold leading-tight">{label}</span>
     </button>
   )
 }
@@ -116,7 +116,7 @@ export function SegmentedToggle<T extends string>({
               onClick={() => onChange(option.value)}
               aria-pressed={isActive}
               className={cn(
-                "min-h-[40px] truncate rounded-lg px-3 py-2 text-sm font-semibold transition-colors",
+                "min-h-[40px] min-w-0 whitespace-normal break-words rounded-lg px-3 py-2 text-sm font-semibold leading-tight transition-colors",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
                 isActive
                   ? "bg-white text-primary shadow-sm"
@@ -238,10 +238,10 @@ export function RangeField({
 }) {
   return (
     <div className="min-w-0">
-      <div className="mb-2 flex items-center justify-between gap-2">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <label
           htmlFor={id}
-          className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500"
+          className="flex min-w-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500"
         >
           {icon}
           {label}

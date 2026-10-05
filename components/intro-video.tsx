@@ -5,6 +5,11 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
 
+/** Reveal the site that the inline gate script in app/(public)/layout.tsx hid. */
+function releaseIntroGate() {
+  document.documentElement.classList.remove("intro-pending")
+}
+
 export function IntroVideo() {
   const pathname = usePathname()
   const { preferences } = useAccessibility()
@@ -21,11 +26,16 @@ export function IntroVideo() {
 
   useEffect(() => {
     // Design previews should be immediately visible for comparison.
-    if (pathname?.startsWith('/demo')) return
+    if (pathname?.startsWith('/demo')) {
+      releaseIntroGate()
+      return
+    }
     
     // A11Y: Skip intro if user has reduce motion or sensory-friendly enabled
     if (preferences.reduceMotion || preferences.sensoryFriendly) {
       console.log('📹 Intro video skipped due to accessibility preferences (reduce motion/sensory-friendly)')
+      setShowIntro(false)
+      releaseIntroGate()
       // Immediately fire completion event so page doesn't wait
       window.dispatchEvent(new CustomEvent("intro-animation-complete"))
       return
@@ -39,8 +49,13 @@ export function IntroVideo() {
     // Show intro if never shown, or if it's been more than 30 minutes
     if (!introShown || (lastShown && now - parseInt(lastShown) > 30 * 60 * 1000)) {
       setShowIntro(true)
+    } else {
+      releaseIntroGate()
     }
   }, [pathname, preferences.reduceMotion, preferences.sensoryFriendly])
+
+  // Never leave the site hidden if this component goes away mid-intro.
+  useEffect(() => releaseIntroGate, [])
 
   useEffect(() => {
     if (showIntro && videoRef.current && !userInteracted) {
@@ -139,12 +154,16 @@ export function IntroVideo() {
     localStorage.setItem("introShown", "true")
     localStorage.setItem("introLastShown", Date.now().toString())
     setShowIntro(false)
+    releaseIntroGate()
     // Notify that intro was skipped
     window.dispatchEvent(new CustomEvent("intro-animation-complete"))
   }
 
   const handleVideoEnd = () => {
     setVideoEnded(true)
+    // The opaque intro overlay still covers the page, so revealing it now is
+    // invisible; it lets the logo measure the navbar and fly onto a real page.
+    releaseIntroGate()
     
     // Small delay to ensure layout is stable and logo is rendered
     setTimeout(() => {
@@ -236,6 +255,7 @@ export function IntroVideo() {
   return (
     <div 
       ref={containerRef}
+      data-intro-video=""
       className={`fixed inset-0 z-[100] transition-opacity duration-1000 ease-out cursor-pointer ${
         fadeBackground ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}

@@ -6,9 +6,14 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { artworkAnchor, type Artwork } from "@/lib/arts/types"
+import { ArtTape, type ArtTapeColor } from "./art-decor"
 import styles from "./arts.module.css"
 
 const pad = (n: number) => String(n).padStart(2, "0")
+
+// Taped-polaroid cards (homepage art language): a slight tilt and tape colour by position.
+const CARD_TILTS = ["-rotate-[1.25deg]", "rotate-[1deg]", "-rotate-[0.5deg]"]
+const CARD_TAPES: ArtTapeColor[] = ["yellow", "blue", "cream"]
 
 const iconButton = cn(
   styles.iconBtn,
@@ -86,7 +91,7 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
 
   return (
     <>
-      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+      <ul role="list" className="grid grid-cols-1 gap-x-6 gap-y-12 pt-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-14">
         {artworks.map((artwork, index) => (
           <li key={artwork.id} id={artworkAnchor(artwork.id)} className="scroll-mt-28">
             <button
@@ -96,15 +101,19 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
               aria-label={`Open “${artwork.title}” by ${artwork.credit}`}
               className={cn(
                 styles.card,
-                "group flex h-full w-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-2.5 text-left",
-                "shadow-[0_2px_16px_rgba(26,26,46,0.06)] transition-[translate,box-shadow] duration-300 ease-out",
-                "hover:-translate-y-1.5 hover:shadow-[0_18px_40px_-14px_rgba(11,95,138,0.28)]",
-                "focus-visible:-translate-y-1.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3FABDE]/50",
+                styles.tilt,
+                "group relative flex h-full w-full flex-col rounded-[2px] border-2 border-[#e5ded3] bg-[#fffdf8] p-2.5 text-left sm:p-3",
+                "shadow-[inset_0_0_0_2px_#fff,inset_0_0_0_5px_#f1eae0,0_18px_25px_-12px_rgba(93,65,30,0.35)]",
+                CARD_TILTS[index % CARD_TILTS.length],
+                "transition-[translate,rotate,box-shadow] duration-300 ease-out",
+                "hover:-translate-y-1.5 hover:rotate-0 hover:shadow-[0_22px_30px_-12px_rgba(93,65,30,0.4)]",
+                "focus-visible:-translate-y-1.5 focus-visible:rotate-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0B5F8A] focus-visible:ring-offset-4",
                 "motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:focus-visible:translate-y-0",
               )}
             >
+              <ArtTape color={CARD_TAPES[index % CARD_TAPES.length]} />
               {/* Gallery mat: fixed frame, painting contained — never cropped. */}
-              <span className={cn(styles.mat, "relative block aspect-[4/3] overflow-hidden rounded-[18px] bg-[#f6f2ec]")}>
+              <span className={cn(styles.mat, "relative block aspect-[4/3] overflow-hidden border border-[#d8d2c5] bg-[#f5f0e7]")}>
                 <Image
                   src={artwork.src}
                   alt={artwork.alt}
@@ -118,12 +127,12 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
                   <span
                     className={cn(
                       styles.heading,
-                      "block truncate font-marissa text-[1.375rem] leading-tight text-[#0B5F8A] [-webkit-text-stroke:0.35px_currentColor]",
+                      "block truncate font-marissa text-[1.375rem] leading-tight text-[#084e70] [-webkit-text-stroke:0.35px_currentColor]",
                     )}
                   >
                     {artwork.title}
                   </span>
-                  <span className={cn(styles.muted, "mt-1 block font-comic text-xs uppercase tracking-[0.14em] text-slate-500")}>
+                  <span className={cn(styles.muted, "mt-1 block font-comic text-xs uppercase tracking-[0.14em] text-slate-600")}>
                     {artwork.credit} · No. {pad(index + 1)}
                   </span>
                 </span>
@@ -179,7 +188,9 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
               </div>
 
               {/* Details */}
-              <aside className="border-t border-slate-200/80 bg-white px-5 py-6 sm:px-8 lg:flex lg:flex-col lg:border-l lg:border-t-0 lg:py-10">
+              {/* Details sit as one centred group: pinning the controls to the
+                  bottom left a full-height void whenever a piece has no description. */}
+              <aside className="border-t border-slate-200/80 bg-white px-5 py-6 sm:px-8 lg:flex lg:flex-col lg:justify-center lg:overflow-y-auto lg:border-l lg:border-t-0 lg:py-16">
                 <p className={cn(styles.eyebrow, "font-comic text-xs font-bold uppercase tracking-[0.2em] text-slate-500")}>
                   No. {pad(openIndex + 1)} of {pad(total)}
                 </p>
@@ -203,7 +214,7 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
                 )}
 
                 {total > 1 && (
-                  <div className="mt-8 flex items-center gap-3 lg:mt-auto">
+                  <div className="mt-8 flex items-center gap-3 border-t border-slate-200/80 pt-6">
                     <button type="button" onClick={() => step(-1)} className={iconButton} aria-label="Previous artwork">
                       <ChevronLeft aria-hidden="true" className="h-5 w-5" />
                     </button>

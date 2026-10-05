@@ -52,6 +52,10 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Preserve saved CMS image URLs after removing superseded files.
+      { source: '/podcast_banner.png', destination: '/podcast_banner.jpeg', permanent: true },
+      { source: '/home/podcast/deessa-podcast-studio.png', destination: '/podcast_banner.jpeg', permanent: true },
+      { source: '/home/hero/inclusion-begins-at-home-v2.jpg', destination: '/home/hero/inclusion-begins-at-home.jpg', permanent: true },
       {
         source: '/programs',
         destination: '/whatwedo',

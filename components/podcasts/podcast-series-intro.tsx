@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import podcastBanner from "@/public/podcast_banner.jpeg"
 import { ArrowDown, ArrowUpRight, Heart, Lightbulb, Mic2, Play, Plus, Quote, Users } from "lucide-react"
 import { useVideoModal } from "@/contexts/VideoModalContext"
 import styles from "./podcasts-page.module.css"
@@ -103,7 +104,7 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
             </div>
             <div className={styles.banner}>
               <Image
-                src="/podcast_banner.png"
+                src={podcastBanner}
                 alt="Living with Autism: Real Voices Real Stories, with Sarita and Merina in the podcast studio"
                 width={1672}
                 height={941}
