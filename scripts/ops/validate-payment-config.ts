@@ -15,7 +15,7 @@
  *   2 - Warnings found (deployment can proceed with caution)
  */
 
-import { validatePaymentConfiguration } from '../lib/payments/validation'
+import { validatePaymentConfiguration } from '../../lib/payments/validation'
 
 async function main() {
   console.log('🔍 Validating payment system configuration...\n')
