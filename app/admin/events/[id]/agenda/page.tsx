@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { AgendaEditor } from "@/components/events/admin/AgendaEditor"
+import { AgendaEditor } from "@/components/admin/events/agenda-editor"
 import type { EventAgendaItem } from "@/lib/types/events-module"
 
 async function getEvent(id: string) {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ServiceDemo } from '@/components/programs/demo/ProgramDemos'
+import { ServiceDemo } from '@/components/programs/demo/program-demos'
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },

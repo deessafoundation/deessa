@@ -9,7 +9,7 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react"
-import { RegistrationsTable } from "@/components/events/admin/RegistrationsTable"
+import { RegistrationsTable } from "@/components/admin/events/registrations-table"
 import type { EventRegistration, EventModuleEvent } from "@/lib/types/events-module"
 import type { FormSchema } from "@/lib/types/conference-form-schema"
 

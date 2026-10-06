@@ -1,7 +1,7 @@
 import type React from "react"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { AdminLayoutContent } from "@/components/admin/admin-layout-content"
+import { AdminLayoutContent } from "@/components/admin/layout/admin-layout-content"
 import type { AdminUser } from "@/lib/types/admin"
 
 export const dynamic = "force-dynamic"

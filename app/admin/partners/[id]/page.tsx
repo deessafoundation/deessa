@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { getPartner } from "@/lib/actions/admin-partners"
-import { PartnerForm } from "@/components/admin/partner-form"
+import { PartnerForm } from "@/components/admin/partners/partner-form"
 
 export default async function EditPartnerPage({ params }: { params: Promise<{ id: string }> }) {
   const admin = await getCurrentAdmin()

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { CmsProgramRenderer } from '@/components/programs/CmsProgramRenderer'
+import { CmsProgramRenderer } from '@/components/programs/cms-program-renderer'
 import { editorialDemoDocuments } from '@/data/programs/editorial-demo-documents'
 
 export const metadata = { title: 'CMS template comparison', robots: { index: false, follow: false } }

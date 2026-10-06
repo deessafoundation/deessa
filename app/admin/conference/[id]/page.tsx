@@ -19,10 +19,10 @@ import { getFormSchemaByVersion } from "@/lib/actions/conference-form-schema"
 import type { FormField } from "@/lib/types/conference-form-schema"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ConferenceStatusActions } from "@/components/admin/conference-status-actions"
-import { ConferenceQuickActions } from "@/components/admin/conference-quick-actions"
-import { ConferenceNotes } from "@/components/admin/conference-notes"
-import { DeleteRegistrationButton } from "@/components/admin/delete-registration-button"
+import { ConferenceStatusActions } from "@/components/admin/conference/conference-status-actions"
+import { ConferenceQuickActions } from "@/components/admin/conference/conference-quick-actions"
+import { ConferenceNotes } from "@/components/admin/conference/conference-notes"
+import { DeleteRegistrationButton } from "@/components/admin/conference/delete-registration-button"
 
 export const metadata = { title: "Registrant Detail | Admin" }
 

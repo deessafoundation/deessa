@@ -1,4 +1,4 @@
-import { EventSettingsClient } from "@/components/events/admin/EventSettingsClient"
+import { EventSettingsClient } from "@/components/admin/events/event-settings-client"
 
 export default async function EventSettingsPage({
   params,

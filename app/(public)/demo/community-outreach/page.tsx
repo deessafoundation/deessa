@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { OutreachDemo } from '@/components/programs/demo/ProgramDemos'
+import { OutreachDemo } from '@/components/programs/demo/program-demos'
 
 export const metadata: Metadata = {
   title: 'Outreach Design Preview - deessa Foundation',

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Video, Check, Upload, Link as LinkIcon, Settings2 } from "lucide-react"
-import { MediaPicker } from "./media-picker"
+import { MediaPicker } from "./media/media-picker"
 import type { MediaAsset } from "@/lib/types/media"
 
 interface VideoSettings {

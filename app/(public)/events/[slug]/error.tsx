@@ -1,6 +1,6 @@
 "use client"
 
-import { EventError } from "@/components/events/public/EventError"
+import { EventError } from "@/components/events/public/event-error"
 
 export default function EventDetailError({
   error,

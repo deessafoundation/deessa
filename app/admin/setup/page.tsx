@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { checkSetupRequired } from "@/lib/actions/admin-setup"
-import { SetupForm } from "@/components/admin/setup-form"
+import { SetupForm } from "@/components/admin/access/setup-form"
 
 export const metadata = {
   title: "Admin Setup | deessa Foundation",

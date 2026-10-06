@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { createClient } from "@/lib/supabase/server"
-import { AboutHero } from "@/components/about-hero"
+import { AboutHero } from "@/components/about/about-hero"
 import { AboutSections } from "./AboutSections"
 import { getAboutPageSettings } from "@/lib/data/about-settings"
 import { teamMembers as fallbackTeamMembers } from "@/data/team"

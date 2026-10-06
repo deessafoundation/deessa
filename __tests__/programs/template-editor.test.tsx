@@ -1,17 +1,17 @@
-import { ServiceEditForm } from '@/components/admin/ServiceEditForm'
+import { ServiceEditForm } from '@/components/admin/programs/service-edit-form'
 import { serviceDemoDocument } from '@/data/programs/service-demo-document'
 import { describe, expect, it, jest } from '@jest/globals'
 import { isValidElement, type ReactElement, type ReactNode } from 'react'
-import { TemplateSectionsEditor } from '@/components/admin/program-sections/TemplateSectionsEditor'
-import { TemplateSection, TemplateTextField } from '@/components/admin/program-sections/TemplateSection'
-import { SectionFormFactory } from '@/components/admin/program-sections/forms/SectionFormFactory'
-import { EditorialProgramEditor } from '@/components/admin/EditorialProgramEditor'
-import { AssetPicker } from '@/components/admin/program-sections/AssetPicker'
+import { TemplateSectionsEditor } from '@/components/admin/programs/sections/template-sections-editor'
+import { TemplateSection, TemplateTextField } from '@/components/admin/programs/sections/template-section'
+import { SectionFormFactory } from '@/components/admin/programs/sections/forms/section-form-factory'
+import { EditorialProgramEditor } from '@/components/admin/programs/editorial-program-editor'
+import { AssetPicker } from '@/components/admin/programs/sections/asset-picker'
 import { editorialDemoDocuments } from '@/data/programs/editorial-demo-documents'
 import { programDocumentSchema, type ProgramSection } from '@/lib/programs/content'
 
-jest.mock('@/components/admin/program-sections/forms/SectionFormFactory', () => ({ SectionFormFactory: () => null }))
-jest.mock('@/components/admin/program-sections/AssetPicker', () => ({ AssetPicker: () => null }))
+jest.mock('@/components/admin/programs/sections/forms/section-form-factory', () => ({ SectionFormFactory: () => null }))
+jest.mock('@/components/admin/programs/sections/asset-picker', () => ({ AssetPicker: () => null }))
 
 type Element = ReactElement<Record<string, any>>
 function elements(node: ReactNode): Element[] {

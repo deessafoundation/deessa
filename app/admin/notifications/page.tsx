@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
-import NotificationCenterClient from "@/components/admin/notification-center-client"
+import NotificationCenterClient from "@/components/admin/notifications/notification-center-client"
 
 async function checkAdminAccess() {
   const supabase = await createClient()

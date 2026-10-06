@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowLeft, ArrowRight, ImageIcon, Search } from "lucide-react"
-import { SafeImage } from "@/components/programs/SafeImage"
+import { SafeImage } from "@/components/programs/safe-image"
 import { cn } from "@/lib/utils"
 import styles from "./whatwedo-programs.module.css"
 

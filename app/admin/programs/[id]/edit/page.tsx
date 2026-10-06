@@ -28,14 +28,14 @@ import {
   deleteProgram,
 } from "@/lib/actions/program-crud"
 import { programDocumentSchema, type ProgramDocument, type ProgramSection, type ProgramCategory } from "@/lib/programs/content"
-import { SectionEditor } from "@/components/admin/program-sections"
-import { ProgramIdProvider } from "@/components/admin/program-sections/program-id-context"
-import { ServiceEditForm } from "@/components/admin/ServiceEditForm"
-import { EditorialProgramEditor } from "@/components/admin/EditorialProgramEditor"
+import { SectionEditor } from "@/components/admin/programs/sections"
+import { ProgramIdProvider } from "@/components/admin/programs/sections/program-id-context"
+import { ServiceEditForm } from "@/components/admin/programs/service-edit-form"
+import { EditorialProgramEditor } from "@/components/admin/programs/editorial-program-editor"
 import { readEditorHero } from "@/lib/programs/editor-hero"
-import { ProgramMediaLibrary } from "@/components/admin/program-sections/ProgramMediaLibrary"
-import { VersionHistoryPanel } from "@/components/admin/program-sections/VersionHistoryPanel"
-import { ProgramEditSkeleton } from "@/components/admin/program-edit-skeleton"
+import { ProgramMediaLibrary } from "@/components/admin/programs/sections/program-media-library"
+import { VersionHistoryPanel } from "@/components/admin/programs/sections/version-history-panel"
+import { ProgramEditSkeleton } from "@/components/admin/programs/program-edit-skeleton"
 import { notifications } from "@/lib/notifications"
 
 function formSnapshot(value: Record<string, unknown>) {

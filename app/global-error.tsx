@@ -1,6 +1,6 @@
 "use client"
 
-import ServerErrorPage from "@/components/error-pages/ServerErrorPage"
+import ServerErrorPage from "@/components/errors/server-error-page"
 
 interface GlobalErrorProps {
   error: Error & { digest?: string }

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { StatForm } from "@/components/admin/stat-form"
+import { StatForm } from "@/components/admin/impact/stat-form"
 
 export default async function NewStatPage() {
   const admin = await getCurrentAdmin()

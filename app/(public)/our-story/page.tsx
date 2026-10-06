@@ -1,11 +1,11 @@
 ﻿import type { Metadata } from "next"
 import Image from "next/image"
-import styles from "@/components/page-hero-contrast.module.css"
+import styles from "@/components/shared/page-hero/page-hero-contrast.module.css"
 import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
-import { CircularTestimonials } from "@/components/circular-testimonials"
+import { CircularTestimonials } from "@/components/shared/testimonials/circular-testimonials"
 
 export const metadata: Metadata = {
   title: "Our Story: Why We Were Founded | deessa Foundation",

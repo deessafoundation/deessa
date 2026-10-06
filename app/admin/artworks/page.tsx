@@ -3,7 +3,7 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { listAllArtworks } from "@/lib/actions/artworks"
 import { getArtsContent } from "@/lib/data/artworks"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
-import { ArtworksManagerClient } from "@/components/admin/artworks/artworks-manager-client"
+import { ArtworksManagerClient } from "@/components/admin/arts/artworks-manager-client"
 
 export const metadata = {
   title: "Artworks | Admin",

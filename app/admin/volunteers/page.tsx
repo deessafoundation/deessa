@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Clock, CheckCircle, XCircle } from "lucide-react"
-import { VolunteerActions } from "@/components/admin/volunteer-actions"
+import { VolunteerActions } from "@/components/admin/volunteers/volunteer-actions"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 
 async function checkVolunteersPermission() {

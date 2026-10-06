@@ -1,0 +1,12 @@
+{
+  "reason": "Execute the mapped non-import maintenance path reference without changing configuration behavior or the immutable mapping.",
+  "references": [
+    {
+      "from": "next.config.mjs",
+      "before": "components/programs/SafeImage.tsx",
+      "after": "components/programs/safe-image.tsx",
+      "kind": "maintenance comment",
+      "mappingBatch": "B69"
+    }
+  ]
+}

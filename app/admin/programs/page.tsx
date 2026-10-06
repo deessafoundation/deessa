@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ProgramThumb } from "@/components/admin/program-thumb"
+import { ProgramThumb } from "@/components/admin/programs/program-thumb"
 
 function heroThumb(hero: unknown): string | null {
   if (typeof hero === "string") return hero || null

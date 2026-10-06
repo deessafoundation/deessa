@@ -12,10 +12,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Frontend conventions
 
 - Default styling is Tailwind utilities plus the `cn()` helper from `lib/utils.ts`.
-- CSS Modules are for keyframe animations, layers driven by CSS custom properties, and `forced-colors`/`print` media queries; co-locate `*.module.css` with its component.
+- CSS Modules are for keyframe animations, layers driven by CSS custom properties, scoped component color/contrast rules, and `forced-colors`/`print` media queries; co-locate `*.module.css` with its component.
 - Global CSS lives only under `app/`; it holds theme tokens and contrast/print/forced-colors overrides.
 - Inline `style={{}}` is for dynamic values only (CSS custom properties, computed widths) — never static layout.
 - Components live in `components/<feature>/`; the `home-` prefix is reserved for homepage-only components.
+- Before adding or relocating components, read `components/README.md` for ownership, naming, dependency, and migration rules.
+- New component folders/files use lowercase kebab-case; component exports use PascalCase and hooks use `useCamelCase` with `use-<purpose>.ts` filenames. Preserve existing export names during structural moves.
+- Keep public components in their feature and management UI in `components/admin/<feature>/`. `ui/` is domain-neutral; `shared/` requires demonstrated cross-feature reuse. Keep coherent subsystems and their local hooks/helpers together; do not add a `components/features/` layer or a global barrel.
+- Never import `components/archive/` from production code. Archived files and the ten retained reviewed dependencies require a separate usage review before further removal; the archive README records restoration/deletion conditions.
+- For structural changes, review tracked and untracked Git files together. Preserve behavior, directives, exports, types, CSS selectors, runtime keys, and URLs; update all required module/reference paths and check exact filename casing and target collisions.
 - Verification is opt-in: do not run Prettier, ESLint, typecheck, or the test suites unless explicitly asked in the request. Just report which commands exist if asked.
 
 ## Accessibility (mandatory for all UI work)
@@ -34,7 +39,8 @@ Key rules derived from that document:
 
 - Package manager: **pnpm** (never npm); lockfile is `pnpm-lock.yaml`.
 - `pnpm run format` / `pnpm run format:check` — Prettier per `.prettierrc` (double quotes, no semicolons, printWidth 120). `pnpm run format:check` is not repo-clean yet (the repo-wide format is a separate, later commit).
-- `pnpm run lint` — ESLint; the repo-wide run has pre-existing errors, so `npx eslint <files>` is the targeted form.
+- `pnpm run lint` — ESLint; the repo-wide run has pre-existing errors, so `pnpm exec eslint <files>` is the targeted form.
+- `pnpm build` — production build; `typescript.ignoreBuildErrors` currently skips TypeScript validation, so build success alone does not prove type safety or authenticated workflow correctness.
 - `pnpm run typecheck` — report-only (`tsc --noEmit`); the repository has pre-existing TypeScript errors, none in the accessibility feature.
 - Accessibility test suite: `node node_modules/jest/bin/jest.js --config jest.accessibility.config.cjs --runInBand` (19 tests).
 - No git hooks are installed.

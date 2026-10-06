@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { EventLocationForm } from "@/components/events/admin/EventLocationForm"
+import { EventLocationForm } from "@/components/admin/events/event-location-form"
 import type { EventModuleEvent } from "@/lib/types/events-module"
 
 async function getEvent(id: string): Promise<EventModuleEvent | null> {

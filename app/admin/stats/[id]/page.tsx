@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { getImpactStat } from "@/lib/actions/admin-stats"
-import { StatForm } from "@/components/admin/stat-form"
+import { StatForm } from "@/components/admin/impact/stat-form"
 
 export default async function EditStatPage({ params }: { params: Promise<{ id: string }> }) {
   const admin = await getCurrentAdmin()

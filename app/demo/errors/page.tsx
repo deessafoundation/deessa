@@ -70,7 +70,7 @@ export default function ErrorsDemo() {
       trigger: () => {
         window.open("/demo/errors/network", "_blank")
       },
-      file: "components/error-pages/NetworkErrorPage.tsx",
+      file: "components/errors/network-error-page.tsx",
     },
     {
       id: "unauthorized",
@@ -83,7 +83,7 @@ export default function ErrorsDemo() {
       trigger: () => {
         window.open("/demo/errors/unauthorized", "_blank")
       },
-      file: "components/error-pages/UnauthorizedErrorPage.tsx",
+      file: "components/errors/unauthorized-error-page.tsx",
     },
   ]
 
@@ -129,7 +129,7 @@ export default function ErrorsDemo() {
   const notFoundCode = `// app/not-found.tsx
 "use client"
 
-import NotFoundErrorPage from "@/components/error-pages/NotFoundErrorPage"
+import NotFoundErrorPage from "@/components/errors/not-found-error-page"
 
 export default NotFoundErrorPage
 
@@ -144,7 +144,7 @@ export default NotFoundErrorPage
   const errorCode = `// app/error.tsx
 "use client"
 
-import GenericErrorPage from "@/components/error-pages/GenericErrorPage"
+import GenericErrorPage from "@/components/errors/generic-error-page"
 
 interface ErrorProps {
   error: Error & { digest?: string }
@@ -167,7 +167,7 @@ export default function Error({ error, reset }: ErrorProps) {
   const globalErrorCode = `// app/global-error.tsx
 "use client"
 
-import ServerErrorPage from "@/components/error-pages/ServerErrorPage"
+import ServerErrorPage from "@/components/errors/server-error-page"
 
 interface GlobalErrorProps {
   error: Error & { digest?: string }
@@ -301,7 +301,7 @@ export async function myServerAction() {
                       <div className="flex flex-wrap gap-2">
                         {component.available && (
                           <Badge variant="secondary" className="text-xs">
-                            Available in components/error-pages
+                            Available in components/errors
                           </Badge>
                         )}
                         {component.demo && (

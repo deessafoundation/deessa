@@ -2,7 +2,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { TeamTable } from "@/components/admin/team-table"
+import { TeamTable } from "@/components/admin/team/team-table"
 
 async function getTeamMembers() {
   const supabase = await createClient()

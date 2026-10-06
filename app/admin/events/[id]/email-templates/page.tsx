@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { EmailTemplateEditor } from "@/components/events/admin/EmailTemplateEditor"
+import { EmailTemplateEditor } from "@/components/admin/events/email-template-editor"
 import type { EventEmailTemplate } from "@/lib/types/events-module"
 
 async function getEvent(id: string) {

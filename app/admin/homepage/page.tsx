@@ -19,7 +19,7 @@ import {
   getHomepageStory,
   getHomepageWhatWeDo,
 } from "@/lib/data/homepage-settings"
-import HomepageManagerClient from "@/components/admin/homepage-manager/HomepageManagerClient"
+import HomepageManagerClient from "@/components/admin/homepage/homepage-manager-client"
 
 export const metadata = {
   title: "Homepage Manager | Admin",

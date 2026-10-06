@@ -1,4 +1,4 @@
-import { StoryForm } from "@/components/admin/story-form"
+import { StoryForm } from "@/components/admin/stories/story-form"
 
 export default function NewStoryPage() {
   return (

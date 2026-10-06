@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { PricingEditor } from "@/components/events/admin/PricingEditor"
+import { PricingEditor } from "@/components/admin/events/pricing-editor"
 import type { EventTicketType } from "@/lib/types/events-module"
 
 async function getEvent(id: string) {

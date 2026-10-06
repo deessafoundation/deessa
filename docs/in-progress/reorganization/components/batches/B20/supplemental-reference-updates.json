@@ -1,0 +1,41 @@
+{
+  "reason": "Migration audit found displayed source paths outside the AST import mapping; keep immutable reviewed mapping and record these six corrections separately.",
+  "references": [
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "components/error-pages/GenericErrorPage",
+      "after": "components/errors/generic-error-page",
+      "reason": "Displayed import example or component filename"
+    },
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "components/error-pages/NotFoundErrorPage",
+      "after": "components/errors/not-found-error-page",
+      "reason": "Displayed import example or component filename"
+    },
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "components/error-pages/ServerErrorPage",
+      "after": "components/errors/server-error-page",
+      "reason": "Displayed import example or component filename"
+    },
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "components/error-pages/NetworkErrorPage",
+      "after": "components/errors/network-error-page",
+      "reason": "Displayed import example or component filename"
+    },
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "components/error-pages/UnauthorizedErrorPage",
+      "after": "components/errors/unauthorized-error-page",
+      "reason": "Displayed import example or component filename"
+    },
+    {
+      "from": "app/demo/errors/page.tsx",
+      "before": "Available in components/error-pages",
+      "after": "Available in components/errors",
+      "reason": "Displayed directory label"
+    }
+  ]
+}

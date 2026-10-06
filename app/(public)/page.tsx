@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import artHero from "@/public/home/hero/art_banner.jpeg"
 import podcastBanner from "@/public/podcast_banner.jpeg"
 import inclusionAtHomeImage from "@/public/home/hero/inclusion-begins-at-home.jpg"
-import { SecretKeyListener } from "@/components/secret-key-listener"
-import { HeroCarousel } from "@/components/hero-carousel"
-import type { HeroSlide } from "@/components/hero-carousel"
+import { SecretKeyListener } from "@/components/homepage/secret-key-listener"
+import { HeroCarousel } from "@/components/homepage/hero-carousel"
+import type { HeroSlide } from "@/components/homepage/hero-carousel"
 import {
   OurStorySection,
   MissionVisionSection,
@@ -13,7 +13,7 @@ import {
   TestimonialsSection,
   ContactSection,
   GlobalEnhancements,
-} from "@/components/homepage-sections"
+} from "@/components/homepage/homepage-sections"
 import {
   getHomepageStory,
   getHomepageWhatWeDo,

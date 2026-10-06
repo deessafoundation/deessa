@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { getAboutPageSettings } from "@/lib/data/about-settings"
-import AboutManagerClient from "@/components/admin/about-manager/AboutManagerClient"
+import AboutManagerClient from "@/components/admin/about/about-manager-client"
 
 export const metadata = {
   title: "About Page Manager | Admin",
