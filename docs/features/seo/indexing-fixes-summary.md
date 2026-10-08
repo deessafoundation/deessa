@@ -136,9 +136,9 @@ export async function generateStaticParams() {
 4. `docs/INTERNAL_LINKING_STRATEGY.md` - Linking guidelines
 5. `docs/INDEXING_ISSUES_DIAGNOSIS.md` - Diagnostic guide
 6. `docs/INDEXING_FIX_ACTION_PLAN.md` - Step-by-step fix plan
-7. `DEPLOY_INSTRUCTIONS.md` - Deployment guide
-8. `SEO_FIXES_SUMMARY.md` - This file
-9. `README_SEO.md` - Quick overview
+7. `docs/features/seo/indexing-deployment-guide.md` - Deployment guide
+8. `docs/features/seo/indexing-fixes-summary.md` - This file
+9. `docs/features/seo/implementation-overview.md` - Quick overview
 
 ---
 
@@ -350,9 +350,9 @@ Mark complete as you progress:
 
 ### Documentation
 - Main Guide: `docs/SEO_GUIDE.md`
-- Deployment: `DEPLOY_INSTRUCTIONS.md`
+- Deployment: `docs/features/seo/indexing-deployment-guide.md`
 - Indexing Fix: `docs/INDEXING_FIX_ACTION_PLAN.md`
-- Quick Start: `README_SEO.md`
+- Quick Start: `docs/features/seo/implementation-overview.md`
 
 ### Tools
 - [Google Search Console](https://search.google.com/search-console)
@@ -397,5 +397,5 @@ All SEO improvements and indexing fixes are complete and ready to deploy:
 
 ---
 
-*For detailed implementation, see: `DEPLOY_INSTRUCTIONS.md`*  
+*For detailed implementation, see: `docs/features/seo/indexing-deployment-guide.md`*  
 *For ongoing maintenance, see: `docs/SEO_GUIDE.md`*

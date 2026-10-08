@@ -73,7 +73,7 @@ All SEO improvements have been successfully implemented following Google's SEO S
 | **Implementation Summary** | Technical details & next steps | `docs/SEO_IMPLEMENTATION_SUMMARY.md` |
 | **Image Optimization** | Image best practices | `docs/IMAGE_OPTIMIZATION_CHECKLIST.md` |
 | **Internal Linking** | Linking strategy | `docs/INTERNAL_LINKING_STRATEGY.md` |
-| **This File** | Quick overview | `README_SEO.md` |
+| **This File** | Quick overview | `docs/features/seo/implementation-overview.md` |
 
 ### Key Utilities
 
