@@ -136,16 +136,16 @@ export function TtsControls() {
   return (
     <div className="space-y-3">
       {/* ── Header: Title + Language Toggle in One Row ── */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Volume2 aria-hidden="true" className="size-4" />
           </div>
-          <span className="text-sm font-extrabold text-slate-800">{strings.listenToPage}</span>
+          <span className="min-w-0 break-words text-sm font-extrabold text-slate-800">{strings.listenToPage}</span>
         </div>
 
         {/* Compact Segmented Language Pills */}
-        <div className="flex rounded-lg bg-slate-100 p-0.5" role="group" aria-label={strings.language}>
+        <div className="flex shrink-0 rounded-lg bg-slate-100 p-0.5" role="group" aria-label={strings.language}>
           {languageOptions.map((opt) => {
             const isSelected = preferences.ttsLocale === opt.value
             return (
@@ -155,7 +155,7 @@ export function TtsControls() {
                 lang={opt.lang}
                 onClick={() => setLocale(opt.value)}
                 className={cn(
-                  "px-2.5 py-1 text-xs font-bold rounded-md transition-all",
+                  "min-h-11 px-3 py-1 text-xs font-bold rounded-md transition-all sm:min-h-8",
                   isSelected
                     ? "bg-white text-primary shadow-xs"
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50",
@@ -240,13 +240,20 @@ export function TtsControls() {
             <Play aria-hidden="true" className="size-4 shrink-0 fill-current" />
             {strings.readPage}
           </button>
+          {isBusy ? (
+            <ControlButton
+              icon={<Square className="size-4 fill-current" />}
+              label={strings.stop}
+              onClick={stop}
+            />
+          ) : null}
           {status === "finished" ? (
             <button
               type="button"
               onClick={restart}
               disabled={disabled || isBusy}
               className={cn(
-                "flex min-h-[34px] w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors",
+                "flex min-h-11 sm:min-h-[34px] w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors",
                 "hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                 "disabled:cursor-not-allowed disabled:opacity-50",
               )}
@@ -258,7 +265,7 @@ export function TtsControls() {
         </div>
       ) : (
         <div className="space-y-2">
-          <div className="grid grid-cols-4 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5 @[18rem]:grid-cols-4">
             <ControlButton
               icon={<SkipBack className="size-4" />}
               label={strings.previousSection}
@@ -301,7 +308,7 @@ export function TtsControls() {
             onClick={restart}
             disabled={disabled}
             className={cn(
-              "flex min-h-[34px] w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors",
+              "flex min-h-11 sm:min-h-[34px] w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors",
               "hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
@@ -313,12 +320,12 @@ export function TtsControls() {
       )}
 
       {/* ── Quick Speed Selector Row ── */}
-      <div className="flex items-center justify-between gap-2 pt-1">
-        <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+        <span className="flex shrink-0 items-center gap-1.5 text-xs font-bold text-slate-500">
           <Gauge aria-hidden="true" className="size-3.5 text-slate-400" />
           {strings.speed}
         </span>
-        <div className="flex rounded-lg bg-slate-100 p-0.5" role="group" aria-label={strings.speed}>
+        <div className="flex flex-wrap rounded-lg bg-slate-100 p-0.5" role="group" aria-label={strings.speed}>
           {SPEED_PRESETS.map((rateVal) => {
             const isSelected = Math.abs(preferences.ttsRate - rateVal) < 0.05
             return (
@@ -328,7 +335,7 @@ export function TtsControls() {
                 onClick={() => setRate(rateVal)}
                 disabled={disabled}
                 className={cn(
-                  "px-2 py-0.5 text-xs font-bold rounded-md transition-all tabular-nums",
+                  "min-h-11 min-w-11 px-2 py-0.5 text-xs font-bold rounded-md transition-all tabular-nums sm:min-h-8 sm:min-w-0",
                   isSelected
                     ? "bg-white text-primary shadow-xs"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50",
@@ -344,17 +351,17 @@ export function TtsControls() {
 
       {/* ── Progressive Disclosure: Voice & Advanced Settings ── */}
       <details className="group rounded-xl border border-slate-200/80 bg-slate-50/50 transition-colors open:bg-white open:border-slate-300">
-        <summary className="flex cursor-pointer select-none items-center justify-between px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-xl">
-          <span className="flex items-center gap-1.5">
+        <summary className="flex min-h-11 cursor-pointer select-none items-center justify-between gap-2 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-xl">
+          <span className="flex min-w-0 items-center gap-1.5">
             <SlidersHorizontal
               aria-hidden="true"
-              className="size-3.5 text-slate-400 group-open:text-primary transition-colors"
+              className="size-3.5 shrink-0 text-slate-400 group-open:text-primary transition-colors"
             />
             Voice & Advanced Settings
           </span>
           <ChevronDown
             aria-hidden="true"
-            className="size-3.5 text-slate-400 transition-transform duration-200 group-open:rotate-180"
+            className="size-3.5 shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180"
           />
         </summary>
 

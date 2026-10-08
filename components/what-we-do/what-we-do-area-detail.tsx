@@ -1,7 +1,11 @@
 import Link from "next/link"
+import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
 import { ArrowRight, BookOpen, Check, Heart, Users } from "lucide-react"
 import type { WhatWeDoArea, WhatWeDoLearningItem } from "@/lib/data/what-we-do-areas"
 import { WhatWeDoVideoPlayer } from "@/components/what-we-do/what-we-do-video-player"
+import { AwarenessAnimatedStory } from "@/components/whatwedo/awareness-animated-story"
+import { InclusiveSchool } from "@/components/what-we-do/inclusive-school"
+import { InclusiveLearning } from "@/components/what-we-do/inclusive-learning"
 
 const learningIconMap = {
   book: BookOpen,
@@ -15,7 +19,7 @@ const learningColorMap: Record<WhatWeDoLearningItem["color"], string> = {
   purple: "text-purple-600",
 }
 
-export function WhatWeDoAreaDetail({ area }: { area: WhatWeDoArea }) {
+export function WhatWeDoAreaDetail({ area, content }: { area: WhatWeDoSettings["areas"]["awareness"]; content: WhatWeDoSettings }) {
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-12 lg:py-16">
       <div
@@ -55,6 +59,7 @@ export function WhatWeDoAreaDetail({ area }: { area: WhatWeDoArea }) {
             label={area.videoLabel}
             areaLabel={area.label}
             posterSrc={area.posterSrc}
+            playButtonLabel={area.playButtonLabel}
           />
 
           <aside className="flex flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.08)] sm:p-8">
@@ -82,6 +87,10 @@ export function WhatWeDoAreaDetail({ area }: { area: WhatWeDoArea }) {
           </aside>
         </div>
 
+        {area.id === "awareness" && content.animatedStory.enabled && <AwarenessAnimatedStory content={content.animatedStory} />}
+        {area.id === "advocacy" && content.inclusiveSchool.enabled && <InclusiveSchool content={content.inclusiveSchool} />}
+        {area.id === "training" && content.inclusiveLearning.enabled && <InclusiveLearning content={content.inclusiveLearning} />}
+
         <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.9fr)]">
           <div>
             <h2 className="mb-5 font-marissa text-3xl text-[#1a1a2e] sm:text-4xl">{area.learningTitle}</h2>
@@ -104,7 +113,7 @@ export function WhatWeDoAreaDetail({ area }: { area: WhatWeDoArea }) {
           <aside className="rounded-3xl border border-blue-100 bg-gradient-to-br from-sky-50 to-purple-50 p-6 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="font-marissa text-3xl text-[#1a1a2e]">Who this is for</h2>
+                <h2 className="font-marissa text-3xl text-[#1a1a2e]">{area.audienceTitle}</h2>
                 <p className="mt-2 font-comic text-sm leading-6 text-slate-600">{area.audienceDescription}</p>
               </div>
               <Users className="size-12 shrink-0 text-purple-600" strokeWidth={1.8} />
@@ -125,10 +134,10 @@ export function WhatWeDoAreaDetail({ area }: { area: WhatWeDoArea }) {
             <p className="mt-1 font-comic text-sm text-slate-600 sm:text-base">{area.closingDescription}</p>
           </div>
           <Link
-            href="/whatwedo#programs"
+            href={area.closingButtonHref}
             className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-sky-500 px-7 py-3 font-comic text-sm font-bold text-white shadow-lg shadow-sky-500/20 transition-transform hover:-translate-y-0.5 hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
           >
-            Explore our work
+            {area.closingButtonLabel}
             <ArrowRight className="size-4" />
           </Link>
         </div>

@@ -108,10 +108,10 @@ const EN: PanelStrings = {
   sectionProgress: (current, total) => `Section ${current} of ${total}`,
   translationPartialTitle: "Some sections could not be translated",
   translationPartialHelp:
-    "Reading did not start because some text is still in English. Please try again.",
+    "Reading continues with the available Nepali translations. Unavailable sections are skipped; try again to read them.",
   translationFailedTitle: "Translation is unavailable right now",
   translationFailedHelp:
-    "Reading did not start. Check your connection and try again.",
+    "Reading could not continue. Check your connection and try again.",
   noVoiceInstalled: "No Nepali voice is installed",
   noVoiceHelp:
     "Add a Nepali (ne-NP) voice in your device's language or speech settings, then reopen this panel.",
@@ -171,10 +171,10 @@ const NE: PanelStrings = {
   sectionProgress: (current, total) => `खण्ड ${current} / ${total}`,
   translationPartialTitle: "केही खण्ड अनुवाद हुन सकेन",
   translationPartialHelp:
-    "केही पाठ अझै अंग्रेजीमा भएकाले पढ्न सुरु भएको छैन। कृपया फेरि प्रयास गर्नुहोस्।",
+    "उपलब्ध नेपाली अनुवाद पढिँदैछ। अनुवाद हुन नसकेका खण्ड छोडिएका छन्। ती खण्ड पढ्न फेरि प्रयास गर्नुहोस्।",
   translationFailedTitle: "अनुवाद अहिले उपलब्ध छैन",
   translationFailedHelp:
-    "पढ्न सुरु भएको छैन। इन्टरनेट जाँच गरी फेरि प्रयास गर्नुहोस्।",
+    "पढाइ अघि बढ्न सकेन। इन्टरनेट जाँच गरी फेरि प्रयास गर्नुहोस्।",
   noVoiceInstalled: "नेपाली आवाज उपलब्ध छैन",
   noVoiceHelp:
     "आफ्नो यन्त्रको भाषा वा आवाज सेटिङमा नेपाली (ne-NP) आवाज थप्नुहोस्, त्यसपछि यो प्यानल पुनः खोल्नुहोस्।",

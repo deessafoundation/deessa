@@ -1,0 +1,17 @@
+/* Shared decoration: hidden wherever colour or ink is constrained.
+   Negative colours (html[data-a11y-negative]) is a root invert filter; decor inverts with the page. */
+:global(body.high-contrast) .decor {
+  display: none !important;
+}
+
+@media (forced-colors: active) {
+  .decor {
+    display: none;
+  }
+}
+
+@media print {
+  .decor {
+    display: none;
+  }
+}

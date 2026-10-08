@@ -1,0 +1,14 @@
+:global(body.high-contrast) .section,
+:global(body.inverted-contrast) .section {
+  background: var(--a11y-paper) !important;
+  border: 2px solid var(--a11y-ink) !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .copy,
+:global(body.high-contrast) .copy *,
+:global(body.inverted-contrast) .copy,
+:global(body.inverted-contrast) .copy * {
+  color: var(--a11y-ink) !important;
+  border-color: var(--a11y-ink) !important;
+}

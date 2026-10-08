@@ -1,177 +1,118 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { artworkAnchor, type Artwork } from "@/lib/arts/types"
+import type { Artwork } from "@/lib/arts/types"
 import { DEFAULT_ARTS_CONTENT, type ArtsContent } from "@/lib/arts/content"
+import {
+  ART_COPY_BACKDROP_MOBILE,
+  ART_COPY_PANEL_MOBILE,
+  ART_HEADING_MOBILE,
+  ART_SPLASH_MOBILE,
+  ArtBadge,
+  ArtColourDots,
+  ArtCopyFrame,
+  ArtDoodle,
+  ArtHeadingUnderline,
+  ArtPaperBackdrop,
+} from "./art-decor"
+import { ArtPhotoPolaroid, ArtworkPolaroid, pickCollagePieces } from "./art-frames"
+import { HomeEyebrow } from "@/components/home/home-section-heading"
+import { homeUi } from "@/components/home/home-ui"
 import styles from "./arts.module.css"
 
-// Homepage-only art feature. Renders nothing when no artwork is published, so
-// the homepage never shows placeholder or invented pieces.
-
-const tilts = ["-rotate-[2deg]", "rotate-[1.5deg]", "-rotate-[1deg]"]
-
-function FramedArtwork({ artwork, tilt, sizes, className }: { artwork: Artwork; tilt: string; sizes: string; className?: string }) {
-  return (
-    <Link
-      href={`/arts#${artworkAnchor(artwork.id)}`}
-      aria-label={`View “${artwork.title}” in the gallery`}
-      className={cn(
-        styles.frame,
-        styles.tilt,
-        "group block rounded-[22px] border border-white bg-white p-2 sm:p-2.5",
-        "shadow-[0_18px_40px_-18px_rgba(11,95,138,0.35)] transition-[rotate,translate,box-shadow] duration-500 ease-out",
-        "hover:rotate-0 hover:-translate-y-1 hover:shadow-[0_26px_50px_-18px_rgba(11,95,138,0.45)]",
-        "focus-visible:rotate-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3FABDE]/50",
-        "motion-reduce:transition-none",
-        tilt,
-        className,
-      )}
-    >
-      {/* Natural aspect ratio: the painting itself is never cropped. */}
-      <span
-        className={cn(styles.mat, "relative block overflow-hidden rounded-[16px] bg-[#f6f2ec]")}
-        style={{ aspectRatio: `${artwork.width} / ${artwork.height}` }}
-      >
-        <Image
-          src={artwork.src}
-          alt={artwork.alt}
-          fill
-          sizes={sizes}
-          className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-        />
-      </span>
-    </Link>
-  )
+const INTRO_PHOTO = {
+  src: "/artWork/art_pic1.jpeg",
+  alt: "A girl sitting on a pink exercise ball and making art on walls filled with her drawings.",
 }
 
-function Collage({ artworks }: { artworks: Artwork[] }) {
-  if (artworks.length === 1) {
-    return (
-      <div className="mx-auto w-full max-w-[460px]">
-        <FramedArtwork artwork={artworks[0]} tilt={tilts[0]} sizes="(min-width: 1024px) 460px, 90vw" />
-      </div>
-    )
-  }
-
-  // The most portrait piece takes the tall slot; the rest stack beside it.
-  const sorted = [...artworks]
-  const tallIndex = sorted.reduce((best, a, i, arr) => (a.height / a.width > arr[best].height / arr[best].width ? i : best), 0)
-  const [tall] = sorted.splice(tallIndex, 1)
-
+/** Mobile and tablet: the creative-space photo sits between the intro and the button. */
+function ArtIntroPhoto() {
   return (
-    <div className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] items-center gap-3 sm:gap-5">
-      <FramedArtwork artwork={tall} tilt={tilts[0]} sizes="(min-width: 1024px) 280px, 45vw" />
-      <div className="flex flex-col gap-3 sm:gap-5">
-        {sorted.map((artwork, i) => (
-          <FramedArtwork
-            key={artwork.id}
-            artwork={artwork}
-            tilt={tilts[i + 1]}
-            sizes="(min-width: 1024px) 340px, 55vw"
-          />
-        ))}
-      </div>
+    <div className="relative mx-auto mt-9 w-[78%] max-w-[300px] xl:hidden">
+      <ArtPhotoPolaroid src={INTRO_PHOTO.src} alt={INTRO_PHOTO.alt}
+        sizes="(min-width: 768px) 300px, 75vw"
+        className="-rotate-[2deg]" />
+      <ArtDoodle kind="rays" className="absolute -left-7 -top-9 h-10 w-10 rotate-[-15deg] text-[#0B5F8A] sm:-left-9 sm:-top-11 sm:h-12 sm:w-12" />
     </div>
   )
 }
 
-export function HomeArtFeature({
-  artworks,
-  content = DEFAULT_ARTS_CONTENT.home,
-}: {
+function ArtworkCollage({ artworks, badge }: { artworks: Artwork[]; badge: string }) {
+  const pieces = pickCollagePieces(artworks)
+  return (
+    <div className="relative mx-auto mt-12 grid w-full max-w-[730px] grid-cols-2 items-start gap-7 px-6 pb-8 sm:gap-10 md:mt-16 xl:contents max-md:mt-10 max-md:gap-x-4 max-md:gap-y-0 max-md:px-5 max-md:pb-6">
+      <ArtPaperBackdrop part="gallery" className={cn("-inset-x-6 -inset-y-8 xl:hidden", ART_SPLASH_MOBILE)} />
+      <div className="relative col-span-2 mx-auto w-[78%] max-w-[340px] xl:absolute xl:left-[49%] xl:top-[17%] xl:w-[21%] xl:max-w-none max-md:w-[70%] max-md:max-w-[280px]">
+        {/* Below xl this photo moves into the copy panel, above the button (see ArtIntroPhoto). */}
+        <div className="hidden xl:block">
+          <ArtPhotoPolaroid src={INTRO_PHOTO.src} alt={INTRO_PHOTO.alt}
+            sizes="(min-width: 1920px) 400px, 21vw"
+            className="-rotate-[3deg]" />
+        </div>
+        <ArtBadge doodleClassName="max-md:h-6 max-md:w-6"
+          className={cn("-ml-3 mt-4 w-[calc(100%+1.5rem)] rotate-[-4deg] text-[clamp(0.875rem,1.15vw,1.25rem)]",
+            "max-md:ml-0 max-md:mt-5 max-md:w-full max-md:gap-1.5 max-md:px-2 max-md:py-2.5 max-md:text-center max-md:text-[0.8125rem] max-md:leading-tight")}>
+          {badge}
+        </ArtBadge>
+        <ArtDoodle kind="rays" className="absolute -left-9 -top-12 hidden h-14 w-14 rotate-[-15deg] text-[#0B5F8A] xl:block" />
+      </div>
+      {pieces[0] && <div className="relative xl:absolute xl:right-[10%] xl:top-[7%] xl:w-[18%] max-md:mt-7">
+        <ArtworkPolaroid artwork={pieces[0]} tape="yellow" className="-rotate-[2deg] xl:-rotate-[3deg]" />
+        <ArtDoodle kind="sun" className="absolute -right-11 -top-2 hidden h-16 w-16 text-[#f4ba05] md:block xl:-right-20 xl:h-20 xl:w-20" />
+        <ArtDoodle kind="leaf" className="absolute -right-12 bottom-5 hidden h-28 w-16 text-[#2798a0] md:block xl:-right-20" />
+      </div>}
+      {pieces[1] && <div className="relative mt-5 xl:absolute xl:right-[3%] xl:top-[50%] xl:mt-0 xl:w-[23%] max-md:mt-11">
+        <ArtworkPolaroid artwork={pieces[1]} tape="blue" className="rotate-[3deg] xl:rotate-[5deg]" />
+        <ArtDoodle kind="heart" className="absolute -left-9 top-4 h-11 w-9 rotate-[-12deg] text-[#8c9ac8] max-md:-left-6 max-md:top-2 max-md:h-8 max-md:w-7" />
+        <ArtDoodle kind="star" className="absolute -left-10 bottom-0 h-10 w-10 text-[#739ebf] max-md:hidden" />
+      </div>}
+    </div>
+  )
+}
+
+export function HomeArtFeature({ artworks, content = DEFAULT_ARTS_CONTENT.home }: {
   artworks: Artwork[]
   content?: ArtsContent["home"]
 }) {
-  if (!artworks.length) return null
-
   return (
-    <section
-      id="art"
-      aria-labelledby="home-art-heading"
-      className={cn(
-        styles.section,
-        "relative overflow-hidden bg-gradient-to-br from-[#fffaf2] via-white to-[#eef8fd] py-14 sm:py-20 lg:py-24",
-      )}
-    >
-      {/* Soft paint-dab decorations */}
-      <div aria-hidden="true" className={cn(styles.decor, "pointer-events-none absolute inset-0")}>
-        <span className="absolute -left-16 top-10 h-56 w-56 rounded-full bg-[#F7C52B]/15 blur-3xl" />
-        <span className="absolute right-[8%] top-0 h-64 w-64 rounded-full bg-[#3FABDE]/12 blur-3xl" />
-        <span className="absolute bottom-0 right-[30%] h-48 w-48 rounded-full bg-[#D6336C]/[0.07] blur-3xl" />
-      </div>
-
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 lg:px-12">
-        {/* Copy */}
-        <div className="max-w-xl">
-          <span aria-hidden="true" className={cn(styles.decor, "mb-5 block h-1 w-10 rounded-full bg-[#3FABDE]")} />
-          <p className={cn(styles.eyebrow, "mb-3 font-comic text-xs font-bold uppercase tracking-[0.2em] text-[#15151c]")}>
-            {content.eyebrow}
-          </p>
-          <h2
-            id="home-art-heading"
-            className={cn(
-              styles.heading,
-              "font-marissa text-[2.25rem] leading-[1.15] text-[#0B5F8A] sm:text-5xl lg:text-[3.25rem]",
-              "[-webkit-text-stroke:0.6px_currentColor]",
-            )}
-          >
-            {content.heading}{" "}
-            <span className={cn(styles.accent, "relative inline-block text-[#3FABDE]")}>
-              {content.headingAccent}
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 200 20"
-                preserveAspectRatio="none"
-                className={cn(styles.decor, "pointer-events-none absolute -bottom-[0.14em] left-0 h-[0.2em] w-full")}
-              >
-                <path d="M4 14 C 50 6, 120 4, 196 10" fill="none" stroke="#F7C52B" strokeLinecap="round" strokeWidth="5" />
-              </svg>
-            </span>
-          </h2>
-          <p className={cn(styles.muted, "mt-6 font-comic text-base leading-relaxed text-slate-600 sm:text-lg")}>
-            {content.intro}
-          </p>
-
-          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
-            <Link
-              href="/arts"
-              className={cn(
-                styles.primaryBtn,
-                "inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full bg-[#0B5F8A] px-7 font-comic text-[1.0625rem] font-bold text-white",
-                "shadow-[0_12px_24px_-12px_rgba(11,95,138,0.7)] transition-colors duration-200 hover:bg-[#094E72]",
-                "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3FABDE]/45 focus-visible:ring-offset-2",
-              )}
-            >
-              {content.ctaLabel}
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
-            <p className={cn(styles.muted, "flex items-center gap-3 font-comic text-sm text-slate-600")}>
-              <span aria-hidden="true" className={cn(styles.decor, "flex -space-x-1.5")}>
-                <span className="h-4 w-4 rounded-full bg-[#F7C52B] ring-2 ring-white" />
-                <span className="h-4 w-4 rounded-full bg-[#D6336C] ring-2 ring-white" />
-                <span className="h-4 w-4 rounded-full bg-[#3FABDE] ring-2 ring-white" />
+    <section id="art" aria-labelledby="home-art-heading"
+      className={cn(styles.section,
+        "relative isolate overflow-hidden bg-white font-comic text-[#145879]")}>
+      <div className="relative mx-auto max-w-[1920px] py-14 sm:py-20 xl:h-[clamp(720px,51.84vw,995px)] xl:py-0 max-md:pt-8 max-md:pb-10">
+        <ArtPaperBackdrop className="inset-0 hidden xl:block [mask-image:linear-gradient(180deg,transparent,#000_7%,#000_93%,transparent)]" />
+        <div className={cn("relative mx-auto w-[calc(100%-2rem)] max-w-[730px] px-5 py-8 sm:px-12 sm:py-12 xl:absolute xl:left-[4%] xl:top-[12%] xl:flex xl:h-[76%] xl:w-[42%] xl:max-w-none xl:flex-col xl:justify-center xl:pl-[4.5%] xl:pr-[2.5%] xl:py-10", ART_COPY_PANEL_MOBILE)}>
+          <ArtPaperBackdrop part="copy" className={cn("-inset-x-[9%] -inset-y-[8%] xl:hidden", ART_COPY_BACKDROP_MOBILE)} />
+          <ArtCopyFrame />
+          <div className="relative z-10">
+            <HomeEyebrow align="start" className="mb-5">{content.eyebrow}</HomeEyebrow>
+            <h2 id="home-art-heading" className={cn(styles.heading,
+              "font-marissa text-[clamp(2rem,7vw,3.5rem)] leading-[1.08] text-[#063F5B] [-webkit-text-stroke:1.25px_currentColor] xl:text-[clamp(2rem,3vw,3.6rem)] xl:[-webkit-text-stroke:1.8px_currentColor]", ART_HEADING_MOBILE)}>
+              <span className="block">{content.heading}</span>{" "}
+              <span className={cn(styles.accent, "relative mt-2 inline-block pb-4 text-[#1A8AC2]")}>
+                {content.headingAccent}
+                <ArtHeadingUnderline />
               </span>
-              {content.creditLine}
+            </h2>
+            <p className={cn(styles.muted, "mt-5 max-w-[620px] text-base leading-[1.55] sm:text-lg xl:text-[clamp(1rem,1.1vw,1.25rem)] max-md:text-[0.9375rem] max-md:leading-[1.6]")}>{content.intro}</p>
+            <ArtIntroPhoto />
+            <Link href="/arts" className={cn(homeUi.primaryButton, "mt-6 w-full sm:w-auto")}>
+              {content.ctaLabel}<ArrowRight aria-hidden="true" className={homeUi.buttonArrow} />
+            </Link>
+            <p className={cn(styles.muted, "mt-7 flex items-center gap-4 text-sm leading-snug sm:text-base xl:text-[clamp(0.875rem,1.1vw,1.25rem)] max-md:mt-6 max-md:items-start max-md:gap-3 max-md:text-pretty")}>
+              <ArtColourDots className="max-md:mt-0.5" dotClassName="ring-white max-md:h-5 max-md:w-5" />
+              <span className="min-w-0">{content.creditLine}</span>
             </p>
           </div>
+          <ArtDoodle kind="rays" className="absolute right-4 top-[16%] hidden h-12 w-12 text-[#efb800] xl:block" />
+          <ArtDoodle kind="heart" className="absolute bottom-[23%] right-0 hidden h-16 w-12 rotate-[8deg] text-[#ef8993] xl:block" />
+          <ArtDoodle kind="sun" className="absolute -left-3 bottom-[14%] hidden h-16 w-16 text-[#f6c122] xl:block" />
         </div>
-
-        {/* Collage */}
-        <div className="relative mx-auto w-full max-w-[620px] pb-8">
-          <Collage artworks={artworks} />
-          <p
-            className={cn(
-              styles.chip,
-              "absolute bottom-0 left-1/2 inline-flex w-max max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-slate-200/80 bg-white px-4 py-2 text-center",
-              "font-comic text-sm text-slate-600 shadow-[0_10px_24px_-12px_rgba(26,26,46,0.3)]",
-            )}
-          >
-            <Sparkles aria-hidden="true" className="h-4 w-4 text-[#3FABDE]" />
-            <span className="font-bold text-[#0B5F8A]">{content.badge}</span>
-          </p>
-        </div>
+        <Image src="/artWork/babys-breath-left.png" alt="" width={1024} height={1536} sizes="(min-width: 1280px) 180px, 120px"
+          className={cn(styles.decor, "pointer-events-none absolute -left-12 top-[25%] hidden w-[180px] -rotate-[12deg] select-none xl:block")} />
+        <Image src="/artWork/babys-breath-center.png" alt="" width={1024} height={1536} sizes="(min-width: 1280px) 180px, 120px"
+          className={cn(styles.decor, "pointer-events-none absolute left-[40%] top-[34%] z-10 hidden w-[13%] -rotate-[8deg] select-none xl:block")} />
+        <ArtworkCollage artworks={artworks} badge={content.badge} />
       </div>
     </section>
   )

@@ -1,0 +1,156 @@
+/* Homepage section system below the hero. Layout and colour are Tailwind utilities in home-ui.ts.
+   This file holds the custom-property-driven paint-underline and ink layers, plus the high-contrast,
+   reduced-motion, forced-colors and print overrides. Doubled classes (.x.x) outrank app/globals.css
+   attribute rules regardless of chunk order. */
+
+.accent {
+  --home-accent-paint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 24' preserveAspectRatio='none'%3E%3Cpath d='M4 11.5C58 6.2 150 3.4 294 7.2c3.4.1 4.4 3.4 2.4 6-1.2 1.6-3.4 1.9-6 2-94 2.6-186 4.3-283 6.4-4.4.1-6.6-2.4-6.2-5.4.3-2.7 1.4-4.5 3-4.7Z' fill='%23F7C52B' fill-opacity='0.9'/%3E%3C/svg%3E");
+  background-image: var(--home-accent-paint);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0.2em;
+  padding-bottom: 0.1em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.inkVars {
+  --home-ink: #063f5b;
+  --home-body: #445e7b;
+  --home-muted: #4f6782;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift.lift:hover,
+  :global(.group):hover .arrow.arrow {
+    translate: none;
+  }
+}
+
+:global(body.reduce-motion) .lift.lift:hover,
+:global(body.sensory-friendly) .lift.lift:hover,
+:global(body.reduce-motion) .arrow.arrow,
+:global(body.sensory-friendly) .arrow.arrow {
+  translate: none !important;
+}
+
+/* High contrast */
+:global(body.high-contrast) .surface {
+  background: #fff !important;
+  background-image: none !important;
+}
+
+:global(body.high-contrast) .heading,
+:global(body.high-contrast) .accent,
+:global(body.high-contrast) .accentInk,
+:global(body.high-contrast) .body,
+:global(body.high-contrast) .muted,
+:global(body.high-contrast) .eyebrow {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .accent.accent {
+  --home-accent-paint: none !important;
+  background-image: none !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 0.06em !important;
+  text-underline-offset: 0.14em !important;
+}
+
+:global(body.high-contrast) .inkVars {
+  --home-ink: #000 !important;
+  --home-body: #000 !important;
+  --home-muted: #000 !important;
+}
+
+:global(body.high-contrast) .card.card,
+:global(body.high-contrast) .floatCard.floatCard,
+:global(body.high-contrast) .tile.tile {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) a.card.card,
+:global(body.high-contrast) a.card.card * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .iconCircle.iconCircle {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+}
+
+:global(body.high-contrast) .iconCircle.iconCircle svg {
+  color: #000 !important;
+  stroke: currentColor !important;
+}
+
+:global(body.high-contrast) a.primaryBtn.primaryBtn,
+:global(body.high-contrast) a.primaryBtn.primaryBtn * {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+:global(body.high-contrast) a.primaryBtn.primaryBtn {
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) a.secondaryBtn.secondaryBtn,
+:global(body.high-contrast) a.secondaryBtn.secondaryBtn * {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) a.secondaryBtn.secondaryBtn {
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .frame.frame {
+  outline: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .frame img {
+  filter: grayscale(1) !important;
+}
+
+@media (forced-colors: active) {
+  .accent {
+    --home-accent-paint: none;
+    background-image: none;
+    text-decoration: underline;
+  }
+
+  .card,
+  .floatCard,
+  .tile,
+  .iconCircle,
+  .frame {
+    border: 1px solid CanvasText;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    border: 2px solid ButtonText;
+  }
+}
+
+@media print {
+  .accent {
+    --home-accent-paint: none;
+    background-image: none;
+    text-decoration: underline;
+  }
+
+  .card,
+  .floatCard,
+  .tile {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

@@ -375,8 +375,8 @@ export function Footer() {
           © {new Date().getFullYear()} deessa Foundation. All rights reserved.
         </p>
               <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-              <p className="text-gray-500 text-xs text-center sm:text-left">
-                Accessibility powered by <a href="https://opendyslexic.org/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors underline">OpenDyslexic</a>
+              <p className="text-white text-xs text-center sm:text-left">
+                Accessibility powered by <a href="https://opendyslexic.org/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors underline">OpenDyslexic</a>
               </p>
 
         {/* Socials + legal */}

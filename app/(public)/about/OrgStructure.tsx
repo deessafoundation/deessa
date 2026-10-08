@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Cog, Lightbulb, Network, UsersRound, Wrench } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
+import { homeUi } from "@/components/home/home-ui"
 import styles from "./org-structure.module.css"
 
 const reveal = {
@@ -71,7 +72,7 @@ const accentStyles: Record<Accent, { icon: LucideIcon; color: string; bg: string
   assembly: { icon: UsersRound, color: "#e88b23", bg: "#fff2e5" },
 }
 
-function SectionHeader({ label, title, sub }: { label: string; title: string; sub?: string }) {
+function SectionHeader({ label, title, accent, sub }: { label: string; title: string; accent?: string; sub?: string }) {
   return (
     <motion.div {...reveal} transition={{ duration: 0.45 }} className="mb-8 max-w-4xl md:mb-10">
       <h2 id="governance-heading" className={styles.headerLabel}>
@@ -79,6 +80,12 @@ function SectionHeader({ label, title, sub }: { label: string; title: string; su
       </h2>
       <p className={styles.headerTitle}>
         {title}
+        {accent ? (
+          <>
+            {" "}
+            <span className={homeUi.accent}>{accent}</span>
+          </>
+        ) : null}
       </p>
       {sub && <p className={styles.headerSub}>{sub}</p>}
     </motion.div>
@@ -91,7 +98,8 @@ export function OrgStructure() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           label="Governance"
-          title="How the Foundation Is Organized"
+          title="How the Foundation Is"
+          accent="Organized"
           sub="Born from experience. United by purpose. The Foundation brings like-minded people together to build an inclusive society through strong governance."
         />
 

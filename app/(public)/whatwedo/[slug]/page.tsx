@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getWhatWeDoSettings } from "@/lib/data/what-we-do-settings"
 import { notFound } from "next/navigation"
 import { getPublishedProgramBySlug, getRelatedPrograms } from "@/lib/programs/data"
 import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
@@ -39,9 +40,9 @@ async function sanitizeDocument(doc: ProgramDocument): Promise<ProgramDocument> 
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const area = getWhatWeDoArea(slug)
-
-  if (area) {
+  if (getWhatWeDoArea(slug)) {
+    const content = await getWhatWeDoSettings()
+    const area = content.areas[slug as keyof typeof content.areas]
     return generateSEOMetadata({
       title: `${area.label} | What We Do`,
       description: area.subtitle,
@@ -61,10 +62,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProgramDetailPage({ params }: PageProps) {
   const { slug } = await params
-  const area = getWhatWeDoArea(slug)
-
-  if (area) {
-    return <WhatWeDoAreaDetail area={area} />
+  if (getWhatWeDoArea(slug)) {
+    const content = await getWhatWeDoSettings()
+    const area = content.areas[slug as keyof typeof content.areas]
+    return <WhatWeDoAreaDetail area={area} content={content} />
   }
 
   const program = await getPublishedProgramBySlug(slug)

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowRight, FileText, ShieldCheck, Users } from "lucide-react"
 import type { AboutHeroSettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
+import { homeUi } from "@/components/home/home-ui"
 import styles from "./about-hero.module.css"
 
 interface AboutHeroProps {
@@ -13,6 +14,13 @@ interface AboutHeroProps {
 
 export function AboutHero({ settings }: AboutHeroProps) {
   const s = settings || DEFAULT_ABOUT_PAGE_SETTINGS.hero
+  // Highlight the last two words of line 2 ("Nepal's Change.") in ocean blue with the yellow stroke.
+  const line2Words = (s.headlineLine2 || "").trim().split(/\s+/).filter(Boolean)
+  const accentCount = line2Words.length > 2 ? 2 : line2Words.length
+  const heroAccent = {
+    lead: line2Words.slice(0, line2Words.length - accentCount).join(" "),
+    accent: line2Words.slice(line2Words.length - accentCount).join(" "),
+  }
 
   return (
     <section data-about-hero className={styles.hero} aria-labelledby="about-hero-title">
@@ -24,7 +32,9 @@ export function AboutHero({ settings }: AboutHeroProps) {
         </nav>
         <p className={styles.eyebrow}>{s.badge}</p>
         <h1 id="about-hero-title" className={styles.title}>
-          {s.headlineLine1} {s.headlineLine2}
+          {s.headlineLine1} {heroAccent.lead}
+          {heroAccent.lead && heroAccent.accent ? " " : null}
+          {heroAccent.accent ? <span className={homeUi.accent}>{heroAccent.accent}</span> : null}
         </h1>
         <p className={styles.description}>{s.subtitle}</p>
         <div className={styles.actions}>

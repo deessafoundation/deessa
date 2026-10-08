@@ -3,6 +3,7 @@ import "server-only"
 import { createClient as createAnonClient } from "@/lib/supabase/static"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { ARTWORK_COLUMNS, toArtwork, type Artwork, type ArtworkRow } from "@/lib/arts/types"
+import { SHARED_ARTWORKS, mergeSharedArtworks } from "@/lib/arts/drive-collection"
 import { ARTS_CONTENT_KEY, DEFAULT_ARTS_CONTENT, normalizeArtsContent, type ArtsContent } from "@/lib/arts/content"
 
 /**
@@ -33,7 +34,7 @@ function mapRows(rows: ArtworkRow[] | null): Artwork[] {
 
 export type ArtworksResult = { artworks: Artwork[]; unavailable: boolean }
 
-/** Every published artwork, in admin-defined order (the /arts gallery). */
+/** Published CMS artworks plus unique pieces from the curated shared collection. */
 export async function getPublishedArtworks(): Promise<ArtworksResult> {
   try {
     const supabase = createAnonClient()
@@ -45,12 +46,12 @@ export async function getPublishedArtworks(): Promise<ArtworksResult> {
 
     if (error) {
       if (process.env.NODE_ENV === "development") console.warn("[artworks] read failed:", error.message)
-      return { artworks: [], unavailable: true }
+      return { artworks: SHARED_ARTWORKS, unavailable: false }
     }
-    return { artworks: mapRows(data as ArtworkRow[]), unavailable: false }
+    return { artworks: mergeSharedArtworks(mapRows(data as ArtworkRow[])), unavailable: false }
   } catch (error) {
     if (process.env.NODE_ENV === "development") console.warn("[artworks] read failed:", error)
-    return { artworks: [], unavailable: true }
+    return { artworks: SHARED_ARTWORKS, unavailable: false }
   }
 }
 

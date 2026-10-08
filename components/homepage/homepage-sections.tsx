@@ -4,7 +4,9 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { HomepageImage } from "./homepage-image"
 import styles from "./homepage-sections.module.css"
+import pillarCard from "./home-pillar-card.module.css"
 import Link from "next/link"
+import podcastBanner from "@/public/podcast_banner.jpeg"
 import {
   Heart,
   ArrowRight,
@@ -37,7 +39,11 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal, CountUp, BackToTop } from "@/components/homepage/scroll-animations"
-import { BrushStroke } from "@/components/ui/brush-stroke"
+import { cn } from "@/lib/utils"
+import { PastelBlob } from "@/components/decor/pastel-blob"
+import { HomeSectionHeading } from "@/components/home/home-section-heading"
+import { HOME_TILE_TONES, HOME_TONES, homeUi } from "@/components/home/home-ui"
+import { getHomeTone, splitHeadingAccent } from "@/components/home/home-tone"
 import type {
   HomepageStat,
   HomepageMarqueeSettings,
@@ -105,73 +111,61 @@ export function OurStorySection({ story }: OurStorySectionProps) {
   const imageAlt = useStoryIllustration
     ? "Illustration of two sisters following paths toward a welcoming school in Nepal"
     : s.imageAlt
+  const storyHeading = splitHeadingAccent(s.badgeText)
 
   return (
-    <section className="py-10 sm:py-16 md:py-24 bg-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 gap-7 sm:gap-9 md:grid-cols-2 md:gap-12 lg:gap-16 items-center">
-          <ScrollReveal animation="fade-up" duration={700}>
-            <div className="relative">
-              <div className="relative aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4] rounded-2xl md:rounded-3xl overflow-hidden shadow-xl">
-                <HomepageImage
-                  src={imageSrc}
-                  alt={imageAlt}
-                  fill
-                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) 45vw, 560px"
-                  className="object-cover object-center"
-                />
-                <div className={`${styles.storyOverlay} absolute inset-0`} />
+    <section className={cn(homeUi.surface, homeUi.sectionY)}>
+      <div className={cn(homeUi.container, "z-10")}>
+        <div className="grid grid-cols-1 items-center gap-y-8 md:grid-cols-2 md:gap-x-12 lg:gap-x-16">
+          <ScrollReveal animation="fade-left" delay={200} className="md:col-start-2 md:row-start-1 md:self-end">
+            <HomeSectionHeading
+              align="responsive"
+              eyebrow={s.eyebrow}
+              title={storyHeading.lead}
+              accent={storyHeading.accent}
+            />
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-up" duration={700} className="md:col-start-1 md:row-start-1 md:row-span-2">
+            <div className="relative mx-auto w-full max-w-[36rem]">
+              <PastelBlob className="-left-[6%] -top-[5%] w-[112%] aspect-[5/4]" />
+              <div className={cn(homeUi.frame, homeUi.organicRadius, "aspect-[5/4] sm:aspect-[4/3] md:aspect-[5/4]")}>
+                <div className={cn("relative h-full w-full overflow-hidden bg-[#E8F6FC]", homeUi.organicRadius)}>
+                  <HomepageImage
+                    src={imageSrc}
+                    alt={imageAlt}
+                    fill
+                    sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1279px) 45vw, 560px"
+                    className="object-cover object-center"
+                  />
+                </div>
               </div>
               <ScrollReveal animation="scale-in" delay={400}>
-                <div className="absolute bottom-3 right-3 md:-bottom-5 md:-right-5 bg-primary text-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-xl">
-                  <p className="text-2xl md:text-4xl font-black font-comic-num">{s.founded}</p>
-                  <p className="text-xs md:text-sm font-bold opacity-90">{s.foundedLabel}</p>
+                <div className="relative z-10 -mt-8 mr-3 flex justify-end md:absolute md:-bottom-6 md:-right-6 md:m-0 md:max-w-[60%]">
+                  <div className={cn(homeUi.floatCard, "flex items-center gap-3 p-3 sm:p-4")}>
+                    <span className={cn(homeUi.iconCircle, HOME_TONES.sunny, "size-10 sm:size-12")}>
+                      <Leaf aria-hidden="true" className="size-5 sm:size-6" strokeWidth={1.8} />
+                    </span>
+                    <div>
+                      <p className="font-comic-num text-2xl leading-none text-[#063F5B] md:text-3xl">{s.founded}</p>
+                      <p className={cn(homeUi.muted, "mt-1 text-sm font-bold")}>{s.foundedLabel}</p>
+                    </div>
+                  </div>
                 </div>
               </ScrollReveal>
             </div>
           </ScrollReveal>
 
-          <ScrollReveal animation="fade-left" delay={200}>
+          <ScrollReveal animation="fade-left" delay={200} className="md:col-start-2 md:row-start-2 md:self-start">
             <div>
-              <span className="text-primary font-bold tracking-widest uppercase text-sm mb-3 sm:mb-4 block">{s.eyebrow}</span>
-              <div className="mx-auto w-fit max-w-[92vw] mb-5 md:mb-6">
-                <BrushStroke
-                  variant="calligraphy"
-                  gradient="teal-blue"
-                  tilt={-1.2}
-                  width="fit-content"
-                  padding="0.45rem 0.4rem"
-                  opacity={0.85}
-                  animate={true}
-                  animationDuration={1.2}
-                  className="w-fit mx-auto"
-                >
-                  <div className="py-0 px-1.5">
-                    <h2
-                      className="font-marissa text-2xl md:text-[34px] text-white text-center"
-                      style={{ lineHeight: 1.15 }}
-                    >
-                      {s.badgeText}
-                    </h2>
-                  </div>
-                </BrushStroke>
-              </div>
               {s.paragraphs.map((p, i) => (
-                <p
-                  key={i}
-                  className={`text-base sm:text-lg text-foreground/70 leading-relaxed ${i === s.paragraphs.length - 1 ? "mb-6 sm:mb-8" : "mb-4 sm:mb-6"}`}
-                >
+                <p key={i} className={cn(homeUi.body, i === s.paragraphs.length - 1 ? "mb-7" : "mb-4 sm:mb-5")}>
                   {p}
                 </p>
               ))}
-              <Link
-                href={s.linkUrl}
-                className="group inline-flex items-center gap-2 font-bold text-primary hover:text-primary/80 transition-colors text-lg"
-              >
+              <Link href={s.linkUrl} className={cn(homeUi.secondaryButton, "w-full sm:w-auto")}>
                 {s.linkText}
-                <ArrowRight className="size-5 transition-transform group-hover:translate-x-2 duration-300" />
+                <ArrowRight aria-hidden="true" className={homeUi.buttonArrow} />
               </Link>
             </div>
           </ScrollReveal>
@@ -184,12 +178,9 @@ export function OurStorySection({ story }: OurStorySectionProps) {
 /* ──────────────────  MISSION, VISION & OBJECTIVES  ────────────────── */
 
 export function MissionVisionSection() {
-  // Shared card chrome so the three panels read as one family and match the
-  // pillar cards in ProgramsSection. Shadow is applied per card so the dark
-  // Mission panel can carry a heavier one without class conflicts.
-  const cardShell =
-    "group relative flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-1"
-  const lightCard = `${cardShell} border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] hover:shadow-xl`
+  // Shared hero-style card chrome so the three panels read as one family with the
+  // pillar cards in ProgramsSection. No hover lift: these articles are not interactive.
+  const cardShell = cn(homeUi.card, "relative flex h-full flex-col overflow-hidden")
 
   // Targets, not achievements — the numbers come straight from the objectives
   // statement, so they stay labelled as goals to avoid reading as impact data.
@@ -200,48 +191,38 @@ export function MissionVisionSection() {
   ]
 
   return (
-    <section data-mission-section className="relative overflow-hidden bg-muted py-12 sm:py-20 md:py-28">
-      <div className="pointer-events-none absolute top-0 left-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 bottom-0 size-96 translate-x-1/2 translate-y-1/2 rounded-full bg-indigo-500/5 blur-3xl" />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-50"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(41,182,200,0.12) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }}
-      />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section data-mission-section className={cn(homeUi.surface, homeUi.sectionY)}>
+      <div className={cn(homeUi.container, "z-10")}>
         <ScrollReveal animation="fade-up">
-          <div className="mb-9 text-center sm:mb-14 md:mb-16">
-            <span className="mb-4 block text-sm font-bold tracking-widest text-[#15151c] uppercase">Our Direction</span>
-            <h2 className="mb-4 text-3xl font-black tracking-tight text-[#0b76b7] md:text-5xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-              Mission, Vision <span className="font-normal">&</span> Objectives
-            </h2>
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-lg">
-              Guided by clear values and a bold vision for Nepal&apos;s future.
-            </p>
-          </div>
+          <HomeSectionHeading
+            className="mb-10 sm:mb-14"
+            eyebrow="Our Direction"
+            title={
+              <>
+                Mission, Vision <span className="font-normal">&</span>
+              </>
+            }
+            accent="Objectives"
+            // One navy line on phones too; it still wraps at large text sizes instead of overflowing.
+            titleClassName="text-2xl leading-[1.15] sm:text-[2.5rem] lg:text-[3.25rem]"
+            intro={<>Guided by clear values and a bold vision for Nepal&apos;s future.</>}
+          />
         </ScrollReveal>
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
-          {/* MISSION — the anchor statement, so it carries the section as a
-              solid deep-ocean panel rather than competing as a third white box */}
+          {/* MISSION — the anchor statement, set apart by a soft sky tint
+              rather than a dark panel, so it stays in the hero's light language */}
           <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
-            <article
-              data-mission-card
-              className={`${cardShell} ${styles.missionCard}`}
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-primary/25 blur-3xl"
-              />
+            <article data-mission-card className={cn(cardShell, "border-[#D7EEF9] bg-[#F2FAFE]")}>
               <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
-                <div data-mission-icon className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
-                  <Target aria-hidden="true" className="size-8 text-white" />
+                <div
+                  data-mission-icon
+                  className={cn(homeUi.iconCircle, HOME_TONES.sky, "mb-5 size-14 sm:mb-7 sm:size-16")}
+                >
+                  <Target aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
                 </div>
-                <h3 className="mb-4 text-2xl font-black text-white md:text-[30px]">Our Mission</h3>
-                <p className="text-base leading-relaxed text-white/80 sm:text-lg md:text-xl">
+                <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Mission</h3>
+                <p className={cn(homeUi.body, "md:text-xl")}>
                   To empower marginalized communities in Nepal through education, healthcare, and sustainable
                   development, ensuring every individual has the opportunity to live with dignity and purpose.
                 </p>
@@ -251,17 +232,13 @@ export function MissionVisionSection() {
 
           {/* VISION */}
           <ScrollReveal animation="fade-left" delay={150} className="h-full lg:col-span-5">
-            <article className={lightCard}>
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-primary via-sky-400 to-indigo-400"
-              />
+            <article className={cardShell}>
               <div className="flex flex-1 flex-col p-5 sm:p-8 md:p-10">
-                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
-                  <Eye aria-hidden="true" className="size-8 text-primary" />
+                <div className={cn(homeUi.iconCircle, HOME_TONES.lavender, "mb-5 size-14 sm:mb-7 sm:size-16")}>
+                  <Eye aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
                 </div>
-                <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Vision</h3>
-                <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
+                <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Vision</h3>
+                <p className={homeUi.body}>
                   A Nepal where every community thrives. Children dream freely, families are healthy, and
                   opportunities are within everyone&apos;s reach.
                 </p>
@@ -271,37 +248,37 @@ export function MissionVisionSection() {
 
           {/* OBJECTIVES — full width base, with the goals broken out as figures */}
           <ScrollReveal animation="fade-up" delay={300} className="lg:col-span-12">
-            <article className={lightCard}>
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-indigo-400 via-sky-400 to-primary"
-              />
+            <article className={cardShell}>
               <div className="grid grid-cols-1 items-center gap-6 p-5 sm:gap-8 sm:p-8 md:p-10 lg:grid-cols-12 lg:gap-14">
                 <div className="lg:col-span-5">
-                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 transition-transform duration-300 group-hover:scale-110 sm:mb-7 sm:size-16">
-                    <Flag aria-hidden="true" className="size-8 text-primary" />
+                  <div className={cn(homeUi.iconCircle, HOME_TONES.sunny, "mb-5 size-14 sm:mb-7 sm:size-16")}>
+                    <Flag aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
                   </div>
-                  <h3 className="mb-4 text-2xl font-black text-foreground md:text-[28px]">Our Objectives</h3>
-                  <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
+                  <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Objectives</h3>
+                  <p className={homeUi.body}>
                     Concrete goals that turn our mission into measurable change, district by district, until every
                     community we serve feels the difference.
                   </p>
                 </div>
 
                 <div className="lg:col-span-7">
-                  <p className="mb-5 text-xs font-bold tracking-widest text-primary uppercase">
+                  <p className={cn(homeUi.muted, "mb-5 text-sm font-bold uppercase tracking-widest text-[#006E9E]")}>
                     What we are working toward
                   </p>
                   <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-                    {targets.map((target) => (
+                    {targets.map((target, i) => (
                       <li
                         key={target.label}
-                        className="rounded-2xl border border-primary/10 bg-primary/[0.04] p-4 transition-colors duration-300 group-hover:border-primary/25 sm:p-5"
+                        className={cn(
+                          homeUi.tile,
+                          HOME_TILE_TONES[(["sky", "sunny", "lavender"] as const)[i % 3]],
+                          "p-4 sm:p-5",
+                        )}
                       >
-                        <p className="mb-1.5 text-3xl font-black text-primary md:text-[34px]">
+                        <p className="font-comic-num mb-1.5 text-3xl text-[#006E9E] md:text-[2.125rem]">
                           <CountUp end={target.value} suffix={target.suffix} />
                         </p>
-                        <p className="text-sm leading-snug font-medium text-slate-600">{target.label}</p>
+                        <p className={cn(homeUi.muted, "text-sm font-bold leading-snug")}>{target.label}</p>
                       </li>
                     ))}
                   </ul>
@@ -347,38 +324,20 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
   // single blue line if an admin has edited the title to something else.
   const titleLeadIn = "We turn understanding into action for"
   const titleEmphasis = w.title.startsWith(titleLeadIn) ? w.title.slice(titleLeadIn.length).trim() : null
+  // Empty or missing emphasis falls back to highlighting the title's last word, so no word is lost.
+  const heading = titleEmphasis ? { lead: titleLeadIn, accent: titleEmphasis } : splitHeadingAccent(w.title)
 
   return (
-    <section id="what-we-do" className="py-12 sm:py-20 md:py-28 bg-white text-slate-900 relative overflow-hidden scroll-mt-24">
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-      <div
-        className="absolute inset-0 opacity-[0.5]"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(41,182,200,0.12) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }}
-      />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="what-we-do" className={cn(homeUi.surface, homeUi.sectionY, "scroll-mt-24")}>
+      <div className={cn(homeUi.container, "z-10")}>
         <ScrollReveal animation="fade-up">
-          <div className="mb-9 text-center sm:mb-16">
-            <span className={`${styles.darkLabel} text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block`}>
-              {w.eyebrow}
-            </span>
-            {titleEmphasis ? (
-              <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4">
-                <span className="block text-[#1a1a2e]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-                  {titleLeadIn}
-                </span>
-                <span className="block text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-                  {titleEmphasis}
-                </span>
-              </h2>
-            ) : (
-              <h2 className="text-3xl md:text-5xl font-marissa tracking-tight mb-4 text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>{w.title}</h2>
-            )}
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">{w.subtitle}</p>
-          </div>
+          <HomeSectionHeading
+            className="mb-10 sm:mb-16"
+            eyebrow={w.eyebrow}
+            title={heading.lead}
+            accent={heading.accent}
+            intro={w.subtitle}
+          />
         </ScrollReveal>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
@@ -394,14 +353,24 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 <Link
                   href={`/whatwedo/${pillar.id}`}
                   aria-label={`Explore ${pillar.title}`}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                  data-tone={getHomeTone(pillar.color, idx)}
+                  className={cn(
+                    pillarCard.card,
+                    "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-visible:outline-none",
+                  )}
                 >
-                  <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">{pillar.statLabel}</p>
-                    <div data-pillar-icon className={`mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl ${pillar.color} shadow-lg transition-transform duration-300 group-hover:scale-110 sm:mb-6`}>
-                      <IconComp className="size-8 text-white animate-icon-float" />
-                    </div>
-                    <h3 className="text-xl font-black mb-3 text-[#1a1a2e]" style={{ WebkitTextStroke: "0.5px currentColor" }}>
+                  <span aria-hidden="true" className={pillarCard.blob} />
+                  <span aria-hidden="true" data-pillar-icon className={pillarCard.icon}>
+                    <IconComp className="size-6" strokeWidth={1.9} />
+                  </span>
+                  <div className="flex flex-1 flex-col p-6 text-left sm:p-7">
+                    {pillar.statLabel ? (
+                      <p className={cn(pillarCard.tag, "font-comic")}>
+                        <span aria-hidden="true" className={pillarCard.tagDot} />
+                        {pillar.statLabel}
+                      </p>
+                    ) : null}
+                    <h3 className={cn(homeUi.heading, pillarCard.title, "mb-3 mt-12 text-[1.3rem] leading-snug")}>
                       {pillar.title.split("&").map((part, i, arr) =>
                         i === arr.length - 1 ? (
                           <span key={i}>{part}</span>
@@ -413,10 +382,19 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                         )
                       )}
                     </h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">{pillar.description}</p>
-                    <span className="mt-auto inline-flex items-center justify-center gap-2 pt-6 text-sm font-bold text-sky-600">
-                      Explore this area
-                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    <p className={cn(pillarCard.desc, "font-comic text-[0.95rem] leading-relaxed")}>
+                      {pillar.description}
+                    </p>
+                    <span
+                      className={cn(
+                        pillarCard.cta,
+                        "mt-auto flex items-center justify-between gap-3 pt-7 font-comic text-[0.95rem] font-bold",
+                      )}
+                    >
+                      <span className={pillarCard.ctaLabel}>Explore this area</span>
+                      <span aria-hidden="true" className={pillarCard.ctaArrow}>
+                        <ArrowRight className="size-4" />
+                      </span>
                     </span>
                   </div>
                 </Link>
@@ -695,32 +673,30 @@ export function PodcastSection() {
       data-tts-text="The deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
     >
       {/* Keep the backdrop on the full-width section so it has no container seams. */}
-      <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full lg:w-1/2" viewBox="0 0 640 240" preserveAspectRatio="none">
+      <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full xl:w-[45%]" viewBox="0 0 640 240" preserveAspectRatio="none">
         <path d="M640 0 C545 160 400 238 190 240 H640 Z" fill="#3FABDE" opacity="0.36" />
       </svg>
-      <div className="relative mx-auto max-w-[1320px]">
+      {/* Full-bleed grid: the banner touches the section edges, so no blue frames it. */}
+      <div className="relative">
         <ScrollReveal animation="fade-up">
           <div className="isolate overflow-hidden">
-            <div className="grid lg:grid-cols-[48%_52%]">
+            <div className="grid xl:min-h-[min(31vw,560px)] xl:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
+              {/* Stacked: intrinsic 16:9, no crop. xl: stretches to the text column's height. */}
               <Link
                 href="/podcasts"
                 aria-label="Explore Living With Autism episodes"
-                className="relative block aspect-[1521/1034] overflow-hidden bg-[#005581] lg:self-center focus-visible:z-10 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-white"
+                className="relative block aspect-video overflow-hidden xl:aspect-auto xl:h-full focus-visible:z-10 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-white"
               >
                 <Image
-                  src="/home/podcast/deessa-podcast-studio.png"
+                  src={podcastBanner}
                   alt="Living With Autism: Real Voices, Real Stories. Sarita and Merina seated at microphones in the podcast studio, with deessa Foundation and SDG Studio branding."
                   fill
-                  sizes="(min-width: 1320px) 634px, (min-width: 1024px) 48vw, 100vw"
-                  className="object-cover object-center"
+                  sizes="(min-width: 1280px) 55vw, 100vw"
+                  className="object-cover object-[50%_40%]"
                 />
-                {/* Feather only the perimeter; keep the hosts and embedded branding sharp. */}
-                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 left-0 hidden w-[7%] bg-gradient-to-r from-[#005581] to-transparent lg:block" />
-                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-y-0 right-0 hidden w-[10%] bg-gradient-to-r from-transparent to-[#005581] lg:block" />
-                <div aria-hidden="true" data-podcast-feather className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#005581] to-transparent lg:hidden" />
               </Link>
 
-              <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-7 font-comic text-white sm:px-8 lg:py-6 lg:pl-8 lg:pr-10">
+              <div className="relative isolate flex min-w-0 flex-col justify-center overflow-hidden px-6 py-8 font-comic text-white sm:px-10 sm:py-10 xl:py-8 xl:pl-12 xl:pr-[max(2.5rem,calc((100vw-1320px)/2))]">
                 <div data-podcast-badge className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-[#3FABDE]/65 px-3 py-1.5 text-[11px] font-bold tracking-[0.08em]">
                   <Mic2 className="size-4 shrink-0" aria-hidden="true" />
                   THE deessa PODCAST
@@ -813,38 +789,34 @@ export function TestimonialsSection({ testimonials: testimonialsSettings }: Test
 
   return (
     <section
-      className="relative overflow-hidden bg-muted py-10 md:py-12"
+      className={cn(homeUi.surface, "py-14 sm:py-16 lg:py-20")}
       data-tts-section=""
       data-tts-priority="heading"
       data-tts-text={testimonialsSpokenText}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={cn(homeUi.container, "z-10")}>
         <ScrollReveal animation="fade-up">
-          <div className="mb-8 text-center">
-            <span className="mb-4 block text-sm font-bold uppercase tracking-widest text-[#15151c]">Global Voices</span>
-            <h2
-              className="font-marissa mb-4 text-3xl tracking-tight text-[#0b76b7] md:text-4xl"
-              style={{ WebkitTextStroke: "0.7px currentColor" }}
-            >
-              Inclusion Begins with Acceptance
-            </h2>
-
-          </div>
+          <HomeSectionHeading
+            className="mb-8"
+            eyebrow="Global Voices"
+            title="Inclusion Begins with"
+            accent="Acceptance"
+          />
         </ScrollReveal>
 
-        <div className={`${styles.testimonials} flex justify-center`}>
+        <div className={cn(styles.testimonials, homeUi.inkVars, "flex justify-center")}>
           <CircularTestimonials
             testimonials={circularTestimonials}
             nameTextStroke="0.55px currentColor"
             autoplay={false}
             videoAutoplay={true}
             colors={{
-              name: "var(--foreground)",
-              designation: "var(--muted-foreground)",
-              testimony: "color-mix(in srgb, var(--foreground) 80%, transparent)",
-              arrowBackground: "var(--primary)",
-              arrowForeground: "var(--primary-foreground)",
-              arrowHoverBackground: "color-mix(in srgb, var(--primary) 80%, transparent)",
+              name: "var(--home-ink)",
+              designation: "var(--home-muted)",
+              testimony: "var(--home-body)",
+              arrowBackground: "#FFFFFF",
+              arrowForeground: "#0B5F8A",
+              arrowHoverBackground: "#E8F6FC",
             }}
             fontSizes={{
               name: "1.75rem",
@@ -1192,31 +1164,31 @@ export function ContactSection() {
   ]
 
   return (
-    <section
-      className="bg-background pt-8 pb-12 sm:pb-20 md:pt-12 md:pb-28"
-      data-tts-section=""
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={cn(homeUi.surface, homeUi.sectionY)} data-tts-section="">
+      <div className={cn(homeUi.container, "z-10")}>
         <ScrollReveal animation="fade-up">
-          <div className="mb-9 text-center sm:mb-16">
-            <span className="text-[#15151c] font-bold tracking-widest uppercase text-sm mb-4 block">Find Us</span>
-            <h2 className="text-3xl md:text-5xl font-black text-[#0b76b7] tracking-tight mb-4" style={{ WebkitTextStroke: "0.7px currentColor" }}>Visit Our Office</h2>
-          </div>
+          <HomeSectionHeading className="mb-10 sm:mb-16" eyebrow="Find Us" title="Visit Our" accent="Office" />
         </ScrollReveal>
         <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2">
-          <div className="space-y-6 sm:space-y-8">
+          <div className={cn(homeUi.card, "divide-y divide-[#E3F1F8] px-5 py-2 sm:px-8 sm:py-3")}>
             {contactItems.map((item, i) => {
               const IconComp = item.icon
               return (
-                <ScrollReveal key={item.title} animation="fade-right" delay={i * 120}>
+                <ScrollReveal key={item.title} animation="fade-right" delay={i * 120} className="py-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                      <IconComp className="size-6 text-primary" />
+                    <div
+                      className={cn(
+                        homeUi.iconCircle,
+                        HOME_TONES[(["sky", "sunny", "lavender", "mint"] as const)[i % 4]],
+                        "size-12",
+                      )}
+                    >
+                      <IconComp aria-hidden="true" className="size-6" strokeWidth={1.8} />
                     </div>
                     <div>
-                      <h3 className="font-black text-foreground mb-1">{item.title}</h3>
-                      <p className="text-foreground/70">{item.line1}</p>
-                      {item.line2 && <p className="text-foreground/50 text-sm">{item.line2}</p>}
+                      <h3 className="font-comic text-lg font-bold text-[#063F5B]">{item.title}</h3>
+                      <p className={cn(homeUi.body, "sm:text-base")}>{item.line1}</p>
+                      {item.line2 && <p className={cn(homeUi.muted, "text-sm")}>{item.line2}</p>}
                     </div>
                   </div>
                 </ScrollReveal>

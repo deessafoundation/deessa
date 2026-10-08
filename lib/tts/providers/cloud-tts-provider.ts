@@ -45,7 +45,11 @@ const SPEAK_ENDPOINT = "/api/tts/speak"
 export async function isCloudTtsAvailable(): Promise<boolean> {
   if (typeof window === "undefined") return false
   try {
-    const res = await fetch(SPEAK_ENDPOINT, { method: "GET", cache: "no-store" })
+    const res = await fetch(SPEAK_ENDPOINT, {
+      method: "GET",
+      cache: "no-store",
+      signal: AbortSignal.timeout(8_000),
+    })
     if (!res.ok) return false
     const data = (await res.json()) as { enabled?: unknown }
     return data.enabled === true
@@ -130,7 +134,7 @@ export class CloudTtsProvider implements TtsProvider {
     try {
       const res = await fetch(SPEAK_ENDPOINT, {
         method: "POST",
-        signal: controller.signal,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(25_000)]),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text,

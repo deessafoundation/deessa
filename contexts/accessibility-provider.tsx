@@ -46,6 +46,7 @@ import type { CompositeTtsProvider } from "@/lib/tts/providers/composite-tts-pro
 /** Time to let a new route paint before extracting its content. */
 const ROUTE_SETTLE_MS = 350
 const MUTATION_DEBOUNCE_MS = 500
+const TRANSLATION_SECTION_BATCH_SIZE = 4
 
 // ── Context ──────────────────────────────────────────────────────────────────
 
@@ -85,6 +86,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   const providerRef = useRef<CompositeTtsProvider | null>(null)
   const sectionsRef = useRef<SpeechSection[]>([])
   const playbackTokenRef = useRef(0)
+  const translationControllerRef = useRef<AbortController | null>(null)
   const highlightedRef = useRef<HTMLElement | null>(null)
   const pendingRescanRef = useRef(false)
 
@@ -341,6 +343,9 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
         return null
       }
       providerRef.current = provider
+      provider.on("start", () => {
+        setTtsStatus((status) => (status === "loading" ? "speaking" : status))
+      })
       return provider
     } catch {
       setTtsIsSupported(false)
@@ -407,6 +412,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
 
   const ttsStop = useCallback(() => {
     playbackTokenRef.current += 1
+    translationControllerRef.current?.abort()
     providerRef.current?.stop()
     clearHighlight()
     setTtsCurrentSectionIndex(-1)
@@ -421,6 +427,10 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
     async (startIndex: number) => {
       const token = ++playbackTokenRef.current
       const isCurrent = () => playbackTokenRef.current === token
+
+      translationControllerRef.current?.abort()
+      const translationController = new AbortController()
+      translationControllerRef.current = translationController
 
       providerRef.current?.stop()
       clearHighlight()
@@ -440,39 +450,11 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
       pauseAllNativeMedia()
 
       const preferredLocale = preferencesRef.current.ttsLocale
-
-      // Translate to Nepali if needed. Only sections from the start point on
-      // are translated: earlier ones are not about to be spoken, and skipping
-      // them saves translation quota and time-to-first-word when reading
-      // starts mid-page. "Previous" re-enters here and translates just the
-      // one extra section (already-translated ones are skipped by the cache).
-      if (preferredLocale === "ne-NP") {
-        setTtsStatus("translating")
-        let outcome: "none" | "partial" | "failed" = "none"
-        const base = sectionsRef.current
-        const translateFrom = Math.min(Math.max(0, startIndex), base.length)
-        try {
-          const result = await translateSectionsToNepali(base.slice(translateFrom))
-          if (!isCurrent()) return
-          sectionsRef.current = [...base.slice(0, translateFrom), ...result.sections]
-          if (result.failed > 0) {
-            outcome = result.translated > 0 ? "partial" : "failed"
-          }
-        } catch {
-          if (!isCurrent()) return
-          outcome = "failed"
-        }
-        setTtsTranslationOutcome(outcome)
-        if (outcome !== "none") {
-          setTtsStatus("error")
-          return
-        }
-        setTtsStatus("loading")
-      } else {
-        setTtsTranslationOutcome("none")
-      }
-
+      setTtsTranslationOutcome("none")
       const sections = sectionsRef.current
+      const skippedTranslations = new Set<number>()
+      let translatedThrough = Math.max(0, startIndex) - 1
+      let spokenSections = 0
 
       // Resolve voices for all locales in use
       const localesInUse = new Set(sections.map((s) => s.locale))
@@ -495,8 +477,11 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
 
       setTtsHasVoiceForLocale(speakable.has(preferredLocale))
 
-      const playableSections = sections.filter((s) => speakable.has(s.locale))
-      if (playableSections.length === 0) {
+      const hasPlayableContent =
+        preferredLocale === "ne-NP"
+          ? speakable.has("ne-NP")
+          : sections.some((section) => speakable.has(section.locale))
+      if (!hasPlayableContent) {
         setTtsStatus("error")
         setTtsErrorCode("no-voice")
         return
@@ -505,6 +490,33 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
       // Section loop
       for (let index = Math.max(0, startIndex); index < sections.length; index++) {
         if (!isCurrent()) return
+        // Translate only the next small group. A slow or rejected translation
+        // elsewhere on the page must not prevent the first words being read.
+        if (preferredLocale === "ne-NP" && index > translatedThrough) {
+          setTtsStatus("translating")
+          const end = Math.min(index + TRANSLATION_SECTION_BATCH_SIZE, sections.length)
+          try {
+            const result = await translateSectionsToNepali(
+              sections.slice(index, end),
+              translationController.signal,
+            )
+            if (!isCurrent()) return
+            result.sections.forEach((section, offset) => {
+              sections[index + offset] = section
+            })
+            result.failedIndexes.forEach((offset) => skippedTranslations.add(index + offset))
+            if (result.failed > 0) setTtsTranslationOutcome("partial")
+          } catch {
+            if (!isCurrent()) return
+            clearHighlight()
+            setTtsTranslationOutcome("failed")
+            setTtsStatus("error")
+            return
+          }
+          translatedThrough = end - 1
+          setTtsStatus("loading")
+        }
+        if (skippedTranslations.has(index)) continue
         const section = sections[index]
         if (!section.element.isConnected) continue
         if (!speakable.has(section.locale)) continue
@@ -528,7 +540,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
         for (const chunk of chunks) {
           if (!isCurrent()) return
           try {
-            setTtsStatus("speaking")
+            setTtsStatus("loading")
             await provider.speak({
               text: chunk,
               locale: section.locale,
@@ -546,12 +558,18 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
             return
           }
         }
+        spokenSections += 1
       }
 
       if (!isCurrent()) return
       clearHighlight()
       setTtsCurrentSectionIndex(-1)
-      setTtsStatus("finished")
+      if (spokenSections === 0 && skippedTranslations.size > 0) {
+        setTtsTranslationOutcome("failed")
+        setTtsStatus("error")
+      } else {
+        setTtsStatus("finished")
+      }
 
       if (pendingRescanRef.current) {
         pendingRescanRef.current = false
@@ -622,6 +640,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
       ttsStatusRef.current === "translating"
 
     playbackTokenRef.current += 1
+    translationControllerRef.current?.abort()
     providerRef.current?.stop()
     clearHighlight()
     sectionsRef.current = []
@@ -774,10 +793,14 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   }, [ttsStop])
 
   useEffect(() => {
-    const onPageHide = () => providerRef.current?.stop()
+    const onPageHide = () => {
+      translationControllerRef.current?.abort()
+      providerRef.current?.stop()
+    }
     window.addEventListener("pagehide", onPageHide)
     return () => {
       window.removeEventListener("pagehide", onPageHide)
+      translationControllerRef.current?.abort()
       providerRef.current?.dispose()
       providerRef.current = null
     }
@@ -846,6 +869,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   const resetAll = useCallback(() => {
     // Stop TTS first
     playbackTokenRef.current += 1
+    translationControllerRef.current?.abort()
     providerRef.current?.stop()
     clearHighlight()
     setTtsCurrentSectionIndex(-1)

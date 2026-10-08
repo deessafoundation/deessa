@@ -21,6 +21,7 @@ const TARGET = "ne"
 /** Keep requests comfortably inside the route's own limits. */
 const BATCH_MAX_TEXTS = 300
 const BATCH_MAX_CHARS = 120_000
+const REQUEST_TIMEOUT_MS = 30_000
 
 const LATIN_LETTERS = /[A-Za-z]/g
 const DEVANAGARI_CHARACTERS = /[\u0900-\u097F]/g
@@ -39,6 +40,8 @@ export interface TranslationOutcome {
   translated: number
   /** How many needed translation but could not be translated. */
   failed: number
+  /** Input indexes that must be skipped instead of speaking untranslated text. */
+  failedIndexes: number[]
 }
 
 /**
@@ -87,11 +90,12 @@ function batch(texts: string[]): string[][] {
   return batches
 }
 
-async function requestBatch(texts: string[]): Promise<Array<string | null>> {
+async function requestBatch(texts: string[], signal?: AbortSignal): Promise<Array<string | null>> {
   const response = await fetch(ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ texts, target: TARGET }),
+    signal: AbortSignal.any([AbortSignal.timeout(REQUEST_TIMEOUT_MS), ...(signal ? [signal] : [])]),
   })
   if (!response.ok) throw new Error(`translate failed: ${response.status}`)
 
@@ -111,11 +115,12 @@ async function requestBatch(texts: string[]): Promise<Array<string | null>> {
  * Translate every section that needs it, then return a new section list.
  *
  * A section that could not be translated stays unchanged and is counted as a
- * failure. Playback must stop rather than reading its English text in Nepali
- * mode; the visitor can retry when translation is available.
+ * failure. Callers skip failedIndexes so untranslated English is never read
+ * in Nepali mode; the other sections can continue and failures can be retried.
  */
 export async function translateSectionsToNepali(
-  sections: SpeechSection[]
+  sections: SpeechSection[],
+  signal?: AbortSignal,
 ): Promise<TranslationOutcome> {
   const candidateIndexes = sections.reduce<number[]>((acc, section, index) => {
     if (needsTranslation(section)) acc.push(index)
@@ -123,7 +128,7 @@ export async function translateSectionsToNepali(
   }, [])
 
   if (candidateIndexes.length === 0) {
-    return { sections, translated: 0, failed: 0 }
+    return { sections, translated: 0, failed: 0, failedIndexes: [] }
   }
 
   // Unique, uncached sources only — a page repeats plenty of short strings.
@@ -136,20 +141,20 @@ export async function translateSectionsToNepali(
   )
 
   for (const group of batch(missing)) {
-    try {
-      const results = await requestBatch(group)
-      group.forEach((source, index) => {
-        const translated = results[index]
-        if (translated) sessionCache.set(source, translated)
-      })
-    } catch {
-      // Network down, route error, or malformed payload. Leave these uncached;
-      // the per-section fallback below handles them.
-    }
+    signal?.throwIfAborted()
+    // A service outage is different from one rejected translation. Let the
+    // caller offer a retry instead of waiting through every remaining group.
+    const results = await requestBatch(group, signal)
+    signal?.throwIfAborted()
+    group.forEach((source, index) => {
+      const translated = results[index]
+      if (translated) sessionCache.set(source, translated)
+    })
   }
 
   let translated = 0
   let failed = 0
+  const failedIndexes: number[] = []
   const candidates = new Set(candidateIndexes)
 
   const next = sections.map((section, index) => {
@@ -158,6 +163,7 @@ export async function translateSectionsToNepali(
     const nepali = sessionCache.get(section.text)
     if (!nepali) {
       failed += 1
+      failedIndexes.push(index)
       return section
     }
 
@@ -171,7 +177,7 @@ export async function translateSectionsToNepali(
     return translatedSection
   })
 
-  return { sections: next, translated, failed }
+  return { sections: next, translated, failed, failedIndexes }
 }
 
 /** Test/debug helper. Not used in the UI. */

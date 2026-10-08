@@ -8,6 +8,7 @@ interface WhatWeDoVideoPlayerProps {
   label: string
   areaLabel: string
   posterSrc: string
+  playButtonLabel?: string
 }
 
 export function WhatWeDoVideoPlayer({
@@ -15,6 +16,7 @@ export function WhatWeDoVideoPlayer({
   label,
   areaLabel,
   posterSrc,
+  playButtonLabel = "Watch video",
 }: WhatWeDoVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hasStarted, setHasStarted] = useState(false)
@@ -68,7 +70,7 @@ export function WhatWeDoVideoPlayer({
               {label}
             </span>
             <span className="shrink-0 rounded-full bg-sky-500 px-4 py-2 font-comic text-xs font-bold shadow-lg transition-colors group-hover:bg-sky-400 sm:text-sm">
-              Watch video
+              {playButtonLabel}
             </span>
           </span>
         </button>
