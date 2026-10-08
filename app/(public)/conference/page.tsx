@@ -35,15 +35,8 @@ export const metadata = {
     "Join industry leaders at the deessa National Conference 2026. Three days of innovation, connection, and hands-on learning.",
 }
 
-// Build a Google Maps embed URL from a maps.app.goo.gl short link or any Google Maps URL
-function buildEmbedUrl(mapsUrl: string): string {
-  // If it's already an embed URL, return as-is
-  if (mapsUrl.includes("google.com/maps/embed")) return mapsUrl
-  // For short links or place URLs, use the place query approach via the URL itself
-  const query = encodeURIComponent("Hyatt Regency Kathmandu, Taragaon, Bouddha, Kathmandu")
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${query}`
-}
+// Note: We use Google Maps query-based embedding which doesn't require an API key
+// This is safe for public use and works without exposing credentials
 
 export default async function ConferencePage() {
   const cfg = await getConferenceSettings()
