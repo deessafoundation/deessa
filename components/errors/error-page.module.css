@@ -1,0 +1,227 @@
+.page, .shell {
+  --error-paper: #fff;
+  --error-ink: var(--foreground, #1a1a2e);
+  --error-muted: rgb(var(--text-muted, 108 117 125));
+  --error-accent: rgb(var(--brand-primary-dark, 11 95 138));
+  --error-rule: #c6dfea;
+  background: var(--error-paper);
+  color: var(--error-ink);
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif;
+}
+.eyebrow { color: #0b5f8a; background: #e8f6fc; border-color: #c6e7f6; }
+.eyebrow, .help, .reference, .feedback, .footer { font-size: calc(0.875rem * var(--error-text-scale, 1)); }
+.action, .caption, .resource { font-size: calc(1rem * var(--error-text-scale, 1)); }
+.message { font-size: calc(1rem * var(--error-text-scale, 1)); }
+.code {
+  color: #3fabde;
+  background: #fff;
+  border: 2px solid #c6e7f6;
+  box-shadow: 0 8px 24px #0b5f8a18;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  overflow-wrap: anywhere;
+  transform: rotate(-3deg);
+}
+.code span { display: inline-block; }
+.code span:nth-child(2n) { color: #3fabde; }
+.code span:nth-child(3n) { color: #0b5f8a; }
+.title {
+  color: var(--error-accent);
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-weight: 400;
+  font-size: calc(2.75rem * var(--error-text-scale, 1));
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.title::after {
+  content: "";
+  display: block;
+  width: 7rem;
+  height: 0.5rem;
+  margin-top: 1rem;
+  background: rgb(var(--brand-primary, 63 171 222));
+  clip-path: polygon(0 30%, 25% 10%, 70% 25%, 100% 0, 97% 70%, 60% 90%, 20% 75%, 2% 100%);
+}
+.message, .help, .footer, .reference, .feedback { color: var(--error-muted); }
+.feedback:empty { display: none; }
+.help, .reference { border-color: var(--error-rule); }
+.action {
+  border-color: var(--error-accent);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #b7dceb;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+.action[data-error-action="primary"] { background: var(--error-accent); color: #fff; }
+.action[data-error-action="primary"]:hover { background: #08496b; border-color: #08496b; transform: translateY(-3px); box-shadow: 0 7px 0 #b7dceb; }
+.action[data-error-action="secondary"] { background: #fff; color: var(--error-accent); }
+.action[data-error-action="secondary"]:hover { background: #e8f6fc; transform: translateY(-3px); box-shadow: 0 7px 0 #b7dceb; }
+.action:active { transform: translateY(2px); box-shadow: none; }
+.action svg { transition: transform 180ms ease; }
+.action:hover svg:last-child { transform: translateX(3px); }
+.textLink { color: var(--error-accent); text-decoration: underline; text-underline-offset: 4px; font-weight: 700; }
+.page a:focus-visible, .page button:focus-visible, .page summary:focus-visible,
+.shell a:focus-visible { outline: 3px solid var(--error-accent); outline-offset: 4px; box-shadow: 0 0 0 2px var(--error-paper); }
+.art { isolation: isolate; }
+.artSurface {
+  background: #e8f6fc;
+  border: 2px solid #c6e7f6;
+  transform: rotate(-3deg);
+}
+.artSurface::after { content: ""; position: absolute; inset: 12px -12px -12px 12px; border: 2px solid #3fabde; border-radius: inherit; z-index: -1; }
+.artIcon { color: var(--error-accent); }
+.illustration { transform: translate(var(--art-x, 0px), var(--art-y, 0px)); transition: transform 250ms ease-out; box-shadow: 0 20px 50px #0b5f8a18; border: 6px solid #fff; }
+.orbit { box-shadow: 0 8px 24px #0b5f8a18; animation: float 5s ease-in-out infinite; }
+.orbitOne { background: #0b5f8a; color: #fff; rotate: -12deg; }
+.orbitTwo { background: #e8f6fc; color: #0b5f8a; animation-delay: -1.5s; rotate: 10deg; }
+.orbitThree { background: #3fabde; color: #fff; animation-delay: -3s; rotate: 12deg; }
+.caption { color: #0b5f8a; background: #fff; border-color: #c6e7f6; box-shadow: 0 5px 0 #c6e7f6; font-size: calc(0.875rem * var(--error-text-scale, 1)); font-weight: 700; }
+.motionControl { color: #465c70; background: transparent; cursor: pointer; }
+.belonging { color: #0b5f8a; }
+.resource { background: var(--error-paper); border-color: var(--error-rule); color: var(--error-ink); overflow-wrap: anywhere; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.resource:hover { transform: translateY(-4px); border-color: #3fabde; box-shadow: 0 8px 20px #0b5f8a10; }
+.resourceIcon { background: #e8f6fc; color: #0b5f8a; }
+.resource:nth-child(2) .resourceIcon { background: #e8f6fc; color: #0b5f8a; }
+.resource:nth-child(3) .resourceIcon { background: #e8f6fc; color: #0b5f8a; }
+.resourceText { color: var(--error-muted); font-size: calc(0.8125rem * var(--error-text-scale, 1)); }
+.copy { animation: enter 500ms ease-out both; }
+.art { animation: enter 650ms 100ms ease-out both; }
+.brand { color: var(--error-accent); text-decoration: none; }
+.header { border-bottom: 1px solid var(--error-rule); }
+.header { background: #f8f6f1; }
+.footer { border-top: 1px solid var(--error-rule); background: #e8f6fc; }
+.skip { position: absolute; top: 8px; left: -10000px; z-index: 100; padding: 1rem; background: var(--error-accent); color: #fff; }
+.skip:focus { left: 8px; }
+.page[data-paused="true"] .orbit { animation-play-state: paused; }
+.page[data-paused="true"] .illustration { transform: none; }
+@keyframes enter { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@media (min-width: 640px) {
+  .title { font-size: calc(3.5rem * var(--error-text-scale, 1)); }
+  .message { font-size: calc(1.125rem * var(--error-text-scale, 1)); }
+}:global(.dark) .page, :global(.dark) .shell {
+  --error-paper: #102a35;
+  --error-ink: #f8f6f1;
+  --error-muted: #c3d3d6;
+  --error-accent: #a5ddeb;
+  --error-rule: #55707c;
+}
+:global(.dark) .action[data-error-action="primary"] { color: #102a35; }
+:global(.dark) .action[data-error-action="primary"]:hover { background: #d1edf4; border-color: #d1edf4; }
+:global(.dark) .action[data-error-action="secondary"]:hover { background: #254550; }
+:global(.dark) .artSurface { background: #203d45; }
+
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page, :global(:is(body.high-contrast, [data-error-contrast="high"])) .shell {
+  --error-paper: #fff;
+  --error-ink: #000;
+  --error-muted: #000;
+  --error-accent: #000;
+  --error-rule: #000;
+  background: #fff !important;
+  color: #000 !important;
+}
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .shell {
+  --error-paper: #000;
+  --error-ink: #fff;
+  --error-muted: #fff;
+  --error-accent: #fff;
+  --error-rule: #fff;
+  background: #000 !important;
+  color: #fff !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page :is(h1, h2, p, summary, code),
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page :is(h1, h2, p, summary, code),
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .shell :is(.brand, .footer),
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .shell :is(.brand, .footer) { color: var(--error-ink) !important; }
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .code, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .code { opacity: 1; }
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .title::after { background: var(--error-ink); }
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .header { background: var(--error-paper); }
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .artSurface, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .artSurface { background: transparent !important; }
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .art img, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .art img { filter: grayscale(1); }
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action {
+  border: 2px solid var(--error-ink) !important;
+  background: var(--error-paper) !important;
+  color: var(--error-ink) !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action[data-error-action="primary"],
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action[data-error-action="primary"] {
+  background: var(--error-ink) !important;
+  color: var(--error-paper) !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action[data-error-action="primary"] svg,
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action[data-error-action="primary"] svg *,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action[data-error-action="primary"] svg,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action[data-error-action="primary"] svg * {
+  color: var(--error-paper) !important;
+  stroke: var(--error-paper) !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action[data-error-action="secondary"] svg,
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .action[data-error-action="secondary"] svg *,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action[data-error-action="secondary"] svg,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .action[data-error-action="secondary"] svg *,
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page .artIcon,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .artIcon {
+  color: var(--error-ink) !important;
+  stroke: var(--error-ink) !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .shell .textLink, :global(:is(body.high-contrast, [data-error-contrast="high"])) .page .textLink,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .shell .textLink, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page .textLink {
+  background: transparent !important;
+  color: var(--error-ink) !important;
+}
+:global(:is(body.high-contrast, [data-error-contrast="high"])) .page :focus-visible, :global(:is(body.high-contrast, [data-error-contrast="high"])) .shell a:focus-visible,
+:global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .page :focus-visible, :global(:is(body.inverted-contrast, [data-error-contrast="inverted"])) .shell a:focus-visible {
+  outline: 3px solid var(--error-ink) !important;
+  outline-offset: 4px;
+}
+:global(body.reduce-motion) .page *, :global(body.sensory-friendly) .page * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+:global(body.reduce-motion) .motionControl, :global(body.sensory-friendly) .motionControl { display: none; }
+:global(body.sensory-friendly) .art img { filter: saturate(0.8); }
+@media (prefers-reduced-motion: reduce) {
+  .page * { animation: none !important; transition: none !important; transform: none !important; }
+  .motionControl { display: none; }
+}
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .page :is(.code, .eyebrow, .caption, .motionControl, .resource, .resourceIcon, .orbit),
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .shell .footer {
+  background: var(--error-paper) !important;
+  color: var(--error-ink) !important;
+  border-color: var(--error-ink) !important;
+  box-shadow: none !important;
+}
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .page :is(.code span, .resourceText, .belonging) {
+  color: var(--error-ink) !important;
+}
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .page :is(.orbit, .resourceIcon, .motionControl, .belonging) svg,
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .page :is(.orbit, .resourceIcon, .motionControl, .belonging) svg * {
+  color: var(--error-ink) !important;
+  stroke: var(--error-ink) !important;
+}
+:global(:is(body.high-contrast, body.inverted-contrast, [data-error-contrast="high"], [data-error-contrast="inverted"])) .artSurface::after { display: none; }
+@media (forced-colors: active) {
+  .page, .shell { background: Canvas !important; color: CanvasText !important; }
+  .action { border-color: ButtonText !important; background: ButtonFace !important; color: ButtonText !important; }
+  .artSurface { display: none; }
+  .code { opacity: 1; }
+  .page :focus-visible, .shell a:focus-visible { outline-color: Highlight !important; }
+}
+@media print {
+  .page, .shell {
+    --error-paper: #fff !important;
+    --error-ink: #000 !important;
+    --error-muted: #000 !important;
+    --error-accent: #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .action, .skip, .help, .reference button, .art, .motionControl { display: none !important; }
+  .title, .message, .code, .eyebrow, .footer { color: #000 !important; opacity: 1; }
+}
+
+
+

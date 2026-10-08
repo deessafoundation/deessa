@@ -27,8 +27,8 @@ export default function DemoIndex() {
       status: "ready"
     },
     {
-      title: "Error States",
-      description: "Error handling, validation, and error message patterns",
+      title: "Custom Error Pages",
+      description: "Illustrated 404, server, connection and access errors, with contrast, text size and retry previews",
       icon: AlertCircle,
       href: "/demo/errors",
       status: "ready"
