@@ -14,7 +14,7 @@ export interface PaymentSettings {
 // transfer instead (see lib/payments/bank-details.ts). The adapter and routes
 // remain in the tree but stay unreachable while KHALTI_SECRET_KEY is unset.
 const DEFAULT_PAYMENT_SETTINGS: PaymentSettings = {
-  enabledProviders: ["stripe", "esewa"],
+  enabledProviders: [],
   primaryProvider: "stripe",
   defaultCurrency: "USD",
   allowRecurring: false,
@@ -58,15 +58,17 @@ export async function getPaymentSettings(supabaseClient?: SupabaseClient): Promi
   const value = data.value as Partial<PaymentSettings>
 
   const merged: PaymentSettings = {
-    enabledProviders: value.enabledProviders && value.enabledProviders.length ? value.enabledProviders : DEFAULT_PAYMENT_SETTINGS.enabledProviders,
+    enabledProviders: Array.isArray(value.enabledProviders)
+      ? value.enabledProviders.filter((provider) => ["stripe", "khalti", "esewa"].includes(provider))
+      : DEFAULT_PAYMENT_SETTINGS.enabledProviders,
     primaryProvider: (value.primaryProvider as PaymentProvider) || DEFAULT_PAYMENT_SETTINGS.primaryProvider,
     defaultCurrency: (value.defaultCurrency as "USD" | "NPR") || DEFAULT_PAYMENT_SETTINGS.defaultCurrency,
     allowRecurring: typeof value.allowRecurring === "boolean" ? value.allowRecurring : DEFAULT_PAYMENT_SETTINGS.allowRecurring,
   }
 
-  // Ensure primary provider is in enabled list
+  // A default selection must never re-enable an administrator-disabled provider.
   if (!merged.enabledProviders.includes(merged.primaryProvider)) {
-    merged.enabledProviders = Array.from(new Set([...merged.enabledProviders, merged.primaryProvider]))
+    merged.primaryProvider = merged.enabledProviders[0] || DEFAULT_PAYMENT_SETTINGS.primaryProvider
   }
 
   return merged

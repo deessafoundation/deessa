@@ -1,6 +1,7 @@
 "use server"
 
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
+import { revalidatePath } from "next/cache"
 import { updateSiteSetting, getSiteSetting } from "@/lib/actions/admin-settings"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
 
@@ -45,6 +46,7 @@ export async function updatePaymentSettings(input: UpdateInput) {
     return { error: (result as any).error as string }
   }
 
+  revalidatePath("/donate")
   return { success: true }
 }
 
