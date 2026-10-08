@@ -1,4 +1,5 @@
 import Image from "next/image"
+import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import styles from "./whatwedo-hero.module.css"
@@ -39,7 +40,7 @@ const buttonBase = cn(
   "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3FABDE]/45 focus-visible:ring-offset-2",
 )
 
-export function WhatWeDoHero() {
+export function WhatWeDoHero({ content }: { content: WhatWeDoSettings["hero"] }) {
   return (
     <section
       id="whatwedo-hero"
@@ -59,7 +60,7 @@ export function WhatWeDoHero() {
               </Link>
             </li>
             <li aria-hidden="true">›</li>
-            <li aria-current="page">Programs</li>
+            <li aria-current="page">{content.breadcrumb}</li>
           </ol>
         </nav>
 
@@ -70,7 +71,7 @@ export function WhatWeDoHero() {
             "mb-3 font-comic text-[0.8125rem] uppercase tracking-[0.2em] text-[#1672A6] sm:text-[0.875rem]",
           )}
         >
-          MAKING A DIFFERENCE ACROSS NEPAL
+          {content.eyebrow}
         </p>
 
         {/* Introduction: heading left, copy + actions right */}
@@ -88,9 +89,9 @@ export function WhatWeDoHero() {
             )}
           >
             <span className="lg:block">
-              Programs{" "}
+              {content.headingStart}{" "}
               <span className="relative inline-block">
-                That
+                {content.headingEmphasis}
                 {/* Pink emphasis marks */}
                 <svg
                   aria-hidden="true"
@@ -107,9 +108,9 @@ export function WhatWeDoHero() {
               </span>
             </span>{" "}
             <span className="lg:block">
-              Change{" "}
+              {content.headingEnd}{" "}
               <span className={cn(styles.headingAccent, "relative inline-block text-[#3FABDE]")}>
-                Lives.
+                {content.headingAccent}
                 {/* Yellow underline */}
                 <svg
                   aria-hidden="true"
@@ -136,26 +137,25 @@ export function WhatWeDoHero() {
                 "max-w-[34rem] font-comic text-[1.125rem] leading-[1.6] text-[#334155] xl:text-[1.25rem]",
               )}
             >
-              From classrooms in Karnali to clinics in the Terai, our work brings sustainable education, healthcare, and
-              empowerment reaching Nepal&apos;s most remote communities.
+              {content.description}
             </p>
 
             <div className="mt-6 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap md:mt-7">
               <a
-                href="#programs"
+                href={content.primaryHref}
                 data-slot="button"
                 data-variant="default"
                 className={cn(styles.primaryBtn, buttonBase, "bg-[#0B5F8A] text-white hover:border-[#094E72] hover:bg-[#094E72]")}
               >
-                Explore Programs <span aria-hidden="true">↓</span>
+                {content.primaryLabel} <span aria-hidden="true">↓</span>
               </a>
               <Link
-                href="/donate"
+                href={content.secondaryHref}
                 data-slot="button"
                 data-variant="outline"
                 className={cn(styles.secondaryBtn, buttonBase, "bg-white text-[#0B5F8A] hover:bg-[#E8F6FC]")}
               >
-                Donate to a Program <span aria-hidden="true">→</span>
+                {content.secondaryLabel} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
@@ -216,13 +216,14 @@ export function WhatWeDoHero() {
               "md:h-[280px] md:grid-cols-[46fr_26fr_28fr] md:gap-3.5 lg:h-[320px] lg:gap-4 xl:h-[350px]",
             )}
           >
-            {heroPhotos.map((photo) => (
+            {heroPhotos.map((layout, index) => { const photo = { ...layout, ...content.photos[index] }; return (
               <figure
                 key={photo.src}
                 className={cn(styles.photo, "relative m-0 overflow-hidden rounded-[20px] bg-[#E8F6FC]", photo.frame)}
               >
                 <Image
                   src={photo.src}
+                  unoptimized={photo.src.startsWith("https://")}
                   alt={photo.alt}
                   fill
                   sizes={photo.sizes}
@@ -231,7 +232,7 @@ export function WhatWeDoHero() {
                   className={cn("object-cover", photo.crop)}
                 />
               </figure>
-            ))}
+            )})}
           </div>
         </div>
       </div>

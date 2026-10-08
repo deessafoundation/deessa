@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { HomepageImage } from "./homepage-image"
 import styles from "./homepage-sections.module.css"
+import pillarCard from "./home-pillar-card.module.css"
 import Link from "next/link"
 import podcastBanner from "@/public/podcast_banner.jpeg"
 import {
@@ -198,9 +199,10 @@ export function MissionVisionSection() {
             eyebrow="Our Direction"
             title={
               <>
-                Mission, Vision <span className="font-normal">&</span> Objectives
+                Mission, Vision <span className="font-normal">&</span>
               </>
             }
+            accent="Objectives"
             // One navy line on phones too; it still wraps at large text sizes instead of overflowing.
             titleClassName="text-2xl leading-[1.15] sm:text-[2.5rem] lg:text-[3.25rem]"
             intro={<>Guided by clear values and a bold vision for Nepal&apos;s future.</>}
@@ -334,7 +336,6 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
             eyebrow={w.eyebrow}
             title={heading.lead}
             accent={heading.accent}
-            underline={false}
             intro={w.subtitle}
           />
         </ScrollReveal>
@@ -352,27 +353,24 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                 <Link
                   href={`/whatwedo/${pillar.id}`}
                   aria-label={`Explore ${pillar.title}`}
+                  data-tone={getHomeTone(pillar.color, idx)}
                   className={cn(
-                    homeUi.card,
-                    homeUi.cardInteractive,
-                    "group relative flex h-full flex-col overflow-hidden",
+                    pillarCard.card,
+                    "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-visible:outline-none",
                   )}
                 >
-                  <div className="flex flex-1 flex-col p-5 text-center sm:p-8">
-                    <p className={cn(homeUi.muted, "mb-4 text-xs font-bold uppercase tracking-wider")}>
-                      {pillar.statLabel}
-                    </p>
-                    <div
-                      data-pillar-icon
-                      className={cn(
-                        homeUi.iconCircle,
-                        HOME_TONES[getHomeTone(pillar.color, idx)],
-                        "mx-auto mb-4 size-16 sm:mb-6",
-                      )}
-                    >
-                      <IconComp aria-hidden="true" className="size-8" strokeWidth={1.8} />
-                    </div>
-                    <h3 className={cn(homeUi.heading, "mb-3 text-xl")}>
+                  <span aria-hidden="true" className={pillarCard.blob} />
+                  <span aria-hidden="true" data-pillar-icon className={pillarCard.icon}>
+                    <IconComp className="size-6" strokeWidth={1.9} />
+                  </span>
+                  <div className="flex flex-1 flex-col p-6 text-left sm:p-7">
+                    {pillar.statLabel ? (
+                      <p className={cn(pillarCard.tag, "font-comic")}>
+                        <span aria-hidden="true" className={pillarCard.tagDot} />
+                        {pillar.statLabel}
+                      </p>
+                    ) : null}
+                    <h3 className={cn(homeUi.heading, pillarCard.title, "mb-3 mt-12 text-[1.3rem] leading-snug")}>
                       {pillar.title.split("&").map((part, i, arr) =>
                         i === arr.length - 1 ? (
                           <span key={i}>{part}</span>
@@ -384,10 +382,19 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                         )
                       )}
                     </h3>
-                    <p className={cn(homeUi.body, "text-sm sm:text-sm")}>{pillar.description}</p>
-                    <span className="mt-auto inline-flex items-center justify-center gap-2 pt-6 font-comic text-sm font-bold text-[#006E9E]">
-                      Explore this area
-                      <ArrowRight aria-hidden="true" className={homeUi.buttonArrow} />
+                    <p className={cn(pillarCard.desc, "font-comic text-[0.95rem] leading-relaxed")}>
+                      {pillar.description}
+                    </p>
+                    <span
+                      className={cn(
+                        pillarCard.cta,
+                        "mt-auto flex items-center justify-between gap-3 pt-7 font-comic text-[0.95rem] font-bold",
+                      )}
+                    >
+                      <span className={pillarCard.ctaLabel}>Explore this area</span>
+                      <span aria-hidden="true" className={pillarCard.ctaArrow}>
+                        <ArrowRight className="size-4" />
+                      </span>
                     </span>
                   </div>
                 </Link>

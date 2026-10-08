@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Fragment, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { motion, useScroll } from "framer-motion"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
@@ -22,6 +22,8 @@ import {
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { OrgStructure } from "./OrgStructure"
+import { homeUi } from "@/components/home/home-ui"
+import { splitHeadingAccent } from "@/components/home/home-tone"
 import introStyles from "./about-intro.module.css"
 import aboutSectionStyles from "./about-sections.module.css"
 
@@ -59,14 +61,70 @@ const partnerCategories = [
   { icon: Trees, label: "Environment", bg: "bg-emerald-50", iconColor: "text-emerald-500" },
 ]
 
+/**
+ * Team portrait that survives a failed or interrupted image request: it retries once with a cache-busting
+ * query, then falls back to the initial-letter tile instead of leaving a broken-image box with alt text.
+ * The mount check catches errors that fired before React hydrated (onError would miss those).
+ */
+function TeamPortrait({ src, name, active }: { src: string | null; name: string; active: boolean }) {
+  const [attempt, setAttempt] = useState(0)
+  const imgRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    const img = imgRef.current
+    if (img && img.complete && img.naturalWidth === 0) setAttempt((a) => a + 1)
+  }, [])
+
+  if (!src || attempt >= 2) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#29b6c8]/10 to-[#29b6c8]/5">
+        <span className="font-marissa text-6xl font-medium" style={{ color: TEAL }}>
+          {name.charAt(0)}
+        </span>
+      </div>
+    )
+  }
+
+  const url = attempt === 0 ? src : `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      key={attempt}
+      ref={imgRef}
+      src={url}
+      alt={name}
+      decoding="async"
+      onError={() => setAttempt((a) => a + 1)}
+      className={`h-full w-full object-cover transition-all duration-700 ${active ? "scale-105 saturate-100" : "scale-100 saturate-0"}`}
+    />
+  )
+}
+
+/** Navy heading with one highlighted phrase (ocean blue + yellow paint stroke), same as the homepage headings. */
+function AccentHeading({ lead, accent }: { lead?: string; accent?: string }) {
+  return (
+    <>
+      {lead}
+      {accent ? (
+        <>
+          {lead ? " " : null}
+          <span className={homeUi.accent}>{accent}</span>
+        </>
+      ) : null}
+    </>
+  )
+}
+
 function SectionHeader({
   label,
   title,
+  accent,
   sub,
   level = 2,
 }: {
   label: string
-  title: React.ReactNode
+  title?: string
+  accent?: string
   sub?: string
   level?: 2 | 3 | 4
 }) {
@@ -76,8 +134,8 @@ function SectionHeader({
       <span className="font-comic mb-3 block text-xs font-bold uppercase tracking-widest about-teal-text">
         {label}
       </span>
-      <HeadingTag className="font-marissa text-3xl font-medium leading-[1.25] md:text-[40px] about-heading-dark">
-        {title}
+      <HeadingTag className={`${homeUi.heading} text-3xl leading-[1.25] md:text-[40px] about-heading-dark`}>
+        <AccentHeading lead={title} accent={accent} />
       </HeadingTag>
       {sub && <p className="font-comic mt-4 text-base leading-relaxed text-[#6b7280] sm:text-lg">{sub}</p>}
     </motion.div>
@@ -95,6 +153,15 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
   const introContent = intro || DEFAULT_ABOUT_PAGE_SETTINGS.intro
   const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
   const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
+  // "...just as they are." reads better highlighted as a phrase than as the single word "are."
+  const introHeading = /just as they are\.?$/i.test(introContent.headline.trim())
+    ? (() => {
+        const words = introContent.headline.trim().split(/\s+/)
+        return { lead: words.slice(0, -4).join(" "), accent: words.slice(-4).join(" ") }
+      })()
+    : splitHeadingAccent(introContent.headline)
+  const howWeDoItHeading = splitHeadingAccent(howWeDoItContent.title)
+  const journeyHeading = splitHeadingAccent(journeyContent.title)
   const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
   const { preferences } = useAccessibility()
@@ -124,7 +191,9 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           </div>
           <div className={introStyles.content}>
             <p className={introStyles.label}>{introContent.label}</p>
-            <h2 id="about-intro-title" className={introStyles.title}>{introContent.headline}</h2>
+            <h2 id="about-intro-title" className={introStyles.title}>
+              <AccentHeading lead={introHeading.lead} accent={introHeading.accent} />
+            </h2>
             <div className={introStyles.paragraphs}>
               {introContent.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
             </div>
@@ -161,7 +230,8 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="How We Do It"
-            title={howWeDoItContent.title}
+            title={howWeDoItHeading.lead}
+            accent={howWeDoItHeading.accent}
             sub={howWeDoItContent.subtitle}
           />
 
@@ -220,7 +290,8 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader
             label={journeyContent.label}
-            title={journeyContent.title}
+            title={journeyHeading.lead}
+            accent={journeyHeading.accent}
             sub={journeyContent.subtitle}
           />
 
@@ -312,14 +383,9 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <SectionHeader
             label="Our People"
-            title={
-              <>
-                Meet the{" "}
-                <span className="text-[#0b76b7]" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-                  Changemakers
-                </span>
-              </>
-            }
+            title="Meet the"
+            accent="Changemakers"
+
             sub="Our diverse team of passionate individuals working tirelessly on the ground and behind the scenes."
           />
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
@@ -351,19 +417,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                   }}
                 >
                   <div className="relative aspect-[4/5.5] overflow-hidden rounded-t-2xl">
-                    {member.image ? (
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className={`h-full w-full object-cover transition-all duration-700 ${isActive ? "scale-105 saturate-100" : "scale-100 saturate-0"}`}
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#29b6c8]/10 to-[#29b6c8]/5">
-                        <span className="font-marissa text-6xl font-medium" style={{ color: TEAL }}>
-                          {member.name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
+                    <TeamPortrait src={member.image} name={member.name} active={isActive} />
 
                     {/* Bottom overlay, name & role + bio + social */}
                     <div
@@ -440,8 +494,9 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
               <span className="font-comic mb-1 block text-xs font-bold uppercase tracking-widest text-[#15151c]">
                 Collaboration
               </span>
-              <h2 className="font-marissa text-2xl font-medium text-[#0b76b7] md:text-3xl" style={{ WebkitTextStroke: "0.7px currentColor" }}>
-                Our Partners <span className="font-comic-num">&</span> Supporters
+              <h2 className={`${homeUi.heading} text-2xl md:text-3xl`}>
+                Our Partners <span className="font-comic-num">&</span>{" "}
+                <span className={homeUi.accent}>Supporters</span>
               </h2>
               <p className="font-dm-sans mt-2 text-[15px] text-[#6b7280]">
                 Working across sectors with organizations who share our vision.

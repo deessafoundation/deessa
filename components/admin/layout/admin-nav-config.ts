@@ -55,6 +55,7 @@ export const adminNavSections: AdminNavSection[] = [
     items: [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
       { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
+      { name: "What We Do", href: "/admin/what-we-do", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },
       { name: "Artworks", href: "/admin/artworks", icon: Palette, permission: "settings", description: "Art gallery & homepage feature" },
       { name: "Projects", href: "/admin/projects", icon: FolderKanban, permission: "projects" },

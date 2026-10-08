@@ -1,0 +1,242 @@
+/* /whatwedo "four core areas" cards.
+   Same family as the homepage pillar cards (white surface, soft sky shadow, pastel icon, Marissa title,
+   black comic copy) but with their own identity: left-aligned, a tinted header band with a numbered
+   icon tile, a solid accent bar and a divider footer with an arrow chip.
+   Per-area colours come from the data-accent attribute so no bg-[#…]/text-[#…] utilities are needed
+   (those are repainted by app/globals.css in high-contrast mode). No gradients on purpose.
+   Doubled classes (.x.x) outrank app/globals.css attribute rules regardless of chunk order. */
+
+.card {
+  --pillar-accent: #0b6fa4;
+  --pillar-tint: #e4f5fd;
+  --pillar-bar: #3fabde;
+  --pillar-border: #d7eef9;
+
+  background: #fff;
+  color: #0a0a0a;
+  border: 1px solid var(--pillar-border);
+  box-shadow: 0 8px 35px rgba(52, 112, 150, 0.08);
+  text-decoration: none;
+  transition:
+    translate 300ms ease-out,
+    box-shadow 300ms ease-out,
+    border-color 300ms ease-out;
+}
+
+.card[data-accent="mint"] {
+  --pillar-accent: #1f7a62;
+  --pillar-tint: #e6f6f1;
+  --pillar-bar: #3dbf9d;
+  --pillar-border: #cdeee4;
+}
+
+.card[data-accent="sunny"] {
+  --pillar-accent: #9a6a00;
+  --pillar-tint: #fff6df;
+  --pillar-bar: #f7c52b;
+  --pillar-border: #f8e7b5;
+}
+
+.card[data-accent="lavender"] {
+  --pillar-accent: #6f3e96;
+  --pillar-tint: #f3eeff;
+  --pillar-bar: #9b6cc2;
+  --pillar-border: #e6ddfb;
+}
+
+.card:hover {
+  translate: 0 -6px;
+  border-color: var(--pillar-bar);
+  box-shadow: 0 18px 44px rgba(52, 112, 150, 0.16);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--pillar-accent);
+  outline-offset: 3px;
+}
+
+.bar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: var(--pillar-bar);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.5rem 1.25rem;
+  background: var(--pillar-tint);
+  border-bottom: 1px solid var(--pillar-border);
+}
+
+.iconTile {
+  display: flex;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: #fff;
+  color: var(--pillar-accent);
+  box-shadow: 0 6px 16px -6px rgba(52, 112, 150, 0.35);
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out,
+    rotate 300ms ease-out;
+}
+
+.card:hover .iconTile,
+.card:focus-visible .iconTile {
+  background: var(--pillar-accent);
+  color: #fff;
+  rotate: -6deg;
+}
+
+/* Decorative step number (aria-hidden in the markup). */
+.index {
+  color: var(--pillar-accent);
+  opacity: 0.35;
+  line-height: 1;
+}
+
+.footer {
+  border-top: 1px solid var(--pillar-border);
+}
+
+.chip {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--pillar-tint);
+  color: var(--pillar-accent);
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out;
+}
+
+.chipIcon {
+  transition: translate 200ms ease-out;
+}
+
+.card:hover .chip,
+.card:focus-visible .chip {
+  background: var(--pillar-accent);
+  color: #fff;
+}
+
+.card:hover .chipIcon,
+.card:focus-visible .chipIcon {
+  translate: 2px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .iconTile,
+  .chip,
+  .chipIcon {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:focus-visible .iconTile,
+  .card:hover .iconTile,
+  .card:hover .chipIcon,
+  .card:focus-visible .chipIcon {
+    translate: none;
+    rotate: none;
+  }
+}
+
+:global(body.reduce-motion) .card.card,
+:global(body.sensory-friendly) .card.card,
+:global(body.reduce-motion) .iconTile.iconTile,
+:global(body.sensory-friendly) .iconTile.iconTile,
+:global(body.reduce-motion) .chipIcon.chipIcon,
+:global(body.sensory-friendly) .chipIcon.chipIcon {
+  transition: none !important;
+}
+
+:global(body.reduce-motion) .card.card:hover,
+:global(body.sensory-friendly) .card.card:hover,
+:global(body.reduce-motion) .card:hover .iconTile,
+:global(body.sensory-friendly) .card:hover .iconTile,
+:global(body.reduce-motion) .card:hover .chipIcon,
+:global(body.sensory-friendly) .card:hover .chipIcon {
+  translate: none !important;
+  rotate: none !important;
+}
+
+/* High contrast: white surface, black ink and borders, black icons on white tiles. */
+:global(body.high-contrast) .card.card {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .card.card:focus-visible {
+  outline: 3px solid #000 !important;
+}
+
+:global(body.high-contrast) .card.card * {
+  color: #000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .bar.bar {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .head.head {
+  background: #fff !important;
+  border-bottom: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .footer.footer {
+  border-top: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .iconTile.iconTile,
+:global(body.high-contrast) .card:hover .iconTile.iconTile,
+:global(body.high-contrast) .card:focus-visible .iconTile.iconTile,
+:global(body.high-contrast) .chip.chip,
+:global(body.high-contrast) .card:hover .chip.chip,
+:global(body.high-contrast) .card:focus-visible .chip.chip {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .iconTile svg,
+:global(body.high-contrast) .chip svg {
+  stroke: #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .index.index {
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .card,
+  .iconTile,
+  .chip {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media print {
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,41 @@
+:global(body.high-contrast) .story,
+:global(body.inverted-contrast) .story {
+  background: var(--a11y-paper) !important;
+  border: 2px solid var(--a11y-ink) !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .copy,
+:global(body.high-contrast) .copy *,
+:global(body.inverted-contrast) .copy,
+:global(body.inverted-contrast) .copy * {
+  color: var(--a11y-ink) !important;
+}
+
+:global(body.high-contrast) .story button,
+:global(body.inverted-contrast) .story button {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .story button span,
+:global(body.inverted-contrast) .story button span {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+:global(body.high-contrast) .story button svg,
+:global(body.high-contrast) .story button svg *,
+:global(body.inverted-contrast) .story button svg,
+:global(body.inverted-contrast) .story button svg * {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .story button:focus-visible,
+:global(body.inverted-contrast) .story button:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: -6px;
+}
