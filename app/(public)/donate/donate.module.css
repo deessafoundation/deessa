@@ -1,0 +1,99 @@
+.page {
+  background: #fff;
+  color: #145879;
+  font-family: var(--font-comic-neue, "Comic Neue"), sans-serif;
+}
+
+:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .page :is(h1, h2, h3) {
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-weight: 400;
+  -webkit-text-stroke: 0.6px currentColor;
+}
+
+.hero { background: #fffcf6; color: #145879; }
+.heroHeading { color: #063f5b; }
+.heroAccent { color: #1a8ac2; }
+.heroCopy { color: #445e7b; }
+.heroEdge { color: #fff; }
+.photoFrame { background: #fffdf8; border: 1px solid #e5ded3; box-shadow: 0 16px 28px -12px #63421e55; color: #145879; }
+.tape { background: #f5cf62; opacity: 0.9; }
+.primaryLink { background: #00678c; color: #fff; box-shadow: 0 10px 20px -6px #005b7b40; }
+.primaryLink:hover { background: #085674; }
+.secondaryLink { background: #fff; color: #0b5f8a; border-color: #91bed2; }
+.secondaryLink:hover { background: #eef8fd; }
+.supportNote { background: #eef8fd; color: #145879; }
+
+.accent, .textLink { color: #086486; }
+.impact { background: #fffcf6; }
+.other { background: #eef8fd; color: #145879; }
+.other a { color: #0b5f8a; }
+.faq summary::marker { color: #086486; }
+.faq[open] summary { color: #086486; }
+.page :is(a, summary):focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+.page ::selection { background: #c9e8df; color: #153f3a; }
+
+:global(.dark) .accent, :global(.dark) .textLink,
+:global(.dark) .faq[open] summary { color: #8ad9e6; }
+
+:global(body.high-contrast) .page,
+:global(body.inverted-contrast) .page {
+  --donate-paper: #fff;
+  --donate-ink: #000;
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+}
+:global(body.inverted-contrast) .page { --donate-paper: #000; --donate-ink: #fff; }
+:global(body.high-contrast) .page :is(h1, h2, h3, p, span, a, summary, svg),
+:global(body.inverted-contrast) .page :is(h1, h2, h3, p, span, a, summary, svg) {
+  color: var(--donate-ink) !important;
+}
+:global(body.high-contrast) .page :is(.caption, .impact, .other),
+:global(body.inverted-contrast) .page :is(.caption, .impact, .other) {
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  border-block: 2px solid var(--donate-ink);
+}
+:global(body.high-contrast) .page :is(.hero, .supportNote, .photoFrame, .giftNote),
+:global(body.inverted-contrast) .page :is(.hero, .supportNote, .photoFrame, .giftNote) {
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  box-shadow: none !important;
+  border-color: var(--donate-ink) !important;
+}
+:global(body.high-contrast) .page .decor,
+:global(body.inverted-contrast) .page .decor { display: none !important; }
+:global(body.high-contrast) .page a.primaryLink,
+:global(body.inverted-contrast) .page a.primaryLink {
+  background: var(--donate-ink) !important;
+  color: var(--donate-paper) !important;
+  border: 2px solid var(--donate-ink) !important;
+}
+:global(body.high-contrast) .page a.primaryLink *,
+:global(body.inverted-contrast) .page a.primaryLink * {
+  color: var(--donate-paper) !important;
+  stroke: var(--donate-paper) !important;
+}
+:global(body.high-contrast) .page a.secondaryLink,
+:global(body.inverted-contrast) .page a.secondaryLink {
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  border: 2px solid var(--donate-ink) !important;
+}
+:global(body.high-contrast) .page :is(h1, h2, h3),
+:global(body.inverted-contrast) .page :is(h1, h2, h3) { -webkit-text-stroke: 0 !important; }
+:global(body.high-contrast) .page img,
+:global(body.inverted-contrast) .page img { filter: grayscale(1); }
+:global(body.high-contrast) .page svg,
+:global(body.inverted-contrast) .page svg { stroke: var(--donate-ink) !important; }
+
+@media (forced-colors: active) {
+  .decor { display: none; }
+  .primaryLink, .secondaryLink, .photoFrame { border: 2px solid ButtonText; }
+  .other, .caption { background: Canvas; color: CanvasText; }
+  .other a, .textLink { color: LinkText; }
+}
+
+@media print {
+  .decor { display: none; }
+  .page, .other, .caption, .impact { background: #fff; color: #000; }
+}

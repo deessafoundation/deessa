@@ -1,0 +1,65 @@
+.options { color: var(--foreground); }
+.form {
+  background: #fff;
+  color: #145879;
+  border: 1px solid #d7eaf4;
+  box-shadow: 0 16px 40px -20px #0b5f8a30;
+}
+.accent { color: #086486; }
+.choice {
+  background: var(--background);
+  color: var(--foreground);
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.choice:hover:not(:disabled) { background: color-mix(in srgb, var(--background) 88%, #83b5aa); }
+.choice[aria-pressed="true"] { background: #e8f6fc; color: #084e70; border-color: #3fabde; box-shadow: inset 0 0 0 1px #3fabde; }
+.choice:disabled { opacity: 0.55; cursor: not-allowed; }
+.input { background: var(--background); color: var(--foreground); caret-color: #086486; }
+.input::placeholder { color: var(--foreground-muted); opacity: 1; }
+.summary { background: #fff7df; color: #145879; }
+.submit { background: #086486; color: #fff; }
+.submit:hover { background: #064f6a; }
+.submit:disabled { opacity: 0.6; }
+.form :is(button, input, textarea, a):focus-visible { outline: 3px solid #086486; outline-offset: 3px; }
+:global(.dark) .summary, :global(.dark) .choice[aria-pressed="true"] { background: #153f3a; color: #d9f3eb; }
+
+:global(body.high-contrast) :is(.form, .options),
+:global(body.inverted-contrast) :is(.form, .options) {
+  --donate-paper: #fff;
+  --donate-ink: #000;
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  border: 2px solid var(--donate-ink) !important;
+}
+:global(body.inverted-contrast) :is(.form, .options) { --donate-paper: #000; --donate-ink: #fff; }
+:global(body.high-contrast) :is(.form, .options) :is(.choice, .input, .summary),
+:global(body.inverted-contrast) :is(.form, .options) :is(.choice, .input, .summary) {
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  border: 2px solid var(--donate-ink) !important;
+  box-shadow: none !important;
+}
+:global(body.high-contrast) :is(.form, .options) .choice[aria-pressed="true"],
+:global(body.inverted-contrast) :is(.form, .options) .choice[aria-pressed="true"],
+:global(body.high-contrast) :is(.form, .options) .submit,
+:global(body.inverted-contrast) :is(.form, .options) .submit {
+  background: var(--donate-ink) !important;
+  color: var(--donate-paper) !important;
+  border: 2px solid var(--donate-ink) !important;
+  text-decoration: underline;
+}
+:global(body.high-contrast) :is(.form, .options) .choice[aria-pressed="true"] *,
+:global(body.inverted-contrast) :is(.form, .options) .choice[aria-pressed="true"] *,
+:global(body.high-contrast) :is(.form, .options) .submit *,
+:global(body.inverted-contrast) :is(.form, .options) .submit * {
+  color: var(--donate-paper) !important;
+  stroke: var(--donate-paper) !important;
+}
+:global(body.high-contrast) :is(.form, .options) :is(button, input, textarea, a):focus-visible,
+:global(body.inverted-contrast) :is(.form, .options) :is(button, input, textarea, a):focus-visible { outline-color: var(--donate-ink); }
+
+@media (prefers-reduced-motion: reduce) { .choice { transition: none; } }
+@media (forced-colors: active) {
+  .choice[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -3px; }
+  .submit { border: 2px solid ButtonText; }
+}

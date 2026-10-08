@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Heart, Shield, CreditCard, Repeat, CheckCircle, HelpCircle, Search } from "lucide-react"
-import { Section } from "@/components/ui/section"
-import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import { Heart, ArrowDown, ArrowUpRight, Shield, Search, BookOpen, Stethoscope, GraduationCap, Scissors, Droplets, School } from "lucide-react"
+import styles from "./donate.module.css"
+import { GivingOptions } from "@/components/donations/giving-options"
 import { DonationForm } from "@/components/donations/donation-form"
 import { BankTransferPanel } from "@/components/donations/bank-transfer-panel"
 import { getPaymentSettings, getSupportedProviders } from "@/lib/payments/config"
@@ -82,225 +83,88 @@ export default async function DonatePage() {
   const enabledProviders = getSupportedProviders(settings)
   const bankAccounts = getConfiguredBankAccounts()
 
+  const impactIcons = [BookOpen, Stethoscope, GraduationCap, Scissors, Droplets, School]
+
   return (
-    <>
-      {/* Hero Section */}
-      <section data-a11y-hero="photo" className="relative">
-        <div className="w-full min-h-[400px] relative overflow-hidden">
-          <div
-            data-a11y-photo
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7QgNEezbRHOt2MsvhmSehLCgOGp-3Um_oszh8418RlOSNyKzKOAhE5NsQkDGMiBytNLDU2yZh9PPHBg-AYg6BmnCa9iG8LQBC0_lkUqCrL4pJFU_So2-85IGkW34ZrQ6498mPet2J-ZYQLaHBN8o5wxwRN8c0jN5NXm81cUsCLvJIGZ-VL3p_FnKi-Nyw5LH9A9KrRzWbDzOsq255qtzgFx6N2X4ExaQ3QQWfCMH4LB-YcibEcm4plH8CXVi_GIywspD8opz3dl4")`,
-            }}
-          />
-          <div data-a11y-hero-copy className="relative z-10 min-h-[inherit] py-12 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
-            <Heart className="size-14 text-primary mb-4 fill-primary" />
-            <h1 className="text-white text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">
-              Your Generosity Changes Lives
-            </h1>
-            <p className="text-white/90 text-lg font-medium max-w-2xl leading-relaxed">
-              Every donation, no matter the size, directly impacts families and communities across Nepal.
-            </p>
+    <div className={styles.page}>
+      <section aria-labelledby="donate-heading" className={`${styles.hero} relative isolate overflow-hidden`}>
+        <div aria-hidden="true" className={`${styles.decor} pointer-events-none absolute -right-24 -top-16 h-[500px] w-[700px] opacity-40`}>
+          <Image src="/artWork/art-watercolor-splash.webp" alt="" fill sizes="700px" className="object-fill" />
+        </div>
+        <div className="relative mx-auto max-w-[1440px] px-5 pb-16 pt-6 sm:px-8 lg:px-16 lg:pb-20">
+          <nav aria-label="Breadcrumb" className="mb-10 text-sm"><ol className="flex items-center gap-2"><li><Link href="/" className="inline-block py-3 hover:underline">Home</Link></li><li aria-hidden="true">›</li><li aria-current="page">Donate</li></ol></nav>
+          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+            <div className="relative">
+              <h1 id="donate-heading" className={`${styles.heroHeading} text-balance text-[clamp(2.5rem,7vw,4rem)] leading-[1.15]`}>
+                A little kindness.<br />
+                <span className={`${styles.heroAccent} relative inline-block pb-4`}>A world of possibility.
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 500 24" preserveAspectRatio="none" className={`${styles.decor} pointer-events-none absolute bottom-0 left-0 h-3 w-full`}><path d="M4 17C99 6 218 3 335 7C406 8 460 10 495 14C359 12 194 14 5 23Z" fill="#f7bd09" /></svg>
+                </span>
+              </h1>
+              <p className={`${styles.heroCopy} mt-6 max-w-xl text-lg leading-relaxed sm:text-xl`}>Help children and families across Nepal feel understood, included, and supported. Every gift makes room for learning, creativity, and connection.</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <a href="#giving-options" data-a11y-control="" className={`${styles.primaryLink} inline-flex min-h-14 items-center justify-center gap-3 rounded-full px-8 py-3 text-lg font-bold`}>Give with love <Heart aria-hidden="true" className="size-5" /></a>
+                <a href="#impact-heading" className={`${styles.secondaryLink} inline-flex min-h-14 items-center justify-center gap-3 rounded-full border px-7 py-3 text-lg font-bold`}>See your impact <ArrowDown aria-hidden="true" className="size-5" /></a>
+              </div>
+              <p className={`${styles.heroCopy} mt-6 flex items-center gap-2 text-sm`}><Shield aria-hidden="true" className="size-4 shrink-0" />A secure way to support a kinder tomorrow.</p>
+            </div>
+            <div className="relative mx-auto w-full max-w-xl pb-8 pl-3 pr-5 pt-4 sm:pr-10">
+              <div aria-hidden="true" className={`${styles.decor} pointer-events-none absolute -inset-5 opacity-65`}><Image src="/artWork/art-watercolor-splash.webp" alt="" fill sizes="650px" className="object-fill" /></div>
+              <figure className={`${styles.photoFrame} relative -rotate-3 p-3 pb-5 sm:p-4 sm:pb-6`}>
+                <span aria-hidden="true" className={`${styles.tape} ${styles.decor} absolute -top-3 left-1/2 z-10 h-7 w-24 -translate-x-1/2 rotate-6`} />
+                <div className="relative aspect-[4/3] overflow-hidden"><Image src="/home/hero/art_banner.jpeg" alt="Children sharing a creative activity together" fill sizes="(max-width: 1023px) 90vw, 44vw" className="object-cover" /></div>
+                <figcaption className="px-2 pt-5 text-center text-base">More moments to learn, create, and belong.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 1440 50" preserveAspectRatio="none" className={`${styles.heroEdge} ${styles.decor} pointer-events-none absolute inset-x-0 bottom-0 h-7 w-full`}><path d="M0 24Q180 48 360 26T720 25T1080 30T1440 18V50H0Z" fill="currentColor" /></svg>
+      </section>
+
+      <section aria-labelledby="giving-heading" className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+        <div className="mb-10 text-center"><h2 id="giving-heading" className="text-3xl leading-tight sm:text-4xl">Let&apos;s make a difference, together.</h2><p className="mt-4 text-lg text-foreground-muted">A one-time kindness or a little love each month. It all matters.</p></div>
+        <GivingOptions
+          onlineAvailable={enabledProviders.length > 0}
+          online={<DonationForm tiers={donationTiers} enabledProviders={enabledProviders} primaryProvider={settings.primaryProvider} defaultCurrency={settings.defaultCurrency} />}
+          bank={bankAccounts.length > 0 ? <BankTransferPanel accounts={bankAccounts} /> : undefined}
+        />
+        <div className="mx-auto mt-10 flex max-w-3xl flex-col items-center gap-5 border-t border-border pt-6 text-center sm:flex-row sm:justify-between sm:text-left">
+          <p className="flex items-center gap-2 text-sm text-foreground-muted"><Shield aria-hidden="true" className="size-4 shrink-0" />Secure payments. Support when you need it.</p>
+          <Link href="/verify" className={`${styles.textLink} inline-flex min-h-11 items-center gap-2 text-sm font-bold`}><Search aria-hidden="true" className="size-4" />Verify your receipt<ArrowUpRight aria-hidden="true" className="size-4" /></Link>
+        </div>
+
+      </section>
+
+      <section aria-labelledby="impact-heading" className={`border-y border-border ${styles.impact}`}>
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-12">
+            <h2 id="impact-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">A gift becomes<br />a real possibility.</h2>
+            <p className="max-w-lg self-end leading-relaxed text-foreground-muted">Here&apos;s how your donation translates into real change on the ground. The examples below are in US dollars.</p>
+          </div>
+          <div className="mt-10 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+            {donationTiers.map((tier, index) => {
+              const Icon = impactIcons[index]
+              return <div key={tier.amount} className="flex items-start gap-4 border-t border-border py-7"><Icon aria-hidden="true" className={`mt-1 size-6 shrink-0 ${styles.accent}`} /><div><p className="text-2xl font-bold tabular-nums">${tier.amount}</p><p className="mt-1 text-sm text-foreground-muted">{tier.impact}</p></div></div>
+            })}
           </div>
         </div>
       </section>
 
-      {/* Donation Form Section */}
-      <Section className="bg-gradient-to-b from-background via-surface/50 to-background py-16 md:py-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8 items-start">
-            {/* Form Column - Takes 2 columns on large screens */}
-            <div className="lg:col-span-2">
-              <DonationForm
-                tiers={donationTiers}
-                enabledProviders={enabledProviders}
-                primaryProvider={settings.primaryProvider}
-                defaultCurrency={settings.defaultCurrency}
-              />
-
-              {bankAccounts.length > 0 && (
-                <div className="mt-8">
-                  <BankTransferPanel accounts={bankAccounts} />
-                </div>
-              )}
-            </div>
-            
-            {/* Info Sidebar - Takes 1 column on large screens */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="bg-surface border border-border rounded-2xl p-6 shadow-lg">
-                <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                  <Shield className="size-5 text-primary" />
-                  Secure & Trusted
-                </h3>
-                <p className="text-sm text-foreground-muted mb-4">
-                  All payments are processed through industry-leading secure payment gateways. Your financial information is never stored on our servers.
-                </p>
-              </div>
-
-              <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-6">
-                <h3 className="font-bold text-foreground mb-3">Why Donate?</h3>
-                <ul className="space-y-2 text-sm text-foreground-muted">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="size-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>100% of funds go directly to programs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="size-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Tax-deductible receipts provided</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="size-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Transparent impact reporting</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="size-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Cancel anytime for monthly donations</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Link href="/verify" className="block bg-surface border border-border rounded-2xl p-5 hover:border-primary/40 hover:shadow-md transition-all group">
-                <div className="flex items-center gap-3">
-                  <div className="size-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Search className="size-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">Already donated?</p>
-                    <p className="text-xs text-foreground-muted">Verify your receipt →</p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </div>
+      <section aria-labelledby="faq-heading" className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div><h2 id="faq-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">Good questions.<br />Clear answers.</h2><p className="mt-5 text-foreground-muted">Need a little help before giving?</p><Link href="/contact" className={`mt-3 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4 ${styles.textLink}`}>Talk to our team <ArrowUpRight aria-hidden="true" className="size-4" /></Link></div>
+        <div className="min-w-0">
+          {faqs.map((faq) => <details key={faq.question} className={`border-b border-border py-5 ${styles.faq}`}><summary className="cursor-pointer pr-3 text-lg font-semibold">{faq.question}</summary><p className="mt-4 max-w-2xl leading-relaxed text-foreground-muted">{faq.answer}</p></details>)}
         </div>
-      </Section>
+      </section>
 
-      {/* Trust Indicators */}
-      <Section className="bg-background">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="size-14 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
-              <Shield className="size-7" />
-            </div>
-            <h3 className="font-bold text-foreground mb-2">100% Secure</h3>
-            <p className="text-sm text-foreground-muted">Your payment is encrypted and processed securely.</p>
-          </div>
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="size-14 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
-              <CreditCard className="size-7" />
-            </div>
-            <h3 className="font-bold text-foreground mb-2">Tax Deductible</h3>
-            <p className="text-sm text-foreground-muted">Receive a tax receipt for your records immediately.</p>
-          </div>
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="size-14 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
-              <Repeat className="size-7" />
-            </div>
-            <h3 className="font-bold text-foreground mb-2">Cancel Anytime</h3>
-            <p className="text-sm text-foreground-muted">Monthly donations can be modified or cancelled anytime.</p>
-          </div>
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="size-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4">
-              <CheckCircle className="size-7" />
-            </div>
-            <h3 className="font-bold text-foreground mb-2">Registered NGO</h3>
-            <p className="text-sm text-foreground-muted">
-              Officially registered with Nepal&apos;s Social Welfare Council.
-            </p>
-          </div>
-        </div>
-      </Section>
-
-      {/* Impact Grid */}
-      <Section className="bg-surface">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-4">See Your Impact</h2>
-          <p className="text-foreground-muted max-w-2xl mx-auto">
-            Here&apos;s how your donation translates into real change on the ground.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          {donationTiers.map((tier) => (
-            <div
-              key={tier.amount}
-              className="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-colors text-center"
-            >
-              <span className="text-3xl mb-3 block">{tier.icon}</span>
-              <div className="text-2xl font-black text-primary mb-1">${tier.amount}</div>
-              <p className="text-sm text-foreground-muted">{tier.impact}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* FAQ Section */}
-      <Section className="bg-background">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <HelpCircle className="size-10 text-primary mx-auto mb-4" />
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Frequently Asked Questions</h2>
-          </div>
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-surface rounded-xl p-6 border border-border">
-                <h3 className="font-bold text-foreground mb-2 flex items-start gap-2">
-                  <CheckCircle className="size-5 text-primary flex-shrink-0 mt-0.5" />
-                  {faq.question}
-                </h3>
-                <p className="text-foreground-muted pl-7">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Section>
-
-      {/* Verify Receipt */}
-      <Section className="bg-surface">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="size-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="size-7 text-primary" />
-          </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Already Donated?</h2>
-          <p className="text-foreground-muted mb-6">
-            Verify your donation receipt using your verification ID or receipt number.
-          </p>
-          <Button asChild size="lg" variant="outline" className="rounded-full">
-            <Link href="/verify">Verify Your Receipt</Link>
-          </Button>
-        </div>
-      </Section>
-
-      {/* Alternative Ways */}
-      <section className="bg-foreground py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Other Ways to Give</h2>
-          <p className="text-gray-400 mb-8">Beyond online donations, there are many ways to support our mission.</p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-full bg-transparent border-gray-600 text-white hover:bg-white hover:text-foreground"
-            >
-              <Link href="/contact">Corporate Partnerships</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-full bg-transparent border-gray-600 text-white hover:bg-white hover:text-foreground"
-            >
-              <Link href="/get-involved">In-Kind Donations</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-full bg-transparent border-gray-600 text-white hover:bg-white hover:text-foreground"
-            >
-              <Link href="/contact">Legacy Giving</Link>
-            </Button>
+      <section aria-labelledby="other-heading" className={styles.other}>
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div><h2 id="other-heading" className="text-3xl font-bold">Generosity takes many forms.</h2><p className="mt-3">Explore other ways to support our mission.</p></div>
+          <div className="flex flex-wrap gap-x-6 gap-y-3">
+            {[{ label: "Corporate Partnerships", href: "/contact" }, { label: "In-Kind Donations", href: "/get-involved" }, { label: "Legacy Giving", href: "/contact" }].map((item) => <Link key={item.label} href={item.href} className="inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4">{item.label}<ArrowUpRight aria-hidden="true" className="size-4" /></Link>)}
           </div>
         </div>
       </section>
-    </>
+    </div>
   )
 }

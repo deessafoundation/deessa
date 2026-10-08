@@ -3,9 +3,10 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Heart, Repeat, Loader2, CreditCard, Lock, Sparkles } from "lucide-react"
+import { Heart, Repeat, Loader2, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import styles from "./donation-form.module.css"
 import { cn } from "@/lib/utils"
 import { startTransition } from "react"
 import type { PaymentProvider } from "@/lib/payments/config"
@@ -27,7 +28,7 @@ interface DonationFormProps {
 
 export function DonationForm({
   tiers,
-  enabledProviders = ["stripe", "esewa"],
+  enabledProviders = [],
   primaryProvider = "stripe",
   defaultCurrency = "USD",
 }: DonationFormProps) {
@@ -184,278 +185,67 @@ export function DonationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gradient-to-br from-background via-background to-surface rounded-3xl border border-border/50 overflow-hidden shadow-2xl backdrop-blur-sm">
-      <div className="p-8 md:p-12">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <Heart className="size-8 text-primary fill-primary" />
-          </div>
-          <h2 className="text-3xl font-black text-foreground mb-2">Make a Difference</h2>
-          <p className="text-foreground-muted">Your support transforms lives</p>
-        </div>
-
-        {/* Frequency Toggle */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-muted/50 p-1.5 rounded-full inline-flex gap-1 shadow-inner">
-            <button
-              type="button"
-              aria-pressed={!isMonthly}
-              onClick={() => setIsMonthly(false)}
-              className={cn(
-                "px-6 py-3 rounded-full text-sm font-bold transition-all duration-200 flex items-center gap-2",
-                !isMonthly 
-                  ? "bg-primary text-white shadow-lg shadow-primary/30 scale-105" 
-                  : "text-foreground-muted hover:text-foreground hover:bg-muted",
-              )}
-            >
-              One-Time
-            </button>
-            <button
-              type="button"
-              aria-pressed={isMonthly}
-              onClick={() => setIsMonthly(true)}
-              className={cn(
-                "px-6 py-3 rounded-full text-sm font-bold transition-all duration-200 flex items-center gap-2",
-                isMonthly 
-                  ? "bg-primary text-white shadow-lg shadow-primary/30 scale-105" 
-                  : "text-foreground-muted hover:text-foreground hover:bg-muted",
-              )}
-            >
-              <Repeat className="size-4" />
-              Monthly
-            </button>
-          </div>
-        </div>
-
-        {/* Payment Method */}
-        <div className="mb-8">
-          <label className="block text-sm font-bold text-foreground mb-4 text-center flex items-center justify-center gap-2">
-            <Lock className="size-4 text-foreground-muted" />
-            Secure Payment Method
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { id: "stripe" as PaymentProvider, label: "Stripe (USD)" },
-              { id: "khalti" as PaymentProvider, label: "Khalti (NPR)" },
-              { id: "esewa" as PaymentProvider, label: "eSewa (NPR)" },
-            ].map((p) => {
-              const isAvailable = enabledProviders.includes(p.id)
-              const isSelected = provider === p.id && isAvailable
-              return (
-                <div key={p.id} className="relative group">
-                  <button
-                    type="button"
-                    onClick={() => handleProviderChange(p.id)}
-                    disabled={!isAvailable}
-                    className={cn(
-                      "w-full px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
-                      !isAvailable
-                        ? "opacity-50 cursor-not-allowed bg-muted text-muted-foreground border-border"
-                        : isSelected
-                          ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
-                          : "bg-surface text-foreground border-border hover:border-primary/50 hover:bg-muted/50",
-                    )}
-                  >
-                    <CreditCard className={cn("size-4", !isAvailable && "text-muted-foreground")} />
-                    {p.label}
-                  </button>
-                  {!isAvailable && (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      <div className="rounded-lg bg-foreground/90 px-3 py-1.5 text-xs font-medium text-background shadow-lg whitespace-nowrap">
-                        Currently unavailable
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-          {enabledProviders.length === 0 && (
-            <p className="mt-4 text-center text-sm text-amber-600 font-medium">
-              No payment methods are currently available. Please contact support.
-            </p>
-          )}
-          <p className="mt-3 text-center text-xs text-foreground-muted">
-            Currency:{" "}
-            <span className="font-semibold text-foreground">
-              {provider === "stripe" ? defaultCurrency || "USD" : "NPR"}
-            </span>
-          </p>
-        </div>
-
-        {/* Amount Selection */}
-        <div className="mb-8">
-          <label className="block text-sm font-bold text-foreground mb-4 text-center flex items-center justify-center gap-2">
-            <Sparkles className="size-4 text-foreground-muted" />
-            Select Amount
-          </label>
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-            {presetAmounts.map((amount) => (
-              <button
-                type="button"
-                key={amount}
-                aria-pressed={selectedAmount === amount}
-                onClick={() => handleAmountSelect(amount)}
-                className={cn(
-                  "py-4 rounded-xl font-bold text-lg transition-all duration-200 border-2 relative overflow-hidden",
-                  selectedAmount === amount
-                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/30 scale-105"
-                    : "bg-surface text-foreground border-border hover:border-primary/50 hover:scale-[1.02]",
-                )}
-              >
-                <span className="relative z-10">{provider === "stripe" ? "$" : "₨"}{amount}</span>
-                {selectedAmount === amount && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent" />
-                )}
-              </button>
-            ))}
-            <div className="relative col-span-3 md:col-span-5 mt-3">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted font-bold text-lg">
-                {provider === "stripe" ? "$" : "₨"}
-              </span>
-              <input
-                type="number"
-                placeholder="Enter custom amount"
-                value={customAmount}
-                onChange={handleCustomAmountChange}
-                min="1"
-                step="0.01"
-                className="w-full h-14 pl-10 pr-4 rounded-xl border-2 border-border bg-surface text-foreground font-bold text-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Impact Preview */}
-        {finalAmount && finalAmount > 0 && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-5 mb-8 text-center shadow-sm">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Heart className="size-5 text-green-600 fill-green-600" />
-              <p className="text-green-800 font-bold text-base">
-                {isMonthly ? (
-                  <>
-                    Your monthly gift of{" "}
-                    <span className="text-green-900 text-lg">
-                      {provider === "stripe" ? "$" : "₨"}
-                      {finalAmount.toFixed(2)}
-                    </span>{" "}
-                    will provide sustained support for our programs.
-                  </>
-                ) : (
-                  <>
-                    Your gift of{" "}
-                    <span className="text-green-900 text-lg">
-                      {provider === "stripe" ? "$" : "₨"}
-                      {finalAmount.toFixed(2)}
-                    </span>{" "}
-                    will make a real difference!
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Donor Info */}
-        <div className="space-y-4 mb-8">
-          <h3 className="text-lg font-bold text-foreground mb-4 text-center">Your Information</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-foreground-muted mb-2">First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                placeholder="John"
-                required
-                value={donorInfo.firstName}
-                onChange={handleDonorInfoChange}
-                className="w-full h-12 px-4 rounded-xl border-2 border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-foreground-muted mb-2">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Doe"
-                required
-                value={donorInfo.lastName}
-                onChange={handleDonorInfoChange}
-                className="w-full h-12 px-4 rounded-xl border-2 border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-foreground-muted mb-2">Email Address</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="john.doe@example.com"
-              required
-              value={donorInfo.email}
-              onChange={handleDonorInfoChange}
-              className="w-full h-12 px-4 rounded-xl border-2 border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-foreground-muted mb-2">Phone Number <span className="text-foreground-muted/70">(Optional)</span></label>
-            <input
-              type="tel"
-              name="phone"
-              placeholder="+1 (555) 123-4567"
-              value={donorInfo.phone}
-              onChange={handleDonorInfoChange}
-              className="w-full h-12 px-4 rounded-xl border-2 border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-foreground-muted mb-2">Message <span className="text-foreground-muted/70">(Optional)</span></label>
-            <Textarea
-              name="message"
-              placeholder="Share a message with us (optional)"
-              value={donorInfo.message}
-              onChange={(e) => setDonorInfo((prev) => ({ ...prev, message: e.target.value }))}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl border-2 border-border bg-surface text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
-            />
-            <p className="text-xs text-foreground-muted/70 mt-1">
-              Let us know what inspired your donation or any special message you'd like to share.
-            </p>
-          </div>
-        </div>
-
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full h-14 rounded-full text-lg font-bold shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 transition-all duration-200 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary"
-          disabled={!finalAmount || finalAmount <= 0 || isLoading || enabledProviders.length === 0}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 size-5 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <Heart className="mr-2 size-5 fill-current" />
-              {isMonthly
-                ? `Donate ${provider === "stripe" ? "$" : "₨"}${finalAmount?.toFixed(2) || 0}/month`
-                : `Donate ${provider === "stripe" ? "$" : "₨"}${finalAmount?.toFixed(2) || 0} Now`}
-            </>
-          )}
-        </Button>
-
-        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-foreground-muted">
-          <Lock className="size-3" />
-          <p className="text-center">
-            Your donation is secure and encrypted. By donating, you agree to our{" "}
-            <a href="/terms" className="text-primary hover:underline font-medium">terms</a> and{" "}
-            <a href="/privacy" className="text-primary hover:underline font-medium">privacy policy</a>.
-          </p>
-        </div>
+    <form id="donation-form" aria-labelledby="donation-title" aria-busy={isLoading} onSubmit={handleSubmit} className={cn(styles.form, "scroll-mt-28 rounded-2xl p-5 sm:p-8")}>
+      <div className="mb-7 flex items-start justify-between gap-4 border-b border-border pb-6">
+        <div><h2 id="donation-title" className="text-2xl font-bold tracking-tight sm:text-3xl">Make a difference</h2><p className="mt-2 text-sm text-foreground-muted">Choose your gift. We&apos;ll take care of the rest.</p></div>
+        <Heart aria-hidden="true" className={cn(styles.accent, "mt-1 size-7 shrink-0")} />
       </div>
+
+      <fieldset className="mb-7">
+        <legend className="mb-3 text-sm font-bold">How often would you like to give?</legend>
+        <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/50 p-1.5">
+          <button type="button" aria-pressed={!isMonthly} onClick={() => setIsMonthly(false)} className={cn(styles.choice, "min-h-12 rounded-lg px-3 py-3 text-sm font-semibold")}>One-time</button>
+          <button type="button" aria-pressed={isMonthly} onClick={() => setIsMonthly(true)} className={cn(styles.choice, "flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold")}><Repeat aria-hidden="true" className="size-4 shrink-0" />Monthly</button>
+        </div>
+      </fieldset>
+
+      <fieldset className="mb-7">
+        <legend className="mb-1 text-sm font-bold">Payment method</legend>
+        <p className="mb-3 text-xs text-foreground-muted">Choose a provider to see the currency for your gift.</p>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { id: "stripe" as PaymentProvider, label: "Card / Stripe", currency: defaultCurrency || "USD" },
+            { id: "khalti" as PaymentProvider, label: "Khalti", currency: "NPR" },
+            { id: "esewa" as PaymentProvider, label: "eSewa", currency: "NPR" },
+          ].filter((p) => enabledProviders.includes(p.id)).map((p) => {
+            const isAvailable = enabledProviders.includes(p.id)
+            return <button key={p.id} type="button" onClick={() => handleProviderChange(p.id)} disabled={!isAvailable} aria-pressed={provider === p.id && isAvailable} className={cn(styles.choice, "flex min-h-16 flex-1 flex-col items-start rounded-xl border border-border px-4 py-3 text-left")}><span className="text-sm font-semibold">{p.label}</span><span className="mt-1 text-xs">{isAvailable ? p.currency : "Unavailable"}</span></button>
+          })}
+        </div>
+        {enabledProviders.length === 0 && <p role="status" className="mt-3 text-sm text-foreground-muted">Online payments are currently unavailable. Please use bank transfer below if offered, or <a href="/contact" className="underline underline-offset-4">contact our team</a>.</p>}
+      </fieldset>
+
+      <fieldset className="mb-7">
+        <legend className="mb-3 text-sm font-bold">Choose an amount <span className="font-normal text-foreground-muted">({provider === "stripe" ? defaultCurrency || "USD" : "NPR"})</span></legend>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          {presetAmounts.map((amount) => <button type="button" key={amount} aria-pressed={selectedAmount === amount} onClick={() => handleAmountSelect(amount)} className={cn(styles.choice, "min-h-12 rounded-lg border border-border px-2 py-3 text-base font-bold tabular-nums")}>{provider === "stripe" ? "$" : "₨"}{amount}</button>)}
+        </div>
+        <label htmlFor="donation-custom" className="mb-2 mt-4 block text-sm text-foreground-muted">Or enter your own amount</label>
+        <div className="relative">
+          <span aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-foreground-muted">{provider === "stripe" ? "$" : "₨"}</span>
+          <input id="donation-custom" type="number" inputMode="decimal" placeholder="Custom amount" value={customAmount} onChange={handleCustomAmountChange} min="1" step="0.01" className={cn(styles.input, "min-h-12 w-full rounded-lg border border-border py-3 pl-10 pr-4")} />
+        </div>
+      </fieldset>
+
+      <fieldset className="border-t border-border pt-6">
+        <legend className="sr-only">Your information</legend>
+        <h3 className="mb-1 text-lg font-bold">A little about you</h3>
+        <p className="mb-5 text-xs text-foreground-muted">Fields marked * are required.</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div><label htmlFor="donation-first" className="mb-2 block text-sm font-medium">First name <span aria-hidden="true">*</span></label><input id="donation-first" type="text" name="firstName" autoComplete="given-name" required aria-required="true" value={donorInfo.firstName} onChange={handleDonorInfoChange} className={cn(styles.input, "min-h-12 w-full rounded-lg border border-border px-4 py-3")} /></div>
+          <div><label htmlFor="donation-last" className="mb-2 block text-sm font-medium">Last name <span aria-hidden="true">*</span></label><input id="donation-last" type="text" name="lastName" autoComplete="family-name" required aria-required="true" value={donorInfo.lastName} onChange={handleDonorInfoChange} className={cn(styles.input, "min-h-12 w-full rounded-lg border border-border px-4 py-3")} /></div>
+          <div className="sm:col-span-2"><label htmlFor="donation-email" className="mb-2 block text-sm font-medium">Email address <span aria-hidden="true">*</span></label><input id="donation-email" type="email" name="email" autoComplete="email" required aria-required="true" value={donorInfo.email} onChange={handleDonorInfoChange} className={cn(styles.input, "min-h-12 w-full rounded-lg border border-border px-4 py-3")} /></div>
+          <div className="sm:col-span-2"><label htmlFor="donation-phone" className="mb-2 block text-sm font-medium">Phone number <span className="font-normal text-foreground-muted">(optional)</span></label><input id="donation-phone" type="tel" name="phone" autoComplete="tel" value={donorInfo.phone} onChange={handleDonorInfoChange} className={cn(styles.input, "min-h-12 w-full rounded-lg border border-border px-4 py-3")} /></div>
+          <div className="sm:col-span-2"><label htmlFor="donation-message" className="mb-2 block text-sm font-medium">Leave a message <span className="font-normal text-foreground-muted">(optional)</span></label><Textarea id="donation-message" name="message" placeholder="What inspired you to give?" value={donorInfo.message} onChange={(e) => setDonorInfo((prev) => ({ ...prev, message: e.target.value }))} rows={3} className={cn(styles.input, "w-full resize-y rounded-lg border border-border px-4 py-3")} /></div>
+        </div>
+      </fieldset>
+
+      {finalAmount && finalAmount > 0 ? <div aria-live="polite" aria-atomic="true" className={cn(styles.summary, "mb-4 mt-6 flex flex-wrap items-center justify-between gap-2 rounded-lg px-4 py-3 text-sm")}><span>{isMonthly ? "Your monthly gift" : "Your one-time gift"}</span><strong className="text-lg tabular-nums">{provider === "stripe" ? "$" : "₨"}{finalAmount.toFixed(2)}{isMonthly && <span className="text-sm font-normal"> / month</span>}</strong></div> : null}
+      <Button type="submit" size="lg" className={cn(styles.submit, "mt-2 h-auto min-h-14 w-full whitespace-normal rounded-xl px-4 py-4 text-base font-bold")} disabled={!finalAmount || finalAmount <= 0 || isLoading || enabledProviders.length === 0}>
+        {isLoading ? <><Loader2 aria-hidden="true" className="mr-2 size-5 shrink-0 animate-spin" />Processing...</> : <><Heart aria-hidden="true" className="mr-2 size-5 shrink-0" />{isMonthly ? `Donate ${provider === "stripe" ? "$" : "₨"}${finalAmount?.toFixed(2) || 0}/month` : `Donate ${provider === "stripe" ? "$" : "₨"}${finalAmount?.toFixed(2) || 0} Now`}</>}
+      </Button>
+      <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-foreground-muted"><Lock aria-hidden="true" className="size-3 shrink-0" />Continue to secure payment</p>
+      <p className="mt-5 text-center text-xs leading-relaxed text-foreground-muted">By donating, you agree to our <a href="/terms" className="underline underline-offset-4">terms</a> and <a href="/privacy" className="underline underline-offset-4">privacy policy</a>.</p>
     </form>
   )
 }

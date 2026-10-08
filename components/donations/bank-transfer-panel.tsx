@@ -37,7 +37,7 @@ function CopyableRow({ label, value }: { label: string; value: string }) {
           type="button"
           onClick={copy}
           aria-label={`Copy ${label}`}
-          className="shrink-0 p-1 rounded hover:bg-primary/10 text-foreground-muted hover:text-primary transition-colors"
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded hover:bg-primary/10 text-foreground-muted hover:text-primary transition-colors"
         >
           {copied ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
         </button>
@@ -105,7 +105,8 @@ export function BankTransferPanel({ accounts }: BankTransferPanelProps) {
         </p>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
+        <div className="min-w-0 space-y-6">
         {accounts.length > 1 && (
           <div className="flex flex-wrap gap-2">
             {accounts.map((a) => (
@@ -113,6 +114,7 @@ export function BankTransferPanel({ accounts }: BankTransferPanelProps) {
                 key={a.id}
                 type="button"
                 onClick={() => setAccountId(a.id)}
+                aria-pressed={a.id === account.id}
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium border transition-colors",
                   a.id === account.id
@@ -143,7 +145,9 @@ export function BankTransferPanel({ accounts }: BankTransferPanelProps) {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        </div>
+        <form onSubmit={handleSubmit} className="min-w-0 space-y-4">
+          <h4 className="text-lg font-bold">Already transferred? Let us know.</h4>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="bt-name" className="block text-sm font-medium text-foreground mb-1.5">
