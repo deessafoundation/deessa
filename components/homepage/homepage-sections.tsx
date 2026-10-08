@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { HomepageImage } from "./homepage-image"
 import styles from "./homepage-sections.module.css"
-import pillarCard from "./home-pillar-card.module.css"
+import pillarCard from "@/components/what-we-do/pillar-card.module.css"
 import Link from "next/link"
 import podcastBanner from "@/public/podcast_banner.jpeg"
 import {

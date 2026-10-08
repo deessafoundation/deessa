@@ -1,8 +1,49 @@
-/* =====================================================
-   WHAT WE DO — HERO ("A window into the work")
-   Layout and colours are Tailwind utilities in whatwedo-hero.tsx.
-   This file only holds the contrast-mode, forced-colors and print overrides.
-   ===================================================== */
+/* What We Do: people and action, framed as moments from the field. */
+.hero { background: #fffcf6; color: #0b5f8a; }
+/* A real workshop scene adds context; a separate veil keeps copy readable. */
+.backgroundPhoto {
+  opacity: 0.2;
+  filter: saturate(0.45);
+}
+.photoVeil {
+  background: linear-gradient(100deg, #fffcf6 3%, rgba(255, 252, 246, 0.95) 26%, rgba(255, 252, 246, 0.5) 72%, rgba(255, 252, 246, 0.35));
+}
+@media (width < 64rem) {
+  .backgroundPhoto { opacity: 0.13; }
+  .photoVeil { background: linear-gradient(180deg, rgba(255, 252, 246, 0.8), rgba(255, 252, 246, 0.5) 65%, #fffcf6); }
+}
+.edge { color: #fff; }
+
+.breadcrumb { color: #476071; }
+.eyebrow { color: #0b658b; }
+.eyebrowLine { background: #3fabde; }
+.heading { color: #0b5f8a; -webkit-text-stroke: 0.65px currentColor; }
+.headingAccent { color: #147fad; }
+.underline { color: #efbf39; }
+.description { color: #405868; }
+.primaryBtn { background: #0b5f8a; color: #fff; border-color: #0b5f8a; box-shadow: 0 8px 20px -12px #0b5f8a; }
+.primaryBtn:hover { background: #094e72; }
+.secondaryBtn { background: transparent; color: #0b5f8a; border-color: #94b7c6; }
+.secondaryBtn:hover { background: #e8f6fc; }
+.hero a:focus-visible { outline: 3px solid #0b5f8a; outline-offset: 4px; }
+.photo { background: #fff; border: 1px solid #e5e1d7; box-shadow: 0 16px 32px -18px rgba(38, 61, 67, 0.35); }
+.photoMat { background: #e8f6fc; }
+.caption { color: #405868; }
+.tape { background: #f5df98; opacity: 0.85; clip-path: polygon(2% 0, 98% 5%, 95% 30%, 100% 65%, 96% 100%, 0 94%, 4% 65%, 0 30%); }
+.rays { color: #d39036; }
+:global(body.high-contrast) .caption { color: #000 !important; }
+:global(body.high-contrast) .photo { background: #fff !important; box-shadow: none !important; }
+:global(body.high-contrast) .hero a:focus-visible { outline: 3px solid #000 !important; outline-offset: 4px; }
+:global(body.high-contrast) .hero a.primaryBtn svg,
+:global(body.high-contrast) .hero a.primaryBtn svg * { color: #fff !important; stroke: #fff !important; }
+:global(body.high-contrast) .hero a.secondaryBtn svg,
+:global(body.high-contrast) .hero a.secondaryBtn svg * { color: #000 !important; stroke: #000 !important; }
+:global(body.inverted-contrast) .caption { color: #fff !important; }
+:global(body.inverted-contrast) .photo { background: #000 !important; box-shadow: none !important; }
+:global(body.inverted-contrast) .hero a.primaryBtn svg,
+:global(body.inverted-contrast) .hero a.primaryBtn svg * { color: #000 !important; stroke: #000 !important; }
+:global(body.inverted-contrast) .hero a.secondaryBtn svg,
+:global(body.inverted-contrast) .hero a.secondaryBtn svg * { color: #fff !important; stroke: #fff !important; }
 
 /* ── High contrast ── */
 :global(body.high-contrast) .hero {
