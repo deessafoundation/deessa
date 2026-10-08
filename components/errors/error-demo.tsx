@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type CSSProperties } from "react"
+import { useCallback, useState, type CSSProperties } from "react"
 import Link from "next/link"
 import { ArrowLeft, ArrowUpRight, CheckCircle2, RotateCcw } from "lucide-react"
 import { ErrorPage, type ErrorPageProps } from "./error-page"
@@ -13,13 +13,13 @@ const examples = {
   server: { label: "500 · Server error", props: { variant: "server", standalone: true } },
   network: { label: "Connection error", props: { variant: "network", standalone: true } },
   unauthorized: { label: "403 · Access denied", props: { variant: "unauthorized", standalone: true } },
-  program: { label: "Program not found", props: { variant: "not-found", title: "We couldn’t find this program.",
+  program: { label: "Program not found", props: { variant: "not-found", standalone: true, title: "We couldn’t find this program.",
     message: "This program may have moved or is no longer available. Explore our current programs to find another way to connect.",
     primaryHref: "/whatwedo", primaryLabel: "Browse programs", secondaryHref: "/", secondaryLabel: "Back to home" } },
-  event: { label: "Event not found", props: { variant: "not-found", title: "We couldn’t find this event.",
+  event: { label: "Event not found", props: { variant: "not-found", standalone: true, title: "We couldn’t find this event.",
     message: "This event may have moved or is no longer available. Discover our upcoming events and find another opportunity to join us.",
     primaryHref: "/events", primaryLabel: "Browse events", secondaryHref: "/", secondaryLabel: "Back to home" } },
-  closed: { label: "Registration closed", props: { variant: "closed", primaryHref: "/events", primaryLabel: "Browse events", secondaryHref: "/", secondaryLabel: "Back to home" } },
+  closed: { label: "Registration closed", props: { variant: "closed", standalone: true, primaryHref: "/events", primaryLabel: "Browse events", secondaryHref: "/", secondaryLabel: "Back to home" } },
 } satisfies Record<string, { label: string; props: ErrorPageProps }>
 
 export type ErrorExample = keyof typeof examples
@@ -31,11 +31,12 @@ export default function ErrorDemo({ initialExample = "not-found", focused = fals
   const [recovered, setRecovered] = useState(false)
   const [retryResult, setRetryResult] = useState("success")
   const [retryCount, setRetryCount] = useState(0)
+  const focusRecovery = useCallback((node: HTMLHeadingElement | null) => node?.focus(), [])
   const selected = examples[example]
   const hasRetry = ["generic", "server", "network"].includes(example)
   const error = example === "generic" || example === "server" ? Object.assign(new Error("Demo only"), { digest: "DEESSA-DEMO-001" }) : undefined
 
-  function tryAgain() {
+  async function tryAgain() {
     setRetryCount((count) => count + 1)
     if (retryResult === "success") setRecovered(true)
     else throw new Error("Simulated persistent failure")
@@ -85,7 +86,7 @@ export default function ErrorDemo({ initialExample = "not-found", focused = fals
           {recovered ? (
             <section aria-labelledby="demo-recovered-title" className={cn(styles.success, "px-6 py-24 text-center")}>
               <CheckCircle2 aria-hidden="true" className="mx-auto mb-5 size-12" />
-              <h2 id="demo-recovered-title" className="text-3xl font-bold">Connected again.</h2>
+              <h2 ref={focusRecovery} tabIndex={-1} id="demo-recovered-title" className="text-3xl font-bold">Connected again.</h2>
               <p role="status" className="mt-4">The demo retry succeeded. The real page would replace the error with its content.</p>
               <button type="button" className={cn(styles.control, "mt-7 inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-5 py-3 font-bold")}
                 onClick={() => setRecovered(false)}><RotateCcw aria-hidden="true" className="size-4" />Show the error again</button>

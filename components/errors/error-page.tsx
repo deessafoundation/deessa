@@ -1,47 +1,14 @@
 "use client"
 
-import { useId, useState, useSyncExternalStore, type CSSProperties } from "react"
+import { useId, useRef, useState, useSyncExternalStore } from "react"
 import Image from "next/image"
-import { ArrowRight, Compass, Copy, House, LockKeyhole, RefreshCw, WifiOff, Wrench, MessageCircle, Heart, Star, Users, BookOpen, Pause, Play } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { comicNeue } from "@/lib/fonts"
 import styles from "./error-page.module.css"
-import { PuzzleNotFound } from "./puzzle-not-found"
 
 export type ErrorVariant = "not-found" | "server" | "generic" | "network" | "unauthorized" | "closed"
-const actionLayout = "inline-flex min-h-12 max-w-full items-center justify-center gap-2.5 rounded-full border-2 px-5 py-3 text-center font-bold leading-snug whitespace-normal"
-
-const content = {
-  "not-found": {
-    code: "404", label: "Page not found", title: "We couldn’t find that page.",
-    message: "A missing page shouldn’t stop a connection. The link may have changed—let’s find the information or support you need.",
-    image: "girl-not-found.webp", caption: "Let’s find the information you need.", icon: Compass,
-  },
-  server: {
-    code: "500", label: "Website unavailable", title: "Something isn’t working.",
-    message: "We couldn’t load the website right now. Please try again in a moment, or return to the homepage.",
-    image: "girl-server-error.webp", caption: "A little patience. Then another try.", icon: Wrench,
-  },
-  generic: {
-    code: "Oops", label: "Something went wrong", title: "We couldn’t load this page.",
-    message: "Something unexpected interrupted this page. Please try again, or choose another place to continue.",
-    image: "girl-server-error.webp", caption: "A little patience. Then another try.", icon: Wrench,
-  },
-  network: {
-    code: "Offline", label: "Connection interrupted", title: "Let’s reconnect.",
-    message: "We couldn’t connect to the website. Check your connection and try again when you’re ready.",
-    image: "girl-connection-error.webp", caption: "We’re here when you reconnect.", icon: WifiOff,
-  },
-  unauthorized: {
-    code: "403", label: "Access restricted", title: "This space needs permission.",
-    message: "This page is reserved for authorized team members. Sign in with an account that has access, or return to the homepage.",
-    image: null, caption: "A little permission opens the conversation.", icon: LockKeyhole,
-  },
-  closed: {
-    code: "Closed", label: "Registration closed", title: "Registration is closed.",
-    message: "Registration for this event is currently closed. Browse other events, or get in touch with the organizer for help.",
-    image: "girl-not-found.webp", caption: "More chances to connect are coming.", icon: Compass,
-  },
-} as const
 
 function subscribeToConnection(callback: () => void) {
   window.addEventListener("online", callback)
@@ -61,7 +28,7 @@ export interface ErrorPageProps {
   title?: string
   message?: string
   error?: Error & { digest?: string }
-  onRetry?: () => void
+  onRetry?: () => void | Promise<void>
   primaryHref?: string
   primaryLabel?: string
   secondaryHref?: string
@@ -72,161 +39,135 @@ export interface ErrorPageProps {
   preview?: boolean
 }
 
-export function ErrorPage({
-  variant = "not-found", title, message, error, onRetry, primaryHref, primaryLabel,
-  secondaryHref, secondaryLabel, showPrimary = true, showSecondary = true, standalone = false, preview = false,
+const screens = {
+  "not-found": {
+    label: "Page not found", title: "This page doesn’t exist.", subtitle: "But there’s always a way forward.",
+    message: "The page you’re looking for might have been moved, renamed, or doesn’t exist anymore. Let’s get you back on track.",
+    art: "puzzle-404.webp", photo: "puzzle-hand.webp", note: "Different perspectives, brighter tomorrows.",
+  },
+  server: {
+    label: "Internal server error", title: "Something went wrong on our side.", subtitle: "A pause. Then a way forward.",
+    message: "We couldn’t load this page right now. Please try again in a moment, or head home to continue exploring.",
+    art: "neurodiversity-500.webp", photo: "supported-bridge.webp", note: "One more try. A way forward.",
+  },
+  network: {
+    label: "Connection interrupted", title: "Let’s reconnect.", subtitle: "A little pause. Our connection continues.",
+    message: "We couldn’t reach the website. Check your Wi-Fi or mobile data, then try again when you’re ready.",
+    art: "connection-infinity.webp", photo: "girl-connection-error.webp", note: "Different minds. Still connected.",
+  },
+  unauthorized: {
+    label: "403 · Access restricted", title: "This space needs permission.", subtitle: "There’s still a way forward.",
+    message: "This page is reserved for authorized team members. Sign in with an account that has access. If you’re already signed in, contact your administrator for help.",
+    art: "permission-403.webp", photo: "permission-door.webp", note: "A little permission. An open door.",
+  },
+  generic: {
+    label: "Unexpected error", title: "Something interrupted this page.", subtitle: "Let’s give it another try.",
+    message: "We couldn’t finish loading this page. Please try again, or head home to find the information you need.",
+    art: "unexpected-oops.webp", photo: "supported-bridge.webp", note: "A pause. Then another possibility.",
+  },
+  closed: {
+    label: "Registration closed", title: "This registration has closed.", subtitle: "More moments to connect are ahead.",
+    message: "Registration for this event is currently closed. Explore our other events, or contact the organizer if you need help with an existing registration.",
+    art: "registration-calendar.webp", photo: "next-gathering.webp", note: "Every gathering starts a connection.",
+  },
+} as const
+
+export function ErrorPage({ variant = "not-found", preview = false, standalone = false, onRetry, error,
+  title, message, primaryHref, primaryLabel, secondaryHref, secondaryLabel, showPrimary = true, showSecondary = true,
 }: ErrorPageProps) {
-  const state = content[variant]
-  const Icon = state.icon
   const headingId = useId()
-  const [failedImage, setFailedImage] = useState<string | null>(null)
+  const state = screens[variant]
+  const recoverable = variant === "server" || variant === "network" || variant === "generic"
+  const digest = error?.digest
   const [feedback, setFeedback] = useState("")
-  const [paused, setPaused] = useState(false)
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
-  const retries = variant === "generic" || variant === "server" || variant === "network"
-  const firstHref = primaryHref ?? (variant === "unauthorized" ? "/admin/login" : "/")
-  const firstLabel = primaryLabel ?? (variant === "unauthorized" ? "Team sign in" : "Back to home")
-  const secondHref = secondaryHref ?? (variant === "not-found" ? "/whatwedo" : "/")
-  const secondLabel = secondaryLabel ?? (variant === "not-found" ? "Explore our programs" : "Back to home")
+  const [retrying, setRetrying] = useState(false)
+  const retryPending = useRef(false)
+  const primaryTarget = primaryHref ?? (variant === "unauthorized" ? "/admin/login" : variant === "closed" ? "/events" : "/")
+  const primaryText = primaryLabel ?? (variant === "unauthorized" ? "Team sign in" : variant === "closed" ? "Browse events" : "Find your way home")
+  const secondaryTarget = secondaryHref ?? "/"
+  const secondaryText = secondaryLabel ?? "Back to home"
+  const customActions = Boolean(primaryHref || secondaryHref || primaryLabel || secondaryLabel)
   const Heading = preview ? "h2" : "h1"
-  const Main = preview ? "div" : "main"
+  const Main = standalone && !preview ? "main" : "div"
 
-  function retry() {
-    setFeedback("Trying to reconnect and load the page…")
+  async function retry() {
+    if (retryPending.current) return
+    retryPending.current = true
+    setRetrying(true)
+    setFeedback(variant === "network" ? "Trying to reconnect…" : "Trying to load the page again…")
     try {
-      if (onRetry) onRetry()
-      else window.location.reload()
-    } catch {
-      setFeedback("We still couldn’t load the page. Please try again in a moment.")
+      if (onRetry) {
+        await onRetry()
+        setFeedback("Retry requested. If this page is still here, please try again in a moment.")
+      } else window.location.reload()
     }
+    catch { setFeedback("We still couldn’t load the page. Please try again in a moment.") }
+    finally { retryPending.current = false; setRetrying(false) }
   }
-
   async function copyReference() {
-    try {
-      await navigator.clipboard.writeText(`deessa Foundation — ${state.label}\nReference: ${error?.digest}`)
-      setFeedback("Support reference copied.")
-    } catch {
-      setFeedback("Couldn’t copy the reference. You can select and copy the text below.")
-    }
+    try { await navigator.clipboard.writeText(`deessa Foundation — ${state.label}\nReference: ${digest}`); setFeedback("Support reference copied.") }
+    catch { setFeedback("Couldn’t copy the reference. Please select and copy it below.") }
   }
-
-  if (variant === "not-found" && !title && !message && !primaryHref && !secondaryHref && showPrimary && showSecondary) {
-    return <PuzzleNotFound preview={preview} standalone={standalone} />
-  }
-
-  const screen = (
-    <section aria-labelledby={headingId} data-paused={paused} className={cn(styles.page, "relative px-5 py-10 sm:px-8 sm:py-14")}>
-      <div className="mx-auto w-full max-w-6xl">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
-          <div className={cn(styles.copy, "relative min-w-0")}>
-            <p className={cn(styles.eyebrow, "mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold")}>
-              <Icon aria-hidden="true" className="size-4 shrink-0" />
-              {state.label}
-            </p>
-            <Heading id={headingId} className={cn(styles.title, "max-w-xl text-balance text-4xl leading-tight sm:text-5xl")}>
-              {title ?? state.title}
-            </Heading>
-            <p className={cn(styles.message, "mt-5 max-w-lg text-base leading-relaxed sm:text-lg")}>
-              {message ?? state.message}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              {showPrimary && (retries ? (
-                <button type="button" data-error-action="primary" className={cn(styles.action, actionLayout)} onClick={retry}>
-                  <RefreshCw aria-hidden="true" className="size-4 shrink-0" /> Try again
-                </button>
-              ) : (
-                <a href={firstHref} data-error-action="primary" className={cn(styles.action, actionLayout)}>
-                  {variant === "unauthorized" ? <LockKeyhole aria-hidden="true" className="size-4 shrink-0" /> : <House aria-hidden="true" className="size-4 shrink-0" />}
-                  {firstLabel}
-                </a>
-              ))}
-              {showSecondary && (
-                <a href={secondHref} data-error-action="secondary" className={cn(styles.action, actionLayout)}>
-                  {secondLabel}<ArrowRight aria-hidden="true" className="size-4 shrink-0" />
-                </a>
-              )}
-            </div>
-            <p role="status" aria-live="polite" className={cn(styles.feedback, "mt-3 text-sm")}>{feedback}</p>
-            {error?.digest && (
-              <details className={cn(styles.reference, "mt-5 text-sm")}>
-                <summary className="cursor-pointer py-3 font-bold">Support reference</summary>
-                <p className="mb-2 leading-relaxed">If you contact us, include this reference so we can look into the issue.</p>
-                <code className="block break-all">{error.digest}</code>
-                <button type="button" className={cn(styles.textLink, "mt-3 inline-flex min-h-11 items-center gap-2")} onClick={copyReference}>
-                  <Copy aria-hidden="true" className="size-4" />Copy reference
-                </button>
-              </details>
-            )}
-          </div>
-          <div className="relative min-w-0">
-          <div aria-hidden="true" className={cn(styles.art, "relative mx-auto w-full max-w-lg")}
-            onPointerMove={(event) => {
-              if (event.pointerType !== "mouse" || paused) return
-              const rect = event.currentTarget.getBoundingClientRect()
-              setTilt({ x: (event.clientX - rect.left) / rect.width - 0.5, y: (event.clientY - rect.top) / rect.height - 0.5 })
-            }} onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-            style={{ "--art-x": `${tilt.x * 12}px`, "--art-y": `${tilt.y * 12}px` } as CSSProperties}>
-            <div className={cn(styles.artSurface, "absolute inset-4 rounded-[3rem]")} />
-            <p className={cn(styles.code, "absolute -left-3 -top-6 z-20 rounded-2xl px-5 py-3 leading-none")}>
-              {[...state.code].map((letter, index) => <span key={index}>{letter}</span>)}
-            </p>
-            <span className={cn(styles.orbit, styles.orbitOne, "absolute left-0 top-1/3 z-20 flex size-14 items-center justify-center rounded-2xl")}><MessageCircle className="size-7" /></span>
-            <span className={cn(styles.orbit, styles.orbitTwo, "absolute right-2 top-10 z-20 flex size-12 items-center justify-center rounded-full")}><Star className="size-6" /></span>
-            <span className={cn(styles.orbit, styles.orbitThree, "absolute bottom-12 right-0 z-20 flex size-14 items-center justify-center rounded-2xl")}><Heart className="size-7" /></span>
-            {state.image && failedImage !== state.image ? (
-              <Image key={state.image} src={`/errors/${state.image}`} alt="" width={768} height={768} unoptimized loading="eager"
-                className={cn(styles.illustration, "relative z-10 h-auto w-full rounded-[2rem] object-cover")} onError={() => setFailedImage(state.image)} />
-            ) : (
-              <div className="relative flex aspect-square items-center justify-center">
-                <Icon className={cn(styles.artIcon, "size-28 sm:size-36")} strokeWidth={1} />
-              </div>
-            )}
-            <p className={cn(styles.caption, "relative z-20 mx-auto -mt-6 w-fit max-w-full rounded-full border px-5 py-3 text-center text-base")}><span>{state.caption}</span></p>
-          </div>
-          <button type="button" aria-pressed={paused} className={cn(styles.motionControl, "mx-auto mt-5 flex min-h-11 items-center gap-2 rounded-full px-4 text-xs font-bold")} onClick={() => {setPaused(!paused); setTilt({x:0,y:0})}}>
-            {paused ? <Play aria-hidden="true" className="size-3.5" /> : <Pause aria-hidden="true" className="size-3.5" />}{paused ? "Resume animation" : "Pause animation"}
-          </button>
-          </div>
-        </div>
-        <div className={cn(styles.help, "mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-6 text-sm")}>
-          <p>Need a hand? <a className={cn(styles.textLink, "inline-flex min-h-11 items-center")} href={variant === "network" ? "mailto:deessa.social@gmail.com" : "/contact"}>Get in touch</a></p>
-          {variant === "not-found" && <span className={cn(styles.belonging, "inline-flex items-center gap-2 font-bold")}><Heart aria-hidden="true" className="size-4" />Every voice matters. Everyone belongs.</span>}
-          {variant === "network" && <p className="max-w-md">You may need to reconnect before opening another page.</p>}
-        </div>
-        {(variant === "not-found" || variant === "closed") && <nav aria-label="Helpful places to continue" className="mt-6 grid gap-3 sm:grid-cols-3">
-          {[{ href: "/whatwedo", label: "Our programs", text: "Support, learning & inclusion", icon: BookOpen },
-            { href: "/about", label: "Meet deessa", text: "People behind the purpose", icon: Users },
-            { href: "/events", label: "Join a conversation", text: "Events that bring us together", icon: MessageCircle }].map((item) => {
-              const CardIcon = item.icon
-              return <a key={item.href} href={item.href} className={cn(styles.resource, "flex min-w-0 items-center gap-3 rounded-2xl border p-4")}>
-                <span className={cn(styles.resourceIcon, "flex size-11 shrink-0 items-center justify-center rounded-xl")}><CardIcon aria-hidden="true" className="size-5" /></span>
-                <span className="min-w-0 flex-1"><strong className="block">{item.label}</strong><span className={cn(styles.resourceText, "mt-1 block text-sm")}>{item.text}</span></span>
-                <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
-              </a>
-            })}
-        </nav>}
-      </div>
-    </section>
-  )
-
-  if (!standalone) return screen
 
   return (
-    <div className={cn(styles.shell, "flex flex-col", !preview && "min-h-svh")}>
-      {!preview && <a href="#error-main-content" className={styles.skip}>Skip to main content</a>}
-      <header className={cn(styles.header, "px-5 py-6 sm:px-8")}>
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-          <a href="/" className={cn(styles.brand, "inline-flex min-h-11 items-center gap-3")} aria-label="deessa Foundation home">
-            <Image src="/logo.png" alt="" width={2421} height={818} unoptimized loading="eager" className="h-auto w-40 object-contain" />
-          </a>
-          <a href="/contact" className={cn(styles.textLink, "inline-flex min-h-11 items-center")}>Contact us <ArrowRight aria-hidden="true" className="ml-2 size-4" /></a>
-        </div>
-      </header>
-      <Main id={preview ? undefined : "error-main-content"} tabIndex={preview ? undefined : -1} className="flex flex-1 flex-col justify-center" data-tts-root="">{screen}</Main>
-      <footer className={cn(styles.footer, "px-5 py-5 text-center text-sm")}>Different ways of thinking. Equal space to belong.</footer>
+    <div className={cn(comicNeue.variable, styles.page)} data-server={variant === "server"}>
+      {standalone && <>
+        {!preview && <a href="#puzzle-error-main" className={styles.skip}>Skip to main content</a>}
+        <header className={cn(styles.header, "px-6 py-4 lg:px-12")}>
+          <div className="mx-auto flex max-w-7xl items-center">
+            <Link href="/" prefetch={false} aria-label="deessa Foundation home" className="shrink-0">
+              <Image src="/logo.png" alt="" width={2421} height={818} loading="eager" unoptimized className="h-auto w-40 lg:w-48" />
+            </Link>
+          </div>
+        </header>
+      </>}
+      <Main id={standalone && !preview ? "puzzle-error-main" : undefined} tabIndex={standalone && !preview ? -1 : undefined}>
+        <section aria-labelledby={headingId} className={cn(styles.scene, "relative isolate overflow-hidden")}>
+          <div className={cn(styles.visual, "pointer-events-none")} aria-hidden="true">
+            <svg width="0" height="0" className="absolute">
+              <defs><clipPath id={`${headingId}-photo`} clipPathUnits="objectBoundingBox">
+                <path d="M .48 .06 C .64 -.02 .84 .02 1 .10 V .39 C .96 .47 .89 .39 .84 .45 C .76 .51 .82 .68 .68 .84 C .56 .98 .46 1 .37 .96 C .28 .93 .28 .82 .20 .76 C .14 .71 .03 .68 .01 .53 C -.03 .38 .05 .24 .18 .22 C .36 .20 .36 .12 .48 .06 Z" />
+              </clipPath></defs>
+            </svg>
+            <div className={cn(styles.photoShape, styles.creamShape)} style={{ clipPath: `url(#${headingId}-photo)` }} />
+            <div className={styles.photoShape} style={{ clipPath: `url(#${headingId}-photo)` }}>
+              <Image src={`/errors/${state.photo}`} alt="" width={variant === "network" ? 768 : 1000} height={variant === "network" ? 768 : 1250} unoptimized loading="eager" className="h-full w-full object-cover" />
+            </div>
+            {variant === "not-found" && <svg className={styles.leaves} viewBox="0 0 500 300" fill="none">
+              <path d="M480 290C380 210 370 160 285 80" stroke="currentColor" strokeWidth="2" />
+              <path d="M480 290C370 230 325 205 140 160C250 110 375 150 480 290" fill="currentColor" opacity=".2" />
+              <path d="M480 290C430 200 400 120 300 100C280 170 370 260 480 290" fill="currentColor" opacity=".35" />
+              <path d="M295 100C255 55 255 20 270 15C292 5 305 55 295 100" fill="currentColor" opacity=".65" />
+            </svg>}
+            <p className={styles.note}>{state.note}</p>
+          </div>
+          <div className="relative z-10 mx-auto max-w-7xl px-6 py-12 sm:px-10 lg:px-12 lg:py-20">
+            <div className={cn(styles.copy, "min-w-0")}>
+              <p className={styles.eyebrow}>{state.label}</p>
+              <div className={cn(styles.numerals, "relative mb-4 mt-8 max-w-xl")} aria-hidden="true">
+                <Image src={`/errors/${state.art}`} alt="" width={1200} height={540} unoptimized loading="eager" className="h-auto w-full" />
+              </div>
+              <Heading id={headingId} className={styles.title}>{title ?? state.title}</Heading>
+              <p className={styles.subtitle}>{state.subtitle}</p>
+              <p className={styles.message}>{message ?? state.message}</p>
+              {showPrimary && (recoverable ? <button type="button" onClick={retry} disabled={retrying} aria-busy={retrying} className={cn(styles.home, "mt-8 inline-flex min-h-14 max-w-full items-center justify-center gap-6 rounded-full px-8 py-4 text-center font-bold")}>{retrying ? "Trying again…" : "Try again"} <ArrowRight aria-hidden="true" className="size-6 shrink-0" /></button> : <Link href={primaryTarget} prefetch={false} className={cn(styles.home, "mt-8 inline-flex min-h-14 max-w-full items-center justify-center gap-6 rounded-full px-8 py-4 text-center font-bold")}>
+                {primaryText} <ArrowRight aria-hidden="true" className="size-6 shrink-0" />
+              </Link>)}
+              {recoverable && <>
+                <p role="status" className="mt-3">{feedback}</p>
+                {digest && <details className="mt-3 break-all"><summary className="min-h-11 cursor-pointer py-3">Support reference</summary><code>{digest}</code><button type="button" onClick={copyReference} className="mt-2 block min-h-11 cursor-pointer underline underline-offset-4">Copy reference</button></details>}
+              </>}
+              {showSecondary && <nav aria-label="More places to explore" className={cn(styles.links, "mt-7 flex flex-wrap gap-x-6 gap-y-2")}>
+                {variant === "not-found" && !customActions ? <><Link href="/our-story" prefetch={false}>Our Story</Link><Link href="/whatwedo" prefetch={false}>What We Do</Link><Link href="/stories" prefetch={false}>Stories</Link></> : <>
+                  <Link href={secondaryTarget} prefetch={false}>{secondaryText}</Link>
+                  <Link href={variant === "network" ? "mailto:deessa.social@gmail.com" : "/contact"} prefetch={false}>Get in touch</Link>
+                </>}
+              </nav>}
+              {variant === "network" && <p className="mt-4 text-sm leading-relaxed">Other pages may be unavailable until you reconnect.</p>}
+            </div>
+          </div>
+        </section>
+      </Main>
     </div>
   )
 }
-
-
-

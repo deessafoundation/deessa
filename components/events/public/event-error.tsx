@@ -10,7 +10,7 @@ interface EventErrorProps {
   showHome?: boolean
   showRetry?: boolean
   error?: Error & { digest?: string }
-  onRetry?: () => void
+  onRetry?: () => void | Promise<void>
   homeHref?: string
   homeLabel?: string
 }
@@ -27,7 +27,9 @@ export function EventNotFound() {
     primaryHref="/events" primaryLabel="Browse events" secondaryHref="/" secondaryLabel="Back to home" />
 }
 
-export function EventRegistrationClosed() {
+export function EventRegistrationClosed({ eventHref, ended = false }: { eventHref?: string; ended?: boolean }) {
   return <ErrorPage variant="closed"
-    primaryHref="/events" primaryLabel="Browse events" secondaryHref="/" secondaryLabel="Back to home" />
+    title={ended ? "This event has ended." : undefined}
+    message={ended ? "This event has already taken place, so registration is no longer available. Explore our other events for another opportunity to connect." : undefined}
+    primaryHref="/events" primaryLabel="Browse events" secondaryHref={eventHref ?? "/"} secondaryLabel={eventHref ? "Back to event" : "Back to home"} />
 }

@@ -11,6 +11,7 @@ import { filterVisibleSteps } from "@/lib/validation/conditional-engine"
 import { registerForEvent } from "@/lib/actions/events-module/event-registration"
 import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
 import type { EventModuleEvent, EventTicketType } from "@/lib/types/events-module"
+import { EventRegistrationClosed } from "./event-error"
 
 interface EventRegistrationFormProps {
   event: EventModuleEvent
@@ -369,6 +370,10 @@ export function EventRegistrationForm({
   // Screen reader announcement for step changes
   const stepAnnouncement = `Step ${currentStep + 1} of ${totalSteps}: ${stepLabels[currentStep] ?? ""}`
 
+  if (isRegistrationClosed) {
+    return <EventRegistrationClosed eventHref={`/events/${event.slug}`} ended={isPastEvent} />
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Screen reader live region for step announcements */}
@@ -451,31 +456,6 @@ export function EventRegistrationForm({
           <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/5 blur-3xl" />
 
           <div className="relative z-10 p-8 sm:p-10">
-            {/* Registration closed guard */}
-            {isRegistrationClosed ? (
-              <div className="flex flex-col items-center gap-6 py-12 text-center">
-                <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-                  <AlertCircle className="size-8 text-muted-foreground" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-2xl font-bold text-foreground">
-                    {isPastEvent ? "Event Has Ended" : "Registration Closed"}
-                  </h2>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    {isPastEvent
-                      ? "This event has already taken place. Registration is no longer available."
-                      : "Registration for this event is no longer available."}
-                  </p>
-                </div>
-                <Link
-                  href={`/events/${event.slug}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
-                >
-                  Back to Event
-                </Link>
-              </div>
-            ) : (
-            <>
             {/* Form Steps */}
             {currentStep < steps.length && steps.length > 0 && (
               <DynamicStep
@@ -1110,8 +1090,6 @@ export function EventRegistrationForm({
                   </button>
                 </div>
               </div>
-            )}
-            </>
             )}
           </div>
         </div>
