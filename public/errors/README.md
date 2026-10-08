@@ -13,3 +13,6 @@ The installed Sharp dependency encodes square 768px WebP at quality 86. Original
 Typography matches the public site: Marissa Font headings and Comic Neue body copy, with shared ocean/deep-ocean brand tokens and neutral body text. Artwork is decorative; headings and recovery actions communicate each state independently. Motion can be paused and respects reduced-motion and sensory-friendly modes.
 
 /demo/errors previews eight states, contrast, 200% text and simulated retry outcomes. These controls do not change real authorization or connectivity. Initial offline navigation still requires separate caching.
+
+## Reference-led 404 (2026-10-05)
+The global 404 now uses puzzle-404.webp (1200 x 540, transparent WebP quality 92) and puzzle-hand.webp (1000 x 1250, quality 90). Generated from the user's supplied visual references with built-in ImageGen: ocean-blue watercolor 404 numerals with missing jigsaw opening and botanical texture; cream-sleeved hand holding a blue jigsaw piece toward sunlit sky. Page text, organic mask, navigation and leaves are live HTML/CSS/SVG. Other error states retain their prior artwork. Originals remain in Codex generated_images.

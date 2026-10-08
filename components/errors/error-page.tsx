@@ -5,6 +5,7 @@ import Image from "next/image"
 import { ArrowRight, Compass, Copy, House, LockKeyhole, RefreshCw, WifiOff, Wrench, MessageCircle, Heart, Star, Users, BookOpen, Pause, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
 import styles from "./error-page.module.css"
+import { PuzzleNotFound } from "./puzzle-not-found"
 
 export type ErrorVariant = "not-found" | "server" | "generic" | "network" | "unauthorized" | "closed"
 const actionLayout = "inline-flex min-h-12 max-w-full items-center justify-center gap-2.5 rounded-full border-2 px-5 py-3 text-center font-bold leading-snug whitespace-normal"
@@ -107,6 +108,10 @@ export function ErrorPage({
     } catch {
       setFeedback("Couldn’t copy the reference. You can select and copy the text below.")
     }
+  }
+
+  if (variant === "not-found" && !title && !message && !primaryHref && !secondaryHref && showPrimary && showSecondary) {
+    return <PuzzleNotFound preview={preview} standalone={standalone} />
   }
 
   const screen = (
