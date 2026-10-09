@@ -22,7 +22,7 @@ function Fields({ value, path, onChange }: { value: Value; path: string[]; onCha
     const video = /video/i.test(key)
     return <div className="space-y-2">
       <label htmlFor={id} className="block text-sm font-medium">{/^\d+$/.test(key) ? `Item ${Number(key) + 1}` : title(key)}</label>
-      {value.length > 90 || /description|quote|introduction/i.test(key)
+      {/description|quote|introduction/i.test(key)
         ? <Textarea id={id} value={value} onChange={event => onChange(path, event.target.value)} />
         : <Input id={id} value={value} onChange={event => onChange(path, event.target.value)} />}
       {media && <><Button type="button" variant="outline" onClick={() => setPicker(true)}>Choose or upload {video ? "video" : "image"}</Button>
@@ -74,7 +74,7 @@ export function WhatWeDoManager({ initialSettings }: { initialSettings: WhatWeDo
   }
   return <div className="mx-auto max-w-5xl space-y-6 p-6">
     <header><h1 className="text-2xl font-bold">What We Do</h1><p className="mt-2 text-slate-600">Edit the main page and all four areas of work. Program listings are managed separately.</p></header>
-    <div className="sticky top-0 z-20 flex flex-wrap items-center gap-3 rounded-xl border bg-white p-4">
+    <div className="sticky top-16 z-20 flex flex-wrap items-center gap-3 rounded-xl border bg-white p-4">
       <Button onClick={save} disabled={busy}>{busy ? "Saving…" : "Save content"}</Button>
       <Button variant="outline" disabled={!dirty || busy} onClick={() => { setSettings(saved); setError(""); setMessage("") }}>Discard unsaved changes</Button>
       <a href="/whatwedo" target="_blank" rel="noreferrer" className="underline">View public page</a>
