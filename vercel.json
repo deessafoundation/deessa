@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/expire-conference-registrations",
-      "schedule": "0 2 * * *"
-    }
-  ],
   "functions": {
     "app/api/receipts/download/route.ts": {
       "maxDuration": 30
