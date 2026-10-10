@@ -24,6 +24,7 @@ interface DonationFormProps {
   enabledProviders?: PaymentProvider[]
   primaryProvider?: PaymentProvider
   defaultCurrency?: "USD" | "NPR"
+  allowRecurring?: boolean
 }
 
 export function DonationForm({
@@ -31,6 +32,7 @@ export function DonationForm({
   enabledProviders = [],
   primaryProvider = "stripe",
   defaultCurrency = "USD",
+  allowRecurring = false,
 }: DonationFormProps) {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(50)
   const [customAmount, setCustomAmount] = useState("")
@@ -47,6 +49,12 @@ export function DonationForm({
       setProvider(enabledProviders[0] || "stripe")
     }
   }, [enabledProviders, provider])
+
+  useEffect(() => {
+    if (!allowRecurring) {
+      setIsMonthly(false)
+    }
+  }, [allowRecurring])
 
   const [donorInfo, setDonorInfo] = useState({
     firstName: "",
@@ -191,13 +199,13 @@ export function DonationForm({
         <Heart aria-hidden="true" className={cn(styles.accent, "mt-1 size-7 shrink-0")} />
       </div>
 
-      <fieldset className="mb-7">
+      {allowRecurring && <fieldset className="mb-7">
         <legend className="mb-3 text-sm font-bold">How often would you like to give?</legend>
         <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/50 p-1.5">
           <button type="button" aria-pressed={!isMonthly} onClick={() => setIsMonthly(false)} className={cn(styles.choice, "min-h-12 rounded-lg px-3 py-3 text-sm font-semibold")}>One-time</button>
           <button type="button" aria-pressed={isMonthly} onClick={() => setIsMonthly(true)} className={cn(styles.choice, "flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold")}><Repeat aria-hidden="true" className="size-4 shrink-0" />Monthly</button>
         </div>
-      </fieldset>
+      </fieldset>}
 
       <fieldset className="mb-7">
         <legend className="mb-1 text-sm font-bold">Payment method</legend>

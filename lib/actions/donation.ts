@@ -1,7 +1,12 @@
 "use server"
 
 import { createClient as createServiceClient } from "@supabase/supabase-js"
-import { getPaymentSettings, getSupportedProviders, type PaymentProvider } from "@/lib/payments/config"
+import {
+  getDonationCheckoutProviders,
+  getPaymentSettings,
+  isOnlineDonationCheckoutEnabled,
+  type PaymentProvider,
+} from "@/lib/payments/config"
 import { startStripeCheckout } from "@/lib/payments/stripe"
 import { startKhaltiPayment } from "@/lib/payments/khalti"
 import { startEsewaPayment } from "@/lib/payments/esewa"
@@ -37,6 +42,17 @@ export type StartDonationResult = {
 
 export async function startDonation(input: StartDonationInput): Promise<StartDonationResult> {
   try {
+    // The Donate page's testing notice is not a security boundary. Keep online
+    // checkout closed on the server until production readiness is explicitly
+    // approved; bank transfers and already-created provider callbacks use
+    // separate entry points and remain available.
+    if (!isOnlineDonationCheckoutEnabled()) {
+      return {
+        ok: false,
+        message: "Online donations are currently under testing. Please use bank transfer instead.",
+      }
+    }
+
     if (!input.amount || input.amount <= 0) {
       return { ok: false, message: "Invalid donation amount" }
     }
@@ -45,7 +61,11 @@ export async function startDonation(input: StartDonationInput): Promise<StartDon
     }
 
     const settings = await getPaymentSettings()
-    const availableProviders = getSupportedProviders(settings)
+    const availableProviders = getDonationCheckoutProviders(settings)
+
+    if (input.isMonthly && !settings.allowRecurring) {
+      return { ok: false, message: "Monthly donations are not currently available." }
+    }
 
     // Reject stale or disabled choices; substituting a gateway can change the currency.
     if (!availableProviders.includes(input.provider)) {

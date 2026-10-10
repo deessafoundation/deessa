@@ -10,6 +10,19 @@ export interface PaymentSettings {
   allowRecurring: boolean
 }
 
+/**
+ * Online donation checkout stays closed until a deliberate release decision.
+ *
+ * Provider credentials and an enabled admin setting are necessary, but not
+ * sufficient, to accept public donations. This server-only switch defaults to
+ * closed so a missing deployment variable cannot accidentally open checkout.
+ * It does not affect bank-transfer donations, provider callbacks, or event
+ * payment flows.
+ */
+export function isOnlineDonationCheckoutEnabled(): boolean {
+  return process.env.DONATION_ONLINE_CHECKOUT_ENABLED === "true"
+}
+
 // Khalti is intentionally absent: deessa takes local donations by direct bank
 // transfer instead (see lib/payments/bank-details.ts). The adapter and routes
 // remain in the tree but stay unreachable while KHALTI_SECRET_KEY is unset.
@@ -77,6 +90,24 @@ export async function getPaymentSettings(supabaseClient?: SupabaseClient): Promi
 export function getSupportedProviders(settings: PaymentSettings): PaymentProvider[] {
   // A provider is usable only if both env vars and settings allow it
   return settings.enabledProviders.filter((p) => isProviderEnvConfigured(p))
+}
+
+/**
+ * A donation checkout needs a verified callback path before it can be offered
+ * to a donor. Keep this stricter than the shared provider list because events
+ * and operational diagnostics have their own release requirements.
+ */
+export function getDonationCheckoutProviders(settings: PaymentSettings): PaymentProvider[] {
+  return getSupportedProviders(settings).filter((provider) => {
+    switch (provider) {
+      case "stripe":
+        return Boolean(process.env.STRIPE_WEBHOOK_SECRET)
+      case "esewa":
+        return Boolean(process.env.ESEWA_SECRET_KEY)
+      case "khalti":
+        return true
+    }
+  })
 }
 
 
