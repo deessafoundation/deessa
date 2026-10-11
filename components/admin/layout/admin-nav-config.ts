@@ -53,6 +53,7 @@ export const adminNavSections: AdminNavSection[] = [
     label: "Content",
     items: [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
+      { name: "Community Posts", href: "/admin/community-posts", icon: MessageSquare, permission: "settings", description: "Facebook posts on the homepage" },
       { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
       { name: "What We Do", href: "/admin/what-we-do", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },

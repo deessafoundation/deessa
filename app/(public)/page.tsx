@@ -22,6 +22,8 @@ import {
 } from "@/lib/data/homepage-settings"
 import { getArtsContent, getHomepageArtworks } from "@/lib/data/artworks"
 import { HomeArtFeature } from "@/components/arts/home-art-feature"
+import { CommunitySection } from "@/components/facebook-posts/community-section"
+import { getHomepageFacebookPosts } from "@/lib/data/facebook-posts"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 // Homepage content comes from the shared CMS. Always render it from the
@@ -52,12 +54,13 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default async function HomePage() {
   // Fetch CMS data for homepage
-  const [storySettings, whatWeDoSettings, heroCarouselSettings, testimonialsSettings, homeArtworks] = await Promise.all([
+  const [storySettings, whatWeDoSettings, heroCarouselSettings, testimonialsSettings, homeArtworks, communityPosts] = await Promise.all([
     getHomepageStory(),
     getHomepageWhatWeDo(),
     getHomepageHeroCarousel(),
     getHomepageTestimonials(),
     getHomepageArtworks(),
+    getHomepageFacebookPosts(),
   ])
   const artsContent = homeArtworks.length ? await getArtsContent() : null
 
@@ -124,6 +127,8 @@ export default async function HomePage() {
 
       {/* 8. TESTIMONIALS - CMS POWERED */}
       <TestimonialsSection testimonials={testimonialsSettings} />
+
+      <CommunitySection posts={communityPosts} />
 
       {/* 9. CONTACT / VISIT OFFICE */}
       <ContactSection />
