@@ -1,5 +1,21 @@
+import { readdirSync, statSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+import { join } from "node:path"
+
+// Check local media at build time; runtime fs checks would bundle CDN assets.
+const publicRoot = fileURLToPath(new URL("./public/", import.meta.url))
+const publicFiles = readdirSync(publicRoot, { recursive: true })
+  .filter(file => statSync(join(publicRoot, file)).isFile())
+  .map(file => `/${file.split("\\").join("/")}`)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    WHAT_WE_DO_PUBLIC_FILES: JSON.stringify(publicFiles),
+  },
+  outputFileTracingExcludes: {
+    "/whatwedo/*": ["./public/**/*"],
+  },
   // Production build optimizations and configuration
   // Prevent Next.js from bundling packages that rely on Node.js native modules,
   // WASM binaries, or dynamic require() calls. These must be loaded by the Node.js

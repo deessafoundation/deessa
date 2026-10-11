@@ -1,12 +1,13 @@
 import Link from "next/link"
-import { existsSync } from "node:fs"
-import { resolve, sep } from "node:path"
+import { relative, resolve, sep } from "node:path"
 import { ArrowDown, ArrowRight, Check, Scale } from "lucide-react"
 import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
 import { WhatWeDoVideoPlayer } from "./what-we-do-video-player"
 import { InclusiveSchool } from "./inclusive-school"
 import { AwarenessAnimatedStory } from "@/components/whatwedo/awareness-animated-story"
 import styles from "./advocacy-detail.module.css"
+
+const publicFiles: string[] = JSON.parse(process.env.WHAT_WE_DO_PUBLIC_FILES || "[]")
 
 export function AdvocacyDetail({ content }: { content: WhatWeDoSettings }) {
   const area = content.areas.advocacy
@@ -24,7 +25,8 @@ export function AdvocacyDetail({ content }: { content: WhatWeDoSettings }) {
   // The default animated-story MP4 is not supplied yet. Keep its saved content,
   // but do not offer a broken player; uploaded HTTPS media remains supported.
   const storyAvailable = storySource.startsWith("https://") ||
-    (storyPath.startsWith(`${publicRoot}${sep}`) && existsSync(storyPath))
+    (storyPath.startsWith(`${publicRoot}${sep}`) &&
+      publicFiles.includes(`/${relative(publicRoot, storyPath).split(sep).join("/")}`))
   const showStory = content.animatedStory.enabled && storyAvailable && !seen.has(storySource)
 
   return (
