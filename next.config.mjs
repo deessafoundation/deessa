@@ -52,6 +52,10 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Keep retired conference links reversible during the archive observation period.
+      { source: '/conference/:path*', destination: '/events', permanent: false },
+      { source: '/admin/conference/:path*', destination: '/admin/events', permanent: false },
+      { source: '/complete-payment', destination: '/events', permanent: false },
       // Preserve saved CMS image URLs after removing superseded files.
       { source: '/podcast_banner.png', destination: '/podcast_banner.jpeg', permanent: true },
       { source: '/home/podcast/deessa-podcast-studio.png', destination: '/podcast_banner.jpeg', permanent: true },
@@ -106,7 +110,7 @@ const nextConfig = {
               // preview in a blob: iframe (components/donations/receipt-preview.tsx,
               // app/demo/receipt/page.tsx) — 'self' does NOT implicitly cover
               // the blob: scheme for frame-src, it must be listed explicitly.
-              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com",
+              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.facebook.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

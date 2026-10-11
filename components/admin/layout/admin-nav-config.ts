@@ -8,7 +8,6 @@ import {
   Users,
   Building,
   BarChart3,
-  CalendarRange,
   HandHeart,
   Receipt,
   Heart,
@@ -54,6 +53,7 @@ export const adminNavSections: AdminNavSection[] = [
     label: "Content",
     items: [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
+      { name: "Community Posts", href: "/admin/community-posts", icon: MessageSquare, permission: "settings", description: "Facebook posts on the homepage" },
       { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
       { name: "What We Do", href: "/admin/what-we-do", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },
@@ -71,7 +71,6 @@ export const adminNavSections: AdminNavSection[] = [
   {
     label: "Engagement",
     items: [
-      { name: "Conference", href: "/admin/conference", icon: CalendarRange, permission: null },
       { name: "Donations", href: "/admin/donations", icon: HandHeart, permission: "donations", requiresFinance: true },
       { name: "Payments", href: "/admin/payments", icon: Receipt, permission: "donations", requiresFinance: true, description: "Receipt & Email Monitoring" },
       { name: "Volunteers", href: "/admin/volunteers", icon: Heart, permission: "volunteers" },

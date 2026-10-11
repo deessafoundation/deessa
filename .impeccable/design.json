@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T00:00:00Z",
+  "title": "Design System: deessa Foundation public brand evidence",
+  "extensions": {
+    "shadows": [],
+    "motion": [
+      {
+        "name": "events-action",
+        "value": "background 180ms ease",
+        "purpose": "Events primary-action hover; disabled under reduced-motion preference."
+      }
+    ],
+    "heroTreatment": "Events-specific desktop scale approximately 25% larger at normal zoom: max width 1400px, gap 45px, padding 40px, heading clamp 88–110px, tagline 40px, body 20px/max425px, foundation label 14px, CTA17px/min54px. Earlier mobile scale preserved. Custom SVG photo shapes with white contours; communication photo scale1.2. Actual Chrome125% zoom not tested."
+  },
+  "components": [
+    {
+      "name": "Events Primary Action",
+      "kind": "button",
+      "refersTo": "events-primary",
+      "description": "Deep-blue action; desktop hero uses 17px copy and 54px minimum height, with earlier mobile sizing preserved.",
+      "html": "<button class=\"ds-events-primary\">Explore events</button>",
+      "css": ".ds-events-primary{background:rgb(var(--brand-primary-dark,11 95 138));color:#fff;border:0;border-radius:999px;padding:10px 18px;min-height:44px;font-family:\"Comic Neue\",sans-serif;font-weight:700;transition:background 180ms ease}.ds-events-primary:hover{background:#085674}.ds-events-primary:focus-visible{outline:3px solid rgb(var(--brand-primary-dark,11 95 138));outline-offset:4px}"
+    },
+    {
+      "name": "Events Secondary Action",
+      "kind": "button",
+      "description": "Outlined supporting action; desktop hero uses 17px copy and 54px minimum height, with earlier mobile sizing preserved.",
+      "html": "<button class=\"ds-events-secondary\">Host an event with us</button>",
+      "css": ".ds-events-secondary{background:#fff;color:rgb(var(--brand-primary-dark,11 95 138));border:1px solid #91bed2;border-radius:999px;padding:10px 18px;min-height:44px;font-family:\"Comic Neue\",sans-serif;font-weight:700}.ds-events-secondary:hover{background:#e8f6fc}.ds-events-secondary:focus-visible{outline:3px solid currentColor;outline-offset:4px}"
+    },
+    {
+      "name": "Events Search",
+      "kind": "input",
+      "description": "Labeled search field within native details when more than one event exists.",
+      "html": "<label for=\"ds-events-search\">Search events by name or location</label><input class=\"ds-events-input\" id=\"ds-events-search\" type=\"search\" placeholder=\"Search events or places\">",
+      "css": ".ds-events-input{display:block;background:#fff;color:#0b5f8a;border:1px solid #cfdfe8;border-radius:8px;padding:12px;min-height:48px;font:16px \"Comic Neue\",sans-serif}.ds-events-input::placeholder{color:#445e7b;opacity:1}.ds-events-input:hover{border-color:#0b5f8a}.ds-events-input:focus-visible{outline:3px solid #0b5f8a;outline-offset:4px}"
+    },
+    {
+      "name": "Events Category",
+      "kind": "chip",
+      "description": "Selected category chip; selection is exposed through aria-pressed.",
+      "html": "<button class=\"ds-events-chip\" aria-pressed=\"true\">Seminar</button>",
+      "css": ".ds-events-chip{background:#e8f6fc;color:#0b5f8a;border:1px solid #0b5f8a;border-radius:999px;padding:8px 16px;min-height:44px;font:700 14px \"Comic Neue\",sans-serif}.ds-events-chip:hover{background:#edf4f7}.ds-events-chip:focus-visible{outline:3px solid #0b5f8a;outline-offset:4px}"
+    },
+    {
+      "name": "Events Listing Row",
+      "kind": "card",
+      "description": "Bordered white image/date/details row; stacked on mobile.",
+      "html": "<article class=\"ds-events-card\"><h3>Event title</h3><a href=\"/events\">View event details</a></article>",
+      "css": ".ds-events-card{background:#fff;color:#0b5f8a;border-radius:16px;padding:24px;border:1px solid #cfdfe8;font-family:\"Comic Neue\",sans-serif}.ds-events-card h3{font-family:\"Marissa Font\",\"Comic Neue\",sans-serif;font-weight:400}.ds-events-card a{color:#0b5f8a;text-underline-offset:5px}.ds-events-card a:hover{text-decoration:underline}.ds-events-card a:focus-visible{outline:3px solid #0b5f8a;outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Existing public-site continuity",
+    "overview": "This is an extracted reference, restricted to the public brand evidence in global CSS, the donate page, and the finalized `/events` implementation. It does not prescribe a new global visual world or describe administrative interfaces. The existing public site is authoritative.",
+    "keyCharacteristics": [
+      "Ocean-blue identity and pale-blue supporting surfaces.",
+      "Marissa headings and Comic Neue copy, respecting accessibility font overrides.",
+      "Rounded actions and restrained existing watercolor artwork."
+    ],
+    "rules": [],
+    "dos": [
+      "Do follow the existing public-site palette, type, and assets.",
+      "Do keep events-specific color and contrast rules in its CSS module.",
+      "Do respect accessibility font modes and explicit focus and selection states."
+    ],
+    "donts": [
+      "Don't treat the events layout as a new global identity.",
+      "Don't reintroduce the rejected warm-paper editorial direction for events.",
+      "Don't use arbitrary hexadecimal Tailwind color classes on interactive elements or their ancestors; repository contrast selectors can override them."
+    ]
+  }
+}

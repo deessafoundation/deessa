@@ -9,7 +9,7 @@ import type {
   FormStep,
   FormField,
   FieldType,
-} from "./conference-form-schema";
+} from "./event-form-schema";
 
 // Re-export for convenience
 export type { FormSchema, FormStep, FormField, FieldType };

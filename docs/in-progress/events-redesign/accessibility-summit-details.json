@@ -1,0 +1,375 @@
+{
+  "event": {
+    "id": "52c72524-7cf7-4275-8739-30ea31119669",
+    "title": "NEPAL ACCESSIBILITY SUMMIT 2026",
+    "slug": "nepal-accessibility-summit-2026",
+    "description": "deessa Foundation, in collaboration with the Kathmandu University School of Education (KUSOED), cordially invites you to participate in the Nepal Accessibility Summit 2026.\n\nCentered around the theme, \"Accessible Nepal 2026: Advancing Inclusive Education, Health, Social Protection, and Urban Futures,\" the summit will bring together policymakers, educators, researchers, development partners, disability advocates, practitioners, and community leaders to exchange knowledge, share best practices, and foster innovative solutions for building a more accessible and inclusive Nepal.\n\nThe two-day summit will feature keynote addresses, panel discussions, technical sessions, workshops, and networking opportunities, providing a platform for meaningful dialogue and collaboration on accessibility across education, healthcare, social protection, and urban development.\n\nEvent Details\n\nOrganizer: deessa Foundation\nIn Collaboration With: Kathmandu University School of Education (KUSOED)\nTheme: Accessible Nepal 2026: Advancing Inclusive Education, Health, Social Protection, and Urban Futures\nVenue: Pokhara (Venue to be announced)\nDate: 12–13 October 2026 (26–27 Ashwin 2083)\n\nWe warmly welcome your participation in this landmark event as we work together to advance accessibility, inclusion, and equal opportunities for all.",
+    "short_description": "Accessible Nepal 2026: Advancing Inclusive Education, Health, Social Protection, and Urban Futures",
+    "event_date": "2026-11-30",
+    "event_time": "09:00 AM",
+    "event_end_date": "2026-12-01",
+    "location": "Pokhara ( Venue TBD ) ",
+    "venue_name": "( TBD )",
+    "address": "( TBD )",
+    "latitude": 28.216519293589116,
+    "longitude": 83.9477849613833,
+    "image": "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/event-images/0c49f606-b595-4676-a48c-3963b56398d8/1785946671573-nodaxc.png",
+    "banner_url": "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/event-images/0c49f606-b595-4676-a48c-3963b56398d8/1786017807869-esb6tm.png",
+    "gallery": [
+      "https://scontent.fbhr4-1.fna.fbcdn.net/v/t39.30808-1/762660767_122104692351409492_3920117282308881116_n.jpg?stp=dst-jpg_tt6&cstp=mx679x692&ctp=s200x200&_nc_cat=109&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=3_C7y2he6_oQ7kNvwEToWFX&_nc_oc=AdoArCzW6_jXU9rhwxU0G1CJmkyUdEp4SuND8_3Nb4OhX-aLUBmGme0qSAQnFuIMD-g&_nc_zt=24&_nc_ht=scontent.fbhr4-1.fna&_nc_gid=SzUvup4NAUbKdc00t2dskw&_nc_ss=7c289&oh=00_AQEHej7icuQ6G8Ocvfs9N8wSD1uCANdqgg1VF4oUlQ4IeQ&oe=6A79295C",
+      "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/event-images/0c49f606-b595-4676-a48c-3963b56398d8/1785946688508-ea222h.png",
+      "https://tqljblbdfhjfqnegjobi.supabase.co/storage/v1/object/public/event-images/0c49f606-b595-4676-a48c-3963b56398d8/1785946671573-nodaxc.png",
+      "https://scontent.fbhr4-1.fna.fbcdn.net/v/t39.30808-6/763065151_122104134639409492_6236755279563861063_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x609&ctp=s960x960&_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=xrtrQLNqsTAQ7kNvwHVc5rW&_nc_oc=Adr42JQaaGoxC9mMfOEqAq-FHRf2kmuppeO4KjZcipN1MLKBV8SorOmSF55mgR1kHDo&_nc_zt=23&_nc_ht=scontent.fbhr4-1.fna&_nc_gid=SzUvup4NAUbKdc00t2dskw&_nc_ss=7c289&oh=00_AQFyzgcgHj4pI-C0kBaNW9i-RYAp6s_dlajhHsT4jsu-MQ&oe=6A794332"
+    ],
+    "status": "published",
+    "category": "seminar",
+    "registration_enabled": true,
+    "registration_open_at": null,
+    "registration_close_at": null,
+    "max_capacity": null,
+    "is_free": false,
+    "contact_email": "nepalaccessibilitysummit@gmail.com",
+    "created_at": "2026-08-05T12:46:41.244601+00:00",
+    "updated_at": "2026-08-07T09:29:24.703+00:00",
+    "payment_qr_image_url": "https://scontent.fbhr4-1.fna.fbcdn.net/v/t39.30808-1/762660767_122104692351409492_3920117282308881116_n.jpg?stp=dst-jpg_tt6&cstp=mx679x692&ctp=s200x200&_nc_cat=109&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=3_C7y2he6_oQ7kNvwEToWFX&_nc_oc=AdoArCzW6_jXU9rhwxU0G1CJmkyUdEp4SuND8_3Nb4OhX-aLUBmGme0qSAQnFuIMD-g&_nc_zt=24&_nc_ht=scontent.fbhr4-1.fna&_nc_gid=SzUvup4NAUbKdc00t2dskw&_nc_ss=7c289&oh=00_AQEHej7icuQ6G8Ocvfs9N8wSD1uCANdqgg1VF4oUlQ4IeQ&oe=6A79295C",
+    "payment_instructions": "Scan the QR code and Pay based on your ticket type amount . Provide your name in remarks and Upload the SS during registration",
+    "allow_online_payment": true,
+    "allow_qr_payment": true,
+    "allow_pay_at_venue": true,
+    "payment_bank_name": "Global IME Bank Limited",
+    "payment_account_name": "Deessa Foundation",
+    "payment_account_number": "10501010001243"
+  },
+  "event_agenda_items": [
+    {
+      "id": "090696ae-fe68-4250-b3ba-ce6535015d39",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "day_number": 1,
+      "day_label": "Day 1 Opening",
+      "start_time": "09:00 AM",
+      "end_time": "10:00 AM",
+      "title": "Opening Ceremony & Keynote Address",
+      "description": "Official inauguration of the Nepal Accessibility Summit 2026, featuring welcome remarks from organizers, distinguished guests, and keynote speakers discussing the vision for an accessible and inclusive Nepal.",
+      "speaker_name": null,
+      "speaker_title": null,
+      "track_or_room": null,
+      "sort_order": 0,
+      "created_at": "2026-08-05T16:33:36.155951+00:00",
+      "updated_at": "2026-08-05T16:36:25.757+00:00",
+      "highlighted": true
+    },
+    {
+      "id": "0c454a54-a6e0-459d-b108-1ec3bfb5abed",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "day_number": 1,
+      "day_label": null,
+      "start_time": "01:30 PM",
+      "end_time": "03:00 PM",
+      "title": "Multi-Stakeholder Panel Discussion",
+      "description": "Government representatives, Organizations of Persons with Disabilities (OPDs), academia, development partners, and the private sector discuss policy gaps, implementation challenges, and strategies to promote Universal Design and accessibility across Nepal.",
+      "speaker_name": null,
+      "speaker_title": null,
+      "track_or_room": null,
+      "sort_order": 1,
+      "created_at": "2026-08-05T16:34:50.759743+00:00",
+      "updated_at": "2026-08-05T16:34:50.759743+00:00",
+      "highlighted": false
+    },
+    {
+      "id": "fbaf8c8d-4443-4a2e-b581-cdc356584832",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "day_number": 2,
+      "day_label": null,
+      "start_time": "10:00 AM",
+      "end_time": "12:30 PM",
+      "title": "Interactive Workshops & Accessibility Demonstration",
+      "description": "Hands-on workshops and live accessibility demonstrations showcasing Universal Design principles, accessibility audits, and practical solutions that participants can apply in their own institutions and communities",
+      "speaker_name": null,
+      "speaker_title": null,
+      "track_or_room": null,
+      "sort_order": 0,
+      "created_at": "2026-08-05T16:35:43.736973+00:00",
+      "updated_at": "2026-08-05T16:36:28.23+00:00",
+      "highlighted": true
+    },
+    {
+      "id": "73e2b766-e3bd-4bdd-bde5-f14acd031160",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "day_number": 2,
+      "day_label": null,
+      "start_time": "02:00 PM",
+      "end_time": "04:30 PM",
+      "title": "Case Story Sharing & Closing Plenary",
+      "description": "Persons with disabilities share their lived experiences, followed by a collaborative plenary session where key recommendations and future actions are presented before the official closing of the summit.",
+      "speaker_name": null,
+      "speaker_title": null,
+      "track_or_room": null,
+      "sort_order": 1,
+      "created_at": "2026-08-05T16:36:31.391545+00:00",
+      "updated_at": "2026-08-05T16:36:31.391545+00:00",
+      "highlighted": false
+    }
+  ],
+  "event_ticket_types": [
+    {
+      "id": "5687926c-b25c-48f3-9ab2-4405fde71dcc",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "name": "Individual Ticket",
+      "price": 3000,
+      "currency": "NPR",
+      "capacity": 100,
+      "sales_start": "2026-08-04T18:15:00+00:00",
+      "sales_end": "2026-10-11T18:14:00+00:00",
+      "is_active": true,
+      "sort_order": 0,
+      "created_at": "2026-08-05T12:51:44.262706+00:00",
+      "sold_count": 4,
+      "price_tbd": false
+    },
+    {
+      "id": "159fbca5-6b0a-4d5c-9df8-ea4349b8ab8b",
+      "event_id": "52c72524-7cf7-4275-8739-30ea31119669",
+      "name": "Organization Ticket",
+      "price": 5000,
+      "currency": "NPR",
+      "capacity": 100,
+      "sales_start": "2026-08-07T18:15:00+00:00",
+      "sales_end": "2026-10-11T18:14:00+00:00",
+      "is_active": true,
+      "sort_order": 1,
+      "created_at": "2026-08-05T12:53:52.125855+00:00",
+      "sold_count": 1,
+      "price_tbd": false
+    }
+  ],
+  "event_form_schemas": [
+    {
+      "form_config": {
+        "steps": [
+          {
+            "id": "personal",
+            "label": "Personal Information",
+            "order": 0,
+            "fields": [
+              {
+                "id": "full_name",
+                "type": "text",
+                "label": "Full Name",
+                "order": 0,
+                "storage": "core",
+                "required": true,
+                "placeholder": "Enter your name "
+              },
+              {
+                "id": "email",
+                "type": "email",
+                "label": "Email Address",
+                "order": 1,
+                "storage": "core",
+                "required": true,
+                "placeholder": "Enter the email address"
+              },
+              {
+                "id": "phone",
+                "type": "tel",
+                "label": "Phone Number",
+                "order": 2,
+                "storage": "core",
+                "required": false,
+                "placeholder": "(+977) (9700000000)"
+              },
+              {
+                "id": "field_1785934771082_d2h3ay8",
+                "type": "radio",
+                "label": "Gender",
+                "order": 3,
+                "options": [
+                  {
+                    "label": "Male",
+                    "value": "male"
+                  },
+                  {
+                    "label": "Female",
+                    "value": "female"
+                  },
+                  {
+                    "label": "Others",
+                    "value": "others"
+                  }
+                ],
+                "storage": "custom",
+                "required": true
+              },
+              {
+                "id": "field_1785934885073_xjphf2h",
+                "type": "text",
+                "label": "Affiliated Organization",
+                "order": 4,
+                "storage": "custom",
+                "required": false,
+                "placeholder": "Enter the affiliated Organization "
+              },
+              {
+                "id": "field_1785934962486_gch2bp4",
+                "type": "text",
+                "label": "Designation / Position",
+                "order": 5,
+                "storage": "custom",
+                "required": false,
+                "placeholder": "Your designation"
+              }
+            ],
+            "description": "Please provide your contact information"
+          },
+          {
+            "id": "step_1785935549901_0yop59a",
+            "label": "Participation Details",
+            "order": 1,
+            "fields": [
+              {
+                "id": "field_1785935578807_e7vjcpi",
+                "type": "radio",
+                "label": "Will you be attending as ?",
+                "order": 0,
+                "options": [
+                  {
+                    "label": "Summit Participant",
+                    "value": "summit_participant"
+                  },
+                  {
+                    "label": "Presenter",
+                    "value": "presenter"
+                  },
+                  {
+                    "label": "Both",
+                    "value": "both"
+                  }
+                ],
+                "storage": "custom",
+                "required": false
+              },
+              {
+                "id": "field_1785935667640_sz9pscb",
+                "type": "radio",
+                "label": "Representing ?",
+                "order": 1,
+                "options": [
+                  {
+                    "label": "Individual",
+                    "value": "individual"
+                  },
+                  {
+                    "label": "Organization",
+                    "value": "organization"
+                  }
+                ],
+                "storage": "custom",
+                "required": false
+              }
+            ],
+            "description": ""
+          },
+          {
+            "id": "step_1785935913666_54tzrt4",
+            "label": "Presentation Themes",
+            "order": 2,
+            "fields": [
+              {
+                "id": "field_1785936025827_lua49yx",
+                "type": "checkbox",
+                "label": "Select the theme you would like to attend",
+                "order": 0,
+                "options": [
+                  {
+                    "label": "Access in Education",
+                    "value": "access_in_education"
+                  },
+                  {
+                    "label": "Access in Health Service",
+                    "value": "access_in_health_service"
+                  },
+                  {
+                    "label": "Access in Social Protection",
+                    "value": "access_in_social_protection"
+                  },
+                  {
+                    "label": "Accessibility and Urbanization",
+                    "value": "accessibility_and_urbanization"
+                  }
+                ],
+                "storage": "custom",
+                "required": true,
+                "conditional": {
+                  "logic": "or",
+                  "value": "",
+                  "operator": "equals",
+                  "dependsOn": "",
+                  "conditions": [
+                    {
+                      "value": "summit_participant",
+                      "operator": "equals",
+                      "dependsOn": "field_1785935578807_e7vjcpi"
+                    },
+                    {
+                      "value": "both",
+                      "operator": "equals",
+                      "dependsOn": "field_1785935578807_e7vjcpi"
+                    }
+                  ]
+                }
+              }
+            ],
+            "description": "If you are participating in the summit, please select one theme that you would like to attend"
+          },
+          {
+            "id": "step_1785936223281_akutibt",
+            "label": "Presentation Details",
+            "order": 3,
+            "fields": [
+              {
+                "id": "field_1785936263731_z2fzo8h",
+                "type": "textarea",
+                "label": "Presentation Summary",
+                "order": 0,
+                "storage": "custom",
+                "required": true,
+                "validation": {
+                  "maxLength": 300,
+                  "minLength": 100
+                },
+                "conditional": {
+                  "logic": "or",
+                  "value": "",
+                  "operator": "equals",
+                  "dependsOn": "",
+                  "conditions": [
+                    {
+                      "value": "presenter",
+                      "operator": "equals",
+                      "dependsOn": "field_1785935578807_e7vjcpi"
+                    },
+                    {
+                      "value": "both",
+                      "operator": "equals",
+                      "dependsOn": "field_1785935578807_e7vjcpi"
+                    }
+                  ]
+                },
+                "placeholder": "Tell us about the presentation in brief in 100-300 words"
+              }
+            ],
+            "description": "If you are participating as a presenter, please share your summary of your presentation in 100-300 words in either Nepali or English"
+          }
+        ],
+        "version": 8,
+        "metadata": {
+          "createdAt": "2026-08-05T12:46:35.558Z",
+          "createdBy": "system",
+          "updatedAt": "2026-10-10T09:09:18.091Z"
+        }
+      },
+      "version": 8,
+      "is_active": true
+    }
+  ]
+}

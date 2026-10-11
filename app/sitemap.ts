@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
+import { accessibilitySummit } from '@/lib/data/accessibility-summit'
 
 /**
  * Dynamic sitemap generation for deessa Foundation
@@ -112,12 +113,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/conference`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/privacy`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
@@ -134,7 +129,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch dynamic content from database
   const dynamicRoutes = await getDynamicRoutes(baseUrl)
 
-  return [...staticRoutes, ...dynamicRoutes]
+  const summitRoute: MetadataRoute.Sitemap[number] = {
+    url: `${baseUrl}/events/${accessibilitySummit.slug}`,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }
+  return [...staticRoutes, summitRoute, ...dynamicRoutes.filter((route) => route.url !== summitRoute.url)]
 }
 
 /**

@@ -1,0 +1,15 @@
+﻿import { ConferenceRegistrationForm } from "@/components/archive/conference/public/conference-registration-form"
+import { getActiveFormSchema } from "@/lib/actions/conference-form-schema"
+
+export const metadata = {
+  title: "Register | deessa National Conference 2026",
+  description:
+    "Register for the deessa National Conference 2026, Oct 15–17 in Kathmandu, Nepal.",
+}
+
+export default async function ConferenceRegisterPage() {
+  // Fetch the active form schema, falls back gracefully if no schema exists yet
+  const schema = await getActiveFormSchema()
+
+  return <ConferenceRegistrationForm schema={schema} />
+}

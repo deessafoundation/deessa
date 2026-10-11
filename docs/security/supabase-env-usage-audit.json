@@ -1,0 +1,1367 @@
+{
+  "scanned": 2064,
+  "byKey": {
+    "SUPABASE_SERVICE_ROLE_KEY": [
+      {
+        "file": "docs/features/seo/indexing-fixes-summary.md",
+        "line": 281
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 40
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 46
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 71
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 87
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 88
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 92
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 93
+      },
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 129
+      },
+      {
+        "file": "__tests__\\setup.ts",
+        "line": 14
+      },
+      {
+        "file": "lib\\data\\podcasts.ts",
+        "line": 232
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.sh",
+        "line": 113
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.ps1",
+        "line": 144
+      },
+      {
+        "file": "scripts\\ops\\check-env-vars.js",
+        "line": 22
+      },
+      {
+        "file": ".env.local",
+        "line": 23
+      },
+      {
+        "file": ".env.example",
+        "line": 28
+      },
+      {
+        "file": ".env",
+        "line": 38
+      },
+      {
+        "file": ".kiro\\specs\\stripe-webhook-vercel-fix\\requirements.md",
+        "line": 37
+      },
+      {
+        "file": ".kiro\\specs\\stripe-webhook-vercel-fix\\design.md",
+        "line": 67
+      },
+      {
+        "file": ".kiro\\specs\\stripe-webhook-vercel-fix\\design.md",
+        "line": 157
+      },
+      {
+        "file": ".kiro\\specs\\stripe-webhook-vercel-fix\\design.md",
+        "line": 353
+      },
+      {
+        "file": "__tests__\\payments\\donation-provider-failclosed.test.ts",
+        "line": 44
+      },
+      {
+        "file": "scripts\\fixes\\README.md",
+        "line": 110
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 40
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 59
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 112
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 126
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 135
+      },
+      {
+        "file": "lib\\actions\\events-module\\event-registration.ts",
+        "line": 438
+      },
+      {
+        "file": "lib\\actions\\donation.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\actions\\donation-receipt.ts",
+        "line": 15
+      },
+      {
+        "file": "lib\\actions\\conference-registration.ts",
+        "line": 108
+      },
+      {
+        "file": "lib\\actions\\admin-payment-actions.ts",
+        "line": 9
+      },
+      {
+        "file": "lib\\actions\\admin-donation-review.ts",
+        "line": 15
+      },
+      {
+        "file": "lib\\actions\\admin-donation-actions.ts",
+        "line": 12
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 1021
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 1076
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 2862
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 3552
+      },
+      {
+        "file": "docs\\planning\\payment-mode-removal.md",
+        "line": 142
+      },
+      {
+        "file": "docs\\operations\\vercel-receipt-deployment.md",
+        "line": 66
+      },
+      {
+        "file": "docs\\operations\\vercel-receipt-deployment.md",
+        "line": 290
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 4
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 6
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 7
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 11
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 4
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 10
+      },
+      {
+        "file": "docs\\operations\\deployment-readme.md",
+        "line": 229
+      },
+      {
+        "file": "docs\\operations\\deployment-guide.md",
+        "line": 65
+      },
+      {
+        "file": "docs\\operations\\deployment-guide.md",
+        "line": 534
+      },
+      {
+        "file": "docs\\operations\\credential-rotation-guide.md",
+        "line": 602
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_QUICK_REFERENCE.md",
+        "line": 27
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_GUIDE.md",
+        "line": 114
+      },
+      {
+        "file": "lib\\payments\\validation.ts",
+        "line": 111
+      },
+      {
+        "file": "lib\\payments\\reconciliation.ts",
+        "line": 78
+      },
+      {
+        "file": "docs\\INDEXING_ISSUES_DIAGNOSIS.md",
+        "line": 471
+      },
+      {
+        "file": "docs\\INDEXING_ISSUES_DIAGNOSIS.md",
+        "line": 477
+      },
+      {
+        "file": "lib\\payments\\core\\PaymentService.ts",
+        "line": 58
+      },
+      {
+        "file": "lib\\payments\\core\\PaymentService.ts",
+        "line": 65
+      },
+      {
+        "file": "lib\\receipts\\service.ts",
+        "line": 24
+      },
+      {
+        "file": "lib\\receipts\\generator.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\rate-limit.ts",
+        "line": 37
+      },
+      {
+        "file": "lib\\supabase\\service.ts",
+        "line": 5
+      },
+      {
+        "file": "lib\\monitoring\\alerts.ts",
+        "line": 464
+      },
+      {
+        "file": "lib\\monitoring\\logging.ts",
+        "line": 535
+      },
+      {
+        "file": "lib\\monitoring\\README.md",
+        "line": 137
+      },
+      {
+        "file": "lib\\monitoring\\metrics.ts",
+        "line": 120
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 19
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 107
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 140
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 15
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 366
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 368
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 4
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 10
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 13
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 39
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 42
+      },
+      {
+        "file": "docs\\in-progress\\programs-cms\\RELEASE-RUNBOOK.md",
+        "line": 161
+      },
+      {
+        "file": "app\\sitemap.ts",
+        "line": 147
+      },
+      {
+        "file": "docs/features/seo/indexing-deployment-guide.md",
+        "line": 35
+      },
+      {
+        "file": "docs/features/seo/indexing-deployment-guide.md",
+        "line": 207
+      },
+      {
+        "file": "docs\\architecture\\security-vulnerabilities.md",
+        "line": 506
+      },
+      {
+        "file": "docs\\architecture\\security-vulnerabilities.md",
+        "line": 564
+      },
+      {
+        "file": "docs\\archive\\donations-deployment-guide.md",
+        "line": 119
+      },
+      {
+        "file": "docs\\archive\\deployment-summary.md",
+        "line": 271
+      },
+      {
+        "file": "docs\\features\\story-editor\\developer-docs.md",
+        "line": 623
+      },
+      {
+        "file": "docs\\features\\conference\\10-improvements-risks.md",
+        "line": 128
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 45
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 92
+      },
+      {
+        "file": "docs\\features\\conference\\03-database-schema.md",
+        "line": 763
+      },
+      {
+        "file": "docs\\features\\conference\\08-security.md",
+        "line": 306
+      },
+      {
+        "file": "docs\\features\\conference\\08-security.md",
+        "line": 315
+      },
+      {
+        "file": "docs\\features\\conference\\08-security.md",
+        "line": 343
+      },
+      {
+        "file": "docs\\features\\conference\\08-security.md",
+        "line": 420
+      },
+      {
+        "file": "docs\\features\\conference\\02-architecture.md",
+        "line": 566
+      },
+      {
+        "file": "docs\\features\\conference\\02-architecture.md",
+        "line": 890
+      },
+      {
+        "file": "docs\\features\\conference\\01-overview.md",
+        "line": 591
+      },
+      {
+        "file": "docs\\features\\conference\\11-appendix.md",
+        "line": 366
+      },
+      {
+        "file": "docs\\features\\events\\08-DEPLOYMENT.md",
+        "line": 38
+      },
+      {
+        "file": "docs\\features\\events\\event-payment\\07-configuration.md",
+        "line": 19
+      },
+      {
+        "file": "docs\\features\\events\\event-payment\\01-overview.md",
+        "line": 83
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-verification.md",
+        "line": 122
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-verification.md",
+        "line": 142
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 176
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 183
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 282
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 305
+      },
+      {
+        "file": "docs\\features\\payments\\donations-stripe-solution.md",
+        "line": 288
+      },
+      {
+        "file": "docs\\features\\payments\\stripe-webhook-troubleshooting.md",
+        "line": 53
+      },
+      {
+        "file": "docs\\features\\payments\\stripe-webhook-troubleshooting.md",
+        "line": 301
+      },
+      {
+        "file": "docs\\features\\payments\\status-fix.md",
+        "line": 121
+      },
+      {
+        "file": "docs\\features\\payments\\status-fix.md",
+        "line": 166
+      },
+      {
+        "file": "docs\\features\\payments\\reconciliation.md",
+        "line": 111
+      },
+      {
+        "file": "docs\\features\\receipts\\receipt-generation-troubleshooting.md",
+        "line": 23
+      },
+      {
+        "file": "docs\\features\\receipts\\receipt-generation-troubleshooting.md",
+        "line": 126
+      },
+      {
+        "file": "docs\\features\\payments\\payment-architecture-v2-readme.md",
+        "line": 323
+      },
+      {
+        "file": "docs\\features\\receipts\\receipt-url-fix.md",
+        "line": 148
+      },
+      {
+        "file": "docs\\features\\receipts\\quick-fix.md",
+        "line": 91
+      },
+      {
+        "file": "docs\\features\\receipts\\quick-fix.md",
+        "line": 148
+      },
+      {
+        "file": "docs\\features\\receipts\\quick-fix.md",
+        "line": 210
+      },
+      {
+        "file": "docs\\features\\receipts\\localhost-fix.md",
+        "line": 141
+      },
+      {
+        "file": "app\\api\\webhooks\\stripe\\test\\route.ts",
+        "line": 31
+      },
+      {
+        "file": "app\\api\\webhooks\\stripe\\route.ts",
+        "line": 22
+      },
+      {
+        "file": "app\\api\\receipts\\resend\\route.ts",
+        "line": 19
+      },
+      {
+        "file": "app\\api\\receipts\\download\\route.ts",
+        "line": 24
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\success\\route.ts",
+        "line": 117
+      },
+      {
+        "file": "app\\api\\payments\\stripe\\verify\\route.ts",
+        "line": 15
+      },
+      {
+        "file": "app\\api\\payments\\khalti\\verify\\route.ts",
+        "line": 66
+      },
+      {
+        "file": "app\\api\\cron\\check-stuck-donations\\route.ts",
+        "line": 51
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\status\\route.ts",
+        "line": 67
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\failure\\route.ts",
+        "line": 11
+      },
+      {
+        "file": "app\\api\\cron\\check-review-escalations\\route.ts",
+        "line": 50
+      },
+      {
+        "file": "app\\api\\payments\\stripe\\status\\route.ts",
+        "line": 10
+      },
+      {
+        "file": "app\\api\\payments\\khalti\\status\\route.ts",
+        "line": 67
+      },
+      {
+        "file": "app\\api\\events\\status\\route.ts",
+        "line": 20
+      },
+      {
+        "file": "app\\api\\events\\confirm-stripe-session\\route.ts",
+        "line": 27
+      },
+      {
+        "file": "app\\api\\cron\\expire-conference-registrations\\route.ts",
+        "line": 27
+      },
+      {
+        "file": "app\\api\\conference\\status\\route.ts",
+        "line": 18
+      },
+      {
+        "file": "app\\api\\events\\resend-payment-link\\route.ts",
+        "line": 35
+      },
+      {
+        "file": "app\\api\\conference\\confirm-stripe-session\\route.ts",
+        "line": 26
+      },
+      {
+        "file": "app\\api\\dictionary\\route.ts",
+        "line": 30
+      },
+      {
+        "file": "app\\(public)\\verify\\[id]\\page.tsx",
+        "line": 325
+      },
+      {
+        "file": "app\\admin\\payments\\system\\page.tsx",
+        "line": 66
+      }
+    ],
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": [
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 125
+      },
+      {
+        "file": "__tests__\\setup.ts",
+        "line": 15
+      },
+      {
+        "file": "lib\\data\\podcasts.ts",
+        "line": 232
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.sh",
+        "line": 112
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.ps1",
+        "line": 143
+      },
+      {
+        "file": ".env.local",
+        "line": 20
+      },
+      {
+        "file": ".env.example",
+        "line": 24
+      },
+      {
+        "file": ".env",
+        "line": 33
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 18
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 33
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 109
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 3551
+      },
+      {
+        "file": "docs\\operations\\deployment-guide.md",
+        "line": 64
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_QUICK_REFERENCE.md",
+        "line": 26
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_GUIDE.md",
+        "line": 113
+      },
+      {
+        "file": "lib\\payments\\validation.ts",
+        "line": 110
+      },
+      {
+        "file": "docs\\INDEXING_ISSUES_DIAGNOSIS.md",
+        "line": 472
+      },
+      {
+        "file": "lib\\supabase\\static.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\supabase\\server.ts",
+        "line": 7
+      },
+      {
+        "file": "lib\\supabase\\middleware.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\supabase\\client.ts",
+        "line": 4
+      },
+      {
+        "file": "lib\\programs\\data.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\programs\\data.ts",
+        "line": 36
+      },
+      {
+        "file": "app\\sitemap.ts",
+        "line": 147
+      },
+      {
+        "file": "docs\\architecture\\backend-analysis.md",
+        "line": 355
+      },
+      {
+        "file": "docs\\archive\\deployment-summary.md",
+        "line": 270
+      },
+      {
+        "file": "docs\\features\\story-editor\\developer-docs.md",
+        "line": 622
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 44
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 91
+      },
+      {
+        "file": "docs\\features\\conference\\01-overview.md",
+        "line": 590
+      },
+      {
+        "file": "docs\\features\\conference\\11-appendix.md",
+        "line": 366
+      },
+      {
+        "file": "docs\\features\\events\\08-DEPLOYMENT.md",
+        "line": 37
+      },
+      {
+        "file": "docs\\features\\payments\\payment-architecture-v2-readme.md",
+        "line": 322
+      }
+    ],
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": [
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 135
+      },
+      {
+        "file": ".env.local",
+        "line": 26
+      },
+      {
+        "file": ".env",
+        "line": 47
+      }
+    ],
+    "SUPABASE_PUBLISHABLE_KEY": [
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 136
+      },
+      {
+        "file": ".env.local",
+        "line": 27
+      },
+      {
+        "file": ".env",
+        "line": 48
+      }
+    ],
+    "SUPABASE_SECRET_KEY": [
+      {
+        "file": "docs/security/supabase-key-rotation.md",
+        "line": 137
+      },
+      {
+        "file": ".env.local",
+        "line": 30
+      },
+      {
+        "file": ".env",
+        "line": 49
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 41
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 113
+      }
+    ],
+    "NEXT_PUBLIC_SUPABASE_URL": [
+      {
+        "file": "__tests__\\setup.ts",
+        "line": 13
+      },
+      {
+        "file": "lib\\data\\podcasts.ts",
+        "line": 231
+      },
+      {
+        "file": "lib\\arts\\types.ts",
+        "line": 48
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.sh",
+        "line": 111
+      },
+      {
+        "file": "scripts\\ops\\test-credentials.ps1",
+        "line": 142
+      },
+      {
+        "file": "scripts\\ops\\check-env-vars.js",
+        "line": 16
+      },
+      {
+        "file": ".env.local",
+        "line": 16
+      },
+      {
+        "file": ".env.example",
+        "line": 20
+      },
+      {
+        "file": ".env",
+        "line": 16
+      },
+      {
+        "file": "__tests__\\payments\\donation-provider-failclosed.test.ts",
+        "line": 43
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 58
+      },
+      {
+        "file": "docs\\security\\supabase-key-migration.md",
+        "line": 108
+      },
+      {
+        "file": "lib\\actions\\events-module\\event-registration.ts",
+        "line": 437
+      },
+      {
+        "file": "lib\\actions\\donation.ts",
+        "line": 10
+      },
+      {
+        "file": "lib\\actions\\donation-receipt.ts",
+        "line": 14
+      },
+      {
+        "file": "lib\\actions\\conference-registration.ts",
+        "line": 106
+      },
+      {
+        "file": "lib\\actions\\admin-payment-actions.ts",
+        "line": 8
+      },
+      {
+        "file": "lib\\actions\\admin-donation-review.ts",
+        "line": 14
+      },
+      {
+        "file": "lib\\actions\\admin-donation-actions.ts",
+        "line": 11
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 3550
+      },
+      {
+        "file": "docs\\planning\\payment-mode-removal.md",
+        "line": 141
+      },
+      {
+        "file": "docs\\operations\\vercel-receipt-deployment.md",
+        "line": 65
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 7
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 4
+      },
+      {
+        "file": "scripts\\db\\seeds\\insert-podcasts.mjs",
+        "line": 9
+      },
+      {
+        "file": "docs\\operations\\deployment-readme.md",
+        "line": 228
+      },
+      {
+        "file": "docs\\operations\\deployment-guide.md",
+        "line": 63
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_QUICK_REFERENCE.md",
+        "line": 25
+      },
+      {
+        "file": "lib\\payments\\VALIDATION_GUIDE.md",
+        "line": 112
+      },
+      {
+        "file": "lib\\payments\\validation.ts",
+        "line": 109
+      },
+      {
+        "file": "lib\\payments\\reconciliation.ts",
+        "line": 77
+      },
+      {
+        "file": "docs\\INDEXING_ISSUES_DIAGNOSIS.md",
+        "line": 476
+      },
+      {
+        "file": "lib\\payments\\core\\PaymentService.ts",
+        "line": 57
+      },
+      {
+        "file": "lib\\payments\\core\\PaymentService.ts",
+        "line": 65
+      },
+      {
+        "file": "lib\\receipts\\service.ts",
+        "line": 23
+      },
+      {
+        "file": "lib\\receipts\\generator.ts",
+        "line": 10
+      },
+      {
+        "file": "lib\\rate-limit.ts",
+        "line": 36
+      },
+      {
+        "file": "lib\\supabase\\static.ts",
+        "line": 10
+      },
+      {
+        "file": "lib\\supabase\\service.ts",
+        "line": 4
+      },
+      {
+        "file": "lib\\supabase\\server.ts",
+        "line": 7
+      },
+      {
+        "file": "lib\\supabase\\middleware.ts",
+        "line": 10
+      },
+      {
+        "file": "lib\\supabase\\client.ts",
+        "line": 4
+      },
+      {
+        "file": "lib\\monitoring\\alerts.ts",
+        "line": 463
+      },
+      {
+        "file": "lib\\monitoring\\logging.ts",
+        "line": 534
+      },
+      {
+        "file": "lib\\monitoring\\README.md",
+        "line": 136
+      },
+      {
+        "file": "lib\\monitoring\\metrics.ts",
+        "line": 119
+      },
+      {
+        "file": "lib\\programs\\data.ts",
+        "line": 11
+      },
+      {
+        "file": "lib\\programs\\data.ts",
+        "line": 36
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 18
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 106
+      },
+      {
+        "file": "scripts\\cron\\reconcile-payments.ts",
+        "line": 139
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 15
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 365
+      },
+      {
+        "file": "scripts\\archive\\migrate-programs.ts",
+        "line": 368
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 4
+      },
+      {
+        "file": "scripts\\archive\\fix-initiative-images.mjs",
+        "line": 9
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 12
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 38
+      },
+      {
+        "file": "scripts\\archive\\backfill-stripe-payment-intents.ts",
+        "line": 42
+      },
+      {
+        "file": "docs\\in-progress\\programs-cms\\RELEASE-RUNBOOK.md",
+        "line": 160
+      },
+      {
+        "file": "app\\sitemap.ts",
+        "line": 146
+      },
+      {
+        "file": "docs/features/seo/indexing-deployment-guide.md",
+        "line": 34
+      },
+      {
+        "file": "docs\\architecture\\backend-analysis.md",
+        "line": 354
+      },
+      {
+        "file": "docs\\archive\\donations-deployment-guide.md",
+        "line": 118
+      },
+      {
+        "file": "docs\\archive\\deployment-summary.md",
+        "line": 269
+      },
+      {
+        "file": "docs\\features\\story-editor\\developer-docs.md",
+        "line": 621
+      },
+      {
+        "file": "docs\\features\\conference\\10-improvements-risks.md",
+        "line": 127
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 43
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 90
+      },
+      {
+        "file": "docs\\features\\conference\\03-database-schema.md",
+        "line": 762
+      },
+      {
+        "file": "docs\\features\\conference\\08-security.md",
+        "line": 314
+      },
+      {
+        "file": "docs\\features\\conference\\01-overview.md",
+        "line": 589
+      },
+      {
+        "file": "docs\\features\\conference\\11-appendix.md",
+        "line": 366
+      },
+      {
+        "file": "docs\\features\\events\\08-DEPLOYMENT.md",
+        "line": 36
+      },
+      {
+        "file": "docs\\features\\events\\event-payment\\07-configuration.md",
+        "line": 18
+      },
+      {
+        "file": "docs\\features\\events\\event-payment\\01-overview.md",
+        "line": 82
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-verification.md",
+        "line": 141
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 175
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 182
+      },
+      {
+        "file": "docs\\features\\seo\\sitemap-robots.md",
+        "line": 304
+      },
+      {
+        "file": "docs\\features\\payments\\donations-stripe-solution.md",
+        "line": 287
+      },
+      {
+        "file": "docs\\features\\payments\\stripe-webhook-troubleshooting.md",
+        "line": 54
+      },
+      {
+        "file": "docs\\features\\payments\\status-fix.md",
+        "line": 122
+      },
+      {
+        "file": "docs\\features\\payments\\reconciliation.md",
+        "line": 110
+      },
+      {
+        "file": "docs\\features\\receipts\\receipt-generation-troubleshooting.md",
+        "line": 28
+      },
+      {
+        "file": "docs\\features\\payments\\payment-architecture-v2-readme.md",
+        "line": 321
+      },
+      {
+        "file": "docs\\features\\receipts\\receipt-url-fix.md",
+        "line": 147
+      },
+      {
+        "file": "docs\\features\\receipts\\quick-fix.md",
+        "line": 90
+      },
+      {
+        "file": "app\\api\\webhooks\\stripe\\test\\route.ts",
+        "line": 32
+      },
+      {
+        "file": "app\\api\\webhooks\\stripe\\route.ts",
+        "line": 20
+      },
+      {
+        "file": "app\\api\\receipts\\resend\\route.ts",
+        "line": 18
+      },
+      {
+        "file": "app\\api\\receipts\\download\\route.ts",
+        "line": 23
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\success\\route.ts",
+        "line": 116
+      },
+      {
+        "file": "app\\api\\payments\\stripe\\verify\\route.ts",
+        "line": 14
+      },
+      {
+        "file": "app\\api\\payments\\khalti\\verify\\route.ts",
+        "line": 65
+      },
+      {
+        "file": "app\\api\\cron\\check-stuck-donations\\route.ts",
+        "line": 50
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\status\\route.ts",
+        "line": 66
+      },
+      {
+        "file": "app\\api\\payments\\esewa\\failure\\route.ts",
+        "line": 10
+      },
+      {
+        "file": "app\\api\\cron\\check-review-escalations\\route.ts",
+        "line": 49
+      },
+      {
+        "file": "app\\api\\payments\\stripe\\status\\route.ts",
+        "line": 9
+      },
+      {
+        "file": "app\\api\\payments\\khalti\\status\\route.ts",
+        "line": 66
+      },
+      {
+        "file": "app\\api\\events\\status\\route.ts",
+        "line": 19
+      },
+      {
+        "file": "app\\api\\events\\confirm-stripe-session\\route.ts",
+        "line": 26
+      },
+      {
+        "file": "app\\api\\cron\\expire-conference-registrations\\route.ts",
+        "line": 26
+      },
+      {
+        "file": "app\\api\\conference\\status\\route.ts",
+        "line": 17
+      },
+      {
+        "file": "app\\api\\events\\resend-payment-link\\route.ts",
+        "line": 34
+      },
+      {
+        "file": "app\\api\\conference\\confirm-stripe-session\\route.ts",
+        "line": 25
+      },
+      {
+        "file": "app\\api\\dictionary\\route.ts",
+        "line": 30
+      },
+      {
+        "file": "app\\(public)\\verify\\[id]\\page.tsx",
+        "line": 324
+      },
+      {
+        "file": "app\\admin\\payments\\system\\page.tsx",
+        "line": 65
+      }
+    ],
+    "SUPABASE_URL": [
+      {
+        "file": "lib\\data\\podcasts.ts",
+        "line": 231
+      },
+      {
+        "file": ".env.local",
+        "line": 17
+      },
+      {
+        "file": ".env.example",
+        "line": 21
+      },
+      {
+        "file": ".env",
+        "line": 17
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 1020
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 1075
+      },
+      {
+        "file": ".kiro\\specs\\payment-architecture-v2\\design.md",
+        "line": 2861
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 3
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 6
+      },
+      {
+        "file": "scripts\\db\\seeds\\run-stories-seed.mjs",
+        "line": 11
+      }
+    ],
+    "SUPABASE_JWT_SECRET": [
+      {
+        "file": ".env.local",
+        "line": 31
+      },
+      {
+        "file": ".env.example",
+        "line": 31
+      },
+      {
+        "file": ".env",
+        "line": 53
+      }
+    ],
+    "SUPABASE_PROJECT_REF": [
+      {
+        "file": "scripts\\deploy\\deploy-staging.sh",
+        "line": 48
+      },
+      {
+        "file": "scripts\\deploy\\deploy-staging.sh",
+        "line": 120
+      },
+      {
+        "file": "scripts\\deploy\\deploy-staging.ps1",
+        "line": 19
+      },
+      {
+        "file": "scripts\\deploy\\deploy-staging.ps1",
+        "line": 98
+      },
+      {
+        "file": "scripts\\deploy\\deploy-production.ps1",
+        "line": 21
+      },
+      {
+        "file": "scripts\\deploy\\deploy-production.ps1",
+        "line": 138
+      }
+    ],
+    "SUPABASE_STAGING_PROJECT_REF": [
+      {
+        "file": "scripts\\deploy\\deploy-staging.sh",
+        "line": 48
+      },
+      {
+        "file": "scripts\\deploy\\deploy-staging.ps1",
+        "line": 19
+      }
+    ],
+    "SUPABASE_PRODUCTION_PROJECT_REF": [
+      {
+        "file": "scripts\\deploy\\deploy-production.ps1",
+        "line": 21
+      }
+    ],
+    "SUPABASE_DATABASE_URL": [
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 248
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 637
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 665
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 668
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 669
+      },
+      {
+        "file": "docs\\features\\conference\\09-deployment-operations.md",
+        "line": 740
+      },
+      {
+        "file": "docs\\features\\conference\\03-database-schema.md",
+        "line": 694
+      }
+    ],
+    "SUPABASE_REGION": [
+      {
+        "file": "docs\\features\\conference\\00-executive-summary.md",
+        "line": 256
+      }
+    ]
+  }
+}

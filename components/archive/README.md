@@ -1,5 +1,9 @@
 # deessa Foundation — archived components
 
+## Conference retirement update — 2026-10-10
+
+The [conference UI archive](conference/README.md) adds 18 legacy components and 14 former route files. Its [separate manifest](../../docs/in-progress/conference-retirement/manifest.json) records every move and import adjustment. The three conference step 1–3 files listed as retained below now live in that archive with their review-screen type consumer. The inventory and verification below remain the historical record of the 2026-10-04 operation; this phase did not repeat its runtime checks.
+
 Archived on 2026-10-04 following the [repository usage audit](../../docs/in-progress/reorganization/components/usage-audit/README.md). These **55 code files** had no discovered consumers. Original names and folder structure are preserved below this directory. Only relative imports needed for relocation were adjusted; UI behavior and styles were preserved.
 
 This is a temporary holding area. Do not introduce production imports from it. Archived TypeScript remains included by the current TypeScript configuration; archival does not hide existing diagnostics or exclude these files from linting.

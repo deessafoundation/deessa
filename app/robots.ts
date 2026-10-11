@@ -42,8 +42,6 @@ export default function robots(): MetadataRoute.Robots {
         // Email/certificate verification (contains tokens in URL)
         '/verify/',
         '/verify/*',
-        '/conference/register/',
-        '/conference/register/*',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,

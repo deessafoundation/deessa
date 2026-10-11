@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   FileJson,
 } from "lucide-react"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 import { notifications } from "@/lib/notifications"
 
 interface SchemaImportExportProps {

@@ -1,17 +1,15 @@
 "use client"
 
 import ServerErrorPage from "@/components/errors/server-error-page"
+// The global boundary replaces the root layout, including its stylesheet imports.
+import "./globals.css"
 
-interface GlobalErrorProps {
-  error: Error & { digest?: string }
-  reset: () => void
-}
-
-export default function GlobalError({ error, reset }: GlobalErrorProps) {
+export default function GlobalError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return (
-    <html>
+    <html lang="en">
       <body>
-        <ServerErrorPage error={error} reset={reset} />
+        <title>Website unavailable | deessa Foundation</title>
+        <ServerErrorPage error={error} onRetry={retry} standalone />
       </body>
     </html>
   )

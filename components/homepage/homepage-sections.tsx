@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { HomepageImage } from "./homepage-image"
 import styles from "./homepage-sections.module.css"
-import pillarCard from "./home-pillar-card.module.css"
+import pillarCard from "@/components/what-we-do/pillar-card.module.css"
 import Link from "next/link"
 import podcastBanner from "@/public/podcast_banner.jpeg"
 import {
@@ -22,7 +22,6 @@ import {
   Home as HomeIcon,
   Target,
   Eye,
-  Flag,
   Users,
   Leaf,
   ArrowUpRight,
@@ -42,7 +41,7 @@ import { ScrollReveal, CountUp, BackToTop } from "@/components/homepage/scroll-a
 import { cn } from "@/lib/utils"
 import { PastelBlob } from "@/components/decor/pastel-blob"
 import { HomeSectionHeading } from "@/components/home/home-section-heading"
-import { HOME_TILE_TONES, HOME_TONES, homeUi } from "@/components/home/home-ui"
+import { HOME_TONES, homeUi } from "@/components/home/home-ui"
 import { getHomeTone, splitHeadingAccent } from "@/components/home/home-tone"
 import type {
   HomepageStat,
@@ -175,20 +174,12 @@ export function OurStorySection({ story }: OurStorySectionProps) {
   )
 }
 
-/* ──────────────────  MISSION, VISION & OBJECTIVES  ────────────────── */
+/* ──────────────────  MISSION & VISION  ────────────────── */
 
 export function MissionVisionSection() {
-  // Shared hero-style card chrome so the three panels read as one family with the
+  // Shared hero-style card chrome so the two panels read as one family with the
   // pillar cards in ProgramsSection. No hover lift: these articles are not interactive.
   const cardShell = cn(homeUi.card, "relative flex h-full flex-col overflow-hidden")
-
-  // Targets, not achievements — the numbers come straight from the objectives
-  // statement, so they stay labelled as goals to avoid reading as impact data.
-  const targets = [
-    { value: 100, suffix: "+", label: "Schools to build" },
-    { value: 50000, suffix: "+", label: "Lives to reach through healthcare" },
-    { value: 10000, suffix: "+", label: "Women to empower with new skills" },
-  ]
 
   return (
     <section data-mission-section className={cn(homeUi.surface, homeUi.sectionY)}>
@@ -197,12 +188,8 @@ export function MissionVisionSection() {
           <HomeSectionHeading
             className="mb-10 sm:mb-14"
             eyebrow="Our Direction"
-            title={
-              <>
-                Mission, Vision <span className="font-normal">&</span>
-              </>
-            }
-            accent="Objectives"
+            title="Mission &"
+            accent="Vision"
             // One navy line on phones too; it still wraps at large text sizes instead of overflowing.
             titleClassName="text-2xl leading-[1.15] sm:text-[2.5rem] lg:text-[3.25rem]"
             intro={<>Guided by clear values and a bold vision for Nepal&apos;s future.</>}
@@ -246,46 +233,7 @@ export function MissionVisionSection() {
             </article>
           </ScrollReveal>
 
-          {/* OBJECTIVES — full width base, with the goals broken out as figures */}
-          <ScrollReveal animation="fade-up" delay={300} className="lg:col-span-12">
-            <article className={cardShell}>
-              <div className="grid grid-cols-1 items-center gap-6 p-5 sm:gap-8 sm:p-8 md:p-10 lg:grid-cols-12 lg:gap-14">
-                <div className="lg:col-span-5">
-                  <div className={cn(homeUi.iconCircle, HOME_TONES.sunny, "mb-5 size-14 sm:mb-7 sm:size-16")}>
-                    <Flag aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
-                  </div>
-                  <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Objectives</h3>
-                  <p className={homeUi.body}>
-                    Concrete goals that turn our mission into measurable change, district by district, until every
-                    community we serve feels the difference.
-                  </p>
-                </div>
 
-                <div className="lg:col-span-7">
-                  <p className={cn(homeUi.muted, "mb-5 text-sm font-bold uppercase tracking-widest text-[#006E9E]")}>
-                    What we are working toward
-                  </p>
-                  <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-                    {targets.map((target, i) => (
-                      <li
-                        key={target.label}
-                        className={cn(
-                          homeUi.tile,
-                          HOME_TILE_TONES[(["sky", "sunny", "lavender"] as const)[i % 3]],
-                          "p-4 sm:p-5",
-                        )}
-                      >
-                        <p className="font-comic-num mb-1.5 text-3xl text-[#006E9E] md:text-[2.125rem]">
-                          <CountUp end={target.value} suffix={target.suffix} />
-                        </p>
-                        <p className={cn(homeUi.muted, "text-sm font-bold leading-snug")}>{target.label}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-          </ScrollReveal>
         </div>
       </div>
     </section>

@@ -2,11 +2,6 @@
 
 import GenericErrorPage from "@/components/errors/generic-error-page"
 
-interface ErrorProps {
-  error: Error & { digest?: string }
-  reset: () => void
-}
-
-export default function Error({ error, reset }: ErrorProps) {
-  return <GenericErrorPage error={error} reset={reset} />
+export default function Error({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
+  return <GenericErrorPage error={error} onRetry={retry} standalone />
 }

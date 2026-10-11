@@ -1,111 +1,80 @@
 import Link from "next/link"
+import type { ReactNode } from "react"
 import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
-import { ArrowRight, BookOpen, FileText, Megaphone, Scale, type LucideIcon } from "lucide-react"
+import { DEFAULT_PILLAR_LAYOUT } from "@/lib/types/what-we-do-settings"
+import { PILLAR_ICONS, PILLAR_ARROWS } from "./pillar-icons"
 import { cn } from "@/lib/utils"
-import styles from "./whatwedo-pillars.module.css"
+import styles from "./pillar-card.module.css"
 
-type PillarAccent = "sky" | "mint" | "sunny" | "lavender"
+/** Content and presentation come from the validated admin settings. */
+const columnClasses = {
+  "1": "grid-cols-1",
+  "2": "grid-cols-1 sm:grid-cols-2",
+  "3": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  "4": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+}
 
-const PILLARS: {
-  slug: string
-  title: string
-  ariaTitle: string
-  description: string
-  icon: LucideIcon
-  accent: PillarAccent
-}[] = [
-  {
-    slug: "awareness",
-    title: "Awareness & Community Engagement",
-    ariaTitle: "Awareness and Community Engagement",
-    description:
-      "We break the silence. Through community campaigns, social media, podcasts, and public conversations, we challenge myths and replace stigma with understanding.",
-    icon: Megaphone,
-    accent: "sky",
-  },
-  {
-    slug: "training",
-    title: "Training",
-    ariaTitle: "Training",
-    description:
-      "We equip parents, teachers, health workers, and caregivers with the skills to spot autism early and support every child, the right way.",
-    icon: BookOpen,
-    accent: "mint",
-  },
-  {
-    slug: "resources",
-    title: "Resources",
-    ariaTitle: "Resources",
-    description:
-      "No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.",
-    icon: FileText,
-    accent: "sunny",
-  },
-  {
-    slug: "advocacy",
-    title: "Advocacy",
-    ariaTitle: "Advocacy",
-    description:
-      "We push for inclusive schools and stronger policies that protect every child's rights, so inclusion becomes a right, not a privilege.",
-    icon: Scale,
-    accent: "lavender",
-  },
-]
+function PillarSurface({ pillar, preview, children }: { pillar: WhatWeDoSettings["cards"][number]; preview: boolean; children: ReactNode }) {
+  const className = cn(styles.card, "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-visible:outline-none motion-reduce:transition-none")
+  // Only the admin preview is non-interactive; public cards open their area pages.
+  if (preview) {
+    return <article data-tone={pillar.accent} data-paused="true" className={className}>{children}</article>
+  }
+  return <Link href={pillar.href} aria-label={`${pillar.buttonLabel}: ${pillar.title}`} data-tone={pillar.accent} className={className}>{children}</Link>
+}
 
-/** The four core-area cards on /whatwedo. Colours live in whatwedo-pillars.module.css (data-accent). */
-export function WhatWeDoPillars({ cards }: { cards: WhatWeDoSettings["cards"] }) {
+export function WhatWeDoPillars({ cards, layout = DEFAULT_PILLAR_LAYOUT, preview = false }: { cards: WhatWeDoSettings["cards"]; layout?: WhatWeDoSettings["cardsLayout"]; preview?: boolean }) {
   return (
-    <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
-      {PILLARS.map((layout, index) => {
-        const pillar = { ...layout, ...cards[index] }
-        const Icon = pillar.icon
+    <ul role="list" className={cn("grid", layout.spacing === "compact" ? "gap-3" : "gap-4 sm:gap-6", preview ? "grid-cols-1" : columnClasses[layout.columns])}>
+      {/* Temporary Advocacy-first rollout; retain saved ordering for the other cards. */}
+      {cards.filter(card => preview || card.enabled).sort((a, b) => Number(b.slug === "advocacy") - Number(a.slug === "advocacy")).map(pillar => {
+        const Arrow = PILLAR_ARROWS[pillar.arrow]
+        const Icon = PILLAR_ICONS[pillar.icon]
         return (
           <li key={pillar.slug} className="h-full">
-            <Link
-              href={pillar.href}
-              aria-label={`${pillar.buttonLabel}: ${pillar.title}`}
-              data-accent={pillar.accent}
-              className={cn(
-                styles.card,
-                "group relative flex h-full flex-col overflow-hidden rounded-3xl focus-visible:outline-none",
-                "motion-reduce:transition-none",
-              )}
-            >
-              <span aria-hidden="true" className={styles.bar} />
-
-              <div className={styles.head}>
-                <span className={styles.iconTile}>
-                  <Icon aria-hidden="true" className="size-7" strokeWidth={1.8} />
-                </span>
-                <span aria-hidden="true" className={cn(styles.index, "font-comic text-4xl font-bold")}>
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              </div>
-
-              <div className="flex flex-1 flex-col px-6 pb-6 pt-5 text-left sm:px-7">
-                <h3 className="mb-3 font-marissa text-[1.375rem] leading-tight text-black [-webkit-text-stroke:0.6px_currentColor]">
-                  {pillar.title}
+            <PillarSurface pillar={pillar} preview={preview}>
+              {pillar.showDecoration && <span aria-hidden="true" className={styles.blob} />}
+              {pillar.showIcon && <span aria-hidden="true" data-pillar-icon className={styles.icon}>
+                <Icon className="size-6" strokeWidth={1.9} />
+              </span>}
+              <div className="flex flex-1 flex-col p-6 text-left sm:p-7">
+                {pillar.tag && <p className={cn(styles.tag, "font-comic")}>
+                  <span aria-hidden="true" className={styles.tagDot} />
+                  {pillar.tag}
+                </p>}
+                <h3 className={cn(styles.title, "mb-3 mt-12 font-marissa text-[1.3rem] leading-snug break-words")}>
+                  {pillar.title.split("&").map((part, i, arr) =>
+                    i === arr.length - 1 ? (
+                      <span key={i}>{part}</span>
+                    ) : (
+                      <span key={i}>
+                        {part}
+                        <span className="font-normal">&</span>
+                      </span>
+                    ),
+                  )}
                 </h3>
-                <p className="mb-6 font-comic text-[0.95rem] leading-relaxed text-black [-webkit-text-stroke:0.25px_currentColor]">
+                <p className={cn(styles.desc, "font-comic text-[0.95rem] leading-relaxed")}>
                   {pillar.description}
                 </p>
 
                 <span
                   className={cn(
-                    styles.footer,
-                    "mt-auto flex items-center justify-between gap-3 pt-4 font-comic text-[0.95rem] font-bold text-black",
+                    styles.cta,
+                    "mt-auto flex items-center justify-between gap-3 pt-7 font-comic text-[0.95rem] font-bold",
                   )}
                 >
-                  {pillar.buttonLabel}
-                  <span aria-hidden="true" className={styles.chip}>
-                    <ArrowRight className={cn(styles.chipIcon, "size-4")} />
-                  </span>
+                  <span className={styles.ctaLabel}>{pillar.buttonLabel}</span>
+                  {pillar.showArrow && <span aria-hidden="true" className={styles.ctaArrow}>
+                    <Arrow className="size-4" />
+                  </span>}
                 </span>
               </div>
-            </Link>
+            </PillarSurface>
           </li>
         )
       })}
     </ul>
   )
 }
+

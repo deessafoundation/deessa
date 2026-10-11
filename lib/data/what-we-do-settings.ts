@@ -9,6 +9,6 @@ export const getWhatWeDoSettings = cache(async () => {
   // Missing content uses the initial document. Database failures must not be
   // disguised as a successful load in the editor (which could overwrite content).
   if (error) throw new Error("Could not load What We Do content. Please try again.")
-  if (!data) return DEFAULT_WHAT_WE_DO_SETTINGS
+  if (!data) return whatWeDoSettingsSchema.parse(DEFAULT_WHAT_WE_DO_SETTINGS)
   return whatWeDoSettingsSchema.parse(data.value)
 })

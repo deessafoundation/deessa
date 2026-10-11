@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 import { Play } from "lucide-react"
+import styles from "./what-we-do-video-player.module.css"
 
 interface WhatWeDoVideoPlayerProps {
   src: string
@@ -20,6 +21,7 @@ export function WhatWeDoVideoPlayer({
 }: WhatWeDoVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hasStarted, setHasStarted] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   const playVideo = async () => {
     const video = videoRef.current
@@ -36,17 +38,29 @@ export function WhatWeDoVideoPlayer({
   }
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-3xl border border-slate-200 bg-black shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+    <div className={`${styles.player} relative aspect-video overflow-hidden rounded-3xl border shadow-sm`}>
+      {failed ? <div role="status" className={`${styles.unavailable} flex h-full flex-col items-center justify-center gap-3 p-6 text-center`}>
+        <p className="font-comic font-bold">This video is currently unavailable.</p>
+        <p className="font-comic text-sm">{label}</p>
+      </div> : <>
       <video
         ref={videoRef}
         className={`absolute inset-0 h-full w-full bg-black ${hasStarted ? "object-contain" : "object-cover"}`}
         controls={hasStarted}
-        preload="metadata"
+        preload="none"
+        data-what-we-do-video
+        onError={() => setFailed(true)}
+        onPlay={event => {
+          // A gallery should never play competing soundtracks at the same time.
+          document.querySelectorAll<HTMLVideoElement>("video[data-what-we-do-video]").forEach(video => {
+            if (video !== event.currentTarget) video.pause()
+          })
+        }}
         playsInline
         poster={posterSrc}
         aria-label={label}
       >
-        <source src={src} type="video/mp4" />
+        <source src={src} type="video/mp4" onError={() => setFailed(true)} />
         Your browser does not support HTML video.
       </video>
 
@@ -54,27 +68,28 @@ export function WhatWeDoVideoPlayer({
         <button
           type="button"
           onClick={playVideo}
-          className="group absolute inset-0 flex w-full items-center justify-center overflow-hidden bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-sky-950/20 text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-sky-300"
+          className={`${styles.playButton} group absolute inset-0 flex w-full items-center justify-center overflow-hidden focus-visible:outline-none`}
           aria-label={`Play ${label}`}
         >
-          <span className="absolute left-5 top-5 rounded-full border border-white/30 bg-slate-950/55 px-4 py-2 font-comic text-xs font-bold uppercase tracking-[0.18em] backdrop-blur-sm sm:left-7 sm:top-7">
+          <span className={`${styles.badge} absolute left-4 top-4 rounded-full border px-3 py-2 font-comic text-xs font-bold uppercase tracking-widest`}>
             {areaLabel}
           </span>
 
-          <span className="flex size-20 items-center justify-center rounded-full border-2 border-white bg-slate-950/65 shadow-[0_12px_35px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 sm:size-24">
-            <Play className="ml-1 size-9 fill-white text-white sm:size-11" aria-hidden="true" />
+          <span className={`${styles.playCircle} flex size-14 items-center justify-center rounded-full border-2 sm:size-20`}>
+            <Play className="ml-1 size-6 sm:size-9" aria-hidden="true" />
           </span>
 
-          <span className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-left sm:inset-x-7 sm:bottom-7">
-            <span className="max-w-[75%] font-marissa text-xl leading-tight drop-shadow-md sm:text-2xl">
+          <span className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 text-left">
+            <span className="max-w-[75%] font-marissa text-sm leading-tight sm:text-lg">
               {label}
             </span>
-            <span className="shrink-0 rounded-full bg-sky-500 px-4 py-2 font-comic text-xs font-bold shadow-lg transition-colors group-hover:bg-sky-400 sm:text-sm">
+            <span className={`${styles.watchLabel} hidden shrink-0 rounded-full px-3 py-2 font-comic text-xs font-bold lg:inline`}>
               {playButtonLabel}
             </span>
           </span>
         </button>
       )}
+      </>}
     </div>
   )
 }

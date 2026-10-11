@@ -19,8 +19,11 @@ describe("What We Do content", () => {
     const settings = structuredClone(DEFAULT_WHAT_WE_DO_SETTINGS); settings.hero.primaryHref = href
     expect(whatWeDoSettingsSchema.safeParse(settings).success).toBe(false)
   })
-  it("rejects missing cards and changed route identities", () => {
-    const settings = structuredClone(DEFAULT_WHAT_WE_DO_SETTINGS); settings.cards.pop()
+  it("allows removing cards while retaining fixed detail-page identities", () => {
+    const settings = structuredClone(DEFAULT_WHAT_WE_DO_SETTINGS)
+    settings.cards.pop()
+    expect(whatWeDoSettingsSchema.safeParse(settings).success).toBe(true)
+    settings.areas.awareness.id = "training"
     expect(whatWeDoSettingsSchema.safeParse(settings).success).toBe(false)
   })
   it("blocks unauthenticated writes", async () => { mockAdmin.mockResolvedValue(null); expect((await POST(request(DEFAULT_WHAT_WE_DO_SETTINGS))).status).toBe(401); expect(mockUpsert).not.toHaveBeenCalled() })
@@ -28,10 +31,19 @@ describe("What We Do content", () => {
   it("blocks cross-origin writes", async () => { expect((await POST(request(DEFAULT_WHAT_WE_DO_SETTINGS, "https://other.example"))).status).toBe(403); expect(mockUpsert).not.toHaveBeenCalled() })
   it("rejects malformed content without writing", async () => { expect((await POST(request({}))).status).toBe(400); expect(mockUpsert).not.toHaveBeenCalled() })
   it("saves edited content and refreshes all four pages", async () => {
-    const settings = structuredClone(DEFAULT_WHAT_WE_DO_SETTINGS); settings.areas.awareness.headline = "An updated heading"
+    const settings = whatWeDoSettingsSchema.parse(DEFAULT_WHAT_WE_DO_SETTINGS); settings.areas.awareness.headline = "An updated heading"
     expect((await POST(request(settings))).status).toBe(200)
     expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ value: settings, updated_by: "admin-id" }), { onConflict: "key" })
     for (const slug of Object.keys(settings.areas)) expect(mockRevalidate).toHaveBeenCalledWith(`/whatwedo/${slug}`)
+  })
+  it("saves card ordering, appearance and layout through the admin API", async () => {
+    const settings = whatWeDoSettingsSchema.parse(DEFAULT_WHAT_WE_DO_SETTINGS)
+    settings.cards.reverse()
+    settings.cards[0] = { ...settings.cards[0], tag: "Inclusion", icon: "users", accent: "mint", enabled: false }
+    settings.cardsLayout = { columns: "2", spacing: "compact" }
+    expect((await POST(request(settings))).status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({ value: settings }), { onConflict: "key" })
+    expect(mockRevalidate).toHaveBeenCalledWith("/whatwedo")
   })
   it("reports database failures without success or revalidation", async () => { mockUpsert.mockResolvedValue({ error: { message: "unavailable" } }); expect((await POST(request(DEFAULT_WHAT_WE_DO_SETTINGS))).status).toBe(500); expect(mockRevalidate).not.toHaveBeenCalled() })
 })

@@ -146,8 +146,8 @@ export default async function ProgramsPage() {
             </p>
           </div>
 
-          {/* 4 Pillars Grid */}
-          <WhatWeDoPillars cards={content.cards} />
+          {/* Admin-managed areas of work */}
+          <WhatWeDoPillars cards={content.cards} layout={content.cardsLayout} />
 
         </div>
       </section>

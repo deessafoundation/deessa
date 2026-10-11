@@ -1,0 +1,102 @@
+.section { background: #f2f7fb; color: #285b83; }
+.card { 
+  background: #fff; 
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+.card:hover {
+  border-color: #3b82f6;
+}
+.emptyPhoto { background: #dfecf5; color: #285b83; }
+.follow { 
+  background: #fff; 
+  color: #1f2937; 
+  border-color: #3b82f6;
+}
+.follow:hover { 
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+.follow:hover svg {
+  color: #fff;
+  stroke: #fff;
+}
+
+/* View all button styles */
+.viewAll {
+  background: #3b82f6;
+  color: #fff;
+  border: 2px solid #3b82f6;
+}
+.viewAll:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Tag styles */
+.tag {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+/* Focus visible states */
+.section a:focus-visible, .section button:focus-visible { outline: 3px solid #3b82f6; outline-offset: 4px; }
+
+/* High contrast mode */
+:global(body.high-contrast) .section,
+:global(body.high-contrast) .card,
+:global(body.high-contrast) .emptyPhoto,
+:global(body.high-contrast) .section .follow,
+:global(body.high-contrast) .viewAll {
+  background: #fff !important; color: #000 !important; border: 2px solid #000 !important;
+}
+:global(body.high-contrast) .section :is(h1, h2, h3, p, span, a, time) { color: #000 !important; }
+:global(body.high-contrast) .section svg,
+:global(body.high-contrast) .section svg * { stroke: #000 !important; color: #000 !important; }
+:global(body.high-contrast) .tag {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+:global(body.high-contrast) .photoLink img { filter: grayscale(1); }
+
+/* Inverted contrast mode */
+:global(body.inverted-contrast) .section,
+:global(body.inverted-contrast) .card,
+:global(body.inverted-contrast) .emptyPhoto,
+:global(body.inverted-contrast) .section .follow,
+:global(body.inverted-contrast) .viewAll {
+  background: #000 !important; color: #fff !important; border: 2px solid #fff !important;
+}
+:global(body.inverted-contrast) .section :is(h1, h2, h3, p, span, a, time) { color: #fff !important; }
+:global(body.inverted-contrast) .section svg,
+:global(body.inverted-contrast) .section svg * { stroke: #fff !important; color: #fff !important; }
+:global(body.inverted-contrast) .tag {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* Focus outline colors for contrast modes */
+:global(body.high-contrast) .section :is(a, button):focus-visible { outline-color: #000 !important; }
+:global(body.inverted-contrast) .section :is(a, button):focus-visible { outline-color: #fff !important; }
+
+/* Forced colors mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .section, .card, .emptyPhoto, .follow, .viewAll, .tag { 
+    background: Canvas; 
+    color: CanvasText; 
+    border: 1px solid CanvasText; 
+  }
+}
+
+/* Print styles */
+@media print { 
+  .section iframe, .section button { display: none; } 
+  .card { break-inside: avoid; }
+  .viewAll { display: none; }
+}
+
+

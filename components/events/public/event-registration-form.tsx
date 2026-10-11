@@ -4,13 +4,14 @@ import { useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ChevronLeft, Loader2, Upload, X, QrCode, CheckCircle, AlertCircle } from "lucide-react"
-import { StepProgressBar } from "@/components/conference/step-progress-bar"
-import { DynamicStep } from "@/components/conference/dynamic-step"
+import { StepProgressBar } from "@/components/events/public/registration/step-progress-bar"
+import { DynamicStep } from "@/components/events/public/registration/dynamic-step"
 import { validateFieldValue } from "@/lib/validation/form-schema"
-import { filterVisibleSteps } from "@/lib/validation/conditional-engine"
+import { filterVisibleFields, filterVisibleSteps } from "@/lib/validation/conditional-engine"
 import { registerForEvent } from "@/lib/actions/events-module/event-registration"
-import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 import type { EventModuleEvent, EventTicketType } from "@/lib/types/events-module"
+import { EventRegistrationClosed } from "./event-error"
 
 interface EventRegistrationFormProps {
   event: EventModuleEvent
@@ -40,9 +41,13 @@ export function EventRegistrationForm({
   const [screenshotError, setScreenshotError] = useState<string | null>(null)
   const screenshotInputRef = useRef<HTMLInputElement>(null)
 
-  const allSteps: FormStep[] = schema?.steps ?? []
-  // Filter steps based on conditional logic
-  const steps = useMemo(() => filterVisibleSteps(allSteps, formData), [allSteps, formData])
+  // Navigation, validation and review share the fields that are actually visible.
+  const steps = useMemo(
+    () => filterVisibleSteps(schema?.steps ?? [], formData)
+      .map((step) => ({ ...step, fields: filterVisibleFields(step.fields, formData) }))
+      .filter((step) => step.fields.length > 0),
+    [schema, formData]
+  )
 
   // Check if registration is closed (client-side guard)
   const now = new Date()
@@ -119,7 +124,7 @@ export function EventRegistrationForm({
   )
 
   const handleNext = useCallback(() => {
-    // Validate all fields in the current step before advancing
+    // Hidden fields have already been excluded from the current step.
     const currentStepData = steps[currentStep]
     if (currentStepData?.fields) {
       const newErrors: Record<string, string> = {}
@@ -369,6 +374,10 @@ export function EventRegistrationForm({
   // Screen reader announcement for step changes
   const stepAnnouncement = `Step ${currentStep + 1} of ${totalSteps}: ${stepLabels[currentStep] ?? ""}`
 
+  if (isRegistrationClosed) {
+    return <EventRegistrationClosed eventHref={`/events/${event.slug}`} ended={isPastEvent} />
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Screen reader live region for step announcements */}
@@ -451,31 +460,6 @@ export function EventRegistrationForm({
           <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-primary/5 blur-3xl" />
 
           <div className="relative z-10 p-8 sm:p-10">
-            {/* Registration closed guard */}
-            {isRegistrationClosed ? (
-              <div className="flex flex-col items-center gap-6 py-12 text-center">
-                <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-                  <AlertCircle className="size-8 text-muted-foreground" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-2xl font-bold text-foreground">
-                    {isPastEvent ? "Event Has Ended" : "Registration Closed"}
-                  </h2>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    {isPastEvent
-                      ? "This event has already taken place. Registration is no longer available."
-                      : "Registration for this event is no longer available."}
-                  </p>
-                </div>
-                <Link
-                  href={`/events/${event.slug}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
-                >
-                  Back to Event
-                </Link>
-              </div>
-            ) : (
-            <>
             {/* Form Steps */}
             {currentStep < steps.length && steps.length > 0 && (
               <DynamicStep
@@ -1110,8 +1094,6 @@ export function EventRegistrationForm({
                   </button>
                 </div>
               </div>
-            )}
-            </>
             )}
           </div>
         </div>

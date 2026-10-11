@@ -7,8 +7,8 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Trash2, ChevronDown, ChevronRight, GripVertical, Plus } from "lucide-react"
 import { OptionsEditor } from "./options-editor"
-import { EnhancedConditionalEditor } from "@/components/admin/conference/form-builder/enhanced-conditional-editor"
-import type { FormField, FormStep, FieldConditional } from "@/lib/types/conference-form-schema"
+import { EnhancedConditionalEditor } from "@/components/admin/events/event-form-builder/enhanced-conditional-editor"
+import type { FormField, FormStep, FieldConditional } from "@/lib/types/event-form-schema"
 
 interface FieldPropertiesPanelProps {
   field: FormField | null

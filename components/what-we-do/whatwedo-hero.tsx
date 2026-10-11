@@ -1,238 +1,98 @@
 import Image from "next/image"
-import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
 import Link from "next/link"
+import { ArrowDown, ArrowUpRight } from "lucide-react"
+import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
 import { cn } from "@/lib/utils"
 import styles from "./whatwedo-hero.module.css"
 
-// Brand palette used by this hero
-// Deep Ocean #0B5F8A · Ocean Blue #3FABDE · Yellow #F7C52B · Pink #D6336C · Pale Blue #E8F6FC
-
-const heroPhotos = [
-  {
-    src: "/WhatWeDo/community_learning.jpg",
-    alt: "Two women reviewing notes together in a notebook during an inclusive education workshop.",
-    sizes: "(min-width: 1360px) 600px, (min-width: 768px) 46vw, 100vw",
-    frame: "col-span-2 aspect-[16/10] max-[359px]:col-span-1 md:col-span-1 md:aspect-auto",
-    crop: "object-[50%_35%]",
-    eager: true,
-  },
-  {
-    src: "/WhatWeDo/football_program.jpg",
-    alt: "A girls' football team in red and white kits celebrating together with a trophy and medals on the pitch.",
-    sizes: "(min-width: 1360px) 340px, (min-width: 768px) 26vw, 50vw",
-    frame: "aspect-[4/5] md:aspect-auto",
-    crop: "object-[48%_55%]",
-    eager: false,
-  },
-  {
-    src: "/WhatWeDo/speaker.jpg",
-    alt: "A woman smiling as she speaks into a microphone while addressing an audience.",
-    sizes: "(min-width: 1360px) 370px, (min-width: 768px) 28vw, 50vw",
-    frame: "aspect-[4/5] md:aspect-auto",
-    crop: "object-[40%_30%]",
-    eager: false,
-  },
+const photoLayouts = [
+  { frame: "col-span-2", crop: "object-[50%_35%]", label: "Learning together", sizes: "(min-width: 1280px) 560px, (min-width: 1024px) 46vw, 90vw" },
+  { frame: "-rotate-3", crop: "object-[48%_55%]", label: "Growing in confidence", sizes: "(min-width: 1280px) 270px, (min-width: 1024px) 23vw, 44vw" },
+  { frame: "rotate-3", crop: "object-[40%_30%]", label: "Making voices heard", sizes: "(min-width: 1280px) 270px, (min-width: 1024px) 23vw, 44vw" },
 ]
 
-const buttonBase = cn(
-  "inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-[12px] border-[1.5px] border-[#0B5F8A] px-6",
-  "font-comic text-[1.0625rem] font-bold transition-colors duration-200 sm:w-auto",
-  "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3FABDE]/45 focus-visible:ring-offset-2",
-)
+const buttonBase = "inline-flex min-h-[54px] items-center justify-center gap-3 rounded-full border px-6 py-3 font-comic text-base font-bold transition-colors motion-reduce:transition-none"
 
 export function WhatWeDoHero({ content }: { content: WhatWeDoSettings["hero"] }) {
   return (
-    <section
-      id="whatwedo-hero"
-      aria-labelledby="whatwedo-hero-heading"
-      className={cn(styles.hero, "relative w-full overflow-x-clip bg-white")}
-    >
-      <div className="mx-auto w-full max-w-[1360px] px-5 pt-8 pb-12 sm:px-8 md:pt-10 md:pb-14 lg:px-12 xl:px-16">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 md:mb-7">
-          <ol className={cn(styles.breadcrumb, "flex items-center gap-2 font-comic text-[0.8125rem] text-[#1e293b]")}>
-            <li>
-              <Link
-                href="/"
-                className="rounded-sm hover:text-[#0B5F8A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3FABDE]"
-              >
-                Home
-              </Link>
-            </li>
+    <section id="whatwedo-hero" aria-labelledby="whatwedo-hero-heading"
+      className={cn(styles.hero, "relative isolate overflow-hidden")}>
+      <div aria-hidden="true" className={cn(styles.decor, styles.backgroundPhoto, "pointer-events-none absolute inset-0")}>
+        <Image src={content.photos[0].src} alt="" fill sizes="100vw"
+          unoptimized={content.photos[0].src.startsWith("https://")}
+          className="object-cover object-center" />
+      </div>
+      <div aria-hidden="true" className={cn(styles.decor, styles.photoVeil, "pointer-events-none absolute inset-0")} />
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 1440 70" preserveAspectRatio="none"
+        className={cn(styles.decor, styles.edge, "pointer-events-none absolute inset-x-0 bottom-0 h-8 w-full sm:h-12")}>
+        <path d="M0 30Q180 65 360 35T720 34T1080 40T1440 24V70H0Z" fill="currentColor" />
+      </svg>
+      <div className="relative mx-auto max-w-[1360px] px-5 pb-16 pt-6 sm:px-8 sm:pb-20 lg:px-12 lg:pt-8 xl:px-16">
+        <nav aria-label="Breadcrumb" className="mb-10 lg:mb-14">
+          <ol className={cn(styles.breadcrumb, "flex flex-wrap items-center gap-2 font-comic text-sm")}>
+            <li><Link href="/" className="inline-block rounded-sm py-3 hover:underline">Home</Link></li>
             <li aria-hidden="true">›</li>
             <li aria-current="page">{content.breadcrumb}</li>
           </ol>
         </nav>
 
-        {/* Eyebrow */}
-        <p
-          className={cn(
-            styles.eyebrow,
-            "mb-3 font-comic text-[0.8125rem] uppercase tracking-[0.2em] text-[#1672A6] sm:text-[0.875rem]",
-          )}
-        >
-          {content.eyebrow}
-        </p>
-
-        {/* Introduction: heading left, copy + actions right */}
-        <div className="grid grid-cols-1 items-center gap-7 md:gap-8 lg:grid-cols-[52fr_48fr] lg:gap-12 xl:gap-16">
-          <h1
-            id="whatwedo-hero-heading"
-            className={cn(
-              styles.heading,
-              "font-marissa text-[#0B5F8A]",
-              "text-[2.5rem] sm:text-[3rem] md:text-[3.5rem] lg:text-[clamp(3.25rem,5vw,4.5rem)]",
-              // Line-height must come after the font-size classes: tailwind-merge drops a
-              // leading-* class when a later text-* size class is present.
-              "leading-[1.08]",
-              "[-webkit-text-stroke:0.5px_currentColor] lg:[-webkit-text-stroke:0.8px_currentColor]",
-            )}
-          >
-            <span className="lg:block">
-              {content.headingStart}{" "}
-              <span className="relative inline-block">
-                {content.headingEmphasis}
-                {/* Pink emphasis marks */}
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  viewBox="0 0 40 40"
-                  className={cn(styles.decor, "pointer-events-none absolute -right-[0.46em] -top-[0.3em] h-[0.5em] w-[0.5em]")}
-                >
-                  <g fill="none" stroke="#D6336C" strokeLinecap="round" strokeWidth="3.5">
-                    <path d="M7 17 L5 3" />
-                    <path d="M13 23 L26 12" />
-                    <path d="M17 33 L35 31" />
-                  </g>
-                </svg>
-              </span>
-            </span>{" "}
-            <span className="lg:block">
-              {content.headingEnd}{" "}
-              <span className={cn(styles.headingAccent, "relative inline-block text-[#3FABDE]")}>
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-12 xl:gap-20">
+          <div className="relative">
+            <p className={cn(styles.eyebrow, "mb-5 flex items-center gap-3 font-comic text-xs font-bold uppercase tracking-[0.16em] leading-relaxed sm:text-sm")}>
+              <span aria-hidden="true" className={cn(styles.decor, styles.eyebrowLine, "h-0.5 w-8 shrink-0")} />
+              {content.eyebrow}
+            </p>
+            <h1 id="whatwedo-hero-heading"
+              className={cn(styles.heading, "font-marissa text-[clamp(2.75rem,9vw,4rem)] leading-[1.1] break-words lg:text-[clamp(3.25rem,4.8vw,4.5rem)]")}>
+              <span className="block">{content.headingStart} {content.headingEmphasis}</span>{" "}
+              <span className="block">{content.headingEnd}</span>{" "}
+              <span className={cn(styles.headingAccent, "relative inline-block pb-3")}>
                 {content.headingAccent}
-                {/* Yellow underline */}
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  viewBox="0 0 200 20"
-                  className={cn(styles.decor, "pointer-events-none absolute -bottom-[0.16em] left-[0.02em] h-[0.19em] w-[88%]")}
-                >
-                  <path
-                    d="M4 14 C 48 7, 118 4, 196 9"
-                    fill="none"
-                    stroke="#F7C52B"
-                    strokeLinecap="round"
-                    strokeWidth="5.5"
-                  />
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 300 24" preserveAspectRatio="none"
+                  className={cn(styles.decor, styles.underline, "pointer-events-none absolute bottom-0 left-0 h-4 w-full")}>
+                  <path d="M5 14Q130 0 292 10M15 22Q150 9 280 17" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
                 </svg>
               </span>
-            </span>
-          </h1>
-
-          <div className="lg:pr-6 xl:pr-0">
-            <p
-              className={cn(
-                styles.description,
-                "max-w-[34rem] font-comic text-[1.125rem] leading-[1.6] text-[#334155] xl:text-[1.25rem]",
-              )}
-            >
+            </h1>
+            <p className={cn(styles.description, "mt-6 max-w-[33rem] font-comic text-base leading-[1.75] sm:text-lg")}>
               {content.description}
             </p>
-
-            <div className="mt-6 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap md:mt-7">
-              <a
-                href={content.primaryHref}
-                data-slot="button"
-                data-variant="default"
-                className={cn(styles.primaryBtn, buttonBase, "bg-[#0B5F8A] text-white hover:border-[#094E72] hover:bg-[#094E72]")}
-              >
-                {content.primaryLabel} <span aria-hidden="true">↓</span>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href={content.primaryHref} data-slot="button" data-variant="default"
+                className={cn(styles.primaryBtn, buttonBase)}>
+                {content.primaryLabel}<ArrowDown aria-hidden="true" className="size-4 shrink-0" />
               </a>
-              <Link
-                href={content.secondaryHref}
-                data-slot="button"
-                data-variant="outline"
-                className={cn(styles.secondaryBtn, buttonBase, "bg-white text-[#0B5F8A] hover:bg-[#E8F6FC]")}
-              >
-                {content.secondaryLabel} <span aria-hidden="true">→</span>
+              <Link href={content.secondaryHref} data-slot="button" data-variant="outline"
+                className={cn(styles.secondaryBtn, buttonBase)}>
+                {content.secondaryLabel}<ArrowUpRight aria-hidden="true" className="size-4 shrink-0" />
               </Link>
             </div>
           </div>
-        </div>
 
-        {/* Photo strip */}
-        <div className="relative mt-10 lg:mt-12">
-          {/* Pale-blue backing, top left */}
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 400 300"
-            preserveAspectRatio="none"
-            className={cn(styles.decor, "pointer-events-none absolute -left-5 -top-4 h-[82%] w-[44%] sm:-left-8 sm:-top-5")}
-          >
-            <path
-              d="M38 6 C 120 -4, 250 10, 330 8 C 380 7, 398 40, 396 90 C 394 170, 400 240, 360 280 C 300 300, 120 296, 50 290 C 12 286, 2 250, 4 190 C 6 120, -4 60, 10 30 C 16 16, 26 8, 38 6 Z"
-              fill="#E8F6FC"
-            />
-          </svg>
-
-          {/* Pale-blue backing, bottom right */}
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 300 260"
-            preserveAspectRatio="none"
-            className={cn(styles.decor, "pointer-events-none absolute -bottom-4 -right-4 h-[72%] w-[30%] sm:-bottom-5 sm:-right-6")}
-          >
-            <path
-              d="M60 10 C 140 2, 230 6, 270 20 C 296 32, 298 80, 296 140 C 294 200, 300 240, 262 254 C 200 262, 110 258, 50 252 C 14 246, 4 214, 6 160 C 8 100, 2 50, 20 26 C 30 14, 44 11, 60 10 Z"
-              fill="#E8F6FC"
-            />
-          </svg>
-
-          {/* Thin decorative curve, bottom right */}
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 300 200"
-            preserveAspectRatio="none"
-            className={cn(styles.decor, "pointer-events-none absolute -bottom-8 -right-3 h-[58%] w-[26%] sm:-right-8 md:-bottom-10")}
-          >
-            <path
-              d="M6 192 C 110 190, 214 162, 294 34"
-              fill="none"
-              stroke="#3FABDE"
-              strokeOpacity="0.55"
-              strokeLinecap="round"
-              strokeWidth="2"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-
-          <div
-            className={cn(
-              "relative z-10 grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-3.5",
-              "md:h-[280px] md:grid-cols-[46fr_26fr_28fr] md:gap-3.5 lg:h-[320px] lg:gap-4 xl:h-[350px]",
-            )}
-          >
-            {heroPhotos.map((layout, index) => { const photo = { ...layout, ...content.photos[index] }; return (
-              <figure
-                key={photo.src}
-                className={cn(styles.photo, "relative m-0 overflow-hidden rounded-[20px] bg-[#E8F6FC]", photo.frame)}
-              >
-                <Image
-                  src={photo.src}
-                  unoptimized={photo.src.startsWith("https://")}
-                  alt={photo.alt}
-                  fill
-                  sizes={photo.sizes}
-                  loading={photo.eager ? "eager" : "lazy"}
-                  fetchPriority={photo.eager ? "high" : "auto"}
-                  className={cn("object-cover", photo.crop)}
-                />
-              </figure>
-            )})}
+          <div className="relative mx-auto w-full max-w-[600px] px-2 pb-2 sm:px-3 lg:pt-2">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 90 70"
+              className={cn(styles.decor, styles.rays, "pointer-events-none absolute -right-2 -top-7 h-14 w-16 sm:-right-5")}>
+              <path d="M10 55L4 28M31 40L40 8M55 49L81 30" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            </svg>
+            <div className="grid grid-cols-2 items-start gap-4 sm:gap-5">
+              {photoLayouts.map((layout, index) => {
+                const photo = content.photos[index]
+                return (
+                  <figure key={index} className={cn(styles.photo, "relative m-0 rounded-sm p-2 sm:p-3", layout.frame)}>
+                    {index === 0 && <span aria-hidden="true" className={cn(styles.decor, styles.tape, "absolute -top-3 left-1/2 z-10 h-7 w-24 -translate-x-1/2 -rotate-3")} />}
+                    <div className={cn(styles.photoMat, "relative overflow-hidden", index === 0 ? "aspect-[16/9]" : "aspect-[4/3]")}>
+                      <Image src={photo.src} alt={photo.alt} fill sizes={layout.sizes}
+                        unoptimized={photo.src.startsWith("https://")}
+                        loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"}
+                        className={cn("object-cover", layout.crop)} />
+                    </div>
+                    <figcaption className={cn(styles.caption, "px-1 pb-1 pt-3 text-center font-comic text-xs leading-relaxed sm:text-sm")}>
+                      {layout.label}
+                    </figcaption>
+                  </figure>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

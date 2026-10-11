@@ -1,7 +1,7 @@
 // ── Form Testing Helpers ────────────────────────────────────────────────────
 // Phase 5: Utilities for testing form functionality, validation, and edge cases.
 
-import { FormSchema, FormField, FormStep, FieldType } from "@/lib/types/conference-form-schema"
+import { FormSchema, FormField, FormStep, FieldType } from "@/lib/types/event-form-schema"
 
 /**
  * Creates a mock form schema for testing.

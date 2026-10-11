@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getWhatWeDoSettings } from "@/lib/data/what-we-do-settings"
 import { notFound } from "next/navigation"
+import { WhatWeDoEmptyState } from "@/components/what-we-do/what-we-do-empty-state"
+import { isWhatWeDoAreaPaused } from "@/lib/data/what-we-do-availability"
 import { getPublishedProgramBySlug, getRelatedPrograms } from "@/lib/programs/data"
 import { sanitizeProgramContent } from "@/lib/sanitize/program-content"
 import { CmsProgramRenderer } from "@/components/programs/cms-program-renderer"
@@ -65,6 +67,10 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   if (getWhatWeDoArea(slug)) {
     const content = await getWhatWeDoSettings()
     const area = content.areas[slug as keyof typeof content.areas]
+    // Temporary rollout: keep these URLs open without exposing unfinished detail content.
+    if (isWhatWeDoAreaPaused(slug)) {
+      return <WhatWeDoEmptyState area={area} card={content.cards.find(card => card.slug === slug)} />
+    }
     return <WhatWeDoAreaDetail area={area} content={content} />
   }
 

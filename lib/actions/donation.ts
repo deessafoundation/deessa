@@ -47,15 +47,12 @@ export async function startDonation(input: StartDonationInput): Promise<StartDon
     const settings = await getPaymentSettings()
     const availableProviders = getSupportedProviders(settings)
 
-    // If the selected provider is not available, try to use the primary provider or first available
+    // Reject stale or disabled choices; substituting a gateway can change the currency.
     if (!availableProviders.includes(input.provider)) {
       if (availableProviders.length === 0) {
         return { ok: false, message: "No payment methods are currently available. Please contact support." }
       }
-      // Use the first available provider as fallback
-      const fallbackProvider = availableProviders[0]
-      console.warn(`Provider ${input.provider} not available, using ${fallbackProvider} instead`)
-      input.provider = fallbackProvider
+      return { ok: false, message: "This payment method is unavailable. Please refresh and select another method." }
     }
 
     // Determine currency: Stripe uses USD by default, local gateways use NPR

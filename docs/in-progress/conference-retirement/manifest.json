@@ -1,0 +1,1164 @@
+{
+  "date": "2026-10-10",
+  "scope": "Event registration ownership relocation and conference UI archival; backend retained.",
+  "moves": [
+    {
+      "from": "components/conference/conference-registration-form.tsx",
+      "to": "components/archive/conference/public/conference-registration-form.tsx",
+      "beforeHash": "89cb9666b7e9465515f3e8134d06963f0aabd5c79c6a66f8eb55e95fc56cef43",
+      "afterHash": "e35ef0b53816e80f8376353e31ea1c900b263ec7ceb02dc9757bdc3bc53e407d"
+    },
+    {
+      "from": "components/conference/dynamic-form-renderer.tsx",
+      "to": "components/archive/conference/public/dynamic-form-renderer.tsx",
+      "beforeHash": "38f3b8126b60768edf7202d5b129a8a404c8b9a82b97611afe53bac26e005253",
+      "afterHash": "37a670abf1b1028b68e3156ab154f1392d23ad97004fabca622baa855ced49e8"
+    },
+    {
+      "from": "components/conference/dynamic-step.tsx",
+      "to": "components/events/public/registration/dynamic-step.tsx",
+      "beforeHash": "7a6aaff40981112a73631be4a703b2cf1d688d400e281a0a4b10fad35fb4782c",
+      "afterHash": "e9c77a03b5de3094d05bc79cf36cde7479e9595cda2a8e264be6ba7177c81d7e"
+    },
+    {
+      "from": "components/conference/fields/field-checkbox.tsx",
+      "to": "components/events/public/registration/fields/field-checkbox.tsx",
+      "beforeHash": "06450df850a690f9928619aad6898b13872a6f90f86ec87b62a537e6ec82eec6",
+      "afterHash": "06450df850a690f9928619aad6898b13872a6f90f86ec87b62a537e6ec82eec6"
+    },
+    {
+      "from": "components/conference/fields/field-date-range.tsx",
+      "to": "components/events/public/registration/fields/field-date-range.tsx",
+      "beforeHash": "963efdfac40186ee18c5b9c6c779f05ac4a0f102a1dc804e9b39683f55cb6cf9",
+      "afterHash": "21cdc1615c1d5d9925f5a7e6e7ccba6b8c21221815287cbad287f80b29d491b0"
+    },
+    {
+      "from": "components/conference/fields/field-date.tsx",
+      "to": "components/events/public/registration/fields/field-date.tsx",
+      "beforeHash": "69a562fa46f3286a2ee6acddee59aee1ea957bc1827afc1a6ccfae4e1eb0aaf4",
+      "afterHash": "82c13f7c05c68378b70e75ed65cb5f7e9af26b0027069319b5e68a8dd7884905"
+    },
+    {
+      "from": "components/conference/fields/field-email.tsx",
+      "to": "components/events/public/registration/fields/field-email.tsx",
+      "beforeHash": "ec562f6d47efcfa96d101ad73ec60ae0930114fe4889124db5316c91f8442067",
+      "afterHash": "ec562f6d47efcfa96d101ad73ec60ae0930114fe4889124db5316c91f8442067"
+    },
+    {
+      "from": "components/conference/fields/field-file.tsx",
+      "to": "components/events/public/registration/fields/field-file.tsx",
+      "beforeHash": "159308d30621e2ab9cdc5a5e882a1b201ea78a63b672b810dd7b7ba54820bf1e",
+      "afterHash": "6a18def5cb9ee0e4c18e81b609a4eea1b4a53d056fe6aa03fca107ae413b53ee"
+    },
+    {
+      "from": "components/conference/fields/field-heading.tsx",
+      "to": "components/events/public/registration/fields/field-heading.tsx",
+      "beforeHash": "6c109cc28740142da22090be1b6a733566744c42d3d29775831d77121e108083",
+      "afterHash": "6c109cc28740142da22090be1b6a733566744c42d3d29775831d77121e108083"
+    },
+    {
+      "from": "components/conference/fields/field-number.tsx",
+      "to": "components/events/public/registration/fields/field-number.tsx",
+      "beforeHash": "269cf26965385d8fd05d85ce64c592800232b3589246146840a2b9d67df1c8da",
+      "afterHash": "269cf26965385d8fd05d85ce64c592800232b3589246146840a2b9d67df1c8da"
+    },
+    {
+      "from": "components/conference/fields/field-paragraph.tsx",
+      "to": "components/events/public/registration/fields/field-paragraph.tsx",
+      "beforeHash": "3ebce9a4d054c6c80a7c076bc2f4dcad0898396d1e0e459f4703403e81bb5f61",
+      "afterHash": "3ebce9a4d054c6c80a7c076bc2f4dcad0898396d1e0e459f4703403e81bb5f61"
+    },
+    {
+      "from": "components/conference/fields/field-radio.tsx",
+      "to": "components/events/public/registration/fields/field-radio.tsx",
+      "beforeHash": "e97fa06ddf1855df91bfabe90fcf20b5a47c8bf535acf44ca76c613cdf3fe723",
+      "afterHash": "e97fa06ddf1855df91bfabe90fcf20b5a47c8bf535acf44ca76c613cdf3fe723"
+    },
+    {
+      "from": "components/conference/fields/field-rating.tsx",
+      "to": "components/events/public/registration/fields/field-rating.tsx",
+      "beforeHash": "9c6c5e19f16cc2c308ba82d64a1734daddeccacba6bd8a7058d23a998af29e52",
+      "afterHash": "c557605186fd880b5efea21291c0a6c27b0e3866eee6d0089ccff5652cc12c70"
+    },
+    {
+      "from": "components/conference/fields/field-repeating.tsx",
+      "to": "components/events/public/registration/fields/field-repeating.tsx",
+      "beforeHash": "5423bb988537ecbcc0c36fd93fb530da5ef0b69fc910efe4dbfe772e3cd88b05",
+      "afterHash": "829a0954203646080a61f7956a14117f8aad92057ea53cb60a02f5dd080c37d0"
+    },
+    {
+      "from": "components/conference/fields/field-rich-text.tsx",
+      "to": "components/events/public/registration/fields/field-rich-text.tsx",
+      "beforeHash": "6cb3c33c9798d134ad01f2949d4749d068671768e68d891bbf91bbf12d030437",
+      "afterHash": "167ad374481b3e0423c5ae39044bcd2ac548dbd046558b021b8878031c033b0b"
+    },
+    {
+      "from": "components/conference/fields/field-select.tsx",
+      "to": "components/events/public/registration/fields/field-select.tsx",
+      "beforeHash": "ca75c337ffe2f459427963a60c5ab612ec25a4f8b58dfa55a29575e637861081",
+      "afterHash": "ca75c337ffe2f459427963a60c5ab612ec25a4f8b58dfa55a29575e637861081"
+    },
+    {
+      "from": "components/conference/fields/field-signature.tsx",
+      "to": "components/events/public/registration/fields/field-signature.tsx",
+      "beforeHash": "812263eb6f848222a64dc832f42460f2f636b068a0a1ca3db22a6117914121bf",
+      "afterHash": "9519dbd88f64d6f4015bc1f6b6cc662405e8893c463206e205440697fb0af089"
+    },
+    {
+      "from": "components/conference/fields/field-slider.tsx",
+      "to": "components/events/public/registration/fields/field-slider.tsx",
+      "beforeHash": "e0eb5a904c42fcd214e27ee4fb26298791cdc60ef3372ec08d001a0ac4bdd725",
+      "afterHash": "a8fd3ee375dc0d0ab3439a7f4dda07f34e5d56e45344f0538988901356ca3e08"
+    },
+    {
+      "from": "components/conference/fields/field-tel.tsx",
+      "to": "components/events/public/registration/fields/field-tel.tsx",
+      "beforeHash": "a594bed0aadab4b1d03f2a8ea412beb9c5ba87bfd916ad0e23c46be231441fc9",
+      "afterHash": "a594bed0aadab4b1d03f2a8ea412beb9c5ba87bfd916ad0e23c46be231441fc9"
+    },
+    {
+      "from": "components/conference/fields/field-text.tsx",
+      "to": "components/events/public/registration/fields/field-text.tsx",
+      "beforeHash": "d0570f7628032628e45e2d6f7d07c5b510016e3f52a4006df5342723f813f10b",
+      "afterHash": "d0570f7628032628e45e2d6f7d07c5b510016e3f52a4006df5342723f813f10b"
+    },
+    {
+      "from": "components/conference/fields/field-textarea.tsx",
+      "to": "components/events/public/registration/fields/field-textarea.tsx",
+      "beforeHash": "f6ace22aedc5f56ebffb64497738c548d0e1ce62758fad962921326eab10b79e",
+      "afterHash": "bacc7f36c65092358b98d80bd27135e3c075848dfb36792b9a9690cbaa64023b"
+    },
+    {
+      "from": "components/conference/fields/field-toggle.tsx",
+      "to": "components/events/public/registration/fields/field-toggle.tsx",
+      "beforeHash": "b30f614be8f026d7df0e356f5cbc775fa53226b1dcb3693b553ffdf1bb71527d",
+      "afterHash": "b30f614be8f026d7df0e356f5cbc775fa53226b1dcb3693b553ffdf1bb71527d"
+    },
+    {
+      "from": "components/conference/fields/field-url.tsx",
+      "to": "components/events/public/registration/fields/field-url.tsx",
+      "beforeHash": "7e83aac1439254c855078291fe540a575334dd8928c4e1e930e7250c01a04cc2",
+      "afterHash": "ac82a4786094259adfd38a87afc68103b8bb8736efc481942281fad50dc191fe"
+    },
+    {
+      "from": "components/conference/fields/index.ts",
+      "to": "components/events/public/registration/fields/index.ts",
+      "beforeHash": "daf7a5f5bfcdf6bd181b8a92c9106c24a2e1bd0ff6ef44d385f9c359cd91f021",
+      "afterHash": "a6c597cbf06bf4b25e12e2686dd1d98ff270886c8c59addf3141a50951a094f5"
+    },
+    {
+      "from": "components/conference/step-progress-bar.tsx",
+      "to": "components/events/public/registration/step-progress-bar.tsx",
+      "beforeHash": "c50e9b042fbc90e9ddd60c2d94bc67a677d94bb9f2f44318b517a46d557f1555",
+      "afterHash": "c50e9b042fbc90e9ddd60c2d94bc67a677d94bb9f2f44318b517a46d557f1555"
+    },
+    {
+      "from": "components/conference/step1-personal-details.tsx",
+      "to": "components/archive/conference/public/step1-personal-details.tsx",
+      "beforeHash": "7e2f869319ee844c7ac335aa1af5abc9c0e53b90fb42a4565dd8a6db09ad0587",
+      "afterHash": "7e2f869319ee844c7ac335aa1af5abc9c0e53b90fb42a4565dd8a6db09ad0587"
+    },
+    {
+      "from": "components/conference/step2-participation.tsx",
+      "to": "components/archive/conference/public/step2-participation.tsx",
+      "beforeHash": "1b4ee2d196978499ed2bbf62afe4bdeadc50b00c69022947772030a6073dd615",
+      "afterHash": "1b4ee2d196978499ed2bbf62afe4bdeadc50b00c69022947772030a6073dd615"
+    },
+    {
+      "from": "components/conference/step3-additional-info.tsx",
+      "to": "components/archive/conference/public/step3-additional-info.tsx",
+      "beforeHash": "1be4375572299fb84ac64b94e8da562769f5c52112c478f51068db0ce39aa921",
+      "afterHash": "1be4375572299fb84ac64b94e8da562769f5c52112c478f51068db0ce39aa921"
+    },
+    {
+      "from": "components/conference/step4-review.tsx",
+      "to": "components/archive/conference/public/step4-review.tsx",
+      "beforeHash": "550cb576b87e1a9711967d51d665c3e6570cbd01c68064c05a0cc2693d64ae95",
+      "afterHash": "550cb576b87e1a9711967d51d665c3e6570cbd01c68064c05a0cc2693d64ae95"
+    },
+    {
+      "from": "components/admin/conference/conference-form-builder.tsx",
+      "to": "components/archive/conference/admin/conference-form-builder.tsx",
+      "beforeHash": "1993aa7c03e613c0a59bddbdd5f94f6935d649a78b5e14fc5bce65322b4e5137",
+      "afterHash": "44ee562cad76074c434caca9f73778443261581932efebf86cced9ccf181cfe3"
+    },
+    {
+      "from": "components/admin/conference/conference-notes.tsx",
+      "to": "components/archive/conference/admin/conference-notes.tsx",
+      "beforeHash": "f3c0e88e444dc64c80ed6afe7dfde15daea6f40155b64e433d6825c93184a253",
+      "afterHash": "f3c0e88e444dc64c80ed6afe7dfde15daea6f40155b64e433d6825c93184a253"
+    },
+    {
+      "from": "components/admin/conference/conference-quick-actions.tsx",
+      "to": "components/archive/conference/admin/conference-quick-actions.tsx",
+      "beforeHash": "b4dac3c9c735da5d34a5a79014c2a8fca8d544b01d517b7e599ba1a1d46dfe17",
+      "afterHash": "b4dac3c9c735da5d34a5a79014c2a8fca8d544b01d517b7e599ba1a1d46dfe17"
+    },
+    {
+      "from": "components/admin/conference/conference-settings-form.tsx",
+      "to": "components/archive/conference/admin/conference-settings-form.tsx",
+      "beforeHash": "58d5583ee29bae20da00cdbaeb4d7716ce73876f1a32be0aed233a5b5263c3ac",
+      "afterHash": "58d5583ee29bae20da00cdbaeb4d7716ce73876f1a32be0aed233a5b5263c3ac"
+    },
+    {
+      "from": "components/admin/conference/conference-status-actions.tsx",
+      "to": "components/archive/conference/admin/conference-status-actions.tsx",
+      "beforeHash": "b7d68a8c62f8f1d2097bb662031d780a77c31c8ef0e32c9a8cff4de3d09784ae",
+      "afterHash": "b7d68a8c62f8f1d2097bb662031d780a77c31c8ef0e32c9a8cff4de3d09784ae"
+    },
+    {
+      "from": "components/admin/conference/delete-registration-button.tsx",
+      "to": "components/archive/conference/admin/delete-registration-button.tsx",
+      "beforeHash": "1b08d44b9009f80b2c6f28a58e39c6a58ed642737dffc8e58f3e07cf7b5f1d14",
+      "afterHash": "1b08d44b9009f80b2c6f28a58e39c6a58ed642737dffc8e58f3e07cf7b5f1d14"
+    },
+    {
+      "from": "components/admin/conference/form-builder/enhanced-conditional-editor.tsx",
+      "to": "components/admin/events/event-form-builder/enhanced-conditional-editor.tsx",
+      "beforeHash": "cd1969a77c6d865a5e7517c16f151be8bcac2907c435f3345fb1cc3f553f8b87",
+      "afterHash": "4149215695fa170c3d68b7021cc48af112d43ca09f86127e30d89694010eeb26"
+    },
+    {
+      "from": "components/admin/conference/form-builder/event-selector.tsx",
+      "to": "components/archive/conference/admin/form-builder/event-selector.tsx",
+      "beforeHash": "6e26c5dfb660fa27b1770eb2654c61aa880e635fe47755012678671f8a969b2c",
+      "afterHash": "6e26c5dfb660fa27b1770eb2654c61aa880e635fe47755012678671f8a969b2c"
+    },
+    {
+      "from": "components/admin/conference/form-builder/form-template-chooser.tsx",
+      "to": "components/admin/events/event-form-builder/form-template-chooser.tsx",
+      "beforeHash": "314c10cf31344bf27855fe5985b4e3888dc33668e80cd3fbd208a846bff7a3eb",
+      "afterHash": "04bbe553533c1da7f214783eedc7762cd51b41fd69b18899ec1d5a061a16150f"
+    },
+    {
+      "from": "components/admin/conference/form-canvas.tsx",
+      "to": "components/archive/conference/admin/form-canvas.tsx",
+      "beforeHash": "64f91b98a064ca4f53fde0e038e091c3a8c34753e33891be6142986f618e681e",
+      "afterHash": "a09c618658a520e3bb3e6b5e92504878bb5377e784cee9f87639c0fc1242f075"
+    },
+    {
+      "from": "components/admin/conference/form-field-editor.tsx",
+      "to": "components/archive/conference/admin/form-field-editor.tsx",
+      "beforeHash": "dcdab05f26ea71f8088e553bf2091689a0b6982857a1e5e1775d065318d9ff92",
+      "afterHash": "d75b1c0250827b657515dd71de6db2027064b8847bcb59e50b1cc539d386a917"
+    },
+    {
+      "from": "components/admin/conference/form-field-palette.tsx",
+      "to": "components/archive/conference/admin/form-field-palette.tsx",
+      "beforeHash": "9c78c20bedf8dd666210765e4853d2f7b5545dcfa2209625f881ed0d2dbe0fb8",
+      "afterHash": "a96640eadf90902c068ab7bfb7c92492c8580842236c77cc50645bfdd76c4f44"
+    },
+    {
+      "from": "components/admin/conference/form-preview.tsx",
+      "to": "components/archive/conference/admin/form-preview.tsx",
+      "beforeHash": "42b52e27f7ca272e7fa509815b67c6f01b05ccbaa0e61438e77e3c27d0b58937",
+      "afterHash": "c8dc66021158fd06046a4a2c7bd6da163d9c1e8e76210a19dc48a945572ddaed"
+    },
+    {
+      "from": "components/admin/conference/form-step-editor.tsx",
+      "to": "components/archive/conference/admin/form-step-editor.tsx",
+      "beforeHash": "7067ebca9284fb750765ac5e4c7ea44b72dfe8cc34114c71c9e246453227b4ef",
+      "afterHash": "4020121d8b9489db04f60c4ccfe6710212937c9fe7b540b10df29c7e33bf7ef8"
+    },
+    {
+      "from": "lib/types/conference-form-schema.ts",
+      "to": "lib/types/event-form-schema.ts",
+      "beforeHash": "714f64d85ac929c9a772ef255836de68ee94aeb2738097244ddbc6c84290e63e",
+      "afterHash": "714f64d85ac929c9a772ef255836de68ee94aeb2738097244ddbc6c84290e63e"
+    },
+    {
+      "from": "app/(public)/conference/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/page.tsx",
+      "beforeHash": "c989acf6372cc961cd502a9660a391ea23db27a144f30c00831daa896522161a",
+      "afterHash": "c989acf6372cc961cd502a9660a391ea23db27a144f30c00831daa896522161a"
+    },
+    {
+      "from": "app/(public)/conference/register/failure/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/failure/page.tsx",
+      "beforeHash": "dac9eaf6290cf5108dcf3e21c8661f3f7ec8305ab725e657355b2a38c1a706a3",
+      "afterHash": "dac9eaf6290cf5108dcf3e21c8661f3f7ec8305ab725e657355b2a38c1a706a3"
+    },
+    {
+      "from": "app/(public)/conference/register/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/page.tsx",
+      "beforeHash": "807e3db317f093956c66425dc189ab51be415c3643b73074382d485ce33ff733",
+      "afterHash": "b0f86efc370f652159c9a3e9bcd50d847f4543adab81261592d0afdb9493af53"
+    },
+    {
+      "from": "app/(public)/conference/register/payment-options/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/payment-options/page.tsx",
+      "beforeHash": "4be8bf032aa7345f01143b3d530a81d0ae7b468dee7264b1f7f6d69279d5ae3a",
+      "afterHash": "4be8bf032aa7345f01143b3d530a81d0ae7b468dee7264b1f7f6d69279d5ae3a"
+    },
+    {
+      "from": "app/(public)/conference/register/payment-success/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/payment-success/page.tsx",
+      "beforeHash": "9367a2f8290b9a9419e769294930478e91eab6c592536550789188fd4d80b8f7",
+      "afterHash": "9367a2f8290b9a9419e769294930478e91eab6c592536550789188fd4d80b8f7"
+    },
+    {
+      "from": "app/(public)/conference/register/pending-payment/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/pending-payment/page.tsx",
+      "beforeHash": "951e2d7969676202a669d55812fff83076156760e4fa34a910018fa721b6eb99",
+      "afterHash": "951e2d7969676202a669d55812fff83076156760e4fa34a910018fa721b6eb99"
+    },
+    {
+      "from": "app/(public)/conference/register/success/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/success/page.tsx",
+      "beforeHash": "2f709850647623d99f0599e3378e34a8963841c6e7c35eb9a423907f7b9679fb",
+      "afterHash": "2f709850647623d99f0599e3378e34a8963841c6e7c35eb9a423907f7b9679fb"
+    },
+    {
+      "from": "app/admin/conference/forms/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/forms/page.tsx",
+      "beforeHash": "053a1e2c244691e9349b24a1402af063f55db61f2c116aee6653c3e48619b66c",
+      "afterHash": "053a1e2c244691e9349b24a1402af063f55db61f2c116aee6653c3e48619b66c"
+    },
+    {
+      "from": "app/admin/conference/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/page.tsx",
+      "beforeHash": "0b3dcd8979c8db913e9cb3d87b1bb382c3904ee4ff26615330d23cbe90a918b8",
+      "afterHash": "0b3dcd8979c8db913e9cb3d87b1bb382c3904ee4ff26615330d23cbe90a918b8"
+    },
+    {
+      "from": "app/admin/conference/settings/form-builder/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/settings/form-builder/page.tsx",
+      "beforeHash": "93028ae3f27b62f831c06f1740c7da753d275f6897314994fc2a14102a45d562",
+      "afterHash": "12bee50955a90cf82dc289e2c16f477b6d1834553eaa90db4e337c81ca153ea2"
+    },
+    {
+      "from": "app/admin/conference/settings/layout.tsx",
+      "to": "components/archive/conference/routes/admin/conference/settings/layout.tsx",
+      "beforeHash": "39d3abdd8eabbd9fd312d137df65877952a2fb0e7be396adc201d9d2568a1c0e",
+      "afterHash": "39d3abdd8eabbd9fd312d137df65877952a2fb0e7be396adc201d9d2568a1c0e"
+    },
+    {
+      "from": "app/admin/conference/settings/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/settings/page.tsx",
+      "beforeHash": "4be30c40985a5b591fb2ebc6f8d559024b6e996166936ea0d48b92727a9687b5",
+      "afterHash": "d19e1c95ffa4405d50279f944d6419bb8b1c303c91636555bc4bfb9d8daed3f0"
+    },
+    {
+      "from": "app/admin/conference/[id]/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/[id]/page.tsx",
+      "beforeHash": "5a9a6e6caafd3004eed17747022eb8640aaa8562ab5c01a44e2ee429c7aacdde",
+      "afterHash": "7dae4475bc31a4f145b67d11ab8df549ce0ec5c0f87766eeeff5a3417f98c5a9"
+    },
+    {
+      "from": "app/(public)/complete-payment/page.tsx",
+      "to": "components/archive/conference/routes/public/complete-payment/page.tsx",
+      "beforeHash": "26d2a23b869fcf6f9ef160be8ce9512841a347e00dda24a3b242a43d16fc0d76",
+      "afterHash": "26d2a23b869fcf6f9ef160be8ce9512841a347e00dda24a3b242a43d16fc0d76"
+    }
+  ],
+  "importAdjustments": [
+    {
+      "from": "app/(public)/conference/register/page.tsx",
+      "to": "components/archive/conference/routes/public/conference/register/page.tsx",
+      "edits": [
+        {
+          "old": "@/components/conference/conference-registration-form",
+          "new": "@/components/archive/conference/public/conference-registration-form"
+        }
+      ],
+      "beforeHash": "807e3db317f093956c66425dc189ab51be415c3643b73074382d485ce33ff733",
+      "afterHash": "b0f86efc370f652159c9a3e9bcd50d847f4543adab81261592d0afdb9493af53"
+    },
+    {
+      "from": "app/(public)/events/[slug]/register/page.tsx",
+      "to": "app/(public)/events/[slug]/register/page.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "aa267fd929be68887ee6d9f6de2ee410be9ca1a839c5934c73487763f39c7f36",
+      "afterHash": "82d43d3b1e67bc3e541c8bc61a8667b9adc854ce772a334987cffd086c1a6f59"
+    },
+    {
+      "from": "app/admin/conference/settings/form-builder/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/settings/form-builder/page.tsx",
+      "edits": [
+        {
+          "old": "@/components/admin/conference/conference-form-builder",
+          "new": "@/components/archive/conference/admin/conference-form-builder"
+        }
+      ],
+      "beforeHash": "93028ae3f27b62f831c06f1740c7da753d275f6897314994fc2a14102a45d562",
+      "afterHash": "12bee50955a90cf82dc289e2c16f477b6d1834553eaa90db4e337c81ca153ea2"
+    },
+    {
+      "from": "app/admin/conference/settings/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/settings/page.tsx",
+      "edits": [
+        {
+          "old": "@/components/admin/conference/conference-settings-form",
+          "new": "@/components/archive/conference/admin/conference-settings-form"
+        }
+      ],
+      "beforeHash": "4be30c40985a5b591fb2ebc6f8d559024b6e996166936ea0d48b92727a9687b5",
+      "afterHash": "d19e1c95ffa4405d50279f944d6419bb8b1c303c91636555bc4bfb9d8daed3f0"
+    },
+    {
+      "from": "app/admin/conference/[id]/page.tsx",
+      "to": "components/archive/conference/routes/admin/conference/[id]/page.tsx",
+      "edits": [
+        {
+          "old": "@/components/admin/conference/delete-registration-button",
+          "new": "@/components/archive/conference/admin/delete-registration-button"
+        },
+        {
+          "old": "@/components/admin/conference/conference-notes",
+          "new": "@/components/archive/conference/admin/conference-notes"
+        },
+        {
+          "old": "@/components/admin/conference/conference-quick-actions",
+          "new": "@/components/archive/conference/admin/conference-quick-actions"
+        },
+        {
+          "old": "@/components/admin/conference/conference-status-actions",
+          "new": "@/components/archive/conference/admin/conference-status-actions"
+        },
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "5a9a6e6caafd3004eed17747022eb8640aaa8562ab5c01a44e2ee429c7aacdde",
+      "afterHash": "7dae4475bc31a4f145b67d11ab8df549ce0ec5c0f87766eeeff5a3417f98c5a9"
+    },
+    {
+      "from": "app/admin/events/[id]/form-builder/page.tsx",
+      "to": "app/admin/events/[id]/form-builder/page.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "723788ab037959e68b239dd5d5a456bac7baaa12c3b3145ec575f0073bf7b317",
+      "afterHash": "d9294ebdd1c83ca19e5d72fc337364d96bf7a65fd2c0995fc3a41e40481940a2"
+    },
+    {
+      "from": "app/admin/events/[id]/page.tsx",
+      "to": "app/admin/events/[id]/page.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "c93bc11113855124f75feee3ab4aed39f27be0b2a351e22c18ca1ff3cbc035f4",
+      "afterHash": "b11edd1dc1ee9863b4eee85be5721cce35dea2c7007e613b44f55ac5e6d812cf"
+    },
+    {
+      "from": "app/admin/events/[id]/registrations/[registrationId]/page.tsx",
+      "to": "app/admin/events/[id]/registrations/[registrationId]/page.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "aa58037cd4b21f82df96cb8f5e11efe5b1e1d93166e2993745c93abda0f8496b",
+      "afterHash": "9566e23f4647bffc6073215ecc1a4062a8211b713a222ac569bb9f2393e61816"
+    },
+    {
+      "from": "components/admin/conference/conference-form-builder.tsx",
+      "to": "components/archive/conference/admin/conference-form-builder.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "1993aa7c03e613c0a59bddbdd5f94f6935d649a78b5e14fc5bce65322b4e5137",
+      "afterHash": "44ee562cad76074c434caca9f73778443261581932efebf86cced9ccf181cfe3"
+    },
+    {
+      "from": "components/admin/conference/form-builder/enhanced-conditional-editor.tsx",
+      "to": "components/admin/events/event-form-builder/enhanced-conditional-editor.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "cd1969a77c6d865a5e7517c16f151be8bcac2907c435f3345fb1cc3f553f8b87",
+      "afterHash": "4149215695fa170c3d68b7021cc48af112d43ca09f86127e30d89694010eeb26"
+    },
+    {
+      "from": "components/admin/conference/form-builder/form-template-chooser.tsx",
+      "to": "components/admin/events/event-form-builder/form-template-chooser.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "314c10cf31344bf27855fe5985b4e3888dc33668e80cd3fbd208a846bff7a3eb",
+      "afterHash": "04bbe553533c1da7f214783eedc7762cd51b41fd69b18899ec1d5a061a16150f"
+    },
+    {
+      "from": "components/admin/conference/form-canvas.tsx",
+      "to": "components/archive/conference/admin/form-canvas.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "64f91b98a064ca4f53fde0e038e091c3a8c34753e33891be6142986f618e681e",
+      "afterHash": "a09c618658a520e3bb3e6b5e92504878bb5377e784cee9f87639c0fc1242f075"
+    },
+    {
+      "from": "components/admin/conference/form-field-editor.tsx",
+      "to": "components/archive/conference/admin/form-field-editor.tsx",
+      "edits": [
+        {
+          "old": "./form-builder/enhanced-conditional-editor",
+          "new": "../../../admin/events/event-form-builder/enhanced-conditional-editor"
+        },
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "dcdab05f26ea71f8088e553bf2091689a0b6982857a1e5e1775d065318d9ff92",
+      "afterHash": "d75b1c0250827b657515dd71de6db2027064b8847bcb59e50b1cc539d386a917"
+    },
+    {
+      "from": "components/admin/conference/form-field-palette.tsx",
+      "to": "components/archive/conference/admin/form-field-palette.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "9c78c20bedf8dd666210765e4853d2f7b5545dcfa2209625f881ed0d2dbe0fb8",
+      "afterHash": "a96640eadf90902c068ab7bfb7c92492c8580842236c77cc50645bfdd76c4f44"
+    },
+    {
+      "from": "components/admin/conference/form-preview.tsx",
+      "to": "components/archive/conference/admin/form-preview.tsx",
+      "edits": [
+        {
+          "old": "@/components/conference/dynamic-form-renderer",
+          "new": "@/components/archive/conference/public/dynamic-form-renderer"
+        },
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "42b52e27f7ca272e7fa509815b67c6f01b05ccbaa0e61438e77e3c27d0b58937",
+      "afterHash": "c8dc66021158fd06046a4a2c7bd6da163d9c1e8e76210a19dc48a945572ddaed"
+    },
+    {
+      "from": "components/admin/conference/form-step-editor.tsx",
+      "to": "components/archive/conference/admin/form-step-editor.tsx",
+      "edits": [
+        {
+          "old": "./form-builder/enhanced-conditional-editor",
+          "new": "../../../admin/events/event-form-builder/enhanced-conditional-editor"
+        },
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "7067ebca9284fb750765ac5e4c7ea44b72dfe8cc34114c71c9e246453227b4ef",
+      "afterHash": "4020121d8b9489db04f60c4ccfe6710212937c9fe7b540b10df29c7e33bf7ef8"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/builder-actions.ts",
+      "to": "components/admin/events/event-form-builder/builder-actions.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "b7c30de834e53033b4623eb8516872c18d4bb8b042ca4e68efd29b0fda9cfa00",
+      "afterHash": "c397f78bb448b9eab2ec6adec6161dfc53f944915150ffe9138df7cdcf996024"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/field-palette.tsx",
+      "to": "components/admin/events/event-form-builder/field-palette.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "66780e12aa629a4fa069ce734a49aa32261461a5b797d672d99f30d15cbb8958",
+      "afterHash": "def089da98a36da2aa9fcec7855ac7fc5466ca78e38d81d812b017724b40d846"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/field-properties-panel.tsx",
+      "to": "components/admin/events/event-form-builder/field-properties-panel.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        },
+        {
+          "old": "@/components/admin/conference/form-builder/enhanced-conditional-editor",
+          "new": "@/components/admin/events/event-form-builder/enhanced-conditional-editor"
+        }
+      ],
+      "beforeHash": "08686a3539b32c8fe9243569af86f655b1fff305f524d28ba89862107f1a04fb",
+      "afterHash": "ac80ce05693a0abc86b39293c395a82f7515f3440d455e650fdc3c2ad9a0b432"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/form-canvas.tsx",
+      "to": "components/admin/events/event-form-builder/form-canvas.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "a51a49c9fc30425b259952c7fc12dcd75b62de4c20813ebc662535eb35764f6c",
+      "afterHash": "29e6e7b45af226abba9220af4c607389a56f221859934575d17dd7bfe0f03400"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/index.tsx",
+      "to": "components/admin/events/event-form-builder/index.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        },
+        {
+          "old": "@/components/admin/conference/form-builder/form-template-chooser",
+          "new": "@/components/admin/events/event-form-builder/form-template-chooser"
+        },
+        {
+          "old": "@/components/conference/fields",
+          "new": "@/components/events/public/registration/fields"
+        }
+      ],
+      "beforeHash": "e5fef9efe8d660348930bd62a8e0d78b8d05b083a8675d23041af1eb5500ef17",
+      "afterHash": "646eb26c277f81bc7304f83b97228f41f5accaa1056258ca80645a78f5805412"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/options-editor.tsx",
+      "to": "components/admin/events/event-form-builder/options-editor.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "b9524714707a7b46299b32c4437cc39eec96f25a04cf4e17585c887a6760699f",
+      "afterHash": "8e239e4762e40f13323dc62edc715f0342a623409c90c7825c11bd55be09e20b"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/schema-import-export.tsx",
+      "to": "components/admin/events/event-form-builder/schema-import-export.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "10e3049f83a7c750e144141a620769ca0a44984f6ed2713bdb5fe2e2bead8a2f",
+      "afterHash": "640870dac078f497e04e6a0a3987916208a7b4dfeef3c29a6a869c93d27d5cb7"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/sortable-field-card.tsx",
+      "to": "components/admin/events/event-form-builder/sortable-field-card.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "61344a9555fd9ac48739184268f1f35025020f93c1d8a2dceb7d1de88a381adb",
+      "afterHash": "9261ff031dd3400b12c47e6bcf65888453f899d16db31f9cfd7e7dacaf0369ac"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/sortable-step-card.tsx",
+      "to": "components/admin/events/event-form-builder/sortable-step-card.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "7d3c13e573aaa3cbdf9579ed849cff2dd3fdb001131223e02d9087b375566d96",
+      "afterHash": "6384ea68cd1a27dc05cc582d72c480d57001829e498c59385235d309317d7e76"
+    },
+    {
+      "from": "components/admin/events/event-form-builder/use-builder-state.ts",
+      "to": "components/admin/events/event-form-builder/use-builder-state.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "9c92d4472ebb6bd3e49da93fbf3b9e5fb693d6f5e6dfd5a53fcc3f11924790e7",
+      "afterHash": "e4014fcac67cba18e66291eeb883ed26e18f9c1539a2ce608d573e603ae9699c"
+    },
+    {
+      "from": "components/admin/events/event-settings-client.tsx",
+      "to": "components/admin/events/event-settings-client.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "25f9810988a98a44e55cda5dc31bc4076f1a5624ae3d6539ab68f735846e9ea0",
+      "afterHash": "d565651ccfb818d64cbca165563f40e9ae1a9751f23139d2f76c70f97a0e7ba5"
+    },
+    {
+      "from": "components/archive/admin/conference-form-builder/FormSchemaViewer.tsx",
+      "to": "components/archive/admin/conference-form-builder/FormSchemaViewer.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "159e0f6a7fad96e1ab8ba83f35f20c7be3ea100d2abc2c0ed0b9c21a7c12c1aa",
+      "afterHash": "2dca0849a30bb4e797a669b9efc116e13b2fb0f38fd7160ee6b1c5a66062c528"
+    },
+    {
+      "from": "components/archive/admin/form-conditional-editor.tsx",
+      "to": "components/archive/admin/form-conditional-editor.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "64c63012302fe8d7e4df5004f9d329ac35d1c467618f764b01a292dcc5de2753",
+      "afterHash": "e8e865e7c0d4e7eedab559cb5faea40b0e5c1bdacdfb1494427a53310ea86b5a"
+    },
+    {
+      "from": "components/conference/conference-registration-form.tsx",
+      "to": "components/archive/conference/public/conference-registration-form.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        },
+        {
+          "old": "./dynamic-step",
+          "new": "../../../events/public/registration/dynamic-step"
+        },
+        {
+          "old": "./step-progress-bar",
+          "new": "../../../events/public/registration/step-progress-bar"
+        }
+      ],
+      "beforeHash": "89cb9666b7e9465515f3e8134d06963f0aabd5c79c6a66f8eb55e95fc56cef43",
+      "afterHash": "e35ef0b53816e80f8376353e31ea1c900b263ec7ceb02dc9757bdc3bc53e407d"
+    },
+    {
+      "from": "components/conference/dynamic-form-renderer.tsx",
+      "to": "components/archive/conference/public/dynamic-form-renderer.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        },
+        {
+          "old": "./dynamic-step",
+          "new": "../../../events/public/registration/dynamic-step"
+        },
+        {
+          "old": "./step-progress-bar",
+          "new": "../../../events/public/registration/step-progress-bar"
+        }
+      ],
+      "beforeHash": "38f3b8126b60768edf7202d5b129a8a404c8b9a82b97611afe53bac26e005253",
+      "afterHash": "37a670abf1b1028b68e3156ab154f1392d23ad97004fabca622baa855ced49e8"
+    },
+    {
+      "from": "components/conference/dynamic-step.tsx",
+      "to": "components/events/public/registration/dynamic-step.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "7a6aaff40981112a73631be4a703b2cf1d688d400e281a0a4b10fad35fb4782c",
+      "afterHash": "e9c77a03b5de3094d05bc79cf36cde7479e9595cda2a8e264be6ba7177c81d7e"
+    },
+    {
+      "from": "components/conference/fields/field-date-range.tsx",
+      "to": "components/events/public/registration/fields/field-date-range.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "963efdfac40186ee18c5b9c6c779f05ac4a0f102a1dc804e9b39683f55cb6cf9",
+      "afterHash": "21cdc1615c1d5d9925f5a7e6e7ccba6b8c21221815287cbad287f80b29d491b0"
+    },
+    {
+      "from": "components/conference/fields/field-date.tsx",
+      "to": "components/events/public/registration/fields/field-date.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "69a562fa46f3286a2ee6acddee59aee1ea957bc1827afc1a6ccfae4e1eb0aaf4",
+      "afterHash": "82c13f7c05c68378b70e75ed65cb5f7e9af26b0027069319b5e68a8dd7884905"
+    },
+    {
+      "from": "components/conference/fields/field-file.tsx",
+      "to": "components/events/public/registration/fields/field-file.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "159308d30621e2ab9cdc5a5e882a1b201ea78a63b672b810dd7b7ba54820bf1e",
+      "afterHash": "6a18def5cb9ee0e4c18e81b609a4eea1b4a53d056fe6aa03fca107ae413b53ee"
+    },
+    {
+      "from": "components/conference/fields/field-rating.tsx",
+      "to": "components/events/public/registration/fields/field-rating.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "9c6c5e19f16cc2c308ba82d64a1734daddeccacba6bd8a7058d23a998af29e52",
+      "afterHash": "c557605186fd880b5efea21291c0a6c27b0e3866eee6d0089ccff5652cc12c70"
+    },
+    {
+      "from": "components/conference/fields/field-repeating.tsx",
+      "to": "components/events/public/registration/fields/field-repeating.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "5423bb988537ecbcc0c36fd93fb530da5ef0b69fc910efe4dbfe772e3cd88b05",
+      "afterHash": "829a0954203646080a61f7956a14117f8aad92057ea53cb60a02f5dd080c37d0"
+    },
+    {
+      "from": "components/conference/fields/field-rich-text.tsx",
+      "to": "components/events/public/registration/fields/field-rich-text.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "6cb3c33c9798d134ad01f2949d4749d068671768e68d891bbf91bbf12d030437",
+      "afterHash": "167ad374481b3e0423c5ae39044bcd2ac548dbd046558b021b8878031c033b0b"
+    },
+    {
+      "from": "components/conference/fields/field-signature.tsx",
+      "to": "components/events/public/registration/fields/field-signature.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "812263eb6f848222a64dc832f42460f2f636b068a0a1ca3db22a6117914121bf",
+      "afterHash": "9519dbd88f64d6f4015bc1f6b6cc662405e8893c463206e205440697fb0af089"
+    },
+    {
+      "from": "components/conference/fields/field-slider.tsx",
+      "to": "components/events/public/registration/fields/field-slider.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "e0eb5a904c42fcd214e27ee4fb26298791cdc60ef3372ec08d001a0ac4bdd725",
+      "afterHash": "a8fd3ee375dc0d0ab3439a7f4dda07f34e5d56e45344f0538988901356ca3e08"
+    },
+    {
+      "from": "components/conference/fields/field-textarea.tsx",
+      "to": "components/events/public/registration/fields/field-textarea.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "f6ace22aedc5f56ebffb64497738c548d0e1ce62758fad962921326eab10b79e",
+      "afterHash": "bacc7f36c65092358b98d80bd27135e3c075848dfb36792b9a9690cbaa64023b"
+    },
+    {
+      "from": "components/conference/fields/field-url.tsx",
+      "to": "components/events/public/registration/fields/field-url.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "7e83aac1439254c855078291fe540a575334dd8928c4e1e930e7250c01a04cc2",
+      "afterHash": "ac82a4786094259adfd38a87afc68103b8bb8736efc481942281fad50dc191fe"
+    },
+    {
+      "from": "components/conference/fields/index.ts",
+      "to": "components/events/public/registration/fields/index.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "daf7a5f5bfcdf6bd181b8a92c9106c24a2e1bd0ff6ef44d385f9c359cd91f021",
+      "afterHash": "a6c597cbf06bf4b25e12e2686dd1d98ff270886c8c59addf3141a50951a094f5"
+    },
+    {
+      "from": "components/events/public/event-registration-form.tsx",
+      "to": "components/events/public/event-registration-form.tsx",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        },
+        {
+          "old": "@/components/conference/dynamic-step",
+          "new": "@/components/events/public/registration/dynamic-step"
+        },
+        {
+          "old": "@/components/conference/step-progress-bar",
+          "new": "@/components/events/public/registration/step-progress-bar"
+        }
+      ],
+      "beforeHash": "99c3a8afdad57c9eab02e459a3dc0b53ae74800445274fd90794e00038e4d6e5",
+      "afterHash": "457171e6b15305648537ab55b806e34ebe5abbdaaa7f1429825f4836fc1aa9f5"
+    },
+    {
+      "from": "lib/actions/conference-form-schema.ts",
+      "to": "lib/actions/conference-form-schema.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "6b1b0597b26326faf9db0c7a4d2c502dbe6a7996ce56f26535f1280b33ff476d",
+      "afterHash": "0dcd931f70931c4641c5b4d0befbebba83ea5350f88d2878fa291f2f944a9c4d"
+    },
+    {
+      "from": "lib/actions/conference-form-templates.ts",
+      "to": "lib/actions/conference-form-templates.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "1eef7bed37c6c196d13fe2149f9aaa29d2be572cd40645e71c60c063e684ff4b",
+      "afterHash": "07ab9657414297c21939b2298169986cc3e3dba6cb03b5d04b27464ac28c6969"
+    },
+    {
+      "from": "lib/actions/conference-registration.ts",
+      "to": "lib/actions/conference-registration.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "8ffa116a1eacb664025f4bc551d3b05012cfa961c5aa117db7c1617753032ec4",
+      "afterHash": "da9b5873d889ba267f148caa068c91b0a32e9296c51243d532c1a9782eb7d6a3"
+    },
+    {
+      "from": "lib/actions/events-module/event-form-schema.ts",
+      "to": "lib/actions/events-module/event-form-schema.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "dbc1d0f93a451edcebe4ec852c2e3f939a304b318b5c21919ec599501d00939f",
+      "afterHash": "ec32c946040d74378babe10b1cf9a8b75fe180399a49758785c29f01bd39a30f"
+    },
+    {
+      "from": "lib/actions/events-module/event-form-templates.ts",
+      "to": "lib/actions/events-module/event-form-templates.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "90dbde57f1abb22e582a65bf109f053ef10af7981909b5ff40a92eba0cc8e3bd",
+      "afterHash": "6b1bab4b16eed5e84187011084ad5e97a78486bb16c4680695d3c238ba3fee89"
+    },
+    {
+      "from": "lib/hooks/useFormPerformance.ts",
+      "to": "lib/hooks/useFormPerformance.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "7811869d7cd64fc325f4fe1bca3b5b3a943c4eb7f3875665708527d84af41625",
+      "afterHash": "2beab1ab5068992731c7a48d140516cc173b99c3c9471b1f56f90075142a2143"
+    },
+    {
+      "from": "lib/testing/form-test-helpers.ts",
+      "to": "lib/testing/form-test-helpers.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "3e14f5c06df724be448f05c4741a45d4551231364a44aa0a5a79c65a1051233d",
+      "afterHash": "ebbb704d6cfff466956d8dcecb6bf9f45fbb33a8ebc036ea28f308dc1e15fdd9"
+    },
+    {
+      "from": "lib/types/events-module.ts",
+      "to": "lib/types/events-module.ts",
+      "edits": [
+        {
+          "old": "./conference-form-schema",
+          "new": "./event-form-schema"
+        }
+      ],
+      "beforeHash": "55cc39ba08a17fda205ee2bc1c9035e33fca61a7df668415162daf859db47eab",
+      "afterHash": "0734707ef24bca0c96d0e81f70e40938e1f58fdd4a7af35bc8d58f56aca7347c"
+    },
+    {
+      "from": "lib/validation/conditional-engine.ts",
+      "to": "lib/validation/conditional-engine.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "ac8cf4eef59d913a8bff2fe251c1da04ab1fc27432157abd64da7a00b9913a1a",
+      "afterHash": "c7479af73102219a4bfd7ca1066967805139148c398899d3871a145054089a2d"
+    },
+    {
+      "from": "lib/validation/form-schema.ts",
+      "to": "lib/validation/form-schema.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "06e22b7b071f0c9bbeb51119c8934e44ac2a0738f4fb2c236c9d4ae41a99cea7",
+      "afterHash": "b2d66f409430d1b64a9264d1225c64eb1ae56190765a168f0de96161a58884ee"
+    },
+    {
+      "from": "lib/validation/form-validation-cache.ts",
+      "to": "lib/validation/form-validation-cache.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "6083a49a5c3ff645ee1dfb563cda98b99d9ee94d07096ff9df329d3b4fc0a62b",
+      "afterHash": "ec2722e29479865083f13c5b066a2bd4df48f493458683927b0daaa82e805b0e"
+    },
+    {
+      "from": "lib/validation/schema-validation.ts",
+      "to": "lib/validation/schema-validation.ts",
+      "edits": [
+        {
+          "old": "@/lib/types/conference-form-schema",
+          "new": "@/lib/types/event-form-schema"
+        }
+      ],
+      "beforeHash": "9e3419acd872924893e268181a223979a4f95acfd09766a92838e7a6fa5773a0",
+      "afterHash": "bca9c61902f4211d08d5588d60229031dc6eb62dcc5eacb2b9a308b1a1aa7a7d"
+    }
+  ],
+  "baseline": {
+    "localModuleEdges": 2757,
+    "unresolvedLocalImports": [
+      {
+        "from": "app/(public)/page.tsx",
+        "specifier": "@/public/home/hero/art_banner.jpeg"
+      },
+      {
+        "from": "app/(public)/page.tsx",
+        "specifier": "@/public/podcast_banner.jpeg"
+      },
+      {
+        "from": "app/(public)/page.tsx",
+        "specifier": "@/public/home/hero/inclusion-begins-at-home.jpg"
+      },
+      {
+        "from": "components/homepage/hero-carousel.tsx",
+        "specifier": "@/public/home/hero/art_banner.jpeg"
+      },
+      {
+        "from": "components/homepage/hero-carousel.tsx",
+        "specifier": "@/public/podcast_banner.jpeg"
+      },
+      {
+        "from": "components/homepage/hero-carousel.tsx",
+        "specifier": "@/public/home/hero/inclusion-begins-at-home.jpg"
+      },
+      {
+        "from": "components/homepage/homepage-sections.tsx",
+        "specifier": "@/public/podcast_banner.jpeg"
+      },
+      {
+        "from": "components/podcasts/podcast-series-intro.tsx",
+        "specifier": "@/public/podcast_banner.jpeg"
+      },
+      {
+        "from": "lib/actions/conference-form-templates.ts",
+        "specifier": "@/lib/types"
+      },
+      {
+        "from": "next-env.d.ts",
+        "specifier": "./.next/dev/types/routes.d.ts"
+      },
+      {
+        "from": "next-env.d.ts",
+        "specifier": "./.next/dev/types/root-params.d.ts"
+      }
+    ]
+  },
+  "structuralReview": {
+    "movesAccountedFor": 58,
+    "liveComponentMoves": 25,
+    "archivedComponents": 18,
+    "archivedRoutes": 14,
+    "preservedModuleEdges": 2757,
+    "newUnresolvedImports": 0,
+    "baselineUnresolvedImports": 11,
+    "productionArchiveImports": 0,
+    "moveContentsMatchImportOnlyTransformation": true,
+    "exactDestinationCasing": true,
+    "eventFilesPreservedApartFromImports": 69,
+    "otherSnapshotFilesUnchanged": 1305,
+    "preExistingDonationEditsPreserved": true,
+    "notRun": [
+      "build",
+      "lint",
+      "format",
+      "typecheck",
+      "test suites",
+      "browser workflows"
+    ]
+  }
+}

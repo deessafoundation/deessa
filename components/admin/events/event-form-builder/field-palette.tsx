@@ -24,7 +24,7 @@ import {
   Pilcrow,
   ChevronRight,
 } from "lucide-react"
-import type { FieldType } from "@/lib/types/conference-form-schema"
+import type { FieldType } from "@/lib/types/event-form-schema"
 
 interface FieldPaletteProps {
   onAddField: (type: FieldType) => void

@@ -1,0 +1,16 @@
+.demo { background: #e8f6fc; color: var(--foreground); font-family: var(--font-comic-neue, "Comic Neue"), sans-serif; }
+.demo h1 { font-family: "Marissa Font", "Comic Neue", sans-serif; font-weight: 400; }
+.eyebrow, .link { color: #0b5f8a; }
+.link { text-decoration: underline; text-underline-offset: 4px; }
+.muted { color: #4b6269; }
+.toolbar { border-color: #c4cece; background: #fff; }
+.select { min-height: 44px; max-width: 100%; border: 1px solid #71858c; border-radius: 8px; padding: 0.5rem 2rem 0.5rem 0.75rem; color: #193947; background: #fff; font: inherit; }
+.preview { border-color: #c4cece; }
+.success { background: #fff; color: #0b5f8a; }
+.control { border-color: #0b5f8a; color: #0b5f8a; background: #fff; cursor: pointer; }
+.demo :is(a, button, select):focus-visible { outline: 3px solid #0b5f8a; outline-offset: 4px; }
+.skip { position: absolute; left: -10000px; top: 8px; z-index: 100; padding: 1rem; background: #0b5f8a; color: #fff; }
+.skip:focus { left: 8px; }
+.preview[data-error-contrast="high"] .success { background: #fff; color: #000; }
+.preview[data-error-contrast="inverted"] .success { background: #000; color: #fff; }
+@media print { .toolbar { display: none; } .demo { background: #fff; color: #000; } }

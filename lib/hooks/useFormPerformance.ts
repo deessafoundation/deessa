@@ -3,7 +3,7 @@
 // Memoizes field visibility calculations and prevents unnecessary re-renders.
 
 import { useMemo, useCallback } from "react"
-import { FormField, FormStep } from "@/lib/types/conference-form-schema"
+import { FormField, FormStep } from "@/lib/types/event-form-schema"
 import { filterVisibleFields } from "@/lib/validation/conditional-engine"
 
 interface UseFormPerformanceOptions {

@@ -34,7 +34,6 @@ const EYEBROW = "A society where everyone is understood, celebrated, and empower
 
 const NEWS_TICKER_ITEMS = [
   "Inclusion Begins at Home: real voices, real stories",
-  "Girls' leadership and participation through sport",
 ]
 
 // Safety net: normalize any CMS-provided image path so a value like

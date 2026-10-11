@@ -1,7 +1,7 @@
 "use client"
 
 import { useReducer, useCallback, useEffect } from "react"
-import type { FormSchema, FormField, FormStep, FieldType } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormField, FormStep, FieldType } from "@/lib/types/event-form-schema"
 import {
   addFieldToStep,
   removeFieldFromStep,

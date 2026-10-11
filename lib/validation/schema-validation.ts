@@ -1,4 +1,4 @@
-import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormField } from "@/lib/types/event-form-schema"
 
 export interface ValidationError {
   path: string // e.g. "steps[0].fields[2].label"

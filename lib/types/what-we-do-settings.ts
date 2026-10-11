@@ -2,6 +2,54 @@ import { z } from "zod"
 import { WHAT_WE_DO_AREAS } from "@/lib/data/what-we-do-areas"
 
 export const WHAT_WE_DO_SETTINGS_KEY = "what_we_do_content"
+export const MAX_WHAT_WE_DO_CARDS = 20
+export const PILLAR_ICON_NAMES = ["megaphone", "book-open", "file-text", "scale", "users", "heart", "graduation-cap", "handshake", "lightbulb", "globe"] as const
+export const PILLAR_ACCENTS = ["sky", "mint", "sunny", "lavender"] as const
+export const PILLAR_ARROW_NAMES = ["arrow-right", "chevron-right", "arrow-up-right"] as const
+export const DEFAULT_PILLAR_LAYOUT = { columns: "4" as const, spacing: "comfortable" as const }
+const pillarLayoutSchema = z.object({
+  columns: z.enum(["1", "2", "3", "4"]),
+  spacing: z.enum(["compact", "comfortable"]),
+}).strict().default(DEFAULT_PILLAR_LAYOUT)
+export type PillarLayout = z.infer<typeof pillarLayoutSchema>
+
+const cardText = z.string().trim().min(1).max(10000)
+export const whatWeDoCardSchema = z.object({
+  slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by hyphens").max(80),
+  title: cardText,
+  description: cardText,
+  buttonLabel: cardText,
+  href: cardText.refine(isSafeContentUrl, "Use a local path or a secure https URL"),
+  tag: z.string().trim().max(80),
+  icon: z.enum(PILLAR_ICON_NAMES),
+  accent: z.enum(PILLAR_ACCENTS),
+  arrow: z.enum(PILLAR_ARROW_NAMES),
+  enabled: z.boolean(),
+  showIcon: z.boolean(),
+  showArrow: z.boolean(),
+  showDecoration: z.boolean(),
+}).strict()
+export type WhatWeDoCard = z.infer<typeof whatWeDoCardSchema>
+
+// Only new presentation fields receive defaults; saved copy and URLs are never replaced.
+const legacyCardPresentation = {
+  awareness: { tag: "Communities", icon: "megaphone", accent: "sky" },
+  training: { tag: "Trained", icon: "book-open", accent: "mint" },
+  resources: { tag: "Resources", icon: "file-text", accent: "sunny" },
+  advocacy: { tag: "Policies", icon: "scale", accent: "lavender" },
+} as const
+const cardsSchema = z.array(z.preprocess(value => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return value
+  const card = value as Record<string, unknown>
+  const presentation = legacyCardPresentation[card.slug as keyof typeof legacyCardPresentation]
+  return { tag: "", icon: "megaphone", accent: "sky", ...presentation, arrow: "arrow-right", enabled: true, showIcon: true, showArrow: true, showDecoration: true, ...card }
+}, whatWeDoCardSchema)).max(MAX_WHAT_WE_DO_CARDS).superRefine((cards, context) => {
+  const slugs = new Set<string>()
+  cards.forEach((card, index) => {
+    if (slugs.has(card.slug)) context.addIssue({ code: "custom", path: [index, "slug"], message: "Each card must have a unique identifier" })
+    slugs.add(card.slug)
+  })
+})
 export const DEFAULT_WHAT_WE_DO_SETTINGS = {
   hero: {
     breadcrumb: "Programs", eyebrow: "MAKING A DIFFERENCE ACROSS NEPAL",
@@ -21,6 +69,7 @@ export const DEFAULT_WHAT_WE_DO_SETTINGS = {
     { slug: "resources", title: "Resources", description: "No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.", buttonLabel: "Explore this area", href: "/whatwedo/resources" },
     { slug: "advocacy", title: "Advocacy", description: "We push for inclusive schools and stronger policies that protect every child's rights, so inclusion becomes a right, not a privilege.", buttonLabel: "Explore this area", href: "/whatwedo/advocacy" },
   ],
+  cardsLayout: DEFAULT_PILLAR_LAYOUT,
   support: {
     label: "Ways to Help", title: "Want to Support a", titleAccent: "Specific Program?", description: "Your targeted donation ensures maximum impact in the area you care about most.",
     actions: [
@@ -53,7 +102,7 @@ export const DEFAULT_WHAT_WE_DO_SETTINGS = {
     listTitle: "Make room for every learner", items: ["Offer different ways to explore ideas, communicate, and take part.", "Adapt learning materials, classroom routines, and support to each child’s needs.", "Recognise strengths and build a culture of patience, respect, and belonging."],
   },
 }
-export type WhatWeDoSettings = typeof DEFAULT_WHAT_WE_DO_SETTINGS
+export type WhatWeDoSettings = Omit<typeof DEFAULT_WHAT_WE_DO_SETTINGS, "cards" | "cardsLayout"> & { cards: WhatWeDoCard[]; cardsLayout: PillarLayout }
 
 export function isSafeContentUrl(value: string) {
   if (/[\u0000-\u001f\\]/.test(value)) return false
@@ -61,9 +110,10 @@ export function isSafeContentUrl(value: string) {
   try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password } catch { return false }
 }
 
-// The default document defines the editable shape. Layout classes and route identities
-// remain immutable; every content field is validated before reaching the database.
+// The rest of the document retains its existing shape; cards use an extensible schema.
 function schemaFor(value: unknown, key = ""): z.ZodTypeAny {
+  if (key === "cards") return cardsSchema
+  if (key === "cardsLayout") return pillarLayoutSchema
   if (typeof value === "boolean") return z.boolean()
   if (typeof value === "string") {
     if (["id", "slug", "labelClass", "icon", "color"].includes(key)) return z.literal(value)

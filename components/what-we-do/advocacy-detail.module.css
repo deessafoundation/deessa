@@ -1,0 +1,60 @@
+.page { background: #fafaf7; color: #172f40; }
+.panel { background: #fff; border: 1px solid #dce5e8; }
+.eyebrow { color: #0b5f8a; }
+.textLink { text-decoration: underline; text-underline-offset: 4px; }
+.primary, .secondary {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 22px;
+  border: 1px solid #0b5f8a;
+  border-radius: 999px;
+  font-weight: 700;
+  font-family: var(--font-comic), sans-serif;
+  text-align: center;
+}
+.primary { background: #0b5f8a; color: #fff; }
+.secondary { background: #fff; color: #0b5f8a; }
+.primary:hover { background: #074869; }
+.secondary:hover { background: #e8f2f7; }
+.closing { background: #153d53; color: #fff; }
+.page a:focus-visible { outline: 3px solid #0b5f8a; outline-offset: 4px; }
+.closing a:focus-visible { outline-color: #fff; }
+
+:global(body.high-contrast) .page,
+:global(body.high-contrast) .panel {
+  background: #fff !important; color: #000 !important; box-shadow: none !important;
+}
+:global(body.high-contrast) .panel { border: 2px solid #000 !important; }
+:global(body.high-contrast) .page .eyebrow,
+:global(body.high-contrast) .page .textLink { color: #000 !important; }
+:global(body.high-contrast) .page .primary,
+:global(body.high-contrast) .closing {
+  background: #000 !important; color: #fff !important; border: 2px solid #000 !important;
+}
+:global(body.high-contrast) .closing h2,
+:global(body.high-contrast) .closing p { color: #fff !important; }
+:global(body.high-contrast) .page .secondary {
+  background: #fff !important; color: #000 !important; border: 2px solid #000 !important;
+}
+:global(body.high-contrast) .page .primary svg,
+:global(body.high-contrast) .page .primary svg * { stroke: #fff !important; color: #fff !important; }
+:global(body.high-contrast) .page .secondary svg,
+:global(body.high-contrast) .page .secondary svg *,
+:global(body.high-contrast) .page .eyebrow svg { stroke: #000 !important; color: #000 !important; }
+:global(body.high-contrast) .page a:focus-visible { outline-color: #000 !important; }
+:global(body.high-contrast) .closing a:focus-visible { outline-color: #fff !important; }
+:global(body.inverted-contrast) .page,
+:global(body.inverted-contrast) .panel,
+:global(body.inverted-contrast) .closing { background: #000 !important; color: #fff !important; border-color: #fff !important; }
+:global(body.inverted-contrast) .page .eyebrow,
+:global(body.inverted-contrast) .page .textLink { color: #fff !important; }
+:global(body.inverted-contrast) .page .primary,
+:global(body.inverted-contrast) .page .secondary { background: #fff !important; color: #000 !important; border: 2px solid #fff !important; }
+:global(body.inverted-contrast) .page a:focus-visible { outline-color: #fff !important; }
+@media (forced-colors: active) {
+  .panel, .closing, .primary, .secondary { border: 1px solid CanvasText; }
+}
+@media print { .page { background: #fff; color: #000; } .closing { background: #fff; color: #000; border: 1px solid; } }

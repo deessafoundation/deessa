@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { SortableStepCard } from "./sortable-step-card"
-import type { FormStep } from "@/lib/types/conference-form-schema"
+import type { FormStep } from "@/lib/types/event-form-schema"
 
 interface FormCanvasProps {
   steps: FormStep[]

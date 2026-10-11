@@ -1,4 +1,4 @@
-import type { FormSchema, FormStep, FormField, FieldType } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormStep, FormField, FieldType } from "@/lib/types/event-form-schema"
 
 // ── ID Generator ──────────────────────────────────────────────────────────────
 export function generateId(prefix = "field"): string {

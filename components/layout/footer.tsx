@@ -151,7 +151,6 @@ const linkColumns = [
   { title: "About", links: footerLinks.about },
   { title: "Programs", links: footerLinks.programs },
   { title: "Get Involved", links: footerLinks.getInvolved },
-  { title: "Resources", links: footerLinks.resources },
 ]
 
 const legalLinks = [
@@ -268,89 +267,70 @@ export function Footer() {
       </section>
 
       {/* ================= MAIN FOOTER ================= */}
-      <div className="mx-auto max-w-[1400px] px-6 py-10 text-center md:px-10 md:text-left">
-        <div className="grid grid-cols-2 justify-items-center gap-8 md:grid-cols-4 md:justify-items-stretch xl:grid-cols-[1.15fr_1fr_repeat(4,0.85fr)]">
+      <div className="mx-auto max-w-[1400px] px-6 py-12 text-center md:px-10 md:text-left">
+        <div className="grid grid-cols-1 justify-items-center gap-10 md:grid-cols-2 md:justify-items-stretch lg:grid-cols-[1.3fr_repeat(4,1fr)] xl:gap-12">
           {/* Logo + mission */}
-          <div className="col-span-2 md:col-span-4 xl:col-span-1">
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <Link href="/" onClick={handleLogoClick} className="inline-block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
               <Image
                 src="/logo.png"
                 alt="deessa Foundation"
                 width={290}
                 height={100}
-                className="h-12 w-auto"
+                className="h-14 w-auto"
                 priority={false}
               />
             </Link>
 
-            <h2 className="font-comic mt-5 text-sm font-bold text-white">Our Mission</h2>
-            <p className="font-comic mt-2 max-w-xs text-sm leading-relaxed text-footer-muted sm:text-xs">
+            <h2 className="font-comic mt-6 text-base font-bold text-white">Our Mission</h2>
+            <p className="font-comic mt-2.5 max-w-xs text-[15px] leading-relaxed text-footer-muted">
               Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
               initiatives since 2022.
             </p>
-            <p className="font-comic mt-3 border-l-2 border-white/40 pl-3 text-sm italic text-footer-muted sm:text-xs">
+            <p className="font-comic mt-3.5 border-l-2 border-white/40 pl-3 text-[15px] italic text-footer-muted">
               Making a difference, one community at a time.
             </p>
 
-            <ul className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
-              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
-                <Award className="size-3" aria-hidden="true" />
+            <ul className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">
+              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-1.5 text-[11px] text-footer-muted">
+                <Award className="size-3.5" aria-hidden="true" />
                 Govt Registered NGO since 2022
               </li>
-              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-2.5 py-1 text-[10px] text-footer-muted">
-                <CheckCircle className="size-3" aria-hidden="true" />
+              <li className="font-comic inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-1.5 text-[11px] text-footer-muted">
+                <CheckCircle className="size-3.5" aria-hidden="true" />
                 SWC Affiliated
               </li>
-            </ul>
-          </div>
-
-          {/* Get in Touch */}
-          <div className="col-span-2 md:col-span-4 xl:col-span-1">
-            <h2 className="font-comic text-sm font-bold text-white">Get in Touch</h2>
-            <ul className="mt-4 space-y-3">
-              {contactItems.map((item) => {
-                const ContactIcon = item.icon
-                return (
-                  <li key={item.srLabel} className="flex items-start justify-center gap-2.5 md:justify-start">
-                    <ContactIcon className="mt-px size-4 shrink-0 text-white/90" strokeWidth={1.75} aria-hidden="true" />
-                    <p className="font-comic text-[13px] leading-relaxed text-footer-muted sm:text-xs">
-                      <span className="sr-only">{item.srLabel}: </span>
-                      {item.value}
-                    </p>
-                  </li>
-                )
-              })}
             </ul>
           </div>
 
           {/* Link columns */}
           {linkColumns.map((column) => (
             <nav key={column.title} aria-label={column.title} className="w-full">
-              <h2 className="font-comic text-sm font-bold text-white">{column.title}</h2>
-              <ul className="mt-4 space-y-2">
+              <h2 className="font-comic text-base font-bold text-white">{column.title}</h2>
+              <ul className="mt-5 space-y-2.5">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     {"download" in link && link.isAccessibility ? (
                       <button
                         onClick={handleAccessibilityClick}
-                        className="flex items-center gap-2 text-gray-400 text-sm hover:text-primary transition-all duration-200 group w-full text-left"
+                        className="flex items-center gap-2 text-gray-400 text-[14px] hover:text-primary transition-all duration-200 group w-full text-left"
                         aria-label="Open Accessibility Settings"
                       >
-                        <IconComponent className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
+                        <IconComponent className="size-4 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-all" />
                         <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
                       </button>
                     ) : link.download ? (
                       <a
                         href={link.href}
                         download
-                        className="font-comic inline-flex min-h-8 items-center rounded text-[13px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0 sm:text-xs"
+                        className="font-comic inline-flex min-h-9 items-center rounded text-[14px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0"
                       >
                         {link.label}
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="font-comic inline-flex min-h-8 items-center rounded text-[13px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0 sm:text-xs"
+                        className="font-comic inline-flex min-h-9 items-center rounded text-[14px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-0"
                       >
                         {link.label}
                       </Link>
@@ -360,29 +340,48 @@ export function Footer() {
               </ul>
             </nav>
           ))}
+
+          {/* Get in Touch */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <h2 className="font-comic text-base font-bold text-white">Get in Touch</h2>
+            <ul className="mt-5 space-y-3.5">
+              {contactItems.map((item) => {
+                const ContactIcon = item.icon
+                return (
+                  <li key={item.srLabel} className="flex items-start justify-center gap-3 md:justify-start">
+                    <ContactIcon className="mt-px size-[18px] shrink-0 text-white/90" strokeWidth={1.75} aria-hidden="true" />
+                    <p className="font-comic text-[14px] leading-relaxed text-footer-muted">
+                      <span className="sr-only">{item.srLabel}: </span>
+                      {item.value}
+                    </p>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
         </div>
 
         {/* Hairline with heart marker */}
-        <div className="relative mt-10 flex items-center justify-center" aria-hidden="true">
+        <div className="relative mt-12 flex items-center justify-center" aria-hidden="true">
           <div className="h-px w-full bg-footer-rule" />
-          <span className="absolute flex size-7 items-center justify-center rounded-full bg-footer-blue">
-            <Heart className="size-3.5 fill-white/80 text-white/80" />
+          <span className="absolute flex size-8 items-center justify-center rounded-full bg-footer-blue">
+            <Heart className="size-4 fill-white/80 text-white/80" />
           </span>
         </div>
 
         {/* Copyright */}
-        <p className="font-comic mt-5 text-center text-[11px] text-footer-muted">
+        <p className="font-comic mt-6 text-center text-[12px] text-footer-muted">
           © {new Date().getFullYear()} deessa Foundation. All rights reserved.
         </p>
               <div className="h-4 w-px bg-gray-700 hidden sm:block"></div>
-              <p className="text-white text-xs text-center sm:text-left">
+              <p className="text-white text-sm text-center sm:text-left">
                 Accessibility powered by <a href="https://opendyslexic.org/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary transition-colors underline">OpenDyslexic</a>
               </p>
 
         {/* Socials + legal */}
-        <div className="mt-4 grid grid-cols-1 items-center justify-items-center gap-5 md:grid-cols-[1fr_auto_1fr]">
+        <div className="mt-5 grid grid-cols-1 items-center justify-items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
           <div className="flex flex-wrap items-center justify-center gap-3 md:justify-self-start">
-            <nav aria-label="Follow our journey" className="flex items-center gap-2.5">
+            <nav aria-label="Follow our journey" className="flex items-center gap-3">
               {socialLinks.map((social) => (
                 social.isAlert ? (
                   <button
@@ -410,12 +409,12 @@ export function Footer() {
             </nav>
           </div>
 
-          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:col-start-2">
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:col-start-2">
             {legalLinks.map((link, index) => (
-              <span key={link.href} className="flex items-center gap-x-3">
+              <span key={link.href} className="flex items-center gap-x-4">
                 <Link
                   href={link.href}
-                  className="font-comic rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {link.label}
                 </Link>
@@ -425,7 +424,7 @@ export function Footer() {
                     href="/admin"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-comic rounded text-[11px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     Admin
                   </Link>

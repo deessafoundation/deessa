@@ -2,7 +2,7 @@
 
 import { Info, X } from "lucide-react"
 import { FancySelect } from "@/components/ui/fancy-select"
-import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormField } from "@/lib/types/event-form-schema"
 
 interface FormConditionalEditorProps {
   field: FormField

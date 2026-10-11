@@ -284,7 +284,7 @@ All files in `docs/features/conference/` use "DEESSA" extensively:
 
 | File | Line | Current | Replacement |
 |------|------|---------|-------------|
-| `test-url-detection.js` | 53, 56, 61, 64 | `deessafoundation.org` | `deessafoundation.com` |
+| `scripts/test/url-detection.js` | 53, 56, 61, 64 | `deessafoundation.org` | `deessafoundation.com` |
 | `components/admin/homepage-manager/components/SEOManager.tsx` | 98 | `deeshafoundation.org` | `deessafoundation.com` |
 
 ---
@@ -320,7 +320,7 @@ All files in `docs/features/conference/` use "DEESSA" extensively:
 14. `app/globals.css` and `programs.module.css`
 
 **Step 7 - Domain fixes:**
-15. `test-url-detection.js` - `.org` -> `.com`
+15. `scripts/test/url-detection.js` - `.org` -> `.com`
 16. `SEOManager.tsx` - `deeshafoundation.org` -> `deessafoundation.com`
 
 **Step 8 - Accessibility key (not deployed yet, safe to replace):**

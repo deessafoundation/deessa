@@ -1,25 +1,5 @@
-"use client"
-
-import GenericErrorPage from "@/components/errors/generic-error-page"
+import ErrorDemo from "@/components/errors/error-demo"
 
 export default function GenericErrorDemo() {
-  const mockError = new Error("This is a demo error to showcase the GenericErrorPage component")
-  
-  // Adding a digest to simulate Next.js error boundary
-  const errorWithDigest = Object.assign(mockError, { 
-    digest: "demo-error-digest-123456" 
-  })
-  
-  const handleReset = () => {
-    window.location.href = "/demo/errors"
-  }
-
-  return (
-    <GenericErrorPage 
-      error={errorWithDigest}
-      reset={handleReset}
-      errorTitle="Something went wrong"
-      errorMessage="This is a demonstration of the Generic Error Page. In a real scenario, this would catch unexpected runtime errors in your application."
-    />
-  )
+  return <ErrorDemo initialExample="generic" focused />
 }

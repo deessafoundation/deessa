@@ -27,7 +27,7 @@ import { EventDeleteRegistrationButton } from "@/components/admin/events/event-d
 import { EventCommunicationLog } from "@/components/admin/events/event-communication-log"
 import { EventPaymentInfo } from "@/components/admin/events/event-payment-info"
 import { createServiceRoleClient } from "@/lib/supabase/service"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 function getInitials(name: string | null | undefined) {
   return (name ?? "")

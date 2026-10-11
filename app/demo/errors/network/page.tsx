@@ -1,3 +1,5 @@
-import NetworkErrorPage from "@/components/errors/network-error-page"
+import ErrorDemo from "@/components/errors/error-demo"
 
-export default NetworkErrorPage
+export default function NetworkErrorDemo() {
+  return <ErrorDemo initialExample="network" focused />
+}
