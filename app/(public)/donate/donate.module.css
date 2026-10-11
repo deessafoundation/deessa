@@ -11,6 +11,39 @@
 }
 
 .hero { background: #fffcf6; color: #145879; }
+.brushSection {
+  position: relative;
+  isolation: isolate;
+}
+.brushSection::before,
+.brushSection::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(48%, 560px);
+  height: 300px;
+  background: url("/artWork/art-watercolor-splash.webp") center / contain no-repeat;
+  pointer-events: none;
+  opacity: 0.26;
+}
+.brushSection::before { top: 0; left: 0; transform: rotate(-8deg); }
+.brushSection::after { bottom: 0; right: 0; transform: rotate(172deg); opacity: 0.2; }
+.impact.brushSection::before { top: 15%; left: auto; right: 0; }
+.other.brushSection::after { display: none; }
+:global(body.high-contrast) .brushSection::before,
+:global(body.high-contrast) .brushSection::after,
+:global(body.inverted-contrast) .brushSection::before,
+:global(body.inverted-contrast) .brushSection::after,
+:global(body.sensory-friendly) .brushSection::before,
+:global(body.sensory-friendly) .brushSection::after { display: none; }
+@media (max-width: 640px) {
+  .brushSection::before,
+  .brushSection::after { width: 60%; height: 200px; opacity: 0.18; }
+}
+@media (forced-colors: active), print {
+  .brushSection::before,
+  .brushSection::after { display: none; }
+}
 .heroHeading { color: #063f5b; }
 .heroAccent { color: #1a8ac2; }
 .heroCopy { color: #445e7b; }

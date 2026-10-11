@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
-import type { FormSchema, FormSchemaMeta } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormSchemaMeta } from "@/lib/types/event-form-schema"
 
 // ── Get the active form schema for an event ──────────────────────────────────
 // Falls back to current event if no eventId provided (backward compatible).

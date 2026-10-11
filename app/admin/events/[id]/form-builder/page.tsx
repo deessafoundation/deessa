@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { EventFormBuilder } from "@/components/admin/events/event-form-builder"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 async function getEvent(id: string) {
   const supabase = await createClient()

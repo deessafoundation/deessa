@@ -121,7 +121,7 @@ export default async function DonatePage() {
         <svg aria-hidden="true" focusable="false" viewBox="0 0 1440 50" preserveAspectRatio="none" className={`${styles.heroEdge} ${styles.decor} pointer-events-none absolute inset-x-0 bottom-0 h-7 w-full`}><path d="M0 24Q180 48 360 26T720 25T1080 30T1440 18V50H0Z" fill="currentColor" /></svg>
       </section>
 
-      <section aria-labelledby="giving-heading" className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+      <section aria-labelledby="giving-heading" className={`${styles.brushSection} mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20`}>
         <div className="mb-10 text-center"><h2 id="giving-heading" className="text-3xl leading-tight sm:text-4xl">Let&apos;s make a difference, together.</h2><p className="mt-4 text-lg text-foreground-muted">A one-time kindness or a little love each month. It all matters.</p></div>
         <GivingOptions
           onlineAvailable={enabledProviders.length > 0}
@@ -135,7 +135,7 @@ export default async function DonatePage() {
 
       </section>
 
-      <section aria-labelledby="impact-heading" className={`border-y border-border ${styles.impact}`}>
+      <section aria-labelledby="impact-heading" className={`border-y border-border ${styles.impact} ${styles.brushSection}`}>
         <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20">
           <div className="grid gap-4 md:grid-cols-2 md:gap-12">
             <h2 id="impact-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">A gift becomes<br />a real possibility.</h2>
@@ -150,14 +150,14 @@ export default async function DonatePage() {
         </div>
       </section>
 
-      <section aria-labelledby="faq-heading" className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <section aria-labelledby="faq-heading" className={`${styles.brushSection} mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16`}>
         <div><h2 id="faq-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">Good questions.<br />Clear answers.</h2><p className="mt-5 text-foreground-muted">Need a little help before giving?</p><Link href="/contact" className={`mt-3 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4 ${styles.textLink}`}>Talk to our team <ArrowUpRight aria-hidden="true" className="size-4" /></Link></div>
         <div className="min-w-0">
           {faqs.map((faq) => <details key={faq.question} className={`border-b border-border py-5 ${styles.faq}`}><summary className="cursor-pointer pr-3 text-lg font-semibold">{faq.question}</summary><p className="mt-4 max-w-2xl leading-relaxed text-foreground-muted">{faq.answer}</p></details>)}
         </div>
       </section>
 
-      <section aria-labelledby="other-heading" className={styles.other}>
+      <section aria-labelledby="other-heading" className={`${styles.other} ${styles.brushSection}`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
           <div><h2 id="other-heading" className="text-3xl font-bold">Generosity takes many forms.</h2><p className="mt-3">Explore other ways to support our mission.</p></div>
           <div className="flex flex-wrap gap-x-6 gap-y-3">

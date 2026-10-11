@@ -8,7 +8,7 @@ import {
   FormStep,
   FieldConditional,
   ConditionalOperator,
-} from "@/lib/types/conference-form-schema"
+} from "@/lib/types/event-form-schema"
 
 type FormData = Record<string, unknown>
 

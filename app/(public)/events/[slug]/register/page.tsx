@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { EventRegistrationForm } from "@/components/events/public/event-registration-form"
 import type { EventModuleEvent, EventTicketType } from "@/lib/types/events-module"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 async function getEvent(slug: string): Promise<EventModuleEvent | null> {
   const supabase = await createClient()

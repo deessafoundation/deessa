@@ -2,7 +2,7 @@
 // Validates a single field value or an entire step's data against the schema.
 
 import { z } from "zod"
-import type { FormField, FieldOption } from "@/lib/types/conference-form-schema"
+import type { FormField, FieldOption } from "@/lib/types/event-form-schema"
 
 // ── Validate a single field value ─────────────────────────────────────────────
 // Returns an error message string if invalid, or null if valid.

@@ -5,7 +5,7 @@
 // Phase 4 enhancement: Reusable form configurations.
 
 import { createClient } from "@/lib/supabase/server"
-import { FormSchema } from "@/lib/types/conference-form-schema"
+import { FormSchema } from "@/lib/types/event-form-schema"
 import { Result } from "@/lib/types"
 
 export interface FormTemplate {

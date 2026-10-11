@@ -25,6 +25,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createClient as createStaticClient } from "@/lib/supabase/static"
 import type { EventModuleEvent, EventAgendaItem } from "@/lib/types/events-module"
 import { ShareEventButton } from "@/components/events/share-event-button"
+import { accessibilitySummit } from "@/lib/data/accessibility-summit"
 import { generateSEOMetadata, extractExcerpt, getOGImageUrl } from "@/lib/seo/metadata-utils"
 import { StructuredData } from "@/components/seo/structured-data"
 import { getEventStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
@@ -40,7 +41,7 @@ export async function generateStaticParams() {
     .eq('status', 'published')
     .limit(50) // Limit for build performance
   
-  return (data || []).map((event) => ({
+  return (data || []).filter((event) => event.slug !== accessibilitySummit.slug).map((event) => ({
     slug: event.slug,
   }))
 }

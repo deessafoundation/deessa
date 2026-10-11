@@ -8,7 +8,6 @@ import {
   Users,
   Building,
   BarChart3,
-  CalendarRange,
   HandHeart,
   Receipt,
   Heart,
@@ -71,7 +70,6 @@ export const adminNavSections: AdminNavSection[] = [
   {
     label: "Engagement",
     items: [
-      { name: "Conference", href: "/admin/conference", icon: CalendarRange, permission: null },
       { name: "Donations", href: "/admin/donations", icon: HandHeart, permission: "donations", requiresFinance: true },
       { name: "Payments", href: "/admin/payments", icon: Receipt, permission: "donations", requiresFinance: true, description: "Receipt & Email Monitoring" },
       { name: "Volunteers", href: "/admin/volunteers", icon: Heart, permission: "volunteers" },

@@ -1,5 +1,7 @@
 # deessa Foundation — component architecture
 
+Current ownership update (2026-10-10): the [conference retirement record](../../conference-retirement/README.md) supersedes conference renderer/control ownership below. Active renderers now belong to `components/events/public/registration/`, active controls to `components/admin/events/event-form-builder/`, and legacy UI/routes to `components/archive/conference/`. The original migration decisions below are preserved as historical evidence.
+
 Date: 2026-10-01. Phase 2 standard for the forthcoming migration plan. This describes intended boundaries, not the current filesystem or executed moves. Evidence: [analysis](analysis.md), [dependency map](dependency-map.md), and all 434 [file profiles](component-details.md). Exact paths, collisions and batches belong to Phase 3; execution remains behind Phase 4.
 
 ## Decision 1: direct domain folders

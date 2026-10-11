@@ -54,6 +54,28 @@
   box-shadow: 0 20px 44px -12px rgba(52, 112, 150, 0.22);
 }
 
+/* Paused rollout cards keep their appearance without implying an active link. */
+.card[data-paused]:hover {
+  translate: none;
+  background: #fff;
+  border-color: #e3f1f8;
+  box-shadow: 0 8px 35px rgba(52, 112, 150, 0.08);
+}
+.card[data-paused]:hover .blob,
+.card[data-paused]:hover .icon,
+.card[data-paused]:hover .ctaArrow {
+  scale: none;
+  rotate: none;
+  translate: none;
+}
+.card[data-paused]:hover .icon,
+.card[data-paused]:hover .ctaArrow {
+  background: #fff;
+  color: var(--tone-ink);
+}
+.card[data-paused]:hover .ctaLabel { background-size: 0% 2px; }
+.card[data-paused]:hover .ctaArrow { border-color: var(--tone-line); }
+
 .card:focus-visible {
   outline: 3px solid var(--tone-ink);
   outline-offset: 3px;

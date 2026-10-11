@@ -2,7 +2,7 @@
 // Phase 5: Performance optimization via validation result caching.
 // Prevents redundant validation calls for unchanged field values.
 
-import { FormField } from "@/lib/types/conference-form-schema"
+import { FormField } from "@/lib/types/event-form-schema"
 
 interface CacheEntry {
   value: unknown

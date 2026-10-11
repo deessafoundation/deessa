@@ -27,15 +27,15 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react"
-import { FIELD_REGISTRY, type FieldProps } from "@/components/conference/fields"
+import { FIELD_REGISTRY, type FieldProps } from "@/components/events/public/registration/fields"
 import { FieldPalette } from "./field-palette"
 import { FormCanvas } from "./form-canvas"
-import { FormTemplateChooser } from "@/components/admin/conference/form-builder/form-template-chooser"
+import { FormTemplateChooser } from "@/components/admin/events/event-form-builder/form-template-chooser"
 import { SchemaImportExport } from "./schema-import-export"
 import { FieldPropertiesPanel } from "./field-properties-panel"
 import { useBuilderState } from "./use-builder-state"
 import { findField, findFieldStep } from "./builder-actions"
-import type { FormSchema, FieldType } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FieldType } from "@/lib/types/event-form-schema"
 import { createFormSchema } from "@/lib/actions/events-module/event-form-schema"
 import { notifications } from "@/lib/notifications"
 

@@ -4,12 +4,12 @@ import { useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ChevronLeft, Loader2, Upload, X, QrCode, CheckCircle, AlertCircle } from "lucide-react"
-import { StepProgressBar } from "@/components/conference/step-progress-bar"
-import { DynamicStep } from "@/components/conference/dynamic-step"
+import { StepProgressBar } from "@/components/events/public/registration/step-progress-bar"
+import { DynamicStep } from "@/components/events/public/registration/dynamic-step"
 import { validateFieldValue } from "@/lib/validation/form-schema"
-import { filterVisibleSteps } from "@/lib/validation/conditional-engine"
+import { filterVisibleFields, filterVisibleSteps } from "@/lib/validation/conditional-engine"
 import { registerForEvent } from "@/lib/actions/events-module/event-registration"
-import type { FormSchema, FormStep } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 import type { EventModuleEvent, EventTicketType } from "@/lib/types/events-module"
 import { EventRegistrationClosed } from "./event-error"
 
@@ -41,9 +41,13 @@ export function EventRegistrationForm({
   const [screenshotError, setScreenshotError] = useState<string | null>(null)
   const screenshotInputRef = useRef<HTMLInputElement>(null)
 
-  const allSteps: FormStep[] = schema?.steps ?? []
-  // Filter steps based on conditional logic
-  const steps = useMemo(() => filterVisibleSteps(allSteps, formData), [allSteps, formData])
+  // Navigation, validation and review share the fields that are actually visible.
+  const steps = useMemo(
+    () => filterVisibleSteps(schema?.steps ?? [], formData)
+      .map((step) => ({ ...step, fields: filterVisibleFields(step.fields, formData) }))
+      .filter((step) => step.fields.length > 0),
+    [schema, formData]
+  )
 
   // Check if registration is closed (client-side guard)
   const now = new Date()
@@ -120,7 +124,7 @@ export function EventRegistrationForm({
   )
 
   const handleNext = useCallback(() => {
-    // Validate all fields in the current step before advancing
+    // Hidden fields have already been excluded from the current step.
     const currentStepData = steps[currentStep]
     if (currentStepData?.fields) {
       const newErrors: Record<string, string> = {}

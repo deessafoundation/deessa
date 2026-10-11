@@ -1,8 +1,7 @@
 ﻿import type { Metadata } from "next"
 import Image from "next/image"
-import styles from "@/components/shared/page-hero/page-hero-contrast.module.css"
 import Link from "next/link"
-import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lightbulb, Lock, Rocket, School, UserRoundX } from "lucide-react"
+import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lock, School, UserRoundX } from "lucide-react"
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
 import { CircularTestimonials } from "@/components/shared/testimonials/circular-testimonials"
@@ -34,37 +33,6 @@ const challengeCards = [
     description:
       "Before she turned seven, Marissa had attended five different schools. We weren't just looking for a school that would admit her, we were looking for one that would understand her.",
     accent: "text-chart-4",
-  },
-]
-
-const timelineItems = [
-  {
-    year: "2022: deessa Foundation begins",
-    text: "deessa began with a commitment to help every child be understood, accepted, and valued.",
-    icon: Lightbulb,
-    color: "bg-primary",
-    textColor: "text-primary",
-  },
-  {
-    year: "2024: Building understanding",
-    text: "We brought autism and neurodiversity into conversations with families, educators, and communities.",
-    icon: HandHeart,
-    color: "bg-empowerment",
-    textColor: "text-empowerment",
-  },
-  {
-    year: "2025: Belonging through participation",
-    text: "Sport and youth-centred activities celebrated confidence, teamwork, and the belief that every child belongs.",
-    icon: Rocket,
-    color: "bg-chart-4",
-    textColor: "text-chart-4",
-  },
-  {
-    year: "2026: Advocacy for inclusive support",
-    text: "We called for accessible services, inclusive education, and disability-inclusive support during crises.",
-    icon: Flag,
-    color: "bg-primary",
-    textColor: "text-primary",
   },
 ]
 
@@ -105,102 +73,6 @@ const impact = [
 export default function OurStoryPage() {
   return (
     <div className="bg-background text-foreground">
-      <section id="our-story-hero" className={`${styles.hero} dark-section relative flex min-h-[82svh] items-center justify-center overflow-hidden px-6 pb-24 pt-20 md:px-8`}>
-        {/* BACKGROUND IMAGE WITH FILTER */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/OurStoryHeroImage.png"
-            alt="Our Story hero background"
-            fill
-            className="object-cover"
-            style={{
-              objectPosition: "center center",
-              filter: "brightness(0.65) saturate(1.1)",
-            }}
-            priority
-          />
-          {/* DARK GRADIENT SCRIM OVERLAY */}
-          <div
-            data-hero-shade
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to bottom, rgba(10, 15, 35, 0.55) 0%, rgba(10, 15, 35, 0.35) 50%, rgba(10, 15, 35, 0.70) 100%)"
-            }}
-          />
-        </div>
-
-        {/* TEXT CONTENT */}
-        <div className="relative z-10 mx-auto max-w-5xl text-center">
-          <span
-            className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider sm:text-sm"
-            style={{ color: "#29b6c8", backgroundColor: "rgba(41, 182, 200, 0.12)" }}
-          >
-            Our Story
-          </span>
-          <h1
-            className="mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl md:text-7xl"
-            style={{ color: "white" }}
-          >
-            Why We Were Founded
-          </h1>
-          <p
-            className="mx-auto mt-7 max-w-3xl text-lg leading-relaxed md:text-2xl"
-            style={{ color: "rgba(255, 255, 255, 0.82)" }}
-          >
-            Every movement begins with a story.
-            <br className="hidden md:block" />
-            Ours began with two little girls.
-          </p>
-        </div>
-
-        {/* BRUSH STROKE SVG DIVIDER */}
-        <div
-          className="absolute bottom-[-2px] left-0 w-full pointer-events-none"
-          style={{ zIndex: 20, lineHeight: 0 }}
-        >
-          <svg
-            viewBox="0 0 1440 100"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ display: "block", width: "100%", height: "clamp(50px, 6vw, 90px)" }}
-          >
-            {/* Main brush edge */}
-            <path
-              d="M0,38 C120,72 240,18 380,52 C500,80 620,12 760,44 C880,70 1000,8 1140,38 C1260,62 1360,22 1440,42 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
-            />
-            {/* Texture layer, semi-transparent */}
-            <path
-              d="M0,55 C150,28 300,68 440,38 C570,10 700,62 840,35 C970,10 1100,58 1240,30 C1330,12 1400,48 1440,32 L1440,100 L0,100 Z"
-              fill="#f8f6f1"
-              opacity="0.55"
-            />
-            {/* Bristle marks left edge */}
-            <path
-              d="M0,38 C-8,32 -12,42 -6,50 C-2,55 8,52 0,58"
-              fill="#f8f6f1"
-              opacity="0.6"
-            />
-            {/* Bristle marks right edge */}
-            <path
-              d="M1440,42 C1448,36 1452,46 1446,54 C1442,59 1432,56 1440,62"
-              fill="#f8f6f1"
-              opacity="0.6"
-            />
-            {/* Top bristle drips */}
-            <path d="M320,52 C318,38 322,28 325,24 C323,32 324,44 320,52" fill="#f8f6f1" opacity="0.35" />
-            <path d="M740,44 C738,28 742,16 745,12 C743,22 744,36 740,44" fill="#f8f6f1" opacity="0.3" />
-            <path d="M1100,38 C1098,24 1102,14 1105,10 C1103,20 1104,32 1100,38" fill="#f8f6f1" opacity="0.32" />
-            {/* Splatter dots */}
-            <circle cx="210" cy="42" r="2.5" fill="#f8f6f1" opacity="0.4" />
-            <circle cx="580" cy="22" r="2" fill="#f8f6f1" opacity="0.35" />
-            <circle cx="980" cy="18" r="2" fill="#f8f6f1" opacity="0.32" />
-            <circle cx="1320" cy="30" r="2.5" fill="#f8f6f1" opacity="0.38" />
-            <ellipse cx="440" cy="35" rx="3" ry="1.5" fill="#f8f6f1" opacity="0.3" />
-          </svg>
-        </div>
-      </section>
-
       <section id="about" className="bg-surface px-6 py-24 md:px-8">
         <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
@@ -217,7 +89,7 @@ export default function OurStoryPage() {
           </div>
 
           <div className="order-1 space-y-7 lg:order-2">
-            <h2 className="text-3xl font-bold leading-tight sm:text-4xl">The Sisters who Sparked a Movement</h2>
+            <h1 className="text-3xl font-bold leading-tight sm:text-4xl">The Sisters who Sparked a Movement</h1>
             <div className="text-foreground-muted space-y-5 text-base leading-relaxed sm:text-lg">
               <p>
                 Our twin daughters, <span className="font-bold text-primary">Deetya and Marissa</span>, were born on
@@ -296,39 +168,6 @@ export default function OurStoryPage() {
             <span className="font-bold text-primary">deessa Foundation</span> so that no parent has to walk this path
             alone, and no child is left behind because of where they&apos;re born or how they learn.
           </p>
-        </div>
-      </section>
-
-      <section className="bg-muted px-6 py-24 md:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-center text-3xl font-bold sm:text-4xl">The Birth of a Vision</h2>
-
-          <div className="relative mx-auto mt-16 max-w-5xl space-y-9">
-            <div className="bg-border absolute bottom-0 left-6 top-0 w-px md:left-1/2 md:-translate-x-1/2" />
-
-            {timelineItems.map((item, index) => {
-              const Icon = item.icon
-              const isEven = index % 2 === 0
-              return (
-                <div key={item.year} className="relative flex flex-col items-start md:flex-row md:items-center">
-                  <div className={`hidden md:block md:w-1/2 ${isEven ? "pr-12 text-right" : "order-3 pl-12 text-left"}`}>
-                    <p className={`font-marissa text-lg font-bold ${item.textColor}`}>{item.year}</p>
-                  </div>
-
-                  <div className={`relative z-10 inline-flex size-12 items-center justify-center rounded-full text-white shadow-lg ${item.color} md:size-14`}>
-                    <Icon className="size-5" aria-hidden />
-                  </div>
-
-                  <div className={`mt-3 w-full md:mt-0 md:w-1/2 ${isEven ? "md:pl-12" : "md:order-1 md:pr-12"}`}>
-                    <p className={`font-marissa mb-2 text-lg font-bold md:hidden ${item.textColor}`}>{item.year}</p>
-                    <div className={`bg-surface rounded-3xl p-6 ${isEven ? "text-left" : "text-left md:text-right"}`}>
-                      <p className="text-foreground-muted">{item.text}</p>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
         </div>
       </section>
 

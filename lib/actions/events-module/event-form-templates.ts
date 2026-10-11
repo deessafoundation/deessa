@@ -6,7 +6,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 type Result<T = void> = { success: true; data?: T } | { success: false; error: string }
 

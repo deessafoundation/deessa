@@ -1,4 +1,16 @@
 .options { color: var(--foreground); }
+.testingNotice { background: #fff7df; color: #694600; border-color: #c99525; }
+:global(body.high-contrast) .options .testingNotice,
+:global(body.inverted-contrast) .options .testingNotice {
+  background: var(--donate-paper) !important;
+  color: var(--donate-ink) !important;
+  border: 2px solid var(--donate-ink) !important;
+}
+:global(body.high-contrast) .options .testingNotice svg,
+:global(body.inverted-contrast) .options .testingNotice svg {
+  color: var(--donate-ink) !important;
+  stroke: var(--donate-ink) !important;
+}
 .form {
   background: #fff;
   color: #145879;
@@ -6,6 +18,26 @@
   box-shadow: 0 16px 40px -20px #0b5f8a30;
 }
 .accent { color: #086486; }
+.form > div:first-child {
+  position: relative;
+  isolation: isolate;
+}
+.form > div:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1rem -0.5rem 0 auto;
+  width: min(55%, 260px);
+  background: url("/artWork/art-watercolor-splash.webp") center / contain no-repeat;
+  opacity: 0.28;
+  pointer-events: none;
+}
+:global(body.high-contrast) .form > div:first-child::after,
+:global(body.inverted-contrast) .form > div:first-child::after,
+:global(body.sensory-friendly) .form > div:first-child::after { display: none; }
+@media (forced-colors: active), print {
+  .form > div:first-child::after { display: none; }
+}
 .choice {
   background: var(--background);
   color: var(--foreground);

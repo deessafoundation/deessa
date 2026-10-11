@@ -28,7 +28,7 @@ import {
   Repeat,
   Pilcrow,
 } from "lucide-react"
-import type { FormField, FieldType } from "@/lib/types/conference-form-schema"
+import type { FormField, FieldType } from "@/lib/types/event-form-schema"
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -67,7 +67,7 @@ import type {
   EventEmailTemplate,
   EventStatus,
 } from "@/lib/types/events-module"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 interface SettingsData {
   event: EventModuleEvent

@@ -3,7 +3,7 @@
 import type React from "react"
 import { Fragment, useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { motion, useScroll } from "framer-motion"
+import { motion } from "framer-motion"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
 import {
   ArrowRight,
@@ -149,10 +149,11 @@ interface AboutSectionsProps {
   journey?: AboutJourneySettings
 }
 
-export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: AboutSectionsProps) {
+export function AboutSections({ teamMembers = [], intro, howWeDoIt /*, journey */ }: AboutSectionsProps) {
   const introContent = intro || DEFAULT_ABOUT_PAGE_SETTINGS.intro
   const howWeDoItContent = howWeDoIt || DEFAULT_ABOUT_PAGE_SETTINGS.howWeDoIt
-  const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
+  // TODO: Restore journey data and scroll animation when the Our Journey section returns.
+  // const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
   // "...just as they are." reads better highlighted as a phrase than as the single word "are."
   const introHeading = /just as they are\.?$/i.test(introContent.headline.trim())
     ? (() => {
@@ -161,14 +162,15 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
       })()
     : splitHeadingAccent(introContent.headline)
   const howWeDoItHeading = splitHeadingAccent(howWeDoItContent.title)
-  const journeyHeading = splitHeadingAccent(journeyContent.title)
-  const timelineRef = useRef<HTMLDivElement>(null)
+  // const journeyHeading = splitHeadingAccent(journeyContent.title)
+  // const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | null>(null)
   const { preferences } = useAccessibility()
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start 75%", "end 60%"],
-  })
+  // Restore useScroll from framer-motion alongside the timeline.
+  // const { scrollYProgress } = useScroll({
+  //   target: timelineRef,
+  //   offset: ["start 75%", "end 60%"],
+  // })
 
   return (
     <>
@@ -285,7 +287,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
         </div>
       </section>
 
-      {/* SECTION 5: OUR JOURNEY TIMELINE */}
+      {/* TODO: Restore Our Journey ("Milestones that define our path.") when ready.
       <section className="bg-white py-12 sm:py-20 lg:py-[90px]" id="journey" aria-label="Our Journey">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <SectionHeader
@@ -296,7 +298,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           />
 
           <div ref={timelineRef} className="relative">
-            {/* Track + scroll-drawn line */}
+            Track + scroll-drawn line
             <div
               className="about-timeline-track absolute bottom-0 left-4 top-0 w-[2px] -translate-x-1/2 md:left-1/2"
               style={{ backgroundColor: "rgba(41,182,200,0.15)" }}
@@ -316,7 +318,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                 const onLeft = index % 2 === 0
                 return (
                   <div key={item.id} className="relative md:grid md:grid-cols-2 md:items-center md:gap-x-16">
-                    {/* Circle marker */}
+                    Circle marker
                     <motion.div
                       initial={{ scale: 0 }}
                       whileInView={{ scale: [0, 1.5, 1] }}
@@ -326,7 +328,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
                       style={{ backgroundColor: TEAL }}
                       aria-hidden
                     />
-                    {/* Horizontal connector to center line */}
+                    Horizontal connector to center line
                     <div
                       className={`about-connector absolute top-9 hidden h-[2px] w-10 md:block ${
                         onLeft ? "right-1/2 mr-[7px]" : "left-1/2 ml-[7px]"
@@ -374,6 +376,8 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, journey }: A
           </div>
         </div>
       </section>
+
+      */}
 
       {/* SECTION 5.5: HOW THE FOUNDATION IS ORGANIZED (GOVERNANCE) */}
       <OrgStructure />

@@ -60,7 +60,7 @@ function isNavLinkActive(pathname: string, href: string) {
 }
 
 export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
-  const registerHref = registerConfig?.enabled ? (registerConfig.href || "/conference/register") : "/events"
+  const registerHref = registerConfig?.enabled ? (registerConfig.href || "/events") : "/events"
   const registerLabel = registerConfig?.label || "Register"
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

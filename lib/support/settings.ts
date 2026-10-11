@@ -33,7 +33,7 @@ export async function getRegisterButtonConfig(): Promise<RegisterButtonConfig> {
   const defaultConfig: RegisterButtonConfig = {
     enabled: true,
     label: "Register",
-    href: "/conference/register",
+    href: "/events",
     eventId: null,
     eventTitle: null,
   }
@@ -57,7 +57,7 @@ export async function getRegisterButtonConfig(): Promise<RegisterButtonConfig> {
     const config: RegisterButtonConfig = {
       enabled: value.enabled !== false,
       label: (value.label as string) || "Register",
-      href: (value.href as string) || "/conference/register",
+      href: (value.href as string) || "/events",
       eventId: (value.eventId as string) || null,
       eventTitle: (value.eventTitle as string) || null,
     }

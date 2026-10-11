@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import type {
   FormSchema,
   FormSchemaMeta,
-} from "@/lib/types/conference-form-schema";
+} from "@/lib/types/event-form-schema";
 import type { ActionResult } from "@/lib/types/events-module";
 
 // Auth guard for admin operations

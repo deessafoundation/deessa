@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, type ReactNode } from "react"
-import { Building2, CreditCard } from "lucide-react"
+import { Building2, CreditCard, TriangleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
 import styles from "./donation-form.module.css"
 
@@ -14,6 +14,13 @@ export function GivingOptions({ online, bank, onlineAvailable }: {
 
   return (
     <div id="giving-options" className={cn(styles.options, "scroll-mt-32")}>
+      <div role="note" className={cn(styles.testingNotice, "mx-auto mb-6 flex max-w-3xl items-start gap-3 rounded-xl border p-4 sm:p-5")}>
+        <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
+        <div>
+          <p className="font-bold">Online donations are under testing</p>
+          <p className="mt-1 text-sm leading-relaxed">Please do not make real payments through online checkout. Only manual bank-transfer donations are currently working. To donate, choose Bank transfer and follow the instructions.</p>
+        </div>
+      </div>
       {bank && (
         <div role="group" aria-label="How would you like to donate?" className="mx-auto mb-8 grid max-w-2xl grid-cols-2 gap-3">
           {([

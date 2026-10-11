@@ -21,6 +21,8 @@ Place components directly under `components/<feature>/`. Do not add a `component
 | `form/`, `photo-wall/`, `seo/`, `accessibility/` | Existing coherent systems; retain their ownership and boundaries |
 | `archive/` | Temporary historical code awaiting observation and a separate deletion decision; never a source of new production imports |
 
+Conference UI retirement (2026-10-10): active registration fields/renderers belong to `events/public/registration/`; active template and conditional editors belong to `admin/events/event-form-builder/`. Legacy components and route snapshots are under `archive/conference/`. See the [retirement record](../docs/in-progress/conference-retirement/README.md). Preserve exports and field/schema contracts; historical conference ownership is superseded for these files.
+
 Admin previews can consume public renderers without transferring their ownership to admin. Keep coherent systems such as program templates, section editors, conference fields, event builders, and rich-text extensions together. Keep feature hooks and helpers near their callers; root `hooks/` is for application-wide hooks. Static public assets belong under `public/` when served by URL.
 
 ## Name files and exports

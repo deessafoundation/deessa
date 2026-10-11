@@ -4,7 +4,7 @@ import { useState } from "react"
 import { GripVertical, Plus, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import type { FieldOption } from "@/lib/types/conference-form-schema"
+import type { FieldOption } from "@/lib/types/event-form-schema"
 
 interface OptionsEditorProps {
   options: FieldOption[]

@@ -1,0 +1,33 @@
+.player { background: #000; color: #fff; border-color: #cbd5e1; }
+.playButton { background: linear-gradient(to top, rgba(0,0,0,.88), rgba(0,0,0,.12) 65%); color: #fff; }
+.badge { background: rgba(0,0,0,.72); border-color: rgba(255,255,255,.65); color: #fff; }
+.playCircle { background: #fff; border-color: #fff; color: #000; }
+.playCircle svg { color: #000; stroke: #000; fill: #000; }
+.watchLabel { background: #fff; color: #000; }
+.playButton:focus-visible { outline: 4px solid #fff; outline-offset: -7px; }
+.unavailable { background: #101820; color: #fff; }
+:global(body.high-contrast) .player,
+:global(body.inverted-contrast) .player { border: 2px solid #000 !important; }
+:global(body.high-contrast) .player .playButton,
+:global(body.inverted-contrast) .player .playButton { background: linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.2) 65%) !important; color: #fff !important; }
+:global(body.high-contrast) .playButton > span,
+:global(body.inverted-contrast) .playButton > span { color: #fff !important; }
+:global(body.high-contrast) .player .badge,
+:global(body.inverted-contrast) .player .badge,
+:global(body.high-contrast) .player .unavailable,
+:global(body.inverted-contrast) .player .unavailable { background: #000 !important; color: #fff !important; }
+:global(body.high-contrast) .player .unavailable *,
+:global(body.inverted-contrast) .player .unavailable * { color: #fff !important; }
+:global(body.high-contrast) .player .playCircle,
+:global(body.inverted-contrast) .player .playCircle,
+:global(body.high-contrast) .player .watchLabel,
+:global(body.inverted-contrast) .player .watchLabel { background: #fff !important; color: #000 !important; }
+:global(body.high-contrast) .player .playCircle svg,
+:global(body.high-contrast) .player .playCircle svg *,
+:global(body.inverted-contrast) .player .playCircle svg,
+:global(body.inverted-contrast) .player .playCircle svg * { color: #000 !important; fill: #000 !important; stroke: #000 !important; }
+@media (forced-colors: active) {
+  .player, .playCircle, .badge { border: 2px solid CanvasText; }
+  .playButton:focus-visible { outline-color: Highlight; }
+}
+@media print { .playButton { display: none; } }

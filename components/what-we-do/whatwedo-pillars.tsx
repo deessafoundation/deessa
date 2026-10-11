@@ -1,85 +1,47 @@
 import Link from "next/link"
+import type { ReactNode } from "react"
 import type { WhatWeDoSettings } from "@/lib/types/what-we-do-settings"
-import { ArrowRight, BookOpen, FileText, Megaphone, Scale, type LucideIcon } from "lucide-react"
+import { DEFAULT_PILLAR_LAYOUT } from "@/lib/types/what-we-do-settings"
+import { PILLAR_ICONS, PILLAR_ARROWS } from "./pillar-icons"
 import { cn } from "@/lib/utils"
 import styles from "./pillar-card.module.css"
 
-type PillarAccent = "sky" | "mint" | "sunny" | "lavender"
+/** Content and presentation come from the validated admin settings. */
+const columnClasses = {
+  "1": "grid-cols-1",
+  "2": "grid-cols-1 sm:grid-cols-2",
+  "3": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  "4": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+}
 
-const PILLARS: {
-  slug: string
-  title: string
-  tag: string
-  description: string
-  icon: LucideIcon
-  accent: PillarAccent
-}[] = [
-  {
-    slug: "awareness",
-    title: "Awareness & Community Engagement",
-    tag: "Communities",
-    description:
-      "We break the silence. Through community campaigns, social media, podcasts, and public conversations, we challenge myths and replace stigma with understanding.",
-    icon: Megaphone,
-    accent: "sky",
-  },
-  {
-    slug: "training",
-    title: "Training",
-    tag: "Trained",
-    description:
-      "We equip parents, teachers, health workers, and caregivers with the skills to spot autism early and support every child, the right way.",
-    icon: BookOpen,
-    accent: "mint",
-  },
-  {
-    slug: "resources",
-    title: "Resources",
-    tag: "Resources",
-    description:
-      "No family should have to navigate this journey alone. We build simple, accessible guides and tools for parents, educators, and professionals.",
-    icon: FileText,
-    accent: "sunny",
-  },
-  {
-    slug: "advocacy",
-    title: "Advocacy",
-    tag: "Policies",
-    description:
-      "We push for inclusive schools and stronger policies that protect every child's rights, so inclusion becomes a right, not a privilege.",
-    icon: Scale,
-    accent: "lavender",
-  },
-]
+function PillarSurface({ pillar, preview, children }: { pillar: WhatWeDoSettings["cards"][number]; preview: boolean; children: ReactNode }) {
+  const className = cn(styles.card, "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-visible:outline-none motion-reduce:transition-none")
+  // Only the admin preview is non-interactive; public cards open their area pages.
+  if (preview) {
+    return <article data-tone={pillar.accent} data-paused="true" className={className}>{children}</article>
+  }
+  return <Link href={pillar.href} aria-label={`${pillar.buttonLabel}: ${pillar.title}`} data-tone={pillar.accent} className={className}>{children}</Link>
+}
 
-/** The four core areas, using the same card styles as the homepage. */
-export function WhatWeDoPillars({ cards }: { cards: WhatWeDoSettings["cards"] }) {
+export function WhatWeDoPillars({ cards, layout = DEFAULT_PILLAR_LAYOUT, preview = false }: { cards: WhatWeDoSettings["cards"]; layout?: WhatWeDoSettings["cardsLayout"]; preview?: boolean }) {
   return (
-    <ul role="list" className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-      {PILLARS.map((layout, index) => {
-        const pillar = { ...layout, ...cards[index] }
-        const Icon = pillar.icon
+    <ul role="list" className={cn("grid", layout.spacing === "compact" ? "gap-3" : "gap-4 sm:gap-6", preview ? "grid-cols-1" : columnClasses[layout.columns])}>
+      {/* Temporary Advocacy-first rollout; retain saved ordering for the other cards. */}
+      {cards.filter(card => preview || card.enabled).sort((a, b) => Number(b.slug === "advocacy") - Number(a.slug === "advocacy")).map(pillar => {
+        const Arrow = PILLAR_ARROWS[pillar.arrow]
+        const Icon = PILLAR_ICONS[pillar.icon]
         return (
           <li key={pillar.slug} className="h-full">
-            <Link
-              href={pillar.href}
-              aria-label={`${pillar.buttonLabel}: ${pillar.title}`}
-              data-tone={pillar.accent}
-              className={cn(
-                styles.card,
-                "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-visible:outline-none",
-                "motion-reduce:transition-none",
-              )}
-            >
-              <span aria-hidden="true" className={styles.blob} />
-              <span aria-hidden="true" data-pillar-icon className={styles.icon}>
+            <PillarSurface pillar={pillar} preview={preview}>
+              {pillar.showDecoration && <span aria-hidden="true" className={styles.blob} />}
+              {pillar.showIcon && <span aria-hidden="true" data-pillar-icon className={styles.icon}>
                 <Icon className="size-6" strokeWidth={1.9} />
-              </span>
+              </span>}
               <div className="flex flex-1 flex-col p-6 text-left sm:p-7">
-                <p className={cn(styles.tag, "font-comic")}>
+                {pillar.tag && <p className={cn(styles.tag, "font-comic")}>
                   <span aria-hidden="true" className={styles.tagDot} />
                   {pillar.tag}
-                </p>
+                </p>}
                 <h3 className={cn(styles.title, "mb-3 mt-12 font-marissa text-[1.3rem] leading-snug break-words")}>
                   {pillar.title.split("&").map((part, i, arr) =>
                     i === arr.length - 1 ? (
@@ -103,15 +65,16 @@ export function WhatWeDoPillars({ cards }: { cards: WhatWeDoSettings["cards"] })
                   )}
                 >
                   <span className={styles.ctaLabel}>{pillar.buttonLabel}</span>
-                  <span aria-hidden="true" className={styles.ctaArrow}>
-                    <ArrowRight className="size-4" />
-                  </span>
+                  {pillar.showArrow && <span aria-hidden="true" className={styles.ctaArrow}>
+                    <Arrow className="size-4" />
+                  </span>}
                 </span>
               </div>
-            </Link>
+            </PillarSurface>
           </li>
         )
       })}
     </ul>
   )
 }
+

@@ -1,0 +1,27 @@
+.page { background: #fff; color: #0b5f8a; font-family: var(--font-comic-neue), "Comic Neue", sans-serif; }
+.hero { background: #f5fafd; }
+.title { text-wrap: balance; overflow-wrap: anywhere; }
+:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .title { font-family: "Marissa Font", "Comic Neue", sans-serif; font-weight: 400; -webkit-text-stroke: .5px currentColor; }
+.muted { color: #445e7b; }
+.back { color: #0b5f8a; }
+.primary { color: #fff; background: #0b5f8a; }
+.primary:hover { background: #084d70; }
+.facts, .areas li, .divider { border-color: #cfdfe8; }
+.partners, .invitation { background: #eef8fd; }
+.page :is(a, button):focus-visible { outline: 3px solid #0b5f8a; outline-offset: 4px; }
+:global(body.high-contrast) .page, :global(body.high-contrast) .page :is(.hero, .partners, .invitation) { color: #000 !important; background: #fff !important; }
+:global(body.inverted-contrast) .page, :global(body.inverted-contrast) .page :is(.hero, .partners, .invitation) { color: #fff !important; background: #000 !important; }
+:global(body.high-contrast) .page :is(.muted, .title, .back), :global(body.high-contrast) .page a:not(.primary) { color: #000 !important; }
+:global(body.inverted-contrast) .page :is(.muted, .title, .back), :global(body.inverted-contrast) .page a:not(.primary) { color: #fff !important; }
+:global(body.high-contrast) .page .primary { background: #000 !important; color: #fff !important; border: 2px solid #000; }
+:global(body.inverted-contrast) .page .primary { background: #fff !important; color: #000 !important; border: 2px solid #fff; }
+:global(body.high-contrast) .page .primary svg { color: #fff !important; stroke: #fff !important; }
+:global(body.inverted-contrast) .page .primary svg { color: #000 !important; stroke: #000 !important; }
+:global(body.high-contrast) .page :is(.facts, .areas li, .divider, .partners, .invitation) { border: 1px solid #000; }
+:global(body.inverted-contrast) .page :is(.facts, .areas li, .divider, .partners, .invitation) { border: 1px solid #fff; }
+:global(body.high-contrast) .page .title, :global(body.inverted-contrast) .page .title { -webkit-text-stroke: 0; }
+:global(body.high-contrast) .page img, :global(body.inverted-contrast) .page img { filter: grayscale(1); }
+:global(body.high-contrast) .page a:focus-visible { outline-color: #000; }
+:global(body.inverted-contrast) .page a:focus-visible { outline-color: #fff; }
+@media (forced-colors: active) { .primary { border: 2px solid ButtonText; } }
+@media print { .page { background: #fff; color: #000; } .page a { text-decoration: underline; } }

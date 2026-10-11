@@ -35,7 +35,7 @@ import type {
 
 // ── Input types ───────────────────────────────────────────────────────────────
 
-import { CORE_FIELD_COLUMN_MAP, isCoreField } from "@/lib/types/conference-form-schema";
+import { CORE_FIELD_COLUMN_MAP, isCoreField } from "@/lib/types/event-form-schema";
 
 export type ConferenceRegistrationData = {
   // Step 1

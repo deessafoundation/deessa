@@ -6,6 +6,7 @@ import { WhatWeDoVideoPlayer } from "@/components/what-we-do/what-we-do-video-pl
 import { AwarenessAnimatedStory } from "@/components/whatwedo/awareness-animated-story"
 import { InclusiveSchool } from "@/components/what-we-do/inclusive-school"
 import { InclusiveLearning } from "@/components/what-we-do/inclusive-learning"
+import { AdvocacyDetail } from "./advocacy-detail"
 
 const learningIconMap = {
   book: BookOpen,
@@ -20,6 +21,7 @@ const learningColorMap: Record<WhatWeDoLearningItem["color"], string> = {
 }
 
 export function WhatWeDoAreaDetail({ area, content }: { area: WhatWeDoSettings["areas"]["awareness"]; content: WhatWeDoSettings }) {
+  if (area.id === "advocacy") return <AdvocacyDetail content={content} />
   return (
     <section className="relative overflow-hidden bg-white py-10 sm:py-12 lg:py-16">
       <div

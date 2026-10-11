@@ -11,7 +11,7 @@ import {
 } from "lucide-react"
 import { RegistrationsTable } from "@/components/admin/events/registrations-table"
 import type { EventRegistration, EventModuleEvent } from "@/lib/types/events-module"
-import type { FormSchema } from "@/lib/types/conference-form-schema"
+import type { FormSchema } from "@/lib/types/event-form-schema"
 
 async function getEvent(id: string): Promise<EventModuleEvent | null> {
   const supabase = await createClient()

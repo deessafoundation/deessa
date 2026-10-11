@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { FormSchema, FormField } from "@/lib/types/conference-form-schema"
+import type { FormSchema, FormField } from "@/lib/types/event-form-schema"
 
 interface FormSchemaViewerProps {
   open: boolean
