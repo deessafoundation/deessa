@@ -6,6 +6,8 @@ import { SiteSettingsForm } from "@/components/admin/settings/site-settings-form
 import { PaymentSettingsForm } from "@/components/admin/finance/payment-settings-form"
 import { OrganizationSettingsForm } from "@/components/admin/settings/organization-settings-form"
 import { SupportToggleModal } from "@/components/admin/support/support-toggle-modal"
+import { SiteStatusCard } from "@/components/admin/settings/site-status-card"
+import { SITE_UI_FLAGS_KEY, type SiteUiFlags } from "@/lib/site-status/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Settings, CreditCard, Building2 } from "lucide-react"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
@@ -66,6 +68,13 @@ export function SettingsTabs({
 
       <TabsContent value="site" className="mt-6 space-y-6">
         <SupportToggleModal />
+        <SiteStatusCard
+          initialFlags={
+            siteSettings[SITE_UI_FLAGS_KEY]
+              ? (siteSettings[SITE_UI_FLAGS_KEY] as Partial<SiteUiFlags>)
+              : undefined
+          }
+        />
         <SiteSettingsForm settings={siteSettings} />
       </TabsContent>
 
