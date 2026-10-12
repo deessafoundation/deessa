@@ -27,6 +27,8 @@ import styles from "./navbar.module.css"
 interface NavbarProps {
   supportEnabled?: boolean
   registerConfig?: RegisterButtonConfig
+  /** Show the amber "Beta" pill. From site_settings.site_ui_flags.betaBadge. */
+  showBetaBadge?: boolean
 }
 
 const primaryNavLinks = [
@@ -59,7 +61,7 @@ function isNavLinkActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/")
 }
 
-export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
+export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = true }: NavbarProps) {
   const registerHref = registerConfig?.enabled ? (registerConfig.href || "/events") : "/events"
   const registerLabel = registerConfig?.label || "Register"
   const pathname = usePathname()
@@ -233,7 +235,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
             </Link>
 
             {/* Development Badge - Desktop: In gap between logo and nav */}
-            {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+            {showBetaBadge && (
               <div className="absolute left-[176px] top-1/2 z-30 hidden -translate-y-1/2 lg:block">
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 shadow-lg">
                   <span className="relative flex size-1.5">
@@ -246,7 +248,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
             )}
 
             {/* Development Badge - Mobile/Tablet: Top right corner */}
-            {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+            {showBetaBadge && (
               <div className="absolute left-[50px] top-1/2 z-30 -translate-y-1/2 sm:left-4 lg:hidden">
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 shadow-lg">
                   <span className="relative flex size-1.5">
@@ -414,7 +416,7 @@ export function Navbar({ supportEnabled = true, registerConfig }: NavbarProps) {
           <nav className="flex h-full flex-col">
             {/* Header with logo, BETA badge and close button */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-              {process.env.NEXT_PUBLIC_SITE_STATUS !== "live" && (
+              {showBetaBadge && (
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-700">
                   <span className="relative flex size-1.5">
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />

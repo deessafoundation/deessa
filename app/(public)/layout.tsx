@@ -12,6 +12,7 @@ import { openDyslexic } from "@/app/fonts"
 import { AccessibilityReadingAids } from "@/components/accessibility/reading-aids"
 import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
 import { comicNeue } from "@/lib/fonts"
+import { getSiteUiFlags } from "@/lib/site-status/settings"
 
 export const dynamic = "force-dynamic"
 
@@ -33,7 +34,9 @@ d.classList.add('intro-pending');
 setTimeout(function(){d.classList.remove('intro-pending')},30000);
 }catch(e){}})();`
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const siteFlags = await getSiteUiFlags()
+
   return (
     <div className={openDyslexic.variable}>
       <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
@@ -48,8 +51,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             className={`${comicNeue.variable} ${comicNeue.className} website-layout relative flex min-h-screen w-full flex-col`}
           >
             <IntroVideo />
-            <NavbarWrapper />
-            <DevelopmentNoticeModal />
+            <NavbarWrapper siteFlags={siteFlags} />
+            <DevelopmentNoticeModal enabled={siteFlags.devNotice} />
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
               <main id="main-content" tabIndex={-1} className="flex-1" data-tts-root="">
                 {children}
