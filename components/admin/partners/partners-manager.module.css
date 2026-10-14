@@ -1,0 +1,31 @@
+:global(body.high-contrast) .surface [data-contrast="filled"] {
+  background: #000 !important;
+  color: #fff !important;
+}
+:global(body.high-contrast) .surface [data-contrast="filled"] svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+:global(body.inverted-contrast) .surface [data-contrast="filled"] {
+  background: #fff !important;
+  color: #000 !important;
+}
+:global(body.inverted-contrast) .surface [data-contrast="filled"] svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+@media (forced-colors: active) {
+  .surface [data-contrast="filled"],
+  :global(body.high-contrast) .surface [data-contrast="filled"],
+  :global(body.inverted-contrast) .surface [data-contrast="filled"] {
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border: 1px solid ButtonText !important;
+  }
+  .surface [data-contrast="filled"] svg,
+  :global(body.high-contrast) .surface [data-contrast="filled"] svg,
+  :global(body.inverted-contrast) .surface [data-contrast="filled"] svg {
+    color: ButtonText !important;
+    stroke: ButtonText !important;
+  }
+}
