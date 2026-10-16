@@ -1,0 +1,23 @@
+.overlay { background: linear-gradient(to top, rgba(10,15,35,.92) 0%, rgba(10,15,35,.7) 70%, transparent 100%); }
+.fallback { background: linear-gradient(to bottom right, rgb(41 182 200 / 10%), rgb(41 182 200 / 5%)); color: #29b6c8; }
+.social { color: rgb(255 255 255 / 85%); transition: color .2s; }
+.social:hover { color: #fff; }
+:global(body.high-contrast) .card .overlay,
+:global(body.inverted-contrast) .card .overlay { background: #000 !important; border: 2px solid #fff !important; }
+:global(body.high-contrast) .card .overlay *,
+:global(body.inverted-contrast) .card .overlay * { color: #fff !important; }
+:global(body.high-contrast) .card .social svg,
+:global(body.inverted-contrast) .card .social svg { color: #fff !important; fill: #fff !important; }
+@media (prefers-reduced-motion: reduce) { .card *, .social { transition: none !important; } }
+:global(body.reduce-motion) .card *, :global(body.sensory-friendly) .card * { transition: none !important; }
+@media (forced-colors: active) {
+  .card .overlay,
+  :global(body.high-contrast) .card .overlay,
+  :global(body.inverted-contrast) .card .overlay { background: Canvas !important; border: 1px solid CanvasText !important; }
+  .card .overlay *,
+  :global(body.high-contrast) .card .overlay *,
+  :global(body.inverted-contrast) .card .overlay * { color: CanvasText !important; }
+  .card .social, .card .social svg,
+  :global(body.high-contrast) .card .social, :global(body.high-contrast) .card .social svg,
+  :global(body.inverted-contrast) .card .social, :global(body.inverted-contrast) .card .social svg { color: LinkText !important; fill: LinkText !important; }
+}

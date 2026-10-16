@@ -21,6 +21,11 @@
   background: transparent;
 }
 
+.layout[data-has-media="false"] {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 820px;
+}
+
 .media::after {
   content: "";
   position: absolute;
@@ -107,7 +112,7 @@
 
 .flow {
   display: grid;
-  grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr);
+  grid-template-columns: var(--flow-columns, minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr));
   list-style: none;
   margin: 0;
   padding: 0;
@@ -147,6 +152,10 @@
 .step:nth-child(4) .icon {
   color: #65a844;
 }
+
+.step .icon[data-tone="blue"] { color: #159dd0; }
+.step .icon[data-tone="pink"] { color: #d6336c; }
+.step .icon[data-tone="green"] { color: #65a844; }
 
 .arrowItem {
   display: grid;
