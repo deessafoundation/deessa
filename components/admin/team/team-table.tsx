@@ -19,6 +19,7 @@ import { Plus, Pencil, Eye, EyeOff, Search, Trash2, Loader2, ChevronLeft, Chevro
 import { deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
 import { ConfirmDialog } from "../common/confirm-dialog"
+import { isSafeMediaUrl } from "@/lib/media-validation"
 
 type TeamMember = {
   id: string
@@ -72,17 +73,18 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
   }
 
   async function handleDelete() {
-    if (!deleteId) return
+    if (!deleteId || deleting) return
     setDeleting(true)
-    const result = await deleteTeamMember(deleteId)
-    if (result.error) {
-      notifications.showError({ description: result.error })
-    } else {
-      notifications.showSuccess({ description: "Member deleted." })
+    try {
+      const result = await deleteTeamMember(deleteId)
+      if (result.error) { notifications.showError({ description: result.error }); return }
+      notifications.showSuccess({ description: result.warning || "Member deleted." })
+      setDeleteId(null)
+      setPage(1)
       router.refresh()
-    }
-    setDeleting(false)
-    setDeleteId(null)
+    } catch {
+      notifications.showError({ description: "Delete could not be confirmed. Please try again." })
+    } finally { setDeleting(false) }
   }
 
   return (
@@ -94,6 +96,7 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
+                  aria-label="Search team members"
                   placeholder="Search by name, role, or email..."
                   value={search}
                   onChange={(e) => handleSearchChange(e.target.value)}
@@ -101,7 +104,7 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
                 />
               </div>
               <Select value={filter} onValueChange={handleFilterChange}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="min-h-11 w-[140px]" aria-label="Filter team members by publishing status">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -149,7 +152,7 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        {member.image ? (
+                        {member.image && isSafeMediaUrl(member.image) ? (
                           <img
                             src={member.image || "/placeholder.svg"}
                             alt={member.name}
@@ -184,12 +187,12 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/admin/team/${member.id}`}>
+                        <Button variant="ghost" size="icon" className="size-11" asChild>
+                          <Link href={`/admin/team/${member.id}`} aria-label={`Edit ${member.name}`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => setDeleteId(member.id)}>
+                        <Button variant="ghost" size="icon" className="size-11" disabled={deleting} aria-label={`Delete ${member.name}`} onClick={() => setDeleteId(member.id)}>
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
@@ -209,6 +212,8 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
                 <Button
                   variant="outline"
                   size="sm"
+                  aria-label="Previous page of team members"
+                  className="min-h-11"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
@@ -217,6 +222,8 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
                 <Button
                   variant="outline"
                   size="sm"
+                  aria-label="Next page of team members"
+                  className="min-h-11"
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
@@ -230,10 +237,11 @@ export function TeamTable({ members }: { members: TeamMember[] }) {
 
       <ConfirmDialog
         open={deleteId !== null}
-        onOpenChange={(open) => { if (!open) setDeleteId(null) }}
+        onOpenChange={(open) => { if (!open && !deleting) setDeleteId(null) }}
         title="Delete Team Member"
         description="This action cannot be undone. The member will be permanently removed."
         loading={deleting}
+        closeOnConfirm={false}
         onConfirm={handleDelete}
       />
     </>

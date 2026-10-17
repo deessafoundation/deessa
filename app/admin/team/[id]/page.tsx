@@ -1,16 +1,11 @@
-import Link from "next/link"
+import { AdminLink as Link } from "@/components/admin/common/admin-navigation-guard"
 import { notFound } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
+import { getTeamMember } from "@/lib/actions/admin-team"
+import { getCurrentAdmin } from "@/lib/actions/admin-auth"
+import { hasPermission } from "@/lib/types/admin"
+import { redirect } from "next/navigation"
 import { TeamMemberForm } from "@/components/admin/team/team-member-form"
-
-async function getTeamMember(id: string) {
-  const supabase = await createClient()
-  const { data, error } = await supabase.from("team_members").select("*").eq("id", id).single()
-
-  if (error) return null
-  return data
-}
 
 export default async function EditTeamMemberPage({
   params,
@@ -18,6 +13,8 @@ export default async function EditTeamMemberPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const admin = await getCurrentAdmin()
+  if (!admin || !hasPermission(admin.role, "team")) redirect("/admin")
   const member = await getTeamMember(id)
 
   if (!member) {
