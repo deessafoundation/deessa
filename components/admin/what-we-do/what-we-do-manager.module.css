@@ -1,0 +1,140 @@
+.root .track {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.root .tab {
+  background: transparent;
+  color: var(--muted-foreground);
+  border: 0;
+  font-weight: 500;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.root .tab:not([data-state="active"]):hover {
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.root .tab[data-state="active"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+}
+
+.root .tab:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+:global(body.high-contrast) .root .track,
+:global(body.inverted-contrast) .root .track {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .root .tab,
+:global(body.inverted-contrast) .root .tab {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .root .tab svg,
+:global(body.inverted-contrast) .root .tab svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .root .tab[data-state="active"],
+:global(body.inverted-contrast) .root .tab[data-state="active"] {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .root .tab[data-state="active"] svg,
+:global(body.inverted-contrast) .root .tab[data-state="active"] svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.high-contrast) .root .tab:focus-visible,
+:global(body.inverted-contrast) .root .tab:focus-visible {
+  outline-color: #000 !important;
+}
+
+:global(body.inverted-contrast) .root .track,
+:global(body.inverted-contrast) .root .tab {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+:global(body.inverted-contrast) .root .tab svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+:global(body.inverted-contrast) .root .tab[data-state="active"] {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .root .tab[data-state="active"] svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.inverted-contrast) .root .tab:focus-visible {
+  outline-color: #fff !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root .tab {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .root .track,
+  .root .tab,
+  :global(body.high-contrast) .root .track,
+  :global(body.inverted-contrast) .root .track,
+  :global(body.high-contrast) .root .tab,
+  :global(body.inverted-contrast) .root .tab {
+    background: Canvas !important;
+    color: CanvasText !important;
+    border: 1px solid ButtonText !important;
+  }
+
+  .root .tab[data-state="active"],
+  :global(body.high-contrast) .root .tab[data-state="active"],
+  :global(body.inverted-contrast) .root .tab[data-state="active"] {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+
+  .root .tab svg,
+  :global(body.high-contrast) .root .tab svg,
+  :global(body.inverted-contrast) .root .tab svg {
+    color: CanvasText !important;
+    stroke: CanvasText !important;
+  }
+
+  .root .tab[data-state="active"] svg,
+  :global(body.high-contrast) .root .tab[data-state="active"] svg,
+  :global(body.inverted-contrast) .root .tab[data-state="active"] svg {
+    color: HighlightText !important;
+    stroke: HighlightText !important;
+  }
+
+  .root .tab:focus-visible,
+  :global(body.high-contrast) .root .tab:focus-visible,
+  :global(body.inverted-contrast) .root .tab:focus-visible {
+    outline-color: Highlight !important;
+  }
+}
