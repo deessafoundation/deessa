@@ -2,36 +2,114 @@
 .card { 
   background: #fff; 
   color: #1f2937;
-  border: 1px solid #e5e7eb;
+  border-color: #e5e7eb;
 }
 .card:hover {
-  border-color: #3b82f6;
+  border-color: #3FABDE;
+  transform: translateY(-2px);
 }
+
+/* Card title - make Marissa font bold with text-stroke and set default color */
+.card h2,
+.card h3,
+.card h2 a,
+.card h3 a {
+  -webkit-text-stroke: 0.5px currentColor;
+  color: #1f2937 !important;
+  text-decoration: none;
+}
+
+/* Card title turns ocean blue on hover - no transition to prevent flicker */
+.card:hover h2,
+.card:hover h2 a,
+.card:hover h3,
+.card:hover h3 a {
+  color: #3FABDE !important;
+  text-decoration: none;
+}
+
+/* Reduce iframe whitespace */
+.card iframe {
+  display: block;
+  max-height: 380px;
+}
+
+/* For photo-only posts, hide the bottom text portion of Facebook embeds */
+.card[data-post-type="photo"] {
+  /* Container for the iframe that will hide overflow */
+}
+
+.card[data-post-type="photo"] iframe {
+  /* Reduce height significantly to cut off text portion */
+  max-height: 280px !important;
+  height: 280px !important;
+}
+
+.card article {
+  min-height: 0;
+}
+.card article > div:last-child {
+  margin-top: auto;
+}
+
 .emptyPhoto { background: #dfecf5; color: #285b83; }
-.follow { 
-  background: #fff; 
-  color: #1f2937; 
-  border-color: #3b82f6;
-}
-.follow:hover { 
-  background: #3b82f6;
+
+/* View All button - Ocean Blue filled */
+.viewAll {
+  background: #3FABDE;
   color: #fff;
-  border-color: #3b82f6;
+  border: 2px solid #3FABDE;
+  box-shadow: 0 2px 8px rgba(63, 171, 222, 0.2);
 }
-.follow:hover svg {
+.viewAll:hover {
+  background: #0B5F8A;
+  border-color: #0B5F8A;
+  box-shadow: 0 4px 12px rgba(11, 95, 138, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Instagram button - Ocean Blue outlined, filled on hover */
+.followInsta {
+  background: #fff;
+  color: #3FABDE;
+  border-color: #3FABDE;
+}
+.followInsta svg {
+  color: #3FABDE;
+  stroke: #3FABDE;
+}
+.followInsta:hover {
+  background: #3FABDE;
+  color: #fff;
+  border-color: #3FABDE;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(63, 171, 222, 0.3);
+}
+.followInsta:hover svg {
   color: #fff;
   stroke: #fff;
 }
 
-/* View all button styles */
-.viewAll {
-  background: #3b82f6;
-  color: #fff;
-  border: 2px solid #3b82f6;
+/* Facebook button - Ocean Blue outlined, filled on hover */
+.followFb {
+  background: #fff;
+  color: #3FABDE;
+  border-color: #3FABDE;
 }
-.viewAll:hover {
-  background: #2563eb;
-  border-color: #2563eb;
+.followFb svg {
+  color: #3FABDE;
+  stroke: #3FABDE;
+}
+.followFb:hover {
+  background: #3FABDE;
+  color: #fff;
+  border-color: #3FABDE;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(63, 171, 222, 0.3);
+}
+.followFb:hover svg {
+  color: #fff;
+  stroke: #fff;
 }
 
 /* Tag styles */
@@ -42,13 +120,14 @@
 }
 
 /* Focus visible states */
-.section a:focus-visible, .section button:focus-visible { outline: 3px solid #3b82f6; outline-offset: 4px; }
+.section a:focus-visible, .section button:focus-visible { outline: 3px solid #3FABDE; outline-offset: 4px; }
 
 /* High contrast mode */
 :global(body.high-contrast) .section,
 :global(body.high-contrast) .card,
 :global(body.high-contrast) .emptyPhoto,
-:global(body.high-contrast) .section .follow,
+:global(body.high-contrast) .section .followInsta,
+:global(body.high-contrast) .section .followFb,
 :global(body.high-contrast) .viewAll {
   background: #fff !important; color: #000 !important; border: 2px solid #000 !important;
 }
@@ -66,7 +145,8 @@
 :global(body.inverted-contrast) .section,
 :global(body.inverted-contrast) .card,
 :global(body.inverted-contrast) .emptyPhoto,
-:global(body.inverted-contrast) .section .follow,
+:global(body.inverted-contrast) .section .followInsta,
+:global(body.inverted-contrast) .section .followFb,
 :global(body.inverted-contrast) .viewAll {
   background: #000 !important; color: #fff !important; border: 2px solid #fff !important;
 }
@@ -85,7 +165,7 @@
 
 /* Forced colors mode (Windows High Contrast) */
 @media (forced-colors: active) {
-  .section, .card, .emptyPhoto, .follow, .viewAll, .tag { 
+  .section, .card, .emptyPhoto, .followInsta, .followFb, .viewAll, .tag { 
     background: Canvas; 
     color: CanvasText; 
     border: 1px solid CanvasText; 
@@ -98,5 +178,6 @@
   .card { break-inside: avoid; }
   .viewAll { display: none; }
 }
+
 
 

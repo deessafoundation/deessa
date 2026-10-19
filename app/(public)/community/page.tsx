@@ -82,22 +82,32 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
             <>
               <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {posts.map(post => (
-                  <li key={post.id} id={`post-${post.id}`} className={cn(styles.card, "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:shadow-xl")}>
+                  <li key={post.id} id={`post-${post.id}`} className={cn(styles.card, "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border shadow-sm transition-shadow duration-300 hover:shadow-xl")} data-post-type={post.post_type}>
                     <PostAnalyticsTracker postId={post.id} />
-                    <article className="flex flex-col">
-                      <div className="space-y-3 p-5">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex size-7 items-center justify-center rounded-full bg-blue-50">
-                              <Facebook aria-hidden="true" className="size-3.5 text-blue-600" />
-                            </div>
-                            <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">Facebook Post</span>
+                    <article className="flex h-full flex-col">
+                      {/* Header section with badge and date */}
+                      <div className="flex items-center justify-between border-b bg-gradient-to-r from-blue-50 to-white px-5 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex size-7 items-center justify-center rounded-full bg-blue-600">
+                            <Facebook aria-hidden="true" className="size-3.5 text-white" />
                           </div>
-                          <time className="text-xs text-gray-500" dateTime={post.created_at}>
-                            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </time>
+                          <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">Facebook Post</span>
                         </div>
-                        <h2 className="text-xl font-bold leading-tight text-gray-900">
+                        <time className="text-xs font-medium text-gray-500" dateTime={post.created_at}>
+                          {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </time>
+                      </div>
+
+                      {/* Facebook embed section - the star of the show */}
+                      <div className="relative bg-gray-50/30 px-5 py-4">
+                        <div className="overflow-hidden rounded-lg">
+                          <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" postType={post.post_type} />
+                        </div>
+                      </div>
+
+                      {/* Context section - title and excerpt below */}
+                      <div className="flex flex-1 flex-col space-y-3 border-t bg-white p-5">
+                        <h2 className="text-lg font-extrabold leading-tight">
                           <TrackedPostLink
                             postId={post.id}
                             url={post.post_url}
@@ -105,32 +115,34 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
                             className="group/link inline-flex items-start gap-1.5 after:absolute after:inset-0"
                           >
                             <span className="line-clamp-2">{post.title}</span>
-                            <ArrowUpRight aria-hidden="true" className="mt-0.5 size-5 shrink-0 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                            <ArrowUpRight aria-hidden="true" className="mt-0.5 size-4 shrink-0 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                             <span className="sr-only"> (opens in a new tab)</span>
                           </TrackedPostLink>
                         </h2>
                         {post.excerpt && (
-                          <p className="line-clamp-3 text-sm text-gray-600">
+                          <p className="line-clamp-3 text-sm leading-relaxed text-gray-600">
                             {post.excerpt}
                           </p>
                         )}
+                        
+                        {/* Tags if present */}
                         {post.tags && post.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1.5 pt-1">
                             {post.tags.slice(0, 3).map(tag => (
-                              <span key={tag} className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700">
+                              <span 
+                                key={tag} 
+                                className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700"
+                              >
                                 {tag}
                               </span>
                             ))}
                             {post.tags.length > 3 && (
-                              <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700">
+                              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
                                 +{post.tags.length - 3}
                               </span>
                             )}
                           </div>
                         )}
-                      </div>
-                      <div className="relative z-10 px-5 pb-5">
-                        <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" />
                       </div>
                     </article>
                   </li>
@@ -168,22 +180,22 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
           {/* Follow CTAs */}
           <div className="mt-16 flex flex-wrap justify-center gap-4 border-t pt-12">
             <a 
-              className={cn(styles.follow, "group inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-6 py-3 font-semibold transition-all duration-200")} 
+              className={cn(styles.followInsta, "group inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-6 py-3 font-semibold transition-all duration-300")} 
               href="https://www.instagram.com/deessa.foundation/" 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              <Instagram aria-hidden="true" className="size-5 transition-transform group-hover:scale-110" />
+              <Instagram aria-hidden="true" className="size-5 transition-transform duration-300 group-hover:scale-110" />
               Follow on Instagram
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a 
-              className={cn(styles.follow, "group inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-6 py-3 font-semibold transition-all duration-200")} 
+              className={cn(styles.followFb, "group inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-6 py-3 font-semibold transition-all duration-300")} 
               href="https://www.facebook.com/deessaFoundation" 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              <Facebook aria-hidden="true" className="size-5 transition-transform group-hover:scale-110" />
+              <Facebook aria-hidden="true" className="size-5 transition-transform duration-300 group-hover:scale-110" />
               Follow on Facebook
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
