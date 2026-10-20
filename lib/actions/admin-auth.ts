@@ -86,7 +86,7 @@ export async function getCurrentAdmin() {
 
   const { data: adminUser } = await supabase.from("admin_users").select("*").eq("user_id", user.id).single()
 
-  return adminUser
+  return adminUser?.is_active ? adminUser : null
 }
 
 export async function createAdminUser(formData: FormData) {

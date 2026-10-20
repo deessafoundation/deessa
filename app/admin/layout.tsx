@@ -1,5 +1,4 @@
 import type React from "react"
-import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { AdminLayoutContent } from "@/components/admin/layout/admin-layout-content"
 import type { AdminUser } from "@/lib/types/admin"
@@ -34,8 +33,9 @@ export default async function AdminLayout({
 
   const { data: adminUser } = await supabase.from("admin_users").select("*").eq("user_id", user.id).single()
 
-  if (!adminUser) {
-    redirect("/admin/login")
+  if (!adminUser?.is_active) {
+    // Proxy protects admin routes; login must remain renderable for inactive sessions.
+    return <>{children}</>
   }
 
   return (

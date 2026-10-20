@@ -2,6 +2,7 @@
 
 import { AdminSidebar } from "@/components/admin/layout/admin-sidebar"
 import { AdminHeader } from "@/components/admin/layout/admin-header"
+import { AdminNavigationGuard } from "@/components/admin/common/admin-navigation-guard"
 import { SidebarProvider, useSidebar } from "@/contexts/SidebarContext"
 import type { AdminUser } from "@/lib/types/admin"
 import { cn } from "@/lib/utils"
@@ -32,10 +33,10 @@ function AdminLayoutInner({ adminUser, children }: AdminLayoutContentProps) {
 
 export function AdminLayoutContent({ adminUser, children }: AdminLayoutContentProps) {
   return (
-    <SidebarProvider>
+    <SidebarProvider><AdminNavigationGuard>
       <AdminLayoutInner adminUser={adminUser}>
         {children}
       </AdminLayoutInner>
-    </SidebarProvider>
+    </AdminNavigationGuard></SidebarProvider>
   )
 }

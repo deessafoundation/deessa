@@ -6,7 +6,6 @@ import {
   Calendar,
   FileText,
   Users,
-  Building,
   BarChart3,
   HandHeart,
   Receipt,
@@ -30,6 +29,7 @@ export type AdminNavItem = {
   href: string
   icon: typeof LayoutDashboard
   permission: string | null
+  alternatePermission?: string
   requiresFinance?: boolean
   requiresAdmin?: boolean
   description?: string
@@ -54,7 +54,7 @@ export const adminNavSections: AdminNavSection[] = [
     items: [
       { name: "Homepage", href: "/admin/homepage", icon: Home, permission: "settings" },
       { name: "Community Posts", href: "/admin/community-posts", icon: MessageSquare, permission: "settings", description: "Facebook posts on the homepage" },
-      { name: "About Page", href: "/admin/about", icon: Info, permission: "settings" },
+      { name: "Who We Are", href: "/admin/about", icon: Info, permission: "settings", alternatePermission: "partners" },
       { name: "What We Do", href: "/admin/what-we-do", icon: Info, permission: "settings" },
       { name: "Media Library", href: "/admin/media", icon: Image, permission: "settings" },
       { name: "Artworks", href: "/admin/artworks", icon: Palette, permission: "settings", description: "Art gallery & homepage feature" },
@@ -64,7 +64,6 @@ export const adminNavSections: AdminNavSection[] = [
       { name: "Stories", href: "/admin/stories", icon: FileText, permission: "stories" },
       { name: "Podcasts", href: "/admin/podcasts", icon: Podcast, permission: "stories" },
       { name: "Team", href: "/admin/team", icon: Users, permission: "team" },
-      { name: "Partners", href: "/admin/partners", icon: Building, permission: "partners" },
       { name: "Impact Stats", href: "/admin/stats", icon: BarChart3, permission: "stats" },
     ],
   },
@@ -92,5 +91,5 @@ export function canAccessAdminNavItem(adminRole: AdminRole, item: AdminNavItem):
   if (item.permission === null) return true
   if (item.requiresFinance && !canViewFinance(adminRole)) return false
   if (item.requiresAdmin && !canManageUsers(adminRole)) return false
-  return hasPermission(adminRole, item.permission)
+  return hasPermission(adminRole, item.permission) || Boolean(item.alternatePermission && hasPermission(adminRole, item.alternatePermission))
 }
