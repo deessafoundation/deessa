@@ -39,11 +39,12 @@ const ROOT_CONFIG_FILES = ["next.config.mjs", "next.config.js", "tailwind.config
 const CODE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".json", ".md", ".mdx"])
 
 const ASSET_REF =
-  /["'`(](\/(?!(?:api|_next|admin|demo)\/)[A-Za-z0-9 ._\-()/%]*?\.(?:png|jpe?g|webp|svg|avif|mp4|pdf|woff2?|ttf|otf))["'`)]|url\(\s*["']?(\/[^)"']+?\.(?:png|jpe?g|webp|svg|avif|mp4|pdf|woff2?|ttf|otf))["']?\s*\)/gi
+  /["'`(](\/(?!(?:api|_next|admin|demo)\/)[A-Za-z0-9 ._\-()/%]*?\.(?:png|jpe?g|webp|svg|avif|mp4|pdf|webmanifest|woff2?|ttf|otf))["'`)]|url\(\s*["']?(\/[^)"']+?\.(?:png|jpe?g|webp|svg|avif|mp4|pdf|webmanifest|woff2?|ttf|otf))["']?\s*\)/gi
 
 const errors = []
 const warnings = []
 const info = []
+const orphans = []
 
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -84,9 +85,30 @@ for (const file of sources) {
 
 // --- public inventory -----------------------------------------------------
 const publicFiles = walk(pub).map(file => "/" + relative(pub, file).split(sep).join("/"))
-const publicSet = new Set(publicFiles.map(p => p.toLowerCase()))
+// lowercase -> exact path, so references can be matched case-insensitively but
+// still reported when the reference and the disk name disagree in case.
+const publicByLower = new Map(publicFiles.map(path => [path.toLowerCase(), path]))
 
 // --- 1. every referenced path must exist ----------------------------------
+// Next.js file-convention routes are served from app/ at runtime, not public/.
+const GENERATED_ROUTES = /\/(opengraph-image|twitter-image|icon|apple-icon|favicon)(-\d+x\d+)?\.(png|jpg|jpeg|svg|ico)$/
+// Documented exceptions: retired files that are redirect sources on purpose,
+// and real defects tracked for a later fix. See the JSON for the reason each.
+const exceptionsPath = join(root, "scripts", "public-asset-exceptions.json")
+let exceptions = { intentional: {}, knownBugs: {} }
+try {
+  exceptions = JSON.parse(readFileSync(exceptionsPath, "utf8"))
+} catch {
+  warnings.push("scripts/public-asset-exceptions.json missing or unreadable — every missing reference is an error")
+}
+const intentional = new Map(Object.entries(exceptions.intentional || {}))
+const knownBugs = new Map(Object.entries(exceptions.knownBugs || {}))
+const reportMissing = (file, decoded) => {
+  const where = `${relative(root, file)} references "${decoded}"`
+  if (knownBugs.has(decoded)) warnings.push(`known bug: ${where} — ${knownBugs.get(decoded)}`)
+  else if (intentional.has(decoded)) info.push(`exception: ${where} — ${intentional.get(decoded)}`)
+  else errors.push(`${where} but no such file exists in public/ — 404 in production`)
+}
 for (const [file, text] of texts) {
   for (const match of text.matchAll(ASSET_REF)) {
     const raw = (match[1] || match[2] || "").trim()
@@ -97,9 +119,12 @@ for (const [file, text] of texts) {
     } catch {
       /* keep raw */
     }
-    if (!publicSet.has(decoded.toLowerCase())) continue // remote URL, node asset, or non-public
-    if (!publicSet.has(decoded)) {
-      errors.push(`${relative(root, file)} references "${decoded}" but disk differs only by case — breaks on Linux`)
+    if (GENERATED_ROUTES.test(decoded)) continue
+    const onDisk = publicByLower.get(decoded.toLowerCase())
+    if (!onDisk) {
+      reportMissing(file, decoded)
+    } else if (onDisk !== decoded) {
+      errors.push(`${relative(root, file)} references "${decoded}" but disk has "${onDisk}" — case mismatch breaks on Linux`)
     }
   }
 }
@@ -159,6 +184,9 @@ for (const set of dirKeys.values()) {
 // --- 4. naming, budgets, orphans (warnings unless --strict) ---------------
 const NAME_OK = /^[a-z0-9][a-z0-9-]*\.(webp|avif|jpg|jpeg|png|svg|mp4|pdf|webmanifest|txt|md|json)$/
 const NAME_UPSTREAM_FONT = /^(OpenDyslexic|ComicNeue|MarissaFont)[A-Za-z-]*\.(otf|ttf|woff2?)$/
+// Asset-contract docs that legitimately sit beside the assets they document
+// (public/errors/README.md, public/fonts/*/LICENSE.txt). No other docs in public/.
+const NAME_ALLOWED_DOC = /^(README|LICENSE|OFL)\.(md|txt)$/
 const BUDGET_KB = { png: 500, jpg: 500, jpeg: 500, webp: 300, svg: 20, mp4: 15360 }
 
 for (const path of publicFiles) {
@@ -168,7 +196,7 @@ for (const path of publicFiles) {
   const inFonts = path.startsWith("/fonts/")
   const isPlatform = !path.slice(1).includes("/")
 
-  if (!isPlatform && !inFonts && !NAME_OK.test(name) && !NAME_UPSTREAM_FONT.test(name)) {
+  if (!isPlatform && !inFonts && !NAME_OK.test(name) && !NAME_UPSTREAM_FONT.test(name) && !NAME_ALLOWED_DOC.test(name)) {
     warnings.push(`naming: "${path}" violates lowercase-kebab standard`)
   }
   const budget = BUDGET_KB[ext]
@@ -179,8 +207,11 @@ for (const path of publicFiles) {
     warnings.push(`root: "${path}" belongs in a feature folder, not public/ root`)
   }
   const isDynamic = DYNAMIC_FOLDERS.some(folder => path.startsWith(`/${folder}/`))
-  if (!isDynamic && !referenced.has(path.toLowerCase())) {
-    info.push(`orphan candidate (verify dynamic/CMS use before deleting): ${path}`)
+  // Platform files are wired through metadata APIs (layout.tsx `manifest:`), not
+  // string asset references — they are never orphans.
+  const isPlatformFile = isPlatform && PLATFORM_ROOT_FILES.has(name)
+  if (!isPlatformFile && !isDynamic && !referenced.has(path.toLowerCase())) {
+    orphans.push(`orphan candidate (verify dynamic/CMS use before deleting): ${path}`)
   }
 }
 
@@ -192,10 +223,11 @@ const print = (label, list, mark) => {
 }
 print("ERRORS", errors, "✖")
 print("WARNINGS", warnings, "▲")
+print("ORPHANS", orphans, "·")
 if (process.env.VERBOSE) print("INFO", info, "·")
 
 console.log(
-  `\npublic/: ${publicFiles.length} files | errors: ${errors.length} | warnings: ${warnings.length} | orphan candidates: ${new Set(info).size}`,
+  `\npublic/: ${publicFiles.length} files | errors: ${new Set(errors).size} | warnings: ${new Set(warnings).size} | orphans: ${new Set(orphans).size} | exceptions: ${new Set(info).size}`,
 )
 if (strict && warnings.length) {
   console.log("\n--strict: warnings are fatal")
