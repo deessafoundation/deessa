@@ -6,7 +6,7 @@ import styles from "./donate.module.css"
 import { GivingOptions } from "@/components/donations/giving-options"
 import { DonationForm } from "@/components/donations/donation-form"
 import { BankTransferPanel } from "@/components/donations/bank-transfer-panel"
-import { getPaymentSettings, getSupportedProviders } from "@/lib/payments/config"
+import { getDonationCheckoutProviders, getPaymentSettings, isOnlineDonationCheckoutEnabled } from "@/lib/payments/config"
 import { getConfiguredBankAccounts } from "@/lib/payments/bank-details"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
@@ -80,7 +80,8 @@ const faqs = [
 
 export default async function DonatePage() {
   const settings = await getPaymentSettings()
-  const enabledProviders = getSupportedProviders(settings)
+  const onlineCheckoutEnabled = isOnlineDonationCheckoutEnabled()
+  const enabledProviders = onlineCheckoutEnabled ? getDonationCheckoutProviders(settings) : []
   const bankAccounts = getConfiguredBankAccounts()
 
   const impactIcons = [BookOpen, Stethoscope, GraduationCap, Scissors, Droplets, School]
@@ -125,7 +126,7 @@ export default async function DonatePage() {
         <div className="mb-10 text-center"><h2 id="giving-heading" className="text-3xl leading-tight sm:text-4xl">Let&apos;s make a difference, together.</h2><p className="mt-4 text-lg text-foreground-muted">A one-time kindness or a little love each month. It all matters.</p></div>
         <GivingOptions
           onlineAvailable={enabledProviders.length > 0}
-          online={<DonationForm tiers={donationTiers} enabledProviders={enabledProviders} primaryProvider={settings.primaryProvider} defaultCurrency={settings.defaultCurrency} />}
+          online={<DonationForm tiers={donationTiers} enabledProviders={enabledProviders} primaryProvider={settings.primaryProvider} defaultCurrency={settings.defaultCurrency} allowRecurring={settings.allowRecurring} />}
           bank={bankAccounts.length > 0 ? <BankTransferPanel accounts={bankAccounts} /> : undefined}
         />
         <div className="mx-auto mt-10 flex max-w-3xl flex-col items-center gap-5 border-t border-border pt-6 text-center sm:flex-row sm:justify-between sm:text-left">

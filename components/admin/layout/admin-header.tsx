@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import { AdminLink as Link } from "@/components/admin/common/admin-navigation-guard"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {

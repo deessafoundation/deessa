@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { facebookEmbedUrl } from "@/lib/facebook-posts/types"
 import { Button } from "@/components/ui/button"
 
-export function FacebookPostPreview({ url, title, automatic = false, mode = "admin" }: { url: string; title: string; automatic?: boolean; mode?: "admin" | "public" }) {
+export function FacebookPostPreview({ url, title, automatic = false, mode = "admin", postType = "full" }: { url: string; title: string; automatic?: boolean; mode?: "admin" | "public"; postType?: "photo" | "full" }) {
   const [open, setOpen] = useState(automatic)
   const [width, setWidth] = useState(500)
   const container = useRef<HTMLDivElement>(null)
@@ -18,12 +18,14 @@ export function FacebookPostPreview({ url, title, automatic = false, mode = "adm
   
   // Apply mode-specific settings
   const isPublicMode = mode === "public" || automatic
-  const showText = !isPublicMode
-  const height = isPublicMode ? 480 : 720
+  // For photo type, always hide text. For full type, show text in admin, hide in public
+  const showText = postType === "photo" ? false : (isPublicMode ? false : true)
+  // Reduced height for public mode to minimize empty space
+  const height = isPublicMode ? 380 : 720
   
-  const embed = source ? source
+  // Rebuild the embed URL with correct show_text parameter
+  const embed = source ? source.replace(/show_text=(true|false)/, `show_text=${showText}`)
     .replace("width=500", `width=${width}`)
-    .replace("show_text=true", `show_text=${showText}`) 
     : null
   
   if (!embed) return null
@@ -36,7 +38,7 @@ export function FacebookPostPreview({ url, title, automatic = false, mode = "adm
         <div>
           {!automatic && <p className="mb-2 text-sm">This preview connects to Facebook, which may use cookies. If it cannot load, use the post link. Share links may need the original post permalink to preview.</p>}
           <iframe src={embed} title={`Facebook post: ${title}`} loading="lazy" referrerPolicy="strict-origin-when-cross-origin"
-            className={automatic ? "h-[480px] w-full rounded-xl border" : `h-[${height}px] w-full rounded-lg border`} 
+            className={automatic ? `w-full rounded-xl border overflow-hidden` : `h-[${height}px] w-full rounded-lg border`} 
             style={{ height: `${height}px` }}
           />
           {!automatic && <a href={url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4">Open original post on Facebook<span className="sr-only"> (opens in a new tab)</span></a>}

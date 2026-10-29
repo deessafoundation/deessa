@@ -138,74 +138,6 @@ async function confirmDonation(
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Conference Registration Payment Confirmation
-// ══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Confirm conference registration payment using centralized PaymentService.
- *
- * @param supabase - Supabase service role client
- * @param registrationId - Conference registration ID
- * @param session - Stripe checkout session
- * @param eventId - Stripe event ID for idempotency
- */
-async function confirmConferenceRegistrationFromWebhook(
-  supabase: ReturnType<typeof createServiceRoleClient>,
-  registrationId: string,
-  session: Stripe.Checkout.Session,
-  eventId: string
-): Promise<boolean> {
-  try {
-    const { createStripeAdapter } = await import("@/lib/payments/adapters/StripeAdapter")
-    const { getPaymentService } = await import("@/lib/payments/core/PaymentService")
-
-    const adapter = createStripeAdapter()
-    const paymentService = getPaymentService()
-
-    // Build a synthetic Stripe.Event from the already-verified session
-    const stripeEvent = {
-      type: "checkout.session.completed",
-      data: { object: session },
-      id: eventId,
-    } as Stripe.Event
-
-    const verificationResult = await adapter.processVerifiedEvent(stripeEvent)
-
-    const result = await paymentService.confirmConferenceRegistration({
-      entityType: "conference_registration",
-      entityId: registrationId,
-      provider: "stripe",
-      verificationResult,
-      eventId,
-    })
-
-    if (!result.success) {
-      console.error("Stripe webhook (conference): Payment confirmation failed", {
-        registrationId,
-        sessionId: session.id,
-        error: result.error,
-      })
-      return false
-    }
-
-    console.log("Stripe webhook (conference): Payment confirmed", {
-      registrationId,
-      sessionId: session.id,
-      status: result.status,
-    })
-
-    return true
-  } catch (error) {
-    console.error("Stripe webhook (conference): Unexpected error", {
-      registrationId,
-      sessionId: session.id,
-      error: error instanceof Error ? error.message : "Unknown error",
-    })
-    return false
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
 // Event Registration Payment Confirmation
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -286,7 +218,6 @@ async function confirmEventRegistrationFromWebhook(
  * 
  * Processes Stripe webhook events for:
  * - Donation payments (one-time and subscriptions)
- * - Conference registration payments
  * - Event registration payments
  * 
  * Security:
@@ -380,24 +311,10 @@ export async function POST(request: Request) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
 
-        // ── Conference registration branch ───────────────────────────────────
-
-        const conferenceRegistrationId =
-          session.metadata?.conference_registration_id;
-
-        if (conferenceRegistrationId) {
-          const confirmed = await confirmConferenceRegistrationFromWebhook(
-            supabase,
-            conferenceRegistrationId,
-            session,
-            event.id
-          );
-          if (!confirmed) {
-            return NextResponse.json(
-              { error: "Failed to confirm conference registration" },
-              { status: 500 }
-            );
-          }
+        // Conference is retired. Acknowledge a delayed legacy event so Stripe
+        // does not retry it, but never query or mutate retired registrations.
+        if (session.metadata?.conference_registration_id) {
+          console.warn("Stripe webhook: ignored retired conference checkout", { sessionId: session.id });
           break;
         }
 
@@ -439,16 +356,7 @@ export async function POST(request: Request) {
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
 
-        // ── Conference branch — keep payment_status = 'unpaid' so user can retry ──
-
-        const conferenceRegistrationId =
-          session.metadata?.conference_registration_id;
-
-        if (conferenceRegistrationId) {
-          // Don't change the registration status — session expired but the
-          // registration itself may still be within its 24h window.
-          break;
-        }
+        if (session.metadata?.conference_registration_id) break;
 
         // ── Event registration branch — keep payment_status = 'unpaid' ────────
         const eventRegistrationId =

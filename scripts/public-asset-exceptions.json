@@ -1,0 +1,18 @@
+{
+  "$comment": "References to public/ paths that intentionally (or known-bug) do not exist on disk. Consumed by scripts/check-public-assets.mjs so the guard can distinguish a rename mistake from a documented exception. Move an entry to knownBugs when it represents a real defect, and delete it when the defect is fixed.",
+  "intentional": {
+    "/old.jpg": "Test fixture string in __tests__/programs — never served.",
+    "/image.jpg": "Test fixture string in __tests__/programs — never served.",
+    "/replacement.jpg": "Test fixture string in __tests__/programs — never served.",
+    "/images/stamp.png": "Test fixture string in __tests__/receipts — never served.",
+    "/podcast_banner.png": "Retired file, kept as a permanent redirect source in next.config.mjs and in the legacy-CMS-URL normalization lists in hero-carousel.tsx / page.tsx.",
+    "/home/hero/inclusion-begins-at-home-v2.jpg": "Retired file, kept as a permanent redirect source in next.config.mjs and in the legacy-CMS-URL normalization lists in hero-carousel.tsx / page.tsx.",
+    "/home/podcast/deessa-podcast-studio.png": "Retired file, kept as a permanent redirect source in next.config.mjs and in the legacy-CMS-URL normalization lists in hero-carousel.tsx / page.tsx.",
+    "/about/journey/milestone.jpg": "placeholder= hint text in the admin about-manager form; not rendered as an image."
+  },
+  "knownBugs": {
+    "/og-image-home.jpg": "BUG: default homepage SEO ogImage (lib/data/homepage-settings.ts:421) points at a file that does not exist, so social shares have no image. Also used as placeholder= text in seo-manager.tsx. Needs a real OG asset (1200x630).",
+    "/resources/aac-brochure.pdf": "BUG: the 'Download Brochure' button on the AAC program page (data/programs/aac-support.ts:282) links to a PDF that does not exist — the click 404s.",
+    "/testimonials.png": "BUG: Impact page uses this as a full-height panel image (ImpactClientPage.tsx:379) and as the avatar for two testimonials (:651), but the file does not exist — broken images in production."
+  }
+}

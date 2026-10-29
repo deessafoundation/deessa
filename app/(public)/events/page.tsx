@@ -48,7 +48,7 @@ export default async function EventsPage() {
   const part = (type: string) => parts.find((value) => value.type === type)?.value
   const today = `${part("year")}-${part("month")}-${part("day")}`
 
-  const listings: ListingEvent[] = [accessibilitySummit, ...(events ?? []).filter((event) => event.slug !== accessibilitySummit.slug)]
+  const listings: ListingEvent[] = [accessibilitySummit, ...(events ?? [])]
     .sort((a, b) => a.event_date.localeCompare(b.event_date))
   return <EventsLanding events={listings} unavailable={events === null} today={today} />
 }

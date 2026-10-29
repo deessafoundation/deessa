@@ -54,6 +54,7 @@ import { AgendaEditor } from "./agenda-editor"
 import { PricingEditor } from "./pricing-editor"
 import { EventFormBuilder } from "./event-form-builder"
 import { EmailTemplateEditor } from "./email-template-editor"
+import { PartnersEditor } from "./partners-editor"
 import {
   setEventStatus,
   deleteEvent,
@@ -107,6 +108,7 @@ const tabs = [
   { label: "Tickets & Pricing", id: "pricing", icon: CreditCard },
   { label: "Registration Form", id: "form-builder", icon: FormInput },
   { label: "Email Templates", id: "email-templates", icon: Mail },
+  { label: "Partners", id: "partners", icon: Users },
   { label: "Promote", id: "promote", icon: Megaphone },
 ]
 
@@ -140,6 +142,12 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
   } | null>(null)
   const [registerConfigLoading, setRegisterConfigLoading] = useState(false)
   const [registerConfigSaving, setRegisterConfigSaving] = useState(false)
+  const [partnersData, setPartnersData] = useState<{
+    categories: any[]
+    availablePartners: any[]
+    linkedPartners: any[]
+  } | null>(null)
+  const [partnersLoading, setPartnersLoading] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -261,6 +269,34 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
           setFetchedTabs((prev) => new Set(prev).add("promote"))
         })
         .finally(() => setRegisterConfigLoading(false))
+    }
+    if (activeTab === "partners" && !fetchedTabs.has("partners")) {
+      if (!partnersData) {
+        setPartnersLoading(true)
+      }
+      Promise.all([
+        fetch(`/api/admin/events/${eventId}/partners/categories`).then((r) => r.json()),
+        fetch(`/api/admin/events/${eventId}/partners/available`).then((r) => r.json()),
+        fetch(`/api/admin/events/${eventId}/partners/linked`).then((r) => r.json()),
+      ])
+        .then(([categoriesRes, availableRes, linkedRes]) => {
+          setPartnersData({
+            categories: categoriesRes.categories || [],
+            availablePartners: availableRes.partners || [],
+            linkedPartners: linkedRes.partners || [],
+          })
+          setFetchedTabs((prev) => new Set(prev).add("partners"))
+        })
+        .catch(() => {
+          setPartnersData((prev) =>
+            prev || {
+              categories: [],
+              availablePartners: [],
+              linkedPartners: [],
+            }
+          )
+        })
+        .finally(() => setPartnersLoading(false))
     }
   }, [activeTab, data, eventId, emailTemplatesVersion, fetchedTabs])
 
@@ -787,6 +823,36 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
             eventDate={data?.event?.event_date}
             eventLocation={data?.event?.location}
           />
+        )}
+        {activeTab === "partners" && (
+          <div>
+            {partnersLoading && !partnersData ? (
+              <div className="space-y-4 animate-pulse">
+                <div className="h-40 w-full rounded-lg bg-gray-100" />
+                <div className="h-40 w-full rounded-lg bg-gray-100" />
+              </div>
+            ) : partnersData ? (
+              <PartnersEditor
+                eventId={eventId}
+                categories={partnersData.categories}
+                availablePartners={partnersData.availablePartners}
+                linkedPartners={partnersData.linkedPartners}
+                onUpdate={() => {
+                  setFetchedTabs((prev) => {
+                    const next = new Set(prev)
+                    next.delete("partners")
+                    return next
+                  })
+                }}
+              />
+            ) : (
+              <Card>
+                <CardContent className="p-8 text-center text-muted-foreground">
+                  Failed to load partners data. Please refresh the page.
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
         {activeTab === "promote" && (
           <Card>

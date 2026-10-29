@@ -9,7 +9,6 @@ import {
 import { createEsewaAdapter } from "@/lib/payments/adapters/EsewaAdapter"
 import { getPaymentService } from "@/lib/payments/core/PaymentService"
 import { generateReceiptForDonation } from "@/lib/actions/donation-receipt"
-import { handleConferenceVerification } from "./conference-handler"
 import { handleEventVerification } from "./event-handler"
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit"
 
@@ -20,12 +19,12 @@ import { checkRateLimit, getClientIP } from "@/lib/rate-limit"
  * - Uses EsewaAdapter for signature verification and payload normalization
  * - Uses PaymentService for centralized payment confirmation
  * - Removes inline donation status updates
- * - Maintains conference registration support (separate handler)
+ * - Maintains event registration support (separate handler)
  * 
  * Flow:
  * 1. Parse and decode eSewa callback data
  * 2. Lookup donation by transaction_uuid
- * 3. If not found, check for conference registration
+ * 3. If not found, check for an event registration
  * 4. Use EsewaAdapter.verify() for signature and server-side verification
  * 5. Use PaymentService.confirmDonation() for state transition
  * 6. Enqueue receipt generation (non-blocking)
@@ -152,21 +151,6 @@ export async function GET(request: Request) {
   }
 
   if (searchError || !donation) {
-    // ── Conference registration fallback branch ─────────────────────────────────
-    // eSewa may be paying for a conference registration instead of a donation.
-    // This is handled by a separate function to avoid code duplication
-    const conferenceResult = await handleConferenceVerification(
-      supabase,
-      transaction_uuid,
-      responseData,
-      url,
-      isMock
-    )
-
-    if (conferenceResult) {
-      return conferenceResult
-    }
-
     // ── Event registration fallback branch ───────────────────────────────────
     const eventResult = await handleEventVerification(
       supabase,

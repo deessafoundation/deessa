@@ -1,0 +1,230 @@
+/* =============================================
+ * Partner Card Component Styles
+ * ============================================= */
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Variant: Grid (card-style) */
+.card.grid {
+  flex-direction: column;
+  border: 1px solid oklch(0.92 0 0);
+  border-radius: 0.5rem;
+  background: oklch(0.99 0 0);
+  min-height: 120px;
+}
+
+/* Variant: Inline (horizontal row) */
+.card.inline {
+  flex-direction: row;
+  gap: 1rem;
+  border: none;
+  background: transparent;
+}
+
+/* Clickable cards */
+a.card {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.card:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+a.card:focus {
+  outline: 3px solid oklch(0.68 0.11 230);
+  outline-offset: 2px;
+}
+
+/* Logo wrapper */
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.logoWrapper[data-size="sm"] {
+  max-width: 120px;
+}
+
+.logoWrapper[data-size="md"] {
+  max-width: 160px;
+}
+
+.logoWrapper[data-size="lg"] {
+  max-width: 200px;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Fallback when image fails to load */
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 60px;
+  padding: 0.75rem;
+  background: oklch(0.95 0 0);
+  border: 2px dashed oklch(0.85 0 0);
+  border-radius: 0.375rem;
+}
+
+.fallback[data-size="sm"] {
+  min-height: 50px;
+}
+
+.fallback[data-size="md"] {
+  min-height: 70px;
+}
+
+.fallback[data-size="lg"] {
+  min-height: 90px;
+}
+
+.fallbackText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: oklch(0.45 0 0);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Description text */
+.description {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: oklch(0.45 0 0);
+  text-align: center;
+}
+
+/* =============================================
+ * High Contrast Mode
+ * ============================================= */
+
+/* Card borders and surfaces */
+:global(body.high-contrast) .card.grid {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .fallback {
+  background: #f5f5f5 !important;
+  border: 2px dashed #666 !important;
+}
+
+:global(body.high-contrast) .fallbackText {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .description {
+  color: #1a1a1a !important;
+}
+
+/* Focus indicators in high contrast */
+:global(body.high-contrast) a.card:focus {
+  outline: 3px solid #000 !important;
+  outline-offset: 3px;
+}
+
+/* Logo visibility - ensure contrast */
+:global(body.high-contrast) .logo {
+  filter: grayscale(0.3) contrast(1.2);
+}
+
+/* =============================================
+ * Inverted Contrast Mode
+ * ============================================= */
+
+:global(body.inverted-contrast) .card.grid {
+  background: #1a1a1a !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .fallback {
+  background: #2a2a2a !important;
+  border: 2px dashed #999 !important;
+}
+
+:global(body.inverted-contrast) .fallbackText {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .description {
+  color: #e5e5e5 !important;
+}
+
+:global(body.inverted-contrast) a.card:focus {
+  outline: 3px solid #fff !important;
+  outline-offset: 3px;
+}
+
+:global(body.inverted-contrast) .logo {
+  filter: invert(1) grayscale(0.3) contrast(1.2);
+}
+
+/* =============================================
+ * Responsive Adjustments
+ * ============================================= */
+
+@media (max-width: 640px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .card.grid {
+    min-height: 100px;
+  }
+
+  .logoWrapper[data-size="sm"] {
+    max-width: 100px;
+  }
+
+  .logoWrapper[data-size="md"] {
+    max-width: 140px;
+  }
+
+  .logoWrapper[data-size="lg"] {
+    max-width: 180px;
+  }
+
+  .description {
+    font-size: 0.8125rem;
+  }
+}
+
+/* =============================================
+ * Print Styles
+ * ============================================= */
+
+@media print {
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  a.card {
+    text-decoration: none;
+  }
+
+  /* Show URL after partner name in print */
+  a.card::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75rem;
+    color: #666;
+  }
+}

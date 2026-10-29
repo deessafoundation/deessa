@@ -98,9 +98,9 @@ export default async function CMSPage() {
     },
     {
       title: "Partners",
-      description: "Showcase your partners and sponsors",
+      description: "Manage partners and sponsors in Who We Are",
       icon: Building,
-      href: "/admin/partners",
+      href: "/admin/about?tab=partners",
       permission: "partners",
       color: "bg-teal-500",
     },

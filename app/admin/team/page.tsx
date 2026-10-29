@@ -1,17 +1,24 @@
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { getTeamMembers } from "@/lib/actions/admin-team"
+import { getCurrentAdmin } from "@/lib/actions/admin-auth"
+import { hasPermission } from "@/lib/types/admin"
+import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { TeamTable } from "@/components/admin/team/team-table"
 
-async function getTeamMembers() {
-  const supabase = await createClient()
-  const { data } = await supabase.from("team_members").select("*").order("sort_order", { ascending: true })
-  return data || []
-}
-
 export default async function TeamPage() {
-  const team = await getTeamMembers()
+  const admin = await getCurrentAdmin()
+  if (!admin || !hasPermission(admin.role, "team")) redirect("/admin")
+  let team
+  try { team = await getTeamMembers() }
+  catch {
+    return <div role="alert" className="space-y-4 rounded-xl border p-6">
+      <h1 className="text-2xl font-bold">Team members could not be loaded</h1>
+      <p>Refresh this page to try again. Saved team records have not been changed.</p>
+      <a href="/admin/team" className="inline-flex min-h-11 items-center underline">Try again</a>
+    </div>
+  }
 
   return (
     <div className="space-y-6">

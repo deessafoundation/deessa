@@ -12,9 +12,10 @@ export interface FacebookPost {
   published_at: string | null
   views: number
   clicks: number
+  post_type: 'photo' | 'full'
 }
 
-export const FACEBOOK_POST_COLUMNS = "id,post_url,title,image_url,image_alt,display_order,is_published,created_at,excerpt,tags,published_at,views,clicks"
+export const FACEBOOK_POST_COLUMNS = "id,post_url,title,image_url,image_alt,display_order,is_published,created_at,excerpt,tags,published_at,views,clicks,post_type"
 
 /** Normalize supported post links without following external redirects. */
 export function normalizeFacebookPostUrl(value: string): string | null {
@@ -38,8 +39,24 @@ export function normalizeFacebookPostUrl(value: string): string | null {
     if (!["facebook.com", "www.facebook.com", "m.facebook.com"].includes(url.hostname)) return null
     const path = url.pathname.replace(/\/$/, "")
     const canonical = new URL(`https://www.facebook.com${path}`)
+    
+    // Share links - these are the cleanest for photo posts
     if (/^\/share\/p\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    if (/^\/share\/v\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    
+    // Photo posts - prioritize these for better visual display
+    if (path === "/photo.php" || path === "/photo") {
+      const photo = url.searchParams.get("fbid")
+      if (!photo || !/^\d+$/.test(photo)) return null
+      canonical.pathname = "/photo.php"
+      canonical.searchParams.set("fbid", photo)
+      return canonical.href
+    }
+    
+    // Regular page posts
     if (/^\/[\w.-]+\/posts\/[\w]+$/.test(path)) return canonical.href
+    
+    // Permalink format
     if (path === "/permalink.php" || path === "/story.php") {
       const post = url.searchParams.get("story_fbid")
       const page = url.searchParams.get("id")
@@ -49,21 +66,16 @@ export function normalizeFacebookPostUrl(value: string): string | null {
       canonical.searchParams.set("id", page)
       return canonical.href
     }
-    if (path === "/photo.php" || path === "/photo") {
-      const photo = url.searchParams.get("fbid")
-      if (!photo || !/^\d+$/.test(photo)) return null
-      canonical.pathname = "/photo.php"
-      canonical.searchParams.set("fbid", photo)
-      return canonical.href
-    }
+    
     return null
   } catch {
     return null
   }
 }
 
-export function facebookEmbedUrl(postUrl: string): string | null {
+export function facebookEmbedUrl(postUrl: string, showText: boolean = false): string | null {
   const canonical = normalizeFacebookPostUrl(postUrl)
   if (!canonical) return null
-  return `https://www.facebook.com/plugins/post.php?${new URLSearchParams({ href: canonical, show_text: "true", width: "500" })}`
+  // Use the showText parameter to control text display
+  return `https://www.facebook.com/plugins/post.php?${new URLSearchParams({ href: canonical, show_text: showText.toString(), width: "500" })}`
 }

@@ -1,6 +1,6 @@
 # Standalone accessibility summit
 
-The public Nepal Accessibility Summit 2026 page is independent of CMS publication status. It retains `/events/nepal-accessibility-summit-2026`, with a registration redirect to the Facebook event. The public listing merges a hardcoded event and deduplicates the same slug; the sitemap preserves the static route. The dynamic event route's `generateStaticParams` filters this slug to avoid a static/dynamic prerender collision. No administrative publication changes are part of this implementation; the user manages unpublishing the CMS record.
+The public Nepal Accessibility Summit 2026 page is independent of CMS publication status. It retains `/events/nepal-accessibility-summit-2026`, with a registration redirect to the Facebook event. The public listing includes the hardcoded event and all published CMS events, including the admin-managed summit if it remains published (updated at the user’s request on 2026-10-11); the sitemap preserves the static route. The dynamic event route's `generateStaticParams` filters this slug to avoid a static/dynamic prerender collision. No administrative publication changes are part of this implementation; the user manages unpublishing the CMS record.
 
 Sources are `lib/data/accessibility-summit.ts`, `components/events/accessibility-summit.tsx`, and its CSS module. The user-provided poster is copied to `public/events/accessibility-summit/poster.jpg`. It supplies actual summit artwork rather than the illustrative hero scenes documented separately.
 
@@ -19,3 +19,7 @@ The page follows the existing blue public brand, Marissa headings with accessibi
 The parent task reviewed `summit-desktop.png` and `summit-mobile.png`: poster loaded, Facebook hrefs matched the implementation, and no horizontal overflow appeared. `summit-preview.png` records the delivered page. Browser checks confirmed the legacy registration URL redirects to Facebook event `2012481132746254`; `/events` shows Upcoming (1) with exactly one summit card using the new poster and title, and View event details opens the static page.
 
 Final reviewer disposition: ship. The detector reported zero primary findings with palette advisories only. The static-parameter collision safeguard was a subsequent source change and was not verified through a build. No formatter, ESLint, typecheck, tests, or build ran. Source contrast rules are not a runtime accessibility certification; screen-reader and comprehensive compliance checks were not performed.
+
+## Admin listing control (2026-10-11)
+
+Removed the summit-specific exclusion from the public listing. The admin-managed summit now follows the normal published-status filter. Both summit listings can appear while the CMS record is published; the user will turn that record off in admin. The standalone detail page and Facebook registration destination remain unchanged. No automated checks were run.

@@ -1,8 +1,13 @@
-import Link from "next/link"
+import { AdminLink as Link } from "@/components/admin/common/admin-navigation-guard"
+import { getCurrentAdmin } from "@/lib/actions/admin-auth"
+import { hasPermission } from "@/lib/types/admin"
+import { redirect } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
 import { TeamMemberForm } from "@/components/admin/team/team-member-form"
 
-export default function NewTeamMemberPage() {
+export default async function NewTeamMemberPage() {
+  const admin = await getCurrentAdmin()
+  if (!admin || !hasPermission(admin.role, "team")) redirect("/admin")
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">

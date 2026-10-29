@@ -53,7 +53,7 @@ export function ArtPaperBackdrop({ part = "wall", className }: {
 
   return <div aria-hidden="true" className={cn(styles.decor,
     "pointer-events-none absolute -z-10 overflow-hidden select-none", className)}>
-    {part === "wall" ? <Image src={paper} alt="" fill sizes="100vw"
+    {part === "wall" ? <Image src={paper} alt="" fill sizes="(min-width: 1536px) 1536px, (min-width: 1280px) 1280px, (min-width: 1024px) 1024px, (min-width: 768px) 768px, 100vw"
       className="object-fill opacity-90" /> : <Image src={paper} alt=""
       width={1742} height={903} sizes="(min-width: 768px) 1400px, 900px"
       className={cn("absolute top-0 h-full max-w-none object-fill",

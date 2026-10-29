@@ -1,0 +1,743 @@
+/* =============================================
+ * Partners Display — deessa Foundation Brand Theme
+ * Brand Primary: #3FABDE (Ocean Blue)
+ * Brand Dark: #0B5F8A (Deep Ocean)
+ * Brand Light: #E8F6FC / #F5FAFD
+ * Muted Slate: #445E7B
+ * ============================================= */
+
+.section {
+  position: relative;
+  width: 100%;
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(circle at 86% 14%, rgba(63, 171, 222, 0.18) 0%, transparent 42%),
+    radial-gradient(circle at 10% 78%, rgba(11, 95, 138, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 50% 45%, rgba(232, 246, 252, 0.55) 0%, transparent 65%),
+    linear-gradient(180deg, #f0f8fd 0%, #ffffff 50%, #f4f9fc 100%);
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1f2937;
+  overflow: hidden;
+  padding: 4.5rem 1rem 5rem;
+  --title-font: "Montserrat", "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+}
+
+/* Decorative corner leaves using deessa ocean blue */
+.cornerLeafTopLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 190px;
+  height: 230px;
+  pointer-events: none;
+  opacity: 0.14;
+  color: #3fabde;
+  z-index: 0;
+}
+
+.cornerLeafBottomRight {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 230px;
+  height: 270px;
+  pointer-events: none;
+  opacity: 0.14;
+  color: #3fabde;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Section Header */
+.header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.eyebrowWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.eyebrowLine {
+  width: 2.75rem;
+  height: 1.5px;
+  background-color: #3fabde;
+}
+
+.eyebrowText {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0b5f8a;
+}
+
+.title {
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-size: clamp(1.85rem, 4vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: #111827;
+  margin: 0.5rem 0 1.125rem;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .title {
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-weight: 400;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.titleAccent {
+  color: #3fabde;
+  background: linear-gradient(135deg, #3fabde 0%, #0b5f8a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: clamp(0.9375rem, 1.8vw, 1.0625rem);
+  line-height: 1.65;
+  color: #4b5563;
+  max-width: 42rem;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+/* =============================================
+ * Top Row: 4 Category Columns
+ * ============================================= */
+
+.topGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 2rem;
+  row-gap: 1.75rem;
+  align-items: stretch;
+  max-width: 73rem;
+  margin: 0 auto 3rem;
+}
+
+.categoryColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.categoryHeader {
+  text-align: center;
+  margin-bottom: 0.625rem;
+}
+
+.categoryTitle {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.categoryUnderline {
+  width: 2.25rem;
+  height: 2.5px;
+  background-color: #3fabde;
+  margin: 0.45rem auto 0;
+  border-radius: 9999px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 14px rgba(15, 23, 42, 0.02);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+/* Interactive hover cards matching co-organizers card style */
+.interactiveCard {
+  cursor: pointer;
+}
+
+.interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -2px rgba(63, 171, 222, 0.22);
+  border-color: #3fabde;
+}
+
+.interactiveCard:hover .partnerName {
+  color: #0b5f8a;
+}
+
+/* Organizing Partners (Multi-partner stacked card) */
+.stackedCardContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  padding: 0.625rem 0.625rem;
+}
+
+.partnerItemLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+
+.partnerItemLink:hover {
+  background-color: #f0f8fd;
+  transform: translateY(-2px);
+}
+
+.partnerItemLink:hover .partnerName {
+  color: #0b5f8a;
+}
+
+.partnerItemLink:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+.stackedDivider {
+  height: 1px;
+  background-color: #f0f7fb;
+  margin: 0.25rem 0.875rem;
+}
+
+/* Single Partner Card (Centered layout) */
+.singleCardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.875rem 0.75rem;
+  height: 100%;
+  min-height: 160px;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.singleCardContent:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+/* Logos in Single Cards (Collaborating, Knowledge, Technical) */
+.singleCardLogoWrapper {
+  height: 94px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0.25rem;
+}
+
+.gizLogo {
+  max-height: 86px;
+  max-width: 94%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform: scale(1.12);
+}
+
+.kuLogo {
+  height: 90px;
+  width: 90px;
+  max-height: 90px;
+  max-width: 90px;
+  object-fit: contain;
+}
+
+.sdgLogo {
+  max-height: 80px;
+  max-width: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Logos in Organizing Card */
+.organizerLogoWrapper {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.organizerLogo {
+  max-height: 40px;
+  max-width: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.partnerName {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.logoFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0b5f8a;
+  background-color: #e8f6fc;
+  border: 1px solid #b3e0f5;
+  border-radius: 0.5rem;
+}
+
+/* =============================================
+ * Co-Organizers Section
+ * ============================================= */
+
+.coOrganizersSection {
+  margin-top: 1rem;
+}
+
+.coOrganizersDividerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: #cfdfe8;
+}
+
+.coOrganizersTitle {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f172a;
+  white-space: nowrap;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.coOrganizersSubtitle {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0 0 2rem;
+}
+
+/* Balanced row for when co-organizers are fewer (e.g. 3 in live DB) */
+.coOrganizersBalancedRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.coOrganizersBalancedRow .coOrganizerCard {
+  flex: 1 1 180px;
+  max-width: 220px;
+}
+
+/* Co-Organizers Rows */
+.coOrganizersGridRow1 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.coOrganizersGridRow2 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.coOrganizerCard {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.125rem 0.625rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 104px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.coOrganizerCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -2px rgba(63, 171, 222, 0.22);
+  border-color: #3fabde;
+}
+
+.coOrganizerCard:hover .coOrganizerName {
+  color: #0b5f8a;
+}
+
+.coOrganizerCard:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 3px;
+  border-radius: 0.75rem;
+}
+
+.coOrganizerLogoWrapper {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.coOrganizerLogo {
+  max-height: 36px;
+  max-width: 82%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.coOrganizerName {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* =============================================
+ * Responsive Breakpoints
+ * ============================================= */
+
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 44rem;
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+    margin: 0 auto 2.5rem;
+  }
+
+  .coOrganizersGridRow1 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .coOrganizersGridRow2 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cornerLeafTopLeft {
+    width: 140px;
+    height: 170px;
+    opacity: 0.10;
+  }
+
+  .cornerLeafBottomRight {
+    width: 160px;
+    height: 190px;
+    opacity: 0.10;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 3rem 1rem 3.5rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .topGrid {
+    grid-template-columns: 1fr;
+    max-width: 24rem;
+    width: 100%;
+    gap: 1.25rem;
+    margin: 0 auto 2.25rem;
+  }
+
+  .singleCardContent {
+    min-height: 145px;
+    padding: 0.75rem 0.625rem;
+  }
+
+  .singleCardLogoWrapper {
+    height: 84px;
+  }
+
+  .kuLogo {
+    height: 80px;
+    width: 80px;
+    max-height: 80px;
+    max-width: 80px;
+  }
+
+  .gizLogo {
+    max-height: 78px;
+  }
+
+  .sdgLogo {
+    max-height: 74px;
+  }
+
+  .coOrganizersBalancedRow {
+    gap: 0.75rem;
+  }
+
+  .coOrganizersBalancedRow .coOrganizerCard {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 125px;
+    max-width: calc(50% - 0.375rem);
+    min-height: 94px;
+    padding: 0.875rem 0.5rem;
+  }
+
+  .coOrganizersGridRow1,
+  .coOrganizersGridRow2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .eyebrowLine {
+    width: 1.5rem;
+  }
+
+  .eyebrowText {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .coOrganizersDividerWrapper {
+    gap: 0.75rem;
+  }
+
+  .coOrganizersTitle {
+    font-size: 0.9375rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cornerLeafTopLeft {
+    width: 85px;
+    height: 105px;
+    opacity: 0.08;
+  }
+
+  .cornerLeafBottomRight {
+    width: 95px;
+    height: 115px;
+    opacity: 0.08;
+  }
+}
+
+@media (max-width: 360px) {
+  .section {
+    padding: 2.5rem 0.75rem 3rem;
+  }
+
+  .coOrganizersBalancedRow .coOrganizerCard {
+    min-width: 110px;
+    padding: 0.75rem 0.375rem;
+    min-height: 88px;
+  }
+
+  .coOrganizerLogoWrapper {
+    height: 34px;
+  }
+
+  .coOrganizerLogo {
+    max-height: 30px;
+  }
+
+  .coOrganizerName {
+    font-size: 0.75rem;
+  }
+}
+
+/* =============================================
+ * Accessibility: High Contrast Modes
+ * Required per docs/in-progress/accessibility-feature/STANDARDS.md
+ * ============================================= */
+
+:global(body.high-contrast) .section {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .title,
+:global(body.high-contrast) .titleAccent,
+:global(body.high-contrast) .categoryTitle,
+:global(body.high-contrast) .coOrganizersTitle,
+:global(body.high-contrast) .partnerName,
+:global(body.high-contrast) .coOrganizerName,
+:global(body.high-contrast) .subtitle,
+:global(body.high-contrast) .coOrganizersSubtitle,
+:global(body.high-contrast) .eyebrowText {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  background: none !important;
+}
+
+:global(body.high-contrast) .card,
+:global(body.high-contrast) .coOrganizerCard {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: none !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .categoryUnderline,
+:global(body.high-contrast) .eyebrowLine,
+:global(body.high-contrast) .dividerLine,
+:global(body.high-contrast) .stackedDivider {
+  background-color: #000000 !important;
+}
+
+:global(body.high-contrast) .cornerLeafTopLeft,
+:global(body.high-contrast) .cornerLeafBottomRight {
+  display: none !important;
+}
+
+:global(body.high-contrast) :is(.gizLogo, .kuLogo, .sdgLogo, .organizerLogo, .coOrganizerLogo) {
+  filter: grayscale(1) !important;
+}
+
+:global(body.high-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+  outline: 3px solid #000000 !important;
+}
+
+/* Inverted Contrast Mode */
+:global(body.inverted-contrast) .section {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .title,
+:global(body.inverted-contrast) .titleAccent,
+:global(body.inverted-contrast) .categoryTitle,
+:global(body.inverted-contrast) .coOrganizersTitle,
+:global(body.inverted-contrast) .partnerName,
+:global(body.inverted-contrast) .coOrganizerName,
+:global(body.inverted-contrast) .subtitle,
+:global(body.inverted-contrast) .coOrganizersSubtitle,
+:global(body.inverted-contrast) .eyebrowText {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
+
+:global(body.inverted-contrast) .card,
+:global(body.inverted-contrast) .coOrganizerCard {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: none !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .categoryUnderline,
+:global(body.inverted-contrast) .eyebrowLine,
+:global(body.inverted-contrast) .dividerLine,
+:global(body.inverted-contrast) .stackedDivider {
+  background-color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .cornerLeafTopLeft,
+:global(body.inverted-contrast) .cornerLeafBottomRight {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) :is(.gizLogo, .kuLogo, .sdgLogo, .organizerLogo, .coOrganizerLogo) {
+  filter: grayscale(1) invert(1) !important;
+}
+
+:global(body.inverted-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+  outline: 3px solid #ffffff !important;
+}
+
+@media print {
+  .section {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 1rem 0 !important;
+  }
+  .card,
+  .coOrganizerCard {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+    break-inside: avoid;
+  }
+  .cornerLeafTopLeft,
+  .cornerLeafBottomRight {
+    display: none !important;
+  }
+}

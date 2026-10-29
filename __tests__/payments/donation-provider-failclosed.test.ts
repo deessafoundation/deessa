@@ -15,7 +15,7 @@
  */
 
 import { createClient as createServiceClient } from "@supabase/supabase-js"
-import { getPaymentSettings, getSupportedProviders } from "@/lib/payments/config"
+import { getDonationCheckoutProviders, getPaymentSettings, isOnlineDonationCheckoutEnabled } from "@/lib/payments/config"
 import { startStripeCheckout } from "@/lib/payments/stripe"
 import { startEsewaPayment } from "@/lib/payments/esewa"
 import { startDonation } from "@/lib/actions/donation"
@@ -23,7 +23,8 @@ import { startDonation } from "@/lib/actions/donation"
 jest.mock("@supabase/supabase-js", () => ({ createClient: jest.fn() }))
 jest.mock("@/lib/payments/config", () => ({
   getPaymentSettings: jest.fn(),
-  getSupportedProviders: jest.fn(),
+  getDonationCheckoutProviders: jest.fn(),
+  isOnlineDonationCheckoutEnabled: jest.fn(),
 }))
 jest.mock("@/lib/payments/stripe", () => ({ startStripeCheckout: jest.fn() }))
 jest.mock("@/lib/payments/esewa", () => ({ startEsewaPayment: jest.fn() }))
@@ -49,6 +50,7 @@ beforeEach(() => {
     defaultCurrency: "USD",
     allowRecurring: false,
   })
+  ;(isOnlineDonationCheckoutEnabled as jest.Mock).mockReturnValue(true)
 
   ;(createServiceClient as jest.Mock).mockReturnValue({
     from: () => ({
@@ -75,9 +77,32 @@ beforeEach(() => {
 })
 
 describe("startDonation — provider availability fails closed", () => {
+  it("rejects online checkout before reading settings or writing a donation while it is closed", async () => {
+    ;(isOnlineDonationCheckoutEnabled as jest.Mock).mockReturnValue(false)
+
+    const result = await startDonation({ ...BASE_INPUT, provider: "stripe" })
+
+    expect(result.ok).toBe(false)
+    expect(result.message).toMatch(/under testing/i)
+    expect(getPaymentSettings).not.toHaveBeenCalled()
+    expect(insertPayload).toBeNull()
+    expect(startStripeCheckout as jest.Mock).not.toHaveBeenCalled()
+  })
+
+  it("rejects a monthly donation when recurring gifts are disabled", async () => {
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe"])
+
+    const result = await startDonation({ ...BASE_INPUT, isMonthly: true, provider: "stripe" })
+
+    expect(result.ok).toBe(false)
+    expect(result.message).toMatch(/monthly donations/i)
+    expect(insertPayload).toBeNull()
+    expect(startStripeCheckout as jest.Mock).not.toHaveBeenCalled()
+  })
+
   it("rejects an unavailable provider instead of substituting", async () => {
     // Donor picked eSewa (NPR), but only Stripe (USD) is available.
-    ;(getSupportedProviders as jest.Mock).mockReturnValue(["stripe"])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe"])
 
     const result = await startDonation({ ...BASE_INPUT, provider: "esewa" })
 
@@ -87,7 +112,7 @@ describe("startDonation — provider availability fails closed", () => {
   })
 
   it("creates NO donation row when the provider is unavailable", async () => {
-    ;(getSupportedProviders as jest.Mock).mockReturnValue(["stripe"])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe"])
 
     await startDonation({ ...BASE_INPUT, provider: "esewa" })
 
@@ -100,7 +125,7 @@ describe("startDonation — provider availability fails closed", () => {
 
   it("never charges USD for a donation the donor selected in NPR", async () => {
     // This is the exact 135x-overcharge scenario the fix prevents.
-    ;(getSupportedProviders as jest.Mock).mockReturnValue(["stripe"])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe"])
 
     const result = await startDonation({ ...BASE_INPUT, provider: "esewa" })
 
@@ -110,7 +135,7 @@ describe("startDonation — provider availability fails closed", () => {
   })
 
   it("still succeeds normally when the requested provider IS available", async () => {
-    ;(getSupportedProviders as jest.Mock).mockReturnValue(["stripe", "esewa"])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe", "esewa"])
 
     const result = await startDonation({ ...BASE_INPUT, provider: "esewa" })
 
@@ -120,7 +145,7 @@ describe("startDonation — provider availability fails closed", () => {
   })
 
   it("uses USD for a stripe donation (currency follows the selected provider)", async () => {
-    ;(getSupportedProviders as jest.Mock).mockReturnValue(["stripe", "esewa"])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue(["stripe", "esewa"])
 
     const result = await startDonation({ ...BASE_INPUT, provider: "stripe" })
 
@@ -129,7 +154,7 @@ describe("startDonation — provider availability fails closed", () => {
   })
 
   it("still reports the no-methods-configured case distinctly", async () => {
-    ;(getSupportedProviders as jest.Mock).mockReturnValue([])
+    ;(getDonationCheckoutProviders as jest.Mock).mockReturnValue([])
 
     const result = await startDonation({ ...BASE_INPUT, provider: "stripe" })
 

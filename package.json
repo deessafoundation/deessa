@@ -14,6 +14,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "validate-config": "tsx scripts/ops/validate-payment-config.ts",
+    "check:assets": "node scripts/check-public-assets.mjs",
     "deploy:staging": "pwsh -File scripts/deploy/deploy-staging.ps1",
     "deploy:production": "pwsh -File scripts/deploy/deploy-production.ps1",
     "test:staging": "pwsh -File scripts/deploy/smoke-tests-staging.ps1",

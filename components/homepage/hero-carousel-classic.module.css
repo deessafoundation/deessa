@@ -1,0 +1,54 @@
+/*
+ * Classic (dark banner) homepage hero — contrast rules.
+ *
+ * Restored from `components/homepage-sections.module.css` as it existed before
+ * commit d65d669 (the light editorial hero rewrite). The selectors are kept
+ * exactly as written so `#home-hero` + `data-hero-shade` / `data-hero-control`
+ * continue to match the documented treatment matrix in
+ * docs/in-progress/accessibility-feature/STANDARDS.md (section 3.4, Home row).
+ *
+ * Normal-mode appearance comes from the Tailwind utilities in the component;
+ * this module only owns the high-contrast corrections.
+ */
+
+/* Pair foregrounds and surfaces explicitly; never infer contrast from utilities. */
+/* Use one shade instead of stacking two 85% black overlays over the photo. */
+:global(body.high-contrast) :global(#home-hero).hero img {
+  filter: grayscale(1);
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+  background: linear-gradient(to right, rgb(0 0 0 / 68%), rgb(0 0 0 / 60%) 60%, rgb(0 0 0 / 25%)) !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="vertical"] {
+  background: transparent !important;
+}
+
+@media (max-width: 767px) {
+  :global(body.high-contrast) :global(#home-hero).hero [data-hero-shade="horizontal"] {
+    background: rgb(0 0 0 / 60%) !important;
+  }
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control],
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) :global(#home-hero).hero [data-hero-control] {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  opacity: 1;
+}
+
+:global(body.high-contrast) section.hero button[data-hero-control]:hover,
+:global(body.high-contrast) section.hero a[data-hero-control]:hover {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+:global(body.high-contrast) section.hero [data-hero-control]:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 4px !important;
+}

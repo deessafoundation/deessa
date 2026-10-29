@@ -17,18 +17,27 @@ export async function getPublishedProjects() {
 }
 
 export function getPublishedProjectsStatic() {
-  const supabase = createStaticClient()
-  return supabase
-    .from("projects")
-    .select("slug")
-    .eq("is_published", true)
-    .then(({ data, error }) => {
-      if (error) {
-        console.error("Error fetching projects:", error)
+  try {
+    const supabase = createStaticClient()
+    return supabase
+      .from("projects")
+      .select("slug")
+      .eq("is_published", true)
+      .then(({ data, error }: any) => {
+        if (error) {
+          console.error("Error fetching projects:", error)
+          return []
+        }
+        return data || []
+      })
+      .catch((err: any) => {
+        console.warn("[getPublishedProjectsStatic] Failed to fetch static projects:", err)
         return []
-      }
-      return data || []
-    })
+      })
+  } catch (err) {
+    console.warn("[getPublishedProjectsStatic] Could not initialize static client:", err)
+    return Promise.resolve([])
+  }
 }
 
 export async function getProjectsByCategory(category: string) {

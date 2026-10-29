@@ -109,19 +109,9 @@ export async function POST(request: Request) {
       }
     }
 
-    // If donation not found, check conference_registrations
+    // If donation not found, check event registrations. Conference is retired
+    // and must not keep a table dependency in the active verification route.
     if (!donation) {
-      const { data: confReg } = await supabase
-        .from("conference_registrations")
-        .select("*")
-        .eq("khalti_pidx", pidx)
-        .single()
-
-      if (confReg) {
-        return await handleConferenceVerification(supabase, paymentService, khaltiAdapter, confReg, pidx)
-      }
-
-      // If conference not found, check event_registrations
       const { data: eventReg } = await supabase
         .from("event_registrations")
         .select("*")
@@ -132,12 +122,12 @@ export async function POST(request: Request) {
         return await handleEventRegistrationVerification(supabase, paymentService, khaltiAdapter, eventReg, pidx)
       }
 
-      // Neither donation, conference, nor event registration found
+      // Neither donation nor event registration found.
       return NextResponse.json(
         { 
           ok: false, 
           error: "Payment record not found", 
-          message: "Could not find donation, conference, or event registration record. Please contact support with your payment ID." 
+          message: "Could not find a donation or event registration record. Please contact support with your payment ID."
         },
         { status: 404 },
       )
@@ -316,121 +306,6 @@ export async function POST(request: Request) {
       stack: err instanceof Error ? err.stack : undefined,
     }, "error")
     return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 })
-  }
-}
-
-/**
- * Handle conference registration verification via Khalti.
- *
- * Uses PaymentService.confirmConferenceRegistration() for centralized payment logic.
- * Khalti adapter handles the Khalti API lookup and amount verification.
- */
-async function handleConferenceVerification(
-  supabase: any,
-  paymentService: any,
-  khaltiAdapter: any,
-  reg: any,
-  pidx: string,
-) {
-  // Idempotency checks
-  if (reg.payment_status === "paid" || reg.status === "confirmed") {
-    return NextResponse.json({ ok: true, status: "paid", message: "Already confirmed" }, { status: 200 })
-  }
-  if (reg.payment_status === "failed") {
-    return NextResponse.json({ ok: false, status: "failed", message: "Payment previously failed" }, { status: 200 })
-  }
-  if (reg.payment_status === "review") {
-    return NextResponse.json({ ok: true, status: "review", message: "Payment under review" }, { status: 200 })
-  }
-
-  try {
-    const verificationResult = await khaltiAdapter.verify(
-      { pidx, donation_id: reg.id, amount: reg.payment_amount },
-      {}
-    )
-
-    // Handle "Pending" status (don't update DB, return processing)
-    if (verificationResult.status === "pending") {
-      return NextResponse.json({
-        ok: true,
-        status: "processing",
-        message: "Payment is still pending",
-      }, { status: 200 })
-    }
-
-    const result = await paymentService.confirmConferenceRegistration({
-      entityType: "conference_registration",
-      entityId: reg.id,
-      provider: "khalti",
-      verificationResult,
-      eventId: pidx,
-    })
-
-    if (!result.success) {
-      logPaymentEvent("Khalti verify (conference): confirmation failed", {
-        confRegId: reg.id,
-        error: result.error,
-        pidx: maskSensitiveData(pidx),
-      }, "error")
-      return NextResponse.json({
-        ok: false,
-        status: "failed",
-        error: result.error || "Payment confirmation failed",
-      }, { status: 400 })
-    }
-
-    const responseStatus = result.status === "paid" ? "paid" : result.status
-
-    logPaymentEvent("Khalti verify (conference): success", {
-      confRegId: reg.id,
-      status: result.status,
-      pidx: maskSensitiveData(pidx),
-    })
-
-    return NextResponse.json({
-      ok: true,
-      status: responseStatus,
-      khaltiStatus: (verificationResult.metadata as Record<string, unknown>)?.khaltiStatus,
-      transactionId: verificationResult.transactionId,
-      amount: verificationResult.amount,
-    }, { status: 200 })
-
-  } catch (error) {
-    if (error instanceof VerificationError) {
-      logPaymentEvent("Khalti verify (conference): verification error", {
-        confRegId: reg.id,
-        error: error.message,
-        pidx: maskSensitiveData(pidx),
-      }, "error")
-
-      if (error.message.includes("pending") || error.message.includes("Pending")) {
-        return NextResponse.json({
-          ok: true,
-          status: "processing",
-          message: "Payment is still pending",
-        }, { status: 200 })
-      }
-
-      return NextResponse.json({
-        ok: false,
-        status: "failed",
-        error: error.message,
-      }, { status: 400 })
-    }
-
-    if (error instanceof ConfigurationError) {
-      logPaymentEvent("Khalti verify (conference): configuration error", {
-        confRegId: reg.id,
-        error: error.message,
-      }, "error")
-      return NextResponse.json({
-        ok: false,
-        error: "Khalti not configured",
-        message: error.message,
-      }, { status: 500 })
-    }
-
-    throw error
   }
 }
 

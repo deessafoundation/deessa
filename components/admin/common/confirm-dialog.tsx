@@ -18,6 +18,7 @@ interface ConfirmDialogProps {
   description: string
   confirmLabel?: string
   loading?: boolean
+  closeOnConfirm?: boolean
   onConfirm: () => void
 }
 
@@ -28,6 +29,7 @@ export function ConfirmDialog({
   description,
   confirmLabel = "Delete",
   loading,
+  closeOnConfirm = true,
   onConfirm,
 }: ConfirmDialogProps) {
   return (
@@ -40,7 +42,7 @@ export function ConfirmDialog({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
+            onClick={(event) => { if (!closeOnConfirm) event.preventDefault(); onConfirm() }}
             disabled={loading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

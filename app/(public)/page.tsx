@@ -3,8 +3,8 @@ import artHero from "@/public/home/hero/art_banner.jpeg"
 import podcastBanner from "@/public/podcast_banner.jpeg"
 import inclusionAtHomeImage from "@/public/home/hero/inclusion-begins-at-home.jpg"
 import { SecretKeyListener } from "@/components/homepage/secret-key-listener"
-import { HeroCarousel } from "@/components/homepage/hero-carousel"
-import type { HeroSlide } from "@/components/homepage/hero-carousel"
+import { HeroCarouselClassic } from "@/components/homepage/hero-carousel-classic"
+import type { HeroSlide } from "@/components/homepage/hero-carousel-classic"
 import {
   OurStorySection,
   MissionVisionSection,
@@ -24,6 +24,7 @@ import { getArtsContent, getHomepageArtworks } from "@/lib/data/artworks"
 import { HomeArtFeature } from "@/components/arts/home-art-feature"
 import { CommunitySection } from "@/components/facebook-posts/community-section"
 import { getHomepageFacebookPosts } from "@/lib/data/facebook-posts"
+import { PartnersDisplay } from "@/components/shared/partners-display"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 // Homepage content comes from the shared CMS. Always render it from the
@@ -104,11 +105,17 @@ export default async function HomePage() {
       {/* The accessibility launcher is mounted once for every public page in
           app/(public)/layout.tsx — see components/accessibility. */}
 
-      {/* 1. HERO BANNER CAROUSEL - CMS POWERED */}
-      <HeroCarousel 
+      {/* 1. HERO BANNER CAROUSEL - CMS POWERED
+           Classic dark banner design (client's choice). The light editorial
+           hero stays available in components/homepage/hero-carousel.tsx — see
+           docs/in-progress/homepage-hero-classic/README.md to switch back. */}
+      <HeroCarouselClassic
         slides={heroSlides}
         interval={heroCarouselSettings.interval}
       />
+
+      {/* 2. PARTNERS & COLLABORATORS */}
+      <PartnersDisplay />
 
       {/* 3. OUR STORY - CMS POWERED */}
       <OurStorySection story={storySettings} />

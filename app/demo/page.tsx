@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Palette, Bell, AlertCircle, CheckCircle2, Info, Zap, Receipt, ImageIcon } from "lucide-react"
+import { Palette, Bell, AlertCircle, CheckCircle2, Info, Zap, Receipt, ImageIcon, Users } from "lucide-react"
 
 export default function DemoIndex() {
   const demos = [
@@ -10,6 +10,13 @@ export default function DemoIndex() {
       description: "Compare Service, Outreach, Research and Campaign page designs with sample content",
       icon: Palette,
       href: "/demo/programs",
+      status: "ready"
+    },
+    {
+      title: "Partners Display",
+      description: "Flexible partner layouts with icon grid, full bar, text grid, and logo grid options",
+      icon: Users,
+      href: "/demo/partners",
       status: "ready"
     },
     {

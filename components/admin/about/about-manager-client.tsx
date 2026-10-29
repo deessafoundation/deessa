@@ -1,595 +1,224 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
 import { notifications } from "@/lib/notifications"
-import { Save, RotateCcw, Eye, Users, Heart, Footprints, Plus, Trash2, Milestone } from "lucide-react"
-import type { AboutPageSettings } from "@/lib/types/about-settings"
+import { Save, RotateCcw, Eye, Users, Heart, Footprints, Building, Network, HandHeart, Settings } from "lucide-react"
+import { aboutPageSettingsSchema, type AboutPageSettings } from "@/lib/types/about-settings"
+import type { Partner } from "@/lib/types/admin"
+import { PartnersManager } from "@/components/admin/partners/partners-manager"
+import { useUnsavedChanges } from "@/components/admin/common/admin-navigation-guard"
+import { AboutSectionEditor, type AboutSection } from "./about-section-editor"
+import { aboutFieldId } from "./content-fields"
+import { cn } from "@/lib/utils"
+import styles from "./about-manager-client.module.css"
 
 interface AboutManagerClientProps {
   initialSettings: AboutPageSettings
   userId: string
+  canEditPage: boolean
+  canManagePartners: boolean
+  initialTab: string
+  initialPartners: Partner[] | null
+  partnersError?: string
+  initialPartner?: string
+  pageLoadError?: string
+}
+const contentTabs = [
+  { value: "hero", label: "Hero", icon: Users },
+  { value: "intro", label: "Who We Are", icon: Heart },
+  { value: "howWeDoIt", label: "How We Do It", icon: Footprints },
+  { value: "governance", label: "Governance", icon: Network },
+  { value: "people", label: "Our People", icon: Users },
+  { value: "partners", label: "Partners", icon: Building },
+  { value: "getInvolved", label: "Get Involved", icon: HandHeart },
+  { value: "pageSettings", label: "Page settings", icon: Settings },
+]
+function ownerTab(path: string) {
+  const section = path.split(".")[0]
+  if (path === "intro.sinceBadge") return "pageSettings"
+  return section === "partnerSection" ? "partners" : ["seo", "visibility", "journey"].includes(section) ? "pageSettings" : section
 }
 
-export default function AboutManagerClient({ initialSettings, userId }: AboutManagerClientProps) {
-  const [settings, setSettings] = useState<AboutPageSettings>(initialSettings)
+export default function AboutManagerClient({
+  initialSettings, canEditPage, canManagePartners, initialTab, initialPartners, partnersError, initialPartner, pageLoadError,
+}: AboutManagerClientProps) {
+  const [settings, setSettings] = useState(initialSettings)
+  const [saved, setSaved] = useState(initialSettings)
   const [isSaving, setIsSaving] = useState(false)
-  const [hasChanges, setHasChanges] = useState(false)
+  const [active, setActive] = useState(initialTab)
+  const [partnerView, setPartnerView] = useState(canEditPage && !pageLoadError && !initialPartner ? "content" : "records")
+  const [discardVersion, setDiscardVersion] = useState(0)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [focusPath, setFocusPath] = useState("")
+  const [status, setStatus] = useState("")
+  const [uploads, setUploads] = useState<Record<string, boolean>>({})
+  const [uploadErrors, setUploadErrors] = useState<Record<string, string | null>>({})
+  const saving = useRef(false)
+  const settingsRef = useRef(settings)
+  const previousInitial = useRef(initialSettings)
+  const hasChanges = JSON.stringify(settings) !== JSON.stringify(saved)
+  const mediaBusy = Object.values(uploads).some(Boolean)
+  const mediaInvalid = Object.values(uploadErrors).some(Boolean)
+  useUnsavedChanges(hasChanges, isSaving || mediaBusy)
+  const tabs = canEditPage ? contentTabs : contentTabs.filter(tab => tab.value === "partners")
 
-  const update = (updater: (prev: AboutPageSettings) => AboutPageSettings) => {
-    setSettings(updater)
-    setHasChanges(true)
-  }
-
-  const handleSave = async () => {
-    setIsSaving(true)
-    const loadingToast = notifications.showLoading({
-      title: "Saving...",
-      description: "Updating About page settings...",
-      duration: 0,
-    })
-    try {
-      const response = await fetch("/api/admin/about-settings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ settings, userId }),
-      })
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || "Failed to save settings")
-      }
-      notifications.dismiss()
-      notifications.showSuccess({
-        title: "✅ Saved successfully",
-        description: "About page settings have been updated.",
-        duration: 4000,
-      })
-      setHasChanges(false)
-    } catch (error) {
-      notifications.dismiss()
-      notifications.showError({
-        title: "❌ Save failed",
-        description: error instanceof Error ? error.message : "Could not save About page settings.",
-        duration: 5000,
-      })
-    } finally {
-      setIsSaving(false)
+  useEffect(() => { setActive(initialTab) }, [initialTab])
+  useEffect(() => { if (initialPartner) setPartnerView("records") }, [initialPartner])
+  useEffect(() => { if (pageLoadError && canManagePartners) setPartnerView("records") }, [pageLoadError, canManagePartners])
+  useEffect(() => {
+    if (previousInitial.current === initialSettings) return
+    previousInitial.current = initialSettings
+    if (!hasChanges && !saving.current && !pageLoadError && !mediaBusy) {
+      settingsRef.current = initialSettings
+      setSettings(initialSettings)
+      setSaved(initialSettings)
     }
-  }
-
-  const handleReset = () => {
-    setSettings(initialSettings)
-    setHasChanges(false)
-    notifications.showInfo({
-      title: "🔄 Changes discarded",
-      description: "All unsaved changes have been reset to the last saved state.",
-      duration: 3000,
+  }, [initialSettings, hasChanges, pageLoadError, mediaBusy])
+  useEffect(() => {
+    if (!focusPath) return
+    let secondFrame = 0
+    const frame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        const field = document.getElementById(aboutFieldId(focusPath))
+        let ancestor = field?.parentElement
+        while (ancestor) { if (ancestor instanceof HTMLDetailsElement) ancestor.open = true; ancestor = ancestor.parentElement }
+        if (field) field.focus()
+        else document.getElementById("about-errors")?.focus()
+      })
     })
+    return () => { cancelAnimationFrame(frame); cancelAnimationFrame(secondFrame) }
+  }, [focusPath, active])
+
+  function validation(next: AboutPageSettings) {
+    const parsed = aboutPageSettingsSchema.safeParse(next)
+    return parsed.success ? {} : Object.fromEntries(parsed.error.issues.map(issue => [issue.path.map(String).join("."), issue.message]))
+  }
+  const update = useCallback((updater: (previous: AboutPageSettings) => AboutPageSettings) => {
+    if (saving.current || !canEditPage || pageLoadError) return
+    const next = updater(settingsRef.current)
+    settingsRef.current = next
+    setSettings(next)
+    setFocusPath("")
+    setStatus("")
+    setErrors(previous => Object.keys(previous).length ? validation(next) : previous)
+  }, [canEditPage, pageLoadError])
+  const uploadBusy = useCallback((key: string, busy: boolean) => setUploads(previous => ({ ...previous, [key]: busy })), [])
+  const uploadError = useCallback((key: string, error: string | null) => setUploadErrors(previous => ({ ...previous, [key]: error })), [])
+
+  function showErrors(issues: { path: (string | number)[]; message: string }[]) {
+    const next = Object.fromEntries(issues.map(issue => [issue.path.map(String).join("."), issue.message]))
+    setErrors(next)
+    const first = issues[0]?.path.map(String).join(".") || ""
+    setFocusPath(first)
+    setActive(ownerTab(first))
+    if (ownerTab(first) === "partners") setPartnerView("content")
+  }
+  async function save() {
+    if (saving.current || !hasChanges || !canEditPage || pageLoadError || mediaBusy || mediaInvalid) return
+    const parsed = aboutPageSettingsSchema.safeParse(settingsRef.current)
+    if (!parsed.success) { showErrors(parsed.error.issues.map(issue => ({ path: issue.path.map(String), message: issue.message }))); return }
+    saving.current = true
+    setIsSaving(true)
+    setStatus("")
+    try {
+      const response = await fetch("/api/admin/about-settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ settings: parsed.data }) })
+      const result = await response.json().catch(() => null)
+      if (!response.ok || result?.success !== true) {
+        if (Array.isArray(result?.issues)) showErrors(result.issues)
+        throw new Error(result?.error || "Save could not be confirmed. Your edits are still here.")
+      }
+      settingsRef.current = parsed.data
+      setSettings(parsed.data)
+      setSaved(parsed.data)
+      setErrors({})
+      setFocusPath("")
+      setStatus(result.warning || "Page changes published.")
+      notifications.showSuccess({ title: "Page saved", description: result.warning || "Who We Are content has been updated." })
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Could not save page changes.")
+      notifications.showError({ title: "Save not confirmed", description: "Your edits have been kept. Please try again." })
+    } finally { saving.current = false; setIsSaving(false) }
+  }
+  function discard() {
+    if (saving.current || mediaBusy) return
+    settingsRef.current = saved
+    setSettings(saved)
+    setErrors({})
+    setFocusPath("")
+    setStatus("Unsaved page changes discarded.")
+    setUploadErrors({})
+    setDiscardVersion(value => value + 1)
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">About Page Manager</h1>
-              <p className="text-sm text-slate-600">
-                Manage the "Who We Are" page — Hero, Intro, How We Do It, and Journey sections
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              {hasChanges && (
-                <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 mr-2 animate-pulse" />
-                  Unsaved changes
-                </Badge>
-              )}
-              <Button variant="outline" size="sm" onClick={handleReset} disabled={!hasChanges || isSaving} className="hidden sm:flex">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => window.open("/about", "_blank")}>
-                <Eye className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Preview</span>
-              </Button>
-              <Button size="sm" onClick={handleSave} disabled={!hasChanges || isSaving} className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md">
-                <Save className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save Changes"}</span>
-              </Button>
-            </div>
-          </div>
+  return <div className={cn(styles.root, "min-w-0 space-y-6")}>
+    <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Who We Are</h1>
+        <p className="text-muted-foreground">{canEditPage ? "Edit sections in page order, or manage partner records." : "Manage partners, donors, and sponsors."}</p>
+        {hasChanges && <Badge variant="outline">Unsaved page changes</Badge>}
+      </div>
+      <Button variant="outline" className="min-h-11" onClick={() => window.open("/about", "_blank", "noopener,noreferrer")} aria-label="View public page (opens in a new tab)">
+        <Eye className="size-4" aria-hidden="true" /> View page
+      </Button>
+    </div>
+    {canEditPage && !pageLoadError && (active !== "partners" || partnerView === "content") && (
+      <div className="sticky top-16 z-20 flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background p-4 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3"><Badge variant="outline">{hasChanges ? "Unsaved changes" : "Up to date"}</Badge>
+          <p className="text-sm text-muted-foreground">{mediaBusy ? "Wait for the upload to finish." : "Publish updates this page's content."}</p></div>
+        <div className="flex gap-2">
+          <Button variant="outline" className="min-h-11" onClick={discard} disabled={(!hasChanges && !mediaInvalid) || isSaving || mediaBusy}><RotateCcw className="size-4" aria-hidden="true" /> Discard</Button>
+          <Button data-contrast="filled" className="min-h-11" onClick={() => void save()} disabled={!hasChanges || isSaving || mediaBusy || mediaInvalid}><Save className="size-4" aria-hidden="true" /> {isSaving ? "Publishing…" : "Save & publish"}</Button>
         </div>
       </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <Card className="mb-6 bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <p className="text-sm text-blue-900">
-              <strong>Note:</strong> Team members and partner logos are managed separately — see{" "}
-              <a href="/admin/team" className="underline font-medium">Team</a> and{" "}
-              <a href="/admin/partners" className="underline font-medium">Partners</a> in the sidebar.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Tabs defaultValue="hero">
-          <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 gap-2 bg-transparent h-auto p-0 mb-6">
-            <TabsTrigger value="hero" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Hero
-            </TabsTrigger>
-            <TabsTrigger value="intro" className="flex items-center gap-2">
-              <Heart className="w-4 h-4" />
-              Who We Are
-            </TabsTrigger>
-            <TabsTrigger value="howWeDoIt" className="flex items-center gap-2">
-              <Footprints className="w-4 h-4" />
-              How We Do It
-            </TabsTrigger>
-            <TabsTrigger value="journey" className="flex items-center gap-2">
-              <Milestone className="w-4 h-4" />
-              Our Journey
-            </TabsTrigger>
+    )}
+    {!!Object.keys(errors).length && <div id="about-errors" tabIndex={-1} role="alert" className="space-y-2 rounded-xl border border-destructive bg-background p-4">
+      <p className="font-medium">Correct these fields before publishing.</p>
+      <ul className="list-disc space-y-1 pl-5">{Object.entries(errors).map(([path, message]) => <li key={path}><button type="button" className="min-h-11 text-left text-sm underline" onClick={() => {
+        const tab = ownerTab(path)
+        setActive(tab)
+        if (tab === "partners") setPartnerView("content")
+        setFocusPath("")
+        requestAnimationFrame(() => setFocusPath(path))
+      }}>{contentTabs.find(tab => tab.value === ownerTab(path))?.label || "Page settings"}: {message} <span className="sr-only">Open the affected field</span></button></li>)}</ul>
+    </div>}
+    {status && <p role="status" className="rounded-xl border bg-background p-4 text-sm">{status}</p>}
+    {pageLoadError && <p role="alert" className="rounded-xl border border-destructive p-4 text-sm text-destructive">{pageLoadError} Page editing is disabled until saved content can be loaded.</p>}
+    {mediaInvalid && <p role="alert" className="text-sm text-destructive">Resolve the media upload error before publishing, or discard the page changes.</p>}
+    <fieldset disabled={isSaving || mediaBusy} className="min-w-0"><legend className="sr-only">Who We Are management</legend>
+      <Tabs value={active} onValueChange={setActive} className="gap-6">
+        <Card><CardContent className="overflow-x-auto p-4">
+          <TabsList aria-label="Who We Are sections" className={cn(styles.track, "flex h-auto w-full min-w-max gap-1 rounded-xl p-1")}>
+            {tabs.map(({ value, label, icon: Icon }) => <TabsTrigger key={value} value={value} disabled={isSaving || mediaBusy}
+              className={cn(styles.tab, "h-auto min-h-11 gap-2 rounded-lg px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-all")}
+              onFocus={(event) => event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}><Icon className="size-4" aria-hidden="true" /> {label}</TabsTrigger>)}
           </TabsList>
-
-          <TabsContent value="hero" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Hero Section</CardTitle>
-                <CardDescription>The full-bleed banner at the top of the About page.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label>Badge Text</Label>
-                  <Input
-                    value={settings.hero.badge}
-                    onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, badge: e.target.value } }))}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Headline Line 1</Label>
-                    <Input
-                      value={settings.hero.headlineLine1}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, headlineLine1: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Headline Line 2</Label>
-                    <Input
-                      value={settings.hero.headlineLine2}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, headlineLine2: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Subtitle</Label>
-                  <Textarea
-                    value={settings.hero.subtitle}
-                    onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, subtitle: e.target.value } }))}
-                    rows={3}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Primary Button Label</Label>
-                    <Input
-                      value={settings.hero.primaryCtaLabel}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, primaryCtaLabel: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Primary Button Link</Label>
-                    <Input
-                      value={settings.hero.primaryCtaUrl}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, primaryCtaUrl: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Secondary Button Label</Label>
-                    <Input
-                      value={settings.hero.secondaryCtaLabel}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, secondaryCtaLabel: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Secondary Button Link</Label>
-                    <Input
-                      value={settings.hero.secondaryCtaUrl}
-                      onChange={(e) => update((p) => ({ ...p, hero: { ...p.hero, secondaryCtaUrl: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Trust Badges (comma-separated)</Label>
-                  <Input
-                    value={settings.hero.trustBadges.join(", ")}
-                    onChange={(e) =>
-                      update((p) => ({
-                        ...p,
-                        hero: { ...p.hero, trustBadges: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) },
-                      }))
-                    }
-                    placeholder="Govt Registered, SWC Affiliated"
-                    className="mt-1"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+        </CardContent></Card>
+        {canEditPage && !pageLoadError && tabs.filter(tab => tab.value !== "partners").map(tab => (
+          <TabsContent key={tab.value} value={tab.value} forceMount className={cn("mt-0", active !== tab.value && "hidden")}>
+            <AboutSectionEditor key={discardVersion} section={tab.value as AboutSection} settings={settings} onUpdate={update} errors={errors}
+              focusPath={focusPath} onUploadBusy={uploadBusy} onUploadError={uploadError} />
           </TabsContent>
-
-          <TabsContent value="intro" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Who We Are Section</CardTitle>
-                <CardDescription>The intro block with photo, headline, and story paragraphs.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Photo Badge Text</Label>
-                    <Input
-                      value={settings.intro.sinceBadge}
-                      onChange={(e) => update((p) => ({ ...p, intro: { ...p.intro, sinceBadge: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Eyebrow Label</Label>
-                    <Input
-                      value={settings.intro.label}
-                      onChange={(e) => update((p) => ({ ...p, intro: { ...p.intro, label: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Headline</Label>
-                  <Textarea
-                    value={settings.intro.headline}
-                    onChange={(e) => update((p) => ({ ...p, intro: { ...p.intro, headline: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>Paragraphs</Label>
-                  <div className="space-y-3 mt-1">
-                    {settings.intro.paragraphs.map((para, i) => (
-                      <div key={i} className="flex gap-2">
-                        <Textarea
-                          value={para}
-                          onChange={(e) =>
-                            update((p) => {
-                              const paragraphs = [...p.intro.paragraphs]
-                              paragraphs[i] = e.target.value
-                              return { ...p, intro: { ...p.intro, paragraphs } }
-                            })
-                          }
-                          rows={3}
-                          className="flex-1"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            update((p) => ({
-                              ...p,
-                              intro: { ...p.intro, paragraphs: p.intro.paragraphs.filter((_, idx) => idx !== i) },
-                            }))
-                          }
-                          className="text-red-600 hover:text-red-700 self-start"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                  <Button
-                    onClick={() => update((p) => ({ ...p, intro: { ...p.intro, paragraphs: [...p.intro.paragraphs, ""] } }))}
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Paragraph
-                  </Button>
-                </div>
-                <div>
-                  <Label>Highlighted Quote</Label>
-                  <Textarea
-                    value={settings.intro.quote}
-                    onChange={(e) => update((p) => ({ ...p, intro: { ...p.intro, quote: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>Flow Steps (comma-separated)</Label>
-                  <Input
-                    value={settings.intro.flowSteps.join(", ")}
-                    onChange={(e) =>
-                      update((p) => ({
-                        ...p,
-                        intro: { ...p.intro, flowSteps: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) },
-                      }))
-                    }
-                    placeholder="Understood, Accepted, Valued, Thrive"
-                    className="mt-1"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="howWeDoIt" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>How We Do It Section</CardTitle>
-                <CardDescription>The 4-step process shown between "Who We Are" and "Our Journey".</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label>Section Title</Label>
-                  <Textarea
-                    value={settings.howWeDoIt.title}
-                    onChange={(e) => update((p) => ({ ...p, howWeDoIt: { ...p.howWeDoIt, title: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>Section Subtitle</Label>
-                  <Textarea
-                    value={settings.howWeDoIt.subtitle}
-                    onChange={(e) => update((p) => ({ ...p, howWeDoIt: { ...p.howWeDoIt, subtitle: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  {settings.howWeDoIt.steps.map((step, i) => (
-                    <Card key={step.id}>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base">Step {i + 1}: {step.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div>
-                          <Label>Title</Label>
-                          <Input
-                            value={step.title}
-                            onChange={(e) =>
-                              update((p) => {
-                                const steps = [...p.howWeDoIt.steps]
-                                steps[i] = { ...steps[i], title: e.target.value }
-                                return { ...p, howWeDoIt: { ...p.howWeDoIt, steps } }
-                              })
-                            }
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <Label>Body</Label>
-                          <Textarea
-                            value={step.body}
-                            onChange={(e) =>
-                              update((p) => {
-                                const steps = [...p.howWeDoIt.steps]
-                                steps[i] = { ...steps[i], body: e.target.value }
-                                return { ...p, howWeDoIt: { ...p.howWeDoIt, steps } }
-                              })
-                            }
-                            rows={2}
-                            className="mt-1"
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                <div>
-                  <Label>Closing Line</Label>
-                  <Textarea
-                    value={settings.howWeDoIt.closingLine}
-                    onChange={(e) => update((p) => ({ ...p, howWeDoIt: { ...p.howWeDoIt, closingLine: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="journey" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Our Journey</CardTitle>
-                <CardDescription>Manage the milestones displayed on the About page.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Label>Eyebrow Label</Label>
-                    <Input
-                      value={settings.journey.label}
-                      onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, label: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Section Title</Label>
-                    <Input
-                      value={settings.journey.title}
-                      onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, title: e.target.value } }))}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Section Subtitle</Label>
-                  <Textarea
-                    value={settings.journey.subtitle}
-                    onChange={(e) => update((p) => ({ ...p, journey: { ...p.journey, subtitle: e.target.value } }))}
-                    rows={2}
-                    className="mt-1"
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  {settings.journey.milestones.map((milestone, index) => (
-                    <Card key={milestone.id} className="border-slate-200">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between gap-4">
-                          <CardTitle className="text-base">Milestone {index + 1}</CardTitle>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            aria-label={`Remove milestone ${index + 1}`}
-                            className="text-red-600 hover:text-red-700"
-                            onClick={() => update((p) => ({
-                              ...p,
-                              journey: { ...p.journey, milestones: p.journey.milestones.filter((_, itemIndex) => itemIndex !== index) },
-                            }))}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-[140px_1fr]">
-                          <div>
-                            <Label>Year</Label>
-                            <Input
-                              value={milestone.year}
-                              onChange={(e) => update((p) => {
-                                const milestones = [...p.journey.milestones]
-                                milestones[index] = { ...milestones[index], year: e.target.value }
-                                return { ...p, journey: { ...p.journey, milestones } }
-                              })}
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label>Milestone Title</Label>
-                            <Input
-                              value={milestone.title}
-                              onChange={(e) => update((p) => {
-                                const milestones = [...p.journey.milestones]
-                                milestones[index] = { ...milestones[index], title: e.target.value }
-                                return { ...p, journey: { ...p, milestones } }
-                              })}
-                              className="mt-1"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <Label>Description</Label>
-                          <Textarea
-                            value={milestone.description}
-                            onChange={(e) => update((p) => {
-                              const milestones = [...p.journey.milestones]
-                              milestones[index] = { ...milestones[index], description: e.target.value }
-                              return { ...p, journey: { ...p.journey, milestones } }
-                            })}
-                            rows={3}
-                            className="mt-1"
-                          />
-                        </div>
-                        <div className="grid gap-4 md:grid-cols-2">
-                          <div>
-                            <Label>Image URL</Label>
-                            <Input
-                              value={milestone.image || ""}
-                              onChange={(e) => update((p) => {
-                                const milestones = [...p.journey.milestones]
-                                milestones[index] = { ...milestones[index], image: e.target.value }
-                                return { ...p, journey: { ...p.journey, milestones } }
-                              })}
-                              placeholder="/about/journey/milestone.jpg"
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label>Image Alt Text</Label>
-                            <Input
-                              value={milestone.imageAlt || ""}
-                              onChange={(e) => update((p) => {
-                                const milestones = [...p.journey.milestones]
-                                milestones[index] = { ...milestones[index], imageAlt: e.target.value }
-                                return { ...p, journey: { ...p.journey, milestones } }
-                              })}
-                              placeholder="Describe the image for accessibility"
-                              className="mt-1"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <Label>Source URL</Label>
-                          <Input
-                            value={milestone.sourceUrl || ""}
-                            onChange={(e) => update((p) => {
-                              const milestones = [...p.journey.milestones]
-                              milestones[index] = { ...milestones[index], sourceUrl: e.target.value }
-                              return { ...p, journey: { ...p.journey, milestones } }
-                            })}
-                            placeholder="https://www.facebook.com/..."
-                            className="mt-1"
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => update((p) => ({
-                    ...p,
-                    journey: {
-                      ...p.journey,
-                      milestones: [
-                        ...p.journey.milestones,
-                        {
-                          id: `journey-${Date.now()}`,
-                          year: new Date().getFullYear().toString(),
-                          title: "New milestone",
-                          description: "Describe this milestone.",
-                          image: "",
-                          imageAlt: "",
-                          sourceUrl: "",
-                        },
-                      ],
-                    },
-                  }))}
-                >
-                  <Plus className="mr-2 w-4 h-4" />
-                  Add Milestone
-                </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  )
+        ))}
+        <TabsContent value="partners" forceMount className={cn("mt-0", active !== "partners" && "hidden")}>
+          <Tabs value={partnerView} onValueChange={setPartnerView} className="gap-4">
+            <TabsList className="h-auto min-h-11" aria-label="Partners management">
+              {canEditPage && !pageLoadError && <TabsTrigger value="content" className="min-h-11">Section content</TabsTrigger>}
+              {canManagePartners && <TabsTrigger value="records" className="min-h-11">Partner records</TabsTrigger>}
+            </TabsList>
+            {canEditPage && !pageLoadError && <TabsContent value="content" forceMount className={cn("mt-0", partnerView !== "content" && "hidden")}>
+              <AboutSectionEditor key={discardVersion} section="partnerSection" settings={settings} onUpdate={update} errors={errors}
+                focusPath={focusPath} onUploadBusy={uploadBusy} onUploadError={uploadError} />
+            </TabsContent>}
+            {canManagePartners && <TabsContent value="records" forceMount className={cn("mt-0", partnerView !== "records" && "hidden")}>
+              <PartnersManager initialPartners={initialPartners} loadError={partnersError} initialPartner={initialPartner} />
+            </TabsContent>}
+          </Tabs>
+        </TabsContent>
+      </Tabs>
+    </fieldset>
+  </div>
 }

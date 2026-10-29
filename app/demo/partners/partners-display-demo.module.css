@@ -1,0 +1,1033 @@
+/* =============================================
+ * Partners Display Demo — deessa Foundation Brand Theme
+ * Brand Primary: #3FABDE (Ocean Blue)
+ * Brand Dark: #0B5F8A (Deep Ocean)
+ * Brand Light: #E8F6FC / #F5FAFD
+ * Muted Slate: #445E7B
+ * ============================================= */
+
+.section {
+  position: relative;
+  width: 100%;
+  background: #f5fafd;
+  background: linear-gradient(180deg, #f0f8fd 0%, #ffffff 100%);
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1f2937;
+  overflow: hidden;
+  padding: 4.5rem 1rem 5rem;
+  --title-font: "Montserrat", "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+}
+
+/* Category & Co-Organizer Title Font Options */
+.section[data-title-font="montserrat"] {
+  --title-font: "Montserrat", "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.section[data-title-font="dm-sans"] {
+  --title-font: "DM Sans", "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.section[data-title-font="jakarta"] {
+  --title-font: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.section[data-title-font="outfit"] {
+  --title-font: "Outfit", "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* =============================================
+ * Background Variations
+ * ============================================= */
+
+/* 1. Soft Ambient Glow (Recommended) */
+.section[data-bg-style="glow"] {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(circle at 86% 14%, rgba(63, 171, 222, 0.18) 0%, transparent 42%),
+    radial-gradient(circle at 10% 78%, rgba(11, 95, 138, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 50% 45%, rgba(232, 246, 252, 0.55) 0%, transparent 65%),
+    linear-gradient(180deg, #f0f8fd 0%, #ffffff 50%, #f4f9fc 100%);
+}
+
+/* 2. Minimal Clean */
+.section[data-bg-style="clean"] {
+  background: linear-gradient(180deg, #f0f8fd 0%, #ffffff 60%, #f4f9fc 100%);
+}
+
+/* 3. Precision Dot Grid */
+.section[data-bg-style="dots"] {
+  background-color: #f6fafe;
+  background-image:
+    radial-gradient(circle at 88% 12%, rgba(63, 171, 222, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 12% 85%, rgba(11, 95, 138, 0.10) 0%, transparent 45%),
+    radial-gradient(rgba(11, 95, 138, 0.11) 1.25px, transparent 1.25px),
+    linear-gradient(180deg, #f0f8fd 0%, #ffffff 50%, #f4f9fc 100%);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 100% 100%;
+}
+
+/* 4. Subtle Organic Waves */
+.section[data-bg-style="waves"] {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(63, 171, 222, 0.14) 0%, transparent 45%),
+    linear-gradient(180deg, #f0f8fd 0%, #ffffff 55%, #f4f9fc 100%);
+}
+
+.bgWaveOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.28;
+  color: #3fabde;
+}
+
+/* Decorative corner leaves using deessa ocean blue */
+.cornerLeafTopLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 190px;
+  height: 230px;
+  pointer-events: none;
+  opacity: 0.14;
+  color: #3fabde;
+  z-index: 0;
+}
+
+.cornerLeafBottomRight {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 230px;
+  height: 270px;
+  pointer-events: none;
+  opacity: 0.14;
+  color: #3fabde;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Section Header */
+.header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.eyebrowWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.eyebrowLine {
+  width: 2.75rem;
+  height: 1.5px;
+  background-color: #3fabde;
+}
+
+.eyebrowText {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0b5f8a;
+}
+
+.title {
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-size: clamp(2.35rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: #111827;
+  margin: 0.5rem 0 1.125rem;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .title {
+  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-weight: 400;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.titleAccent {
+  color: #3fabde;
+  background: linear-gradient(135deg, #3fabde 0%, #0b5f8a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #4b5563;
+  max-width: 42rem;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+/* =============================================
+ * Top Row: 4 Category Columns
+ * ============================================= */
+
+.topGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+  margin-bottom: 4rem;
+}
+
+.categoryColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.categoryHeader {
+  text-align: center;
+  margin-bottom: 0.875rem;
+}
+
+.categoryTitle {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.categoryUnderline {
+  width: 2.25rem;
+  height: 2.5px;
+  background-color: #3fabde;
+  margin: 0.45rem auto 0;
+  border-radius: 9999px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 14px rgba(15, 23, 42, 0.02);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+/* Interactive hover cards matching co-organizers card style */
+.interactiveCard {
+  cursor: pointer;
+}
+
+.interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -2px rgba(63, 171, 222, 0.22);
+  border-color: #3fabde;
+}
+
+.interactiveCard:hover .partnerName {
+  color: #0b5f8a;
+}
+
+.singleCardLink {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.singleCardLink:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -4px rgba(63, 171, 222, 0.22), 0 2px 8px -1px rgba(11, 95, 138, 0.1);
+  border-color: #3fabde;
+}
+
+.singleCardLink:hover .partnerName {
+  color: #0b5f8a;
+}
+
+.singleCardLink:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 4px;
+}
+
+/* Organizing Partners (Multi-partner stacked card) */
+.stackedCardContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  padding: 1.25rem 1rem;
+}
+
+.partnerItemLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+
+.partnerItemLink:hover {
+  background-color: #f0f8fd;
+  transform: translateY(-2px);
+}
+
+.partnerItemLink:hover .partnerName {
+  color: #0b5f8a;
+}
+
+.partnerItemLink:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+.partnerItemStatic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.75rem 0.5rem;
+}
+
+.stackedDivider {
+  height: 1px;
+  background-color: #f0f7fb;
+  margin: 0.75rem 1rem;
+}
+
+/* Single Partner Card (Centered layout) */
+.singleCardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.75rem 1.25rem;
+  height: 100%;
+  min-height: 235px;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.singleCardContent:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+/* Logos in Single Cards (Collaborating, Knowledge, Technical) */
+.singleCardLogoWrapper {
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0.5rem;
+}
+
+.singleCardLogoWrapper img {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gizLogo {
+  max-height: 90px;
+  max-width: 94%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform: scale(1.15);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kuLogo {
+  height: 96px;
+  width: 96px;
+  max-height: 100px;
+  max-width: 100px;
+  object-fit: contain;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sdgLogo {
+  max-height: 85px;
+  max-width: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Logos in Organizing Card */
+.organizerLogoWrapper {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.organizerLogo {
+  max-height: 46px;
+  max-width: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Legacy fallback classes */
+.topCardLogoWrapper {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.topCardLogo {
+  max-height: 64px;
+  max-width: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.topCardLogoLarge {
+  max-height: 80px;
+  max-width: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.partnerName {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.logoFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0b5f8a;
+  background-color: #e8f6fc;
+  border: 1px solid #b3e0f5;
+  border-radius: 0.5rem;
+}
+
+/* =============================================
+ * Co-Organizers Section
+ * ============================================= */
+
+.coOrganizersSection {
+  margin-top: 1rem;
+}
+
+.coOrganizersDividerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: #cfdfe8;
+}
+
+.coOrganizersTitle {
+  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f172a;
+  white-space: nowrap;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.coOrganizersSubtitle {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0 0 2rem;
+}
+
+/* Co-Organizers Rows */
+.coOrganizersGridRow1 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.coOrganizersGridRow2 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.coOrganizerCard {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.125rem 0.625rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 104px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.coOrganizerCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -2px rgba(63, 171, 222, 0.22);
+  border-color: #3fabde;
+}
+
+.coOrganizerCard:hover .coOrganizerName {
+  color: #0b5f8a;
+}
+
+.coOrganizerCard:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 3px;
+  border-radius: 0.75rem;
+}
+
+.coOrganizerLogoWrapper {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.coOrganizerLogo {
+  max-height: 36px;
+  max-width: 82%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.coOrganizerName {
+  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* =============================================
+ * Top Demo Toolbar & Mode Switcher
+ * ============================================= */
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e1edf3;
+  padding: 0.75rem 1rem;
+}
+
+.toolbarInner {
+  max-width: 82rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #445e7b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: #0b5f8a;
+}
+
+.toolbarDivider {
+  color: #cfdfe8;
+  font-size: 0.875rem;
+}
+
+.toolbarTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.segmentedControl {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f0f7fb;
+  border: 1px solid #d5e7f0;
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segmentButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #445e7b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.segmentButton:hover {
+  color: #0b5f8a;
+}
+
+.segmentButtonActive {
+  background-color: #ffffff;
+  color: #0b5f8a;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(11, 95, 138, 0.12);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.segmentBadge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  background-color: #e8f6fc;
+  color: #0b5f8a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fontControls {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f0f7fb;
+  border: 1px solid #d5e7f0;
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.fontControlsLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #0b5f8a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0.375rem 0 0.5rem;
+}
+
+.fontButtonGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.fontButton {
+  padding: 0.25rem 0.5625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #445e7b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.fontButton:hover {
+  color: #0b5f8a;
+}
+
+.fontButtonActive {
+  background-color: #ffffff;
+  color: #0b5f8a;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(11, 95, 138, 0.12);
+}
+
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adminLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #445e7b;
+  background-color: #ffffff;
+  border: 1px solid #d5e7f0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.adminLink:hover {
+  background-color: #f0f8fd;
+  color: #0b5f8a;
+  border-color: #3fabde;
+}
+
+/* Balanced row for when co-organizers are fewer (e.g. 3 in live DB) */
+.coOrganizersBalancedRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.coOrganizersBalancedRow .coOrganizerCard {
+  flex: 1 1 180px;
+  max-width: 220px;
+}
+
+.bottomNote {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 2.25rem;
+}
+
+/* =============================================
+ * Responsive Breakpoints
+ * ============================================= */
+
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coOrganizersGridRow1 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .coOrganizersGridRow2 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 3.5rem 1rem 4rem;
+  }
+
+  .topGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .coOrganizersGridRow1,
+  .coOrganizersGridRow2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .eyebrowLine {
+    width: 1.5rem;
+  }
+
+  .coOrganizersDividerWrapper {
+    gap: 0.75rem;
+  }
+
+  .coOrganizersTitle {
+    font-size: 1rem;
+  }
+}
+
+/* =============================================
+ * Accessibility: High Contrast Modes
+ * Required per docs/in-progress/accessibility-feature/STANDARDS.md
+ * ============================================= */
+
+:global(body.high-contrast) .section {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .title,
+:global(body.high-contrast) .titleAccent,
+:global(body.high-contrast) .categoryTitle,
+:global(body.high-contrast) .coOrganizersTitle,
+:global(body.high-contrast) .partnerName,
+:global(body.high-contrast) .coOrganizerName,
+:global(body.high-contrast) .subtitle,
+:global(body.high-contrast) .coOrganizersSubtitle,
+:global(body.high-contrast) .bottomNote,
+:global(body.high-contrast) .eyebrowText {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  background: none !important;
+}
+
+:global(body.high-contrast) .card,
+:global(body.high-contrast) .coOrganizerCard {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: none !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .categoryUnderline,
+:global(body.high-contrast) .eyebrowLine,
+:global(body.high-contrast) .dividerLine,
+:global(body.high-contrast) .stackedDivider {
+  background-color: #000000 !important;
+}
+
+:global(body.high-contrast) .cornerLeafTopLeft,
+:global(body.high-contrast) .cornerLeafBottomRight,
+:global(body.high-contrast) .bgWaveOverlay {
+  display: none !important;
+}
+
+:global(body.high-contrast) :is(.topCardLogo, .topCardLogoLarge, .gizLogo, .kuLogo, .sdgLogo, .organizerLogo, .coOrganizerLogo) {
+  filter: grayscale(1) !important;
+}
+
+:global(body.high-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+  outline: 3px solid #000000 !important;
+}
+
+/* Inverted Contrast Mode */
+:global(body.inverted-contrast) .section {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .title,
+:global(body.inverted-contrast) .titleAccent,
+:global(body.inverted-contrast) .categoryTitle,
+:global(body.inverted-contrast) .coOrganizersTitle,
+:global(body.inverted-contrast) .partnerName,
+:global(body.inverted-contrast) .coOrganizerName,
+:global(body.inverted-contrast) .subtitle,
+:global(body.inverted-contrast) .coOrganizersSubtitle,
+:global(body.inverted-contrast) .bottomNote,
+:global(body.inverted-contrast) .eyebrowText {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
+
+:global(body.inverted-contrast) .card,
+:global(body.inverted-contrast) .coOrganizerCard {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .interactiveCard:hover {
+  transform: translateY(-3px);
+  box-shadow: none !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .categoryUnderline,
+:global(body.inverted-contrast) .eyebrowLine,
+:global(body.inverted-contrast) .dividerLine,
+:global(body.inverted-contrast) .stackedDivider {
+  background-color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .cornerLeafTopLeft,
+:global(body.inverted-contrast) .cornerLeafBottomRight,
+:global(body.inverted-contrast) .bgWaveOverlay {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) :is(.topCardLogo, .topCardLogoLarge, .gizLogo, .kuLogo, .sdgLogo, .organizerLogo, .coOrganizerLogo) {
+  filter: grayscale(1) invert(1) !important;
+}
+
+:global(body.inverted-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+  outline: 3px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .toolbar {
+  background: #ffffff !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) :is(.segmentButton, .adminLink, .backLink, .toolbarTitle) {
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .segmentButtonActive {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .liveDot {
+  background: #000000 !important;
+}
+
+:global(body.high-contrast) .fontControls {
+  background: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+:global(body.high-contrast) .fontControlsLabel,
+:global(body.high-contrast) .fontButton {
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .fontButtonActive {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .toolbar {
+  background: #000000 !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) :is(.segmentButton, .adminLink, .backLink, .toolbarTitle) {
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .segmentButtonActive {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .liveDot {
+  background: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .fontControls {
+  background: #000000 !important;
+  border: 1px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .fontControlsLabel,
+:global(body.inverted-contrast) .fontButton {
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .fontButtonActive {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+@media print {
+  .section {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 1rem 0 !important;
+  }
+  .card,
+  .coOrganizerCard {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+    break-inside: avoid;
+  }
+  .cornerLeafTopLeft,
+  .cornerLeafBottomRight {
+    display: none !important;
+  }
+}

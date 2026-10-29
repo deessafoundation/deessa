@@ -1,0 +1,301 @@
+/* =============================================
+ * Partners Section Component Styles
+ * ============================================= */
+
+.section {
+  width: 100%;
+  padding: 4rem 0;
+}
+
+/* Section Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: oklch(0.2 0 0);
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: oklch(0.45 0 0);
+}
+
+/* Categories Container */
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Single Category Group */
+.category {
+  width: 100%;
+}
+
+.categoryLabel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: oklch(0.3 0 0);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Partners Grid (default variant) */
+.partnersGrid.grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Grid columns */
+.partnersGrid.grid[data-columns="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.partnersGrid.grid[data-columns="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.partnersGrid.grid[data-columns="4"] {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.partnersGrid.grid[data-columns="5"] {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.partnersGrid.grid[data-columns="6"] {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* Partners Inline (horizontal list variant) */
+.partnersGrid.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =============================================
+ * High Contrast Mode
+ * ============================================= */
+
+:global(body.high-contrast) .title {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .subtitle {
+  color: #1a1a1a !important;
+}
+
+:global(body.high-contrast) .categoryLabel {
+  color: #000 !important;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5rem;
+}
+
+/* =============================================
+ * Inverted Contrast Mode
+ * ============================================= */
+
+:global(body.inverted-contrast) .title {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .subtitle {
+  color: #e5e5e5 !important;
+}
+
+:global(body.inverted-contrast) .categoryLabel {
+  color: #fff !important;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 0.5rem;
+}
+
+/* =============================================
+ * Responsive Adjustments
+ * ============================================= */
+
+/* Tablet (medium screens) */
+@media (max-width: 1024px) {
+  .section {
+    padding: 3rem 0;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .categories {
+    gap: 2.5rem;
+  }
+
+  .categoryLabel {
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Reduce grid columns on tablets */
+  .partnersGrid.grid[data-columns="5"],
+  .partnersGrid.grid[data-columns="6"] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .partnersGrid.grid[data-columns="4"] {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile (small screens) */
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 0;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .categories {
+    gap: 2rem;
+  }
+
+  .categoryLabel {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .partnersGrid.grid {
+    gap: 1rem;
+  }
+
+  /* 2 columns for most grids on mobile */
+  .partnersGrid.grid[data-columns="3"],
+  .partnersGrid.grid[data-columns="4"],
+  .partnersGrid.grid[data-columns="5"],
+  .partnersGrid.grid[data-columns="6"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Inline variant stacks vertically on mobile */
+  .partnersGrid.inline {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .categoryLabel {
+    font-size: 0.9375rem;
+  }
+
+  /* Single column on very small screens */
+  .partnersGrid.grid[data-columns="2"],
+  .partnersGrid.grid[data-columns="3"],
+  .partnersGrid.grid[data-columns="4"],
+  .partnersGrid.grid[data-columns="5"],
+  .partnersGrid.grid[data-columns="6"] {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================
+ * Print Styles
+ * ============================================= */
+
+@media print {
+  .section {
+    padding: 1rem 0;
+    page-break-inside: avoid;
+  }
+
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    color: #000;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: #333;
+  }
+
+  .categories {
+    gap: 1.5rem;
+  }
+
+  .categoryLabel {
+    font-size: 1rem;
+    color: #000;
+    margin-bottom: 0.75rem;
+    page-break-after: avoid;
+  }
+
+  .category {
+    page-break-inside: avoid;
+  }
+
+  .partnersGrid.grid {
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .partnersGrid.inline {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+/* =============================================
+ * Forced Colors Mode (Windows High Contrast)
+ * ============================================= */
+
+@media (forced-colors: active) {
+  .categoryLabel {
+    border-bottom: 1px solid CanvasText;
+  }
+}

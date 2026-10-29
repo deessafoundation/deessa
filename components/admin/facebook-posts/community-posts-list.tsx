@@ -1,20 +1,17 @@
 "use client"
 
-import { useState, useTransition, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useTransition, useEffect, useMemo } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Plus, ArrowUpRight, Search, ArrowUpDown, Eye, MousePointerClick, Trash2 } from "lucide-react"
+import { Plus, Search, Eye, EyeOff, Calendar, TrendingUp, MousePointerClick, ArrowUpDown, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { PostsReorder } from "./posts-reorder"
-import { bulkUpdateFacebookPosts } from "@/lib/actions/facebook-posts"
 import type { FacebookPost } from "@/lib/facebook-posts/types"
-import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
 
 interface CommunityPostsListProps {
@@ -31,13 +28,10 @@ export function CommunityPostsList({
   initialStatus = "all" 
 }: CommunityPostsListProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [result, setResult] = useState(initialResult)
   const [search, setSearch] = useState(initialSearch)
   const [status, setStatus] = useState(initialStatus)
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [showReorder, setShowReorder] = useState(false)
-  const [pending, startTransition] = useTransition()
 
   const page = initialPage
   const totalPages = Math.ceil(result.count / 50)
@@ -53,237 +47,240 @@ export function CommunityPostsList({
     router.push(`/admin/community-posts${query ? `?${query}` : ""}`)
   }, [search, status, page, router])
 
-  function handleSelectAll(checked: boolean) {
-    setSelectedIds(checked ? result.posts.map(p => p.id) : [])
-  }
-
-  function handleSelectOne(id: string, checked: boolean) {
-    setSelectedIds(prev => checked ? [...prev, id] : prev.filter(pid => pid !== id))
-  }
-
-  function handleBulkAction(action: "publish" | "unpublish" | "delete") {
-    if (selectedIds.length === 0) {
-      toast.error("Select at least one post")
-      return
-    }
-
-    const actionText = action === "delete" ? "delete" : action === "publish" ? "publish" : "unpublish"
-    const confirmMessage = `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} ${selectedIds.length} post${selectedIds.length > 1 ? "s" : ""}?`
+  // Calculate stats
+  const stats = useMemo(() => {
+    const total = result.count
+    const published = result.posts.filter(p => p.is_published).length
+    const drafts = result.posts.filter(p => !p.is_published).length
+    const scheduled = result.posts.filter(p => p.published_at && new Date(p.published_at) > new Date()).length
+    const totalViews = result.posts.reduce((sum, p) => sum + p.views, 0)
+    const totalClicks = result.posts.reduce((sum, p) => sum + p.clicks, 0)
     
-    if (action === "delete" && !window.confirm(confirmMessage)) return
+    return { total, published, drafts, scheduled, totalViews, totalClicks }
+  }, [result])
 
-    startTransition(async () => {
-      try {
-        const actionResult = await bulkUpdateFacebookPosts(selectedIds, action)
-        if (actionResult.ok) {
-          toast.success(`${selectedIds.length} post${selectedIds.length > 1 ? "s" : ""} ${actionText}ed successfully`)
-          setSelectedIds([])
-          router.refresh()
-        } else {
-          toast.error(actionResult.error)
-        }
-      } catch {
-        toast.error(`Could not ${actionText} posts. Please try again.`)
-      }
-    })
+  function handleRowDoubleClick(postId: string) {
+    router.push(`/admin/community-posts/${postId}`)
   }
-
-  const allSelected = result.posts.length > 0 && selectedIds.length === result.posts.length
-  const someSelected = selectedIds.length > 0 && selectedIds.length < result.posts.length
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Community Posts</h1>
           <p className="text-muted-foreground">
-            Manage community moments on the homepage. Select a post to view its details.
+            Manage Facebook posts displayed on the homepage. Double-click a post to edit.
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/community-posts/new">
-            <Plus aria-hidden="true" className="mr-2 size-4" />
-            Add post
+            <Plus className="mr-2 h-4 w-4" />
+            Add Post
           </Link>
         </Button>
-      </header>
+      </div>
 
-      {/* Search and Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search posts..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Posts</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="draft">Drafts</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Bulk Actions */}
-      {selectedIds.length > 0 && (
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""} selected
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleBulkAction("publish")}
-                  disabled={pending}
-                >
-                  Publish
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleBulkAction("unpublish")}
-                  disabled={pending}
-                >
-                  Unpublish
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleBulkAction("delete")}
-                  disabled={pending}
-                >
-                  <Trash2 className="mr-2 size-4" />
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Actions Bar */}
+      {/* Stats Cards */}
       {!result.error && result.posts.length > 0 && (
-        <div className="flex justify-end">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowReorder(true)}
-          >
-            <ArrowUpDown className="mr-2 size-4" />
-            Reorder Posts
-          </Button>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.total}</p>
+                  <p className="text-xs text-muted-foreground">Total Posts</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <Eye className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.published}</p>
+                  <p className="text-xs text-muted-foreground">Published</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <TrendingUp className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.totalViews}</p>
+                  <p className="text-xs text-muted-foreground">Total Views</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-50 rounded-lg">
+                  <MousePointerClick className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.totalClicks}</p>
+                  <p className="text-xs text-muted-foreground">Total Clicks</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
 
+      {/* Search and Filters */}
+      <div className="flex gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search posts by title, URL, or excerpt..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10 h-10"
+          />
+        </div>
+        <Select value={status} onValueChange={setStatus}>
+          <SelectTrigger className="w-[160px] h-10">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Posts</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="draft">Drafts</SelectItem>
+          </SelectContent>
+        </Select>
+        {result.posts.length > 1 && (
+          <Button variant="outline" onClick={() => setShowReorder(true)}>
+            <ArrowUpDown className="mr-2 h-4 w-4" />
+            Reorder
+          </Button>
+        )}
+      </div>
+
       {/* Posts Table */}
       {result.error ? (
-        <p role="alert" className="rounded-xl border p-6">
-          {result.error}
-        </p>
+        <Card>
+          <CardContent className="p-8 text-center">
+            <p className="text-destructive" role="alert">{result.error}</p>
+          </CardContent>
+        </Card>
       ) : (
         <Card>
           <CardContent className="p-0">
             {result.posts.length ? (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-12">
-                        <Checkbox
-                          checked={allSelected}
-                          onCheckedChange={handleSelectAll}
-                          aria-label="Select all posts"
-                          className={someSelected ? "data-[state=checked]:bg-primary/50" : ""}
-                        />
-                      </TableHead>
-                      <TableHead>Post</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="hidden sm:table-cell">Analytics</TableHead>
-                      <TableHead className="hidden md:table-cell">Created</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {result.posts.map((post) => (
-                      <TableRow key={post.id}>
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedIds.includes(post.id)}
-                            onCheckedChange={(checked) => handleSelectOne(post.id, checked === true)}
-                            aria-label={`Select ${post.title}`}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            href={`/admin/community-posts/${post.id}`}
-                            className="font-medium underline underline-offset-4 hover:text-primary"
-                          >
-                            {post.title}
-                          </Link>
-                          {post.excerpt && (
-                            <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                              {post.excerpt}
-                            </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[40%]">Title</TableHead>
+                    <TableHead className="w-[100px]">Status</TableHead>
+                    <TableHead className="w-[80px]">Views</TableHead>
+                    <TableHead className="w-[80px]">Clicks</TableHead>
+                    <TableHead className="w-[80px]">Order</TableHead>
+                    <TableHead className="w-[120px]">Created</TableHead>
+                    <TableHead className="w-[80px] text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {result.posts.map((post) => (
+                    <TableRow 
+                      key={post.id}
+                      onDoubleClick={() => handleRowDoubleClick(post.id)}
+                      className="cursor-pointer hover:bg-muted/50"
+                    >
+                      <TableCell>
+                        <div>
+                          <div className="font-medium line-clamp-2 leading-tight">{post.title}</div>
+                          {post.tags && post.tags.length > 0 && (
+                            <div className="flex gap-1 mt-1.5">
+                              {post.tags.slice(0, 3).map(tag => (
+                                <span 
+                                  key={tag} 
+                                  className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-blue-50 text-blue-700 border border-blue-200"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                              {post.tags.length > 3 && (
+                                <span className="text-xs text-muted-foreground">
+                                  +{post.tags.length - 3}
+                                </span>
+                              )}
+                            </div>
                           )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <Badge variant={post.is_published ? "default" : "secondary"}>
-                              {post.is_published ? "Published" : "Draft"}
-                            </Badge>
-                            {post.published_at && new Date(post.published_at) > new Date() && (
-                              <p className="text-xs text-muted-foreground">
-                                Scheduled: {new Date(post.published_at).toLocaleDateString()}
-                              </p>
-                            )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={post.is_published ? "default" : "secondary"} 
+                          className={post.is_published ? "bg-green-100 text-green-800 border-green-200" : ""}
+                        >
+                          {post.is_published ? (
+                            <><Eye className="w-3 h-3 mr-1" />Live</>
+                          ) : (
+                            <><EyeOff className="w-3 h-3 mr-1" />Draft</>
+                          )}
+                        </Badge>
+                        {post.published_at && new Date(post.published_at) > new Date() && (
+                          <div className="text-[10px] text-amber-600 mt-1 font-medium">
+                            Scheduled
                           </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Eye className="size-3" />
-                              {post.views}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MousePointerClick className="size-3" />
-                              {post.clicks}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          <span className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button asChild variant="ghost" size="sm">
-                            <Link href={`/admin/community-posts/${post.id}`}>
-                              View
-                              <ArrowUpRight aria-hidden="true" className="ml-1 size-3" />
-                            </Link>
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm font-medium">
+                          <Eye className="h-3.5 w-3.5 text-blue-600" />
+                          <span>{post.views.toLocaleString()}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm font-medium">
+                          <MousePointerClick className="h-3.5 w-3.5 text-purple-600" />
+                          <span>{post.clicks.toLocaleString()}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm font-mono text-muted-foreground">
+                          #{post.display_order}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          asChild 
+                          onClick={(e) => e.stopPropagation()}
+                          className="hover:bg-blue-50 hover:text-blue-700"
+                        >
+                          <Link href={`/admin/community-posts/${post.id}`}>
+                            <Edit2 className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
-              <div className="space-y-3 p-8 text-center">
+              <div className="p-8 text-center space-y-3">
                 <h2 className="text-lg font-semibold">
                   {search || status !== "all" ? "No posts match your filters" : "No community posts yet"}
                 </h2>
@@ -304,28 +301,28 @@ export function CommunityPostsList({
       )}
 
       {/* Pagination */}
-      {!result.error && result.posts.length > 0 && (
-        <nav aria-label="Community posts pagination" className="flex flex-wrap items-center justify-between gap-3">
+      {!result.error && result.posts.length > 0 && totalPages > 1 && (
+        <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {result.count} total post{result.count !== 1 ? "s" : ""} · Page {page} of {Math.max(1, totalPages)}
+            {result.count} total post{result.count !== 1 ? "s" : ""} · Page {page} of {totalPages}
           </p>
           <div className="flex gap-2">
             {page > 1 && (
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" size="sm">
                 <Link href={`/admin/community-posts?page=${page - 1}${search ? `&q=${search}` : ""}${status !== "all" ? `&status=${status}` : ""}`}>
                   Previous
                 </Link>
               </Button>
             )}
             {page < totalPages && (
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" size="sm">
                 <Link href={`/admin/community-posts?page=${page + 1}${search ? `&q=${search}` : ""}${status !== "all" ? `&status=${status}` : ""}`}>
                   Next
                 </Link>
               </Button>
             )}
           </div>
-        </nav>
+        </div>
       )}
 
       {/* Reorder Modal */}

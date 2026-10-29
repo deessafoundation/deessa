@@ -48,17 +48,14 @@ execute-admin-enhancement-commits.ps1
 execute-payments-v2-scripts.ps1
 
 # Large media files
-public/websiteClip/*.mp4
 public/websiteClip/*.MP3
-# Video files
+# Video files: ignore stray clips, but every MP4 under public/ is site content and
+# MUST stay tracked — an untracked site video is a silent 404 in production.
+# (public/what-we-do/understanding-a-new-friend.mp4 was lost this way once.)
 *.mp4
-# Exception for intro video
-!public/Deesa-Intro*.mp4
-# What We Do detail-page videos
-!public/Awareness and community engagement.mp4
-!public/Training.mp4
-!public/Resources.mp4
-!public/Advocacy (2).mp4
+!public/*.mp4
+!public/**/*.mp4
+public/websiteClip/*.mp4
 
 
 /.agents

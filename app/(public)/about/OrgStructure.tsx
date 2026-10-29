@@ -1,6 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
+import { useAccessibility } from "@/lib/hooks/use-accessibility"
+import type { AboutPageSettings } from "@/lib/types/about-settings"
+import { DEFAULT_ADDITIONAL_ABOUT_SETTINGS } from "@/lib/types/about-sections"
 import { Cog, Lightbulb, Network, UsersRound, Wrench } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { homeUi } from "@/components/home/home-ui"
@@ -14,57 +17,6 @@ const reveal = {
 
 type Accent = "vision" | "board" | "advisory" | "assembly"
 
-interface Tier {
-  title: string
-  subtitle: string
-  description: string
-  accent: Accent
-}
-
-const tiers: Tier[] = [
-  {
-    title: "Founding Vision",
-    subtitle: "Concept Designer & Co-Founders",
-    description:
-      "The minds behind the Foundation shape its idea, mission, and direction from the start.",
-    accent: "vision",
-  },
-  {
-    title: "Governing Board",
-    subtitle: "Executive Board",
-    description:
-      "The Executive Board leads the Foundation's strategic direction, legal oversight, governance, accountability, and management.",
-    accent: "board",
-  },
-  {
-    title: "Advisory Circle",
-    subtitle: "Advisory Board & Thematic Advisors",
-    description:
-      "Senior advisors and thematic experts guide the Foundation's strategy, credibility, and direction through institutional oversight and program expertise.",
-    accent: "advisory",
-  },
-  {
-    title: "General Assembly",
-    subtitle: "General Members",
-    description:
-      "The General Assembly is the Foundation's highest authority. Its members elect the Executive Board and hold it accountable.",
-    accent: "assembly",
-  },
-]
-
-const operationalTeams = [
-  {
-    icon: UsersRound,
-    title: "Working Team",
-    description: "Handles the Foundation's day-to-day operations and management.",
-  },
-  {
-    icon: Wrench,
-    title: "Technical Team",
-    description: "Experts who serve the Foundation, each in their own area of expertise.",
-  },
-]
-
 const accentStyles: Record<Accent, { icon: LucideIcon; color: string; bg: string }> = {
   vision: { icon: Lightbulb, color: "#7848a2", bg: "#f3ebfa" },
   board: { icon: Network, color: "#228cc4", bg: "#e9f5fc" },
@@ -72,9 +24,9 @@ const accentStyles: Record<Accent, { icon: LucideIcon; color: string; bg: string
   assembly: { icon: UsersRound, color: "#e88b23", bg: "#fff2e5" },
 }
 
-function SectionHeader({ label, title, accent, sub }: { label: string; title: string; accent?: string; sub?: string }) {
+function SectionHeader({ label, title, accent, sub, reduced }: { label: string; title: string; accent?: string; sub?: string; reduced: boolean }) {
   return (
-    <motion.div {...reveal} transition={{ duration: 0.45 }} className="mb-8 max-w-4xl md:mb-10">
+    <motion.div {...reveal} initial={reduced ? false : reveal.initial} transition={{ duration: 0.45 }} className="mb-8 max-w-4xl md:mb-10">
       <h2 id="governance-heading" className={styles.headerLabel}>
         {label}
       </h2>
@@ -92,15 +44,21 @@ function SectionHeader({ label, title, accent, sub }: { label: string; title: st
   )
 }
 
-export function OrgStructure() {
+export function OrgStructure({ settings = DEFAULT_ADDITIONAL_ABOUT_SETTINGS.governance }: { settings?: AboutPageSettings["governance"] }) {
+  const systemReduced = useReducedMotion()
+  const { preferences } = useAccessibility()
+  const reduced = !!systemReduced || preferences.reduceMotion || preferences.sensoryFriendly
+  const tiers = settings.tiers
+  const operationalTeams = settings.teams
   return (
     <section className={styles.section} id="organization" aria-labelledby="governance-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          label="Governance"
-          title="How the Foundation Is"
-          accent="Organized"
-          sub="Born from experience. United by purpose. The Foundation brings like-minded people together to build an inclusive society through strong governance."
+          label={settings.label}
+          title={settings.title}
+          accent={settings.accent}
+          sub={settings.description}
+          reduced={reduced}
         />
 
         <ol className="grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
@@ -108,8 +66,8 @@ export function OrgStructure() {
             const style = accentStyles[tier.accent]
             const Icon = style.icon
             return (
-              <li key={tier.title} className="min-w-0">
-                <motion.article {...reveal} transition={{ duration: 0.4, delay: i * 0.06 }} className={styles.tierCard}>
+              <li key={tier.id} className="min-w-0">
+                <motion.article {...reveal} initial={reduced ? false : reveal.initial} transition={{ duration: 0.4, delay: i * 0.06 }} className={styles.tierCard}>
                   <div className="flex items-start gap-3.5">
                     <div className={styles.tierIcon} style={{ color: style.color, backgroundColor: style.bg }} aria-hidden="true">
                       <Icon className="size-7" strokeWidth={2.2} />
@@ -126,18 +84,19 @@ export function OrgStructure() {
           })}
         </ol>
 
-        <motion.div {...reveal} transition={{ duration: 0.45 }} className={styles.opContainer}>
+        <motion.div {...reveal} initial={reduced ? false : reveal.initial} transition={{ duration: 0.45 }} className={styles.opContainer}>
           <div className={styles.opHeader}>
             <Cog className="size-7" strokeWidth={2.5} aria-hidden="true" />
-            <h3 className={styles.opHeaderText}>Operational Level</h3>
+            <h3 className={styles.opHeaderText}>{settings.operationalTitle}</h3>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {operationalTeams.map((team, i) => {
-              const Icon = team.icon
+              const Icon = team.id === "working" ? UsersRound : Wrench
               return (
                 <motion.article
-                  key={team.title}
+                  key={team.id}
                   {...reveal}
+                  initial={reduced ? false : reveal.initial}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
                   className={styles.opCard}
                 >

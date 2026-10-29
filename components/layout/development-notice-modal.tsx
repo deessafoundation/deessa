@@ -8,13 +8,20 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { cn } from "@/lib/utils"
 import styles from "./development-notice-modal.module.css"
 
-const showDevNotice = process.env.NEXT_PUBLIC_SITE_STATUS !== "live"
+interface DevelopmentNoticeModalProps {
+  /**
+   * Controlled by Admin → Site Settings → Site status indicators
+   * (`site_settings.site_ui_flags.devNotice`). Replaces the old build-time
+   * `NEXT_PUBLIC_SITE_STATUS` env check.
+   */
+  enabled?: boolean
+}
 
-export function DevelopmentNoticeModal() {
+export function DevelopmentNoticeModal({ enabled = true }: DevelopmentNoticeModalProps) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (!showDevNotice || typeof window === "undefined") return
+    if (!enabled || typeof window === "undefined") return
 
     // Only show on homepage
     if (window.location.pathname !== "/") return
@@ -41,13 +48,13 @@ export function DevelopmentNoticeModal() {
       clearTimeout(timeoutId)
       clearTimeout(fallbackTimeout)
     }
-  }, [])
+  }, [enabled])
 
   const handleClose = () => {
     setOpen(false)
   }
 
-  if (!showDevNotice) return null
+  if (!enabled) return null
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
