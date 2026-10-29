@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -175,7 +175,7 @@ export function StoriesSections({
                 {/* Accent rule */}
                 <div className="mt-5 flex items-center gap-3">
                   <div className="h-[3px] w-10 rounded-full bg-teal" />
-                  <span className="font-dm text-xs text-slate-400">{primaryStory.formattedDate}</span>
+                  <span className="font-dm text-xs text-slate-600 font-medium">{primaryStory.formattedDate}</span>
                 </div>
 
                 <p className="font-dm mt-6 text-[1.05rem] leading-[1.85] text-slate-600">
@@ -294,7 +294,8 @@ export function StoriesSections({
                       {spotlightMainStory.image ? (
                         <Image
                           src={spotlightMainStory.image}
-                          alt={spotlightMainStory.title}
+                          alt=""
+                          aria-hidden="true"
                           fill
                           sizes="(min-width: 1024px) 55vw, 100vw"
                           className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -322,13 +323,13 @@ export function StoriesSections({
                       </p>
                       <div className="mt-auto flex items-center justify-between pt-5">
                         <div className="flex items-center gap-3">
-                          <span className="font-dm text-[11px] font-medium text-slate-400">
+                          <span className="font-dm text-[11px] font-medium text-slate-600">
                             {spotlightMainStory.formattedDate}
                           </span>
                           {spotlightMainStory.read_time && (
                             <>
                               <span className="size-1 rounded-full bg-slate-300" />
-                              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600">
                                 <Clock className="size-3" />
                                 {spotlightMainStory.read_time}
                               </span>
@@ -358,7 +359,8 @@ export function StoriesSections({
                         {story.image ? (
                           <Image
                             src={story.image}
-                            alt={story.title}
+                            alt=""
+                            aria-hidden="true"
                             fill
                             sizes="110px"
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -384,11 +386,11 @@ export function StoriesSections({
                         </div>
                         <div className="mt-3 flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="font-dm text-[11px] text-slate-400">{story.formattedDate}</span>
+                            <span className="font-dm text-[11px] text-slate-600 font-medium">{story.formattedDate}</span>
                             {story.read_time && (
                               <>
                                 <span className="size-1 rounded-full bg-slate-200" />
-                                <span className="inline-flex items-center gap-1 text-[11px] text-slate-400">
+                                <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 font-medium">
                                   <Clock className="size-3" />
                                   {story.read_time}
                                 </span>
@@ -431,7 +433,8 @@ export function StoriesSections({
                         {story.image ? (
                           <Image
                             src={story.image}
-                            alt={story.title}
+                            alt=""
+                            aria-hidden="true"
                             fill
                             sizes="(min-width: 768px) 45vw, 100vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -456,11 +459,11 @@ export function StoriesSections({
                         </p>
                         <div className="mt-auto flex items-center justify-between pt-5">
                           <div className="flex items-center gap-2">
-                            <span className="font-dm text-[11px] text-slate-400">{story.formattedDate}</span>
+                            <span className="font-dm text-[11px] text-slate-600 font-medium">{story.formattedDate}</span>
                             {story.read_time && (
                               <>
                                 <span className="size-1 rounded-full bg-slate-300" />
-                                <span className="inline-flex items-center gap-1 text-[11px] text-slate-400">
+                                <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 font-medium">
                                   <Clock className="size-3" />
                                   {story.read_time}
                                 </span>
@@ -499,7 +502,8 @@ export function StoriesSections({
                         {story.image ? (
                           <Image
                             src={story.image}
-                            alt={story.title}
+                            alt=""
+                            aria-hidden="true"
                             fill
                             sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -523,7 +527,7 @@ export function StoriesSections({
                           {story.excerpt}
                         </p>
                         <div className="mt-auto flex items-center justify-between pt-4">
-                          <span className="font-dm text-[11px] text-slate-400">{story.formattedDate}</span>
+                          <span className="font-dm text-[11px] text-slate-600 font-medium">{story.formattedDate}</span>
                           <span className="inline-flex items-center gap-1.5 text-xs font-bold text-teal transition-all duration-300 group-hover:gap-2">
                             Read story
                             <ArrowRight className="size-3.5" />

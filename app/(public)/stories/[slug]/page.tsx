@@ -147,7 +147,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
 
       <section data-a11y-region="neutral" className="relative isolate overflow-hidden bg-slate-950 text-white no-print">
         <div className="absolute inset-0">
-          <Image src={story.image || "/placeholder.svg"} alt={story.title} fill className="object-cover opacity-60" priority />
+          <Image src={story.image || "/placeholder.svg"} alt="" aria-hidden="true" fill className="object-cover opacity-60" priority />
           <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(18,53,80,0.15)_0%,rgba(2,6,23,0.78)_55%,rgba(2,6,23,0.96)_100%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(14,165,233,0.25)_0%,rgba(2,6,23,0.08)_35%,rgba(2,6,23,0.7)_100%)]" />
         </div>
@@ -307,9 +307,9 @@ export default async function StoryDetailPage({ params }: PageProps) {
                 href={`/stories/${prevStory.slug}`}
                 className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-300 hover:shadow-md"
               >
-                <ArrowLeft className="mt-1 size-5 shrink-0 text-slate-400 transition group-hover:text-cyan-600" />
+                <ArrowLeft className="mt-1 size-5 shrink-0 text-slate-600 transition group-hover:text-cyan-600" aria-hidden="true" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Previous Story</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-700">Previous Story</p>
                   <h3 className="mt-1 line-clamp-2 font-semibold text-slate-900 transition group-hover:text-cyan-600">{prevStory.title}</h3>
                 </div>
               </Link>
@@ -322,10 +322,10 @@ export default async function StoryDetailPage({ params }: PageProps) {
                 className="group flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-300 hover:shadow-md sm:text-right"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Next Story</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-700">Next Story</p>
                   <h3 className="mt-1 line-clamp-2 font-semibold text-slate-900 transition group-hover:text-cyan-600">{nextStory.title}</h3>
                 </div>
-                <ArrowRight className="mt-1 size-5 shrink-0 text-slate-400 transition group-hover:text-cyan-600" />
+                <ArrowRight className="mt-1 size-5 shrink-0 text-slate-600 transition group-hover:text-cyan-600" aria-hidden="true" />
               </Link>
             ) : (
               <div />

@@ -37,7 +37,7 @@ function TeamPortrait({ src, name, active }: { src: string | null; name: string;
     </div>
   )
   return <img ref={imgRef} src={attempt ? `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}` : src}
-    alt={name} decoding="async" onError={() => setAttempt(value => value + 1)}
+    alt={`Portrait of ${name}`} decoding="async" onError={() => setAttempt(value => value + 1)}
     className={cn("h-full w-full object-cover transition-all duration-700", active ? "scale-105 saturate-100" : "scale-100 saturate-0")} />
 }
 

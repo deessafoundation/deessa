@@ -152,7 +152,7 @@ export default function PressPage() {
           ].map((img, index) => (
             <div key={index} className="relative group overflow-hidden rounded-xl">
               <div
-                className="h-64 bg-cover bg-center transition-transform group-hover:scale-105"
+                role="img" aria-label={`deessa Foundation press photo ${index + 1}`} className="h-64 bg-cover bg-center transition-transform group-hover:scale-105"
                 style={{ backgroundImage: `url("${img}")` }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
@@ -162,8 +162,8 @@ export default function PressPage() {
                   size="sm"
                   className="opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <a href={img} download>
-                    <Image className="size-4 mr-2" />
+                  <a href={img} download aria-label={`Download deessa Foundation press photo ${index + 1}`}>
+                    <Image className="size-4 mr-2" aria-hidden="true" />
                     Download
                   </a>
                 </Button>

@@ -105,7 +105,7 @@ export default function AllHighlightsCard({
           <button
             onClick={() => { setActiveInlineId(shortId); setIsPlaying(true); }}
             className="absolute inset-0 flex items-center justify-center group/btn"
-            aria-label="Play video"
+            aria-label={`Play highlight: ${metadata.title || episodeTitle}`}
           >
             {/* Play button - White background with filled brand color icon */}
             <div className="w-16 h-16 rounded-full bg-white group-hover/btn:bg-white/95 flex items-center justify-center transform group-hover/btn:scale-110 transition-all duration-300 shadow-2xl">

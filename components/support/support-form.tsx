@@ -247,7 +247,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
               required
               value={formData.name}
               onChange={handleChange}
-              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
             />
           </div>
           <div>
@@ -261,7 +261,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
               required
               value={formData.email}
               onChange={handleChange}
-              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
             />
           </div>
         </div>
@@ -289,7 +289,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
               value={formData.pageUrl}
               onChange={handleChange}
               placeholder="https://..."
-              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+              className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
             />
             <p className="mt-2 text-xs text-slate-500">Paste the exact page where the problem happened.</p>
           </div>
@@ -307,7 +307,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
             value={formData.summary}
             onChange={handleChange}
             placeholder="Example: The signup button did not respond"
-            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
           />
         </div>
 
@@ -323,7 +323,7 @@ export function SupportForm({ initialPageUrl = "" }: SupportFormProps) {
             value={formData.details}
             onChange={handleChange}
             placeholder="Tell us what happened, what you expected, and anything else that helps us reproduce it."
-            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
           />
         </div>
 

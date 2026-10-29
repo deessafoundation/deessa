@@ -188,7 +188,7 @@ export default function PodcastSeriesIntro({ latestEpisode }: { latestEpisode?: 
                 <div className={styles.hostPhoto}>
                   <Image
                     src={host.image}
-                    alt={host.name}
+                    alt={`Portrait of host ${host.name}`}
                     fill
                     sizes="(max-width: 639px) 85vw, (max-width: 1023px) 40vw, 260px"
                     className="object-cover object-center"

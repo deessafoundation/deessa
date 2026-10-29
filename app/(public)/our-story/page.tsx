@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lock, School, UserRoundX } from "lucide-react"
@@ -314,7 +314,8 @@ export default function OurStoryPage() {
           <div className="absolute inset-0 opacity-20">
             <Image
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDObnZb9aDESJ36lgucVDoXG4ikhozQiTrqeLRtpIdSNRy5igPnNFD8ELZKcR9IRcU7oz6dSPbFoFlYSveJqlZRa_tdqqAreV_NQge-Ryajr-weagx4XprOHVZSMsYBWn3MWeLouBUb-iUHWpm10ckFMO0_yjDlZuBNGSMmKcBSGm4z2a_EwG0Ip0KcNJE4xjLdnQQ4ER7OxQL1HNNa3NULGLGU1elM726TzK_JM0jKLIM3dnDDN4ah09-mbldfWlA_4HYp2h38IWY"
-              alt="Hands nurturing a seedling"
+              alt=""
+              aria-hidden="true"
               fill
               className="object-cover"
             />

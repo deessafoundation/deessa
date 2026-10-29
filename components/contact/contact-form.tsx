@@ -127,7 +127,7 @@ export function ContactForm({ initialSubject = "", initialMessage = "" }: Contac
       <div className="space-y-1.5">
         <label htmlFor="subject" className="block text-sm font-medium text-foreground">
           Subject
-          <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+          <span className="text-red-700 ml-1" aria-hidden="true">*</span>
         </label>
         <select
           id="subject"

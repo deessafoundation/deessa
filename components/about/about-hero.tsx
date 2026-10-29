@@ -81,7 +81,7 @@ export function AboutHero({ settings, teamMembers = [] }: AboutHeroProps) {
               {portraits.map((member, index) => (
                 <div key={member.id || `${member.name}-${index}`} className={cn(styles.photo, "relative overflow-hidden rounded-xl",
                   index === 0 && portraits.length === 3 && "row-span-2 mt-[18px] sm:mt-[26px]")}>
-                  <Image src={member.image && isSafeMediaUrl(member.image) && !failedPhotos[member.image] ? member.image : "/image_coming_soon.png"} alt={member.name}
+                  <Image src={member.image && isSafeMediaUrl(member.image) && !failedPhotos[member.image] ? member.image : "/image_coming_soon.png"} alt={member.image && isSafeMediaUrl(member.image) && !failedPhotos[member.image] ? `Portrait of ${member.name}` : `Placeholder photo for ${member.name}`}
                     onError={() => { if (member.image && !failedPhotos[member.image]) setFailedPhotos(previous => ({ ...previous, [member.image!]: true })) }}
                     fill loading="eager" fetchPriority={index === 0 ? "high" : "auto"}
                     unoptimized={!!member.image?.startsWith("http")}

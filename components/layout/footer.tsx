@@ -425,6 +425,7 @@ export function Footer() {
                     href="/admin"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Admin portal (opens in a new tab)"
                     className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     Admin

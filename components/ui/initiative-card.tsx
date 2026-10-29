@@ -23,7 +23,8 @@ export function InitiativeCard({ title, description, image, icon: Icon, href, cl
     >
       <Image
         src={image || "/placeholder.svg"}
-        alt={title}
+        alt=""
+        aria-hidden="true"
         fill
         className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale-30 group-hover:grayscale-0"
       />

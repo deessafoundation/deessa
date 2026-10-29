@@ -225,12 +225,12 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
               ) : (
                 <div className="text-center py-16 px-4">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8 text-gray-400" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <p className="text-gray-500 text-base">No highlights available for this episode yet.</p>
-                  <p className="text-gray-400 text-sm mt-2">Check back later for curated shorts!</p>
+                  <p className="text-gray-600 text-base">No highlights available for this episode yet.</p>
+                  <p className="text-gray-600 text-sm mt-2 font-medium">Check back later for curated shorts!</p>
                 </div>
               )}
             </div>
@@ -435,7 +435,8 @@ export default async function PodcastDetailPage({ params }: PodcastDetailPagePro
                           <div className="w-24 h-24 relative rounded overflow-hidden flex-shrink-0">
                             <img
                               src={related.thumbnailUrl}
-                              alt={related.title}
+                              alt=""
+                              aria-hidden="true"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>

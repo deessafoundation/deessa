@@ -210,7 +210,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               <div role="group" aria-labelledby="skills-heading">
                 <h3 id="skills-heading" className="font-bold text-foreground mb-3">
                   Skills <span className="font-normal">&</span> Expertise
-                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                  <span className="text-red-700 ml-1" aria-hidden="true">*</span>
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {skillOptions.map((skill) => (
@@ -222,7 +222,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
                         className="size-4 rounded border-border text-primary focus:ring-primary"
                         aria-required="true"
                       />
-                      <span className="text-sm text-foreground-muted">{skill}</span>
+                      <span className="text-sm text-foreground font-medium">{skill}</span>
                     </label>
                   ))}
                 </div>
@@ -232,7 +232,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               <div className="space-y-1.5">
                 <label htmlFor="availability" className="block text-sm font-medium text-foreground">
                   Availability
-                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                  <span className="text-red-700 ml-1" aria-hidden="true">*</span>
                 </label>
                 <select
                   id="availability"
@@ -256,7 +256,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
               <div role="group" aria-labelledby="interests-heading">
                 <h3 id="interests-heading" className="font-bold text-foreground mb-3">
                   Areas of Interest
-                  <span className="text-red-500 ml-1" aria-hidden="true">*</span>
+                  <span className="text-red-700 ml-1" aria-hidden="true">*</span>
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {interestOptions.map((interest) => (
@@ -268,7 +268,7 @@ export function VolunteerForm({ isOpen, onClose, roleTitle }: VolunteerFormProps
                         className="size-4 rounded border-border text-primary focus:ring-primary"
                         aria-required="true"
                       />
-                      <span className="text-sm text-foreground-muted">{interest}</span>
+                      <span className="text-sm text-foreground font-medium">{interest}</span>
                     </label>
                   ))}
                 </div>

@@ -122,17 +122,17 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
             className="w-full h-11 px-4 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
           {error && (
-            <p id={errorId} className="text-red-500 text-xs mt-1" role="alert">
+            <p id={errorId} className="text-red-600 font-medium text-xs mt-1" role="alert">
               {error}
             </p>
           )}
         </div>
         <Button type="submit" className="w-full rounded-lg" disabled={isLoading}>
           {isLoading ? (
-            <Loader2 className="size-4 animate-spin" />
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
           ) : (
             <>
-              <Send className="size-4 mr-2" />
+              <Send className="size-4 mr-2" aria-hidden="true" />
               Subscribe
             </>
           )}
@@ -165,13 +165,13 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
           className="w-full h-11 px-4 rounded-lg border border-border bg-surface text-foreground placeholder:text-foreground-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
         {error && (
-          <p id={errorId} className="text-red-500 text-xs mt-1" role="alert">
+          <p id={errorId} className="text-red-600 font-medium text-xs mt-1" role="alert">
             {error}
           </p>
         )}
       </div>
-      <Button type="submit" className="rounded-lg h-11 px-6" disabled={isLoading}>
-        {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+      <Button type="submit" aria-label="Subscribe to newsletter" className="rounded-lg h-11 px-6" disabled={isLoading}>
+        {isLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <Send className="size-4" aria-hidden="true" />}
       </Button>
     </form>
   )
