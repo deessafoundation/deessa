@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { getSiteSettings } from "@/lib/actions/admin-settings"
 import { getPaymentSettings, isProviderEnvConfigured, type PaymentProvider } from "@/lib/payments/config"
+import { getIntroVideoConfig } from "@/lib/data/intro-video"
+import { getAccessibilityConfig } from "@/lib/data/accessibility-settings"
 import { createClient } from "@/lib/supabase/server"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { SettingsTabs } from "@/components/admin/settings/settings-tabs"
@@ -15,7 +17,7 @@ export default async function SiteSettingsPage() {
   }
 
   // Fetch all settings data in parallel
-  const [siteSettings, paymentSettings, orgResult] = await Promise.all([
+  const [siteSettings, paymentSettings, orgResult, introConfig, a11yConfig] = await Promise.all([
     getSiteSettings(),
     getPaymentSettings(),
     (async () => {
@@ -27,6 +29,8 @@ export default async function SiteSettingsPage() {
         .single()
       return data?.value ?? null
     })(),
+    getIntroVideoConfig(),
+    getAccessibilityConfig(),
   ])
 
   // Convert site settings array to object
@@ -54,6 +58,8 @@ export default async function SiteSettingsPage() {
         paymentSettings={paymentSettings}
         envConfigured={envConfigured}
         organizationDetails={orgResult}
+        introVideoConfig={introConfig}
+        accessibilityConfig={a11yConfig}
       />
     </div>
   )

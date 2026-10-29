@@ -1,335 +1,407 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { Volume2, VolumeX, FastForward } from "lucide-react"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
+import {
+  DEFAULT_INTRO_VIDEO_CONFIG,
+  type IntroVideoConfig,
+} from "@/lib/types/intro-video"
+import styles from "./intro-video.module.css"
 
-/** Reveal the site that the inline gate script in app/(public)/layout.tsx hid. */
-function releaseIntroGate() {
-  document.documentElement.classList.remove("intro-pending")
+interface IntroVideoProps {
+  /** Dynamic configuration loaded from site_settings */
+  config?: IntroVideoConfig
 }
 
-export function IntroVideo() {
+/** Removes the pre-paint gate class from <html> */
+function releaseIntroGate() {
+  if (typeof document !== "undefined") {
+    document.documentElement.classList.remove("intro-pending")
+  }
+}
+
+export function IntroVideo({ config = DEFAULT_INTRO_VIDEO_CONFIG }: IntroVideoProps) {
   const pathname = usePathname()
   const { preferences } = useAccessibility()
+
   const [showIntro, setShowIntro] = useState(false)
   const [videoEnded, setVideoEnded] = useState(false)
   const [animateLogo, setAnimateLogo] = useState(false)
   const [fadeBackground, setFadeBackground] = useState(false)
   const [logoStyle, setLogoStyle] = useState<React.CSSProperties>({})
-  const [userInteracted, setUserInteracted] = useState(false)
-  const [isSkipping, setIsSkipping] = useState(false)
+  const [isMuted, setIsMuted] = useState(config.behavior.mutedByDefault)
+  const [canShowSkip, setCanShowSkip] = useState(config.behavior.skipDelaySeconds === 0)
+  const [isMobile, setIsMobile] = useState(false)
+
   const videoRef = useRef<HTMLVideoElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const hasDismissedRef = useRef(false)
 
+  // Track viewport mode
   useEffect(() => {
-    // Design previews should be immediately visible for comparison.
-    if (pathname?.startsWith('/demo')) {
-      releaseIntroGate()
-      return
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
     }
-    
-    // A11Y: Skip intro if user has reduce motion or sensory-friendly enabled
-    if (preferences.reduceMotion || preferences.sensoryFriendly) {
-      console.log('📹 Intro video skipped due to accessibility preferences (reduce motion/sensory-friendly)')
-      setShowIntro(false)
-      releaseIntroGate()
-      // Immediately fire completion event so page doesn't wait
-      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
-      return
-    }
-    
-    // Check if intro has been shown (using localStorage to persist across sessions)
-    const introShown = localStorage.getItem("introShown")
-    const lastShown = localStorage.getItem("introLastShown")
-    const now = Date.now()
-    
-    // Show intro if never shown, or if it's been more than 30 minutes
-    if (!introShown || (lastShown && now - parseInt(lastShown) > 30 * 60 * 1000)) {
-      setShowIntro(true)
-    } else {
-      releaseIntroGate()
-    }
-  }, [pathname, preferences.reduceMotion, preferences.sensoryFriendly])
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
-  // Never leave the site hidden if this component goes away mid-intro.
-  useEffect(() => releaseIntroGate, [])
+  // Complete cleanup and dismiss
+  const dismissIntro = useCallback(() => {
+    if (hasDismissedRef.current) return
+    hasDismissedRef.current = true
 
-  useEffect(() => {
-    if (showIntro && videoRef.current && !userInteracted) {
-      const video = videoRef.current
-      
-      // Always start muted to satisfy browser autoplay policies
-      video.muted = true
-      
-      // Ensure video is ready to play
-      video.load()
-      
-      // Try to play the video
-      const playPromise = video.play()
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Video started playing successfully
-            console.log('Video autoplay started (muted)')
-          })
-          .catch((error) => {
-            // AbortError is expected when browser pauses video to save power
-            // This is not a real error, just ignore it
-            if (error.name === 'AbortError') {
-              // Browser interrupted playback, try again
-              setTimeout(() => {
-                if (videoRef.current && !userInteracted) {
-                  videoRef.current.play().catch(() => {
-                    // If still failing, wait for user interaction
-                    console.log('Video requires user interaction to play')
-                  })
-                }
-              }, 100)
-            } else if (error.name === 'NotAllowedError' || error.name === 'NotSupportedError') {
-              // Browser requires user interaction - this is expected on mobile
-              console.log('Video autoplay blocked, waiting for user interaction')
-            } else {
-              console.error("Video autoplay failed:", error)
-            }
-          })
-      }
-    }
-  }, [showIntro, userInteracted])
-
-  // Handle any click/touch to start video or enable sound
-  const handleContainerClick = () => {
-    // Prevent if already skipping
-    if (isSkipping) return
-    
-    if (!userInteracted && videoRef.current) {
-      // First interaction: enable sound and ensure video plays
-      const video = videoRef.current
-      
-      // Check if video is paused or hasn't started
-      const needsRestart = video.paused || video.currentTime === 0
-      
-      if (needsRestart) {
-        // Video needs to start/restart - unmute and play from beginning
-        video.muted = false
-        video.currentTime = 0
-        video.play().then(() => {
-          setUserInteracted(true)
-          console.log('Video playing with sound after user interaction')
-        }).catch(err => {
-          console.error('Play with audio failed:', err)
-          // Fallback: try muted playback
-          video.muted = true
-          video.currentTime = 0
-          video.play().then(() => {
-            setUserInteracted(true)
-            console.log('Video playing muted (audio failed)')
-          }).catch(err2 => console.error('Fallback play failed:', err2))
-        })
-      } else {
-        // Video is already playing - just unmute it
-        video.muted = false
-        setUserInteracted(true)
-        console.log('Sound enabled on playing video')
-      }
-    }
-  }
-
-  // Handle skip button click/touch - prevent event bubbling
-  const handleSkip = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    
-    // Prevent double-clicks
-    if (isSkipping) return
-    setIsSkipping(true)
-    
     if (videoRef.current) {
       videoRef.current.pause()
     }
-    // Mark intro as shown and hide it
-    localStorage.setItem("introShown", "true")
-    localStorage.setItem("introLastShown", Date.now().toString())
-    setShowIntro(false)
+
+    // Persist frequency tracking
+    try {
+      const now = Date.now().toString()
+      localStorage.setItem("introShown", "true")
+      localStorage.setItem("introLastShown", now)
+      sessionStorage.setItem("introSessionShown", "true")
+      localStorage.setItem("introEverShown", "true")
+    } catch {
+      // Storage access blocked / incognito safeguard
+    }
+
     releaseIntroGate()
-    // Notify that intro was skipped
+    setShowIntro(false)
     window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+  }, [])
+
+  // Check eligibility on mount
+  useEffect(() => {
+    // If master switch disabled, bypass immediately
+    if (!config.enabled) {
+      releaseIntroGate()
+      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      return
+    }
+
+    // Skip on demo routes
+    if (pathname?.startsWith("/demo")) {
+      releaseIntroGate()
+      return
+    }
+
+    // If restricted to homepage only
+    if (config.behavior.homepageOnly && pathname !== "/") {
+      releaseIntroGate()
+      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      return
+    }
+
+    // Accessibility check: Skip intro if user prefers reduced motion or sensory-friendly mode
+    if (preferences.reduceMotion || preferences.sensoryFriendly) {
+      releaseIntroGate()
+      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      return
+    }
+
+    // Frequency evaluation
+    try {
+      const { frequency, cooldownMinutes } = config.behavior
+      if (frequency === "every_visit") {
+        setShowIntro(true)
+        return
+      }
+
+      if (frequency === "session") {
+        const sessionShown = sessionStorage.getItem("introSessionShown")
+        if (sessionShown) {
+          releaseIntroGate()
+          window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+          return
+        }
+        setShowIntro(true)
+        return
+      }
+
+      if (frequency === "once_ever") {
+        const everShown = localStorage.getItem("introEverShown")
+        if (everShown) {
+          releaseIntroGate()
+          window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+          return
+        }
+        setShowIntro(true)
+        return
+      }
+
+      // Default: cooldown period
+      const lastShown = localStorage.getItem("introLastShown")
+      const now = Date.now()
+      const cooldownMs = (cooldownMinutes || 30) * 60 * 1000
+
+      if (!lastShown || now - parseInt(lastShown, 10) > cooldownMs) {
+        setShowIntro(true)
+      } else {
+        releaseIntroGate()
+        window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      }
+    } catch {
+      // Fallback
+      setShowIntro(true)
+    }
+  }, [pathname, preferences.reduceMotion, preferences.sensoryFriendly, config])
+
+  // Skip delay timer
+  useEffect(() => {
+    if (!showIntro || config.behavior.skipDelaySeconds === 0) return
+    const timer = setTimeout(() => {
+      setCanShowSkip(true)
+    }, config.behavior.skipDelaySeconds * 1000)
+    return () => clearTimeout(timer)
+  }, [showIntro, config.behavior.skipDelaySeconds])
+
+  // Keyboard accessibility: Escape key skips intro
+  useEffect(() => {
+    if (!showIntro) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault()
+        dismissIntro()
+        // Focus main landmark for keyboard navigation
+        const main = document.getElementById("main-content")
+        main?.focus()
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [showIntro, dismissIntro])
+
+  // Failsafe timer: release gate if video fails to start within 3.5s
+  useEffect(() => {
+    if (!showIntro) return
+    const failsafe = setTimeout(() => {
+      if (videoRef.current && videoRef.current.currentTime === 0) {
+        console.warn("Intro video playback stalled; auto-releasing gate.")
+        dismissIntro()
+      }
+    }, 3500)
+    return () => clearTimeout(failsafe)
+  }, [showIntro, dismissIntro])
+
+  // Autoplay handler
+  useEffect(() => {
+    if (showIntro && videoRef.current) {
+      const video = videoRef.current
+      video.muted = isMuted
+
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          if (err.name === "AbortError") {
+            setTimeout(() => video.play().catch(() => {}), 150)
+          } else if (err.name === "NotAllowedError") {
+            // If sound was enabled and autoplay was blocked, fallback to muted autoplay
+            video.muted = true
+            setIsMuted(true)
+            video.play().catch(() => {})
+          }
+        })
+      }
+    }
+  }, [showIntro, isMuted])
+
+  // Sound toggle handler
+  const toggleSound = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted
+      videoRef.current.muted = nextMuted
+      setIsMuted(nextMuted)
+    }
   }
 
+  // Handle Outro & Flying Logo Effect
   const handleVideoEnd = () => {
     setVideoEnded(true)
-    // The opaque intro overlay still covers the page, so revealing it now is
-    // invisible; it lets the logo measure the navbar and fly onto a real page.
     releaseIntroGate()
-    
-    // Small delay to ensure layout is stable and logo is rendered
-    setTimeout(() => {
-      // Calculate navbar logo position
-      const navbarLogo = document.querySelector('[data-navbar-logo]') as HTMLElement
-      const navbarLogoTarget = document.querySelector('[data-navbar-logo-target]') as HTMLElement
-      const navbarLogoImg = navbarLogo?.querySelector('img') as HTMLImageElement
-      
-      if (navbarLogo && logoRef.current) {
-        const navbarRect = navbarLogoImg?.getBoundingClientRect() || navbarLogoTarget?.getBoundingClientRect() || navbarLogo.getBoundingClientRect()
+
+    // If flying logo transition is disabled or user prefers reduced motion
+    if (!config.transition.enableLogoFlyTransition || preferences.reduceMotion || preferences.sensoryFriendly) {
+      setFadeBackground(true)
+      window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+      setTimeout(dismissIntro, 600)
+      return
+    }
+
+    // Measure target navbar logo position
+    requestAnimationFrame(() => {
+      const navbarTarget =
+        (document.querySelector("[data-navbar-logo-target]") as HTMLElement) ||
+        (document.querySelector("[data-navbar-logo]") as HTMLElement)
+      const navbarImg = navbarTarget?.querySelector("img") as HTMLImageElement
+
+      if (navbarTarget && logoRef.current) {
+        const targetRect = navbarImg?.getBoundingClientRect() || navbarTarget.getBoundingClientRect()
         const logoRect = logoRef.current.getBoundingClientRect()
-        const navbarStyle = navbarLogoImg ? window.getComputedStyle(navbarLogoImg) : null
 
-        const paddingLeft = navbarStyle ? Number.parseFloat(navbarStyle.paddingLeft) || 0 : 0
-        const paddingRight = navbarStyle ? Number.parseFloat(navbarStyle.paddingRight) || 0 : 0
-        const paddingTop = navbarStyle ? Number.parseFloat(navbarStyle.paddingTop) || 0 : 0
-        const paddingBottom = navbarStyle ? Number.parseFloat(navbarStyle.paddingBottom) || 0 : 0
-
-        const renderedScale = navbarLogoImg && navbarLogoImg.offsetWidth > 0
-          ? navbarRect.width / navbarLogoImg.offsetWidth
-          : 1
-
-        const renderedPaddingLeft = paddingLeft * renderedScale
-        const renderedPaddingRight = paddingRight * renderedScale
-        const renderedPaddingTop = paddingTop * renderedScale
-        const renderedPaddingBottom = paddingBottom * renderedScale
-
-        const visibleTargetWidth = Math.max(0, navbarRect.width - renderedPaddingLeft - renderedPaddingRight)
-        const visibleTargetHeight = Math.max(0, navbarRect.height - renderedPaddingTop - renderedPaddingBottom)
-        
-        // Calculate the visible image center, not the padded wrapper center.
-        const navbarCenterX = navbarRect.left + renderedPaddingLeft + visibleTargetWidth / 2
-        const navbarCenterY = navbarRect.top + renderedPaddingTop + visibleTargetHeight / 2
+        // Calculate optical centers
+        const targetCenterX = targetRect.left + targetRect.width / 2
+        const targetCenterY = targetRect.top + targetRect.height / 2
         const logoCenterX = logoRect.left + logoRect.width / 2
         const logoCenterY = logoRect.top + logoRect.height / 2
-        
-        // Calculate the delta to move the logo center to navbar center
-        const deltaX = navbarCenterX - logoCenterX
-        const deltaY = navbarCenterY - logoCenterY
-        
-        // Calculate scale based on the visible logo graphic size inside the padded box.
-        const targetWidth = visibleTargetWidth || navbarRect.width || 48
-        const targetHeight = visibleTargetHeight || navbarRect.height || 48
-        const currentWidth = logoRect.width
-        const currentHeight = logoRect.height
-        
-        // Scale to match the visible navbar logo graphic, not the padded container.
-        const scaleX = targetWidth / currentWidth
-        const scaleY = targetHeight / currentHeight
-        // Use the smaller scale to maintain aspect ratio
+
+        const deltaX = targetCenterX - logoCenterX
+        const deltaY = targetCenterY - logoCenterY
+
+        // Dimension scale
+        const scaleX = (targetRect.width || 48) / (logoRect.width || 240)
+        const scaleY = (targetRect.height || 48) / (logoRect.height || 240)
         const scale = Math.min(scaleX, scaleY)
 
         setLogoStyle({
-          transform: `translate(${deltaX}px, ${deltaY}px) scale(${scale})`,
-          transformOrigin: "center center",
+          transform: `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scale})`,
         })
+
+        // Notify navbar to hide its stationary logo
+        window.dispatchEvent(new CustomEvent("intro-logo-flying"))
+        setAnimateLogo(true)
+
+        const flightDuration = 1800
+        setTimeout(() => {
+          setFadeBackground(true)
+          // Navbar reveals its stationary logo
+          window.dispatchEvent(new CustomEvent("intro-logo-landed"))
+          // Notify subsequent modals / hero animations
+          window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+
+          setTimeout(dismissIntro, config.transition.fadeDurationMs || 1000)
+        }, flightDuration)
+      } else {
+        // Fallback if navbar target not found
+        setFadeBackground(true)
+        window.dispatchEvent(new CustomEvent("intro-animation-complete"))
+        setTimeout(dismissIntro, 800)
       }
-      
-      // Trigger animation on next frame for smoother transition
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          // Hide navbar logo when flying animation starts
-          window.dispatchEvent(new CustomEvent("intro-logo-flying"))
-          
-          setAnimateLogo(true)
-          
-          // Wait for logo animation to complete (1800ms), then fade background and show navbar logo
-          setTimeout(() => {
-            setFadeBackground(true)
-            // Show navbar logo when flying logo reaches destination
-            window.dispatchEvent(new CustomEvent("intro-logo-landed"))
-            // Notify that intro animation is complete and page content can start
-            window.dispatchEvent(new CustomEvent("intro-animation-complete"))
-          }, 1800)
-        })
-      })
-      
-      // After animation completes, hide intro and mark as shown
-      setTimeout(() => {
-        localStorage.setItem("introShown", "true")
-        localStorage.setItem("introLastShown", Date.now().toString())
-        setShowIntro(false)
-      }, 2800) // Animation (1800ms) + fade (1000ms)
-    }, 300)
+    })
   }
 
-  if (!showIntro || pathname?.startsWith('/demo')) return null
+  // Handle video error (graceful fallback)
+  const handleVideoError = () => {
+    console.error("Intro video failed to load or decode.")
+    dismissIntro()
+  }
+
+  // Always ensure cleanup
+  useEffect(() => releaseIntroGate, [])
+
+  if (!showIntro) return null
+
+  const logoSource = config.transition.logoUrl || "/logo.png"
+  const activePoster = isMobile
+    ? config.media.mobilePosterUrl || config.media.desktopPosterUrl
+    : config.media.desktopPosterUrl
 
   return (
-    <div 
+    <div
       ref={containerRef}
       data-intro-video=""
-      className={`fixed inset-0 z-[100] transition-opacity duration-1000 ease-out cursor-pointer ${
-        fadeBackground ? "opacity-0 pointer-events-none" : "opacity-100"
-      }`}
-      onClick={handleContainerClick}
-      onTouchEnd={handleContainerClick}
-      role="button"
-      tabIndex={0}
-      aria-label="Click or tap to enable sound"
+      className={`${styles.overlay} ${fadeBackground ? styles.overlayHidden : ""}`}
+      style={{ "--fade-duration": `${config.transition.fadeDurationMs || 1000}ms` } as React.CSSProperties}
+      aria-label="Website intro video presentation"
+      role="region"
     >
-      {/* Subtle text prompt - show before interaction */}
-      {!userInteracted && !videoEnded && (
-        <div
-          className="absolute top-4 right-4 z-10 text-black/30 hover:text-black/50 text-[10px] uppercase tracking-wider transition-colors duration-300 pointer-events-none"
-        >
-          Click for sound
+      {/* Top Controls: Audio Unmute Button */}
+      {!videoEnded && (
+        <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleSound}
+            onTouchEnd={toggleSound}
+            className={styles.controlButton}
+            aria-label={isMuted ? "Unmute intro video audio" : "Mute intro video audio"}
+          >
+            {isMuted ? (
+              <>
+                <VolumeX className="h-4 w-4" aria-hidden="true" />
+                <span>Unmute</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="h-4 w-4 text-green-400" aria-hidden="true" />
+                <span>Sound On</span>
+              </>
+            )}
+          </button>
         </div>
       )}
 
-      {/* Skip button - subtle in bottom right with larger touch target */}
-      {!videoEnded && (
-        <button
-          onClick={handleSkip}
-          onTouchEnd={handleSkip}
-          className="absolute bottom-6 right-6 z-10 px-3 py-1.5 text-white/40 hover:text-white/80 text-xs font-light tracking-wide transition-all duration-300 hover:bg-white/5 rounded-md backdrop-blur-sm border border-white/10 hover:border-white/30"
-          style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          aria-label="Skip intro"
-          type="button"
-        >
-          Skip
-        </button>
+      {/* Bottom Controls: Accessible Skip Button */}
+      {config.behavior.allowSkip && canShowSkip && !videoEnded && (
+        <div className="absolute bottom-6 right-6 z-20">
+          <button
+            type="button"
+            onClick={dismissIntro}
+            onTouchEnd={dismissIntro}
+            className={styles.controlButton}
+            aria-label="Skip intro video and go to homepage"
+          >
+            <span>Skip</span>
+            <FastForward className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
       )}
 
-      {/* Video Background - fades when logo starts flying */}
-      <div 
+      {/* Video Surface */}
+      <div
         className={`absolute inset-0 bg-black transition-opacity duration-700 ease-out ${
           animateLogo ? "opacity-0" : "opacity-100"
         }`}
       >
         <video
           ref={videoRef}
-          className="w-full h-full object-cover"
-          onEnded={handleVideoEnd}
           playsInline
           autoPlay
-          muted
+          muted={isMuted}
           preload="auto"
-          webkit-playsinline="true"
+          poster={activePoster}
+          className="w-full h-full object-cover"
+          onEnded={handleVideoEnd}
+          onError={handleVideoError}
         >
-          <source src="/Deesa-Intro%20.mp4" type="video/mp4" />
+          {/* Mobile vertical source for phones (<768px) */}
+          {config.media.mobileVideoUrl && (
+            <source src={config.media.mobileVideoUrl} media="(max-width: 767px)" type="video/mp4" />
+          )}
+
+          {/* Desktop widescreen source */}
+          {config.media.desktopVideoUrl && (
+            <source src={config.media.desktopVideoUrl} media="(min-width: 768px)" type="video/mp4" />
+          )}
+
+          {/* Fallback source */}
+          <source src={config.media.desktopVideoUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
 
-      {/* Logo overlay - shown at end of video */}
+      {/* Flying Logo Outro Surface */}
       {videoEnded && (
-        <div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
           <div
             ref={logoRef}
-            className={`relative will-change-transform ${
-              animateLogo 
-                ? "transition-all duration-[1800ms] ease-out" 
-                : "scale-100 opacity-100"
-            }`}
-            style={animateLogo ? logoStyle : { transformOrigin: "center center" }}
+            className={styles.flyingLogo}
+            style={animateLogo ? logoStyle : { transform: "none" }}
           >
             <Image
-              src="/logo.png"
-              alt="deessa Foundation Logo"
-              width={900}
-              height={900}
-              className="object-contain drop-shadow-2xl"
-              style={{ width: 'auto', height: 'auto' }}
+              src={logoSource}
+              alt="deessa Foundation"
+              width={400}
+              height={400}
+              className="object-contain drop-shadow-2xl max-w-[280px] max-h-[280px] sm:max-w-[400px] sm:max-h-[400px]"
               priority
             />
           </div>

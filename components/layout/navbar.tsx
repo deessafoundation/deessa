@@ -164,13 +164,11 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
           className={cn(
             comicNeue.className,
             isSecondary && styles.secondaryLink,
+            active ? styles.navLinkActive : styles.navLink,
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
               ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"
-              : "px-3 py-2 text-[15px] font-medium",
-            active
-              ? "text-primary"
-              : "text-slate-600 dark:text-slate-400 hover:text-[#3FABDE]"
+              : "px-3 py-2 text-[15px] font-medium"
           )}
         >
           <IconComponent className={cn(isSecondary ? "size-3.5" : "size-4", "shrink-0 opacity-80")} />
@@ -182,8 +180,8 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                 active ? "w-[70%] opacity-100" : "w-0 opacity-0 group-hover:w-[45%] group-hover:opacity-100"
               )}
             >
-              <span className="absolute inset-0 h-[3px] rounded-full bg-gradient-to-r from-[#7ad8ff] via-[#3FABDE] to-[#2f95c8] shadow-[0_0_10px_rgba(63,171,222,0.55)]" />
-              <span className="absolute inset-0 h-[6px] -translate-y-[1px] rounded-full bg-gradient-to-r from-transparent via-[#66d0ff]/80 to-transparent blur-[2px] animate-pulse" />
+              <span className="absolute inset-0 h-[3px] rounded-full bg-gradient-to-r from-[#50bcf5] via-[#0275b1] to-[#015c8c] shadow-[0_0_10px_rgba(2,117,177,0.5)]" />
+              <span className="absolute inset-0 h-[6px] -translate-y-[1px] rounded-full bg-gradient-to-r from-transparent via-[#50bcf5]/80 to-transparent blur-[2px] animate-pulse" />
             </span>
           )}
         </Link>
@@ -272,7 +270,11 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
               <div className="hidden items-center gap-1.5 lg:flex">
                 <Link
                   href={registerHref}
-                  className={cn(comicNeue.className, "flex items-center gap-2 rounded-xl border border-primary/50 px-6 py-2.5 text-[15px] font-medium text-primary transition-colors duration-200 hover:bg-[#3FABDE]/20 hover:text-[#0B5F8A]")}
+                  className={cn(
+                    comicNeue.className,
+                    styles.registerBtn,
+                    "flex items-center gap-2 rounded-xl px-6 py-2.5 text-[15px] font-semibold"
+                  )}
                 >
                   <ClipboardList className="size-3.5" />
                   {registerLabel}
@@ -280,7 +282,10 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
 
                 <Button
                   asChild
-                  className="h-11 rounded-xl bg-[#3FABDE] px-8 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:scale-[1.03] hover:bg-[#2f9bca] hover:shadow-md"
+                  className={cn(
+                    styles.donateBtn,
+                    "h-11 rounded-xl px-8 text-[15px] font-semibold"
+                  )}
                 >
                   <Link href="/donate" className={cn(comicNeue.className, "flex items-center gap-1.5")}>
                     <Heart className="size-4 fill-current" />
@@ -338,10 +343,8 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                     href={link.href}
                     className={cn(
                       comicNeue.className,
-                      "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200",
-                      active
-                        ? "border-primary/40 bg-primary/10 text-primary"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-[#3FABDE]/45 hover:bg-[#3FABDE]/10 hover:text-[#0B5F8A]"
+                      active ? styles.tabletLinkActive : styles.tabletLink,
+                      "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200"
                     )}
                   >
                     <IconComponent className="size-3.5" />
@@ -352,7 +355,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
 
               <Link
                 href={registerHref}
-                className={cn(comicNeue.className, "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 px-3 py-1.5 text-sm text-primary transition-colors hover:bg-[#3FABDE]/15 hover:text-[#0B5F8A]")}
+                className={cn(comicNeue.className, styles.registerBtn, "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold")}
               >
                 <ClipboardList className="size-3.5" />
                 <span>{registerLabel}</span>
@@ -360,7 +363,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
 
               <Link
                 href="/donate"
-                className={cn(comicNeue.className, "inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#3FABDE] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2f9bca]")}
+                className={cn(comicNeue.className, styles.donateBtn, "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold shadow-sm")}
               >
                 <Heart className="size-3.5 fill-current" />
                 <span>Donate</span>
@@ -476,8 +479,8 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                           comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
-                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
-                            : "text-slate-700 hover:bg-slate-50"
+                            ? "bg-[#eaf5fc] text-black font-semibold"
+                            : "text-black hover:bg-slate-50 hover:text-[#0275b1]"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -520,8 +523,8 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                           comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
-                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
-                            : "text-slate-700 hover:bg-slate-50"
+                            ? "bg-[#eaf5fc] text-black font-semibold"
+                            : "text-black hover:bg-slate-50 hover:text-[#0275b1]"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -562,8 +565,8 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                           comicNeue.className,
                           "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                           active
-                            ? "bg-[#eaf5fc] text-[#1a6f96] font-medium"
-                            : "text-slate-700 hover:bg-slate-50"
+                            ? "bg-[#eaf5fc] text-black font-semibold"
+                            : "text-black hover:bg-slate-50 hover:text-[#0275b1]"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -588,33 +591,45 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
             {/* Sticky Footer with CTAs */}
             <div className="border-t border-slate-200 bg-white px-5 py-4">
               <div className="space-y-2.5">
-                {/* Primary solid blue button */}
+                {/* Primary solid action button */}
                 {supportEnabled && (
                   <Link
                     href="/support"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#2F9BCA] px-4 py-3 text-[15px] font-semibold text-white shadow-sm transition-all hover:bg-[#2889b5] active:scale-[0.98]")}
+                    className={cn(
+                      comicNeue.className,
+                      styles.mobileActionReport,
+                      "flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-[15px] font-semibold shadow-sm transition-all active:scale-[0.98]"
+                    )}
                   >
                     <MessageSquare className="size-4" strokeWidth={2.5} />
                     Report an Issue
                   </Link>
                 )}
 
-                {/* Outline blue border button */}
+                {/* Outline button */}
                 <Link
                   href={registerHref}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl border-2 border-[#2F9BCA] bg-white px-4 py-3 text-[15px] font-medium text-[#2F9BCA] transition-all hover:bg-[#f0f8fc] active:scale-[0.98]")}
+                  className={cn(
+                    comicNeue.className,
+                    styles.mobileActionRegister,
+                    "flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-[15px] font-semibold transition-all active:scale-[0.98]"
+                  )}
                 >
                   <ClipboardList className="size-4" strokeWidth={2.5} />
                   {registerLabel}
                 </Link>
 
-                {/* Soft ghost blue button */}
+                {/* Soft ghost button */}
                 <Link
                   href="/donate"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={cn(comicNeue.className, "flex items-center justify-center gap-2 rounded-xl bg-[#e8f5fb] px-4 py-3 text-[15px] font-medium text-[#1a6f96] transition-all hover:bg-[#d9eef8] active:scale-[0.98]")}
+                  className={cn(
+                    comicNeue.className,
+                    styles.mobileActionDonate,
+                    "flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-[15px] font-semibold transition-all active:scale-[0.98]"
+                  )}
                 >
                   <Heart className="size-4 fill-current" strokeWidth={2.5} />
                   Donate

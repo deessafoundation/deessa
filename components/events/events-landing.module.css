@@ -10,9 +10,9 @@
 }
 .page .title { color: var(--events-ink); text-wrap: balance; overflow-wrap: anywhere; }
 :global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .page .title {
-  font-family: "Marissa Font", "Comic Neue", sans-serif;
-  font-weight: 400;
-  -webkit-text-stroke: 0.5px currentColor;
+  font-family: var(--font-dm-sans, "DM Sans"), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;
+  -webkit-text-stroke: 0;
 }
 .feature > *, .eventRow > * { min-width: 0; }
 :global(html[data-text-scale-high="true"]) .summary { flex-wrap: wrap; }
@@ -46,7 +46,10 @@
 .hero .heroTitle { font-size: clamp(88px, 7.2vw, 110px); line-height: 1; }
 .heroTagline { margin-top: 28px; font-size: 40px; line-height: 1.12; }
 .heroDescription { max-width: 425px; margin-top: 20px; font-size: 20px; line-height: 1.6; }
-:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .page .heroTitle { -webkit-text-stroke: 2px currentColor; }
+:global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .page .heroTitle {
+  font-family: var(--font-dm-sans, "DM Sans"), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-stroke: 0;
+}
 .heroActions { margin-top: 28px; gap: 12px; }
 .heroActions a { padding: 12px 22px; font-size: 17px; min-height: 54px; gap: 12px; }
 .heroFigure { position: relative; }

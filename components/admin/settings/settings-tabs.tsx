@@ -7,16 +7,22 @@ import { PaymentSettingsForm } from "@/components/admin/finance/payment-settings
 import { OrganizationSettingsForm } from "@/components/admin/settings/organization-settings-form"
 import { SupportToggleModal } from "@/components/admin/support/support-toggle-modal"
 import { SiteStatusCard } from "@/components/admin/settings/site-status-card"
+import { IntroVideoManager } from "@/components/admin/settings/intro-video-manager"
+import { AccessibilitySettingsManager } from "@/components/admin/settings/accessibility-settings-manager"
 import { SITE_UI_FLAGS_KEY, type SiteUiFlags } from "@/lib/site-status/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Settings, CreditCard, Building2 } from "lucide-react"
+import { Settings, CreditCard, Building2, Video, Accessibility } from "lucide-react"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
+import type { IntroVideoConfig } from "@/lib/types/intro-video"
+import type { AccessibilityConfig } from "@/lib/types/accessibility-settings"
 
 interface SettingsTabsProps {
   siteSettings: Record<string, Record<string, unknown>>
   paymentSettings: PaymentSettings
   envConfigured: Record<PaymentProvider, boolean>
   organizationDetails: Record<string, unknown> | null
+  introVideoConfig?: IntroVideoConfig
+  accessibilityConfig?: AccessibilityConfig
 }
 
 export function SettingsTabs({
@@ -24,6 +30,8 @@ export function SettingsTabs({
   paymentSettings,
   envConfigured,
   organizationDetails,
+  introVideoConfig,
+  accessibilityConfig,
 }: SettingsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -46,6 +54,22 @@ export function SettingsTabs({
         >
           <Settings className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
           <span className="font-semibold">Site Settings</span>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
+        </TabsTrigger>
+        <TabsTrigger
+          value="accessibility"
+          className="relative data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:rounded-xl rounded-lg px-4 py-2.5 group"
+        >
+          <Accessibility className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
+          <span className="font-semibold">Accessibility</span>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
+        </TabsTrigger>
+        <TabsTrigger
+          value="intro"
+          className="relative data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:rounded-xl rounded-lg px-4 py-2.5 group"
+        >
+          <Video className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
+          <span className="font-semibold">Intro Video</span>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
         </TabsTrigger>
         <TabsTrigger
@@ -76,6 +100,14 @@ export function SettingsTabs({
           }
         />
         <SiteSettingsForm settings={siteSettings} />
+      </TabsContent>
+
+      <TabsContent value="accessibility" className="mt-6 space-y-6">
+        <AccessibilitySettingsManager initialConfig={accessibilityConfig} />
+      </TabsContent>
+
+      <TabsContent value="intro" className="mt-6 space-y-6">
+        <IntroVideoManager initialConfig={introVideoConfig} />
       </TabsContent>
 
       <TabsContent value="payments" className="mt-6 space-y-6">

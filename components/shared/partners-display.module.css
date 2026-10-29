@@ -376,32 +376,38 @@
   margin: 0 0 2rem;
 }
 
-/* Balanced row for when co-organizers are fewer (e.g. 3 in live DB) */
+/* Unified Balanced Co-Organizers Grid */
+.coOrganizersGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.coOrganizersGrid .coOrganizerCard,
+.coOrganizersBalancedRow .coOrganizerCard {
+  flex: 0 1 calc(16.666% - 0.85rem);
+  min-width: 155px;
+  max-width: 190px;
+}
+
+/* Fallback for legacy class references */
 .coOrganizersBalancedRow {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  max-width: 50rem;
+  max-width: 74rem;
   margin: 0 auto;
 }
 
-.coOrganizersBalancedRow .coOrganizerCard {
-  flex: 1 1 180px;
-  max-width: 220px;
-}
-
-/* Co-Organizers Rows */
-.coOrganizersGridRow1 {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
+.coOrganizersGridRow1,
 .coOrganizersGridRow2 {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -409,7 +415,7 @@
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
-  padding: 1.125rem 0.625rem;
+  padding: 1rem 0.625rem 0.875rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -440,19 +446,49 @@
 }
 
 .coOrganizerLogoWrapper {
-  height: 40px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 0 0.375rem;
 }
 
 .coOrganizerLogo {
-  max-height: 36px;
-  max-width: 82%;
+  max-height: 40px;
+  max-width: 86%;
   width: auto;
   height: auto;
   object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+/* Wide / Panoramic Banners (Aspect Ratio > 2.5: NFDN, NDWA, FAIRMED, TDH) */
+.coOrganizerLogo[data-shape="wide"] {
+  max-height: 46px;
+  max-width: 95%;
+  transform: scale(1.18);
+}
+
+/* Square / Circle / Compact Badges (Aspect Ratio < 1.25: e-Sewa, INF) */
+.coOrganizerLogo[data-shape="square"] {
+  max-height: 36px;
+  max-width: 70%;
+  transform: scale(0.96);
+}
+
+/* Special compensation for logos with embedded transparent padding */
+.coOrganizerLogo[data-partner="byan"] {
+  transform: scale(1.22);
+}
+
+/* Custom Admin Scale Overrides */
+.coOrganizerLogo[data-scale="boost"] {
+  transform: scale(1.25) !important;
+}
+
+.coOrganizerLogo[data-scale="boost-large"] {
+  transform: scale(1.5) !important;
 }
 
 .coOrganizerName {
@@ -479,6 +515,13 @@
     margin: 0 auto 2.5rem;
   }
 
+  .coOrganizersGrid .coOrganizerCard,
+  .coOrganizersBalancedRow .coOrganizerCard {
+    flex: 0 1 calc(25% - 0.85rem);
+    min-width: 145px;
+    max-width: 185px;
+  }
+
   .coOrganizersGridRow1 {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -497,6 +540,15 @@
     width: 160px;
     height: 190px;
     opacity: 0.10;
+  }
+}
+
+@media (max-width: 768px) {
+  .coOrganizersGrid .coOrganizerCard,
+  .coOrganizersBalancedRow .coOrganizerCard {
+    flex: 0 1 calc(33.333% - 0.75rem);
+    min-width: 135px;
+    max-width: 175px;
   }
 }
 
@@ -541,16 +593,32 @@
     max-height: 74px;
   }
 
+  .coOrganizersGrid,
   .coOrganizersBalancedRow {
     gap: 0.75rem;
   }
 
+  .coOrganizersGrid .coOrganizerCard,
   .coOrganizersBalancedRow .coOrganizerCard {
     flex: 1 1 calc(50% - 0.5rem);
     min-width: 125px;
     max-width: calc(50% - 0.375rem);
     min-height: 94px;
     padding: 0.875rem 0.5rem;
+  }
+
+  .coOrganizerLogoWrapper {
+    height: 44px;
+  }
+
+  .coOrganizerLogo {
+    max-height: 36px;
+  }
+
+  .coOrganizerLogo[data-shape="wide"] {
+    max-height: 40px;
+    max-width: 96%;
+    transform: scale(1.12);
   }
 
   .coOrganizersGridRow1,

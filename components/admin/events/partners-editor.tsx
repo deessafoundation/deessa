@@ -79,6 +79,8 @@ interface PartnersEditorProps {
   onUpdate?: () => void
 }
 
+export type LogoFitOption = "auto" | "wide" | "square" | "boost" | "boost-large"
+
 interface PartnerModalState {
   isOpen: boolean
   mode: "add" | "edit"
@@ -89,6 +91,7 @@ interface PartnerModalState {
   website: string
   logo: string
   uploadMethod: "upload" | "url"
+  logoFit: LogoFitOption
 }
 
 export function PartnersEditor({
@@ -132,6 +135,7 @@ export function PartnersEditor({
     website: "",
     logo: "",
     uploadMethod: "upload",
+    logoFit: "auto",
   })
   const [isUploadingLogo, setIsUploadingLogo] = useState(false)
   const [isDraggingLogo, setIsDraggingLogo] = useState(false)
@@ -202,11 +206,25 @@ export function PartnersEditor({
       website: "",
       logo: "",
       uploadMethod: "upload",
+      logoFit: "auto",
     })
   }
 
   // Open modal for Editing Partner
   const handleOpenEditModal = (partner: ContextPartnerDetailed) => {
+    let initialFit: LogoFitOption = "auto"
+    if (partner.partner_description) {
+      try {
+        if (partner.partner_description.startsWith("{")) {
+          const parsed = JSON.parse(partner.partner_description)
+          if (parsed.logoFit) initialFit = parsed.logoFit
+        } else if (partner.partner_description.includes("fit:")) {
+          const match = partner.partner_description.match(/fit:([a-z-]+)/)
+          if (match) initialFit = match[1] as LogoFitOption
+        }
+      } catch {}
+    }
+
     setPartnerModal({
       isOpen: true,
       mode: "edit",
@@ -217,6 +235,7 @@ export function PartnersEditor({
       website: partner.partner_website || "",
       logo: partner.partner_logo || "",
       uploadMethod: partner.partner_logo && !partner.partner_logo.includes("supabase.co") ? "url" : "upload",
+      logoFit: initialFit,
     })
   }
 
@@ -313,6 +332,7 @@ export function PartnersEditor({
           name: trimmedName,
           website: trimmedWebsite || undefined,
           logo: trimmedLogo || undefined,
+          description: JSON.stringify({ logoFit: partnerModal.logoFit }),
           type: "partner",
           is_published: true,
           created_context_type: "event",
@@ -355,7 +375,7 @@ export function PartnersEditor({
           partner_logo_storage_path: null,
           partner_logo_uploaded_at: null,
           partner_website: trimmedWebsite || null,
-          partner_description: null,
+          partner_description: JSON.stringify({ logoFit: partnerModal.logoFit }),
           partner_type: "partner",
           category_label: matchingCategory?.category_label || partnerModal.category_key,
           category_display_order: matchingCategory?.display_order || 0,
@@ -379,6 +399,7 @@ export function PartnersEditor({
           name: trimmedName,
           website: trimmedWebsite || null,
           logo: trimmedLogo || null,
+          description: JSON.stringify({ logoFit: partnerModal.logoFit }),
         })
 
         if (!updateResult.success) {
@@ -408,6 +429,7 @@ export function PartnersEditor({
                 partner_name: trimmedName,
                 partner_website: trimmedWebsite || null,
                 partner_logo: trimmedLogo || null,
+                partner_description: JSON.stringify({ logoFit: partnerModal.logoFit }),
                 category_key: partnerModal.category_key,
                 category_label: matchingCategory?.category_label || p.category_label,
               }
@@ -1548,6 +1570,42 @@ export function PartnersEditor({
                   </Button>
                 </div>
               )}
+            </div>
+
+            {/* Logo Display Adjustment (Scale & Fit) */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-medium">Logo Display Fit &amp; Scale</Label>
+                <span className="text-[11px] text-muted-foreground">Visual balance control</span>
+              </div>
+              <Select
+                value={partnerModal.logoFit}
+                onValueChange={(val: LogoFitOption) => setPartnerModal((prev) => ({ ...prev, logoFit: val }))}
+              >
+                <SelectTrigger className="h-9 text-xs">
+                  <SelectValue placeholder="Auto-balance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="auto" className="text-xs">
+                    Auto-balance (Smart Aspect Ratio Detection)
+                  </SelectItem>
+                  <SelectItem value="wide" className="text-xs">
+                    Wide / Panoramic Banner (e.g. NFDN, NDWA)
+                  </SelectItem>
+                  <SelectItem value="square" className="text-xs">
+                    Square / Compact Icon (e.g. e-Sewa, round badges)
+                  </SelectItem>
+                  <SelectItem value="boost" className="text-xs">
+                    Zoom In (+25% scale for small logos / whitespace borders)
+                  </SelectItem>
+                  <SelectItem value="boost-large" className="text-xs">
+                    Large Zoom (+50% scale for tiny emblems)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Leave as <strong>Auto-balance</strong> for automatic sizing, or choose an override if the logo has excessive padding or needs custom scaling.
+              </p>
             </div>
           </div>
 
