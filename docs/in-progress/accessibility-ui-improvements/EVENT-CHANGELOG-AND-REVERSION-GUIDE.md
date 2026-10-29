@@ -110,3 +110,21 @@ If you wish to display the floating accessibility widget again on the public sit
 
 - Navigate to Admin $\to$ Site Settings $\to$ Accessibility Settings (or update `site_settings` key `accessibility_settings`), and set `enabled: true`.
 - Layout reference: `app/(public)/layout.tsx` lines 79–81: `<AccessibilityPanel config={a11yConfig} />`.
+
+---
+
+### F. Restoring the Press & Media Page
+
+If you ever wish to re-enable the Press & Media page:
+
+1. Restore `app/(public)/press/page.tsx` from git history (commit `869077f`).
+2. Re-add `{ label: "Press & Media", href: "/press", icon: FileText }` to `footerLinks.about` in `components/layout/footer.tsx`.
+
+---
+
+### G. Restoring the Stories Page Hero Section
+
+If you ever wish to restore the full-height hero section on `/stories`:
+
+1. Restore the hero markup `<section id="stories-hero">` and imports in `app/(public)/stories/page.tsx` from git history (commit `869077f`).
+2. In `app/(public)/stories/StoriesSections.tsx`, change `<h1 className="font-marissa ...">` on the primary story back to `<h2 className="font-marissa ...">` and adjust section padding.

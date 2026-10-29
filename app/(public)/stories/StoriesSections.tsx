@@ -102,13 +102,27 @@ export function StoriesSections({
       ═══════════════════════════════════════════ */}
       <section
         id="featured"
-        className="relative overflow-hidden bg-[#faf9f6] py-24"
+        className="relative overflow-hidden bg-[#faf9f6] pt-8 pb-20 sm:pt-10 sm:pb-24"
       >
         {/* Decorative blobs */}
         <div className="pointer-events-none absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-violet-100/40 blur-[100px]" />
         <div className="pointer-events-none absolute -right-24 bottom-0 h-[400px] w-[400px] rounded-full bg-teal-100/40 blur-[100px]" />
 
         <div className="relative mx-auto max-w-6xl px-6">
+          <nav aria-label="Breadcrumb" className="mb-8 pt-2">
+            <ol className="flex items-center gap-2 text-sm font-medium text-slate-500">
+              <li>
+                <Link href="/" className="transition-colors hover:text-slate-900 hover:underline">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-slate-400">›</li>
+              <li aria-current="page" className="font-semibold text-slate-900">
+                Stories
+              </li>
+            </ol>
+          </nav>
+
           {primaryStory ? (
             <div className="grid gap-14 lg:grid-cols-[48%_52%] lg:items-center">
 
@@ -168,9 +182,9 @@ export function StoriesSections({
                   ★ Featured Story
                 </span>
 
-                <h2 className="font-marissa mt-5 text-[2.6rem] leading-[1.15] text-[#1a1a2e] lg:text-[3rem]">
+                <h1 className="font-marissa mt-5 text-[2.6rem] leading-[1.15] text-[#1a1a2e] lg:text-[3rem]">
                   {primaryStory.title}
-                </h2>
+                </h1>
 
                 {/* Accent rule */}
                 <div className="mt-5 flex items-center gap-3">
@@ -215,9 +229,9 @@ export function StoriesSections({
           ) : (
             <div className="rounded-3xl bg-white p-14 text-center shadow-sm">
               <p className="text-xs font-bold uppercase tracking-widest text-teal">No Featured Story</p>
-              <h3 className="font-marissa mt-4 text-3xl text-[#1a1a2e]">
-                This section is ready for the next published story.
-              </h3>
+              <h1 className="font-marissa mt-4 text-3xl text-[#1a1a2e]">
+                Stories &amp; Community Narratives
+              </h1>
             </div>
           )}
         </div>
