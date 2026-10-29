@@ -73,7 +73,7 @@ export const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>
         )}
         
         {hasError && (
-          <p id={errorId} className="text-xs text-red-500" role="alert">
+          <p id={errorId} className="text-xs text-red-700 font-medium" role="alert">
             {error}
           </p>
         )}

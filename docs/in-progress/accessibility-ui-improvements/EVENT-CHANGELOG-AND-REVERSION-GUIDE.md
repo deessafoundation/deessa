@@ -25,6 +25,7 @@
 | **Navbar Buttons & Links** | `components/layout/navbar.tsx`, `components/layout/navbar.module.css` | White on cyan `#3FABDE` (2.3:1 contrast, failing AA), inline hex classes. | Default color is crisp black (`#000000`, 21:1 contrast) with accessible Ocean Blue (`#0275b1`) hover color and preserved original hover scaling and expanding glowing underline. | Fully reversible or retainable. |
 | **Footer Feedback Button** | `components/layout/footer.tsx` | No Feedback button in bottom bar; resources column had no Feedback link. | Feedback button in bottom bar and resources column linking to `/support`. | 1-minute revert (remove the Link elements). |
 | **Website Features** | `app/(public)/layout.tsx`, Site Settings | Intro video & Dev mode notice active. | Intro video and Dev notice modal disabled in site configuration. | Re-enable in Admin $\to$ Site Settings $\to$ Site UI Flags. |
+| **Accessibility Button / Widget** | `app/(public)/layout.tsx`, Site Settings | Always rendered as a floating widget over public viewports. | Made configurable in site settings and hidden from public interface to reduce screen clutter. | Re-enable in Admin $\to$ Site Settings $\to$ Accessibility Settings. |
 
 ---
 
@@ -100,3 +101,30 @@ If you wish to remove the Feedback button from the footer:
 
 - **Intro Video**: Navigate to Admin $\to$ Site Settings $\to$ Intro Video, or update `site_settings` under key `intro_video` to set `enabled: true`.
 - **Development Notice Modal / Beta Badge**: Navigate to Admin $\to$ Site Settings $\to$ Site status indicators, or set `devNotice: true` and `betaBadge: true` under key `site_ui_flags`.
+
+---
+
+### E. Re-enabling the Floating Accessibility Button / Widget
+
+If you wish to display the floating accessibility widget again on the public site:
+
+- Navigate to Admin $\to$ Site Settings $\to$ Accessibility Settings (or update `site_settings` key `accessibility_settings`), and set `enabled: true`.
+- Layout reference: `app/(public)/layout.tsx` lines 79–81: `<AccessibilityPanel config={a11yConfig} />`.
+
+---
+
+### F. Restoring the Press & Media Page
+
+If you ever wish to re-enable the Press & Media page:
+
+1. Restore `app/(public)/press/page.tsx` from git history (commit `869077f`).
+2. Re-add `{ label: "Press & Media", href: "/press", icon: FileText }` to `footerLinks.about` in `components/layout/footer.tsx`.
+
+---
+
+### G. Restoring the Stories Page Hero Section
+
+If you ever wish to restore the full-height hero section on `/stories`:
+
+1. Restore the hero markup `<section id="stories-hero">` and imports in `app/(public)/stories/page.tsx` from git history (commit `869077f`).
+2. In `app/(public)/stories/StoriesSections.tsx`, change `<h1 className="font-marissa ...">` on the primary story back to `<h2 className="font-marissa ...">` and adjust section padding.

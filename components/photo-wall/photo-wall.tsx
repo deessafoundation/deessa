@@ -145,7 +145,7 @@ export default function PhotoWall({
                   {panel?.src ? (
                     <Image
                       src={panel.src}
-                      alt={panel.alt || panel.title || `Photo ${index + 1}`}
+                      alt={panel.alt || panel.title || `Community moment ${index + 1}`}
                       fill
                       sizes="(min-width: 1024px) 176px, (min-width: 640px) 164px, 150px"
                       className="object-cover"

@@ -516,7 +516,7 @@ export default async function EventDetailPage({
                         <div className="flex justify-center mb-3">
                           <img
                             src={event.payment_qr_image_url}
-                            alt="Payment QR Code"
+                            alt={`Payment QR Code for ${event.title}`}
                             className="h-48 w-48 object-contain rounded-lg bg-white p-2 shadow-sm"
                           />
                         </div>

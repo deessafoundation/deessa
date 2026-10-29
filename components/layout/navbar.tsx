@@ -69,6 +69,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
   const [hideNavbarLogo, setHideNavbarLogo] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const scrolledRef = useRef(false)
+  const mobileToggleRef = useRef<HTMLButtonElement>(null)
   const LOGO_ZONE_WIDTH = 220
 
   // Filter nav links based on support status
@@ -130,15 +131,25 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
   }, [])
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden"
-      return () => {
-        document.body.style.overflow = ""
+    if (!mobileMenuOpen) {
+      document.body.style.overflow = ""
+      return
+    }
+
+    document.body.style.overflow = "hidden"
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false)
+        mobileToggleRef.current?.focus()
       }
     }
 
-    document.body.style.overflow = ""
-    return undefined
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.body.style.overflow = ""
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, [mobileMenuOpen])
 
   const renderNavLink = (
@@ -295,6 +306,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
               </div>
 
               <button
+                ref={mobileToggleRef}
                 type="button"
                 className={cn(
                   styles.mobileToggle,

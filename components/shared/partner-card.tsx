@@ -104,7 +104,7 @@ export function PartnerCard({
         rel="noopener noreferrer"
         className={cn(styles.card, styles[variant], className)}
         data-size={size}
-        aria-label={`Visit ${partner.partner_name} website`}
+        aria-label={`Visit ${partner.partner_name} website (opens in a new tab)`}
       >
         {content}
       </a>

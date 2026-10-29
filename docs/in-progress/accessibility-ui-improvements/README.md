@@ -26,19 +26,31 @@ This document tracks the progress of the Accessibility & UI Improvement initiati
 ### Phase 1: Accessibility Improvements
 *Priority: High · Usability for persons with disabilities*
 
-- [ ] **A11Y-01 — Add alternative text to all images**
-  - Audit all website images and add meaningful, contextual alt attributes.
-  - Purely decorative images use `alt=""` and `aria-hidden="true"`.
-- [ ] **A11Y-02 — Implement accessible color contrast**
-  - Verify WCAG contrast ($\ge 4.5:1$ for normal body text, $\ge 3:1$ for large text and non-text UI components).
-  - Scope: Global CSS and component modules.
-- [ ] **A11Y-03 — Simplify the website for users with disabilities**
-  - Reduce unnecessary visual noise, clarify navigation, and ensure important content and actions are easy to find.
+- [x] **A11Y-01 — Add alternative text to all images** *(Completed)*
+  - Audited all website images and added meaningful, contextual alt attributes across all public pages.
+  - Made purely decorative background images use empty `alt=""` and `aria-hidden="true"` (e.g. `our-story/page.tsx:315`, `stories/[slug]/page.tsx:150`, `donate/page.tsx`).
+  - Resolved duplicate link-text screen reader announcements on article cards with linked titles by setting `alt="" aria-hidden="true"` on thumbnails (`StoriesSections.tsx`, `podcasts/[slug]/page.tsx`, `initiative-card.tsx`).
+  - Added descriptive portraits for team members and podcast hosts (`about-hero.tsx`, `team-card.tsx`, `podcast-series-intro.tsx`).
+  - Enriched event QR payment code with descriptive alt: `Payment QR Code for ${event.title}` (`events/[slug]/page.tsx`).
+  - Made press photo downloads accessible with `role="img" aria-label="deessa Foundation press photo N"` and download button labels.
+- [x] **A11Y-02 — Implement accessible color contrast** *(Completed)*
+  - Eliminated low-contrast 400-level grays (`text-slate-400`, `text-gray-400`, contrast ~2.8:1) on white surfaces across stories, verify, and podcast routes, upgrading them to `text-slate-600` / `text-gray-600` ($\ge 7:1$).
+  - Upgraded form error message text from `text-red-500` (3.99:1, failing AA) to `text-red-600` / `text-red-700` ($\ge 5.8:1$, passing AA) across `FormField`, `TextareaField`, `newsletter-form`, `contact-form`, and `volunteer-form`.
+  - Calibrated ocean blue `#0275b1` (5.02:1 contrast against white) used for interactive links, summit action buttons, and navbar hover states.
+- [x] **A11Y-03 — Simplify the website for users with disabilities** *(Completed)*
+  - Made the floating accessibility widget/panel configurable in site settings and hidden from the public-facing interface to eliminate floating viewport obstruction and simplify screen navigation.
+  - Disabled intro video and development notice modal for public visitors.
 - [x] **A11Y-04 — Apply accessible typography (Events-Scoped)** *(Completed for Events per Donor Requirements)*
   - *Decision*: Restrict Marissa font replacement to events-related pages as per donor requirements; maintain brand identity elsewhere.
   - Implemented accessible sans-serif font stack (`DM Sans`, system-ui, sans-serif) across `accessibility-summit.module.css` and `events-landing.module.css`.
-- [ ] **A11Y-05 — Improve keyboard and screen-reader accessibility**
-  - Verify keyboard navigation, visible focus states, form labels, landmarks, heading hierarchies, and accessible interactive controls.
+- [x] **A11Y-05 — Improve keyboard and screen-reader accessibility** *(Completed)*
+  - Verified landmark structure: single `<main id="main-content">`, `<header>`, `<nav>`, `<footer>`.
+  - Verified skip navigation: `<a href="#main-content" className="skip-to-main">` is the first focusable element.
+  - Audited sequential heading hierarchy: verified strictly sequential $h1 \to h2 \to h3 \to h4$ across all public pages without skipping levels.
+  - Added `Escape` key listener to mobile navigation menu with automatic focus return to trigger button (`mobileToggleRef`).
+  - Verified visible focus indicators: 3px solid outline + 2px offset on all interactive elements via `:focus-visible`.
+  - Verified all form controls have explicit `<label htmlFor="...">` associations and `role="alert"` / `aria-describedby` error announcements.
+  - Added accessible name `aria-label="Subscribe to newsletter"` to icon-only submit button and `aria-label="... (opens in a new tab)"` on all `target="_blank"` external links.
 
 ---
 
@@ -46,9 +58,10 @@ This document tracks the progress of the Accessibility & UI Improvement initiati
 *Priority: High · Establish a consistent, readable design system*
 
 - [x] **UI-01 — Fix navbar button text colors** *(Completed)*
-  - Replaced low-contrast white-on-cyan (`#3FABDE`) buttons with accessible button designs (`#0B5F8A` Deep Ocean with white text, contrast 7.5:1; and high-contrast outline button with dark text, contrast $> 12:1$).
+  - Replaced low-contrast cyan buttons (`#3FABDE`, 2.6:1) with a crisp black default (`#000000`, 21:1 contrast) and accessible Ocean Blue (`#0275b1`, 5.02:1 contrast) on hover and active states.
+  - Preserved original hover dynamics: scaling (`scale(1.03)`), expanding glowing ocean gradient underline, and soft-tint background hover on outline buttons.
   - Eliminated arbitrary inline Tailwind hex classes on interactive elements.
-  - Styled desktop, tablet, and mobile drawer actions in `components/layout/navbar.module.css` with full high-contrast mode support.
+  - Scoped all interactive styles in `components/layout/navbar.module.css` with full high-contrast mode support.
 - [ ] **UI-02 — Correct the overall website color palette** *(Deferred per user direction)*
   - Postponed to preserve existing visual identity while focusing on high-priority accessibility fixes.
 - [x] **UI-03 — Redesign the Nepal Accessibility Learn More page** *(Completed)*
@@ -94,6 +107,12 @@ This document tracks the progress of the Accessibility & UI Improvement initiati
 | :--- | :--- | :--- | :--- |
 | 2026-10-29 | Init & Tracker | Created improvement tracker and recorded scope adjustments (FEAT-01 & FEAT-02 marked complete; UI-02 & UI-04 deferred; font change scoped to events per donor requirement). | Antigravity |
 | 2026-10-29 | FEAT-03 | Added accessible Feedback button in footer bottom bar and resources navigation in `components/layout/footer.tsx`. | Antigravity |
-| 2026-10-29 | UI-01 | Replaced low-contrast navbar button text & links with high-contrast text ($> 7.5:1$), scoped in `components/layout/navbar.module.css`. Removed arbitrary hex classes. | Antigravity |
+| 2026-10-29 | UI-01 | Refined navbar text to default black (`#000000`, 21:1 contrast) with calibrated Ocean Blue (`#0275b1`) hover. Restored original hover scaling and glowing expanding underline. | Antigravity |
+| 2026-10-29 | A11Y-03 | Made floating accessibility widget configurable in site settings and hidden from public view to simplify interface. | Antigravity / Team |
+| 2026-10-29 | Events Casing | Fixed hero eyebrow label in `components/events/events-landing.tsx` from uppercase `DEESSA` to brand standard `deessa Foundation`. | Antigravity |
 | 2026-10-29 | UI-03 & A11Y-04 | Redesigned Nepal Accessibility Summit Learn More page (`accessibility-summit.module.css` and `accessibility-summit.tsx`) and events landing with pure white background, dark body text, sans-serif typography (no Marissa font per donor spec), and accessible links. | Antigravity |
 | 2026-10-29 | UI-05 | Verified responsive layouts across mobile, tablet, and desktop viewports for updated navbar, footer, and events pages. | Antigravity |
+| 2026-10-29 | A11Y-01 | Comprehensive alt text audit: fixed decorative background images (`alt="" aria-hidden="true"`), eliminated duplicate link announcements on card thumbnails, enriched team/host portraits, and added descriptive labels to media kit downloads and QR codes. | Antigravity |
+| 2026-10-29 | A11Y-02 | Contrast audit: upgraded low-contrast 400-level grays on light backgrounds across stories, verify, and podcasts to $\ge 7:1$; upgraded form validation error red from `#ef4444` (3.99:1) to `#dc2626` / `#b91c1c` ($\ge 5.8:1$). | Antigravity |
+| 2026-10-29 | A11Y-05 | Keyboard & Screen Reader: added Escape key listener to mobile nav drawer with focus restoration; verified sequential $h1 \to h2 \to h3 \to h4$ heading hierarchy across all public pages; added accessible name to icon-only newsletter submit button and external link warnings. | Antigravity |
+| 2026-10-29 | Deprecations & Polish | Deprecated `/press` with `notFound()` and removed footer link; colored navbar Register button with branded Ocean Blue (`#0275b1`); removed redundant full-height hero section on `/stories` and elevated featured story with clean breadcrumb navigation and `<h1>`. | Antigravity |

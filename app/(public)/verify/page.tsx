@@ -73,14 +73,14 @@ export default function VerifyPage() {
           <form onSubmit={handleVerify} className="space-y-5">
             {/* Input with search icon */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground-muted" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground-muted" aria-hidden="true" />
               <input
                 id="verification-input"
                 type="text"
                 value={verificationId}
                 onChange={(e) => setVerificationId(e.target.value)}
                 placeholder="e.g. DF-2024-XXXXX"
-                className="w-full pl-12 pr-4 py-4 text-base sm:text-lg rounded-xl border-2 border-gray-200 bg-[rgb(248,249,250)] focus:border-[rgb(63,171,222)] focus:ring-4 focus:ring-[rgb(63,171,222)]/15 focus:bg-white outline-none transition-all duration-200 text-[rgb(33,37,41)] placeholder:text-gray-400"
+                className="w-full pl-12 pr-4 py-4 text-base sm:text-lg rounded-xl border-2 border-gray-200 bg-[rgb(248,249,250)] focus:border-[rgb(63,171,222)] focus:ring-4 focus:ring-[rgb(63,171,222)]/15 focus:bg-white outline-none transition-all duration-200 text-[rgb(33,37,41)] placeholder:text-gray-500"
                 autoComplete="off"
                 autoFocus
               />

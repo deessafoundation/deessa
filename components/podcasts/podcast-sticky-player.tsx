@@ -72,7 +72,8 @@ export default function PodcastStickyPlayer({ podcast }: PodcastStickyPlayerProp
           <div className="hidden sm:block w-16 h-16 rounded overflow-hidden flex-shrink-0">
             <img
               src={podcast.thumbnailUrl}
-              alt={podcast.title}
+              alt=""
+              aria-hidden="true"
               className="w-full h-full object-cover"
             />
           </div>

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Public Receipt Verification Page
  * 
  * Allows anyone to verify the authenticity of a donation receipt
@@ -300,7 +300,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
                 <svg className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-[11px] text-gray-400 leading-relaxed italic">
+                <p className="text-[11px] text-gray-600 leading-relaxed italic">
                   This is an automated security measure and does not indicate any problem with your receipt. If you need immediate assistance, please contact our support team.
                 </p>
               </div>
@@ -308,7 +308,7 @@ export default async function VerificationPage({ params }: VerificationPageProps
           </div>
 
           {/* Encrypted badge */}
-          <div className="flex items-center justify-center gap-2 mt-8 text-xs text-gray-400">
+          <div className="flex items-center justify-center gap-2 mt-8 text-xs text-gray-600 font-medium">
             <svg className="w-4 h-4 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -451,16 +451,16 @@ export default async function VerificationPage({ params }: VerificationPageProps
                 <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <p className="text-[11px] text-gray-400 leading-relaxed italic">
+                <p className="text-[11px] text-gray-600 leading-relaxed italic">
                   If you suspect a fraudulent receipt, please report it immediately to our compliance team at{" "}
-                  <a href="mailto:deessa.social@gmail.com" className="text-red-400 hover:underline">deessa.social@gmail.com</a>
+                  <a href="mailto:deessa.social@gmail.com" className="text-red-700 font-medium hover:underline">deessa.social@gmail.com</a>
                 </p>
               </div>
             </div>
           </div>
 
           {/* Encrypted badge */}
-          <div className="flex items-center justify-center gap-2 mt-8 text-xs text-gray-400">
+          <div className="flex items-center justify-center gap-2 mt-8 text-xs text-gray-600 font-medium">
             <svg className="w-4 h-4 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>

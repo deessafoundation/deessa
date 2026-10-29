@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight, MessageSquare } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight, MessageSquare } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter/newsletter-form"
 import { Facebook, Twitter, Instagram, Youtube } from "@/components/shared/icons/social-icons"
 
@@ -13,7 +13,6 @@ const footerLinks = {
     { label: "Our Story", href: "/our-story", icon: Heart },
     { label: "Our Team", href: "/about#team", icon: Users },
     { label: "Partners", href: "/about#partners", icon: HeartHandshake },
-    { label: "Press & Media", href: "/press", icon: FileText },
     { label: "Annual Reports", href: "/impact#reports", icon: Award },
     { label: "Autism Programs", href: "/whatwedo?category=autism", icon: Heart },
     { label: "Careers", href: "/about#careers", icon: Briefcase },
@@ -425,6 +424,7 @@ export function Footer() {
                     href="/admin"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Admin portal (opens in a new tab)"
                     className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     Admin
