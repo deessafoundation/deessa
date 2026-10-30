@@ -384,6 +384,7 @@ export function IntroVideo({ config = DEFAULT_INTRO_VIDEO_CONFIG }: IntroVideoPr
 
           {/* Fallback source */}
           <source src={config.media.desktopVideoUrl} type="video/mp4" />
+          <track kind="captions" src="/captions/intro.vtt" srcLang="en" label="English" default />
           Your browser does not support the video tag.
         </video>
       </div>

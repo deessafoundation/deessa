@@ -79,11 +79,11 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
           {sortedStats.map((stat) => (
             <div key={stat.label} className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-primary font-comic-num">
+              <p className="text-2xl md:text-3xl font-bold text-brand-primary-dark font-comic-num">
                 <CountUp end={stat.value} suffix={stat.suffix || ""} />
               </p>
-              <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
-              {stat.sublabel && <p className="text-xs text-slate-500">{stat.sublabel}</p>}
+              <p className="text-sm text-slate-700 font-medium">{stat.label}</p>
+              {stat.sublabel && <p className="text-xs text-slate-600 font-medium">{stat.sublabel}</p>}
             </div>
           ))}
         </div>
@@ -339,7 +339,10 @@ export function ProgramsSection({ whatWeDo }: ProgramsSectionProps) {
                         "mt-auto flex items-center justify-between gap-3 pt-7 font-comic text-[0.95rem] font-bold",
                       )}
                     >
-                      <span className={pillarCard.ctaLabel}>Explore this area</span>
+                      <span className={pillarCard.ctaLabel}>
+                        <span className="sr-only">Explore {pillar.title}</span>
+                        <span aria-hidden="true">Explore this area</span>
+                      </span>
                       <span aria-hidden="true" className={pillarCard.ctaArrow}>
                         <ArrowRight className="size-4" />
                       </span>
@@ -496,7 +499,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
         <ScrollReveal animation="fade-up">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
-              Our <span className="text-primary">Impact through the Years</span>
+              Our <span className="text-brand-primary-dark">Impact through the Years</span>
             </h2>
             <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">{subtitle}</p>
           </div>
@@ -632,7 +635,7 @@ export function PodcastSection() {
               {/* Stacked: intrinsic 16:9, no crop. xl: stretches to the text column's height. */}
               <Link
                 href="/podcasts"
-                aria-label="Explore Living With Autism episodes"
+                aria-label="Explore the podcast: Living With Autism"
                 className="relative block aspect-video overflow-hidden xl:aspect-auto xl:h-full focus-visible:z-10 focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-white"
               >
                 <Image
@@ -684,6 +687,7 @@ export function PodcastSection() {
                 <Link
                   href="/podcasts"
                   data-podcast-cta
+                  aria-label="Explore the podcast: Living With Autism"
                   className="group mt-5 inline-flex min-h-12 w-full items-center justify-center gap-3 self-start rounded-xl bg-white px-6 py-3 text-base font-bold text-brand-primary-dark shadow-sm transition-colors hover:bg-[#E8F6FC] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:w-auto"
                 >
                   Explore the podcast
@@ -993,12 +997,12 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
+            <span className="text-brand-primary-dark font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-6">
               Partners <span className="font-normal">&</span> Sponsors
             </h2>
             <div className="max-w-3xl mx-auto mb-8">
-              <h3 className="text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-brand-primary-dark mb-3">Making the Impossible Possible</h3>
               <p className="text-foreground/70 leading-relaxed">
                 We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and
                 creating lasting opportunities for communities in need. Thank you to our partners who believe in our

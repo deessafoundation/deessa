@@ -78,8 +78,8 @@ export const CircularTestimonials = ({
 
   // Color & font config
   const colorName = colors.name ?? "#000"
-  const colorDesignation = colors.designation ?? "#6b7280"
-  const colorTestimony = colors.testimony ?? "#4b5563"
+  const colorDesignation = colors.designation ?? "#475569"
+  const colorTestimony = colors.testimony ?? "#334155"
   const colorArrowBg = colors.arrowBackground ?? "#141414"
   const colorArrowFg = colors.arrowForeground ?? "#f1f1f7"
   const colorArrowHoverBg = colors.arrowHoverBackground ?? "#00a6fb"
@@ -329,7 +329,9 @@ export const CircularTestimonials = ({
                     }
                   })
                 }}
-              />
+              >
+                <track kind="captions" src="/captions/empty.vtt" srcLang="en" label="English" default />
+              </video>
             ) : (
               <img
                 key={index}

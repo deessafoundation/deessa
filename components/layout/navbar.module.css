@@ -51,7 +51,7 @@
 /* Desktop and Tablet Register Button — Branded Ocean Blue with soft tint */
 .registerBtn {
   background-color: rgba(2, 117, 177, 0.08);
-  color: #0275b1;
+  color: #015c8c;
   border: 1.5px solid #0275b1;
   transition: all 0.2s ease;
 }
@@ -121,7 +121,7 @@
 
 .mobileActionRegister {
   background-color: rgba(2, 117, 177, 0.08);
-  color: #0275b1;
+  color: #015c8c;
   border: 2px solid #0275b1;
   transition: all 0.2s ease;
 }
@@ -133,7 +133,7 @@
 
 .mobileActionDonate {
   background-color: #e8f5fb;
-  color: #0275b1;
+  color: #015c8c;
   transition: all 0.2s ease;
 }
 .mobileActionDonate:hover {

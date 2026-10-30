@@ -23,9 +23,11 @@ import {
 } from "lucide-react"
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
+import { TEAM_TIERS, TEAM_TIER_DETAILS, type TeamTier } from "@/lib/types/team-input"
 import { OrgStructure } from "./OrgStructure"
 import { homeUi } from "@/components/home/home-ui"
 import { splitHeadingAccent } from "@/components/home/home-tone"
+import { cn } from "@/lib/utils"
 import introStyles from "./about-intro.module.css"
 import aboutSectionStyles from "./about-sections.module.css"
 
@@ -108,7 +110,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
   const howWeDoItHeading = splitHeadingAccent(howWeDoItContent.title)
   // const journeyHeading = splitHeadingAccent(journeyContent.title)
   // const timelineRef = useRef<HTMLDivElement>(null)
-  const [activeCard, setActiveCard] = useState<number | null>(null)
+  const [activeCard, setActiveCard] = useState<number | string | null>(null)
   const systemReduced = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoError, setVideoError] = useState(false)
@@ -148,7 +150,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
               className={introStyles.video}
             >
               <source src={media.src} />
-              {media.captionsSrc && <track kind="captions" src={media.captionsSrc} srcLang={media.captionsLanguage} label={media.captionsLabel} default />}
+              <track kind="captions" src={media.captionsSrc || "/captions/empty.vtt"} srcLang={media.captionsLanguage || "en"} label={media.captionsLabel || "English"} default />
               Your browser does not support embedded videos.
             </video>
             {videoError && <p role="status" className="p-4 text-sm">The video could not be loaded.</p>}
@@ -357,17 +359,55 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
 
             sub={settings.people.description}
           />
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-            {teamMembers.length === 0 ? (
-              <div className="col-span-full py-12 text-center">
-                <p className="font-dm-sans text-[#6b7280]">{teamUnavailable ? settings.people.unavailableMessage : settings.people.emptyMessage}</p>
-              </div>
-            ) : (
-              teamMembers.map((member, index) => <TeamCard key={member.id || `${member.name}-${index}`}
-                member={member} index={index} active={activeCard === index}
-                onActivate={(active) => setActiveCard(active ? index : null)} reduced={reduced} />)
-            )}
-          </div>
+          {teamMembers.length === 0 ? (
+            <div className="col-span-full py-12 text-center">
+              <p className="font-dm-sans text-[#6b7280]">{teamUnavailable ? settings.people.unavailableMessage : settings.people.emptyMessage}</p>
+            </div>
+          ) : (
+            <div>
+              {(() => {
+                const grouped = TEAM_TIERS.map(tierKey => {
+                  const meta = TEAM_TIER_DETAILS[tierKey]
+                  const members = teamMembers.filter(m => (m.tier || "vision") === tierKey)
+                  return { tierKey, meta, members }
+                }).filter(group => group.members.length > 0)
+
+                return grouped.map((group, gIndex) => (
+                  <div key={group.tierKey} className={cn(aboutSectionStyles.tierGroup, gIndex > 0 && aboutSectionStyles.tierDivider)}>
+                    <div className={aboutSectionStyles.tierHeader}>
+                      <div>
+                        <span className={aboutSectionStyles.tierEyebrow}>
+                          {group.meta.subtitle}
+                        </span>
+                        <h3 className={aboutSectionStyles.tierTitle}>
+                          {group.meta.label}
+                        </h3>
+                      </div>
+                      <p className={aboutSectionStyles.tierDesc}>
+                        {group.meta.description}
+                      </p>
+                    </div>
+
+                    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
+                      {group.members.map((member, mIndex) => {
+                        const cardId = member.id || `${group.tierKey}-${member.name}-${mIndex}`
+                        return (
+                          <TeamCard
+                            key={cardId}
+                            member={member}
+                            index={mIndex}
+                            active={activeCard === cardId}
+                            onActivate={(active) => setActiveCard(active ? cardId : null)}
+                            reduced={reduced}
+                          />
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))
+              })()}
+            </div>
+          )}
 
         </div>
       </section>}

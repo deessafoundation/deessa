@@ -100,9 +100,9 @@ export function CommunitySection({ posts }: { posts: FacebookPost[] }) {
                     <div className="flex size-7 items-center justify-center rounded-full bg-blue-600">
                       <Facebook aria-hidden="true" className="size-3.5 text-white" />
                     </div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">Facebook Post</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-blue-700">Facebook Post</span>
                   </div>
-                  <time className="text-xs font-medium text-gray-500" dateTime={post.created_at}>
+                  <time className="text-xs font-medium text-slate-600" dateTime={post.created_at}>
                     {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </time>
                 </div>

@@ -303,9 +303,12 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                   <Button
                     asChild
                     size="lg"
-                    className="h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8"
+                    className={cn(
+                      "h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8",
+                      styles.primaryCta
+                    )}
                   >
-                    <Link href={slide.ctaHref}>{slide.cta}</Link>
+                    <Link href={slide.ctaHref} data-hero-control>{slide.cta}</Link>
                   </Button>
                   <Button
                     asChild
@@ -331,7 +334,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
         onClick={prev}
         data-hero-control
         data-tts-ignore=""
-        className="absolute left-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
+        className="absolute left-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-md transition-colors hover:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white md:flex"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -341,7 +344,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
         onClick={next}
         data-hero-control
         data-tts-ignore=""
-        className="absolute right-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/20 text-white opacity-60 backdrop-blur-md transition-colors hover:bg-white/30 hover:opacity-100 focus:opacity-100 md:flex"
+        className="absolute right-4 top-1/2 hidden -translate-y-1/2 z-20 w-12 h-12 items-center justify-center rounded-full bg-white/25 text-white backdrop-blur-md transition-colors hover:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white md:flex"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6" />
