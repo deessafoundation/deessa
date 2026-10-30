@@ -52,23 +52,3 @@
   outline: 3px solid #fff !important;
   outline-offset: 4px !important;
 }
-
-/* Primary CTA button with calibrated ocean blue (#0275b1) for WCAG AA compliance (5.1:1 contrast) */
-.primaryCta {
-  background-color: #0275b1 !important;
-  color: #ffffff !important;
-  border: 1px solid #0275b1 !important;
-  transition: all 0.2s ease;
-}
-
-.primaryCta:hover {
-  background-color: #015c8c !important;
-  border-color: #015c8c !important;
-  color: #ffffff !important;
-}
-
-:global(body.high-contrast) .primaryCta {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 2px solid #000000 !important;
-}

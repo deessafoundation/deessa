@@ -303,10 +303,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                   <Button
                     asChild
                     size="lg"
-                    className={cn(
-                      "h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8",
-                      styles.primaryCta
-                    )}
+                    className="h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8"
                   >
                     <Link href={slide.ctaHref} data-hero-control>{slide.cta}</Link>
                   </Button>

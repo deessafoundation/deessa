@@ -174,8 +174,9 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
           aria-current={active ? "page" : undefined}
           className={cn(
             comicNeue.className,
-            isSecondary && styles.secondaryLink,
-            active ? styles.navLinkActive : styles.navLink,
+            isSecondary
+              ? (active ? styles.secondaryLinkActive : styles.secondaryLink)
+              : (active ? styles.navLinkActive : styles.navLink),
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
               ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"

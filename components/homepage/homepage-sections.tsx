@@ -79,11 +79,11 @@ export function ImpactStatsBar({ stats }: ImpactStatsBarProps) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
           {sortedStats.map((stat) => (
             <div key={stat.label} className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-brand-primary-dark font-comic-num">
+              <p className="text-2xl md:text-3xl font-bold text-primary font-comic-num">
                 <CountUp end={stat.value} suffix={stat.suffix || ""} />
               </p>
-              <p className="text-sm text-slate-700 font-medium">{stat.label}</p>
-              {stat.sublabel && <p className="text-xs text-slate-600 font-medium">{stat.sublabel}</p>}
+              <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
+              {stat.sublabel && <p className="text-xs text-slate-500">{stat.sublabel}</p>}
             </div>
           ))}
         </div>
@@ -499,7 +499,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
         <ScrollReveal animation="fade-up">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
-              Our <span className="text-brand-primary-dark">Impact through the Years</span>
+              Our <span className="text-primary">Impact through the Years</span>
             </h2>
             <p className="text-base sm:text-lg text-foreground/70 leading-relaxed">{subtitle}</p>
           </div>
@@ -997,12 +997,12 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="text-brand-primary-dark font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
+            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
             <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-6">
               Partners <span className="font-normal">&</span> Sponsors
             </h2>
             <div className="max-w-3xl mx-auto mb-8">
-              <h3 className="text-xl md:text-2xl font-bold text-brand-primary-dark mb-3">Making the Impossible Possible</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
               <p className="text-foreground/70 leading-relaxed">
                 We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and
                 creating lasting opportunities for communities in need. Thank you to our partners who believe in our

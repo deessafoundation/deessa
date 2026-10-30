@@ -48,10 +48,47 @@
   color: #0275b1;
 }
 
+/* Secondary Navigation link base and active styles */
+.secondaryLink {
+  color: #475569;
+  transition: color 0.2s ease;
+}
+.secondaryLink:hover {
+  color: #0275b1;
+}
+.secondaryLinkActive {
+  color: #0275b1;
+  font-weight: 700;
+}
+
+:global(.dark) .secondaryLink {
+  color: #cbd5e1;
+}
+:global(.dark) .secondaryLink:hover {
+  color: #7ad8ff;
+}
+:global(.dark) .secondaryLinkActive {
+  color: #7ad8ff;
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  .secondaryLink {
+    color: #cbd5e1;
+  }
+  .secondaryLink:hover {
+    color: #7ad8ff;
+  }
+  .secondaryLinkActive {
+    color: #7ad8ff;
+    font-weight: 700;
+  }
+}
+
 /* Desktop and Tablet Register Button — Branded Ocean Blue with soft tint */
 .registerBtn {
   background-color: rgba(2, 117, 177, 0.08);
-  color: #015c8c;
+  color: #0275b1;
   border: 1.5px solid #0275b1;
   transition: all 0.2s ease;
 }
@@ -121,7 +158,7 @@
 
 .mobileActionRegister {
   background-color: rgba(2, 117, 177, 0.08);
-  color: #015c8c;
+  color: #0275b1;
   border: 2px solid #0275b1;
   transition: all 0.2s ease;
 }
@@ -133,12 +170,12 @@
 
 .mobileActionDonate {
   background-color: #e8f5fb;
-  color: #015c8c;
+  color: #0275b1;
   transition: all 0.2s ease;
 }
 .mobileActionDonate:hover {
   background-color: #d9eef8;
-  color: #015c8c;
+  color: #0275b1;
 }
 
 /* High Contrast Mode Overrides */
@@ -208,7 +245,9 @@
 }
 
 :global(body.inverted-contrast) .navLink,
-:global(body.inverted-contrast) .navLinkActive {
+:global(body.inverted-contrast) .navLinkActive,
+:global(body.inverted-contrast) .secondaryLink,
+:global(body.inverted-contrast) .secondaryLinkActive {
   color: #ffffff !important;
 }
 
