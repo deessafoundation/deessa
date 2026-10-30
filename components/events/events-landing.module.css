@@ -71,7 +71,24 @@
 :global(body.inverted-contrast) .collagePhoto img { filter: grayscale(1); }
 :global(body.high-contrast) .heroTitle::after,
 :global(body.inverted-contrast) .heroTitle::after { background: var(--events-ink); }
-@media (max-width: 639px) { .collage { aspect-ratio: 1.6; } .heroLayout { width: calc(100% - 40px); gap: 16px; } .hero .heroTitle { font-size: 68px; } }
+@media (max-width: 639px) {
+  .collage { aspect-ratio: 1.6; }
+  .heroLayout { width: calc(100% - 32px); gap: 16px; }
+  .hero .heroTitle { font-size: clamp(40px, 12vw, 68px); }
+  .heroTagline { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .summary {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .summary > div:first-child {
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+}
 .secondary { background: #fff; color: var(--events-blue); border-color: #91bed2; }
 .secondary:hover { background: #e8f6fc; }
 .dot { background: var(--events-blue); }
