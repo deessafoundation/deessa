@@ -210,37 +210,6 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Accommodations Section Styles */
-.accommodationsSection {
-  background: #ffffff;
-}
-
-.accommodationCard {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  transition: all 0.2s ease;
-}
-
-.accommodationCard:hover {
-  background: #ffffff;
-  border-color: #0275b1;
-  box-shadow: 0 4px 14px rgba(2, 117, 177, 0.08);
-}
-
-.iconCircle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.75rem;
-  background: #e0f2fe;
-  color: #0275b1;
-  flex-shrink: 0;
-}
-
 .page :is(a, button):focus-visible {
   outline: 3px solid #0275b1;
   outline-offset: 4px;
@@ -248,23 +217,23 @@
 
 /* High Contrast Mode */
 :global(body.high-contrast) .page,
-:global(body.high-contrast) .page :is(.hero, .partners, .invitation, .scheduleSection, .accommodationsSection) {
+:global(body.high-contrast) .page :is(.hero, .partners, .invitation, .scheduleSection) {
   color: #000000 !important;
   background: #ffffff !important;
 }
 
 :global(body.inverted-contrast) .page,
-:global(body.inverted-contrast) .page :is(.hero, .partners, .invitation, .scheduleSection, .accommodationsSection) {
+:global(body.inverted-contrast) .page :is(.hero, .partners, .invitation, .scheduleSection) {
   color: #ffffff !important;
   background: #000000 !important;
 }
 
-:global(body.high-contrast) .page :is(.muted, .title, .back, .sessionCard, .accommodationCard),
+:global(body.high-contrast) .page :is(.muted, .title, .back, .sessionCard),
 :global(body.high-contrast) .page a:not(.primary):not(.secondary) {
   color: #000000 !important;
 }
 
-:global(body.inverted-contrast) .page :is(.muted, .title, .back, .sessionCard, .accommodationCard),
+:global(body.inverted-contrast) .page :is(.muted, .title, .back, .sessionCard),
 :global(body.inverted-contrast) .page a:not(.primary):not(.secondary) {
   color: #ffffff !important;
 }
@@ -291,13 +260,13 @@
   stroke: #000000 !important;
 }
 
-:global(body.high-contrast) .page :is(.dayTab:not(.dayTabActive), .sessionCard, .accommodationCard, .quickNavLink) {
+:global(body.high-contrast) .page :is(.dayTab:not(.dayTabActive), .sessionCard, .quickNavLink) {
   background: #ffffff !important;
   color: #000000 !important;
   border: 2px solid #000000 !important;
 }
 
-:global(body.inverted-contrast) .page :is(.dayTab:not(.dayTabActive), .sessionCard, .accommodationCard, .quickNavLink) {
+:global(body.inverted-contrast) .page :is(.dayTab:not(.dayTabActive), .sessionCard, .quickNavLink) {
   background: #000000 !important;
   color: #ffffff !important;
   border: 2px solid #ffffff !important;
@@ -313,16 +282,6 @@
   background: #000000 !important;
   color: #ffffff !important;
   border: 1.5px solid #ffffff !important;
-}
-
-:global(body.high-contrast) .page .iconCircle {
-  background: #000000 !important;
-  color: #ffffff !important;
-}
-
-:global(body.inverted-contrast) .page .iconCircle {
-  background: #ffffff !important;
-  color: #000000 !important;
 }
 
 :global(body.high-contrast) .page :is(.facts, .areas li, .divider, .partners, .invitation) {
@@ -357,8 +316,7 @@
   .primary,
   .secondary,
   .dayTab,
-  .sessionCard,
-  .accommodationCard {
+  .sessionCard {
     border: 2px solid ButtonText;
   }
 }
@@ -375,8 +333,7 @@
   .quickNav {
     display: none;
   }
-  .sessionCard,
-  .accommodationCard {
+  .sessionCard {
     break-inside: avoid;
     box-shadow: none;
     border: 1px solid #000;

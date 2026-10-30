@@ -8,12 +8,6 @@ import {
   Clock,
   MapPin,
   Navigation,
-  Accessibility,
-  Ear,
-  Captions,
-  FileText,
-  Sparkles,
-  HeartHandshake,
 } from "lucide-react"
 import { accessibilitySummit as event } from "@/lib/data/accessibility-summit"
 import { PartnersDisplay } from "@/components/shared/partners-display"
@@ -25,9 +19,7 @@ const areas = [
   "Inclusive education",
   "Accessible health services",
   "Social protection",
-  "Livelihoods & employment",
-  "Transportation & public infrastructure",
-  "Digital & communication accessibility",
+  "Urban futures",
 ]
 
 const REGISTRATION_FORM_URL = "https://forms.gle/kUsJ4aMD8YaNLyfF8"
@@ -72,25 +64,6 @@ function FacebookEventLink({ className }: { className?: string }) {
   )
 }
 
-function getAccommodationIcon(iconType: string) {
-  switch (iconType) {
-    case "wheelchair":
-      return <Accessibility className="size-6" aria-hidden="true" />
-    case "sign-language":
-      return <HeartHandshake className="size-6" aria-hidden="true" />
-    case "captions":
-      return <Captions className="size-6" aria-hidden="true" />
-    case "sensory":
-      return <Sparkles className="size-6" aria-hidden="true" />
-    case "hearing":
-      return <Ear className="size-6" aria-hidden="true" />
-    case "document":
-      return <FileText className="size-6" aria-hidden="true" />
-    default:
-      return <Accessibility className="size-6" aria-hidden="true" />
-  }
-}
-
 export function AccessibilitySummit() {
   return (
     <article aria-labelledby="summit-title" className={cn(styles.page, "overflow-x-hidden")}>
@@ -122,9 +95,6 @@ export function AccessibilitySummit() {
                 </a>
                 <a href="#summit-schedule" className={styles.quickNavLink}>
                   Program Schedule
-                </a>
-                <a href="#summit-accommodations" className={styles.quickNavLink}>
-                  Accessibility &amp; Accommodations
                 </a>
                 <a href="#summit-partners" className={styles.quickNavLink}>
                   Partners
@@ -243,7 +213,7 @@ export function AccessibilitySummit() {
           </h2>
           <div className="mt-5 space-y-5 text-base leading-relaxed sm:mt-6">
             <p className={styles.muted}>
-              Have questions about registration, disability accommodations, travel support, or partnerships for the summit?
+              Have questions about registration, attendance, or partnerships for the summit?
             </p>
 
             <div className={cn(styles.divider, "border-t pt-4 sm:pt-5")}>
@@ -282,7 +252,7 @@ export function AccessibilitySummit() {
         </aside>
       </div>
 
-      {/* Accessible Schedule Section */}
+      {/* Program Schedule Section */}
       <section
         id="summit-schedule"
         aria-labelledby="schedule-heading"
@@ -290,65 +260,6 @@ export function AccessibilitySummit() {
       >
         <div className="mx-auto max-w-7xl">
           <SummitScheduleViewer schedule={event.schedule} />
-        </div>
-      </section>
-
-      {/* Dedicated Accessibility Accommodations Section */}
-      <section
-        id="summit-accommodations"
-        aria-labelledby="accommodations-heading"
-        className={cn(styles.accommodationsSection, "px-4 py-12 sm:px-8 sm:py-16 lg:py-20")}
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#0275b1]">
-              Barrier-Free Inclusion
-            </p>
-            <h2 id="accommodations-heading" className={cn(styles.title, "mt-1 text-2xl sm:text-3xl md:text-4xl")}>
-              Accessibility Accommodations &amp; Support Services
-            </h2>
-            <p className={cn(styles.muted, "mt-3 text-base sm:text-lg leading-relaxed")}>
-              The Nepal Accessibility Summit 2026 is planned by and for persons with disabilities. We provide comprehensive
-              accommodations across physical, communication, sensory, and digital domains.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {event.accommodations.map((acc) => (
-              <div key={acc.id} className={styles.accommodationCard}>
-                <div className={styles.iconCircle}>
-                  {getAccommodationIcon(acc.icon)}
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-slate-900">{acc.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-700">{acc.description}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Accommodation Assistance Request Banner */}
-          <div className="mt-10 flex flex-col justify-between gap-6 rounded-2xl border border-blue-200 bg-[#f0f7fb] p-6 sm:p-8 md:flex-row md:items-center">
-            <div className="max-w-2xl">
-              <h3 className="text-xl font-bold text-slate-900">
-                Need Individual Accessibility Accommodations?
-              </h3>
-              <p className="mt-1.5 text-sm sm:text-base leading-relaxed text-slate-800">
-                Do you require a tactile guide, personal assistant pass, braille program, sensory assistance, or specialized
-                dietary provisions? Please contact our accessibility coordinator by{" "}
-                <strong className="text-slate-950">15 November 2026</strong>.
-              </p>
-            </div>
-            <a
-              href={`mailto:${event.email}?subject=Accessibility%20Accommodation%20Request%20-%20Nepal%20Accessibility%20Summit%202026`}
-              aria-label="Send email to request individual accessibility accommodations"
-              className={cn(
-                styles.primary,
-                "inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-center"
-              )}
-            >
-              <span>Request Accommodations</span>
-              <ArrowUpRight className="size-4 shrink-0" aria-hidden="true" />
-            </a>
-          </div>
         </div>
       </section>
 

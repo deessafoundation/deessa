@@ -30,52 +30,6 @@ export interface SummitScheduleDay {
   sessions: SummitScheduleSession[];
 }
 
-export interface SummitAccommodation {
-  id: string;
-  title: string;
-  description: string;
-  icon: "wheelchair" | "sign-language" | "captions" | "sensory" | "hearing" | "document";
-}
-
-export const summitAccommodations: SummitAccommodation[] = [
-  {
-    id: "physical-access",
-    title: "Step-Free Physical Access",
-    description: "Hotel Pauwa features level ground-floor entrances, ramps, wide corridors, and accessible restrooms for wheelchair and mobility aid users.",
-    icon: "wheelchair",
-  },
-  {
-    id: "sign-language",
-    title: "Nepali Sign Language (NSL)",
-    description: "Professional NSL interpreters will provide continuous interpretation on stage for all plenaries and parallel working tracks.",
-    icon: "sign-language",
-  },
-  {
-    id: "live-captions",
-    title: "Real-Time CART Captions",
-    description: "Live speech-to-text transcription will be displayed on hall screens and accessible directly on personal smartphones via web browser.",
-    icon: "captions",
-  },
-  {
-    id: "sensory-space",
-    title: "Sensory Reset Quiet Room",
-    description: "A dedicated quiet room with dimmable lighting, comfortable seating, and low auditory stimulation is available throughout both days.",
-    icon: "sensory",
-  },
-  {
-    id: "assistive-listening",
-    title: "Assistive Listening Systems",
-    description: "FM listening headsets and neck-loops are provided at the accessibility reception desk for hard-of-hearing attendees.",
-    icon: "hearing",
-  },
-  {
-    id: "accessible-materials",
-    title: "Screen-Reader & Large Print Materials",
-    description: "All program agendas, speaker bios, and presentation summaries are published in accessible HTML and screen-reader-compliant digital formats.",
-    icon: "document",
-  },
-];
-
 // Schedule data placeholder — will be populated when provided by organizer
 export const summitSchedule: SummitScheduleDay[] = [];
 
@@ -98,5 +52,4 @@ export const accessibilitySummit = {
   email: "nepalaccessibilitysummit@gmail.com",
   venueMapUrl: "https://maps.google.com/?q=Hotel+Pauwa+Lakeside+Pokhara",
   schedule: summitSchedule,
-  accommodations: summitAccommodations,
 };
