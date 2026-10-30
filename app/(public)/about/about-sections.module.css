@@ -327,3 +327,91 @@
   color: #fff !important;
   border: 2px solid #fff !important;
 }
+
+/* ── Section 6: Tier Subsections ── */
+.tierGroup {
+  margin-top: 3rem;
+}
+
+.tierGroup:first-child {
+  margin-top: 0;
+}
+
+.tierDivider {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 3rem;
+}
+
+.tierHeader {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .tierHeader {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.tierEyebrow {
+  font-family: var(--font-comic);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #29b6c8;
+}
+
+.tierTitle {
+  font-family: var(--font-comic);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1a1a2e;
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .tierTitle {
+    font-size: 1.875rem;
+  }
+}
+
+.tierDesc {
+  font-family: var(--font-dm-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #6b7280;
+  max-width: 28rem;
+}
+
+:global(body.high-contrast) .tierEyebrow,
+:global(body.high-contrast) .tierTitle,
+:global(body.high-contrast) .tierDesc {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .tierDivider,
+:global(body.high-contrast) .tierHeader {
+  border-color: #000 !important;
+}
+
+:global(body.inverted-contrast) .tierEyebrow,
+:global(body.inverted-contrast) .tierTitle,
+:global(body.inverted-contrast) .tierDesc {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .tierDivider,
+:global(body.inverted-contrast) .tierHeader {
+  border-color: #fff !important;
+}

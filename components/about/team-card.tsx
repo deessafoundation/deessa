@@ -19,6 +19,8 @@ export interface AboutTeamMember {
   id?: string
   name: string
   role: string
+  tier?: string | null
+  is_featured?: boolean
   bio: string | null
   image: string | null
   social_links?: Partial<Record<keyof typeof socialPaths, string | null>> | null
