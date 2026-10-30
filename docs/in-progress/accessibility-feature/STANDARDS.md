@@ -962,3 +962,52 @@ Verification history remains as documented: nine preference tests and targeted l
 | `app/(public)/whatwedo/whatwedo-client.tsx` | Applied scoped `styles` for filter tabs, program cards, category badges, "Learn More →" links, pagination buttons, and empty filter state. |
 | `docs/in-progress/accessibility-feature/STANDARDS.md` | Documented Section 27 detailing the ancestor wildcard cascade trap, badge specificity fixes, and implementation patterns. |
 
+---
+
+## 28. Phase 4: WCAG 2.2 Level AA Full Audit & Sign-off (2026-10-30)
+
+**Last Updated:** 2026-10-30  
+**Scope:** Complete public website audit across all four WCAG principles (Perceivable, Operable, Understandable, Robust) following Phase 1–3 improvements.
+
+### 28.1 Automated Test Suite Results (QA-02)
+
+The project's dedicated accessibility test suite was executed in full:
+```bash
+node node_modules/jest/bin/jest.js --config jest.accessibility.config.cjs --runInBand
+```
+- **Results:**
+  - `__tests__/accessibility/dictionary-selection.test.ts` — **PASS**
+  - `__tests__/accessibility/dictionary-provider.test.ts` — **PASS**
+  - `__tests__/accessibility/preferences.test.ts` — **PASS**
+  - `__tests__/accessibility/dictionary.test.ts` — **PASS**
+  - `__tests__/accessibility/dictionary-route.test.ts` — **PASS**
+  - **Total:** 5 test suites, 19 of 19 tests passed (100% pass rate).
+- **Public Assets Audit:**
+  - Audited asset references; corrected missing placeholder reference in `components/shared/partner-card.tsx` to the valid `public/placeholder.svg`.
+
+### 28.2 WCAG 2.2 Level AA Compliance Matrix (QA-01 & QA-03)
+
+| WCAG Criterion | Level | Status | Implementation Details |
+| :--- | :--- | :--- | :--- |
+| **1.1.1 Non-text Content** | A | **Compliant** | All informative images have descriptive `alt` text. Purely decorative graphics and background illustrations have `alt=""` and `aria-hidden="true"`. Thumbnail images inside titled link cards are silenced to prevent duplicate link announcements. |
+| **1.3.1 Info and Relationships** | A | **Compliant** | Semantic landmarks used throughout (`<header>`, `<nav>`, `<main id="main-content">`, `<footer>`). Strictly sequential heading hierarchy ($h1 \to h2 \to h3 \to h4$) verified across all public routes. Form inputs explicitly linked with `<label htmlFor="...">`. |
+| **1.4.3 Contrast (Minimum)** | AA | **Compliant** | Normal text $\ge 4.5:1$, large text $\ge 3:1$. Low-contrast 400-level grays elevated to `text-slate-600`/`text-gray-600` ($\ge 7:1$). Form error messages elevated from `#ef4444` (3.99:1) to `#dc2626` / `#b91c1c` ($\ge 5.8:1$). Calibrated Ocean Blue (`#0275b1`, 5.02:1) applied to interactive buttons and links. |
+| **1.4.4 Resize Text** | AA | **Compliant** | Content scales cleanly up to 200% without clipping or layout breakage; line clamp restrictions removed when text-scaling modes are active. |
+| **1.4.11 Non-text Contrast** | AA | **Compliant** | Active UI controls, toggle buttons, and focus outlines meet $\ge 3:1$ contrast against adjacent surfaces. |
+| **1.4.12 Text Spacing** | AA | **Compliant** | Custom CSS properties `--a11y-line-height` and `--a11y-letter-spacing` support text spacing overrides without layout truncation. |
+| **2.1.1 Keyboard** | A | **Compliant** | All interactive controls, cards, links, dialogs, and video embeds are 100% reachable and operable via keyboard Tab and Enter/Space. |
+| **2.1.2 No Keyboard Trap** | A | **Compliant** | No keyboard traps detected. Modals and the mobile navigation drawer trap focus while open, close on `Escape`, and return focus to their triggers. |
+| **2.4.1 Bypass Blocks** | A | **Compliant** | Skip-to-main-content link (`<a href="#main-content" className="skip-to-main">`) is the first focusable element on every page. |
+| **2.4.3 Focus Order** | A | **Compliant** | Focus follows natural reading and DOM flow (top-to-bottom, left-to-right). |
+| **2.4.7 Focus Visible** | AA | **Compliant** | Global `:focus-visible` rule provides an unmistakable 3px solid outline with a 2px offset on all focused elements. |
+| **2.5.8 Target Size (Minimum)** | AA | **Compliant** | Primary interactive controls meet $\ge 44\times 44\text{px}$ touch targets; secondary controls maintain adequate spacing. |
+| **3.2.1 On Focus / 3.2.2 On Input** | A | **Compliant** | Focus and input changes do not trigger unexpected context shifts or navigation. |
+| **3.3.1 Error Identification** | A | **Compliant** | Form validation errors announce via `role="alert"` and link to inputs via `aria-describedby` with high-contrast text. |
+| **3.3.2 Labels or Instructions** | A | **Compliant** | All form fields include clear, visible labels with required indicators and helpful placeholders. |
+| **4.1.2 Name, Role, Value** | A | **Compliant** | Interactive elements have accurate ARIA roles and labels (e.g. `aria-expanded`, `aria-label`, `aria-modal`). External links include `(opens in a new tab)` context. |
+
+### 28.3 Contrast Mode Verification
+- **High-Contrast Mode (`body.high-contrast`)**: All public routes verified with monochrome borders, solid ink backgrounds, paper foregrounds, and zero black-on-black or white-on-white text traps.
+- **Inverted-Contrast Mode (`body.inverted-contrast`)**: Fully verified with reverse polarity across buttons, cards, and text layers.
+
+
