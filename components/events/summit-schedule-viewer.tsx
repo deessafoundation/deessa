@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef } from "react"
-import { CalendarDays, Clock, MapPin } from "lucide-react"
+import { CalendarDays, Clock, MapPin, ArrowUpRight } from "lucide-react"
 import type { SummitScheduleDay, AccessibilityFeature } from "@/lib/data/accessibility-summit"
 import { cn } from "@/lib/utils"
 import styles from "./accessibility-summit.module.css"
@@ -27,8 +27,40 @@ export interface SummitScheduleViewerProps {
 
 export function SummitScheduleViewer({ schedule }: SummitScheduleViewerProps) {
   const [activeDay, setActiveDay] = useState(1)
-  const [liveAnnouncement, setLiveAnnouncement] = useState("Showing Day 1 schedule: 6 sessions.")
+  const [liveAnnouncement, setLiveAnnouncement] = useState("")
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  // When no schedule sessions have been published yet
+  if (!schedule || schedule.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center sm:p-12">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-blue-50 text-[#0275b1] mb-4">
+          <CalendarDays className="size-7" aria-hidden="true" />
+        </div>
+        <p className="text-xs font-bold uppercase tracking-wider text-[#0275b1]">Program Announcement</p>
+        <h2 id="schedule-heading" className={cn(styles.title, "mt-1.5 text-2xl sm:text-3xl font-bold")}>
+          Full Summit Schedule &amp; Agenda Coming Soon
+        </h2>
+        <p className={cn(styles.muted, "mx-auto mt-3 max-w-xl text-base sm:text-lg leading-relaxed")}>
+          The comprehensive two-day session schedule, keynote speaker line-up, and thematic breakout tracks are currently being finalized.
+          Register now to receive the schedule and accessibility guide directly in your inbox.
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="https://forms.gle/kUsJ4aMD8YaNLyfF8"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Register on Google Forms to receive summit schedule updates (opens in a new window)"
+            className={cn(styles.primary, "inline-flex min-h-12 items-center gap-2 rounded-full px-6 py-3 text-sm font-bold")}
+          >
+            <span>Register for Schedule Updates</span>
+            <ArrowUpRight className="size-4 shrink-0" aria-hidden="true" />
+            <span className="sr-only"> (opens in a new window)</span>
+          </a>
+        </div>
+      </div>
+    )
+  }
 
   const handleDayChange = (dayNum: number) => {
     setActiveDay(dayNum)
