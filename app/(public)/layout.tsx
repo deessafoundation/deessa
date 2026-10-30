@@ -13,33 +13,46 @@ import { AccessibilityReadingAids } from "@/components/accessibility/reading-aid
 import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
 import { comicNeue } from "@/lib/fonts"
 import { getSiteUiFlags } from "@/lib/site-status/settings"
+import { getIntroVideoConfig } from "@/lib/data/intro-video"
 
 export const dynamic = "force-dynamic"
 
-/**
- * Runs before the page markup is painted. If the intro video is going to play,
- * it hides the site so the homepage never flashes before the intro appears.
- * Mirrors the rules in components/intro-video.tsx; IntroVideo removes the class
- * when the intro is skipped, finishes, or is not shown. The timeout is a
- * failsafe so a JS failure can never leave the site hidden.
- */
-const introGateScript = `(function(){try{
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const [siteFlags, introConfig] = await Promise.all([
+    getSiteUiFlags(),
+    getIntroVideoConfig(),
+  ])
+
+  // Build the pre-paint gate script dynamically based on introConfig
+  let introGateScript: string | null = null
+  if (introConfig.enabled) {
+    const cooldownMs = (introConfig.behavior.cooldownMinutes || 30) * 60 * 1000
+    const freq = introConfig.behavior.frequency
+    const hpOnly = introConfig.behavior.homepageOnly
+
+    introGateScript = `(function(){try{
 var d=document.documentElement;
 if(location.pathname.indexOf('/demo')===0)return;
+${hpOnly ? "if(location.pathname!=='/')return;" : ""}
 var raw=localStorage.getItem('deesha-a11y-preferences')||sessionStorage.getItem('deesha-a11y-preferences');
 if(raw){var p=(JSON.parse(raw)||{}).preferences;if(p&&(p.reduceMotion||p.sensoryFriendly))return;}
-var shown=localStorage.getItem('introShown'),last=localStorage.getItem('introLastShown');
-if(shown&&!(last&&Date.now()-parseInt(last,10)>1800000))return;
+${
+  freq === "every_visit"
+    ? ""
+    : freq === "session"
+      ? "if(sessionStorage.getItem('introSessionShown'))return;"
+      : freq === "once_ever"
+        ? "if(localStorage.getItem('introEverShown'))return;"
+        : `var shown=localStorage.getItem('introShown'),last=localStorage.getItem('introLastShown');if(shown&&!(last&&Date.now()-parseInt(last,10)>${cooldownMs}))return;`
+}
 d.classList.add('intro-pending');
-setTimeout(function(){d.classList.remove('intro-pending')},30000);
+setTimeout(function(){d.classList.remove('intro-pending')},10000);
 }catch(e){}})();`
-
-export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const siteFlags = await getSiteUiFlags()
+  }
 
   return (
     <div className={openDyslexic.variable}>
-      <script dangerouslySetInnerHTML={{ __html: introGateScript }} />
+      {introGateScript && <script dangerouslySetInnerHTML={{ __html: introGateScript }} />}
       {/* Skip to main content link - appears on Tab */}
       <a href="#main-content" className="skip-to-main">
         Skip to main content
@@ -50,7 +63,7 @@ export default async function PublicLayout({ children }: { children: React.React
           <div
             className={`${comicNeue.variable} ${comicNeue.className} website-layout relative flex min-h-screen w-full flex-col`}
           >
-            <IntroVideo />
+            <IntroVideo config={introConfig} />
             <NavbarWrapper siteFlags={siteFlags} />
             <DevelopmentNoticeModal enabled={siteFlags.devNotice} />
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
