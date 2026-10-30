@@ -16,51 +16,51 @@ export interface ToastOptions extends Partial<ToastT> {
 const toastStyles = {
   success: {
     icon: (
-      <div className="rounded-full bg-gradient-to-br from-green-400 to-green-600 p-2 shadow-lg shadow-green-500/30">
-        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-sm shadow-green-500/20">
+        <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
         </svg>
       </div>
     ),
-    className: 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-100 dark:border-green-800',
-    progressBarClass: 'bg-gradient-to-r from-green-400 to-emerald-500',
-    shadowClass: 'shadow-green-500/30',
+    className: 'bg-[#f0fdf4] border-green-200/80',
+    progressBarClass: 'bg-gradient-to-r from-green-500 to-emerald-500',
+    shadowClass: 'shadow-lg shadow-green-950/5',
   },
   error: {
     icon: (
-      <div className="rounded-full bg-gradient-to-br from-red-400 to-red-600 p-2 shadow-lg shadow-red-500/30">
-        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-sm shadow-red-500/20">
+        <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </div>
     ),
-    className: 'bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-100 dark:border-red-800',
-    progressBarClass: 'bg-gradient-to-r from-red-400 to-rose-500',
-    shadowClass: 'shadow-red-500/30',
+    className: 'bg-[#fef2f2] border-red-200/80',
+    progressBarClass: 'bg-gradient-to-r from-red-500 to-rose-500',
+    shadowClass: 'shadow-lg shadow-red-950/5',
   },
   warning: {
     icon: (
-      <div className="rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 p-2 shadow-lg shadow-yellow-500/30">
-        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-sm shadow-amber-500/20">
+        <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
     ),
-    className: 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-100 dark:border-yellow-800',
-    progressBarClass: 'bg-gradient-to-r from-yellow-400 to-amber-500',
-    shadowClass: 'shadow-yellow-500/30',
+    className: 'bg-[#fffbeb] border-yellow-200/80',
+    progressBarClass: 'bg-gradient-to-r from-yellow-500 to-amber-500',
+    shadowClass: 'shadow-lg shadow-amber-950/5',
   },
   info: {
     icon: (
-      <div className="rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 p-2 shadow-lg shadow-blue-500/30">
-        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-sm shadow-blue-500/20">
+        <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
     ),
-    className: 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-100 dark:border-blue-800',
-    progressBarClass: 'bg-gradient-to-r from-blue-400 to-indigo-500',
-    shadowClass: 'shadow-blue-500/30',
+    className: 'bg-[#eff6ff] border-blue-200/80',
+    progressBarClass: 'bg-gradient-to-r from-blue-500 to-indigo-500',
+    shadowClass: 'shadow-lg shadow-blue-950/5',
   },
 } as const;
 
@@ -70,21 +70,25 @@ const ToastMessage = ({
   description, 
   type = 'info',
   duration = 2500,
+  action,
   onAutoClose 
 }: { 
   title: string; 
   description?: string; 
   type: keyof typeof toastStyles;
   duration: number;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
   onAutoClose?: () => void;
 }) => {
   const style = toastStyles[type];
 
   return (
     <div className={cn(
-      "relative flex w-full items-start gap-4 overflow-hidden rounded-xl p-4",
-      "border border-opacity-50 backdrop-blur-sm",
-      "shadow-lg transition-all duration-300 hover:shadow-xl",
+      "relative flex w-full items-start gap-3.5 overflow-hidden rounded-2xl p-4",
+      "border bg-white shadow-lg transition-all duration-300 hover:shadow-xl",
       "animate-in slide-in-from-top-2 fade-in-0 zoom-in-95",
       style.className,
       style.shadowClass
@@ -95,21 +99,33 @@ const ToastMessage = ({
       </div>
 
       {/* Content with animated entrance */}
-      <div className="flex-1 min-w-0 animate-in slide-in-from-right-1 duration-300">
-        <h3 className="font-semibold leading-5 tracking-tight mb-1">
+      <div className="flex-1 min-w-0 animate-in slide-in-from-right-1 duration-300 pr-1">
+        <h3 className="font-semibold text-[15px] leading-5 tracking-tight mb-1 text-slate-900">
           {title}
         </h3>
         {description && (
-          <p className="text-sm opacity-90 leading-relaxed">
+          <p className="text-sm leading-relaxed text-slate-700">
             {description}
           </p>
+        )}
+        {action && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              action.onClick();
+            }}
+            className="mt-2 text-xs font-semibold text-slate-800 underline underline-offset-2 hover:text-slate-950 cursor-pointer"
+          >
+            {action.label}
+          </button>
         )}
       </div>
 
       {/* Animated progress bar */}
       <div 
         className={cn(
-          "absolute bottom-0 left-0 h-1",
+          "absolute bottom-0 left-0 h-1 rounded-b-2xl",
           style.progressBarClass
         )}
         style={{
@@ -136,13 +152,14 @@ export const showToast = {
    * Show a success toast notification
    */
   success: (options: ToastOptions) => {
-    const { title, description, duration, ...rest } = options
+    const { title, description, duration, action, ...rest } = options;
     return toast.custom((t) => (
       <ToastMessage
         type="success"
         title={title || 'Success'}
         description={description}
         duration={duration || 2500}
+        action={action}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
@@ -155,13 +172,14 @@ export const showToast = {
    * Show an error toast notification
    */
   error: (options: ToastOptions) => {
-    const { title, description, duration, ...rest } = options
+    const { title, description, duration, action, ...rest } = options;
     return toast.custom((t) => (
       <ToastMessage
         type="error"
         title={title || 'Error'}
         description={description}
         duration={duration || 2500}
+        action={action}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
@@ -174,13 +192,14 @@ export const showToast = {
    * Show a warning toast notification
    */
   warning: (options: ToastOptions) => {
-    const { title, description, duration, ...rest } = options
+    const { title, description, duration, action, ...rest } = options;
     return toast.custom((t) => (
       <ToastMessage
         type="warning"
         title={title || 'Warning'}
         description={description}
         duration={duration || 2500}
+        action={action}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {
@@ -193,13 +212,14 @@ export const showToast = {
    * Show an info toast notification
    */
   info: (options: ToastOptions) => {
-    const { title, description, duration, ...rest } = options
+    const { title, description, duration, action, ...rest } = options;
     return toast.custom((t) => (
       <ToastMessage
         type="info"
         title={title || 'Info'}
         description={description}
         duration={duration || 2500}
+        action={action}
         onAutoClose={() => toast.dismiss(t)}
       />
     ), {

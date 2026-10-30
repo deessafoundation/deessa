@@ -47,7 +47,7 @@ export function PartnerCard({
   const shouldLink = clickable && hasWebsite
 
   // Logo URL (prefer storage path, fallback to legacy logo field)
-  const logoUrl = partner.partner_logo || "/images/placeholder-partner.svg"
+  const logoUrl = partner.partner_logo || "/placeholder.svg"
 
   // Size mapping for logo dimensions
   const sizeMap = {

@@ -16,9 +16,13 @@ export default async function AboutPage() {
     getPublicAboutPageSettings(),
   ])
 
+  // Use explicitly toggled hero featured members (fallback to first 3 published)
+  const heroFeatured = team.members.filter(m => m.is_featured)
+  const heroPortraits = heroFeatured.length > 0 ? heroFeatured.slice(0, 3) : team.members.slice(0, 3)
+
   return (
     <>
-      <AboutHero settings={aboutSettings.hero} teamMembers={team.members} />
+      <AboutHero settings={aboutSettings.hero} teamMembers={heroPortraits} />
       <AboutSections
         settings={aboutSettings}
         teamUnavailable={team.unavailable}

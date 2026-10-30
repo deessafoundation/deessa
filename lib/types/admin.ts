@@ -54,6 +54,7 @@ export interface TeamMember {
   id: string
   name: string
   role: string
+  tier?: string
   bio?: string
   image?: string
   email?: string
@@ -67,6 +68,7 @@ export interface TeamMember {
     whatsapp?: string
   }
   is_published: boolean
+  is_featured?: boolean
   sort_order: number
   created_at: string
   updated_at: string
@@ -117,6 +119,7 @@ export interface Partner {
   description?: string
   type: "partner" | "donor" | "sponsor"
   is_published: boolean
+  is_featured?: boolean
   sort_order: number
   created_at: string
 }

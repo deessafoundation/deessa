@@ -271,7 +271,12 @@ export function Footer() {
         <div className="grid grid-cols-1 justify-items-center gap-10 md:grid-cols-2 md:justify-items-stretch lg:grid-cols-[1.3fr_repeat(4,1fr)] xl:gap-12">
           {/* Logo + mission */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
-            <Link href="/" onClick={handleLogoClick} className="inline-block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            <Link
+              href="/"
+              onClick={handleLogoClick}
+              aria-label="deessa Foundation Home"
+              className="inline-block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
               <Image
                 src="/logo.png"
                 alt="deessa Foundation"
@@ -414,7 +419,7 @@ export function Footer() {
               <span key={link.href} className="flex items-center gap-x-4">
                 <Link
                   href={link.href}
-                  className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="font-comic inline-block py-1 rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {link.label}
                 </Link>
@@ -425,7 +430,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Admin portal (opens in a new tab)"
-                    className="font-comic rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="font-comic inline-block py-1 rounded text-[12px] text-footer-muted transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   >
                     Admin
                   </Link>

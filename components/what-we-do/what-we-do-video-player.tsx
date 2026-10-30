@@ -61,6 +61,7 @@ export function WhatWeDoVideoPlayer({
         aria-label={label}
       >
         <source src={src} type="video/mp4" onError={() => setFailed(true)} />
+        <track kind="captions" src="/captions/empty.vtt" srcLang="en" label="English" default />
         Your browser does not support HTML video.
       </video>
 

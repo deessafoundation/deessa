@@ -154,16 +154,16 @@ export async function PartnersDisplay({
           {eyebrow && (
             <div className={styles.eyebrowWrapper}>
               <span className={styles.eyebrowLine} aria-hidden="true" />
-              <span className={styles.eyebrowText}>{eyebrow}</span>
+              <span className={cn(styles.eyebrowText, "font-comic font-sans")}>{eyebrow}</span>
               <span className={styles.eyebrowLine} aria-hidden="true" />
             </div>
           )}
 
-          <h2 id={`${id}-title`} className={styles.title}>
+          <h2 id={`${id}-title`} className={cn(styles.title, "font-heading font-marissa")}>
             {titlePrefix} <span className={styles.titleAccent}>{titleAccent}</span>
           </h2>
 
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          {subtitle && <p className={cn(styles.subtitle, "font-comic font-sans")}>{subtitle}</p>}
         </header>
 
         {/* Top Row: 4 Category Columns */}
@@ -171,7 +171,7 @@ export async function PartnersDisplay({
           {/* Column 1: ORGANIZING PARTNERS */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
-              <h3 className={styles.categoryTitle}>
+              <h3 className={cn(styles.categoryTitle, "font-heading")}>
                 {getCategoryDisplayTitle(organizersCategory, "ORGANIZING PARTNERS")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
@@ -227,7 +227,7 @@ export async function PartnersDisplay({
           {/* Column 2: IN COLLABORATION WITH */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
-              <h3 className={styles.categoryTitle}>
+              <h3 className={cn(styles.categoryTitle, "font-heading")}>
                 {getCategoryDisplayTitle(collaboratingCategory, "IN COLLABORATION WITH")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
@@ -279,7 +279,7 @@ export async function PartnersDisplay({
           {/* Column 3: KNOWLEDGE PARTNER */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
-              <h3 className={styles.categoryTitle}>
+              <h3 className={cn(styles.categoryTitle, "font-heading")}>
                 {getCategoryDisplayTitle(knowledgeCategory, "KNOWLEDGE PARTNER")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
@@ -331,7 +331,7 @@ export async function PartnersDisplay({
           {/* Column 4: TECHNICAL PARTNER */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
-              <h3 className={styles.categoryTitle}>
+              <h3 className={cn(styles.categoryTitle, "font-heading")}>
                 {getCategoryDisplayTitle(technicalCategory, "TECHNICAL PARTNER")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
@@ -386,12 +386,12 @@ export async function PartnersDisplay({
           <div className={styles.coOrganizersSection}>
             <div className={styles.coOrganizersDividerWrapper}>
               <div className={styles.dividerLine} aria-hidden="true" />
-              <h3 className={styles.coOrganizersTitle}>{coOrganizersTitle}</h3>
+              <h3 className={cn(styles.coOrganizersTitle, "font-heading")}>{coOrganizersTitle}</h3>
               <div className={styles.dividerLine} aria-hidden="true" />
             </div>
 
             {coOrganizersSubtitle && (
-              <p className={styles.coOrganizersSubtitle}>{coOrganizersSubtitle}</p>
+              <p className={cn(styles.coOrganizersSubtitle, "font-comic font-sans")}>{coOrganizersSubtitle}</p>
             )}
 
             <div className={styles.coOrganizersGrid}>

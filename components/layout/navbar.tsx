@@ -165,7 +165,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
       <div key={link.href + link.label} className="flex items-center gap-0">
         {opts.showDivider && (
           <span
-            className="hidden lg:flex w-px h-4 bg-slate-200 dark:bg-slate-600 mx-1 shrink-0"
+            className="hidden lg:flex w-px h-4 bg-slate-300 dark:bg-slate-600 mx-1 shrink-0"
             aria-hidden
           />
         )}
@@ -174,15 +174,16 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
           aria-current={active ? "page" : undefined}
           className={cn(
             comicNeue.className,
-            isSecondary && styles.secondaryLink,
-            active ? styles.navLinkActive : styles.navLink,
+            isSecondary
+              ? (active ? styles.secondaryLinkActive : styles.secondaryLink)
+              : (active ? styles.navLinkActive : styles.navLink),
             "group relative flex items-center gap-1.5 rounded-lg transition-colors duration-200",
             isSecondary
-              ? "px-2.5 py-2 text-sm font-medium lg:text-[14px]"
-              : "px-3 py-2 text-[15px] font-medium"
+              ? "px-2.5 py-2 text-sm font-bold lg:text-[14px] text-black"
+              : "px-3 py-2 text-[15px] font-bold text-black"
           )}
         >
-          <IconComponent className={cn(isSecondary ? "size-3.5" : "size-4", "shrink-0 opacity-80")} />
+          <IconComponent className={cn(isSecondary ? "size-3.5" : "size-4", "shrink-0 text-black")} strokeWidth={2.2} />
           <span>{link.label}</span>
           {isPrimary && (
             <span
@@ -218,6 +219,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
             <div className="relative flex h-16 items-center gap-1 px-3 sm:px-4 lg:px-6">
             <Link
               href="/"
+              aria-label="deessa Foundation Home"
               className="group absolute left-[49%] flex shrink-0 -translate-x-1/2 items-center gap-3 lg:relative lg:left-auto lg:w-[220px] lg:translate-x-0 lg:ml-4"
             >
               <div
@@ -388,7 +390,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
             data-secondary-nav
             className={cn(
               styles.secondaryRow,
-              "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 dark:bg-slate-900 lg:block",
+              "relative z-10 hidden overflow-hidden bg-[#f1f7fe] px-4 pt-3 pb-2 transition-all duration-300 lg:block",
               scrolled ? "max-h-0 translate-y-[-8px] py-0 pt-0 pb-0 opacity-0" : "max-h-24 translate-y-0 opacity-100"
             )}
           >

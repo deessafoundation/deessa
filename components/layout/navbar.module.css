@@ -34,18 +34,51 @@
 
 /* Navigation link base and active styles */
 .navLink {
-  color: #000000;
+  color: #000000 !important;
+  font-weight: 700;
   transition: color 0.2s ease;
 }
 .navLink:hover {
-  color: #0275b1;
+  color: #0275b1 !important;
 }
 .navLinkActive {
-  color: #000000;
+  color: #000000 !important;
   font-weight: 700;
 }
 .navLinkActive:hover {
-  color: #0275b1;
+  color: #0275b1 !important;
+}
+
+/* Secondary Navigation link base and active styles */
+.secondaryLink {
+  color: #000000 !important;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+.secondaryLink:hover {
+  color: #0275b1 !important;
+}
+.secondaryLinkActive {
+  color: #000000 !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: #0275b1;
+  text-decoration-thickness: 2px;
+}
+.secondaryLinkActive:hover {
+  color: #0275b1 !important;
+}
+
+:global(.dark) .secondaryLink {
+  color: #ffffff !important;
+}
+:global(.dark) .secondaryLink:hover {
+  color: #7ad8ff !important;
+}
+:global(.dark) .secondaryLinkActive {
+  color: #7ad8ff !important;
+  font-weight: 700;
 }
 
 /* Desktop and Tablet Register Button — Branded Ocean Blue with soft tint */
@@ -138,7 +171,7 @@
 }
 .mobileActionDonate:hover {
   background-color: #d9eef8;
-  color: #015c8c;
+  color: #0275b1;
 }
 
 /* High Contrast Mode Overrides */
@@ -208,7 +241,9 @@
 }
 
 :global(body.inverted-contrast) .navLink,
-:global(body.inverted-contrast) .navLinkActive {
+:global(body.inverted-contrast) .navLinkActive,
+:global(body.inverted-contrast) .secondaryLink,
+:global(body.inverted-contrast) .secondaryLinkActive {
   color: #ffffff !important;
 }
 

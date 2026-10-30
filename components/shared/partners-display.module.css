@@ -15,11 +15,11 @@
     radial-gradient(circle at 10% 78%, rgba(11, 95, 138, 0.10) 0%, transparent 45%),
     radial-gradient(circle at 50% 45%, rgba(232, 246, 252, 0.55) 0%, transparent 65%),
     linear-gradient(180deg, #f0f8fd 0%, #ffffff 50%, #f4f9fc 100%);
-  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #1f2937;
   overflow: hidden;
   padding: 4.5rem 1rem 5rem;
-  --title-font: "Montserrat", "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  --title-font: var(--font-heading, var(--font-marissa, "Montserrat", system-ui, sans-serif));
 }
 
 /* Decorative corner leaves using deessa ocean blue */
@@ -76,7 +76,7 @@
 }
 
 .eyebrowText {
-  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-family: var(--title-font, var(--font-heading, "Montserrat", system-ui, sans-serif));
   font-size: 0.8125rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -85,7 +85,7 @@
 }
 
 .title {
-  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-family: var(--font-heading, var(--font-marissa, "Marissa Font", sans-serif));
   font-size: clamp(1.85rem, 4vw, 3.25rem);
   font-weight: 800;
   line-height: 1.18;
@@ -96,9 +96,25 @@
 }
 
 :global(body:not(.dyslexia-font):not(.font-opendyslexic):not(.font-readable)) .title {
-  font-family: "Marissa Font", "Comic Neue", sans-serif;
+  font-family: var(--font-heading, var(--font-marissa, "Marissa Font", sans-serif));
+}
+
+:global([data-typography="classic-brand"]) .title {
+  font-family: "Marissa Font", "Comic Neue", sans-serif !important;
   font-weight: 400;
   -webkit-text-stroke: 0.5px currentColor;
+}
+
+:global([data-typography="warm-inclusive"]) .title {
+  font-family: var(--font-nunito-sans, "Nunito Sans"), system-ui, sans-serif !important;
+  font-weight: 800;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global([data-typography="modern-clean"]) .title {
+  font-family: "DM Sans", system-ui, sans-serif !important;
+  font-weight: 800;
+  -webkit-text-stroke: 0 !important;
 }
 
 .titleAccent {
@@ -111,7 +127,7 @@
 }
 
 .subtitle {
-  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-family: var(--font-comic, var(--font-sans, system-ui, sans-serif));
   font-size: clamp(0.9375rem, 1.8vw, 1.0625rem);
   line-height: 1.65;
   color: #4b5563;
@@ -146,7 +162,7 @@
 }
 
 .categoryTitle {
-  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-family: var(--title-font, var(--font-heading, system-ui, sans-serif));
   font-size: 0.8125rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -311,7 +327,7 @@
 }
 
 .partnerName {
-  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-family: var(--font-comic, var(--font-sans, system-ui, sans-serif));
   font-size: 0.8125rem;
   font-weight: 600;
   color: #1e293b;
@@ -357,7 +373,7 @@
 }
 
 .coOrganizersTitle {
-  font-family: var(--title-font, "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-family: var(--title-font, var(--font-heading, system-ui, sans-serif));
   font-size: clamp(1.125rem, 2vw, 1.25rem);
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -369,7 +385,7 @@
 }
 
 .coOrganizersSubtitle {
-  font-family: var(--font-sans), "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-family: var(--font-comic, var(--font-sans, system-ui, sans-serif));
   text-align: center;
   font-size: 0.9375rem;
   color: #64748b;
