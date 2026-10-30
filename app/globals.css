@@ -47,12 +47,16 @@
   --font-comic-num: var(--font-atkinson, "Atkinson Hyperlegible"), system-ui, sans-serif;
 }
 
+[data-typography="warm-inclusive"] .font-heading,
+[data-typography="warm-inclusive"] [class*="font-heading"],
 [data-typography="warm-inclusive"] .font-marissa,
 [data-typography="warm-inclusive"] [class*="font-marissa"] {
   font-family: var(--font-nunito-sans, "Nunito Sans"), system-ui, sans-serif !important;
   -webkit-text-stroke: 0 !important;
 }
 
+[data-typography="warm-inclusive"] .font-sans,
+[data-typography="warm-inclusive"] [class*="font-sans"],
 [data-typography="warm-inclusive"] .font-comic,
 [data-typography="warm-inclusive"] [class*="font-comic"],
 [data-typography="warm-inclusive"] .font-comic-num {
@@ -68,11 +72,15 @@
   --font-comic-num: var(--font-comic-neue, "Comic Neue"), sans-serif;
 }
 
+[data-typography="classic-brand"] .font-heading,
+[data-typography="classic-brand"] [class*="font-heading"],
 [data-typography="classic-brand"] .font-marissa,
 [data-typography="classic-brand"] [class*="font-marissa"] {
   font-family: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif !important;
 }
 
+[data-typography="classic-brand"] .font-sans,
+[data-typography="classic-brand"] [class*="font-sans"],
 [data-typography="classic-brand"] .font-comic,
 [data-typography="classic-brand"] [class*="font-comic"],
 [data-typography="classic-brand"] .font-comic-num {
@@ -88,21 +96,25 @@
   --font-comic-num: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
+[data-typography="modern-clean"] .font-heading,
+[data-typography="modern-clean"] [class*="font-heading"],
 [data-typography="modern-clean"] .font-marissa,
 [data-typography="modern-clean"] [class*="font-marissa"] {
   font-family: "DM Sans", system-ui, sans-serif !important;
   -webkit-text-stroke: 0 !important;
 }
 
+[data-typography="modern-clean"] .font-sans,
+[data-typography="modern-clean"] [class*="font-sans"],
 [data-typography="modern-clean"] .font-comic,
 [data-typography="modern-clean"] [class*="font-comic"],
 [data-typography="modern-clean"] .font-comic-num {
   font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
 }
 
+[data-typography],
 .website-layout {
-  --font-sans: var(--font-sans, "Comic Neue", sans-serif);
-  --font-comic: var(--font-comic, "Comic Neue", sans-serif);
+  font-family: var(--font-sans);
 }
 
 :root {

@@ -269,7 +269,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 >
                   <span
                     data-hero-control
-                    className="inline-block rounded-full bg-white/20 px-3 py-1.5 mb-3 text-[10px] font-semibold text-white backdrop-blur-sm sm:px-4 sm:mb-4 sm:text-sm"
+                    className="font-comic font-sans inline-block rounded-full bg-white/20 px-3 py-1.5 mb-3 text-[10px] font-semibold text-white backdrop-blur-sm sm:px-4 sm:mb-4 sm:text-sm"
                   >
                     A society where everyone is understood, celebrated, and empowered
                   </span>
@@ -277,7 +277,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
 
                 <h1
                   className={cn(
-                    "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5",
+                    "font-heading font-marissa text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5",
                     "transition-all duration-500 delay-100",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -286,7 +286,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 </h1>
                 <p
                   className={cn(
-                    "text-base sm:text-lg md:text-xl text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-lg sm:max-w-xl",
+                    "font-comic font-sans text-base sm:text-lg md:text-xl text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-lg sm:max-w-xl",
                     "transition-all duration-500 delay-200",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -295,7 +295,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 </p>
                 <div
                   className={cn(
-                    "flex flex-col gap-3 sm:flex-row sm:gap-4",
+                    "flex flex-col gap-3 sm:flex-row sm:gap-4 font-comic font-sans",
                     "transition-all duration-500 delay-300",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -303,7 +303,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                   <Button
                     asChild
                     size="lg"
-                    className="h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8"
+                    className="font-comic font-sans h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8"
                   >
                     <Link href={slide.ctaHref} data-hero-control>{slide.cta}</Link>
                   </Button>
@@ -311,7 +311,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                     asChild
                     variant="outline"
                     size="lg"
-                    className="h-12 w-full rounded-lg border-2 border-white/50 bg-white/10 px-6 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
+                    className="font-comic font-sans h-12 w-full rounded-lg border-2 border-white/50 bg-white/10 px-6 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
                   >
                     <Link href="/whatwedo" data-hero-control>
                       Explore Programs
@@ -360,7 +360,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
       <div className="absolute top-3 left-0 right-0 z-20 px-2 sm:top-4 sm:px-4 lg:px-6">
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-4 rounded-2xl px-4 py-2.5 text-white">
-            <span className="shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 sm:text-xs">
+            <span className="shrink-0 font-comic font-sans rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 sm:text-xs">
               LATEST UPDATES
             </span>
             <div className="min-w-0 flex-1 overflow-hidden">
@@ -371,7 +371,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 {[...NEWS_TICKER_ITEMS, ...NEWS_TICKER_ITEMS].map((text, idx) => (
                   <span
                     key={`${text}-${idx}`}
-                    className="flex shrink-0 items-center gap-8 whitespace-nowrap text-sm text-white/90"
+                    className="flex shrink-0 items-center gap-8 whitespace-nowrap font-comic font-sans text-sm text-white/90"
                   >
                     <span>{text}</span>
                     <span className="text-white/35" aria-hidden>

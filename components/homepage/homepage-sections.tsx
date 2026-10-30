@@ -997,13 +997,13 @@ export function PartnersSection({ settings }: PartnersSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
         <ScrollReveal animation="fade-up">
           <div className="text-center max-w-3xl mx-auto">
-            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
-            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight mb-6">
+            <span className="font-comic font-sans text-primary font-bold tracking-widest uppercase text-sm mb-4 block">Our Network</span>
+            <h2 className="font-heading font-marissa text-3xl md:text-4xl font-black text-foreground tracking-tight mb-6">
               Partners <span className="font-normal">&</span> Sponsors
             </h2>
             <div className="max-w-3xl mx-auto mb-8">
-              <h3 className="text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
-              <p className="text-foreground/70 leading-relaxed">
+              <h3 className="font-heading text-xl md:text-2xl font-bold text-primary mb-3">Making the Impossible Possible</h3>
+              <p className="font-comic font-sans text-foreground/70 leading-relaxed">
                 We extend our heartfelt gratitude to our generous donors. Your support is transforming lives and
                 creating lasting opportunities for communities in need. Thank you to our partners who believe in our
                 mission and help us build a brighter future.
