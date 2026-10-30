@@ -5,7 +5,7 @@
 // These functions query the context_partners_detailed view with proper
 // ordering and grouping for efficient rendering.
 
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/static"
 import type {
   ContextType,
   ContextPartnerDetailed,
