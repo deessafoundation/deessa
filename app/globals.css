@@ -4,6 +4,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
 /* Tippy.js styles for slash menu */
 @import "tippy.js/dist/tippy.css";
 
@@ -33,9 +35,7 @@
    deessa FOUNDATION - OCEAN BLUE THEME
    =========================================== */
 
-/* ========================================================
-   DYNAMIC TYPOGRAPHY MODES
-   ======================================================== */
+
 
 /* Default & Warm-Inclusive (Nunito Sans + Atkinson Hyperlegible) */
 :root:not([data-typography="classic-brand"]):not([data-typography="modern-clean"]),
