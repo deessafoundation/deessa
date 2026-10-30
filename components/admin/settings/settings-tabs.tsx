@@ -9,12 +9,14 @@ import { SupportToggleModal } from "@/components/admin/support/support-toggle-mo
 import { SiteStatusCard } from "@/components/admin/settings/site-status-card"
 import { IntroVideoManager } from "@/components/admin/settings/intro-video-manager"
 import { AccessibilitySettingsManager } from "@/components/admin/settings/accessibility-settings-manager"
+import { TypographyManager } from "@/components/admin/settings/typography-manager"
 import { SITE_UI_FLAGS_KEY, type SiteUiFlags } from "@/lib/site-status/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Settings, CreditCard, Building2, Video, Accessibility } from "lucide-react"
+import { Settings, CreditCard, Building2, Video, Accessibility, Type } from "lucide-react"
 import type { PaymentSettings, PaymentProvider } from "@/lib/payments/config"
 import type { IntroVideoConfig } from "@/lib/types/intro-video"
 import type { AccessibilityConfig } from "@/lib/types/accessibility-settings"
+import type { TypographyConfig } from "@/lib/typography/types"
 
 interface SettingsTabsProps {
   siteSettings: Record<string, Record<string, unknown>>
@@ -23,6 +25,7 @@ interface SettingsTabsProps {
   organizationDetails: Record<string, unknown> | null
   introVideoConfig?: IntroVideoConfig
   accessibilityConfig?: AccessibilityConfig
+  typographyConfig?: TypographyConfig
 }
 
 export function SettingsTabs({
@@ -32,6 +35,7 @@ export function SettingsTabs({
   organizationDetails,
   introVideoConfig,
   accessibilityConfig,
+  typographyConfig,
 }: SettingsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -54,6 +58,14 @@ export function SettingsTabs({
         >
           <Settings className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
           <span className="font-semibold">Site Settings</span>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
+        </TabsTrigger>
+        <TabsTrigger
+          value="typography"
+          className="relative data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:rounded-xl rounded-lg px-4 py-2.5 group"
+        >
+          <Type className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
+          <span className="font-semibold">Typography</span>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
         </TabsTrigger>
         <TabsTrigger
@@ -100,6 +112,10 @@ export function SettingsTabs({
           }
         />
         <SiteSettingsForm settings={siteSettings} />
+      </TabsContent>
+
+      <TabsContent value="typography" className="mt-6 space-y-6">
+        <TypographyManager initialConfig={typographyConfig} />
       </TabsContent>
 
       <TabsContent value="accessibility" className="mt-6 space-y-6">

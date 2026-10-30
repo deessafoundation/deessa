@@ -11,18 +11,20 @@ import { AccessibilityPanel } from "@/components/accessibility/panel"
 import { openDyslexic } from "@/app/fonts"
 import { AccessibilityReadingAids } from "@/components/accessibility/reading-aids"
 import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
-import { comicNeue } from "@/lib/fonts"
+import { comicNeue, nunitoSans, atkinsonHyperlegible } from "@/lib/fonts"
 import { getSiteUiFlags } from "@/lib/site-status/settings"
 import { getIntroVideoConfig } from "@/lib/data/intro-video"
 import { getAccessibilityConfig } from "@/lib/data/accessibility-settings"
+import { getTypographyConfig } from "@/lib/typography/settings"
 
 export const dynamic = "force-dynamic"
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const [siteFlags, introConfig, a11yConfig] = await Promise.all([
+  const [siteFlags, introConfig, a11yConfig, typographyConfig] = await Promise.all([
     getSiteUiFlags(),
     getIntroVideoConfig(),
     getAccessibilityConfig(),
+    getTypographyConfig(),
   ])
 
   // Build the pre-paint gate script dynamically based on introConfig
@@ -63,7 +65,8 @@ setTimeout(function(){d.classList.remove('intro-pending')},10000);
       <AccessibilityProvider>
         <VideoModalProvider>
           <div
-            className={`${comicNeue.variable} ${comicNeue.className} website-layout relative flex min-h-screen w-full flex-col`}
+            data-typography={typographyConfig.theme}
+            className={`${nunitoSans.variable} ${atkinsonHyperlegible.variable} ${comicNeue.variable} website-layout relative flex min-h-screen w-full flex-col`}
           >
             <IntroVideo config={introConfig} />
             <NavbarWrapper siteFlags={siteFlags} />
