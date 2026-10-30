@@ -31,6 +31,10 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin"
+    if (href.includes("?")) {
+      const [path] = href.split("?")
+      return pathname.startsWith(path)
+    }
     return pathname.startsWith(href)
   }
 
@@ -54,13 +58,14 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
         )}
       >
       <div className="flex h-16 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Image 
             src="/favicon.png" 
             alt="deessa Foundation" 
             width={32} 
             height={32}
             className="flex-shrink-0"
+            priority
           />
           <span className={cn(
             "font-semibold transition-all duration-200",
@@ -75,7 +80,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
               e.stopPropagation()
               setIsCollapsed(true)
             }}
-            className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
+            className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
             aria-label="Collapse sidebar"
           >
             <PanelLeftClose className="h-4 w-4" />
