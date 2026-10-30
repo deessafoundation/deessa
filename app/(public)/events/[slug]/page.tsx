@@ -34,16 +34,21 @@ export const revalidate = 300
 
 // Generate static params for published events at build time
 export async function generateStaticParams() {
-  const supabase = createStaticClient()
-  const { data } = await supabase
-    .from('events')
-    .select('slug')
-    .eq('status', 'published')
-    .limit(50) // Limit for build performance
-  
-  return (data || []).filter((event) => event.slug !== accessibilitySummit.slug).map((event) => ({
-    slug: event.slug,
-  }))
+  try {
+    const supabase = createStaticClient()
+    const { data } = await supabase
+      .from('events')
+      .select('slug')
+      .eq('status', 'published')
+      .limit(50) // Limit for build performance
+    
+    return (data || []).filter((event: any) => event.slug !== accessibilitySummit.slug).map((event: any) => ({
+      slug: event.slug,
+    }))
+  } catch (error) {
+    console.warn("[generateStaticParams] Could not pre-generate event slugs at build time:", error)
+    return []
+  }
 }
 
 export async function generateMetadata({

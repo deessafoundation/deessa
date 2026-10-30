@@ -37,18 +37,27 @@ export async function getPublishedStories() {
 }
 
 export function getPublishedStoriesStatic() {
-  const supabase = createStaticClient()
-  return supabase
-    .from("stories")
-    .select("slug")
-    .eq("is_published", true)
-    .then(({ data, error }) => {
-      if (error) {
-        console.error("Error fetching stories:", error)
+  try {
+    const supabase = createStaticClient()
+    return supabase
+      .from("stories")
+      .select("slug")
+      .eq("is_published", true)
+      .then(({ data, error }: any) => {
+        if (error) {
+          console.error("Error fetching stories:", error)
+          return []
+        }
+        return data || []
+      })
+      .catch((err: any) => {
+        console.warn("[getPublishedStoriesStatic] Failed to fetch static stories:", err)
         return []
-      }
-      return data || []
-    })
+      })
+  } catch (err) {
+    console.warn("[getPublishedStoriesStatic] Could not initialize static client:", err)
+    return Promise.resolve([])
+  }
 }
 
 export async function getFeaturedStory() {
