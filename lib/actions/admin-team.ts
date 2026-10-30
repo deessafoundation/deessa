@@ -15,7 +15,9 @@ async function teamAdmin() {
 function teamValues(formData: FormData) {
   const parsed = teamInputSchema.safeParse({
     ...Object.fromEntries(["name", "role", "bio", "image", "email", "phone"].map(key => [key, formData.get(key) ?? ""])),
+    tier: formData.get("tier") || "vision",
     is_published: formData.get("isPublished") === "true",
+    is_featured: formData.get("isFeatured") === "true",
     social_links: Object.fromEntries(TEAM_SOCIAL_FIELDS.map(key => [key, formData.get(key) ?? ""])),
   })
   if (!parsed.success) return { error: parsed.error.issues[0].message } as const
@@ -28,6 +30,9 @@ function teamValues(formData: FormData) {
 
 function teamFailure(error: { message: string; code?: string }, action: string) {
   console.error(`Team member ${action} failed`, error)
+  if (error.message?.includes("is_featured")) {
+    return { error: "Database migration required: 'is_featured' column is missing on team_members. Please run migration 077 in Supabase." }
+  }
   return { error: error.code === "PGRST116" ? "This member no longer exists. Refresh the list." : `Could not ${action} the team member. Please try again.` }
 }
 
@@ -92,6 +97,39 @@ export async function updateTeamMember(id: string, formData: FormData) {
   const { error } = await supabase.from("team_members").update(values.data).eq("id", id).select("id").single()
   if (error) return teamFailure(error, "update")
   const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "UPDATE", entity_type: "team_member", entity_id: id })
+  return { success: true, warning }
+}
+
+export async function toggleTeamMemberFeatured(id: string, isFeatured: boolean) {
+  const admin = await teamAdmin()
+  if (!admin) return { error: "Unauthorized" }
+  const supabase = await createClient()
+
+  if (isFeatured) {
+    const { count, error: countError } = await supabase
+      .from("team_members")
+      .select("id", { count: "exact", head: true })
+      .eq("is_featured", true)
+      .neq("id", id)
+
+    if (!countError && count !== null && count >= 3) {
+      return { error: "Maximum 3 members can be featured in the Hero collage. Please unfeature another member first." }
+    }
+  }
+
+  const { error } = await supabase.from("team_members").update({ is_featured: isFeatured }).eq("id", id).select("id").single()
+  if (error) return teamFailure(error, "update")
+  const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "UPDATE", entity_type: "team_member", entity_id: id, new_data: { is_featured: isFeatured } })
+  return { success: true, warning }
+}
+
+export async function toggleTeamMemberPublish(id: string, isPublished: boolean) {
+  const admin = await teamAdmin()
+  if (!admin) return { error: "Unauthorized" }
+  const supabase = await createClient()
+  const { error } = await supabase.from("team_members").update({ is_published: isPublished }).eq("id", id).select("id").single()
+  if (error) return teamFailure(error, "update")
+  const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "UPDATE", entity_type: "team_member", entity_id: id, new_data: { is_published: isPublished } })
   return { success: true, warning }
 }
 
