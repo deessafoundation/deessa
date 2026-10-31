@@ -3,6 +3,7 @@ import { getContextPartners } from "@/lib/data/context-partners"
 import type { ContextType, ContextPartnerDetailed, CategoryKey } from "@/lib/types/partners"
 import styles from "./partners-display.module.css"
 import { cn } from "@/lib/utils"
+import { CoOrganizerLogoImage, type LogoFitOverride } from "./co-organizer-logo-image"
 
 export interface PartnersDisplayProps {
   /**
@@ -124,9 +125,6 @@ export async function PartnersDisplay({
   )
 
   const coOrganizers = coOrganizersCategory?.partners || []
-  const isFewerCoOrganizers = coOrganizers.length <= 6
-  const row1CoOrganizers = coOrganizers.slice(0, 6)
-  const row2CoOrganizers = coOrganizers.slice(6)
 
   return (
     <section className={cn(styles.section, className)} aria-labelledby={`${id}-title`} id={id}>
@@ -396,121 +394,58 @@ export async function PartnersDisplay({
               <p className={styles.coOrganizersSubtitle}>{coOrganizersSubtitle}</p>
             )}
 
-            {isFewerCoOrganizers ? (
-              /* Balanced row when 6 or fewer co-organizers from DB */
-              <div className={styles.coOrganizersBalancedRow}>
-                {coOrganizers.map((partner, index) => {
-                  const logoUrl = getPartnerLogoUrl(partner)
-                  const websiteUrl = getPartnerWebsite(partner)
-                  const content = (
-                    <>
-                      <div className={styles.coOrganizerLogoWrapper}>
-                        {logoUrl ? (
-                          <img
-                            src={logoUrl}
-                            alt={`${partner.partner_name} logo`}
-                            className={styles.coOrganizerLogo}
-                          />
-                        ) : (
-                          <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
-                        )}
-                      </div>
-                      <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
-                    </>
-                  )
+            <div className={styles.coOrganizersGrid}>
+              {coOrganizers.map((partner, index) => {
+                const logoUrl = getPartnerLogoUrl(partner)
+                const websiteUrl = getPartnerWebsite(partner)
 
-                  return (
-                    <a
-                      key={partner.partner_id || partner.partner_name + index}
-                      href={websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.coOrganizerCard}
-                      aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
-                    >
-                      {content}
-                    </a>
-                  )
-                })}
-              </div>
-            ) : (
-              /* Multi-row layout when more than 6 co-organizers */
-              <>
-                <div className={styles.coOrganizersGridRow1}>
-                  {row1CoOrganizers.map((partner, index) => {
-                    const logoUrl = getPartnerLogoUrl(partner)
-                    const websiteUrl = getPartnerWebsite(partner)
-                    const content = (
-                      <>
-                        <div className={styles.coOrganizerLogoWrapper}>
-                          {logoUrl ? (
-                            <img
-                              src={logoUrl}
-                              alt={`${partner.partner_name} logo`}
-                              className={styles.coOrganizerLogo}
-                            />
-                          ) : (
-                            <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
-                          )}
-                        </div>
-                        <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
-                      </>
-                    )
+                // Extract custom admin logoFit override if present
+                let fitOverride: LogoFitOverride = "auto"
+                if (partner.partner_description) {
+                  try {
+                    if (partner.partner_description.startsWith("{")) {
+                      const parsed = JSON.parse(partner.partner_description)
+                      if (parsed.logoFit) fitOverride = parsed.logoFit
+                    } else if (partner.partner_description.includes("fit:")) {
+                      const match = partner.partner_description.match(/fit:([a-z-]+)/)
+                      if (match) fitOverride = match[1] as LogoFitOverride
+                    }
+                  } catch {}
+                }
 
-                    return (
-                      <a
-                        key={partner.partner_id || partner.partner_name + index}
-                        href={websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.coOrganizerCard}
-                        aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
-                      >
-                        {content}
-                      </a>
-                    )
-                  })}
-                </div>
+                const content = (
+                  <>
+                    <div className={styles.coOrganizerLogoWrapper}>
+                      {logoUrl ? (
+                        <CoOrganizerLogoImage
+                          src={logoUrl}
+                          alt={`${partner.partner_name} logo`}
+                          className={styles.coOrganizerLogo}
+                          partnerName={partner.partner_name}
+                          fitOverride={fitOverride}
+                        />
+                      ) : (
+                        <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
+                      )}
+                    </div>
+                    <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
+                  </>
+                )
 
-                {row2CoOrganizers.length > 0 && (
-                  <div className={styles.coOrganizersGridRow2}>
-                    {row2CoOrganizers.map((partner, index) => {
-                      const logoUrl = getPartnerLogoUrl(partner)
-                      const websiteUrl = getPartnerWebsite(partner)
-                      const content = (
-                        <>
-                          <div className={styles.coOrganizerLogoWrapper}>
-                            {logoUrl ? (
-                              <img
-                                src={logoUrl}
-                                alt={`${partner.partner_name} logo`}
-                                className={styles.coOrganizerLogo}
-                              />
-                            ) : (
-                              <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
-                            )}
-                          </div>
-                          <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
-                        </>
-                      )
-
-                      return (
-                        <a
-                          key={partner.partner_id || partner.partner_name + index}
-                          href={websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.coOrganizerCard}
-                          aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
-                        >
-                          {content}
-                        </a>
-                      )
-                    })}
-                  </div>
-                )}
-              </>
-            )}
+                return (
+                  <a
+                    key={partner.partner_id || partner.partner_name + index}
+                    href={websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.coOrganizerCard}
+                    aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
+                  >
+                    {content}
+                  </a>
+                )
+              })}
+            </div>
           </div>
         )}
       </div>
