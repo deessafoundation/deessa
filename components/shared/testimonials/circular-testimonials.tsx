@@ -13,6 +13,8 @@ interface Testimonial {
   video?: string
   topic?: string
   caption?: string
+  /** Explicit image description. Falls back to name when absent; use when name is empty or the image content differs from the name. */
+  alt?: string
 }
 
 interface Colors {
@@ -332,7 +334,7 @@ export const CircularTestimonials = ({
               <img
                 key={index}
                 src={testimonial.src}
-                alt={testimonial.name}
+                alt={testimonial.alt ?? testimonial.name}
                 className="testimonial-media"
                 data-index={index}
                 style={{

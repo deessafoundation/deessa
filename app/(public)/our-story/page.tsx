@@ -37,13 +37,55 @@ const challengeCards = [
 ]
 
 const storyPhotos = [
-  { src: "/twins-newborn.jpg", name: "", designation: "", quote: "" },
-  { src: "/twins-together.jpg", name: "", designation: "", quote: "" },
-  { src: "/twins-dino.jpg", name: "", designation: "", quote: "" },
-  { src: "/twins-cheer.jpg", name: "", designation: "", quote: "" },
-  { src: "/twins-curious.jpg", name: "", designation: "", quote: "" },
-  { src: "/twin-solo-1.jpg", name: "", designation: "", quote: "" },
-  { src: "/twin-solo-2.jpg", name: "", designation: "", quote: "" },
+  {
+    src: "/twins-newborn.jpg",
+    alt: "The twins as newborns, lying side by side on a blanket in white onesies, one yawning with her arm raised.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twins-together.jpg",
+    alt: "The twins as toddlers outdoors in matching light blue dresses, standing face to face in front of green bushes.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twins-dino.jpg",
+    alt: "The twins crouching on the grass in matching blue \"Team Dino\" t-shirts, watching something on the ground.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twins-cheer.jpg",
+    alt: "The twins in a playroom, raising their arms together during an activity, with books and an abacus behind them.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twins-curious.jpg",
+    alt: "The twins at a table; one leans in to smell an orange fruit while her sister watches.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twin-solo-1.jpg",
+    alt: "One of the twins outdoors, laughing with delight in a light blue dress and pink headband.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
+  {
+    src: "/twin-solo-2.jpg",
+    alt: "One of the twins outdoors, standing and looking at the camera in a light blue dress and pink headband.",
+    name: "",
+    designation: "",
+    quote: "",
+  },
 ]
 
 const impact = [
