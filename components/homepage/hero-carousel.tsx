@@ -18,6 +18,7 @@ import styles from "./hero-carousel.module.css"
 export interface HeroSlide {
   id?: string
   image: string
+  mobileImage?: string
   title: string
   subtitle: string
   cta: string
@@ -523,14 +524,39 @@ export function HeroCarousel({ slides, interval = 6000 }: HeroCarouselProps) {
                       i === current ? "opacity-100" : "opacity-0",
                     )}
                   >
-                    <HomepageImage
-                      src={normalizeHeroImage(slide.image)}
-                      alt=""
-                      fill
-                      priority={i === 0}
-                      sizes="(min-width: 1680px) 780px, (min-width: 1024px) 48vw, (min-width: 820px) 780px, calc(100vw - 40px)"
-                      className={cn("object-cover", getHeroImagePositionClass(slide))}
-                    />
+                    {slide.mobileImage ? (
+                      <>
+                        <div className="relative block h-full w-full lg:hidden">
+                          <HomepageImage
+                            src={normalizeHeroImage(slide.mobileImage)}
+                            alt=""
+                            fill
+                            priority={i === 0}
+                            sizes="(max-width: 1024px) 100vw, 780px"
+                            className="object-cover object-center"
+                          />
+                        </div>
+                        <div className="relative hidden h-full w-full lg:block">
+                          <HomepageImage
+                            src={normalizeHeroImage(slide.image)}
+                            alt=""
+                            fill
+                            priority={i === 0}
+                            sizes="(min-width: 1680px) 780px, (min-width: 1024px) 48vw, (min-width: 820px) 780px, calc(100vw - 40px)"
+                            className={cn("object-cover", getHeroImagePositionClass(slide))}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <HomepageImage
+                        src={normalizeHeroImage(slide.image)}
+                        alt=""
+                        fill
+                        priority={i === 0}
+                        sizes="(min-width: 1680px) 780px, (min-width: 1024px) 48vw, (min-width: 820px) 780px, calc(100vw - 40px)"
+                        className={cn("object-cover", getHeroImagePositionClass(slide))}
+                      />
+                    )}
                   </div>
                 ))}
                 </div>

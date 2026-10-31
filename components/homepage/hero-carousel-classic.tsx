@@ -37,6 +37,7 @@ import { TTS_ATTRIBUTES, TTS_EVENTS } from "@/lib/tts/types"
 export interface HeroSlide {
   id?: string
   image: string
+  mobileImage?: string
   title: string
   subtitle: string
   cta: string
@@ -233,18 +234,52 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
         >
           {/* Background image with subtle zoom */}
           <div className="absolute inset-0">
-            <HomepageImage
-              src={normalizeHeroImage(slide.image)}
-              alt=""
-              fill
-              className={cn(
-                "object-cover",
-                getHeroImagePositionClass(slide),
-                !prefersReducedMotion && i === current && "animate-kenburns",
-              )}
-              priority={i === 0}
-              sizes="100vw"
-            />
+            {slide.mobileImage ? (
+              <>
+                {/* Mobile portrait image (< 768px) */}
+                <div className="relative block h-full w-full md:hidden">
+                  <HomepageImage
+                    src={normalizeHeroImage(slide.mobileImage)}
+                    alt=""
+                    fill
+                    className={cn(
+                      "object-cover",
+                      !prefersReducedMotion && i === current && "animate-kenburns",
+                    )}
+                    priority={i === 0}
+                    sizes="100vw"
+                  />
+                </div>
+                {/* Desktop widescreen image (>= 768px) */}
+                <div className="relative hidden h-full w-full md:block">
+                  <HomepageImage
+                    src={normalizeHeroImage(slide.image)}
+                    alt=""
+                    fill
+                    className={cn(
+                      "object-cover",
+                      getHeroImagePositionClass(slide),
+                      !prefersReducedMotion && i === current && "animate-kenburns",
+                    )}
+                    priority={i === 0}
+                    sizes="100vw"
+                  />
+                </div>
+              </>
+            ) : (
+              <HomepageImage
+                src={normalizeHeroImage(slide.image)}
+                alt=""
+                fill
+                className={cn(
+                  "object-cover",
+                  getHeroImagePositionClass(slide) ?? "object-[50%_25%] md:object-center",
+                  !prefersReducedMotion && i === current && "animate-kenburns",
+                )}
+                priority={i === 0}
+                sizes="100vw"
+              />
+            )}
           </div>
           {/* Gradient overlay - stronger for better text readability */}
           <div
@@ -253,11 +288,11 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
           />
           <div
             data-hero-shade="vertical"
-            className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30"
+            className="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-slate-900/40 to-slate-900/30 md:from-slate-900/70 md:via-transparent md:to-slate-900/30"
           />
 
-          {/* Content - Improved typography and hierarchy */}
-          <div className="relative z-10 flex h-full items-center">
+          {/* Content - Positioned ~25% below the navbar on mobile viewports */}
+          <div className="relative z-10 flex h-full items-start pt-[22svh] sm:pt-[24svh] md:items-center md:pt-0">
             <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
               <div data-tts-highlight-target className="max-w-xl sm:max-w-2xl">
                 {/* Pre-heading tag */}
@@ -269,7 +304,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 >
                   <span
                     data-hero-control
-                    className="font-comic font-sans inline-block rounded-full bg-white/20 px-3 py-1.5 mb-3 text-[10px] font-semibold text-white backdrop-blur-sm sm:px-4 sm:mb-4 sm:text-sm"
+                    className="font-comic font-sans inline-block rounded-full bg-white/20 px-3 py-1 mb-2.5 text-[10px] font-semibold text-white backdrop-blur-sm sm:px-4 sm:mb-4 sm:text-sm"
                   >
                     A society where everyone is understood, celebrated, and empowered
                   </span>
@@ -277,7 +312,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
 
                 <h1
                   className={cn(
-                    "font-heading font-marissa text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-5",
+                    "font-heading font-marissa text-[1.75rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-2.5 sm:mb-5",
                     "transition-all duration-500 delay-100",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -286,7 +321,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 </h1>
                 <p
                   className={cn(
-                    "font-comic font-sans text-base sm:text-lg md:text-xl text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-lg sm:max-w-xl",
+                    "font-comic font-sans text-sm sm:text-lg md:text-xl text-white/85 leading-relaxed mb-4 sm:mb-8 max-w-lg sm:max-w-xl line-clamp-3 sm:line-clamp-none",
                     "transition-all duration-500 delay-200",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -295,7 +330,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                 </p>
                 <div
                   className={cn(
-                    "flex flex-col gap-3 sm:flex-row sm:gap-4 font-comic font-sans",
+                    "flex flex-col gap-2.5 sm:flex-row sm:gap-4 font-comic font-sans",
                     "transition-all duration-500 delay-300",
                     i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
                   )}
@@ -303,7 +338,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                   <Button
                     asChild
                     size="lg"
-                    className="font-comic font-sans h-12 w-full rounded-lg px-6 text-base font-semibold shadow-lg sm:h-14 sm:w-auto sm:px-8"
+                    className="font-comic font-sans h-11 sm:h-14 w-full rounded-lg px-6 text-sm sm:text-base font-semibold shadow-lg sm:w-auto sm:px-8"
                   >
                     <Link href={slide.ctaHref} data-hero-control>{slide.cta}</Link>
                   </Button>
@@ -311,7 +346,7 @@ export function HeroCarouselClassic({ slides, interval = 6000 }: HeroCarouselCla
                     asChild
                     variant="outline"
                     size="lg"
-                    className="font-comic font-sans h-12 w-full rounded-lg border-2 border-white/50 bg-white/10 px-6 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:h-14 sm:w-auto sm:px-8"
+                    className="font-comic font-sans h-11 sm:h-14 w-full rounded-lg border-2 border-white/50 bg-white/10 px-6 text-sm sm:text-base font-semibold text-white backdrop-blur-sm hover:bg-white/20 hover:border-white sm:w-auto sm:px-8"
                   >
                     <Link href="/whatwedo" data-hero-control>
                       Explore Programs

@@ -93,6 +93,7 @@ export default async function HomePage() {
     .map((slide) => ({
       id: slide.id,
       image: slide.id === "slide-1" && ["/home/hero/real-voices-young-speaker.jpg", "/home/hero/art_banner.jpeg"].includes(slide.image.replace(/\\/g, "/")) ? artHero.src : normalizeSlideImage(slide.image, artHero.src),
+      mobileImage: slide.mobileImage ? normalizeSlideImage(slide.mobileImage, slide.mobileImage) : undefined,
       title: slide.id === "slide-1" && slide.title === "Understanding Begins with Lived Experience" ? "Every child deserves space to thrive" : slide.title,
       subtitle: slide.id === "slide-1" && slide.title === "Understanding Begins with Lived Experience" ? "Through creativity, learning, and everyday moments of connection, deessa helps build a world where every child feels understood, included, and free to explore their potential." : slide.subtitle,
       cta: slide.cta,
