@@ -49,6 +49,17 @@ export type TeamMemberItem = {
 
 const PAGE_SIZE = 12
 
+function formatBioExcerpt(bio: string | null | undefined, maxLength = 70): string {
+  if (!bio) return ""
+  // Normalize newlines and consecutive whitespace to a single space
+  const singleLine = bio.replace(/\s+/g, " ").trim()
+  if (singleLine.length <= maxLength) return singleLine
+  const slice = singleLine.slice(0, maxLength)
+  const lastSpace = slice.lastIndexOf(" ")
+  const truncated = lastSpace > 25 ? slice.slice(0, lastSpace) : slice
+  return `${truncated.trimEnd()}...`
+}
+
 export function TeamTable({ members }: { members: TeamMemberItem[] }) {
   const router = useRouter()
   const [items, setItems] = useState<TeamMemberItem[]>(members)
@@ -469,8 +480,11 @@ export function TeamTable({ members }: { members: TeamMemberItem[] }) {
 
                     {/* Bio preview if any */}
                     {member.bio && (
-                      <p className="text-xs text-muted-foreground/90 line-clamp-2 bg-muted/40 rounded-lg p-2 leading-relaxed">
-                        {member.bio}
+                      <p
+                        title={member.bio}
+                        className="text-xs text-muted-foreground/90 line-clamp-2 bg-muted/40 rounded-lg p-2 leading-relaxed"
+                      >
+                        {formatBioExcerpt(member.bio, 110)}
                       </p>
                     )}
 
@@ -527,7 +541,7 @@ export function TeamTable({ members }: { members: TeamMemberItem[] }) {
               <TableHeader className="bg-muted/40">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-12 text-center font-semibold">#</TableHead>
-                  <TableHead className="min-w-[220px] font-semibold">Member</TableHead>
+                  <TableHead className="min-w-[200px] max-w-[320px] font-semibold">Member</TableHead>
                   <TableHead className="font-semibold">Tier / Group</TableHead>
                   <TableHead className="font-semibold">Role / Position</TableHead>
                   <TableHead className="w-28 text-center font-semibold">Hero (★)</TableHead>
@@ -588,7 +602,7 @@ export function TeamTable({ members }: { members: TeamMemberItem[] }) {
                         </TableCell>
 
                         {/* Member Identity & Hero Pill */}
-                        <TableCell className="py-3">
+                        <TableCell className="py-3 max-w-[280px] lg:max-w-[340px]">
                           <div className="flex items-center gap-3">
                             <div className="relative shrink-0">
                               {member.image && isSafeMediaUrl(member.image) ? (
@@ -610,7 +624,7 @@ export function TeamTable({ members }: { members: TeamMemberItem[] }) {
                                 title={member.is_published ? "Published" : "Hidden"}
                               />
                             </div>
-                            <div className="min-w-0">
+                            <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2 flex-wrap">
                                 <p className="font-semibold text-foreground text-sm leading-tight truncate">
                                   {member.name}
@@ -626,8 +640,11 @@ export function TeamTable({ members }: { members: TeamMemberItem[] }) {
                                 )}
                               </div>
                               {member.bio ? (
-                                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                                  {member.bio}
+                                <p
+                                  title={member.bio}
+                                  className="text-xs text-muted-foreground truncate max-w-[200px] lg:max-w-[260px] mt-0.5 cursor-help"
+                                >
+                                  {formatBioExcerpt(member.bio, 60)}
                                 </p>
                               ) : (
                                 <p className="text-xs text-muted-foreground/60 italic mt-0.5">No bio written</p>

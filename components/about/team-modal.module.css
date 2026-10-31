@@ -1,0 +1,115 @@
+/* Team Member Editorial Modal Styles */
+
+.modalContent {
+  background-color: var(--card, #ffffff);
+  color: var(--card-foreground, #0f172a);
+}
+
+/* Sleek custom scrollbar replacing default browser bar */
+.scrollArea {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+  overscroll-behavior: contain;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.6);
+}
+
+.socialBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  color: var(--muted-foreground);
+  background-color: var(--muted);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease-in-out;
+}
+
+.socialBtn:hover {
+  color: var(--primary);
+  background-color: var(--card);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   High Contrast & Inverted Contrast Modes (WCAG AAA)
+   Per docs/in-progress/accessibility-feature/STANDARDS.md
+   ───────────────────────────────────────────────────────────── */
+
+:global(body.high-contrast) .modalContent {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .modalContent {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .modalContent :is(h2, h3, p, span, div, blockquote) {
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .modalContent :is(h2, h3, p, span, div, blockquote) {
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .socialBtn {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .socialBtn {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .socialBtn svg {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+:global(body.inverted-contrast) .socialBtn svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  .modalContent,
+  .socialBtn {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+:global(body.reduce-motion) .modalContent,
+:global(body.sensory-friendly) .modalContent {
+  transition: none !important;
+  animation: none !important;
+}

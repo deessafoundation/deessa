@@ -58,7 +58,7 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-[85vw] max-w-xs sm:w-80 p-0 flex flex-col h-full bg-background border-r"
+          className="w-[85vw] max-w-xs sm:w-80 p-0 flex flex-col h-[100dvh] max-h-[100dvh] gap-0 bg-background border-r"
         >
           {/* Mobile Drawer Header with Favicon */}
           <div className="flex h-16 shrink-0 items-center gap-2.5 border-b px-5 bg-card/60">
@@ -78,7 +78,7 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
           {/* Truly Scrollable Nav Container */}
           <nav
             aria-label="Mobile admin navigation"
-            className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 space-y-4 touch-pan-y scrollbar-hide"
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-4 pb-10 space-y-4 touch-pan-y scrollbar-hide"
           >
             {adminNavSections.map((section) => {
               const items = section.items.filter((item) => canAccessAdminNavItem(adminUser.role, item))
@@ -138,7 +138,7 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
           </nav>
 
           {/* User Footer Profile & Mobile Actions */}
-          <div className="shrink-0 border-t border-border p-4 bg-muted/30 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2">
+          <div className="shrink-0 mt-auto border-t border-border p-4 bg-muted/30 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2">
             <div className="flex items-center gap-3 rounded-xl bg-card border border-border/80 p-2.5 shadow-2xs">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground flex-shrink-0">
                 {adminUser.full_name?.charAt(0) || "A"}
