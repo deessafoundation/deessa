@@ -14,13 +14,15 @@ import { AccessibilityDictionary } from "@/components/accessibility/dictionary"
 import { comicNeue } from "@/lib/fonts"
 import { getSiteUiFlags } from "@/lib/site-status/settings"
 import { getIntroVideoConfig } from "@/lib/data/intro-video"
+import { getAccessibilityConfig } from "@/lib/data/accessibility-settings"
 
 export const dynamic = "force-dynamic"
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const [siteFlags, introConfig] = await Promise.all([
+  const [siteFlags, introConfig, a11yConfig] = await Promise.all([
     getSiteUiFlags(),
     getIntroVideoConfig(),
+    getAccessibilityConfig(),
   ])
 
   // Build the pre-paint gate script dynamically based on introConfig
@@ -74,9 +76,9 @@ setTimeout(function(){d.classList.remove('intro-pending')},10000);
             </div>
           </div>
           <GlobalVideoModal />
-          <AccessibilityPanel />
-          <AccessibilityReadingAids />
-          <AccessibilityDictionary />
+          <AccessibilityPanel config={a11yConfig} />
+          {a11yConfig.enabled && a11yConfig.features.readingGuide && <AccessibilityReadingAids />}
+          {a11yConfig.enabled && a11yConfig.features.readingDictionary && <AccessibilityDictionary />}
         </VideoModalProvider>
       </AccessibilityProvider>
     </div>

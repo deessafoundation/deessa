@@ -38,6 +38,10 @@ import {
   WIDGET_POSITIONS,
   WIDGET_POSITION_LABELS,
 } from "@/lib/types/accessibility"
+import {
+  DEFAULT_ACCESSIBILITY_CONFIG,
+  type AccessibilityConfig,
+} from "@/lib/types/accessibility-settings"
 
 const subscribeToMount = () => () => {}
 const clientMounted = () => true
@@ -189,7 +193,12 @@ const ModifiedIndicator = ({ onClick }: { onClick: () => void }) => (
   </button>
 )
 
-export function AccessibilityPanel() {
+interface AccessibilityPanelProps {
+  config?: AccessibilityConfig
+}
+
+export function AccessibilityPanel({ config = DEFAULT_ACCESSIBILITY_CONFIG }: AccessibilityPanelProps) {
+  const features = config.features || DEFAULT_ACCESSIBILITY_CONFIG.features
   const [isOpen, setIsOpen] = useState(false)
   const dictionaryAllowed = dictionaryAllowedOnPath(usePathname())
   const mounted = useSyncExternalStore(subscribeToMount, clientMounted, serverMounted)
@@ -317,6 +326,8 @@ export function AccessibilityPanel() {
 
   const fontSizePercent = Math.round(preferences.textScale * 100)
 
+  if (!config.enabled) return null
+
   const buttonContent = (
     <>
       <button
@@ -412,331 +423,361 @@ export function AccessibilityPanel() {
               className="@container min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-5"
             >
               {/* 0. LISTEN TO THIS PAGE (TTS) */}
-              <div className="mb-6 pb-6 border-b border-slate-100">
-                <TtsControls />
-              </div>
+              {features.textToSpeech && (
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <TtsControls />
+                </div>
+              )}
 
               <div className="space-y-6 pb-2">
                 {/* 1. TYPOGRAPHY */}
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Type className="w-3.5 h-3.5" strokeWidth={3} /> Typography
-                  </h4>
+                {(features.fontStyle || features.textScaling || features.spacingControls) && (
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                      <Type className="w-3.5 h-3.5" strokeWidth={3} /> Typography
+                    </h4>
 
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">Font Style</label>
-                      {isFontFamilyModified && <ModifiedIndicator onClick={() => resetPreference("fontFamily")} />}
-                    </div>
-                    <SegmentedControl
-                      options={fontOptions}
-                      value={preferences.fontFamily}
-                      onChange={(val) => updatePreference("fontFamily", val)}
-                      isHighContrast={isHighContrastModified}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">
-                        Text Size <span className="text-slate-400 font-medium ml-1">({fontSizePercent}%)</span>
-                      </label>
-                      {isTextScaleModified && <ModifiedIndicator onClick={() => resetPreference("textScale")} />}
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
-                      <button
-                        type="button"
-                        onClick={() => updatePreference("textScale", Math.max(1.0, preferences.textScale - 0.1))}
-                        disabled={preferences.textScale <= 1.0}
-                        className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                        aria-label="Decrease text size"
-                      >
-                        <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
-                      </button>
-                      <div className="min-w-0 flex-1 px-1">
-                        <input
-                          type="range"
-                          min="1.0"
-                          max="2.0"
-                          step="0.1"
-                          value={preferences.textScale}
-                          onChange={(e) => updatePreference("textScale", parseFloat(e.target.value))}
-                          className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
-                          aria-label="Adjust text size"
+                    {features.fontStyle && (
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                          <label className="min-w-0 text-sm font-bold text-slate-700">Font Style</label>
+                          {isFontFamilyModified && <ModifiedIndicator onClick={() => resetPreference("fontFamily")} />}
+                        </div>
+                        <SegmentedControl
+                          options={fontOptions}
+                          value={preferences.fontFamily}
+                          onChange={(val) => updatePreference("fontFamily", val)}
+                          isHighContrast={isHighContrastModified}
                         />
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => updatePreference("textScale", Math.min(2.0, preferences.textScale + 0.1))}
-                        disabled={preferences.textScale >= 2.0}
-                        className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                        aria-label="Increase text size"
-                      >
-                        <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
-                      </button>
-                    </div>
-                  </div>
+                    )}
 
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                        <label className="min-w-0 text-sm font-bold text-slate-700">
-                          Line Height{" "}
-                          <span className="text-slate-400 font-medium ml-1">({preferences.lineSpacing ?? 1.5})</span>
-                        </label>
-                        {isLineSpacingModified && <ModifiedIndicator onClick={() => resetPreference("lineSpacing")} />}
-                      </div>
-                      <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updatePreference("lineSpacing", Math.max(1.5, (preferences.lineSpacing ?? 1.5) - 0.1))
-                          }
-                          disabled={(preferences.lineSpacing ?? 1.5) <= 1.5}
-                          className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                          aria-label="Decrease line height"
-                        >
-                          <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
-                        </button>
-                        <div className="min-w-0 flex-1 px-1">
-                          <input
-                            type="range"
-                            min="1.5"
-                            max="2.5"
-                            step="0.1"
-                            value={preferences.lineSpacing ?? 1.5}
-                            onChange={(e) => updatePreference("lineSpacing", parseFloat(e.target.value))}
-                            className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
-                            aria-label="Adjust line height"
-                          />
+                    {features.textScaling && (
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                          <label className="min-w-0 text-sm font-bold text-slate-700">
+                            Text Size <span className="text-slate-400 font-medium ml-1">({fontSizePercent}%)</span>
+                          </label>
+                          {isTextScaleModified && <ModifiedIndicator onClick={() => resetPreference("textScale")} />}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updatePreference("lineSpacing", Math.min(2.5, (preferences.lineSpacing ?? 1.5) + 0.1))
-                          }
-                          disabled={(preferences.lineSpacing ?? 1.5) >= 2.5}
-                          className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                          aria-label="Increase line height"
-                        >
-                          <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                        <label className="min-w-0 text-sm font-bold text-slate-700">
-                          Character Space{" "}
-                          <span className="text-slate-400 font-medium ml-1">({preferences.letterSpacing ?? 0})</span>
-                        </label>
-                        {isLetterSpacingModified && (
-                          <ModifiedIndicator onClick={() => resetPreference("letterSpacing")} />
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updatePreference("letterSpacing", Math.max(0, (preferences.letterSpacing ?? 0) - 0.01))
-                          }
-                          disabled={(preferences.letterSpacing ?? 0) <= 0}
-                          className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                          aria-label="Decrease character space"
-                        >
-                          <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
-                        </button>
-                        <div className="min-w-0 flex-1 px-1">
-                          <input
-                            type="range"
-                            min="0"
-                            max="0.12"
-                            step="0.01"
-                            value={preferences.letterSpacing ?? 0}
-                            onChange={(e) => updatePreference("letterSpacing", parseFloat(e.target.value))}
-                            className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
-                            aria-label="Adjust character space"
-                          />
+                        <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                          <button
+                            type="button"
+                            onClick={() => updatePreference("textScale", Math.max(1.0, preferences.textScale - 0.1))}
+                            disabled={preferences.textScale <= 1.0}
+                            className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                            aria-label="Decrease text size"
+                          >
+                            <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
+                          </button>
+                          <div className="min-w-0 flex-1 px-1">
+                            <input
+                              type="range"
+                              min="1.0"
+                              max="2.0"
+                              step="0.1"
+                              value={preferences.textScale}
+                              onChange={(e) => updatePreference("textScale", parseFloat(e.target.value))}
+                              className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
+                              aria-label="Adjust text size"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => updatePreference("textScale", Math.min(2.0, preferences.textScale + 0.1))}
+                            disabled={preferences.textScale >= 2.0}
+                            className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                            aria-label="Increase text size"
+                          >
+                            <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updatePreference("letterSpacing", Math.min(0.12, (preferences.letterSpacing ?? 0) + 0.01))
-                          }
-                          disabled={(preferences.letterSpacing ?? 0) >= 0.12}
-                          className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
-                          aria-label="Increase character space"
-                        >
-                          <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
-                        </button>
                       </div>
-                    </div>
+                    )}
+
+                    {features.spacingControls && (
+                      <div className="space-y-4">
+                        <div className="space-y-1.5">
+                          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                            <label className="min-w-0 text-sm font-bold text-slate-700">
+                              Line Height{" "}
+                              <span className="text-slate-400 font-medium ml-1">({preferences.lineSpacing ?? 1.5})</span>
+                            </label>
+                            {isLineSpacingModified && <ModifiedIndicator onClick={() => resetPreference("lineSpacing")} />}
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updatePreference("lineSpacing", Math.max(1.5, (preferences.lineSpacing ?? 1.5) - 0.1))
+                              }
+                              disabled={(preferences.lineSpacing ?? 1.5) <= 1.5}
+                              className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                              aria-label="Decrease line height"
+                            >
+                              <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
+                            </button>
+                            <div className="min-w-0 flex-1 px-1">
+                              <input
+                                type="range"
+                                min="1.5"
+                                max="2.5"
+                                step="0.1"
+                                value={preferences.lineSpacing ?? 1.5}
+                                onChange={(e) => updatePreference("lineSpacing", parseFloat(e.target.value))}
+                                className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
+                                aria-label="Adjust line height"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updatePreference("lineSpacing", Math.min(2.5, (preferences.lineSpacing ?? 1.5) + 0.1))
+                              }
+                              disabled={(preferences.lineSpacing ?? 1.5) >= 2.5}
+                              className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                              aria-label="Increase line height"
+                            >
+                              <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                            <label className="min-w-0 text-sm font-bold text-slate-700">
+                              Character Space{" "}
+                              <span className="text-slate-400 font-medium ml-1">({preferences.letterSpacing ?? 0})</span>
+                            </label>
+                            {isLetterSpacingModified && (
+                              <ModifiedIndicator onClick={() => resetPreference("letterSpacing")} />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3 p-1.5 bg-slate-100/50 rounded-xl border border-slate-200/60 shadow-inner">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updatePreference("letterSpacing", Math.max(0, (preferences.letterSpacing ?? 0) - 0.01))
+                              }
+                              disabled={(preferences.letterSpacing ?? 0) <= 0}
+                              className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                              aria-label="Decrease character space"
+                            >
+                              <ZoomOut className="w-4 h-4" strokeWidth={2.5} />
+                            </button>
+                            <div className="min-w-0 flex-1 px-1">
+                              <input
+                                type="range"
+                                min="0"
+                                max="0.12"
+                                step="0.01"
+                                value={preferences.letterSpacing ?? 0}
+                                onChange={(e) => updatePreference("letterSpacing", parseFloat(e.target.value))}
+                                className="w-full h-1.5 bg-slate-200 rounded-full appearance-none accent-primary cursor-pointer"
+                                aria-label="Adjust character space"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updatePreference("letterSpacing", Math.min(0.12, (preferences.letterSpacing ?? 0) + 0.01))
+                              }
+                              disabled={(preferences.letterSpacing ?? 0) >= 0.12}
+                              className="size-11 shrink-0 rounded-lg bg-white border border-slate-200 flex items-center justify-center hover:bg-primary/5 hover:border-primary/30 text-slate-600 disabled:opacity-40 transition-all shadow-sm"
+                              aria-label="Increase character space"
+                            >
+                              <ZoomIn className="w-4 h-4" strokeWidth={2.5} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
 
                 {/* 2. VISUALS & FOCUS */}
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
-                    <Eye className="w-3.5 h-3.5" strokeWidth={3} /> Visuals & Focus
-                  </h4>
+                {(features.contrastMode || features.sensoryFriendly || features.reduceMotion) && (
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                      <Eye className="w-3.5 h-3.5" strokeWidth={3} /> Visuals & Focus
+                    </h4>
 
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">Contrast</label>
-                      {isHighContrastModified && <ModifiedIndicator onClick={() => resetPreference("contrastMode")} />}
-                    </div>
-                    <SegmentedControl
-                      options={contrastOptions}
-                      value={preferences.contrastMode}
-                      onChange={(val) => updatePreference("contrastMode", val)}
-                      isHighContrast={isHighContrastModified}
-                    />
-                  </div>
+                    {features.contrastMode && (
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                          <label className="min-w-0 text-sm font-bold text-slate-700">Contrast</label>
+                          {isHighContrastModified && <ModifiedIndicator onClick={() => resetPreference("contrastMode")} />}
+                        </div>
+                        <SegmentedControl
+                          options={contrastOptions}
+                          value={preferences.contrastMode}
+                          onChange={(val) => updatePreference("contrastMode", val)}
+                          isHighContrast={isHighContrastModified}
+                        />
+                      </div>
+                    )}
 
-                  <div className="flex flex-col gap-2">
-                    <Toggle
-                      label="Sensory-Friendly Mode"
-                      description="Mutes bright colors & removes auto-play elements"
-                      icon={Palette}
-                      checked={preferences.sensoryFriendly}
-                      onChange={(val) => updatePreference("sensoryFriendly", val)}
-                      isModified={isSensoryFriendlyModified}
-                      onReset={() => resetPreference("sensoryFriendly")}
-                      isHighContrast={isHighContrastModified}
-                    />
-                    <Toggle
-                      label="Reduce Motion"
-                      description="Disables UI animations & slick transitions"
-                      icon={Pause}
-                      checked={preferences.reduceMotion}
-                      onChange={(val) => updatePreference("reduceMotion", val)}
-                      isModified={isReduceMotionModified}
-                      onReset={() => resetPreference("reduceMotion")}
-                      isHighContrast={isHighContrastModified}
-                    />
+                    {(features.sensoryFriendly || features.reduceMotion) && (
+                      <div className="flex flex-col gap-2">
+                        {features.sensoryFriendly && (
+                          <Toggle
+                            label="Sensory-Friendly Mode"
+                            description="Mutes bright colors & removes auto-play elements"
+                            icon={Palette}
+                            checked={preferences.sensoryFriendly}
+                            onChange={(val) => updatePreference("sensoryFriendly", val)}
+                            isModified={isSensoryFriendlyModified}
+                            onReset={() => resetPreference("sensoryFriendly")}
+                            isHighContrast={isHighContrastModified}
+                          />
+                        )}
+                        {features.reduceMotion && (
+                          <Toggle
+                            label="Reduce Motion"
+                            description="Disables UI animations & slick transitions"
+                            icon={Pause}
+                            checked={preferences.reduceMotion}
+                            onChange={(val) => updatePreference("reduceMotion", val)}
+                            isModified={isReduceMotionModified}
+                            onReset={() => resetPreference("reduceMotion")}
+                            isHighContrast={isHighContrastModified}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
 
                 {/* 3. ASSISTIVE TOOLS */}
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
-                    <Wrench className="w-3.5 h-3.5" strokeWidth={3} /> Assistive Tools
-                  </h4>
+                {(features.readingDictionary || features.bigCursor || features.readingGuide) && (
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                      <Wrench className="w-3.5 h-3.5" strokeWidth={3} /> Assistive Tools
+                    </h4>
 
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">Reading Dictionary</label>
-                      {isDictionaryModified && <ModifiedIndicator onClick={() => resetPreference("dictionaryMode")} />}
-                    </div>
-                    <SegmentedControl
-                      options={dictionaryOptions}
-                      value={preferences.dictionaryMode}
-                      onChange={(val) => updatePreference("dictionaryMode", val)}
-                      isHighContrast={isHighContrastModified}
-                    />
-                    {preferences.dictionaryMode !== "off" && dictionaryAllowed && (
-                      <div className="px-1 mt-1.5">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsOpen(false)
-                            requestAnimationFrame(() => window.dispatchEvent(new Event("openAccessibilityDictionary")))
-                          }}
-                          className="min-h-11 text-xs text-primary font-bold hover:underline py-1 flex items-center gap-1"
-                        >
-                          <BookOpen className="w-3.5 h-3.5" strokeWidth={3} /> Look up a word right now
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Toggle
-                      label="Large Cursor"
-                      description="Increases pointer size for easier tracking"
-                      icon={MousePointer2}
-                      checked={preferences.bigCursor}
-                      onChange={(val) => updatePreference("bigCursor", val)}
-                      isModified={isBigCursorModified}
-                      onReset={() => resetPreference("bigCursor")}
-                      isHighContrast={isHighContrastModified}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 pb-2 pt-1 border-t border-slate-100/60 mt-4">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1 mt-2">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">Reading Assist</label>
-                      {isCursorModified && <ModifiedIndicator onClick={() => resetPreference("cursorMode")} />}
-                    </div>
-                    <SegmentedControl
-                      options={cursorOptions}
-                      value={preferences.cursorMode}
-                      onChange={(val) => updatePreference("cursorMode", val)}
-                      isHighContrast={isHighContrastModified}
-                    />
-
-                    {preferences.cursorMode === "guide" && (
-                      <div className="mt-2.5 p-3 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative animate-in fade-in slide-in-from-top-2">
-                        <p className="text-xs font-bold text-slate-600 mb-2.5">Choose your reading buddy:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {GUIDE_STICKERS.map((sticker) => (
-                            <button
-                              key={sticker.id}
-                              type="button"
-                              aria-label={sticker.label}
-                              title={sticker.label}
-                              onClick={() => updatePreference("guideSticker", sticker.id)}
-                              className={cn(
-                                "size-11 rounded-lg border-2 p-1 text-xl flex items-center justify-center transition-all bg-white",
-                                preferences.guideSticker === sticker.id
-                                  ? "border-primary ring-2 ring-primary/20 scale-110 shadow-md"
-                                  : "border-slate-200 hover:border-primary/50",
-                              )}
-                            >
-                              <ReadingGuideSticker id={sticker.id} />
-                            </button>
-                          ))}
+                    {features.readingDictionary && (
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                          <label className="min-w-0 text-sm font-bold text-slate-700">Reading Dictionary</label>
+                          {isDictionaryModified && <ModifiedIndicator onClick={() => resetPreference("dictionaryMode")} />}
                         </div>
+                        <SegmentedControl
+                          options={dictionaryOptions}
+                          value={preferences.dictionaryMode}
+                          onChange={(val) => updatePreference("dictionaryMode", val)}
+                          isHighContrast={isHighContrastModified}
+                        />
+                        {preferences.dictionaryMode !== "off" && dictionaryAllowed && (
+                          <div className="px-1 mt-1.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsOpen(false)
+                                requestAnimationFrame(() => window.dispatchEvent(new Event("openAccessibilityDictionary")))
+                              }}
+                              className="min-h-11 text-xs text-primary font-bold hover:underline py-1 flex items-center gap-1"
+                            >
+                              <BookOpen className="w-3.5 h-3.5" strokeWidth={3} /> Look up a word right now
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {features.bigCursor && (
+                      <div className="space-y-1.5">
+                        <Toggle
+                          label="Large Cursor"
+                          description="Increases pointer size for easier tracking"
+                          icon={MousePointer2}
+                          checked={preferences.bigCursor}
+                          onChange={(val) => updatePreference("bigCursor", val)}
+                          isModified={isBigCursorModified}
+                          onReset={() => resetPreference("bigCursor")}
+                          isHighContrast={isHighContrastModified}
+                        />
+                      </div>
+                    )}
+
+                    {features.readingGuide && (
+                      <div className="space-y-1.5 pb-2 pt-1 border-t border-slate-100/60 mt-4">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1 mt-2">
+                          <label className="min-w-0 text-sm font-bold text-slate-700">Reading Assist</label>
+                          {isCursorModified && <ModifiedIndicator onClick={() => resetPreference("cursorMode")} />}
+                        </div>
+                        <SegmentedControl
+                          options={cursorOptions}
+                          value={preferences.cursorMode}
+                          onChange={(val) => updatePreference("cursorMode", val)}
+                          isHighContrast={isHighContrastModified}
+                        />
+
+                        {preferences.cursorMode === "guide" && (
+                          <div className="mt-2.5 p-3 bg-slate-50 rounded-xl border border-slate-100 shadow-sm relative animate-in fade-in slide-in-from-top-2">
+                            <p className="text-xs font-bold text-slate-600 mb-2.5">Choose your reading buddy:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {GUIDE_STICKERS.map((sticker) => (
+                                <button
+                                  key={sticker.id}
+                                  type="button"
+                                  aria-label={sticker.label}
+                                  title={sticker.label}
+                                  onClick={() => updatePreference("guideSticker", sticker.id)}
+                                  className={cn(
+                                    "size-11 rounded-lg border-2 p-1 text-xl flex items-center justify-center transition-all bg-white",
+                                    preferences.guideSticker === sticker.id
+                                      ? "border-primary ring-2 ring-primary/20 scale-110 shadow-md"
+                                      : "border-slate-200 hover:border-primary/50",
+                                  )}
+                                >
+                                  <ReadingGuideSticker id={sticker.id} />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                </div>
+                )}
 
                 {/* 4. WIDGET POSITION */}
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
-                    </svg>
-                    Button Placement
-                  </h4>
+                {features.widgetPosition && (
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 pt-1 border-t border-slate-100/60 mt-2">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                      </svg>
+                      Button Placement
+                    </h4>
 
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
-                      <label className="min-w-0 text-sm font-bold text-slate-700">Widget Position</label>
-                      {isWidgetPositionModified && (
-                        <ModifiedIndicator onClick={() => resetPreference("widgetPosition")} />
-                      )}
+                    <div className="space-y-1.5">
+                      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1">
+                        <label className="min-w-0 text-sm font-bold text-slate-700">Widget Position</label>
+                        {isWidgetPositionModified && (
+                          <ModifiedIndicator onClick={() => resetPreference("widgetPosition")} />
+                        )}
+                      </div>
+                      <SegmentedControl
+                        options={widgetPositionOptions}
+                        value={preferences.widgetPosition}
+                        onChange={(val) => updatePreference("widgetPosition", val)}
+                        isHighContrast={isHighContrastModified}
+                      />
+                      <p className="text-[10px] text-slate-400 px-1 leading-tight">
+                        Choose where the <span className="font-semibold">♿ button</span> anchors on your screen.
+                      </p>
                     </div>
-                    <SegmentedControl
-                      options={widgetPositionOptions}
-                      value={preferences.widgetPosition}
-                      onChange={(val) => updatePreference("widgetPosition", val)}
-                      isHighContrast={isHighContrastModified}
-                    />
-                    <p className="text-[10px] text-slate-400 px-1 leading-tight">
-                      Choose where the <span className="font-semibold">♿ button</span> anchors on your screen.
-                    </p>
                   </div>
-                </div>
+                )}
               </div>
 
               <details className="mt-2 border-t border-slate-100 pt-4 group">
