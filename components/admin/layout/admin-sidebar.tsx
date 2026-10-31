@@ -53,11 +53,11 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
         onMouseMove={enableTooltips}
         onMouseLeave={() => setTooltipsReady(false)}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 hidden flex-col border-r bg-background transition-all duration-300 lg:flex",
+          "fixed inset-y-0 left-0 z-50 hidden flex-col border-r bg-background transition-all duration-300 lg:flex h-[100dvh]",
           isCollapsed ? "w-16 cursor-pointer hover:bg-muted/30" : "w-64"
         )}
       >
-      <div className="flex h-16 items-center justify-between border-b px-4">
+      <div className="flex h-16 shrink-0 items-center justify-between border-b px-4">
         <div className="flex items-center gap-2.5">
           <Image 
             src="/favicon.png" 
@@ -88,7 +88,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
         )}
       </div>
 
-      <nav onClick={(e) => e.stopPropagation()} className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide p-4 space-y-4">
+      <nav onClick={(e) => e.stopPropagation()} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-hide px-4 pt-4 pb-10 space-y-4">
         {adminNavSections.map((section) => {
           const items = section.items.filter((item) => canAccessAdminNavItem(adminUser.role, item))
 
@@ -158,7 +158,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
         })}
       </nav>
 
-      <div onClick={(e) => e.stopPropagation()} className="border-t p-4">
+      <div onClick={(e) => e.stopPropagation()} className="shrink-0 mt-auto border-t p-4">
         {shouldShowTooltips ? (
           <Tooltip>
             <TooltipTrigger asChild>

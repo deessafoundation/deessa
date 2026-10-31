@@ -109,7 +109,6 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
   const clearGuard = useUnsavedChanges(dirty, busy)
 
   const activeTierMeta = TEAM_TIER_DETAILS[tier] || TEAM_TIER_DETAILS.vision
-  const bioCharsLeft = 150 - bio.length
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -136,8 +135,8 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
       notifications.showSuccess({
         description: result.warning || (member ? "Member profile updated." : "Team member created."),
       })
-      if (member) router.refresh()
-      else router.push("/admin/team")
+      router.push("/admin/team")
+      router.refresh()
     } catch {
       setError("Save could not be confirmed. Your edits have been kept. Please try again.")
     } finally {
@@ -250,23 +249,14 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                   </p>
                 </div>
 
-                {/* Bio Field with Live Character Counter */}
+                {/* Bio Field with Live Character & Word Counter */}
                 <div className="space-y-2 pt-1">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="bio" className="text-xs font-semibold">
-                      Short Bio (Optional)
+                      Biography / Background (Optional)
                     </Label>
-                    <span
-                      className={cn(
-                        "text-[11px] font-mono tabular-nums",
-                        bioCharsLeft < 15
-                          ? "text-destructive font-semibold"
-                          : bioCharsLeft < 30
-                            ? "text-amber-600 font-medium"
-                            : "text-muted-foreground",
-                      )}
-                    >
-                      {bio.length} / 150 characters
+                    <span className="text-[11px] font-mono tabular-nums text-muted-foreground">
+                      {bio.length} characters ({bio.trim() ? bio.trim().split(/\s+/).length : 0} words)
                     </span>
                   </div>
                   <Textarea
@@ -277,11 +267,13 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                       setBio(e.target.value)
                       setDirty(true)
                     }}
-                    rows={3}
-                    maxLength={150}
-                    placeholder="Brief background or specialty (appears when visitors hover over the member's photo)..."
-                    className="resize-none text-sm leading-relaxed"
+                    rows={6}
+                    placeholder="Write the member's professional journey, background, credentials, and vision (displayed in full within their profile modal)..."
+                    className="resize-y text-sm leading-relaxed min-h-[140px]"
                   />
+                  <p className="text-[11px] text-muted-foreground">
+                    Multiple paragraphs are supported and will be formatted cleanly in their profile dialog.
+                  </p>
                 </div>
 
                 {/* Photo Upload */}
@@ -408,82 +400,76 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
 
               <CardContent className="p-4 sm:p-5 flex flex-col items-center">
                 {/* Simulated TeamCard exactly as rendered on /about */}
-                <div className="w-full max-w-[270px] overflow-hidden rounded-2xl bg-card border border-border shadow-md transition-shadow">
-                  {/* Portrait Area */}
-                  <div className="relative aspect-[4/5.2] w-full overflow-hidden bg-muted">
-                    {imageUrl && isSafeMediaUrl(imageUrl) ? (
-                      <img
-                        src={imageUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full flex-col items-center justify-center text-muted-foreground/50">
-                        <User className="h-16 w-16 stroke-[1.2]" />
-                        <span className="text-xs font-medium mt-1">Photo Preview</span>
-                      </div>
-                    )}
-
-                    {/* Tier badge overlay */}
-                    <div className="absolute top-2.5 left-2.5">
-                      <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-xs", activeTierMeta.badgeTone)}>
-                        {activeTierMeta.label}
-                      </span>
+                <div className="w-full max-w-[270px] overflow-hidden rounded-2xl bg-card border border-border shadow-md transition-shadow relative aspect-[4/5.2]">
+                  {imageUrl && isSafeMediaUrl(imageUrl) ? (
+                    <img
+                      src={imageUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center text-muted-foreground/50 bg-muted">
+                      <User className="h-16 w-16 stroke-[1.2]" />
+                      <span className="text-xs font-medium mt-1">Photo Preview</span>
                     </div>
+                  )}
 
-                    {/* Star badge overlay for Hero featured */}
-                    {isFeatured && (
-                      <div className="absolute top-2.5 right-2.5">
-                        <span
-                          className="inline-flex size-7 items-center justify-center rounded-full bg-amber-400 text-slate-950 shadow-md ring-2 ring-white"
-                          title="Featured in Hero collage"
-                        >
-                          <Star className="size-4 fill-slate-950 text-slate-950" />
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Bio overlay preview if bio is provided */}
-                    {bio && (
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent p-3 pt-6 text-white">
-                        <p className="text-[11px] leading-tight text-white/90 line-clamp-3">
-                          {bio}
-                        </p>
-                      </div>
-                    )}
+                  {/* Tier badge overlay */}
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-xs", activeTierMeta.badgeTone)}>
+                      {activeTierMeta.label}
+                    </span>
                   </div>
 
-                  {/* Card Bottom Details */}
-                  <div className="p-3.5 space-y-1">
-                    <p className="font-bold text-foreground text-sm leading-snug truncate">
+                  {/* Star badge overlay for Hero featured */}
+                  {isFeatured && (
+                    <div className="absolute top-2.5 right-2.5 z-10">
+                      <span
+                        className="inline-flex size-7 items-center justify-center rounded-full bg-amber-400 text-slate-950 shadow-md ring-2 ring-white"
+                        title="Featured in Hero collage"
+                      >
+                        <Star className="size-4 fill-slate-950 text-slate-950" />
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Overlay Simulation (Matches /about hover overlay) */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-4 pt-10 text-white">
+                    <p className="font-comic text-base font-bold text-white leading-tight">
                       {name || "Member Name"}
                     </p>
-                    <p className="text-xs text-muted-foreground font-medium truncate">
+                    <p className="font-dm-sans text-xs text-white/80 font-medium mt-0.5">
                       {role || "Position / Role"}
                     </p>
-
-                    {/* Social icons preview */}
-                    <div className="flex items-center gap-1.5 pt-2">
-                      {Object.entries(socials)
-                        .filter(([_, href]) => href && isSafeWebsiteUrl(href))
-                        .map(([key]) => {
-                          const config = SOCIAL_ICONS[key]
-                          if (!config) return null
-                          return (
-                            <span
-                              key={key}
-                              className="inline-flex size-6 items-center justify-center rounded bg-muted text-muted-foreground"
-                              title={config.label}
-                            >
-                              <svg viewBox="0 0 24 24" fill="currentColor" className="size-3">
-                                <path d={config.svg} />
-                              </svg>
-                            </span>
-                          )
-                        })}
-                      {!Object.values(socials).some((v) => v && isSafeWebsiteUrl(v)) && (
-                        <span className="text-[10px] text-muted-foreground/60 italic">No social links</span>
-                      )}
+                    {bio && (
+                      <p className="font-sans text-[11px] leading-relaxed text-white/75 line-clamp-3 mt-2">
+                        {bio}
+                      </p>
+                    )}
+                    <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-white underline underline-offset-2">
+                        Read more →
+                      </span>
+                      {/* Social icons preview */}
+                      <div className="flex items-center gap-1">
+                        {Object.entries(socials)
+                          .filter(([_, href]) => href && isSafeWebsiteUrl(href))
+                          .map(([key]) => {
+                            const config = SOCIAL_ICONS[key]
+                            if (!config) return null
+                            return (
+                              <span
+                                key={key}
+                                className="inline-flex size-5 items-center justify-center rounded bg-white/15 text-white"
+                                title={config.label}
+                              >
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="size-2.5">
+                                  <path d={config.svg} />
+                                </svg>
+                              </span>
+                            )
+                          })}
+                      </div>
                     </div>
                   </div>
                 </div>

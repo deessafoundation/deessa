@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { teamInputSchema, TEAM_SOCIAL_FIELDS } from "@/lib/types/team-input"
+import { deleteStorageFile } from "@/lib/storage-helpers"
 
 async function teamAdmin() {
   const admin = await getCurrentAdmin()
@@ -94,8 +95,26 @@ export async function updateTeamMember(id: string, formData: FormData) {
   const values = teamValues(formData)
   if ("error" in values) return values
   const supabase = await createClient()
+
+  // Fetch current photo before update so we can clean up if replaced
+  const { data: currentMember } = await supabase
+    .from("team_members")
+    .select("image")
+    .eq("id", id)
+    .maybeSingle()
+
   const { error } = await supabase.from("team_members").update(values.data).eq("id", id).select("id").single()
   if (error) return teamFailure(error, "update")
+
+  // If photo was changed or removed, delete the old file from team-photos bucket
+  if (currentMember?.image && currentMember.image !== values.data.image) {
+    try {
+      await deleteStorageFile("team-photos", currentMember.image)
+    } catch (cleanupError) {
+      console.warn("Could not delete previous photo from storage:", cleanupError)
+    }
+  }
+
   const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "UPDATE", entity_type: "team_member", entity_id: id })
   return { success: true, warning }
 }
@@ -137,8 +156,26 @@ export async function deleteTeamMember(id: string) {
   const admin = await teamAdmin()
   if (!admin) return { error: "Unauthorized" }
   const supabase = await createClient()
+
+  // Fetch current photo before record deletion
+  const { data: memberToDelete } = await supabase
+    .from("team_members")
+    .select("image")
+    .eq("id", id)
+    .maybeSingle()
+
   const { error } = await supabase.from("team_members").delete().eq("id", id).select("id").single()
   if (error) return teamFailure(error, "delete")
+
+  // Permanently clean up photo from team-photos bucket
+  if (memberToDelete?.image) {
+    try {
+      await deleteStorageFile("team-photos", memberToDelete.image)
+    } catch (cleanupError) {
+      console.warn("Could not delete photo from storage upon member removal:", cleanupError)
+    }
+  }
+
   const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "DELETE", entity_type: "team_member", entity_id: id })
   return { success: true, warning }
 }

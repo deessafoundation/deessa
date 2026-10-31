@@ -6,6 +6,7 @@ import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import type { AboutPageSettings } from "@/lib/types/about-settings"
 import { TeamCard, type AboutTeamMember } from "@/components/about/team-card"
+import { TeamMemberModal } from "@/components/about/team-modal"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
 import {
   ArrowRight,
@@ -111,6 +112,36 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
   // const journeyHeading = splitHeadingAccent(journeyContent.title)
   // const timelineRef = useRef<HTMLDivElement>(null)
   const [activeCard, setActiveCard] = useState<number | string | null>(null)
+  const [selectedMember, setSelectedMember] = useState<AboutTeamMember | null>(null)
+
+  // Support deep-linking via URL hash e.g. #member-merina-panthee
+  useEffect(() => {
+    if (typeof window === "undefined" || teamMembers.length === 0) return
+    const rawHash = window.location.hash.replace("#", "")
+    if (!rawHash) return
+    const hash = rawHash.replace(/^member-/, "")
+    const found = teamMembers.find(
+      (m) =>
+        (m.id && m.id === hash) ||
+        m.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === hash
+    )
+    if (found) {
+      setSelectedMember(found)
+    }
+  }, [teamMembers])
+
+  const handleSelectMember = (member: AboutTeamMember | null) => {
+    setSelectedMember(member)
+    if (typeof window !== "undefined") {
+      if (member) {
+        const slug = member.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+        window.history.replaceState(null, "", `#member-${slug}`)
+      } else {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search)
+      }
+    }
+  }
+
   const systemReduced = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoError, setVideoError] = useState(false)
@@ -398,6 +429,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
                             index={mIndex}
                             active={activeCard === cardId}
                             onActivate={(active) => setActiveCard(active ? cardId : null)}
+                            onSelect={handleSelectMember}
                             reduced={reduced}
                           />
                         )
@@ -409,6 +441,13 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
             </div>
           )}
 
+          {/* Centered Editorial Modal for Full Biography */}
+          <TeamMemberModal
+            member={selectedMember}
+            allMembers={teamMembers}
+            onClose={() => handleSelectMember(null)}
+            onSelectMember={handleSelectMember}
+          />
         </div>
       </section>}
 
