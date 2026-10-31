@@ -117,7 +117,7 @@ export function AccessibilitySummit() {
           </p>
           <div className={cn(styles.divider, "border-t pt-4 sm:pt-5")}>
             <p className={styles.muted}>Contact our organizing team:</p>
-            <a href={`mailto:${event.email}`} className="mt-2 inline-block break-all font-bold underline underline-offset-4">
+            <a href={`mailto:${event.email}`} className={cn(styles.link, "mt-2 inline-block break-all font-bold underline underline-offset-4")}>
               {event.email}
             </a>
           </div>

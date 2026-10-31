@@ -70,7 +70,7 @@ export function EventsLanding({ events, unavailable, today }: { events: ListingE
   return <div className={styles.page}>
     <section id="events-hero" aria-labelledby="events-title" className={styles.hero}>
       <div className={cn(styles.heroLayout, "relative mx-auto grid items-center")}>
-        <div className={cn(styles.heroCopy, "min-w-0")}><p className={styles.foundationLabel}>DEESSA FOUNDATION</p>
+        <div className={cn(styles.heroCopy, "min-w-0")}><p className={styles.foundationLabel}>deessa Foundation</p>
           <h1 id="events-title" className={cn(styles.title, styles.heroTitle, "text-7xl leading-none")}>Events</h1>
           <p className={cn(styles.title, styles.heroTagline)}>Come together.<br />Grow together.</p>
           <p className={cn(styles.muted, styles.heroDescription)}>Workshops, seminars, and community gatherings that create a more inclusive and understanding society.</p>
