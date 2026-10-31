@@ -31,3 +31,189 @@
   color: var(--a11y-ink) !important;
   stroke: var(--a11y-ink) !important;
 }
+
+/* Navigation link base and active styles */
+.navLink {
+  color: #000000;
+  transition: color 0.2s ease;
+}
+.navLink:hover {
+  color: #0275b1;
+}
+.navLinkActive {
+  color: #000000;
+  font-weight: 700;
+}
+.navLinkActive:hover {
+  color: #0275b1;
+}
+
+/* Desktop and Tablet Register Button — Black default with ocean blue hover */
+.registerBtn {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1.5px solid #000000;
+  transition: all 0.2s ease;
+}
+.registerBtn:hover {
+  background-color: rgba(2, 117, 177, 0.12);
+  color: #0275b1;
+  border-color: #0275b1;
+}
+.registerBtn:focus-visible {
+  outline: 2px solid #0275b1;
+  outline-offset: 2px;
+}
+
+/* Desktop and Tablet Donate Button — Preserves original scale(1.03) + shadow-md hover effect */
+.donateBtn {
+  background-color: #0275b1;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.donateBtn:hover {
+  background-color: #015c8c;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px -2px rgba(2, 117, 177, 0.35), 0 2px 6px -2px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+}
+.donateBtn:active {
+  transform: scale(0.99);
+}
+.donateBtn:focus-visible {
+  outline: 2px solid #0275b1;
+  outline-offset: 2px;
+}
+
+/* Tablet Quick Link */
+.tabletLink {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
+  color: #000000;
+  transition: all 0.2s ease;
+}
+.tabletLink:hover {
+  border-color: rgba(2, 117, 177, 0.45);
+  background-color: rgba(2, 117, 177, 0.1);
+  color: #0275b1;
+}
+.tabletLinkActive {
+  border-color: #000000;
+  background-color: rgba(2, 117, 177, 0.12);
+  color: #000000;
+  font-weight: 700;
+}
+
+/* Mobile Drawer Action Buttons */
+.mobileActionReport {
+  background-color: #0275b1;
+  color: #ffffff;
+  border: 1px solid #0275b1;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.mobileActionReport:hover {
+  background-color: #015c8c;
+}
+
+.mobileActionRegister {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  transition: all 0.2s ease;
+}
+.mobileActionRegister:hover {
+  background-color: #f0f8fc;
+  color: #0275b1;
+  border-color: #0275b1;
+}
+
+.mobileActionDonate {
+  background-color: #e8f5fb;
+  color: #0275b1;
+  transition: all 0.2s ease;
+}
+.mobileActionDonate:hover {
+  background-color: #d9eef8;
+  color: #015c8c;
+}
+
+/* High Contrast Mode Overrides */
+:global(body.high-contrast) .registerBtn,
+:global(body.high-contrast) .mobileActionRegister {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .donateBtn,
+:global(body.high-contrast) .mobileActionReport {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .donateBtn svg,
+:global(body.high-contrast) .mobileActionReport svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+:global(body.high-contrast) .mobileActionDonate {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .navLink,
+:global(body.high-contrast) .navLinkActive {
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .tabletLink,
+:global(body.high-contrast) .tabletLinkActive {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+}
+
+/* Inverted Contrast Mode Overrides */
+:global(body.inverted-contrast) .registerBtn,
+:global(body.inverted-contrast) .mobileActionRegister {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .donateBtn,
+:global(body.inverted-contrast) .mobileActionReport {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .donateBtn svg,
+:global(body.inverted-contrast) .mobileActionReport svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+:global(body.inverted-contrast) .mobileActionDonate {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .navLink,
+:global(body.inverted-contrast) .navLinkActive {
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .tabletLink,
+:global(body.inverted-contrast) .tabletLinkActive {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+}

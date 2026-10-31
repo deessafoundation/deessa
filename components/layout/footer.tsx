@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight } from "lucide-react"
+import { Heart, Mail, MapPin, Phone, Target, GraduationCap, HeartHandshake, Shield, Users, FileText, Award, Calendar, Download, CheckCircle, Briefcase, Camera, Archive, UserPlus, Handshake, Accessibility, ArrowRight, MessageSquare } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter/newsletter-form"
 import { Facebook, Twitter, Instagram, Youtube } from "@/components/shared/icons/social-icons"
 
@@ -36,6 +36,7 @@ const footerLinks = {
   ],
   resources: [
     { label: "Accessibility", href: "#accessibility", icon: Accessibility, isAccessibility: true },
+    { label: "Website Feedback", href: "/support", icon: MessageSquare },
     { label: "Brand Guidelines", href: "/deessa-resources/Deessa Brand Guidelines.pdf", download: true, icon: Download },
     { label: "Organization Bio", href: "/deessa-resources/deessa Foundation_ Short Bio -2.pdf", download: true, icon: Download },
     { label: "SWC Certificate", href: "/deessa-resources/SWC.jpg", download: true, icon: Download },
@@ -432,6 +433,17 @@ export function Footer() {
               </span>
             ))}
           </nav>
+
+          <div className="flex items-center justify-center md:justify-self-end">
+            <Link
+              href="/support"
+              className="font-comic inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-white/20 hover:border-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-footer-blue"
+              aria-label="Website Feedback"
+            >
+              <MessageSquare className="size-3.5 shrink-0 text-white" aria-hidden="true" />
+              <span>Feedback</span>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
