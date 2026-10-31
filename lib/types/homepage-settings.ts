@@ -57,6 +57,7 @@ export interface HomepageProgramsSettings {
 export interface HeroCarouselSlide {
   id: string
   image: string
+  mobileImage?: string
   title: string
   subtitle: string
   cta: string
@@ -525,6 +526,7 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
     {
       id: 'slide-1',
       image: '/home/hero/art_banner.jpeg',
+      mobileImage: '',
       title: 'Every child deserves space to thrive',
       subtitle: 'Through creativity, learning, and everyday moments of connection, deessa helps build a world where every child feels understood, included, and free to explore their potential.',
       cta: 'Learn About deessa',
@@ -536,6 +538,7 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
     {
       id: 'slide-2',
       image: '/home/hero/inclusion-begins-at-home.jpg',
+      mobileImage: '',
       title: 'Parents Turning Experience into Support',
       subtitle: 'deessa\'s parent leaders bring families, educators, and communities into honest conversations about autism, acceptance, and belonging.',
       cta: 'Explore Autism Support',
@@ -547,6 +550,7 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
     {
       id: 'slide-3',
       image: '/home/hero/girls-leadership-football.jpg',
+      mobileImage: '',
       title: 'Confidence and Belonging on the Field',
       subtitle: 'At the 2025 Inter-School Girls\' Football Tournament, deessa joined partners to celebrate girls\' leadership, participation, and empowerment through sport.',
       cta: 'See Our Journey',
@@ -558,6 +562,7 @@ export const DEFAULT_HERO_CAROUSEL: HomepageHeroCarouselSettings = {
     {
       id: 'slide-4',
       image: '/podcast_banner.jpeg',
+      mobileImage: '',
       title: 'Living With Autism',
       subtitle: 'Real voices, real stories. Honest conversations about autism, inclusion, and belonging. Hosted by Sarita & Merina.',
       cta: 'Explore the Podcast',
