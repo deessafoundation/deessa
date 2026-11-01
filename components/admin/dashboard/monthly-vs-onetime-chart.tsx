@@ -38,42 +38,42 @@ export function MonthlyVsOneTimeChart() {
   const totalOneTime = data.reduce((s, d) => s + d.oneTime, 0)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Donation Types</CardTitle>
-        <CardDescription>
-          Recurring vs one-time donations — ₹{(totalRecurring + totalOneTime).toLocaleString()} total
+    <Card className="w-full min-w-0 overflow-hidden">
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3 min-w-0">
+        <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Donation Types</CardTitle>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">
+          Recurring vs one-time donations — <span className="tabular-nums font-semibold text-foreground">₹{(totalRecurring + totalOneTime).toLocaleString()}</span> total
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden">
         {loading ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Loading...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             No donation data for the last 6 months
           </div>
         ) : (
           <>
-            <div className="flex gap-4 mb-4">
+            <div className="flex flex-wrap gap-4 mb-3 px-1">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: chartConfig.recurring.color }} />
-                <span className="text-sm">
-                  <span className="font-medium">₹{totalRecurring.toLocaleString()}</span>
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: chartConfig.recurring.color }} />
+                <span className="text-xs sm:text-sm">
+                  <span className="font-semibold tabular-nums">₹{totalRecurring.toLocaleString()}</span>
                   <span className="text-muted-foreground ml-1">Recurring</span>
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: chartConfig.oneTime.color }} />
-                <span className="text-sm">
-                  <span className="font-medium">₹{totalOneTime.toLocaleString()}</span>
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: chartConfig.oneTime.color }} />
+                <span className="text-xs sm:text-sm">
+                  <span className="font-semibold tabular-nums">₹{totalOneTime.toLocaleString()}</span>
                   <span className="text-muted-foreground ml-1">One-Time</span>
                 </span>
               </div>
             </div>
-            <ChartContainer config={chartConfig} className="h-[250px] w-full">
-              <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <ChartContainer config={chartConfig} className="aspect-auto h-[220px] sm:h-[250px] w-full min-w-0 max-w-full">
+              <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="fillRecurring" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--color-recurring)" stopOpacity={0.8} />
@@ -85,11 +85,12 @@ export function MonthlyVsOneTimeChart() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} minTickGap={16} />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
+                  width={45}
                   tickFormatter={(val) =>
                     val >= 1000 ? `₹${(val / 1000).toFixed(0)}k` : `₹${val}`
                   }
@@ -108,6 +109,7 @@ export function MonthlyVsOneTimeChart() {
                   stroke="var(--color-recurring)"
                   fill="url(#fillRecurring)"
                   strokeWidth={2}
+                  isAnimationActive={false}
                 />
                 <Area
                   type="monotone"
@@ -115,6 +117,7 @@ export function MonthlyVsOneTimeChart() {
                   stroke="var(--color-oneTime)"
                   fill="url(#fillOneTime)"
                   strokeWidth={2}
+                  isAnimationActive={false}
                 />
               </AreaChart>
             </ChartContainer>

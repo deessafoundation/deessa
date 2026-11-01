@@ -9,14 +9,21 @@
   transform: translateY(-2px);
 }
 
-/* Card title - make Marissa font bold with text-stroke and set default color */
+/* Card title - uses active heading font and scoped styling */
 .card h2,
 .card h3,
 .card h2 a,
 .card h3 a {
-  -webkit-text-stroke: 0.5px currentColor;
+  font-family: var(--font-heading, inherit);
   color: #1f2937 !important;
   text-decoration: none;
+}
+
+:global([data-typography="classic-brand"]) .card h2,
+:global([data-typography="classic-brand"]) .card h3,
+:global([data-typography="classic-brand"]) .card h2 a,
+:global([data-typography="classic-brand"]) .card h3 a {
+  -webkit-text-stroke: 0.5px currentColor;
 }
 
 /* Card title turns ocean blue on hover - no transition to prevent flicker */

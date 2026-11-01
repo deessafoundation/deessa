@@ -23,62 +23,64 @@ export async function getDashboardTrends(role: AdminRole, range: string = "30d")
     { table: "contact_submissions", key: "contacts", perm: "contacts" },
   ]
 
-  for (const entity of entities) {
-    if (!hasPermission(role, entity.perm)) continue
+  const entityPromises = entities.map(async (entity) => {
+    if (!hasPermission(role, entity.perm)) return
 
-    const { count: current } = await supabase
-      .from(entity.table)
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", start.toISOString())
-      .lte("created_at", end.toISOString())
+    const [currentRes, previousRes] = await Promise.all([
+      supabase
+        .from(entity.table)
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", start.toISOString())
+        .lte("created_at", end.toISOString()),
+      supabase
+        .from(entity.table)
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", prevStart.toISOString())
+        .lt("created_at", start.toISOString()),
+    ])
 
-    const { count: previous } = await supabase
-      .from(entity.table)
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", prevStart.toISOString())
-      .lt("created_at", start.toISOString())
-
-    const c = current || 0
-    const p = previous || 0
+    const c = currentRes.count || 0
+    const p = previousRes.count || 0
     trends[entity.key] = {
       current: c,
       previous: p,
       change: p > 0 ? Math.round(((c - p) / p) * 100) : c > 0 ? 100 : 0,
     }
-  }
+  })
 
-  if (canViewFinance(role)) {
-    const { count: currentDonations } = await supabase
-      .from("donations")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", start.toISOString())
-      .lte("created_at", end.toISOString())
+  const financePromise = (async () => {
+    if (!canViewFinance(role)) return
 
-    const { count: previousDonations } = await supabase
-      .from("donations")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", prevStart.toISOString())
-      .lt("created_at", start.toISOString())
+    const [currDonRes, prevDonRes, currAmtRes, prevAmtRes] = await Promise.all([
+      supabase
+        .from("donations")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", start.toISOString())
+        .lte("created_at", end.toISOString()),
+      supabase
+        .from("donations")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", prevStart.toISOString())
+        .lt("created_at", start.toISOString()),
+      supabase
+        .from("donations")
+        .select("amount")
+        .eq("payment_status", "completed")
+        .gte("created_at", start.toISOString())
+        .lte("created_at", end.toISOString()),
+      supabase
+        .from("donations")
+        .select("amount")
+        .eq("payment_status", "completed")
+        .gte("created_at", prevStart.toISOString())
+        .lt("created_at", start.toISOString()),
+    ])
 
-    const { data: currentAmounts } = await supabase
-      .from("donations")
-      .select("amount")
-      .eq("payment_status", "completed")
-      .gte("created_at", start.toISOString())
-      .lte("created_at", end.toISOString())
+    const currentTotal = currAmtRes.data?.reduce((s, d) => s + (d.amount || 0), 0) || 0
+    const previousTotal = prevAmtRes.data?.reduce((s, d) => s + (d.amount || 0), 0) || 0
 
-    const { data: previousAmounts } = await supabase
-      .from("donations")
-      .select("amount")
-      .eq("payment_status", "completed")
-      .gte("created_at", prevStart.toISOString())
-      .lt("created_at", start.toISOString())
-
-    const currentTotal = currentAmounts?.reduce((s, d) => s + (d.amount || 0), 0) || 0
-    const previousTotal = previousAmounts?.reduce((s, d) => s + (d.amount || 0), 0) || 0
-
-    const dc = currentDonations || 0
-    const dp = previousDonations || 0
+    const dc = currDonRes.count || 0
+    const dp = prevDonRes.count || 0
     trends.donations = {
       current: dc,
       previous: dp,
@@ -87,27 +89,34 @@ export async function getDashboardTrends(role: AdminRole, range: string = "30d")
     trends.totalDonations = {
       current: currentTotal,
       previous: previousTotal,
-      change: previousTotal > 0 ? Math.round(((currentTotal - previousTotal) / previousTotal) * 100) : currentTotal > 0 ? 100 : 0,
+      change:
+        previousTotal > 0
+          ? Math.round(((currentTotal - previousTotal) / previousTotal) * 100)
+          : currentTotal > 0
+            ? 100
+            : 0,
     }
-  }
+  })()
 
-  if (hasPermission(role, "volunteers")) {
+  const volunteerPromise = (async () => {
+    if (!hasPermission(role, "volunteers")) return
     const { count: current } = await supabase
       .from("volunteer_applications")
       .select("*", { count: "exact", head: true })
       .eq("status", "pending")
-
     trends.pendingVolunteers = { current: current || 0, previous: 0, change: 0 }
-  }
+  })()
 
-  if (hasPermission(role, "newsletters")) {
+  const newsletterPromise = (async () => {
+    if (!hasPermission(role, "newsletters")) return
     const { count: current } = await supabase
       .from("newsletter_subscriptions")
       .select("*", { count: "exact", head: true })
       .eq("is_active", true)
-
     trends.subscribers = { current: current || 0, previous: 0, change: 0 }
-  }
+  })()
+
+  await Promise.all([...entityPromises, financePromise, volunteerPromise, newsletterPromise])
 
   return trends
 }

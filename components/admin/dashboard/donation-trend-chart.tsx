@@ -15,7 +15,7 @@ interface DonationTrendData {
 
 const chartConfig = {
   amount: {
-    label: "Amount (NPR)",
+    label: "Amount (₹)",
     color: "hsl(var(--chart-1))",
   },
   count: {
@@ -24,10 +24,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function DonationTrendChart() {
-  const [range, setRange] = useState("30d")
+interface DonationTrendChartProps {
+  initialRange?: string
+}
+
+export function DonationTrendChart({ initialRange = "30d" }: DonationTrendChartProps = {}) {
+  const [range, setRange] = useState(initialRange)
   const [data, setData] = useState<DonationTrendData[]>([])
   const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (initialRange && initialRange !== range) {
+      setRange(initialRange)
+    }
+  }, [initialRange])
 
   useEffect(() => {
     setLoading(true)
@@ -40,34 +50,35 @@ export function DonationTrendChart() {
   const totalDonations = data.reduce((s, d) => s + d.count, 0)
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Donation Trend</CardTitle>
-          <CardDescription>
-            {totalDonations.toLocaleString()} donations totalling ₹{totalAmount.toLocaleString()}
+    <Card className="w-full h-full min-w-0 overflow-hidden flex flex-col">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 sm:p-6 pb-2 sm:pb-4 min-w-0">
+        <div className="min-w-0 space-y-1">
+          <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Donation Trend</CardTitle>
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
+            <span className="tabular-nums font-semibold text-foreground">{totalDonations.toLocaleString()}</span> donations totalling{" "}
+            <span className="tabular-nums font-semibold text-foreground">₹{totalAmount.toLocaleString()}</span>
           </CardDescription>
         </div>
-        <Tabs value={range} onValueChange={setRange}>
-          <TabsList className="h-8">
-            <TabsTrigger value="7d" className="text-xs px-2">7D</TabsTrigger>
-            <TabsTrigger value="30d" className="text-xs px-2">30D</TabsTrigger>
-            <TabsTrigger value="90d" className="text-xs px-2">90D</TabsTrigger>
+        <Tabs value={range} onValueChange={setRange} className="shrink-0 self-start sm:self-auto">
+          <TabsList className="h-8 bg-muted/60 p-0.5 rounded-xl border border-border/50" aria-label="Donation trend timeframe">
+            <TabsTrigger value="7d" aria-label="7 days trend" className="text-xs px-2.5 h-7 rounded-lg hover:text-primary">7D</TabsTrigger>
+            <TabsTrigger value="30d" aria-label="30 days trend" className="text-xs px-2.5 h-7 rounded-lg hover:text-primary">30D</TabsTrigger>
+            <TabsTrigger value="90d" aria-label="90 days trend" className="text-xs px-2.5 h-7 rounded-lg hover:text-primary">90D</TabsTrigger>
           </TabsList>
         </Tabs>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-2 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden flex-1 flex flex-col justify-center">
         {loading ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] sm:h-[280px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Loading chart...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] sm:h-[280px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             No donation data for this period
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <ChartContainer config={chartConfig} className="aspect-auto h-[240px] sm:h-[280px] w-full min-w-0 max-w-full">
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
               <defs>
                 <linearGradient id="fillAmount" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="var(--color-amount)" stopOpacity={0.8} />
@@ -79,7 +90,8 @@ export function DonationTrendChart() {
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
+                tickMargin={6}
+                minTickGap={16}
                 tickFormatter={(val) => {
                   const d = new Date(val)
                   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" })
@@ -88,7 +100,8 @@ export function DonationTrendChart() {
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tickMargin={8}
+                tickMargin={4}
+                width={40}
                 tickFormatter={(val) =>
                   val >= 1000 ? `₹${(val / 1000).toFixed(0)}k` : `₹${val}`
                 }
@@ -116,6 +129,7 @@ export function DonationTrendChart() {
                 stroke="var(--color-amount)"
                 fill="url(#fillAmount)"
                 strokeWidth={2}
+                isAnimationActive={false}
               />
             </AreaChart>
           </ChartContainer>

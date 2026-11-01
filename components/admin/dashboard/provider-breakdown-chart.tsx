@@ -35,25 +35,26 @@ export function ProviderBreakdownChart() {
   }, {} as Record<string, { label: string; color: string }>) satisfies ChartConfig
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Payment Providers</CardTitle>
-        <CardDescription>
-          {totalDonations} donations totalling ₹{totalAmount.toLocaleString()}
+    <Card className="w-full h-full min-w-0 overflow-hidden flex flex-col">
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3 min-w-0">
+        <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Payment Providers</CardTitle>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">
+          <span className="tabular-nums font-semibold text-foreground">{totalDonations.toLocaleString()}</span> donations totalling{" "}
+          <span className="tabular-nums font-semibold text-foreground">₹{totalAmount.toLocaleString()}</span>
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden flex-1 flex flex-col justify-between">
         {loading ? (
-          <div className="h-[250px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Loading...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-[250px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             No completed donations yet
           </div>
         ) : (
           <>
-            <ChartContainer config={chartConfig} className="h-[250px] w-full">
+            <ChartContainer config={chartConfig} className="aspect-auto h-[220px] sm:h-[250px] w-full min-w-0 max-w-full">
               <PieChart>
                 <ChartTooltip
                   content={
@@ -74,28 +75,32 @@ export function ProviderBreakdownChart() {
                   nameKey="provider"
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={90}
+                  innerRadius={50}
+                  outerRadius={75}
                   strokeWidth={2}
                   stroke="hsl(var(--background))"
+                  isAnimationActive={false}
                 >
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <ChartLegend content={<ChartLegendContent />} />
+                <ChartLegend content={<ChartLegendContent className="flex-wrap gap-x-3 gap-y-1 text-xs justify-center pt-2" />} />
               </PieChart>
             </ChartContainer>
-            <div className="mt-4 space-y-2">
+            <div className="mt-3 sm:mt-4 space-y-1.5 w-full min-w-0">
               {data.map((d) => (
-                <div key={d.provider} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: d.fill }} />
-                    <span className="font-medium">{d.provider.toUpperCase()}</span>
+                <div
+                  key={d.provider}
+                  className="flex items-center justify-between gap-2 text-xs sm:text-sm p-1.5 sm:p-2 rounded-lg hover:bg-muted/40 transition-colors min-w-0"
+                >
+                  <div className="flex items-center gap-2 min-w-0 truncate">
+                    <div className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: d.fill }} />
+                    <span className="font-medium text-foreground truncate">{d.provider.toUpperCase()}</span>
                   </div>
-                  <div className="flex items-center gap-4 text-muted-foreground">
-                    <span>{d.count} donations</span>
-                    <span className="font-medium text-foreground">₹{d.amount.toLocaleString()}</span>
+                  <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground shrink-0 text-right">
+                    <span className="tabular-nums text-xs text-muted-foreground hidden xs:inline">{d.count} txns</span>
+                    <span className="font-semibold text-foreground tabular-nums">₹{d.amount.toLocaleString()}</span>
                   </div>
                 </div>
               ))}

@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
+import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { HOMEPAGE_SETTINGS_KEYS } from "@/lib/types/homepage-settings"
 
 export async function POST(request: NextRequest) {
@@ -23,10 +24,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user has permission (SUPER_ADMIN, ADMIN, or EDITOR)
-    if (!["SUPER_ADMIN", "ADMIN", "EDITOR"].includes(currentAdmin.role)) {
+    // Check if user has permission for settings
+    if (!hasPermission(currentAdmin.role as AdminRole, "settings")) {
       return NextResponse.json(
-        { error: "Forbidden - Admin access required" },
+        { error: "Forbidden - Settings permission required" },
         { status: 403 }
       )
     }
@@ -37,91 +38,67 @@ export async function POST(request: NextRequest) {
     // Parse request body
     const { settings, hero, heroCarousel, testimonials, timeline, story, whatWeDo } = await request.json()
 
-    if (!settings) {
+    if (!settings && !hero && !heroCarousel && !testimonials && !timeline && !story && !whatWeDo) {
       return NextResponse.json(
-        { error: "Settings are required" },
+        { error: "At least one settings payload is required" },
         { status: 400 }
       )
     }
 
     // Update each setting in the database
-    const updates: { key: string; value: unknown }[] = [
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.STATS,
-        value: settings.stats,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.PROGRAMS,
-        value: settings.programs,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.HERO_CTAS,
-        value: settings.heroCTAs,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.CTA_CARDS,
-        value: settings.ctaCards,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.BANNERS,
-        value: settings.banners,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.MARQUEE,
-        value: settings.marquee,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.SEO,
-        value: settings.seo,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.FLAGS,
-        value: settings.flags,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.TRUST_INDICATORS,
-        value: settings.trustIndicators,
-      },
-      {
-        key: HOMEPAGE_SETTINGS_KEYS.FEATURED_STORIES_RULES,
-        value: settings.featuredStoriesRules,
-      },
-    ]
+    const updates: { key: string; value: unknown }[] = []
 
-    // Add new settings if provided
-    if (heroCarousel) {
-      updates.push({
-        key: HOMEPAGE_SETTINGS_KEYS.HERO_CAROUSEL,
-        value: heroCarousel,
-      })
+    if (settings) {
+      if (settings.stats !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.STATS, value: settings.stats })
+      }
+      if (settings.programs !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.PROGRAMS, value: settings.programs })
+      }
+      if (settings.heroCTAs !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.HERO_CTAS, value: settings.heroCTAs })
+      }
+      if (settings.ctaCards !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.CTA_CARDS, value: settings.ctaCards })
+      }
+      if (settings.banners !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.BANNERS, value: settings.banners })
+      }
+      if (settings.marquee !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.MARQUEE, value: settings.marquee })
+      }
+      if (settings.seo !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.SEO, value: settings.seo })
+      }
+      if (settings.flags !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.FLAGS, value: settings.flags })
+      }
+      if (settings.trustIndicators !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.TRUST_INDICATORS, value: settings.trustIndicators })
+      }
+      if (settings.featuredStoriesRules !== undefined) {
+        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.FEATURED_STORIES_RULES, value: settings.featuredStoriesRules })
+      }
     }
 
-    if (testimonials) {
-      updates.push({
-        key: HOMEPAGE_SETTINGS_KEYS.TESTIMONIALS,
-        value: testimonials,
-      })
+    if (heroCarousel !== undefined) {
+      updates.push({ key: HOMEPAGE_SETTINGS_KEYS.HERO_CAROUSEL, value: heroCarousel })
     }
 
-    if (timeline) {
-      updates.push({
-        key: HOMEPAGE_SETTINGS_KEYS.TIMELINE,
-        value: timeline,
-      })
+    if (testimonials !== undefined) {
+      updates.push({ key: HOMEPAGE_SETTINGS_KEYS.TESTIMONIALS, value: testimonials })
     }
 
-    if (story) {
-      updates.push({
-        key: HOMEPAGE_SETTINGS_KEYS.STORY,
-        value: story,
-      })
+    if (timeline !== undefined) {
+      updates.push({ key: HOMEPAGE_SETTINGS_KEYS.TIMELINE, value: timeline })
     }
 
-    if (whatWeDo) {
-      updates.push({
-        key: HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO,
-        value: whatWeDo,
-      })
+    if (story !== undefined) {
+      updates.push({ key: HOMEPAGE_SETTINGS_KEYS.STORY, value: story })
+    }
+
+    if (whatWeDo !== undefined) {
+      updates.push({ key: HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO, value: whatWeDo })
     }
 
     // Perform all updates
@@ -159,12 +136,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Log activity
-    const updatedKeys = [...updates.map(u => u.key)]
+    const updatedKeys = [...updates.map((u) => u.key)]
     if (hero) updatedKeys.push("home_hero")
     
     await supabase.from("activity_logs").insert({
       user_id: currentAdmin.id,
-      action: "update",
+      action: "UPDATE",
       entity_type: "homepage_settings",
       entity_id: null,
       new_data: { keys_updated: updatedKeys },
@@ -198,6 +175,14 @@ export async function GET() {
       return NextResponse.json(
         { error: "Unauthorized - Please log in" },
         { status: 401 }
+      )
+    }
+
+    // Check if user has permission for settings
+    if (!hasPermission(currentAdmin.role as AdminRole, "settings")) {
+      return NextResponse.json(
+        { error: "Forbidden - Settings permission required" },
+        { status: 403 }
       )
     }
 
