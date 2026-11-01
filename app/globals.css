@@ -360,15 +360,15 @@
     @apply bg-background text-foreground;
   }
 
-  /* Apply Marissa font to all headings in website pages only */
+  /* Apply active heading font to all headings in website pages */
   .website-layout h1,
   .website-layout h2,
   .website-layout h3,
   .website-layout h4,
   .website-layout h5,
   .website-layout h6 {
-    font-family: "Marissa Font", "Comic Neue", ui-serif, Georgia, serif;
-    font-weight: 500;
+    font-family: var(--font-heading, "Marissa Font", "Comic Neue", ui-serif, Georgia, serif);
+    font-weight: 700;
   }
 }
 

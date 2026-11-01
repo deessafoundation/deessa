@@ -67,12 +67,14 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
           <div className="mb-12 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2">
               <HandHeart aria-hidden="true" className="size-5 text-blue-600" />
-              <p className="text-sm font-semibold uppercase tracking-widest text-blue-900">The deessa community</p>
+              <p className="text-sm font-semibold tracking-widest text-blue-900">
+                THE <span className="lowercase font-bold">deessa</span> COMMUNITY
+              </p>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            <h1 className="font-heading font-marissa text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Little moments. Big impact.
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600 font-sans font-comic">
               Stories, celebrations, and everyday moments from our community.
             </p>
           </div>
@@ -107,7 +109,7 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
 
                       {/* Context section - title and excerpt below */}
                       <div className="flex flex-1 flex-col space-y-3 border-t bg-white p-5">
-                        <h2 className="text-lg font-extrabold leading-tight">
+                        <h2 className="font-heading font-marissa text-lg font-extrabold leading-tight">
                           <TrackedPostLink
                             postId={post.id}
                             url={post.post_url}
