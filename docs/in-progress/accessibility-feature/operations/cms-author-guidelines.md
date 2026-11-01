@@ -202,7 +202,7 @@ Better: "View donation information and payment options."
 
 **Exception:** Email addresses and phone numbers are okay:
 ```
-✅ OK: "Email us at info@deeshafoundation.org"
+✅ OK: "Email us at info@deessafoundation.com"
 ✅ OK: "Call +977-XXX-XXXX"
 ```
 
@@ -235,7 +235,7 @@ Our CMS automatically adds an icon for external links, but you can mention it:
 **How to add captions:**
 1. **YouTube:** Use auto-captions as a starting point, then edit for accuracy
 2. **Upload SRT/VTT file:** For videos hosted on our site
-3. **Request help:** Contact [accessibility@deeshafoundation.org] if you need assistance
+3. **Request help:** Contact [accessibility@deessafoundation.com] if you need assistance
 
 **Caption Quality Checklist:**
 - [ ] Accurate (match what's said)
@@ -599,7 +599,7 @@ Name (Required)
 "Annual Report available in:
 - PDF (2.5 MB)
 - HTML (web version)
-- Accessible format available on request: email info@deeshafoundation.org"
+- Accessible format available on request: email info@deessafoundation.com"
 ```
 
 ---
@@ -763,9 +763,9 @@ Check the "Accessibility" tab in the editor
 ### Questions?
 
 **Contact:**
-- Accessibility Lead: [accessibility@deeshafoundation.org]
-- Content Team: [content@deeshafoundation.org]
-- Tech Support: [support@deeshafoundation.org]
+- Accessibility Lead: [accessibility@deessafoundation.com]
+- Content Team: [content@deessafoundation.com]
+- Tech Support: [support@deessafoundation.com]
 
 ### Training
 
@@ -816,4 +816,4 @@ Thank you for your commitment to creating accessible content! 🎉
 
 **Last Updated:** September 16, 2026  
 **Version:** 1.0  
-**Questions?** Email [accessibility@deeshafoundation.org]
+**Questions?** Email [accessibility@deessafoundation.com]

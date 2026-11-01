@@ -92,7 +92,7 @@ We strive for full accessibility, but acknowledge the following known limitation
 - Some older PDF documents may not be fully accessible
 - We are in the process of remediating existing documents
 - New documents are created with accessibility in mind
-- Request alternative formats: [accessibility@deeshafoundation.org]
+- Request alternative formats: [accessibility@deessafoundation.com]
 
 **Media Alternatives:**
 - Some videos may not yet have captions or audio descriptions
@@ -186,7 +186,7 @@ Your feedback helps us improve accessibility for everyone. Please let us know if
 
 ### How to Reach Us
 
-**Email:** [accessibility@deeshafoundation.org]  
+**Email:** [accessibility@deessafoundation.com]  
 **Phone:** [+977-XXX-XXXX]  
 **Contact Form:** [Link to /contact page]
 
@@ -319,7 +319,7 @@ When you customize accessibility settings:
 ### Accountability
 
 **Accessibility Lead:** [Name/Title]  
-**Contact:** [accessibility@deeshafoundation.org]
+**Contact:** [accessibility@deessafoundation.com]
 
 ### Policy
 
@@ -431,7 +431,7 @@ This accessibility statement is available in:
 - **Audio Recording** (available on request)
 
 To request an alternative format:  
-Email: [accessibility@deeshafoundation.org]  
+Email: [accessibility@deessafoundation.com]  
 Phone: [+977-XXX-XXXX]
 
 ---
@@ -449,7 +449,7 @@ We welcome feedback and are committed to continuous improvement to ensure everyo
 For questions or concerns about this statement or our accessibility practices, please contact:
 
 **deessa Foundation Accessibility Team**  
-Email: [accessibility@deeshafoundation.org]  
+Email: [accessibility@deessafoundation.com]  
 Phone: [+977-XXX-XXXX]
 
 ---

@@ -34,7 +34,7 @@ export default function ErrorDemo({ initialExample = "not-found", focused = fals
   const focusRecovery = useCallback((node: HTMLHeadingElement | null) => node?.focus(), [])
   const selected = examples[example]
   const hasRetry = ["generic", "server", "network"].includes(example)
-  const error = example === "generic" || example === "server" ? Object.assign(new Error("Demo only"), { digest: "DEESSA-DEMO-001" }) : undefined
+  const error = example === "generic" || example === "server" ? Object.assign(new Error("Demo only"), { digest: "deessa-demo-001" }) : undefined
 
   async function tryAgain() {
     setRetryCount((count) => count + 1)

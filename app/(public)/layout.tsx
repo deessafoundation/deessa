@@ -38,7 +38,7 @@ export default async function PublicLayout({ children }: { children: React.React
 var d=document.documentElement;
 if(location.pathname.indexOf('/demo')===0)return;
 ${hpOnly ? "if(location.pathname!=='/')return;" : ""}
-var raw=localStorage.getItem('deesha-a11y-preferences')||sessionStorage.getItem('deesha-a11y-preferences');
+var raw=localStorage.getItem('deessa-a11y-preferences')||localStorage.getItem('deesha-a11y-preferences')||sessionStorage.getItem('deessa-a11y-preferences')||sessionStorage.getItem('deesha-a11y-preferences');
 if(raw){var p=(JSON.parse(raw)||{}).preferences;if(p&&(p.reduceMotion||p.sensoryFriendly))return;}
 ${
   freq === "every_visit"

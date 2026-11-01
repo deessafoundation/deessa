@@ -22,11 +22,11 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = generateSEOMetadata({
   title: "Art & Expression",
   description:
-    "Discover a growing collection of art by children and artists in the Deessa community, celebrating creativity, inclusion, and individual expression.",
+    "Discover a growing collection of art by children and artists in the deessa community, celebrating creativity, inclusion, and individual expression.",
   path: "/arts",
   image: "/artWork/art_pic2.jpeg",
   imageAlt: "A wall covered with children's paintings and drawings",
-  keywords: ["children's art", "community art", "art gallery", "creative expression", "Deessa Foundation"],
+  keywords: ["children's art", "community art", "art gallery", "creative expression", "deessa Foundation"],
 })
 
 // Same pill as the homepage "Explore Art" button.

@@ -444,7 +444,7 @@ export default async function AdminDashboard(props: {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Operational dashboard and impact metrics for Deesha Foundation.
+            Operational dashboard and impact metrics for deessa Foundation.
           </p>
         </div>
         <div className="flex items-center gap-3 self-start md:self-auto">

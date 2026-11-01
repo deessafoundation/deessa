@@ -681,4 +681,4 @@ resetAll()
 
 **Document Maintained By:** Development Team  
 **Last Updated:** 2026-09-16  
-**Questions:** Contact dev team or [accessibility@deeshafoundation.org]
+**Questions:** Contact dev team or [accessibility@deessafoundation.com]

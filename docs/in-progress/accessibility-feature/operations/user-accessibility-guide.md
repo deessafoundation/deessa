@@ -442,7 +442,7 @@ Most layouts adapt beautifully up to 200% text, but some complex pages may need 
 ### If You Need Additional Help
 
 **Contact Options:**
-- Email: [accessibility@deeshafoundation.org]
+- Email: [accessibility@deessafoundation.com]
 - Phone: [+977-XXX-XXXX]
 - Contact form: [Link to /contact page]
 
@@ -483,7 +483,7 @@ If localStorage is full, we automatically fall back to sessionStorage (works dur
 
 ### Can I suggest new accessibility features?
 
-**Absolutely!** We're always looking to improve. Contact us at [accessibility@deeshafoundation.org]
+**Absolutely!** We're always looking to improve. Contact us at [accessibility@deessafoundation.com]
 
 ### Will future updates affect my settings?
 
@@ -569,7 +569,7 @@ We thank everyone who provided feedback to make our website more accessible!
 ---
 
 **Last Updated:** September 16, 2026  
-**Questions?** Contact us at [accessibility@deeshafoundation.org]
+**Questions?** Contact us at [accessibility@deessafoundation.com]
 
 ---
 
