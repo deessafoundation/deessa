@@ -1,5 +1,5 @@
 import type React from "react"
-import { createClient } from "@/lib/supabase/server"
+import { getCachedAdminUser } from "@/lib/supabase/get-admin-user"
 import { AdminLayoutContent } from "@/components/admin/layout/admin-layout-content"
 import type { AdminUser } from "@/lib/types/admin"
 
@@ -20,20 +20,9 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
+  const adminUser = await getCachedAdminUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Login page doesn't need the admin layout
-  if (!user) {
-    return <>{children}</>
-  }
-
-  const { data: adminUser } = await supabase.from("admin_users").select("*").eq("user_id", user.id).single()
-
-  if (!adminUser?.is_active) {
+  if (!adminUser || !adminUser.is_active) {
     // Proxy protects admin routes; login must remain renderable for inactive sessions.
     return <>{children}</>
   }
