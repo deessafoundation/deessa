@@ -79,7 +79,16 @@ interface PartnersEditorProps {
   onUpdate?: () => void
 }
 
-export type LogoFitOption = "auto" | "wide" | "square" | "boost" | "boost-large"
+export type LogoFitOption =
+  | "auto"
+  | "wide"
+  | "square"
+  | "boost"
+  | "boost-large"
+  | "boost-xl"
+  | "boost-2x"
+  | "boost-75"
+  | "boost-100"
 
 interface PartnerModalState {
   isOpen: boolean
@@ -779,7 +788,7 @@ export function PartnersEditor({
                   <div className="space-y-1">
                     <h3 className="text-base font-semibold">No Categories Configured</h3>
                     <p className="text-xs text-muted-foreground">
-                      Partners are organized by category (e.g. Organizing Partners, In Collaboration With). Initialize
+                      Partners are organized by category (e.g. Organizing Partners, In Partnership With). Initialize
                       the 5 summit categories or add custom ones.
                     </p>
                   </div>
@@ -1600,6 +1609,12 @@ export function PartnersEditor({
                   </SelectItem>
                   <SelectItem value="boost-large" className="text-xs">
                     Large Zoom (+50% scale for tiny emblems)
+                  </SelectItem>
+                  <SelectItem value="boost-xl" className="text-xs">
+                    Extra Large Zoom (+75% scale)
+                  </SelectItem>
+                  <SelectItem value="boost-2x" className="text-xs">
+                    Maximum Zoom (+100% / 2x scale)
                   </SelectItem>
                 </SelectContent>
               </Select>

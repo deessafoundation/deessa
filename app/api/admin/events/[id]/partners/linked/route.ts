@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
     const { id } = await params
     const supabase = createServiceRoleClient()

@@ -63,8 +63,8 @@ export function SetupForm() {
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            placeholder="Min. 8 characters"
-            minLength={8}
+            placeholder="Min. 12 characters"
+            minLength={12}
             required
             className="pr-10"
           />

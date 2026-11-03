@@ -14,11 +14,11 @@ async function requireFinanceAdmin() {
 
   const { data: adminUser } = await supabase
     .from("admin_users")
-    .select("role")
+    .select("role, is_active")
     .eq("user_id", user.id)
     .single()
 
-  if (!adminUser || !canViewFinance(adminUser.role as AdminRole)) return null
+  if (!adminUser || !adminUser.is_active || !canViewFinance(adminUser.role as AdminRole)) return null
   return { supabase, admin: adminUser }
 }
 

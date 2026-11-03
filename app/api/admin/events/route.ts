@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
 export async function GET() {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient()
-    
-    const { data: events, error } = await supabase
+    const { data: events, error } = await auth.supabase
       .from("events")
       .select("*")
       .order("created_at", { ascending: false })

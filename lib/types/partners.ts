@@ -284,10 +284,11 @@ export const DEFAULT_EVENT_CATEGORIES: Array<{
   display_order: number;
 }> = [
   { category_key: "organizers", category_label: "Organizing Partners", display_order: 0 },
-  { category_key: "in_collaboration", category_label: "In Collaboration With", display_order: 1 },
+  { category_key: "in_collaboration", category_label: "In Partnership With", display_order: 1 },
   { category_key: "knowledge_partner", category_label: "Knowledge Partners", display_order: 2 },
   { category_key: "technical_partner", category_label: "Technical Partners", display_order: 3 },
   { category_key: "co_organizers", category_label: "Co-organizers", display_order: 4 },
+  { category_key: "in_solidarity_with", category_label: "In Solidarity With", display_order: 5 },
 ];
 
 export const DEFAULT_HOMEPAGE_CATEGORIES = DEFAULT_EVENT_CATEGORIES;

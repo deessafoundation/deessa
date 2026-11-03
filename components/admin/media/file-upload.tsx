@@ -250,7 +250,7 @@ export function FileUpload({
       ) : validPreview && preview ? (
         /* Active File Preview Card */
         <div className="overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-4 shadow-xs transition-all">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             {/* Thumbnail */}
             <div className="relative size-20 sm:size-24 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-muted">
               {isImage && (

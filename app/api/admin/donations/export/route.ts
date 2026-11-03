@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { canViewFinance, type AdminRole } from "@/lib/types/admin"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
 function escapeXml(val: string): string {
   return val
@@ -12,26 +11,10 @@ function escapeXml(val: string): string {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "FINANCE"])
+    if (!auth.success) return auth.response
 
-    // Auth check
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const { data: adminUser } = await supabase
-      .from("admin_users")
-      .select("role")
-      .eq("user_id", user.id)
-      .single()
-
-    if (!adminUser || !canViewFinance(adminUser.role as AdminRole)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+    const supabase = auth.supabase
 
     const { searchParams } = new URL(request.url)
 

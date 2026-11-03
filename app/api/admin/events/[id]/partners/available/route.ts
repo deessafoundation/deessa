@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient()
+    const params = await context.params
     const eventId = params.id
+    const supabase = auth.supabase
 
-    // Use the database function to get available partners
-    // This returns: global partners (created_context_type IS NULL)
-    //            + partners created in this specific event
     const { data: partners, error } = await supabase.rpc("get_available_partners_for_context", {
       p_context_type: "event",
       p_context_id: eventId,

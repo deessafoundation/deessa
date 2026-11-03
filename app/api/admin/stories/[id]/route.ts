@@ -1,22 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-import { createClient } from "@/lib/supabase/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient()
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const body = await request.json()
     const { id } = await params
 
@@ -36,7 +29,7 @@ export async function PATCH(
     }
 
     if (isPublished) {
-      const { data: existing, error: existingError } = await supabase
+      const { data: existing, error: existingError } = await auth.supabase
         .from("stories")
         .select("published_at")
         .eq("id", id)
@@ -51,7 +44,7 @@ export async function PATCH(
       }
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await auth.supabase
       .from("stories")
       .update(updateData)
       .eq("id", id)
@@ -72,23 +65,16 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient()
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { id } = await params
 
-    const { error } = await supabase.from("stories").delete().eq("id", id)
+    const { error } = await auth.supabase.from("stories").delete().eq("id", id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
