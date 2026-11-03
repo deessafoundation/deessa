@@ -1,4 +1,5 @@
 export { DashboardStatCard } from "./dashboard-stat-card"
+export { KpiMetricsGrid } from "./kpi-metrics-grid"
 export { DonationTrendChart } from "./donation-trend-chart"
 export { ContentActivityChart } from "./content-activity-chart"
 export { ProviderBreakdownChart } from "./provider-breakdown-chart"
