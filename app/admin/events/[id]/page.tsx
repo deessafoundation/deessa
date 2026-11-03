@@ -108,15 +108,15 @@ export default async function EventRegistrationsPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Registrations</h1>
-          <p className="text-sm text-muted-foreground">{event.title}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Registrations</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground">{event.title}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Link
             href={`/admin/events/${id}/settings`}
-            className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-all"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-3.5 py-2 text-xs sm:text-sm font-medium text-foreground hover:bg-muted transition-all"
           >
             <Settings className="size-4" />
             Settings
@@ -125,60 +125,62 @@ export default async function EventRegistrationsPage({
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3.5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-muted-foreground">Total Registrations</p>
-              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Users className="size-4" />
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Total Registrations</p>
+              <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                <Users className="size-3.5 sm:size-4" />
               </div>
             </div>
-            <p className="mt-2 text-3xl font-bold text-foreground">{total}</p>
-            <p className="mt-1 text-xs text-muted-foreground">All time registrations</p>
+            <p className="mt-2 text-xl sm:text-3xl font-bold text-foreground">{total}</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground truncate">All time registrations</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3.5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-muted-foreground">Confirmed</p>
-              <div className="flex size-9 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                <CheckCircle className="size-4" />
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Confirmed</p>
+              <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg bg-green-100 text-green-600 shrink-0">
+                <CheckCircle className="size-3.5 sm:size-4" />
               </div>
             </div>
-            <p className="mt-2 text-3xl font-bold text-foreground">{confirmed}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="mt-2 text-xl sm:text-3xl font-bold text-foreground">{confirmed}</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground truncate">
               {total > 0 ? Math.round((confirmed / total) * 100) : 0}% confirmation rate
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3.5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-muted-foreground">Awaiting Payment</p>
-              <div className="flex size-9 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
-                <Clock className="size-4" />
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Awaiting Payment</p>
+              <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg bg-amber-100 text-amber-600 shrink-0">
+                <Clock className="size-3.5 sm:size-4" />
               </div>
             </div>
-            <p className="mt-2 text-3xl font-bold text-foreground">{unpaid}</p>
-            <p className="mt-1 text-xs text-muted-foreground">Payment not yet received</p>
+            <p className="mt-2 text-xl sm:text-3xl font-bold text-foreground">{unpaid}</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground truncate">Not yet received</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3.5 sm:p-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-muted-foreground">Revenue</p>
-              <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
-                <DollarSign className="size-4" />
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Revenue</p>
+              <div className="flex size-7 sm:size-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 shrink-0">
+                <DollarSign className="size-3.5 sm:size-4" />
               </div>
             </div>
-            <p className="mt-2 text-3xl font-bold text-foreground">
+            <p className="mt-2 text-xl sm:text-3xl font-bold text-foreground truncate">
               {event.is_free ? "Free" : `NPR ${revenue.toLocaleString()}`}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">Total collected</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground truncate">
+              {event.is_free ? "No charges" : "Total collected"}
+            </p>
           </CardContent>
         </Card>
       </div>

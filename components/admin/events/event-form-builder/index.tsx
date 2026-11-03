@@ -78,6 +78,7 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
   const [savingAction, setSavingAction] = useState<"draft" | "publish" | null>(null)
   const [view, setView] = useState<"builder" | "preview">("builder")
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop")
+  const [mobileStudioTab, setMobileStudioTab] = useState<"canvas" | "palette" | "properties">("canvas")
   const [previewData, setPreviewData] = useState<Record<string, unknown>>({})
   const [previewErrors, setPreviewErrors] = useState<Record<string, string>>({})
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -253,6 +254,7 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
   const handleAddFieldWithExpand = useCallback(
     (type: FieldType) => {
       handleAddField(type)
+      setMobileStudioTab("canvas")
     },
     [handleAddField]
   )
@@ -281,30 +283,32 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
   const allFields = schema.steps.flatMap((s) => s.fields)
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] min-h-[600px]">
+    <div className="flex flex-col min-h-[500px] lg:h-[calc(100vh-200px)] lg:min-h-[600px]">
       {/* Action bar */}
-      <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-4">
-        <div className="flex items-center gap-3">
-          <Badge variant="outline" className="text-xs">
-            v{schema.version}
-          </Badge>
-          {hasUnsavedChanges && (
-            <Badge variant="secondary" className="text-xs bg-amber-50 text-amber-600 border-amber-200">
-              Unsaved
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60 mb-4">
+        <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              v{schema.version}
             </Badge>
-          )}
-          <span className="text-xs text-black/30">
-            {schema.steps.length} step{schema.steps.length !== 1 ? "s" : ""} · {totalFields} field{totalFields !== 1 ? "s" : ""}
-          </span>
+            {hasUnsavedChanges && (
+              <Badge variant="secondary" className="text-xs bg-amber-50 text-amber-600 border-amber-200">
+                Unsaved
+              </Badge>
+            )}
+            <span className="text-xs text-muted-foreground">
+              {schema.steps.length} step{schema.steps.length !== 1 ? "s" : ""} · {totalFields} field{totalFields !== 1 ? "s" : ""}
+            </span>
+          </div>
 
           {/* View toggle */}
-          <div className="flex gap-0.5 rounded-lg bg-gray-100 p-0.5 ml-2">
+          <div className="flex gap-0.5 rounded-lg bg-muted p-0.5 ml-auto sm:ml-2">
             <button
               onClick={() => setView("builder")}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
                 view === "builder"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-black/40 hover:text-black/70 hover:bg-white/60"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Builder
@@ -313,8 +317,8 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
               onClick={() => setView("preview")}
               className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
                 view === "preview"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-black/40 hover:text-black/70 hover:bg-white/60"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Preview
@@ -322,13 +326,13 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2">
           {/* Undo/Redo */}
-          <div className="flex gap-1 mr-2">
+          <div className="flex gap-1">
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="flex size-8 items-center justify-center rounded-lg bg-gray-100 text-black/50 hover:bg-gray-200 hover:text-black/70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               title="Undo (Ctrl+Z)"
             >
               <Undo2 className="size-4" />
@@ -336,115 +340,165 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="flex size-8 items-center justify-center rounded-lg bg-gray-100 text-black/50 hover:bg-gray-200 hover:text-black/70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               title="Redo (Ctrl+Shift+Z)"
             >
               <Redo2 className="size-4" />
             </button>
           </div>
 
-          {/* Templates */}
-          <FormTemplateChooser
-            eventId={eventId}
-            currentSchema={schema}
-            onApplyTemplate={(templateSchema) => {
-              setSchema(templateSchema)
-            }}
-          />
+          <div className="flex items-center gap-1.5">
+            {/* Templates */}
+            <FormTemplateChooser
+              eventId={eventId}
+              currentSchema={schema}
+              onApplyTemplate={(templateSchema) => {
+                setSchema(templateSchema)
+              }}
+            />
 
-          {/* Import/Export */}
-          <SchemaImportExport
-            schema={schema}
-            onImport={(importedSchema) => {
-              setSchema(importedSchema)
-            }}
-          />
+            {/* Import/Export */}
+            <SchemaImportExport
+              schema={schema}
+              onImport={(importedSchema) => {
+                setSchema(importedSchema)
+              }}
+            />
+          </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleSave(false)}
-            disabled={savingAction !== null}
-            className="gap-2 hover:bg-gray-100 hover:text-black transition-colors"
-          >
-            {savingAction === "draft" ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
-            Save Draft
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => handleSave(true)}
-            disabled={savingAction !== null}
-            className="gap-2 hover:opacity-90 transition-all"
-          >
-            {savingAction === "publish" ? <Loader2 className="size-3.5 animate-spin" /> : <FileText className="size-3.5" />}
-            Publish
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleSave(false)}
+              disabled={savingAction !== null}
+              className="gap-1.5 hover:bg-muted transition-colors"
+            >
+              {savingAction === "draft" ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+              <span className="hidden xs:inline">Save</span> Draft
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => handleSave(true)}
+              disabled={savingAction !== null}
+              className="gap-1.5 hover:opacity-90 transition-all"
+            >
+              {savingAction === "publish" ? <Loader2 className="size-3.5 animate-spin" /> : <FileText className="size-3.5" />}
+              Publish
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Main content */}
       {view === "builder" ? (
-        <div className="flex-1 grid grid-cols-[220px_1fr_340px] gap-4 min-h-0 overflow-hidden">
-          {/* Left: Field Palette */}
-          <div className="overflow-y-auto pr-2 scrollbar-hide">
-            <FieldPalette
-              onAddField={handleAddFieldWithExpand}
-              targetStepId={schema.steps[0]?.id || null}
-            />
-          </div>
-
-          {/* Center: Form Canvas */}
-          <div className="overflow-y-auto scrollbar-hide">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
+        <div className="flex-1 flex flex-col min-h-0">
+          {/* Mobile Studio Tab Switcher */}
+          <div className="lg:hidden flex items-center justify-center p-1 bg-muted rounded-xl mb-3 gap-1">
+            <button
+              type="button"
+              onClick={() => setMobileStudioTab("canvas")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                mobileStudioTab === "canvas"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <FormCanvas
-                steps={schema.steps}
-                selectedFieldId={selectedFieldId}
-                selectedStepId={selectedStepId}
-                expandedSteps={expandedSteps}
-                onSelectField={setSelectedFieldId}
-                onSelectStep={setSelectedStepId}
-                onUpdateStep={updateStep}
-                onRemoveStep={removeStep}
-                onRemoveField={(stepId, fieldId) => {
-                  removeField(stepId, fieldId)
-                  if (selectedFieldId === fieldId) setSelectedFieldId(null)
-                }}
-                onDuplicateField={duplicateField}
-                onMoveFieldToStep={moveFieldToStep}
-                onToggleExpand={toggleExpand}
-                onAddStep={handleAddStep}
-              />
-              <DragOverlay>
-                {activeId ? (
-                  <div className="rounded-lg border border-primary bg-white px-3 py-2.5 shadow-lg opacity-90 text-sm font-medium">
-                    {(() => {
-                      const field = findField(schema, activeId)
-                      return field?.label || "Dragging..."
-                    })()}
-                  </div>
-                ) : null}
-              </DragOverlay>
-            </DndContext>
+              Canvas ({allFields.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileStudioTab("palette")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                mobileStudioTab === "palette"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              + Add Field
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileStudioTab("properties")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                mobileStudioTab === "properties"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Properties {selectedField ? "•" : ""}
+            </button>
           </div>
 
-          {/* Right: Field Properties */}
-          <div className="overflow-y-auto pl-3 border-l border-gray-100 scrollbar-hide bg-gray-50/50 rounded-xl">
-            <FieldPropertiesPanel
-              field={selectedField}
-              stepId={selectedFieldStep?.id || null}
-              steps={schema.steps}
-              allFields={allFields}
-              onUpdate={updateField}
-              onDelete={(stepId, fieldId) => {
-                removeField(stepId, fieldId)
-                setSelectedFieldId(null)
-              }}
-            />
+          <div className="flex-1 lg:grid lg:grid-cols-[220px_1fr_340px] gap-4 min-h-0 overflow-hidden">
+            {/* Left: Field Palette */}
+            <div className={`${mobileStudioTab === "palette" ? "block" : "hidden"} lg:block overflow-y-auto pr-0 lg:pr-2 scrollbar-hide`}>
+              <FieldPalette
+                onAddField={handleAddFieldWithExpand}
+                targetStepId={schema.steps[0]?.id || null}
+              />
+            </div>
+
+            {/* Center: Form Canvas */}
+            <div className={`${mobileStudioTab === "canvas" ? "block" : "hidden"} lg:block overflow-y-auto scrollbar-hide`}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <FormCanvas
+                  steps={schema.steps}
+                  selectedFieldId={selectedFieldId}
+                  selectedStepId={selectedStepId}
+                  expandedSteps={expandedSteps}
+                  onSelectField={(id) => {
+                    setSelectedFieldId(id)
+                    if (id) setMobileStudioTab("properties")
+                  }}
+                  onSelectStep={setSelectedStepId}
+                  onUpdateStep={updateStep}
+                  onRemoveStep={removeStep}
+                  onRemoveField={(stepId, fieldId) => {
+                    removeField(stepId, fieldId)
+                    if (selectedFieldId === fieldId) {
+                      setSelectedFieldId(null)
+                      setMobileStudioTab("canvas")
+                    }
+                  }}
+                  onDuplicateField={duplicateField}
+                  onMoveFieldToStep={moveFieldToStep}
+                  onToggleExpand={toggleExpand}
+                  onAddStep={handleAddStep}
+                />
+                <DragOverlay>
+                  {activeId ? (
+                    <div className="rounded-lg border border-primary bg-background px-3 py-2.5 shadow-lg opacity-90 text-sm font-medium">
+                      {(() => {
+                        const field = findField(schema, activeId)
+                        return field?.label || "Dragging..."
+                      })()}
+                    </div>
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            </div>
+
+            {/* Right: Field Properties */}
+            <div className={`${mobileStudioTab === "properties" ? "block" : "hidden"} lg:block overflow-y-auto pl-0 lg:pl-3 border-l-0 lg:border-l border-border/60 scrollbar-hide bg-muted/20 rounded-xl`}>
+              <FieldPropertiesPanel
+                field={selectedField}
+                stepId={selectedFieldStep?.id || null}
+                steps={schema.steps}
+                allFields={allFields}
+                onUpdate={updateField}
+                onDelete={(stepId, fieldId) => {
+                  removeField(stepId, fieldId)
+                  setSelectedFieldId(null)
+                  setMobileStudioTab("canvas")
+                }}
+              />
+            </div>
           </div>
         </div>
       ) : (
@@ -473,7 +527,7 @@ export function EventFormBuilder({ eventId, initialSchema, onSchemaSaved }: Even
             "max-w-sm"
           }`}>
             <div className={`rounded-xl border border-gray-200 bg-white shadow-sm transition-all ${
-              previewDevice === "mobile" ? "border-4 border-gray-300 rounded-3xl" : "p-8"
+              previewDevice === "mobile" ? "border-4 border-gray-300 rounded-3xl" : "p-4 sm:p-8"
             }`}>
               <div className={previewDevice === "mobile" ? "p-4" : ""}>
               <h2 className="text-xl font-bold text-black mb-2">Form Preview</h2>

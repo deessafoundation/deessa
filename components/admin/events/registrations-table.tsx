@@ -435,15 +435,29 @@ export function RegistrationsTable({
 
   return (
     <Card>
-      <CardHeader className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-bold">All Registrations</CardTitle>
-          <div className="flex items-center gap-3">
+      <CardHeader className="border-b border-border px-4 sm:px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center justify-between sm:justify-start gap-2">
+            <CardTitle className="text-base font-bold">All Registrations</CardTitle>
+            <Badge variant="outline" className="text-xs">
+              {filtered.length}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search ID, name, email..."
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="pl-9 h-9 text-xs"
+              />
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" size="sm" className="gap-2">
+                <Button variant="default" size="sm" className="gap-1.5 shrink-0 h-9">
                   <Download className="h-4 w-4" />
-                  Export
+                  <span className="hidden xs:inline">Export</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -457,20 +471,11 @@ export function RegistrationsTable({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="relative w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by ID, name, email, phone..."
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 h-9"
-              />
-            </div>
           </div>
         </div>
 
-        {/* Filter Row */}
-        <div className="flex items-center gap-3 mt-3">
+        {/* Desktop Filter Row */}
+        <div className="hidden sm:flex items-center gap-3 mt-3 flex-wrap">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Filter className="h-4 w-4" />
             <span>Filters:</span>
@@ -550,9 +555,87 @@ export function RegistrationsTable({
             </Badge>
           )}
         </div>
+
+        {/* Mobile Filter Row */}
+        <div className="flex sm:hidden flex-col gap-2 mt-3 pt-3 border-t border-border/60">
+          <div className="grid grid-cols-2 gap-2">
+            <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1) }}>
+              <SelectTrigger className="w-full h-8 text-xs">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+                <SelectItem value="expired">Expired</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={paymentFilter} onValueChange={(v) => { setPaymentFilter(v); setCurrentPage(1) }}>
+              <SelectTrigger className="w-full h-8 text-xs">
+                <SelectValue placeholder="Payment" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Payment</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
+                <SelectItem value="unpaid">Unpaid</SelectItem>
+                <SelectItem value="review">Under Review</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+                <SelectItem value="refunded">Refunded</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={paymentMethodFilter} onValueChange={(v) => { setPaymentMethodFilter(v); setCurrentPage(1) }}>
+              <SelectTrigger className="w-full h-8 text-xs">
+                <SelectValue placeholder="Method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Methods</SelectItem>
+                <SelectItem value="online">Online</SelectItem>
+                <SelectItem value="qr">QR Code</SelectItem>
+                <SelectItem value="venue">Pay at Venue</SelectItem>
+                <SelectItem value="__none__">Free / No Method</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {paymentProviders.length > 1 && (
+              <Select value={paymentProviderFilter} onValueChange={(v) => { setPaymentProviderFilter(v); setCurrentPage(1) }}>
+                <SelectTrigger className="w-full h-8 text-xs">
+                  <SelectValue placeholder="Provider" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Providers</SelectItem>
+                  {paymentProviders.map((p) => (
+                    <SelectItem key={p} value={p}>
+                      {p === "free" ? "Free" : p.charAt(0).toUpperCase() + p.slice(1)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          {hasActiveFilters && (
+            <div className="flex items-center justify-between pt-1">
+              <Badge variant="secondary" className="text-xs">
+                {filtered.length} of {registrations.length}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="h-7 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5 mr-1" /> Clear filters
+              </Button>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -691,63 +774,191 @@ export function RegistrationsTable({
           </Table>
         </div>
 
-        {/* Footer */}
-        {filtered.length > 0 && (
-          <div className="flex items-center justify-between border-t border-border px-6 py-3 text-xs text-muted-foreground">
-            <p>
-              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
-              {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of{" "}
-              {filtered.length} registrations
-              {search && (
-                <span className="ml-1 text-primary">
-                  ({filtered.length} match{filtered.length !== 1 ? "es" : ""})
-                </span>
+        {/* Mobile Card List View */}
+        <div className="md:hidden p-3 space-y-2.5">
+          {paginated.length === 0 ? (
+            <div className="py-12 text-center text-muted-foreground space-y-2">
+              {hasActiveFilters ? (
+                <>
+                  <Filter className="size-8 mx-auto text-muted-foreground/40" />
+                  <p className="font-medium text-foreground">No matching registrations</p>
+                  <p className="text-xs">Try adjusting your filters or search query.</p>
+                  <Button variant="outline" size="sm" onClick={clearFilters} className="mt-2 text-xs">
+                    Clear filters
+                  </Button>
+                </>
+              ) : search ? (
+                <>
+                  <Search className="size-8 mx-auto text-muted-foreground/40" />
+                  <p className="font-medium text-foreground">No registrations found</p>
+                  <p className="text-xs">Try a different search term.</p>
+                </>
+              ) : (
+                <>
+                  <Users className="size-8 mx-auto text-muted-foreground/40" />
+                  <p className="font-medium text-foreground">No registrations yet</p>
+                  <p className="text-xs">Registrations will appear here once attendees sign up.</p>
+                </>
               )}
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="h-7 px-2 text-xs"
-              >
-                <ChevronLeft className="h-3 w-3" />
-              </Button>
-              <div className="flex items-center gap-1">
-                {getPaginationPages(currentPage, totalPages).map((page, i) =>
-                  page === "..." ? (
-                    <span key={`ellipsis-${i}`} className="px-1 text-xs text-muted-foreground">
-                      ...
-                    </span>
-                  ) : (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => setCurrentPage(page as number)}
-                      className={`h-7 w-7 text-xs ${
-                        currentPage === page
-                          ? "bg-primary text-primary-foreground"
-                          : ""
-                      }`}
-                    >
-                      {page}
-                    </Button>
-                  )
-                )}
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="h-7 px-2 text-xs"
-              >
-                <ChevronRight className="h-3 w-3" />
-              </Button>
             </div>
-          </div>
+          ) : (
+            paginated.map((reg) => {
+              const custom = (reg.custom_fields || {}) as Record<string, unknown>
+              const role = hasRoleField ? formatCustomValue(custom.role) : null
+              const mode = hasModeField ? formatCustomValue(custom.attendance_mode || custom.mode) : null
+
+              return (
+                <div
+                  key={reg.id}
+                  onClick={() => router.push(`/admin/events/${eventId}/registrations/${reg.id}`)}
+                  className="p-3.5 rounded-xl border border-border bg-card hover:bg-muted/30 transition-all cursor-pointer space-y-2.5 active:scale-[0.99]"
+                >
+                  {/* Top row: Avatar + Name + Status Badges */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ${avatarColor(reg.full_name)}`}
+                      >
+                        {getInitials(reg.full_name)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-sm text-foreground truncate">{reg.full_name}</p>
+                        <p className="font-mono text-[10px] text-muted-foreground">deessa-{reg.id.slice(0, 6).toUpperCase()}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <StatusBadge status={reg.status} />
+                      <PaymentBadge status={reg.payment_status} />
+                    </div>
+                  </div>
+
+                  {/* Middle row: Email & Phone */}
+                  <div className="text-xs text-muted-foreground space-y-0.5">
+                    <p className="truncate">{reg.email?.toLowerCase()}</p>
+                    {reg.phone && <p>{reg.phone}</p>}
+                  </div>
+
+                  {/* Extra custom badges if role or mode present */}
+                  {(role && role !== "—" || mode && mode !== "—") && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                      {role && role !== "—" && (
+                        <Badge variant="outline" className="text-[10px] font-normal">
+                          {role}
+                        </Badge>
+                      )}
+                      {mode && mode !== "—" && (
+                        <ModeBadge mode={mode} />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Bottom row: Payment amount + method + date */}
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-border/60">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-foreground">
+                        {reg.payment_amount
+                          ? `${reg.payment_currency || "NPR"} ${Number(reg.payment_amount).toLocaleString()}`
+                          : "Free"}
+                      </span>
+                      <PaymentMethodBadge method={reg.payment_method} />
+                    </div>
+                    <span className="text-[11px] text-muted-foreground">
+                      {new Date(reg.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </span>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+
+        {/* Footer / Pagination */}
+        {filtered.length > 0 && (
+          <>
+            {/* Desktop Pagination */}
+            <div className="hidden sm:flex items-center justify-between border-t border-border px-6 py-3 text-xs text-muted-foreground">
+              <p>
+                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
+                {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of{" "}
+                {filtered.length} registrations
+                {search && (
+                  <span className="ml-1 text-primary">
+                    ({filtered.length} match{filtered.length !== 1 ? "es" : ""})
+                  </span>
+                )}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="h-7 px-2 text-xs"
+                >
+                  <ChevronLeft className="h-3 w-3" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  {getPaginationPages(currentPage, totalPages).map((page, i) =>
+                    page === "..." ? (
+                      <span key={`ellipsis-${i}`} className="px-1 text-xs text-muted-foreground">
+                        ...
+                      </span>
+                    ) : (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setCurrentPage(page as number)}
+                        className={`h-7 w-7 text-xs ${
+                          currentPage === page
+                            ? "bg-primary text-primary-foreground"
+                            : ""
+                        }`}
+                      >
+                        {page}
+                      </Button>
+                    )
+                  )}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-7 px-2 text-xs"
+                >
+                  <ChevronRight className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Mobile Pagination */}
+            <div className="flex sm:hidden items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 px-3 text-xs"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 px-3 text-xs"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </>
         )}
       </CardContent>
     </Card>

@@ -5,6 +5,7 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, CheckCircle, XCircle } from "lucide-react"
 import { canManageUsers, getRoleDisplayName, type AdminRole } from "@/lib/types/admin"
@@ -65,9 +66,14 @@ export default async function AdminUsersPage() {
                 <TableRow key={user.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium">
-                        {user.full_name.charAt(0)}
-                      </div>
+                      <Avatar className="h-10 w-10">
+                        {user.avatar_url && (
+                          <AvatarImage src={user.avatar_url} alt={user.full_name} className="object-cover" />
+                        )}
+                        <AvatarFallback className="bg-primary font-medium text-primary-foreground">
+                          {user.full_name?.charAt(0) || "A"}
+                        </AvatarFallback>
+                      </Avatar>
                       <div>
                         <p className="font-medium">{user.full_name}</p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>

@@ -91,21 +91,21 @@ export default function NewEventPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-5xl px-6 py-8">
+      <div className="mx-auto max-w-5xl px-0 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             href="/admin/events"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-4"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground mb-3"
           >
             <ChevronLeft className="h-4 w-4" />
             Back to Events
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">Create New Event</h1>
-          <p className="text-muted-foreground">Set up the basics for your new event</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Create New Event</h1>
+          <p className="text-sm text-muted-foreground">Set up the basics for your new event</p>
         </div>
 
-        <form id="new-event-form" onSubmit={handleSubmit} className="space-y-6">
+        <form id="new-event-form" onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {error && (
             <Alert variant="destructive" className="border-red-200 bg-red-50">
               <AlertCircle className="h-4 w-4 text-red-600" />
@@ -115,12 +115,12 @@ export default function NewEventPage() {
 
           {/* Hero Section - Title & Description */}
           <Card className="border-border/50 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="hidden sm:flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                   <Sparkles className="h-5 w-5 text-primary" />
                 </div>
-                <div className="flex-1 space-y-4">
+                <div className="flex-1 space-y-4 min-w-0">
                   <div className="space-y-2">
                     <Label htmlFor="title" className="text-sm font-semibold text-foreground">
                       Event Title
@@ -136,7 +136,7 @@ export default function NewEventPage() {
                         }
                       }}
                       placeholder="e.g. Annual Tech Conference 2026"
-                      className="h-11 text-base"
+                      className="h-10 sm:h-11 text-base"
                       required
                     />
                   </div>
@@ -147,7 +147,7 @@ export default function NewEventPage() {
                         URL Slug
                       </Label>
                       <div className="flex items-center gap-0">
-                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-border bg-muted px-3 text-sm text-muted-foreground">
+                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-border bg-muted px-2.5 sm:px-3 text-xs sm:text-sm text-muted-foreground shrink-0">
                           /events/
                         </span>
                         <Input
@@ -156,7 +156,7 @@ export default function NewEventPage() {
                           value={slug}
                           onChange={(e) => setSlug(e.target.value)}
                           placeholder="your-event-slug"
-                          className="rounded-l-none border-l-0"
+                          className="rounded-l-none border-l-0 text-xs sm:text-sm"
                           required
                         />
                       </div>
@@ -167,7 +167,7 @@ export default function NewEventPage() {
                         Category
                       </Label>
                       <Select name="category" defaultValue="general">
-                        <SelectTrigger className="h-11">
+                        <SelectTrigger className="h-10 sm:h-11">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -193,7 +193,7 @@ export default function NewEventPage() {
                       name="short_description"
                       placeholder="A brief summary for event cards (1-2 sentences)"
                       maxLength={200}
-                      className="h-11"
+                      className="h-10 sm:h-11"
                     />
                     <p className="text-xs text-muted-foreground">
                       Shown on event cards and social previews
@@ -206,12 +206,12 @@ export default function NewEventPage() {
 
           {/* Description */}
           <Card className="border-border/50 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="hidden sm:flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
                   <FileText className="h-5 w-5 text-blue-600" />
                 </div>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 min-w-0">
                   <Label htmlFor="description" className="text-sm font-semibold text-foreground">
                     Full Description
                   </Label>
@@ -219,8 +219,8 @@ export default function NewEventPage() {
                     id="description"
                     name="description"
                     placeholder="Write a detailed description of your event. Include what attendees can expect, key highlights, and any important information..."
-                    rows={8}
-                    className="text-base leading-relaxed"
+                    rows={6}
+                    className="text-sm sm:text-base leading-relaxed"
                     required
                   />
                 </div>
@@ -230,12 +230,12 @@ export default function NewEventPage() {
 
           {/* Date & Location */}
           <Card className="border-border/50 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="hidden sm:flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50">
                   <Calendar className="h-5 w-5 text-amber-600" />
                 </div>
-                <div className="flex-1 space-y-4">
+                <div className="flex-1 space-y-4 min-w-0">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label className="text-sm font-semibold text-foreground">
@@ -269,7 +269,7 @@ export default function NewEventPage() {
                         id="location"
                         name="location"
                         placeholder="e.g. Kathmandu, Nepal"
-                        className="h-11 pl-10"
+                        className="h-10 sm:h-11 pl-10"
                         required
                       />
                     </div>
@@ -281,18 +281,18 @@ export default function NewEventPage() {
 
           {/* Settings */}
           <Card className="border-border/50 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="hidden sm:flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-50">
                   <Tag className="h-5 w-5 text-purple-600" />
                 </div>
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center justify-between rounded-xl border border-border bg-muted/30 p-4">
-                    <div className="space-y-0.5">
+                <div className="flex-1 space-y-4 min-w-0">
+                  <div className="flex items-center justify-between rounded-xl border border-border bg-muted/30 p-3.5 sm:p-4 gap-3">
+                    <div className="space-y-0.5 min-w-0">
                       <Label htmlFor="is_free" className="text-sm font-semibold text-foreground">
                         Free Event
                       </Label>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {isFree
                           ? "Registration is free — no payment required"
                           : "Paid event — ticket types can be configured after creation"}
@@ -302,6 +302,7 @@ export default function NewEventPage() {
                       id="is_free"
                       checked={isFree}
                       onCheckedChange={setIsFree}
+                      className="shrink-0"
                     />
                   </div>
 
@@ -314,7 +315,7 @@ export default function NewEventPage() {
                       name="contact_email"
                       type="email"
                       placeholder="events@deessafoundation.com"
-                      className="h-11"
+                      className="h-10 sm:h-11"
                     />
                   </div>
                 </div>
@@ -323,19 +324,20 @@ export default function NewEventPage() {
           </Card>
 
           {/* Bottom Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => router.back()}
               disabled={isLoading}
+              className="w-full sm:w-auto h-11"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading || !title.trim()}
-              className="bg-[#3FABDE] hover:bg-[#2f9bca] text-white"
+              className="w-full sm:w-auto h-11 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Event

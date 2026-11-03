@@ -396,20 +396,21 @@ export default async function EventDetailPage({
                             {items.map((item, idx) => (
                               <div
                                 key={item.id}
-                                className={`group flex gap-5 rounded-xl p-4 transition-all ${
+                                className={`group flex flex-col sm:flex-row gap-3 sm:gap-5 rounded-xl p-3.5 sm:p-4 transition-all ${
                                   item.highlighted
                                     ? "bg-primary/5 ring-1 ring-primary/15"
                                     : "bg-white hover:bg-gray-50/80"
                                 }`}
                               >
                                 {/* Time column */}
-                                <div className="w-28 shrink-0 pt-0.5 text-center">
+                                <div className="flex sm:flex-col items-center sm:items-stretch gap-2 sm:gap-0 sm:w-28 shrink-0 pt-0.5 text-left sm:text-center">
                                   <p className={`text-sm font-bold ${item.highlighted ? "text-primary" : "text-black/50"}`}>
                                     {item.start_time || "TBA"}
                                   </p>
                                   {item.end_time && (
                                     <>
-                                      <p className="text-[10px] text-black/25 leading-tight text-center">to</p>
+                                      <p className="text-[10px] text-black/25 leading-tight text-center hidden sm:block">to</p>
+                                      <span className="text-xs text-black/30 sm:hidden">–</span>
                                       <p className={`text-sm font-bold ${item.highlighted ? "text-primary" : "text-black/50"}`}>
                                         {item.end_time}
                                       </p>
@@ -418,7 +419,7 @@ export default async function EventDetailPage({
                                 </div>
 
                                 {/* Divider dot */}
-                                <div className="relative flex flex-col items-center pt-1.5">
+                                <div className="hidden sm:flex relative flex-col items-center pt-1.5">
                                   <div className={`size-2.5 shrink-0 rounded-full ${
                                     item.highlighted
                                       ? "bg-primary shadow-sm shadow-primary/30"

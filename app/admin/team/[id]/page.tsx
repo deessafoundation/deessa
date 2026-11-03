@@ -40,7 +40,7 @@ export default async function EditTeamMemberPage({
   const tierMeta = TEAM_TIER_DETAILS[tierKey] || TEAM_TIER_DETAILS.vision
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Top Header & Breadcrumb */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border/70 pb-5">
         <div>

@@ -6,6 +6,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { PanelLeftClose } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { type AdminUser } from "@/lib/types/admin"
 import {
   Tooltip,
@@ -166,9 +167,18 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
                 "flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2 border border-border/70",
                 isCollapsed && "justify-center"
               )}>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground flex-shrink-0">
-                  {adminUser.full_name.charAt(0)}
-                </div>
+                <Avatar className="h-8 w-8 shrink-0">
+                  {adminUser.avatar_url && (
+                    <AvatarImage
+                      src={adminUser.avatar_url}
+                      alt={adminUser.full_name || "Admin"}
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
+                    {adminUser.full_name?.charAt(0) || "A"}
+                  </AvatarFallback>
+                </Avatar>
                 <div className={cn(
                   "flex-1 min-w-0 transition-all duration-200",
                   isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
@@ -190,9 +200,18 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
             "flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2 border border-border/70",
             isCollapsed && "justify-center"
           )}>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground flex-shrink-0">
-              {adminUser.full_name.charAt(0)}
-            </div>
+            <Avatar className="h-8 w-8 shrink-0">
+              {adminUser.avatar_url && (
+                <AvatarImage
+                  src={adminUser.avatar_url}
+                  alt={adminUser.full_name || "Admin"}
+                  className="object-cover"
+                />
+              )}
+              <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
+                {adminUser.full_name?.charAt(0) || "A"}
+              </AvatarFallback>
+            </Avatar>
             <div className={cn(
               "flex-1 min-w-0 transition-all duration-200",
               isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"

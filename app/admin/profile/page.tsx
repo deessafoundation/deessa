@@ -6,6 +6,7 @@ import { PasswordForm } from "@/components/admin/profile/password-form"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User, Lock, Clock, Shield } from "lucide-react"
 
 export default async function ProfilePage() {
@@ -65,17 +66,18 @@ export default async function ProfilePage() {
         <Card className="lg:col-span-1">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                {adminUser.avatar_url ? (
-                  <img
-                    src={adminUser.avatar_url || "/placeholder.svg"}
+              <Avatar className="h-20 w-20">
+                {adminUser.avatar_url && (
+                  <AvatarImage
+                    src={adminUser.avatar_url}
                     alt={adminUser.full_name}
-                    className="h-20 w-20 rounded-full object-cover"
+                    className="object-cover"
                   />
-                ) : (
-                  adminUser.full_name.charAt(0)
                 )}
-              </div>
+                <AvatarFallback className="bg-primary text-2xl font-bold text-primary-foreground">
+                  {adminUser.full_name?.charAt(0) || "A"}
+                </AvatarFallback>
+              </Avatar>
               <h2 className="mt-4 text-xl font-semibold">{adminUser.full_name}</h2>
               <p className="text-sm text-muted-foreground">{adminUser.email}</p>
               <Badge variant={getRoleBadgeVariant(adminUser.role)} className="mt-2">
