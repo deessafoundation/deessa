@@ -1,10 +1,12 @@
-﻿"use client"
+"use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Switch } from "@/components/ui/switch"
+import { Settings, CheckCircle2, Sliders, Eye } from "lucide-react"
 import type { HomepageFlags } from "@/lib/types/homepage-settings"
+import { cn } from "@/lib/utils"
 
 interface FlagsManagerProps {
   flags: HomepageFlags
@@ -16,24 +18,33 @@ export default function FlagsManager({ flags, onChange }: FlagsManagerProps) {
     onChange({ ...flags, ...updates })
   }
 
+  const featureList = [
+    { key: "showAccessibilityToolbar", label: "Accessibility Toolbar", active: flags.showAccessibilityToolbar },
+    { key: "enableMarquee", label: "Partner Logo Marquee", active: flags.enableMarquee },
+    { key: "enableAnimations", label: "Page Animations & Motion", active: flags.enableAnimations },
+    { key: "showTrustBadges", label: "Hero Trust Badges", active: flags.showTrustBadges },
+    { key: "showTrustIndicators", label: "Trust Indicators Bar", active: flags.showTrustIndicators },
+    { key: "showScrollProgress", label: "Reading Progress Bar", active: flags.showScrollProgress },
+  ]
+
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Feature Flags</CardTitle>
-          <CardDescription>
-            Toggle homepage features and behaviors on or off
+      <Card className="border border-border/80 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Settings className="w-4 h-4 text-primary" />
+            Homepage Feature Switches & Runtime Flags
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Instantly turn modular homepage features on or off without redeploying code.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Display Features */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm text-gray-700">Display Features</h3>
-            
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
               <div>
-                <Label className="font-medium">Accessibility Toolbar</Label>
-                <p className="text-xs text-gray-500 mt-1">Show accessibility options on homepage</p>
+                <Label className="text-xs font-semibold">Accessibility Toolbar</Label>
+                <p className="text-[11px] text-muted-foreground">Show contrast and font controls</p>
               </div>
               <Switch
                 checked={flags.showAccessibilityToolbar}
@@ -41,12 +52,69 @@ export default function FlagsManager({ flags, onChange }: FlagsManagerProps) {
               />
             </div>
 
-            {flags.showAccessibilityToolbar && (
-              <div className="ml-4">
-                <Label>Toolbar Position</Label>
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
+              <div>
+                <Label className="text-xs font-semibold">Partner Logo Marquee</Label>
+                <p className="text-[11px] text-muted-foreground">Scrolling sponsor strip</p>
+              </div>
+              <Switch
+                checked={flags.enableMarquee}
+                onCheckedChange={(checked) => updateFlag({ enableMarquee: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
+              <div>
+                <Label className="text-xs font-semibold">Fluid Motion & Animations</Label>
+                <p className="text-[11px] text-muted-foreground">Scroll reveals & micro-interactions</p>
+              </div>
+              <Switch
+                checked={flags.enableAnimations}
+                onCheckedChange={(checked) => updateFlag({ enableAnimations: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
+              <div>
+                <Label className="text-xs font-semibold">Hero Trust Badges</Label>
+                <p className="text-[11px] text-muted-foreground">Verification badges in hero</p>
+              </div>
+              <Switch
+                checked={flags.showTrustBadges}
+                onCheckedChange={(checked) => updateFlag({ showTrustBadges: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
+              <div>
+                <Label className="text-xs font-semibold">Trust Indicators Bar</Label>
+                <p className="text-[11px] text-muted-foreground">Credibility ribbon under hero</p>
+              </div>
+              <Switch
+                checked={flags.showTrustIndicators}
+                onCheckedChange={(checked) => updateFlag({ showTrustIndicators: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-muted/20">
+              <div>
+                <Label className="text-xs font-semibold">Reading Scroll Progress</Label>
+                <p className="text-[11px] text-muted-foreground">Top progress line as user scrolls</p>
+              </div>
+              <Switch
+                checked={flags.showScrollProgress}
+                onCheckedChange={(checked) => updateFlag({ showScrollProgress: checked })}
+              />
+            </div>
+          </div>
+
+          {flags.showAccessibilityToolbar && (
+            <div className="p-4 rounded-xl border border-border/70 bg-card max-w-sm">
+              <Label className="text-xs font-medium">Accessibility Toolbar Docking</Label>
+              <div className="mt-1.5">
                 <FancySelect
                   value={flags.accessibilityToolbarPosition}
-                  onValueChange={(value) => updateFlag({ accessibilityToolbarPosition: value as any })}
+                  onValueChange={(val) => updateFlag({ accessibilityToolbarPosition: val as any })}
                   options={[
                     { value: "top-left", label: "Top Left" },
                     { value: "top-right", label: "Top Right" },
@@ -56,128 +124,28 @@ export default function FlagsManager({ flags, onChange }: FlagsManagerProps) {
                   size="sm"
                 />
               </div>
-            )}
+            </div>
+          )}
 
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <Label className="font-medium">Partner Marquee</Label>
-                <p className="text-xs text-gray-500 mt-1">Enable scrolling partner logos</p>
-              </div>
-              <Switch
-                checked={flags.enableMarquee}
-                onCheckedChange={(checked) => updateFlag({ enableMarquee: checked })}
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <Label className="font-medium">Animations</Label>
-                <p className="text-xs text-gray-500 mt-1">Enable page animations and transitions</p>
-              </div>
-              <Switch
-                checked={flags.enableAnimations}
-                onCheckedChange={(checked) => updateFlag({ enableAnimations: checked })}
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <Label className="font-medium">Trust Badges</Label>
-                <p className="text-xs text-gray-500 mt-1">Show trust badges in hero section</p>
-              </div>
-              <Switch
-                checked={flags.showTrustBadges}
-                onCheckedChange={(checked) => updateFlag({ showTrustBadges: checked })}
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <Label className="font-medium">Trust Indicators</Label>
-                <p className="text-xs text-gray-500 mt-1">Show trust indicators under hero</p>
-              </div>
-              <Switch
-                checked={flags.showTrustIndicators}
-                onCheckedChange={(checked) => updateFlag({ showTrustIndicators: checked })}
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <Label className="font-medium">Scroll Progress Bar</Label>
-                <p className="text-xs text-gray-500 mt-1">Show reading progress at top of page</p>
-              </div>
-              <Switch
-                checked={flags.showScrollProgress}
-                onCheckedChange={(checked) => updateFlag({ showScrollProgress: checked })}
-              />
-            </div>
-          </div>
-
-          {/* Content Features */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-sm text-gray-700">Content Features</h3>
-            
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <Label className="font-medium">Featured Stories Mode</Label>
-              <p className="text-xs text-gray-500 mt-1 mb-3">How to select featured stories</p>
-              <FancySelect
-                value={flags.featuredStoriesMode}
-                onValueChange={(value) => updateFlag({ featuredStoriesMode: value as any })}
-                options={[
-                  { value: "manual", label: "Manual Selection" },
-                  { value: "auto-latest", label: "Auto - Latest Stories" },
-                  { value: "auto-popular", label: "Auto - Popular Stories" },
-                ]}
-                size="sm"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Status Summary */}
-      <Card className="bg-green-50 border-green-200">
-        <CardHeader>
-          <CardTitle className="text-base">Active Features</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="flex items-center gap-2">
-              <span className={flags.showAccessibilityToolbar ? "text-green-600" : "text-gray-400"}>
-                {flags.showAccessibilityToolbar ? "✓" : "○"}
-              </span>
-              <span>Accessibility Toolbar</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={flags.enableMarquee ? "text-green-600" : "text-gray-400"}>
-                {flags.enableMarquee ? "✓" : "○"}
-              </span>
-              <span>Marquee</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={flags.enableAnimations ? "text-green-600" : "text-gray-400"}>
-                {flags.enableAnimations ? "✓" : "○"}
-              </span>
-              <span>Animations</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={flags.showTrustBadges ? "text-green-600" : "text-gray-400"}>
-                {flags.showTrustBadges ? "✓" : "○"}
-              </span>
-              <span>Trust Badges</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={flags.showTrustIndicators ? "text-green-600" : "text-gray-400"}>
-                {flags.showTrustIndicators ? "✓" : "○"}
-              </span>
-              <span>Trust Indicators</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={flags.showScrollProgress ? "text-green-600" : "text-gray-400"}>
-                {flags.showScrollProgress ? "✓" : "○"}
-              </span>
-              <span>Scroll Progress</span>
+          {/* Status Summary */}
+          <div className="rounded-xl border border-border/70 bg-muted/30 p-4">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              Active Module Overview
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+              {featureList.map((item) => (
+                <div key={item.key} className="flex items-center gap-2">
+                  <span
+                    className={cn(
+                      "w-2 h-2 rounded-full shrink-0",
+                      item.active ? "bg-emerald-500" : "bg-muted-foreground/40"
+                    )}
+                  />
+                  <span className={item.active ? "text-foreground font-medium" : "text-muted-foreground"}>
+                    {item.label}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </CardContent>

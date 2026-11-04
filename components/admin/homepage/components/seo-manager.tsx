@@ -1,15 +1,16 @@
-﻿"use client"
+"use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Search, Globe, Share2 } from "lucide-react"
 import type { HomepageSEOSettings } from "@/lib/types/homepage-settings"
+import { cn } from "@/lib/utils"
 
-// Read from env rather than hardcoding: this preview previously showed a stale
-// domain long after the site moved, which is exactly what a hardcoded URL does.
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://deessafoundation.com"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://deessafoundation.com"
 
 interface SEOManagerProps {
   seo: HomepageSEOSettings
@@ -17,112 +18,197 @@ interface SEOManagerProps {
 }
 
 export default function SEOManager({ seo, onChange }: SEOManagerProps) {
+  const [previewTab, setPreviewTab] = useState<"google" | "social">("google")
+
   const updateSEO = (updates: Partial<HomepageSEOSettings>) => {
     onChange({ ...seo, ...updates })
   }
 
   const updateKeywords = (value: string) => {
-    const keywords = value.split(',').map(k => k.trim()).filter(k => k)
+    const keywords = value
+      .split(",")
+      .map((k) => k.trim())
+      .filter((k) => k)
     updateSEO({ keywords })
   }
 
+  const titleLength = (seo.title || "").length
+  const descLength = (seo.description || "").length
+
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>SEO Settings</CardTitle>
-          <CardDescription>
-            Manage homepage SEO metadata for better search engine visibility
+      <Card className="border border-border/80 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Search className="w-4 h-4 text-primary" />
+            Homepage Search & Social Metadata
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Configure organic search metadata and OpenGraph social card previews.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Page Title</Label>
-            <Input
-              value={seo.title}
-              onChange={(e) => updateSEO({ title: e.target.value })}
-              className="mt-1"
-              maxLength={60}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {seo.title.length}/60 characters (optimal: 50-60)
-            </p>
-          </div>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-medium">Page Meta Title</Label>
+                <span
+                  className={cn(
+                    "text-[11px] font-mono",
+                    titleLength > 60 ? "text-destructive font-semibold" : "text-muted-foreground"
+                  )}
+                >
+                  {titleLength}/60 chars
+                </span>
+              </div>
+              <Input
+                value={seo.title || ""}
+                onChange={(e) => updateSEO({ title: e.target.value })}
+                placeholder="deessa Foundation - Empowering Nepal Through Inclusive Education"
+                className="mt-1.5 h-9 text-sm"
+                maxLength={70}
+              />
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Optimal length is 50-60 characters for Google SERP titles.
+              </p>
+            </div>
 
-          <div>
-            <Label>Meta Description</Label>
-            <Textarea
-              value={seo.description}
-              onChange={(e) => updateSEO({ description: e.target.value })}
-              rows={3}
-              className="mt-1"
-              maxLength={160}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {seo.description.length}/160 characters (optimal: 150-160)
-            </p>
-          </div>
+            <div>
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-medium">Meta Description</Label>
+                <span
+                  className={cn(
+                    "text-[11px] font-mono",
+                    descLength > 160 ? "text-destructive font-semibold" : "text-muted-foreground"
+                  )}
+                >
+                  {descLength}/160 chars
+                </span>
+              </div>
+              <Textarea
+                value={seo.description || ""}
+                onChange={(e) => updateSEO({ description: e.target.value })}
+                rows={3}
+                placeholder="A non-profit organization dedicated to sustainable development, autism inclusion, and quality education in Nepal..."
+                className="mt-1.5 text-sm resize-none"
+                maxLength={175}
+              />
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Optimal length is 150-160 characters for search snippets.
+              </p>
+            </div>
 
-          <div>
-            <Label>Keywords</Label>
-            <Input
-              value={seo.keywords.join(', ')}
-              onChange={(e) => updateKeywords(e.target.value)}
-              placeholder="keyword1, keyword2, keyword3"
-              className="mt-1"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Separate keywords with commas. Current: {seo.keywords.length} keywords
-            </p>
-          </div>
-
-          <div>
-            <Label>Open Graph Image URL</Label>
-            <Input
-              value={seo.ogImage}
-              onChange={(e) => updateSEO({ ogImage: e.target.value })}
-              placeholder="/og-image-home.jpg"
-              className="mt-1"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Recommended size: 1200x630px
-            </p>
-          </div>
-
-          {/* Preview Card */}
-          <Card className="bg-gray-50">
-            <CardHeader>
-              <CardTitle className="text-base">Search Result Preview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                <p className="text-blue-600 text-lg hover:underline cursor-pointer">
-                  {seo.title}
-                </p>
-                <p className="text-green-700 text-sm">
-                  {SITE_URL}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  {seo.description}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs font-medium">Meta Keywords (comma separated)</Label>
+                <Input
+                  value={(seo.keywords || []).join(", ")}
+                  onChange={(e) => updateKeywords(e.target.value)}
+                  placeholder="Nepal NGO, autism support, inclusive education"
+                  className="mt-1.5 h-9 text-xs"
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  {(seo.keywords || []).length} keywords configured
                 </p>
               </div>
-            </CardContent>
-          </Card>
-        </CardContent>
-      </Card>
 
-      {/* Info Card */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <p className="text-sm text-blue-900">
-            <strong>💡 SEO Tips:</strong>
-          </p>
-          <ul className="text-sm text-blue-800 mt-2 space-y-1 list-disc list-inside">
-            <li>Keep title under 60 characters</li>
-            <li>Keep description between 150-160 characters</li>
-            <li>Use relevant keywords naturally</li>
-            <li>Update OG image for social media sharing</li>
-          </ul>
+              <div>
+                <Label className="text-xs font-medium">Social Card Image URL (OG Image)</Label>
+                <Input
+                  value={seo.ogImage || ""}
+                  onChange={(e) => updateSEO({ ogImage: e.target.value })}
+                  placeholder="/home/hero/art_banner.jpeg or https://..."
+                  className="mt-1.5 h-9 font-mono text-xs"
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  Recommended resolution: 1200 × 630 px
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Search & Social Preview Box */}
+          <div className="rounded-2xl border border-border/80 bg-muted/20 p-4 sm:p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Live Snippet Simulation
+              </h4>
+              <div className="flex items-center gap-1 bg-card border rounded-lg p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setPreviewTab("google")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all",
+                    previewTab === "google"
+                      ? "bg-primary text-primary-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Globe className="w-3 h-3" />
+                  Google SERP
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPreviewTab("social")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all",
+                    previewTab === "social"
+                      ? "bg-primary text-primary-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Share2 className="w-3 h-3" />
+                  Social Card
+                </button>
+              </div>
+            </div>
+
+            {previewTab === "google" ? (
+              /* Google Search Simulation */
+              <div className="p-4 rounded-xl bg-card border border-border/60 space-y-1.5 font-sans">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                    D
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-foreground">deessa Foundation</p>
+                    <p className="text-[11px] text-muted-foreground">{SITE_URL}</p>
+                  </div>
+                </div>
+                <h3 className="text-base text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer leading-snug">
+                  {seo.title || "Homepage Title"}
+                </h3>
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                  {seo.description || "Homepage meta description snippet..."}
+                </p>
+              </div>
+            ) : (
+              /* Social OpenGraph Simulation */
+              <div className="rounded-xl overflow-hidden border border-border/60 bg-card max-w-md">
+                <div className="h-44 bg-muted flex items-center justify-center relative overflow-hidden">
+                  {seo.ogImage ? (
+                    <img
+                      src={seo.ogImage}
+                      alt="Social OpenGraph preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none"
+                      }}
+                    />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">1200 × 630 OG Image Preview</span>
+                  )}
+                </div>
+                <div className="p-3 bg-card border-t border-border/60 space-y-1">
+                  <p className="text-[10px] uppercase font-semibold text-muted-foreground font-mono">
+                    {new URL(SITE_URL).hostname}
+                  </p>
+                  <p className="text-sm font-bold text-foreground line-clamp-1">{seo.title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{seo.description}</p>
+                </div>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

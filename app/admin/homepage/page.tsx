@@ -2,7 +2,7 @@
  * Homepage Manager - Comprehensive Admin UI
  * 
  * This page allows admins to edit all homepage content through a visual interface.
- * Includes 14 managers: Hero Carousel, Stats, Programs, Timeline, Testimonials, and more.
+ * Includes 16 managers: Hero Carousel, Stats, Programs, Timeline, Testimonials, and more.
  * All changes are saved to the database and reflected immediately on the homepage.
  */
 
@@ -66,8 +66,8 @@ function LoadingState() {
   return (
     <div className="flex items-center justify-center min-h-[400px]">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading homepage manager...</p>
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary border-t-transparent mx-auto mb-3" />
+        <p className="text-xs font-medium text-muted-foreground">Loading homepage manager...</p>
       </div>
     </div>
   )

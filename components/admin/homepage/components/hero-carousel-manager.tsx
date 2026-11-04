@@ -10,9 +10,21 @@ import { Switch } from "@/components/ui/switch"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   Plus,
   Trash2,
   GripVertical,
+  ChevronUp,
+  ChevronDown,
   Eye,
   EyeOff,
   UploadCloud,
@@ -279,6 +291,31 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [uploadingTarget, setUploadingTarget] = useState<{ index: number; type: "desktop" | "mobile" } | null>(null)
   const [previewModes, setPreviewModes] = useState<Record<string, "desktop" | "mobile">>({})
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
+
+  const confirmDelete = () => {
+    if (deleteIndex === null) return
+    const newSlides = heroCarousel.slides.filter((_, i) => i !== deleteIndex)
+    newSlides.forEach((slide, i) => { slide.order = i + 1 })
+    updateSettings({ slides: newSlides })
+    setDeleteIndex(null)
+  }
+
+  const moveUp = (index: number) => {
+    if (index === 0) return
+    const newSlides = [...heroCarousel.slides]
+    ;[newSlides[index - 1], newSlides[index]] = [newSlides[index], newSlides[index - 1]]
+    newSlides.forEach((slide, i) => { slide.order = i + 1 })
+    updateSettings({ slides: newSlides })
+  }
+
+  const moveDown = (index: number) => {
+    if (index === heroCarousel.slides.length - 1) return
+    const newSlides = [...heroCarousel.slides]
+    ;[newSlides[index], newSlides[index + 1]] = [newSlides[index + 1], newSlides[index]]
+    newSlides.forEach((slide, i) => { slide.order = i + 1 })
+    updateSettings({ slides: newSlides })
+  }
 
   const updateSettings = (updates: Partial<HomepageHeroCarouselSettings>) => {
     onChange({ ...heroCarousel, ...updates })
@@ -525,8 +562,8 @@ export default function HeroCarouselManager({ heroCarousel, onChange }: HeroCaro
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => deleteSlide(index)}
-                          className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => setDeleteIndex(index)}
+                          className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
