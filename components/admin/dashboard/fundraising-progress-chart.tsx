@@ -45,30 +45,31 @@ export function FundraisingProgressChart() {
   }, {} as Record<string, { label: string; color: string }>)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Fundraising Progress</CardTitle>
-        <CardDescription>
-          ₹{totalRaised.toLocaleString()} raised of ₹{totalGoal.toLocaleString()} goal
+    <Card className="w-full h-full min-w-0 overflow-hidden flex flex-col">
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3 min-w-0">
+        <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Fundraising Progress</CardTitle>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">
+          <span className="tabular-nums font-semibold text-foreground">₹{totalRaised.toLocaleString()}</span> raised of{" "}
+          <span className="tabular-nums font-semibold text-foreground">₹{totalGoal.toLocaleString()}</span> goal
           {totalGoal > 0 && ` (${Math.round((totalRaised / totalGoal) * 100)}%)`}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden flex-1 flex flex-col justify-center">
         {loading ? (
-          <div className="h-[350px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Loading...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-[350px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             No published projects with fundraising data
           </div>
         ) : (
           <>
-            <ChartContainer config={chartConfig} className="h-[250px] w-full">
+            <ChartContainer config={chartConfig} className="aspect-auto h-[220px] sm:h-[250px] w-full min-w-0 max-w-full">
               <BarChart
                 data={data}
                 layout="vertical"
-                margin={{ top: 5, right: 30, left: 80, bottom: 5 }}
+                margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
               >
                 <CartesianGrid horizontal={false} stroke="hsl(var(--border))" strokeOpacity={0.5} />
                 <XAxis
@@ -85,7 +86,8 @@ export function FundraisingProgressChart() {
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(val) => categoryLabels[val] || val}
-                  width={75}
+                  width={68}
+                  tick={{ fontSize: 11 }}
                 />
                 <ChartTooltip
                   content={
@@ -98,24 +100,24 @@ export function FundraisingProgressChart() {
                     />
                   }
                 />
-                <Bar dataKey="goal" fill="hsl(var(--muted))" radius={[0, 4, 4, 0]} barSize={24} />
-                <Bar dataKey="raised" radius={[0, 4, 4, 0]} barSize={24}>
+                <Bar dataKey="goal" fill="hsl(var(--muted))" radius={[0, 4, 4, 0]} barSize={22} isAnimationActive={false} />
+                <Bar dataKey="raised" radius={[0, 4, 4, 0]} barSize={22} isAnimationActive={false}>
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Bar>
               </BarChart>
             </ChartContainer>
-            <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="mt-3 sm:mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 w-full min-w-0">
               {data.map((d) => (
-                <div key={d.category} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: d.fill }} />
-                    <span className="text-muted-foreground">{categoryLabels[d.category] || d.category}</span>
+                <div key={d.category} className="flex items-center justify-between text-xs sm:text-sm p-1.5 rounded-lg hover:bg-muted/30 transition-colors min-w-0">
+                  <div className="flex items-center gap-1.5 min-w-0 truncate">
+                    <div className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: d.fill }} />
+                    <span className="text-muted-foreground truncate">{categoryLabels[d.category] || d.category}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{d.progress}%</span>
-                    <span className="text-xs text-muted-foreground">({d.count})</span>
+                  <div className="flex items-center gap-1.5 shrink-0 pl-2">
+                    <span className="font-semibold tabular-nums text-foreground">{d.progress}%</span>
+                    <span className="text-[11px] text-muted-foreground tabular-nums">({d.count})</span>
                   </div>
                 </div>
               ))}

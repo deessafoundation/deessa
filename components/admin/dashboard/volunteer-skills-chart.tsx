@@ -35,38 +35,46 @@ export function VolunteerSkillsChart() {
   const currentData = tab === "skills" ? data?.topSkills : data?.topInterests
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Volunteer Insights</CardTitle>
-          <CardDescription>
+    <Card className="w-full min-w-0 overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 items-start p-4 sm:p-6 pb-2 sm:pb-3 min-w-0">
+        <div className="min-w-0 space-y-1">
+          <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Volunteer Insights</CardTitle>
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
             Skills and interests breakdown
-            {data && ` — ${data.statusBreakdown.find((s) => s.label === "pending")?.value || 0} pending`}
+            {data && (
+              <>
+                {" — "}
+                <span className="tabular-nums font-semibold text-foreground">
+                  {data.statusBreakdown.find((s) => s.label === "pending")?.value || 0}
+                </span>{" "}
+                pending
+              </>
+            )}
           </CardDescription>
         </div>
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="h-8">
-            <TabsTrigger value="skills" className="text-xs px-2">Skills</TabsTrigger>
-            <TabsTrigger value="interests" className="text-xs px-2">Interests</TabsTrigger>
+        <Tabs value={tab} onValueChange={setTab} className="shrink-0 self-start sm:self-auto">
+          <TabsList className="h-8 bg-muted/60 p-0.5 rounded-xl border border-border/50" aria-label="Volunteer insights category">
+            <TabsTrigger value="skills" className="text-xs px-2.5 h-7 rounded-lg">Skills</TabsTrigger>
+            <TabsTrigger value="interests" className="text-xs px-2.5 h-7 rounded-lg">Interests</TabsTrigger>
           </TabsList>
         </Tabs>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-2 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden">
         {loading ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] sm:h-[280px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Loading...
           </div>
         ) : !currentData || currentData.length === 0 ? (
-          <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-[240px] sm:h-[280px] flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             No volunteer data yet
           </div>
         ) : (
           <>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+            <ChartContainer config={chartConfig} className="aspect-auto h-[240px] sm:h-[280px] w-full min-w-0 max-w-full">
               <BarChart
                 data={currentData}
                 layout="vertical"
-                margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+                margin={{ top: 5, right: 15, left: 0, bottom: 5 }}
               >
                 <CartesianGrid horizontal={false} stroke="hsl(var(--border))" strokeOpacity={0.5} />
                 <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
@@ -79,7 +87,7 @@ export function VolunteerSkillsChart() {
                   tickFormatter={(val) => val.length > 14 ? val.slice(0, 14) + "..." : val}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="value" fill="var(--color-value)" radius={[0, 4, 4, 0]} barSize={20} />
+                <Bar dataKey="value" fill="var(--color-value)" radius={[0, 4, 4, 0]} barSize={20} isAnimationActive={false} />
               </BarChart>
             </ChartContainer>
             {data.availability.length > 0 && (

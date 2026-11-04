@@ -40,9 +40,11 @@ const entityColors: Record<string, string> = {
   donation: "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
   volunteer_application: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
   contact_submission: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+  homepage_settings: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
 }
 
 function getEntityHref(entityType: string, entityId?: string): string | null {
+  if (entityType === "homepage_settings") return "/admin/homepage"
   const base = entityType.replace(/_/g, "-").replace(/s$/, "")
   if (entityId) return `/admin/${base === "team-member" ? "team" : base === "volunteer-application" ? "volunteers" : base === "contact-submission" ? "contacts" : entityType.replace(/_/g, "s").replace(/ie$/, "y")}/${entityId}`
   const listMap: Record<string, string> = {
@@ -58,6 +60,7 @@ function getEntityHref(entityType: string, entityId?: string): string | null {
     donation: "/admin/donations",
     volunteer_application: "/admin/volunteers",
     contact_submission: "/admin/contacts",
+    homepage_settings: "/admin/homepage",
   }
   return listMap[entityType] || null
 }
@@ -67,19 +70,20 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
   const displayActivities = expanded ? activities : activities.slice(0, 6)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
-        <CardDescription>Latest actions by admin users</CardDescription>
+    <Card className="w-full min-w-0 overflow-hidden">
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3 min-w-0">
+        <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Recent Activity</CardTitle>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">Latest actions by admin users</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0 min-w-0 w-full overflow-hidden">
         {activities.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">No recent activity</p>
         ) : (
           <>
             <div className="space-y-3">
               {displayActivities.map((activity) => {
-                const action = actionConfig[activity.action as keyof typeof actionConfig] || actionConfig.UPDATE
+                const actionKey = (activity.action || "").toUpperCase()
+                const action = actionConfig[actionKey as keyof typeof actionConfig] || actionConfig.UPDATE
                 const Icon = action.icon
                 const entityHref = getEntityHref(activity.entity_type, activity.entity_id)
 
@@ -94,15 +98,15 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
                       <Icon className={cn("h-4 w-4", action.color)} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm">
-                        <span className="font-medium">{activity.user?.full_name || "System"}</span>{" "}
+                      <p className="text-sm leading-relaxed">
+                        <span className="font-medium text-foreground">{activity.user?.full_name || "System"}</span>{" "}
                         <span className="text-muted-foreground">{action.label.toLowerCase()}{" "}</span>
                         {entityHref ? (
-                          <Link href={entityHref} className="font-medium text-primary hover:underline">
+                          <Link href={entityHref} className="inline-block font-medium text-primary hover:underline">
                             <Badge
                               variant="secondary"
                               className={cn(
-                                "text-[10px] px-1.5 mx-0.5",
+                                "text-[10px] px-1.5 mx-0.5 whitespace-nowrap",
                                 entityColors[activity.entity_type] || "bg-gray-100 text-gray-700"
                               )}
                             >
@@ -113,7 +117,7 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
                           <Badge
                             variant="secondary"
                             className={cn(
-                              "text-[10px] px-1.5 mx-0.5",
+                              "text-[10px] px-1.5 mx-0.5 whitespace-nowrap",
                               entityColors[activity.entity_type] || "bg-gray-100 text-gray-700"
                             )}
                           >
@@ -131,8 +135,11 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
             </div>
             {activities.length > 6 && (
               <button
+                type="button"
                 onClick={() => setExpanded(!expanded)}
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mt-4 mx-auto transition-colors"
+                aria-expanded={expanded}
+                aria-label={expanded ? "Show less activity" : `Show ${activities.length - 6} more activities`}
+                className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground mt-4 mx-auto py-2 px-3 rounded-lg hover:bg-muted transition-colors min-h-[44px]"
               >
                 {expanded ? "Show less" : `Show ${activities.length - 6} more`}
                 <ChevronDown className={cn("h-4 w-4 transition-transform", expanded && "rotate-180")} />
