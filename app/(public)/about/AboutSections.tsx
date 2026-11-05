@@ -1,10 +1,16 @@
 "use client"
 
-import type React from "react"
-import { Fragment, useEffect, useRef, useState } from "react"
+import React, { Fragment, useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
-import type { AboutPageSettings } from "@/lib/types/about-settings"
+import type {
+  AboutPageSettings,
+  AboutIntroSettings,
+  AboutHowWeDoItSettings,
+  AboutJourneySettings,
+} from "@/lib/types/about-settings"
+import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { TeamCard, type AboutTeamMember } from "@/components/about/team-card"
 import { TeamMemberModal } from "@/components/about/team-modal"
 import { useAccessibility } from "@/lib/hooks/use-accessibility"
@@ -21,9 +27,10 @@ import {
   Heart,
   Sprout,
   Quote,
+  Sparkles,
+  ShieldCheck,
+  Users,
 } from "lucide-react"
-import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
-import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { TEAM_TIERS, TEAM_TIER_DETAILS, type TeamTier } from "@/lib/types/team-input"
 import { homeUi } from "@/components/home/home-ui"
 import { splitHeadingAccent } from "@/components/home/home-tone"
@@ -100,13 +107,52 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
   const howWeDoItContent = howWeDoIt || settings.howWeDoIt
   // TODO: Restore journey data and scroll animation when the Our Journey section returns.
   // const journeyContent = journey || DEFAULT_ABOUT_PAGE_SETTINGS.journey
-  // "...just as they are." reads better highlighted as a phrase than as the single word "are."
-  const introHeading = /just as they are\.?$/i.test(introContent.headline.trim())
+  const introHeadline = introContent.headline.trim()
+  const introHeading = introHeadline.length > 80
+    ? { lead: "Advancing Rights, Dignity & Participation for", accent: "Every Child." }
+    : /just as they are\.?$/i.test(introHeadline)
     ? (() => {
-        const words = introContent.headline.trim().split(/\s+/)
+        const words = introHeadline.split(/\s+/)
         return { lead: words.slice(0, -4).join(" "), accent: words.slice(-4).join(" ") }
       })()
-    : splitHeadingAccent(introContent.headline)
+    : splitHeadingAccent(introHeadline)
+
+  // Split the intro content into lead manifesto and narrative pillars
+  const manifesto = introContent.paragraphs[0] || (
+    introHeadline.length > 80 ? introHeadline : "deessa Foundation is a non-profit organization based in Nepal, dedicated to promoting disability inclusion and advancing the rights, dignity, and participation of children with disabilities."
+  )
+  const narrativePillars = introContent.paragraphs.length > 1
+    ? introContent.paragraphs.slice(1)
+    : [
+        "With a particular focus on autism and neurodiversity, we work towards creating a society where differences are understood, accepted, and embraced rather than seen as limitations.",
+        "We believe every child has unique abilities, strengths, and potential. Yet, stigma, limited awareness, inaccessible environments, and inadequate support continue to create barriers to equal opportunities and meaningful participation.",
+        "Bringing together parents, educators, professionals, and advocates, we work with children, families, institutions, and communities through awareness, advocacy, capacity building, inclusive education, and accessible resources to challenge these barriers and promote lasting change.",
+      ]
+
+  const defaultPillarMeta = [
+    {
+      icon: HeartPulse,
+      title: "Focus on Autism & Neurodiversity",
+      tone: "blue" as const,
+    },
+    {
+      icon: ShieldCheck,
+      title: "Challenging Stigma & Barriers",
+      tone: "amber" as const,
+    },
+    {
+      icon: Users,
+      title: "Collective Community Action",
+      tone: "emerald" as const,
+    },
+  ]
+
+  const stepDescriptions: Record<string, string> = {
+    seen: "Recognized and valued for unique identity, strengths, and potential.",
+    heard: "Elevating lived experiences and authentic family voices.",
+    supported: "Accessible education, community training, and guidance.",
+    thrive: "Full and equal participation across school, family, and society.",
+  }
   const howWeDoItHeading = splitHeadingAccent(howWeDoItContent.title)
   // const journeyHeading = splitHeadingAccent(journeyContent.title)
   // const timelineRef = useRef<HTMLDivElement>(null)
@@ -161,67 +207,176 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
   return (
     <>
       {/* SECTION 2: WHO WE ARE */}
-      {settings.visibility.intro && <section className={introStyles.section} aria-labelledby="about-intro-title">
-        <div className={introStyles.layout} data-has-media={!!media.src}>
-          {media.src && <div className={introStyles.media}>
-            <video
-              ref={videoRef}
-              key={media.src}
-              autoPlay={media.autoPlay && !reduced}
-              poster={media.poster || undefined}
-              crossOrigin={media.captionsSrc.startsWith("https://") ? "anonymous" : undefined}
-              onError={() => setVideoError(true)}
-              onLoadedMetadata={() => setVideoError(false)}
-              controls
-              muted
-              playsInline
-              preload="metadata"
-              aria-label={media.title}
-              className={introStyles.video}
-            >
-              <source src={media.src} />
-              <track kind="captions" src={media.captionsSrc || "/captions/empty.vtt"} srcLang={media.captionsLanguage || "en"} label={media.captionsLabel || "English"} default />
-              Your browser does not support embedded videos.
-            </video>
-            {videoError && <p role="status" className="p-4 text-sm">The video could not be loaded.</p>}
-            {media.transcript && <details className="p-4"><summary className="min-h-11 cursor-pointer">Video transcript</summary><p className="whitespace-pre-wrap">{media.transcript}</p></details>}
-          </div>}
-          <div className={introStyles.content}>
-            <p className={introStyles.label}>{introContent.label}</p>
-            <h2 id="about-intro-title" className={introStyles.title}>
-              <AccentHeading lead={introHeading.lead} accent={introHeading.accent} />
-            </h2>
-            <div className={introStyles.paragraphs}>
-              {introContent.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-            </div>
-            {introContent.quote && <blockquote className={introStyles.quote}>
-              <Quote size={28} aria-hidden="true" />
-              <p>{introContent.quote}</p>
-            </blockquote>}
-            {introContent.flowSteps.length > 0 && <ol className={introStyles.flow} style={{ "--flow-columns": introContent.flowSteps.flatMap((_, index) => index < introContent.flowSteps.length - 1 ? ["minmax(44px, 1fr)", "auto"] : ["minmax(44px, 1fr)"]).join(" ") } as React.CSSProperties}>
-              {introContent.flowSteps.map((step, index) => {
-                const appearance = introContent.flowAppearance[index] || { icon: "heart" as const, tone: "blue" as const }
-                const Icon = flowIcons[appearance.icon]
-                return (
-                  <Fragment key={index}>
-                    <li className={introStyles.step}>
-                      <div className={introStyles.stepContent}>
-                        <span className={introStyles.icon} data-tone={appearance.tone}><Icon size={25} aria-hidden="true" /></span>
-                        <span>{step}</span>
-                      </div>
-                    </li>
-                    {index < introContent.flowSteps.length - 1 && (
-                      <li className={introStyles.arrowItem} aria-hidden="true">
-                        <ArrowRight size={17} className={introStyles.arrow} />
-                      </li>
+      {settings.visibility.intro && (
+        <section className={introStyles.section} aria-labelledby="about-intro-title">
+          <div className={introStyles.container}>
+            {/* Header & Editorial Manifesto */}
+            <div className={introStyles.header}>
+              <div className={introStyles.eyebrowWrapper}>
+                <span className={introStyles.eyebrowBadge}>{introContent.label || "Who We Are"}</span>
+                {introContent.sinceBadge && (
+                  <span className={introStyles.sinceBadge}>{introContent.sinceBadge}</span>
+                )}
+              </div>
+              <h2 id="about-intro-title" className={introStyles.title}>
+                <AccentHeading lead={introHeading.lead} accent={introHeading.accent} />
+              </h2>
+              {manifesto && (
+                <div className={introStyles.manifestoBox}>
+                  <p className={introStyles.manifestoText}>
+                    {manifesto.toLowerCase().startsWith("deessa foundation") ? (
+                      <>
+                        <span className={introStyles.manifestoBrand}>deessa Foundation</span>
+                        {manifesto.slice("deessa Foundation".length)}
+                      </>
+                    ) : (
+                      manifesto
                     )}
-                  </Fragment>
-                )
-              })}
-            </ol>}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Bento Grid: Visual Showcase & Pillars */}
+            <div className={introStyles.bentoGrid}>
+              {/* Visual Anchor / Video Column */}
+              <div className={introStyles.visualCol}>
+                {media.src ? (
+                  <div className={introStyles.media}>
+                    <video
+                      ref={videoRef}
+                      key={media.src}
+                      autoPlay={media.autoPlay && !reduced}
+                      poster={media.poster || undefined}
+                      crossOrigin={media.captionsSrc.startsWith("https://") ? "anonymous" : undefined}
+                      onError={() => setVideoError(true)}
+                      onLoadedMetadata={() => setVideoError(false)}
+                      controls
+                      muted
+                      playsInline
+                      preload="metadata"
+                      aria-label={media.title}
+                      className={introStyles.video}
+                    >
+                      <source src={media.src} />
+                      <track
+                        kind="captions"
+                        src={media.captionsSrc || "/captions/empty.vtt"}
+                        srcLang={media.captionsLanguage || "en"}
+                        label={media.captionsLabel || "English"}
+                        default
+                      />
+                      Your browser does not support embedded videos.
+                    </video>
+                    {videoError && <p role="status" className="p-4 text-sm">The video could not be loaded.</p>}
+                    {media.transcript && (
+                      <details className="p-4">
+                        <summary className="min-h-11 cursor-pointer">Video transcript</summary>
+                        <p className="whitespace-pre-wrap">{media.transcript}</p>
+                      </details>
+                    )}
+                  </div>
+                ) : (
+                  <div className={introStyles.artworkCard}>
+                    <div className={introStyles.imageContainer}>
+                      <Image
+                        src="/about/hero/about_hero_img.png"
+                        alt="Unlocking Potential, Embracing Neurodiversity with colourful craft materials and a child's hand."
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 560px"
+                        className={introStyles.artworkImage}
+                      />
+                      <div className={introStyles.imageOverlay} aria-hidden="true" />
+                      <div className={introStyles.imageBadge}>
+                        <Sparkles size={16} className={introStyles.badgeIcon} aria-hidden="true" />
+                        <span>Unlocking Potential · Embracing Neurodiversity</span>
+                      </div>
+                    </div>
+                    <div className={introStyles.artCardFooter}>
+                      <div className={introStyles.artFooterItem}>
+                        <span className={introStyles.artFooterValue}>100%</span>
+                        <span className={introStyles.artFooterLabel}>Belief in Every Child</span>
+                      </div>
+                      <div className={introStyles.artFooterDivider} aria-hidden="true" />
+                      <div className={introStyles.artFooterItem}>
+                        <span className={introStyles.artFooterValue}>Nepal</span>
+                        <span className={introStyles.artFooterLabel}>Community-Rooted</span>
+                      </div>
+                      <div className={introStyles.artFooterDivider} aria-hidden="true" />
+                      <div className={introStyles.artFooterItem}>
+                        <span className={introStyles.artFooterValue}>Together</span>
+                        <span className={introStyles.artFooterLabel}>Families & Allies</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Pillars Column */}
+              <div className={introStyles.pillarsCol}>
+                {narrativePillars.map((paragraph, index) => {
+                  const meta = defaultPillarMeta[index % defaultPillarMeta.length]
+                  const PillarIcon = meta.icon
+                  return (
+                    <div key={index} className={introStyles.pillarCard} data-tone={meta.tone}>
+                      <div className={introStyles.pillarIconDisc}>
+                        <PillarIcon size={22} aria-hidden="true" />
+                      </div>
+                      <div className={introStyles.pillarBody}>
+                        <h3 className={introStyles.pillarTitle}>{meta.title}</h3>
+                        <p className={introStyles.pillarText}>{paragraph}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Featured Philosophy Creed Banner */}
+            {introContent.quote && (
+              <div className={introStyles.philosophyBanner}>
+                <div className={introStyles.quoteIconWrapper}>
+                  <Quote size={28} className={introStyles.quoteIcon} aria-hidden="true" />
+                </div>
+                <div className={introStyles.philosophyContent}>
+                  <p className={introStyles.philosophySubtitle}>Our Core Philosophy</p>
+                  <blockquote className={introStyles.philosophyQuote}>
+                    &ldquo;{introContent.quote.replace(/^["“]|["”]$/g, "")}&rdquo;
+                  </blockquote>
+                </div>
+              </div>
+            )}
+
+            {/* 4-Stage Pathway Ribbon */}
+            {introContent.flowSteps.length > 0 && (
+              <div className={introStyles.flowSection}>
+                <div className={introStyles.flowHeader}>
+                  <span className={introStyles.flowSubtitle}>Our Guiding Pathway</span>
+                  <h3 className={introStyles.flowTitle}>How Inclusion Comes to Life</h3>
+                </div>
+                <ol className={introStyles.flowGrid}>
+                  {introContent.flowSteps.map((step, index) => {
+                    const appearance = introContent.flowAppearance[index] || { icon: "heart" as const, tone: "blue" as const }
+                    const Icon = flowIcons[appearance.icon] || Heart
+                    const stepKey = step.toLowerCase().trim()
+                    const desc = stepDescriptions[stepKey] || "Creating environments where every child can grow and thrive."
+                    return (
+                      <li key={index} className={introStyles.flowCard}>
+                        <span className={introStyles.flowStepNum}>0{index + 1}</span>
+                        <div className={introStyles.flowIconContainer} data-tone={appearance.tone}>
+                          <Icon size={24} aria-hidden="true" />
+                        </div>
+                        <h4 className={introStyles.flowStepLabel}>{step}</h4>
+                        <p className={introStyles.flowStepDesc}>{desc}</p>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </div>
+            )}
           </div>
-        </div>
-      </section>}
+        </section>
+      )}
 
       {/* SECTION 4: HOW WE DO IT */}
       {settings.visibility.process && <section className="bg-white py-10 sm:py-14 lg:py-16" aria-label={howWeDoItContent.label || "How We Do It"}>

@@ -2,26 +2,15 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { getCurrentAdmin } from "./admin-auth"
-
-interface StorageFile {
-  name: string
-  id: string
-  updated_at: string
-  created_at: string
-  last_accessed_at: string
-  metadata: {
-    eTag: string
-    size: number
-    mimetype: string
-    cacheControl: string
-    lastModified: string
-    contentLength: number
-    httpStatusCode: number
-  }
-}
+import {
+  listFilesRecursive,
+  getAvailableBuckets,
+} from "./storage-browser"
+import { getMimeTypeFromExtension } from "@/lib/types/storage"
 
 /**
- * Sync existing storage files to media_assets table
+ * Sync storage files in a bucket to the media_assets table
+ * Recursively scans all subfolders so user-uploaded files are never missed
  */
 export async function syncStorageToMediaAssets(bucketName: string) {
   try {
@@ -32,94 +21,77 @@ export async function syncStorageToMediaAssets(bucketName: string) {
 
     const supabase = await createClient()
 
-    // List all files in the bucket
-    const { data: files, error: listError } = await supabase.storage
-      .from(bucketName)
-      .list("", {
-        limit: 1000,
-        sortBy: { column: "created_at", order: "desc" },
-      })
+    // Recursively list ALL files in the bucket, traversing all subfolders
+    const files = await listFilesRecursive(supabase, bucketName)
 
-    if (listError) {
-      console.error("List error:", listError)
-      throw listError
-    }
-    
     if (!files || files.length === 0) {
-      return { success: true, error: null, synced: 0, message: "No files found in bucket" }
+      return { success: true, error: null, synced: 0, skipped: 0, total: 0, message: "No files found in bucket" }
     }
 
-    console.log(`Found ${files.length} files in ${bucketName}`)
+    // Fetch existing tracked assets in this bucket in ONE query
+    const { data: existingAssets } = await supabase
+      .from("media_assets")
+      .select("id, storage_path, filename")
+      .eq("bucket", bucketName)
+
+    const existingPathSet = new Set<string>()
+    for (const a of existingAssets || []) {
+      if (a.storage_path) existingPathSet.add(a.storage_path)
+      if (a.filename) existingPathSet.add(a.filename)
+    }
 
     let syncedCount = 0
     let skippedCount = 0
     const errors: string[] = []
 
     for (const file of files) {
+      const filePath = file.fullPath || file.name
+      if (!filePath) continue
+
+      // Check if already tracked
+      if (existingPathSet.has(filePath)) {
+        skippedCount++
+        continue
+      }
+
       try {
-        // Skip folders
-        if (!file.name || file.name.endsWith("/") || file.id === null) {
-          console.log(`Skipping folder/invalid: ${file.name}`)
-          continue
-        }
-
-        // Check if already exists
-        const { data: existing } = await supabase
-          .from("media_assets")
-          .select("id")
-          .eq("bucket", bucketName)
-          .eq("storage_path", file.name)
-          .single()
-
-        if (existing) {
-          console.log(`Already tracked: ${file.name}`)
-          skippedCount++
-          continue
-        }
-
-        // Get public URL
+        // Resolve public URL
         const { data: urlData } = supabase.storage
           .from(bucketName)
-          .getPublicUrl(file.name)
+          .getPublicUrl(filePath)
 
-        console.log(`Processing: ${file.name}, URL: ${urlData.publicUrl}`)
+        const mimeType = getMimeTypeFromExtension(filePath)
+        const filenameOnly = filePath.split("/").pop() || filePath
 
-        // Determine file type from mime type or extension
-        const mimeType = file.metadata?.mimetype || ""
-        const extension = file.name.split('.').pop()?.toLowerCase() || ""
-        
         let type: "image" | "video" | "document" = "document"
-        if (mimeType.startsWith("image/") || ["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(extension)) {
+        if (mimeType.startsWith("image/")) {
           type = "image"
-        } else if (mimeType.startsWith("video/") || ["mp4", "webm", "mov", "avi"].includes(extension)) {
+        } else if (mimeType.startsWith("video/")) {
           type = "video"
         }
 
-        // Insert into media_assets
-        const { error: insertError } = await supabase
-          .from("media_assets")
-          .insert({
-            filename: file.name,
-            bucket: bucketName,
-            storage_path: file.name,
-            url: urlData.publicUrl,
-            type,
-            mime_type: mimeType || `application/${extension}`,
-            size_bytes: file.metadata?.size || 0,
-            uploaded_by: admin.id,
-            created_at: file.created_at || new Date().toISOString(),
-          })
+        const { error: insertError } = await supabase.from("media_assets").insert({
+          filename: filenameOnly,
+          bucket: bucketName,
+          storage_path: filePath,
+          url: urlData.publicUrl,
+          type,
+          mime_type: mimeType,
+          size_bytes: file.metadata?.size || 0,
+          uploaded_by: admin.id,
+          created_at: file.created_at || new Date().toISOString(),
+        })
 
         if (insertError) {
-          console.error(`Insert error for ${file.name}:`, insertError)
-          errors.push(`${file.name}: ${insertError.message}`)
+          console.warn(`[Sync Media] Insert error for ${filePath}:`, insertError.message)
+          errors.push(`${filePath}: ${insertError.message}`)
         } else {
-          console.log(`Successfully synced: ${file.name} as ${type}`)
+          existingPathSet.add(filePath)
           syncedCount++
         }
-      } catch (fileError: any) {
-        console.error(`File error for ${file.name}:`, fileError)
-        errors.push(`${file.name}: ${fileError.message}`)
+      } catch (fileErr: any) {
+        console.error(`[Sync Media] Error processing file ${filePath}:`, fileErr)
+        errors.push(`${filePath}: ${fileErr.message}`)
       }
     }
 
@@ -130,34 +102,64 @@ export async function syncStorageToMediaAssets(bucketName: string) {
       skipped: skippedCount,
       total: files.length,
       errors: errors.length > 0 ? errors : null,
-      message: `Synced ${syncedCount} files, skipped ${skippedCount} existing files`,
+      message: `Synced ${syncedCount} new files, skipped ${skippedCount} existing files`,
     }
   } catch (error: any) {
-    console.error("Error syncing storage to media assets:", error)
+    console.error("[Sync Media] Error syncing storage to media assets:", error)
     return {
       success: false,
-      error: error.message,
+      error: error.message || "Failed to sync storage bucket",
       synced: 0,
+      skipped: 0,
+      total: 0,
     }
   }
 }
 
 /**
- * Sync all buckets
+ * Sync all available application buckets
  */
 export async function syncAllBuckets() {
-  const buckets = ["hero-images", "hero-videos", "press-gallery", "site-assets", "og-images"]
-  const results = []
+  try {
+    const buckets = await getAvailableBuckets()
+    const results: Array<{
+      bucket: string
+      synced: number
+      skipped: number
+      total: number
+      error?: string | null
+    }> = []
 
-  for (const bucket of buckets) {
-    const result = await syncStorageToMediaAssets(bucket)
-    results.push({ bucket, ...result })
-  }
+    let totalSynced = 0
+    let totalSkipped = 0
 
-  return {
-    success: true,
-    results,
-    totalSynced: results.reduce((sum, r) => sum + r.synced, 0),
-    totalSkipped: results.reduce((sum, r) => sum + (r.skipped || 0), 0),
+    for (const b of buckets) {
+      const res = await syncStorageToMediaAssets(b.id)
+      results.push({
+        bucket: b.id,
+        synced: res.synced || 0,
+        skipped: res.skipped || 0,
+        total: res.total || 0,
+        error: res.error,
+      })
+      totalSynced += res.synced || 0
+      totalSkipped += res.skipped || 0
+    }
+
+    return {
+      success: true,
+      totalSynced,
+      totalSkipped,
+      results,
+    }
+  } catch (error: any) {
+    console.error("[Sync Media] Error syncing all buckets:", error)
+    return {
+      success: false,
+      totalSynced: 0,
+      totalSkipped: 0,
+      error: error.message,
+      results: [],
+    }
   }
 }

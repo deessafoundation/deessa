@@ -52,6 +52,7 @@ export function HomeSectionHeading({
   id,
   className,
   titleClassName,
+  introClassName,
 }: {
   eyebrow?: string
   title?: React.ReactNode
@@ -62,6 +63,7 @@ export function HomeSectionHeading({
   id?: string
   className?: string
   titleClassName?: string
+  introClassName?: string
 }) {
   return (
     <div className={cn(ALIGN_TEXT[align], className)}>
@@ -83,16 +85,17 @@ export function HomeSectionHeading({
         ) : null}
       </h2>
       {intro ? (
-        <p
+        <div
           className={cn(
             homeUi.body,
             "mt-4 max-w-2xl",
             align === "center" && "mx-auto",
             align === "responsive" && "mx-auto md:mx-0",
+            introClassName,
           )}
         >
           {intro}
-        </p>
+        </div>
       ) : null}
     </div>
   )
