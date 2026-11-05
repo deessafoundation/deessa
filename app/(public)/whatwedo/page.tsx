@@ -172,13 +172,12 @@ export default async function ProgramsPage() {
         </svg>
       </div>
 
-      {/* Programs Grid Section */}
+      {/* TODO: Fix "Our Programs in Action" section later
       <section
         id="programs"
         aria-labelledby="programs-heading"
         className={cn(programsStyles.section, "relative overflow-hidden scroll-mt-24")}
       >
-        {/* Soft brand-tinted background decorations (mirrors the support section) */}
         <div
           aria-hidden="true"
           className={cn(
@@ -195,7 +194,6 @@ export default async function ProgramsPage() {
         />
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-14 md:pb-24">
-          {/* Section Title */}
           <div className="text-center mb-8 md:mb-10">
             <h2 id="programs-heading" className={programsStyles.sectionTitle}>
               Our Programs <span className={programsStyles.ctaHeadingAccent}>in Action</span>
@@ -210,6 +208,7 @@ export default async function ProgramsPage() {
           </Suspense>
         </div>
       </section>
+      */}
 
       {/* Support CTA Section — light, card-based */}
       <section

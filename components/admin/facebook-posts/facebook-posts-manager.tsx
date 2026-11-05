@@ -378,12 +378,12 @@ export function FacebookPostsManager({ post }: { post?: FacebookPost }) {
                     <p className="font-medium">Supported URL formats:</p>
                     <ul className="ml-4 space-y-1 text-muted-foreground">
                       <li>• Post: facebook.com/yourpage/posts/123...</li>
+                      <li>• Reel: facebook.com/reel/123...</li>
                       <li>• Share: facebook.com/share/p/ABC123...</li>
                       <li>• Permalink: facebook.com/permalink.php?story_fbid=...</li>
                       <li>• Photo: facebook.com/photo.php?fbid=...</li>
                       <li>• Or paste the complete iframe embed code</li>
                     </ul>
-                    <p className="text-muted-foreground">Videos and Reels are not supported.</p>
                   </CardContent>
                 </Card>
               )}
@@ -428,6 +428,38 @@ export function FacebookPostsManager({ post }: { post?: FacebookPost }) {
                 />
                 <p className="text-xs text-muted-foreground">{draft.excerpt.length}/500 characters</p>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="post-image-url">
+                  Cover Photo URL <span className="text-muted-foreground">(Optional)</span>
+                </Label>
+                <Input 
+                  id="post-image-url" 
+                  disabled={pending}
+                  maxLength={2048} 
+                  value={draft.image_url} 
+                  onChange={e => setDraft({ ...draft, image_url: e.target.value })} 
+                  placeholder="/home/... or uploaded image URL (overrides iframe preview)"
+                />
+                <p className="text-xs text-muted-foreground">Optional image to display instead of relying on the Facebook embed iframe.</p>
+              </div>
+
+              {draft.image_url && (
+                <div className="space-y-2">
+                  <Label htmlFor="post-image-alt">
+                    Cover Photo Alt Text *
+                  </Label>
+                  <Input 
+                    id="post-image-alt" 
+                    required={Boolean(draft.image_url)}
+                    disabled={pending}
+                    maxLength={300} 
+                    value={draft.image_alt} 
+                    onChange={e => setDraft({ ...draft, image_alt: e.target.value })} 
+                    placeholder="Describe the image for screen readers"
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="post-tags">

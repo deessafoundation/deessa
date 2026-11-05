@@ -278,7 +278,7 @@ export function ConferenceSettingsForm({ settings }: ConferenceSettingsFormProps
                 className={inputCls}
                 value={details.contactEmail}
                 onChange={(e) => setDetails((d) => ({ ...d, contactEmail: e.target.value }))}
-                placeholder="deessa.social@gmail.com"
+                placeholder="deessa.foundation@gmail.com"
               />
             </Field>
 

@@ -3,6 +3,8 @@ import { aboutPageSettingsSchema, DEFAULT_ABOUT_PAGE_SETTINGS, type AboutPageSet
 const legacyHeadlines = new Set([
   "Every child deserves to be understood, accepted, and valued, just as they are.",
   "Every child deserves to be understood, accepted, and valued — just as they are.",
+  "Every child deserves to be understood, accepted, and valued just as they are.",
+  "Every child has potential. Every child belongs.",
 ])
 const legacyParagraphs = [
   "deessa Foundation is a non-profit working for and with children with disabilities, with a special focus on autism. Born from one family's story, we've grown into a community of parents, educators, professionals, advocates, and changemakers who share one purpose: to build a society where every child belongs.",
@@ -66,11 +68,8 @@ export function normalizeAboutPageSettings(value: unknown): AboutPageSettings {
     "disability is never seen as a limit. Every child is known for their strengths, abilities, and potential. Being different is never seen as being less."
   ))
   if (usesLegacyIntro) {
-    settings.intro.headline = "Every child deserves to be understood, accepted, and valued just as they are."
-    settings.intro.paragraphs = settings.intro.paragraphs.map(paragraph => {
-      const index = legacyParagraphs.indexOf(paragraph)
-      return index < 0 ? paragraph : defaults.intro.paragraphs[index]
-    })
+    settings.intro.headline = defaults.intro.headline
+    settings.intro.paragraphs = [...defaults.intro.paragraphs]
     if (settings.intro.quote === "At deessa Foundation, we stand for a world where every child is seen, heard, and included.") settings.intro.quote = defaults.intro.quote
     if (JSON.stringify(settings.intro.flowSteps) === JSON.stringify(["Understood", "Accepted", "Valued", "Thrive"])) settings.intro.flowSteps = [...defaults.intro.flowSteps]
   }

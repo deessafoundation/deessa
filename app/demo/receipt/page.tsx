@@ -23,8 +23,8 @@ const MOCK_DATA: ReceiptPDFData = {
   organization: {
     name: "deessa Foundation",
     address: "Kathmandu, Nepal",
-    phone: "+977-1-4XXXXXX",
-    email: "deessa.social@gmail.com",
+    phone: "+977 9841026085, +977 9811549437",
+    email: "deessa.foundation@gmail.com",
     website: "https://dessafoundation.org",
     pan_number: "123456789",
     swc_registration_number: "SWC-12345",

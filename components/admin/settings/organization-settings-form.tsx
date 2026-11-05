@@ -109,7 +109,7 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
             value={formData.email}
             onChange={handleChange}
             disabled={isSubmitting}
-            placeholder="deessa.social@gmail.com"
+            placeholder="deessa.foundation@gmail.com"
           />
         </div>
         <div>
@@ -120,7 +120,7 @@ export function OrganizationSettingsForm({ initialData }: OrganizationSettingsFo
             value={formData.phone}
             onChange={handleChange}
             disabled={isSubmitting}
-            placeholder="+977-1-XXXXXXX"
+            placeholder="+977 9841026085, +977 9811549437"
           />
         </div>
       </div>

@@ -53,7 +53,7 @@ export const CONFERENCE_DEFAULTS: ConferenceSettings = {
   venue: "Hyatt Regency, Kathmandu, Nepal",
   venueAddress: "Taragaon, Bouddha, Kathmandu, Nepal",
   mapsUrl: "https://maps.app.goo.gl/hyattkathmandu",
-  contactEmail: "deessa.social@gmail.com",
+  contactEmail: "deessa.foundation@gmail.com",
   registrationDeadline: "October 1st, 2026",
   agenda: [
     {

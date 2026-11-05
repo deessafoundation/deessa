@@ -444,8 +444,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **deessa Foundation**
 
 - **Address:** Kathmandu, Nepal
-- **Email:** <deessa.social@gmail.com>
-- **Phone:** +977-XXXXXXXXX
+- **Email:** <deessa.foundation@gmail.com>
+- **Phone:** +977 9841026085, +977 9811549437
 - **Social Media:** [Facebook](#) | [Twitter](#) | [Instagram](#)
 
 ---

@@ -143,8 +143,8 @@ const newsletterBenefits = [
 
 const contactItems = [
   { icon: MapPin, srLabel: "Location", value: "Dhobighat Nayabato, Sanepa, Lalitpur 44600, Nepal" },
-  { icon: Mail, srLabel: "Email", value: "deessa.social@gmail.com" },
-  { icon: Phone, srLabel: "Phone", value: "+977 1-4123456" },
+  { icon: Mail, srLabel: "Email", value: "deessa.foundation@gmail.com" },
+  { icon: Phone, srLabel: "Phone", value: "+977 9841026085, +977 9811549437" },
 ]
 
 const linkColumns = [
@@ -289,11 +289,13 @@ export function Footer() {
 
             <h2 className="font-comic mt-6 text-base font-bold text-white">Our Mission</h2>
             <p className="font-comic mt-2.5 max-w-xs text-[15px] leading-relaxed text-footer-muted">
-              Empowering communities in rural Nepal through sustainable education, healthcare, and livelihood
-              initiatives since 2022.
+              Fostering Inclusion Through Awareness, Advocacy, and Education.
+            </p>
+            <p className="font-comic mt-2.5 max-w-xs text-[15px] leading-relaxed text-footer-muted">
+              Advancing the rights, dignity, and inclusion of children with disabilities, particularly those with autism and neurodivergent conditions.
             </p>
             <p className="font-comic mt-3.5 border-l-2 border-white/40 pl-3 text-[15px] italic text-footer-muted">
-              Making a difference, one community at a time.
+              Building an Inclusive Society, One Step at a Time.
             </p>
 
             <ul className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">

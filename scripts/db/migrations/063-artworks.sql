@@ -1,5 +1,5 @@
 -- =============================================================================
--- 063 — Artworks (Deetya & Marissa art gallery)
+-- 063 — Artworks (Art & Expression gallery)
 --
 -- Powers the homepage art feature and the public /arts gallery.
 --   * Anonymous visitors can read PUBLISHED rows only (RLS).
@@ -199,7 +199,7 @@ insert into public.artworks (
   seed_key, title, artist_credit, description, alt_text, local_image_path,
   width, height, display_order, is_published, is_featured, source_filename
 )
-select m.seed_key, m.title, 'Deetya & Marissa', null, m.alt_text, m.local_image_path,
+select m.seed_key, m.title, null, null, m.alt_text, m.local_image_path,
        m.width, m.height,
        -- Fresh database: keep the intended 1..6 order. Existing rows: append.
        case when b.max_order = 0 then m.pos else b.max_order + m.rn end,
@@ -217,22 +217,22 @@ values (
   '{
     "home": {
       "eyebrow": "Art & Expression",
-      "heading": "Art that speaks",
-      "headingAccent": "without words",
-      "intro": "Step into the colourful worlds of Deetya and Marissa. Each piece is a glimpse of imagination, feeling, and the joy of creating.",
-      "ctaLabel": "Explore their art",
-      "creditLine": "Original works by Deetya & Marissa",
+      "heading": "Every child has a story.",
+      "headingAccent": "Art gives it a voice.",
+      "intro": "Art can be a way for children to communicate, explore emotions, build confidence, and express ideas when words may not always come easily. Let’s create spaces where all children, including children with autism and other disabilities can explore their creativity freely, without judgment or pressure.",
+      "ctaLabel": "Explore Art",
+      "creditLine": "A space for every artist and every expression",
       "badge": "Made with imagination and heart"
     },
     "gallery": {
-      "eyebrow": "Art by Deetya & Marissa",
+      "eyebrow": "Art & Expression",
       "heading": "A world of colour,",
       "headingAccent": "through their eyes",
-      "intro": "A collection of paintings, playful details, and moments of expression. Take your time and see what each piece invites you to notice.",
+      "intro": "A growing collection celebrating the creativity of children and artists in our community. Every piece offers a different way of seeing, feeling, and sharing a story.",
       "heroBadge": "A space for every expression",
       "collectionHeading": "Little worlds,",
       "collectionAccent": "big imagination",
-      "collectionIntro": "Original artworks from Deetya and Marissa''s creative space."
+      "collectionIntro": "Explore original artworks from our community, with room for new artists, stories, and perspectives."
     }
   }'::jsonb,
   now()

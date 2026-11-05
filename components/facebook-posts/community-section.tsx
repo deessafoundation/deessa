@@ -3,6 +3,7 @@ import { ArrowUpRight, HandHeart } from "lucide-react"
 import type { SVGProps } from "react"
 import type { FacebookPost } from "@/lib/facebook-posts/types"
 import { FacebookPostPreview } from "./facebook-post-preview"
+import { CommunityCover } from "./community-cover"
 import { PostAnalyticsTracker } from "./post-analytics-tracker"
 import { TrackedPostLink } from "./tracked-post-link"
 import styles from "./community-section.module.css"
@@ -111,10 +112,16 @@ export function CommunitySection({ posts }: { posts: FacebookPost[] }) {
                   </time>
                 </div>
 
-                {/* Facebook embed section - the star of the show */}
+                {/* Facebook embed or cover photo */}
                 <div className="relative bg-gray-50/30 px-5 py-4">
                   <div className="overflow-hidden rounded-lg">
-                    <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" postType={post.post_type} />
+                    {post.image_url ? (
+                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+                        <CommunityCover src={post.image_url} alt={post.image_alt || post.title} />
+                      </div>
+                    ) : (
+                      <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" postType={post.post_type} />
+                    )}
                   </div>
                 </div>
 

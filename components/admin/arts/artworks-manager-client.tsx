@@ -243,7 +243,7 @@ export function ArtworksManagerClient({
                   <div>
                     <h2 className="font-semibold leading-tight">{row.title}</h2>
                     <p className="mt-0.5 text-sm text-muted-foreground">
-                      {row.artist_credit || `${ARTWORK_COLLECTION_CREDIT} (collection credit)`}
+                      {row.artist_credit || (ARTWORK_COLLECTION_CREDIT ? `${ARTWORK_COLLECTION_CREDIT} (collection credit)` : "No credit listed")}
                     </p>
                     <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
                       <span className="font-medium">Alt:</span> {row.alt_text}
@@ -495,7 +495,7 @@ function ArtworkEditor({
                 id="art-credit"
                 value={credit}
                 maxLength={120}
-                placeholder={`${ARTWORK_COLLECTION_CREDIT} (used when empty)`}
+                placeholder={ARTWORK_COLLECTION_CREDIT ? `${ARTWORK_COLLECTION_CREDIT} (used when empty)` : "Artist credit (optional)"}
                 onChange={(e) => setCredit(e.target.value)}
                 aria-describedby="art-credit-help"
               />
@@ -555,9 +555,11 @@ function ArtworkEditor({
               </div>
               <div className="px-3 pb-2 pt-4">
                 <p className="truncate font-marissa text-xl text-[#0B5F8A]">{title || "Artwork title"}</p>
-                <p className="mt-1 font-comic text-xs uppercase tracking-[0.14em] text-slate-500">
-                  {credit.trim() || ARTWORK_COLLECTION_CREDIT}
-                </p>
+                {credit.trim() || ARTWORK_COLLECTION_CREDIT ? (
+                  <p className="mt-1 font-comic text-xs uppercase tracking-[0.14em] text-slate-500">
+                    {credit.trim() || ARTWORK_COLLECTION_CREDIT}
+                  </p>
+                ) : null}
               </div>
             </div>
             {preview && (

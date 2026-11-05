@@ -11,10 +11,10 @@ import type { Podcast } from "@/lib/types/podcast"
 // Host information with actual photographs
 const hosts = [
   {
-    name: "Merina Panthii",
+    name: "Merina Panthee",
     role: "President, deessa Foundation",
     description: "A parent and host sharing real stories of raising children with autism",
-    image: "/Merina Panthii.jpg",
+    image: "/Merina Panthee.jpg",
   },
   {
     name: "Sarita Sapkota",

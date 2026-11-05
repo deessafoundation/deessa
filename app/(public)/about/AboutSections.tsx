@@ -25,7 +25,6 @@ import {
 import type { AboutIntroSettings, AboutHowWeDoItSettings, AboutJourneySettings } from "@/lib/types/about-settings"
 import { DEFAULT_ABOUT_PAGE_SETTINGS } from "@/lib/types/about-settings"
 import { TEAM_TIERS, TEAM_TIER_DETAILS, type TeamTier } from "@/lib/types/team-input"
-import { OrgStructure } from "./OrgStructure"
 import { homeUi } from "@/components/home/home-ui"
 import { splitHeadingAccent } from "@/components/home/home-tone"
 import { cn } from "@/lib/utils"
@@ -376,9 +375,6 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
       </section>
 
       */}
-
-      {/* SECTION 5.5: HOW THE FOUNDATION IS ORGANIZED (GOVERNANCE) */}
-      {settings.visibility.governance && <OrgStructure settings={settings.governance} />}
 
       {/* SECTION 6: MEET THE CHANGEMAKERS */}
       {settings.visibility.people && <section className="bg-white py-10 sm:py-14 lg:py-16" id="team" aria-label={settings.people.title}>
