@@ -425,7 +425,7 @@
   color: var(--accent)
 }
 
-/* Services: DEESSA ocean blue, soft brand accents, rounded photography. */
+/* Services: deessa ocean blue, soft brand accents, rounded photography. */
 .serviceHero {
   display: grid;
   grid-template-columns: 1.05fr 1fr;
@@ -733,7 +733,7 @@
   color: rgb(var(--bg-white) / .85)
 }
 
-/* Campaign: poster composition with DEESSA purple and logo yellow. */
+/* Campaign: poster composition with deessa purple and logo yellow. */
 .campaign {
   --ink: rgb(var(--text-main));
   --accent: rgb(var(--brand-purple));
@@ -2729,7 +2729,7 @@
   }
 }
 
-/* Brand alignment pass: use DEESSA's ocean blue system throughout the concepts. */
+/* Brand alignment pass: use deessa's ocean blue system throughout the concepts. */
 .root {
   --ink: #212529;
   --muted: #6c757d;

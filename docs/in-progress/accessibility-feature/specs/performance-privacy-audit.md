@@ -628,7 +628,7 @@ You can view, modify, or delete your accessibility preferences at any time:
 ### Legal Basis
 These are "strictly necessary" cookies under GDPR Article 6(1)(f) and are exempt from consent requirements. They enable core functionality and do not track your behavior.
 
-For questions about accessibility data, contact: [accessibility@deeshafoundation.org]
+For questions about accessibility data, contact: [accessibility@deessafoundation.com]
 ```
 
 **Privacy Assessment:** ✅ **TRANSPARENT** - Clear, honest disclosure

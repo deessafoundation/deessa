@@ -360,7 +360,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                       name="email"
                       type="email"
                       defaultValue={member?.email || ""}
-                      placeholder="name@deesha.org"
+                      placeholder="name@deessafoundation.com"
                       className="min-h-10 text-sm"
                     />
                   </div>
