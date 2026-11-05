@@ -89,5 +89,5 @@ export const DEFAULT_ADDITIONAL_ABOUT_SETTINGS: AdditionalAboutSettings = {
   },
   getInvolved: { title: "Ready to Make a Difference?", description: "Whether through volunteering, donating, or simply spreading the word, your involvement is crucial to our mission.", primaryLabel: "Donate Now", primaryHref: "/donate", secondaryLabel: "Join Our Team", secondaryHref: "/get-involved" },
   seo: { title: "Who We Are - About deessa Foundation", description: "Learn about deessa Foundation, a non-profit working for and with children with disabilities in Nepal, with a special focus on autism. Building a Nepal where every child is seen, heard, and included.", keywords: ["about deessa Foundation", "Nepal disability NGO", "autism organization Nepal", "child disability support", "inclusive education Nepal", "our mission", "our team"], image: "", imageAlt: "", noIndex: false },
-  visibility: { intro: true, process: true, governance: true, people: true, partners: true, getInvolved: true },
+  visibility: { intro: true, process: true, governance: false, people: true, partners: true, getInvolved: true },
 }

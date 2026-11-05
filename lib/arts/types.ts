@@ -2,7 +2,7 @@
 
 export const ARTWORKS_BUCKET = "site-assets"
 export const ARTWORKS_STORAGE_PREFIX = "artworks/"
-export const ARTWORK_COLLECTION_CREDIT = "Deetya & Marissa"
+export const ARTWORK_COLLECTION_CREDIT = ""
 export const ARTWORK_MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 export const ARTWORK_MIN_DIMENSION = 400
 export const ARTWORK_MAX_DIMENSION = 8000
@@ -55,10 +55,14 @@ export function toArtwork(row: ArtworkRow): Artwork | null {
     ? artworkStorageUrl(row.storage_path)
     : row.local_image_path
   if (!src) return null
+  const rawCredit = row.artist_credit?.trim() || ARTWORK_COLLECTION_CREDIT
+  const credit = /deetya|marissa/i.test(rawCredit) ? "" : rawCredit
+  const rawTitle = row.title?.trim() || ""
+  const title = rawTitle.replace(/art by deetya & marissa/i, "Artwork").replace(/deetya & marissa/i, "").trim() || rawTitle
   return {
     id: row.id,
-    title: row.title,
-    credit: row.artist_credit?.trim() || ARTWORK_COLLECTION_CREDIT,
+    title,
+    credit,
     description: row.description?.trim() || null,
     alt: row.alt_text,
     src,

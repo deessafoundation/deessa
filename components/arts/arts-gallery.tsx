@@ -98,7 +98,7 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
               type="button"
               onClick={() => open(index)}
               aria-haspopup="dialog"
-              aria-label={`Open “${artwork.title}” by ${artwork.credit}`}
+              aria-label={artwork.credit ? `Open “${artwork.title}” by ${artwork.credit}` : `Open “${artwork.title}”`}
               className={cn(
                 styles.card,
                 styles.tilt,
@@ -133,7 +133,7 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
                     {artwork.title}
                   </span>
                   <span className={cn(styles.muted, "mt-1 block font-comic text-xs uppercase tracking-[0.14em] text-slate-600")}>
-                    {artwork.credit} · No. {pad(index + 1)}
+                    {artwork.credit ? `${artwork.credit} · ` : ""}No. {pad(index + 1)}
                   </span>
                 </span>
                 <span
@@ -202,7 +202,9 @@ export function ArtsGallery({ artworks }: { artworks: Artwork[] }) {
                 >
                   {current.title}
                 </DialogPrimitive.Title>
-                <p className="mt-2 font-comic text-base font-bold text-[#1a1a2e]">{current.credit}</p>
+                {current.credit ? (
+                  <p className="mt-2 font-comic text-base font-bold text-[#1a1a2e]">{current.credit}</p>
+                ) : null}
                 {current.description ? (
                   <DialogPrimitive.Description className={cn(styles.muted, "mt-5 whitespace-pre-line font-comic text-base leading-relaxed text-slate-600")}>
                     {current.description}

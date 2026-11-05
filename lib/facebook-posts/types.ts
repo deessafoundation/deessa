@@ -36,13 +36,24 @@ export function normalizeFacebookPostUrl(value: string): string | null {
     } else if (value.trim().startsWith("<")) return null
     if (url.href.length > 2048) return null
     if (url.protocol !== "https:" || url.username || url.password || url.port) return null
-    if (!["facebook.com", "www.facebook.com", "m.facebook.com"].includes(url.hostname)) return null
+    if (!["facebook.com", "www.facebook.com", "m.facebook.com", "web.facebook.com"].includes(url.hostname)) return null
     const path = url.pathname.replace(/\/$/, "")
     const canonical = new URL(`https://www.facebook.com${path}`)
     
     // Share links - these are the cleanest for photo posts
     if (/^\/share\/p\/[A-Za-z0-9]+$/.test(path)) return canonical.href
     if (/^\/share\/v\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    
+    // Reels and videos
+    if (/^\/reel\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    if (path === "/watch") {
+      const v = url.searchParams.get("v")
+      if (v && /^[A-Za-z0-9]+$/.test(v)) {
+        canonical.pathname = "/watch"
+        canonical.searchParams.set("v", v)
+        return canonical.href
+      }
+    }
     
     // Photo posts - prioritize these for better visual display
     if (path === "/photo.php" || path === "/photo") {
@@ -76,6 +87,10 @@ export function normalizeFacebookPostUrl(value: string): string | null {
 export function facebookEmbedUrl(postUrl: string, showText: boolean = false): string | null {
   const canonical = normalizeFacebookPostUrl(postUrl)
   if (!canonical) return null
-  // Use the showText parameter to control text display
-  return `https://www.facebook.com/plugins/post.php?${new URLSearchParams({ href: canonical, show_text: showText.toString(), width: "500" })}`
+  const parsed = new URL(canonical)
+  const isVideoOrReel = parsed.pathname.startsWith("/reel/") || parsed.pathname.startsWith("/watch") || parsed.pathname.startsWith("/share/v/")
+  const endpoint = isVideoOrReel
+    ? "https://www.facebook.com/plugins/video.php"
+    : "https://www.facebook.com/plugins/post.php"
+  return `${endpoint}?${new URLSearchParams({ href: canonical, show_text: showText.toString(), width: "500" })}`
 }

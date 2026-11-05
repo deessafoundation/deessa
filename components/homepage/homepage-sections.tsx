@@ -188,11 +188,20 @@ export function MissionVisionSection() {
           <HomeSectionHeading
             className="mb-10 sm:mb-14"
             eyebrow="Our Direction"
-            title="Mission &"
-            accent="Vision"
+            title="Acceptance for All:"
+            accent="Embracing Diversity."
             // One navy line on phones too; it still wraps at large text sizes instead of overflowing.
             titleClassName="text-2xl leading-[1.15] sm:text-[2.5rem] lg:text-[3.25rem]"
-            intro={<>Guided by clear values and a bold vision for Nepal&apos;s future.</>}
+            intro={
+              <span className="space-y-3 block max-w-3xl mx-auto">
+                <span className="block">
+                  Every child is unique, with their own abilities, strengths, and potential. Yet, many children with disabilities continue to face barriers to education, acceptance, participation, and equal opportunities.
+                </span>
+                <span className="block">
+                  At <span className="lowercase font-bold">deessa</span> Foundation, we believe that differences should never be a reason for exclusion. We work alongside children, families, educators, and communities to promote awareness, strengthen understanding, advocate for inclusion, and create environments where every child can learn, grow, participate, and thrive.
+                </span>
+              </span>
+            }
           />
         </ScrollReveal>
 
@@ -210,8 +219,7 @@ export function MissionVisionSection() {
                 </div>
                 <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Mission</h3>
                 <p className={cn(homeUi.body, "md:text-xl")}>
-                  To empower marginalized communities in Nepal through education, healthcare, and sustainable
-                  development, ensuring every individual has the opportunity to live with dignity and purpose.
+                  To promote the rights, acceptance, and inclusion of children with disabilities, with a particular focus on autism and neurodivergent conditions, through awareness, advocacy, education, and accessible support.
                 </p>
               </div>
             </article>
@@ -226,8 +234,7 @@ export function MissionVisionSection() {
                 </div>
                 <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Vision</h3>
                 <p className={homeUi.body}>
-                  A Nepal where every community thrives. Children dream freely, families are healthy, and
-                  opportunities are within everyone&apos;s reach.
+                  An inclusive society where every child is accepted, valued, and empowered to reach their full potential.
                 </p>
               </div>
             </article>
@@ -610,7 +617,7 @@ export function TimelineSection({ timeline: timelineSettings }: TimelineSectionP
 
 export function PodcastSection() {
   const hosts = [
-    { name: "Merina Panthii", role: "President & Host", image: "/Merina Panthii.jpg" },
+    { name: "Merina Panthee", role: "President & Host", image: "/Merina Panthee.jpg" },
     { name: "Sarita Sapkota", role: "Parent & Host", image: "/Sarita Sapkota.jpg" },
   ]
 
@@ -621,7 +628,7 @@ export function PodcastSection() {
       className="relative overflow-hidden bg-[#005581]"
       data-tts-section=""
       data-tts-priority="heading"
-      data-tts-text="The deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthii, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
+      data-tts-text="The deessa Podcast. Living With Autism. Real voices. Real stories. Honest conversations about autism, inclusion, and the experiences that shape our communities. Hosted by Merina Panthee, President and Host, and Sarita Sapkota, Parent and Host. Explore the podcast."
     >
       {/* Keep the backdrop on the full-width section so it has no container seams. */}
       <svg aria-hidden="true" data-podcast-feather className="pointer-events-none absolute bottom-0 right-0 h-[32%] w-full xl:w-[45%]" viewBox="0 0 640 240" preserveAspectRatio="none">
@@ -1110,8 +1117,8 @@ function MarqueeContainer({
 export function ContactSection() {
   const contactItems = [
     { icon: MapPin, title: "Address", line1: "Dhobighat Nayabato, Sanepa, Lalitpur 44600", line2: "Nepal" },
-    { icon: Phone, title: "Phone", line1: "+977-1-XXXXXXX", line2: null },
-    { icon: Mail, title: "Email", line1: "deessa.social@gmail.com", line2: null },
+    { icon: Phone, title: "Phone", line1: "+977 9841026085", line2: "+977 9811549437" },
+    { icon: Mail, title: "Email", line1: "deessa.foundation@gmail.com", line2: null },
     { icon: Clock, title: "Office Hours", line1: "Sun - Fri: 10:00 AM - 5:00 PM", line2: "Saturday: Closed" },
   ]
 

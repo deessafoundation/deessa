@@ -160,7 +160,7 @@ export function ErrorPage({ variant = "not-found", preview = false, standalone =
               {showSecondary && <nav aria-label="More places to explore" className={cn(styles.links, "mt-7 flex flex-wrap gap-x-6 gap-y-2")}>
                 {variant === "not-found" && !customActions ? <><Link href="/our-story" prefetch={false}>Our Story</Link><Link href="/whatwedo" prefetch={false}>What We Do</Link><Link href="/stories" prefetch={false}>Stories</Link></> : <>
                   <Link href={secondaryTarget} prefetch={false}>{secondaryText}</Link>
-                  <Link href={variant === "network" ? "mailto:deessa.social@gmail.com" : "/contact"} prefetch={false}>Get in touch</Link>
+                  <Link href={variant === "network" ? "mailto:deessa.foundation@gmail.com" : "/contact"} prefetch={false}>Get in touch</Link>
                 </>}
               </nav>}
               {variant === "network" && <p className="mt-4 text-sm leading-relaxed">Other pages may be unavailable until you reconnect.</p>}

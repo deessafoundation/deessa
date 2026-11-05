@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowUpRight, HandHeart, Home } from "lucide-react"
 import { getPublicFacebookPosts } from "@/lib/data/facebook-posts"
 import { FacebookPostPreview } from "@/components/facebook-posts/facebook-post-preview"
+import { CommunityCover } from "@/components/facebook-posts/community-cover"
 import { PostAnalyticsTracker } from "@/components/facebook-posts/post-analytics-tracker"
 import { TrackedPostLink } from "@/components/facebook-posts/tracked-post-link"
 import type { SVGProps } from "react"
@@ -100,10 +101,16 @@ export default async function CommunityPage({ searchParams }: { searchParams: Pr
                         </time>
                       </div>
 
-                      {/* Facebook embed section - the star of the show */}
+                      {/* Facebook embed or cover photo */}
                       <div className="relative bg-gray-50/30 px-5 py-4">
                         <div className="overflow-hidden rounded-lg">
-                          <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" postType={post.post_type} />
+                          {post.image_url ? (
+                            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+                              <CommunityCover src={post.image_url} alt={post.image_alt || post.title} />
+                            </div>
+                          ) : (
+                            <FacebookPostPreview url={post.post_url} title={post.title} automatic mode="public" postType={post.post_type} />
+                          )}
                         </div>
                       </div>
 

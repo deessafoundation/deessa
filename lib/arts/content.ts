@@ -81,16 +81,27 @@ export function normalizeArtsContent(value: unknown): ArtsContent {
     }
   }
   // Broaden the original collection copy without replacing custom admin wording.
-  if (result.home.creditLine === "Original works by Deetya & Marissa") {
+  if (result.home.creditLine === "Original works by Deetya & Marissa" || /deetya|marissa/i.test(result.home.creditLine)) {
     result.home.creditLine = DEFAULT_ARTS_CONTENT.home.creditLine
   }
   if (result.home.ctaLabel === "Explore their art") result.home.ctaLabel = DEFAULT_ARTS_CONTENT.home.ctaLabel
-  if (result.gallery.eyebrow === "Art by Deetya & Marissa") result.gallery.eyebrow = DEFAULT_ARTS_CONTENT.gallery.eyebrow
-  if (result.gallery.intro === "A collection of paintings, playful details, and moments of expression. Take your time and see what each piece invites you to notice.") {
+  if (result.gallery.eyebrow === "Art by Deetya & Marissa" || /deetya|marissa/i.test(result.gallery.eyebrow)) {
+    result.gallery.eyebrow = DEFAULT_ARTS_CONTENT.gallery.eyebrow
+  }
+  if (
+    result.gallery.intro === "A collection of paintings, playful details, and moments of expression. Take your time and see what each piece invites you to notice." ||
+    /deetya|marissa/i.test(result.gallery.intro)
+  ) {
     result.gallery.intro = DEFAULT_ARTS_CONTENT.gallery.intro
   }
-  if (result.gallery.collectionIntro === "Original artworks from Deetya and Marissa's creative space.") {
+  if (
+    result.gallery.collectionIntro === "Original artworks from Deetya and Marissa's creative space." ||
+    /deetya|marissa/i.test(result.gallery.collectionIntro)
+  ) {
     result.gallery.collectionIntro = DEFAULT_ARTS_CONTENT.gallery.collectionIntro
+  }
+  if (/deetya|marissa/i.test(result.home.intro)) {
+    result.home.intro = DEFAULT_ARTS_CONTENT.home.intro
   }
   return result as unknown as ArtsContent
 }

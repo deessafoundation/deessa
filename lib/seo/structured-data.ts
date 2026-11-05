@@ -152,6 +152,8 @@ export function getOrganizationStructuredData(): WithContext<Organization> {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'General Inquiries',
+      email: 'deessa.foundation@gmail.com',
+      telephone: '+977-9841026085',
       url: `${SITE_URL}/contact`,
     },
   }

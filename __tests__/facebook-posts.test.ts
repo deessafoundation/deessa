@@ -30,9 +30,9 @@ describe("Facebook post links", () => {
     "javascript:alert(1)", "https://www.facebook.com.evil.test/page/posts/123",
     "https://www.facebook.com@evil.test/page/posts/123", "http://www.facebook.com/page/posts/123",
     "https://user:password@www.facebook.com/page/posts/123", "https://www.facebook.com:8443/page/posts/123",
-    "https://www.facebook.com/deessaFoundation", "https://www.facebook.com/share/v/123",
+    "https://www.facebook.com/deessaFoundation",
     "https://www.facebook.com/permalink.php?id=123", "https://www.facebook.com/photo.php?fbid=evil",
-    '<iframe src="https://www.facebook.com"></iframe>', "https://www.facebook.com/reel/123",
+    '<iframe src="https://www.facebook.com"></iframe>',
   ])("rejects unsupported or unsafe input: %s", value => {
     expect(normalizeFacebookPostUrl(value)).toBeNull()
     expect(facebookEmbedUrl(value)).toBeNull()
@@ -41,6 +41,12 @@ describe("Facebook post links", () => {
     const embed = new URL(facebookEmbedUrl("https://www.facebook.com/page/posts/123")!)
     expect(embed.origin + embed.pathname).toBe("https://www.facebook.com/plugins/post.php")
     expect(embed.searchParams.get("href")).toBe("https://www.facebook.com/page/posts/123")
+  })
+  it("accepts reel links and constructs video embed endpoint", () => {
+    expect(normalizeFacebookPostUrl("https://www.facebook.com/reel/2347831395969553/?ref=embed_video"))
+      .toBe("https://www.facebook.com/reel/2347831395969553")
+    const embed = new URL(facebookEmbedUrl("https://www.facebook.com/reel/2347831395969553")!)
+    expect(embed.origin + embed.pathname).toBe("https://www.facebook.com/plugins/video.php")
   })
   it("accepts the Copy Link share-post format and removes tracking", () => {
     expect(normalizeFacebookPostUrl("https://www.facebook.com/share/p/1DqLmQT9tC/?mibextid=abc"))

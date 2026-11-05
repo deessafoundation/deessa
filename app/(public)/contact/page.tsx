@@ -34,15 +34,15 @@ const channels = [
     icon: Mail,
     meta: "Write to Us",
     label: "Email",
-    items: [{ text: "deessa.social@gmail.com", href: "mailto:deessa.social@gmail.com" }],
+    items: [{ text: "deessa.foundation@gmail.com", href: "mailto:deessa.foundation@gmail.com" }],
   },
   {
     icon: Phone,
     meta: "Call Us",
     label: "Phone",
     items: [
-      { text: "+977 1-4123456", href: "tel:+97714123456" },
-      { text: "+977 9841234567", href: "tel:+9779841234567" },
+      { text: "+977 9841026085", href: "tel:+9779841026085" },
+      { text: "+977 9811549437", href: "tel:+9779811549437" },
     ],
   },
   {
@@ -294,8 +294,8 @@ export default async function ContactPage() {
                     <div className={styles.locationStatText}>
                       <p className={styles.locationStatLabel}>General Inquiries</p>
                       <p className={styles.locationStatValue}>
-                        <a href="mailto:deessa.social@gmail.com" className={styles.locationStatLink}>
-                          deessa.social@gmail.com
+                        <a href="mailto:deessa.foundation@gmail.com" className={styles.locationStatLink}>
+                          deessa.foundation@gmail.com
                         </a>
                       </p>
                     </div>
@@ -307,8 +307,12 @@ export default async function ContactPage() {
                     <div className={styles.locationStatText}>
                       <p className={styles.locationStatLabel}>Direct Line</p>
                       <p className={styles.locationStatValue}>
-                        <a href="tel:+9779841234567" className={styles.locationStatLink}>
-                          +977 9841234567
+                        <a href="tel:+9779841026085" className={styles.locationStatLink}>
+                          +977 9841026085
+                        </a>
+                        {", "}
+                        <a href="tel:+9779811549437" className={styles.locationStatLink}>
+                          +977 9811549437
                         </a>
                       </p>
                     </div>
@@ -403,13 +407,13 @@ export default async function ContactPage() {
               <div className={styles.ctaRightBg} aria-hidden="true" />
               <div className="relative">
                 <span className={styles.ctaEmailLabel}>Email us at</span>
-                <a href="mailto:deessa.social@gmail.com" className={styles.ctaEmailVal}>
-                  deessa.social@gmail.com
+                <a href="mailto:deessa.foundation@gmail.com" className={styles.ctaEmailVal}>
+                  deessa.foundation@gmail.com
                 </a>
                 <div className={styles.ctaDivider} aria-hidden="true" />
                 <nav className={styles.ctaActions} aria-label="Contact actions">
                   <a
-                    href="mailto:deessa.social@gmail.com"
+                    href="mailto:deessa.foundation@gmail.com"
                     className={`${styles.ctaActionBtn} ${styles.ctaActionPrimary}`}
                     aria-label="Send email to deessa Foundation"
                   >

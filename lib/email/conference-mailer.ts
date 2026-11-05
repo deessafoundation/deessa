@@ -177,7 +177,7 @@ export async function sendCustomEmail(params: {
                   <p style="margin:0;font-size:12px;color:#94A3B8;">
                     deessa Foundation &mdash; deessa National Conference 2026<br/>
                     Thamel, Kathmandu, Nepal 44600<br/>
-                    <a href="mailto:deessa.social@gmail.com" style="color:#3FABDE;">deessa.social@gmail.com</a>
+                    <a href="mailto:deessa.foundation@gmail.com" style="color:#3FABDE;">deessa.foundation@gmail.com</a>
                   </p>
                 </td>
               </tr>

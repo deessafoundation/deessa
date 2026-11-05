@@ -60,6 +60,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.gstatic.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.fbcdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.facebook.com',
+      },
     ],
     formats: ['image/avif', 'image/webp'], // Modern image formats for better performance
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // Common device widths
@@ -73,6 +81,7 @@ const nextConfig = {
       { source: '/admin/conference/:path*', destination: '/admin/events', permanent: false },
       { source: '/complete-payment', destination: '/events', permanent: false },
       // Preserve saved CMS image URLs after removing superseded files.
+      { source: '/Merina Panthii.jpg', destination: '/Merina Panthee.jpg', permanent: true },
       { source: '/podcast_banner.png', destination: '/podcast_banner.jpeg', permanent: true },
       { source: '/home/podcast/deessa-podcast-studio.png', destination: '/podcast_banner.jpeg', permanent: true },
       { source: '/home/hero/inclusion-begins-at-home-v2.jpg', destination: '/home/hero/inclusion-begins-at-home.jpg', permanent: true },
@@ -126,7 +135,7 @@ const nextConfig = {
               // preview in a blob: iframe (components/donations/receipt-preview.tsx,
               // app/demo/receipt/page.tsx) — 'self' does NOT implicitly cover
               // the blob: scheme for frame-src, it must be listed explicitly.
-              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.facebook.com",
+              "frame-src 'self' blob: https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.facebook.com https://*.facebook.com https://facebook.com https://*.fbcdn.net https://*.fbsbx.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
