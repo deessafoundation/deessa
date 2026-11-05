@@ -33,26 +33,418 @@
 }
 
 /* ══════════════════════════════════════════════════════
-   MISSION CARD — high-contrast  (STANDARDS.md §3)
-   The Mission card is a light sky-tinted card (home-ui card
-   system), so high contrast only needs black text and the
-   white icon box with a black border and black icon.
+   MISSION & VISION DIRECTION SECTION (STANDARDS.md §3)
+   Bespoke twin cards, action pillars, and guiding values.
    ══════════════════════════════════════════════════════ */
-:global(body.high-contrast) [data-mission-card] :is(h3, p) {
-  color: #000 !important;
-  opacity: 1 !important;
+
+.directionCard {
+  --dir-ink: #063f5b;
+  --dir-body: #334e68;
+  --dir-tint: #e4f5fd;
+  --dir-soft: #f4fafe;
+  --dir-line: #d7eef9;
+  --dir-accent: #0b6fa4;
+  --dir-pill-bg: #e0f2fe;
+  --dir-pill-text: #0369a1;
+  --dir-pill-border: #bae6fd;
+  --dir-micro-bg: rgba(255, 255, 255, 0.88);
+  --dir-micro-border: #dbeafe;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 1.75rem;
+  border: 1px solid var(--dir-line);
+  background-color: var(--dir-soft);
+  box-shadow: 0 10px 30px -10px rgba(52, 112, 150, 0.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+  overflow: hidden;
 }
 
-:global(body.high-contrast) [data-mission-icon] {
+.directionCard[data-tone="lavender"] {
+  --dir-tint: #f3eeff;
+  --dir-soft: #faf7ff;
+  --dir-line: #e6ddfb;
+  --dir-accent: #6f3e96;
+  --dir-pill-bg: #f3e8ff;
+  --dir-pill-text: #6b21a8;
+  --dir-pill-border: #e9d5ff;
+  --dir-micro-bg: rgba(255, 255, 255, 0.92);
+  --dir-micro-border: #eedcfc;
+}
+
+.directionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(52, 112, 150, 0.16);
+}
+
+.directionIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--dir-line);
+  box-shadow: 0 4px 14px -3px rgba(52, 112, 150, 0.12);
+  color: var(--dir-accent);
+  transition: transform 0.3s ease;
+}
+
+.directionCard:hover .directionIconBox {
+  transform: scale(1.05);
+}
+
+.directionPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background-color: var(--dir-pill-bg);
+  border: 1px solid var(--dir-pill-border);
+  color: var(--dir-pill-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-comic);
+}
+
+.directionPillDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: currentColor;
+}
+
+.pillarGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.pillarItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--dir-micro-bg);
+  border: 1px solid var(--dir-micro-border);
+  transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.pillarItem:hover {
+  border-color: var(--dir-line);
+  background-color: #ffffff;
+  transform: translateX(3px);
+}
+
+.pillarCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background-color: var(--dir-tint);
+  color: var(--dir-accent);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.pillarTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #063f5b;
+  margin-bottom: 0.15rem;
+  font-family: var(--font-comic);
+}
+
+.pillarText {
+  font-size: 0.84375rem;
+  line-height: 1.45;
+  color: #445e7b;
+  font-family: var(--font-comic);
+}
+
+/* Values Ribbon */
+.valuesRibbon {
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 1.5rem;
+  border: 1px solid #d7eef9;
+  background-color: #ffffff;
+  box-shadow: 0 8px 30px -8px rgba(52, 112, 150, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .valuesRibbon {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.75rem 2.25rem;
+  }
+}
+
+.valueTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.75rem;
+  background-color: #f7fbfe;
+  border: 1px solid #dcecf6;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #063f5b;
+  box-shadow: 0 2px 8px -2px rgba(52, 112, 150, 0.06);
+  font-family: var(--font-comic);
+}
+
+.directionCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 0.875rem;
+  background-color: #006e9e;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  font-family: var(--font-comic);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.directionCtaBtn:hover {
+  background-color: #094e72;
+  transform: translateY(-1px);
+}
+
+.directionCtaBtn:focus-visible {
+  outline: 3px solid #006e9e;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Overrides (STANDARDS.md §3) */
+:global(body.high-contrast) [data-mission-card],
+:global(body.high-contrast) [data-vision-card],
+:global(body.high-contrast) .directionCard {
   background: #fff !important;
   border: 2px solid #000 !important;
   box-shadow: none !important;
 }
 
+:global(body.high-contrast) [data-mission-card] :is(h3, h4, p, span),
+:global(body.high-contrast) [data-vision-card] :is(h3, h4, p, span),
+:global(body.high-contrast) .directionCard :is(h3, h4, p, span) {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
+:global(body.high-contrast) [data-mission-icon],
+:global(body.high-contrast) [data-vision-icon],
+:global(body.high-contrast) .directionIconBox {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+  color: #000 !important;
+}
+
 :global(body.high-contrast) [data-mission-icon] svg,
-:global(body.high-contrast) [data-mission-icon] svg * {
+:global(body.high-contrast) [data-mission-icon] svg *,
+:global(body.high-contrast) [data-vision-icon] svg,
+:global(body.high-contrast) [data-vision-icon] svg *,
+:global(body.high-contrast) .directionIconBox svg,
+:global(body.high-contrast) .directionIconBox svg * {
+  stroke: #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .directionPill {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .directionPillDot {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .pillarItem {
+  background: #fff !important;
+  border: 1px solid #000 !important;
+  transform: none !important;
+}
+
+:global(body.high-contrast) .pillarItem * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .pillarCheck {
+  background: #fff !important;
+  border: 1px solid #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .pillarCheck svg,
+:global(body.high-contrast) .pillarCheck svg * {
+  stroke: #000 !important;
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .valuesRibbon {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .valuesRibbon * {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .valueTag {
+  background: #fff !important;
+  border: 1px solid #000 !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .directionCtaBtn,
+:global(body.high-contrast) a.directionCtaBtn {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .directionCtaBtn *,
+:global(body.high-contrast) a.directionCtaBtn * {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+
+/* Inverted Contrast Mode Overrides */
+:global(body.inverted-contrast) [data-mission-card],
+:global(body.inverted-contrast) [data-vision-card],
+:global(body.inverted-contrast) .directionCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) [data-mission-card] :is(h3, h4, p, span),
+:global(body.inverted-contrast) [data-vision-card] :is(h3, h4, p, span),
+:global(body.inverted-contrast) .directionCard :is(h3, h4, p, span) {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) [data-mission-icon],
+:global(body.inverted-contrast) [data-vision-icon],
+:global(body.inverted-contrast) .directionIconBox {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) [data-mission-icon] svg,
+:global(body.inverted-contrast) [data-mission-icon] svg *,
+:global(body.inverted-contrast) [data-vision-icon] svg,
+:global(body.inverted-contrast) [data-vision-icon] svg *,
+:global(body.inverted-contrast) .directionIconBox svg,
+:global(body.inverted-contrast) .directionIconBox svg * {
+  stroke: #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .directionPill {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .directionPillDot {
+  background: #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarItem {
+  background: #000 !important;
+  border: 1px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarItem * {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarCheck {
+  background: #000 !important;
+  border: 1px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarCheck svg,
+:global(body.inverted-contrast) .pillarCheck svg * {
+  stroke: #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .valuesRibbon {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .valuesRibbon * {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .valueTag {
+  background: #000 !important;
+  border: 1px solid #fff !important;
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .directionCtaBtn,
+:global(body.inverted-contrast) a.directionCtaBtn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .directionCtaBtn *,
+:global(body.inverted-contrast) a.directionCtaBtn * {
   color: #000 !important;
   stroke: #000 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .directionCard,
+  .directionIconBox,
+  .pillarItem,
+  .directionCtaBtn {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+:global(body.reduce-motion) .directionCard,
+:global(body.reduce-motion) .directionIconBox,
+:global(body.reduce-motion) .pillarItem,
+:global(body.reduce-motion) .directionCtaBtn,
+:global(body.sensory-friendly) .directionCard,
+:global(body.sensory-friendly) .directionIconBox,
+:global(body.sensory-friendly) .pillarItem,
+:global(body.sensory-friendly) .directionCtaBtn {
+  transition: none !important;
+  transform: none !important;
 }
 
 /* ══════════════════════════════════════════════════════

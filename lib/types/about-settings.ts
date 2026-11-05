@@ -161,14 +161,14 @@ export const DEFAULT_ABOUT_PAGE_SETTINGS: AboutPageSettings = {
     flowAppearance: [{ icon: "eye", tone: "blue" }, { icon: "message-circle", tone: "pink" }, { icon: "heart", tone: "blue" }, { icon: "sprout", tone: "blue" }],
     sinceBadge: "✦ Since 2022",
     label: "Who We Are",
-    headline: "deessa Foundation is a non-profit organization based in Nepal, dedicated to promoting disability inclusion and advancing the rights, dignity, and participation of children with disabilities.",
+    headline: "Advancing Rights, Dignity & Participation for Every Child.",
     paragraphs: [
+      "deessa Foundation is a non-profit organization based in Nepal, dedicated to promoting disability inclusion and advancing the rights, dignity, and participation of children with disabilities.",
       "With a particular focus on autism and neurodiversity, we work towards creating a society where differences are understood, accepted, and embraced rather than seen as limitations.",
       "We believe every child has unique abilities, strengths, and potential. Yet, stigma, limited awareness, inaccessible environments, and inadequate support continue to create barriers to equal opportunities and meaningful participation.",
       "Bringing together parents, educators, professionals, and advocates, we work with children, families, institutions, and communities through awareness, advocacy, capacity building, inclusive education, and accessible resources to challenge these barriers and promote lasting change.",
-      "At deessa Foundation, we believe that inclusion begins with acceptance, grows through understanding, and becomes meaningful through action.",
     ],
-    quote: "When we embrace neurodiversity, we unlock potential in every child.",
+    quote: "At deessa Foundation, we believe that inclusion begins with acceptance, grows through understanding, and becomes meaningful through action.",
     flowSteps: ["Seen", "Heard", "Supported", "Thrive"],
   },
   howWeDoIt: {

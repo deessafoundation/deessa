@@ -34,7 +34,9 @@ import {
   Megaphone,
   FileText,
   Scale,
-  Mic2
+  Mic2,
+  Sparkles,
+  CheckCircle2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal, CountUp, BackToTop } from "@/components/homepage/scroll-animations"
@@ -177,71 +179,216 @@ export function OurStorySection({ story }: OurStorySectionProps) {
 /* ──────────────────  MISSION & VISION  ────────────────── */
 
 export function MissionVisionSection() {
-  // Shared hero-style card chrome so the two panels read as one family with the
-  // pillar cards in ProgramsSection. No hover lift: these articles are not interactive.
-  const cardShell = cn(homeUi.card, "relative flex h-full flex-col overflow-hidden")
-
   return (
     <section data-mission-section className={cn(homeUi.surface, homeUi.sectionY)}>
       <div className={cn(homeUi.container, "z-10")}>
         <ScrollReveal animation="fade-up">
           <HomeSectionHeading
-            className="mb-10 sm:mb-14"
+            className="mb-12 sm:mb-16"
             eyebrow="Our Direction"
             title="Acceptance for All:"
             accent="Embracing Diversity."
             // One navy line on phones too; it still wraps at large text sizes instead of overflowing.
             titleClassName="text-2xl leading-[1.15] sm:text-[2.5rem] lg:text-[3.25rem]"
+            introClassName="max-w-3xl"
             intro={
-              <span className="space-y-3 block max-w-3xl mx-auto">
-                <span className="block">
-                  Every child is unique, with their own abilities, strengths, and potential. Yet, many children with disabilities continue to face barriers to education, acceptance, participation, and equal opportunities.
-                </span>
-                <span className="block">
-                  At <span className="lowercase font-bold">deessa</span> Foundation, we believe that differences should never be a reason for exclusion. We work alongside children, families, educators, and communities to promote awareness, strengthen understanding, advocate for inclusion, and create environments where every child can learn, grow, participate, and thrive.
-                </span>
-              </span>
+              <div className="space-y-3.5">
+                <p className="font-comic text-base sm:text-lg leading-relaxed text-[#143247] font-medium">
+                  Every child is unique, with their own innate strengths, boundless potential, and inherent dignity. Yet,
+                  many children with disabilities continue to face persistent barriers to education, acceptance,
+                  participation, and equal opportunities.
+                </p>
+                <p className="font-comic text-sm sm:text-base leading-relaxed text-[#445E7B]">
+                  At <span className="lowercase font-bold text-[#063F5B]">deessa</span> Foundation, we believe that differences
+                  should never be a reason for exclusion. We work alongside children, families, educators, and communities
+                  to promote awareness, strengthen understanding, advocate for inclusion, and create environments where every
+                  child can learn, grow, participate, and thrive.
+                </p>
+              </div>
             }
           />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
-          {/* MISSION — the anchor statement, set apart by a soft sky tint
-              rather than a dark panel, so it stays in the hero's light language */}
-          <ScrollReveal animation="fade-right" className="h-full lg:col-span-7">
-            <article data-mission-card className={cn(cardShell, "border-[#D7EEF9] bg-[#F2FAFE]")}>
-              <div className="relative flex flex-1 flex-col p-5 sm:p-8 md:p-11">
-                <div
-                  data-mission-icon
-                  className={cn(homeUi.iconCircle, HOME_TONES.sky, "mb-5 size-14 sm:mb-7 sm:size-16")}
-                >
-                  <Target aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          {/* MISSION — the anchor statement & action commitment */}
+          <ScrollReveal animation="fade-right" className="h-full">
+            <article
+              data-mission-card
+              data-tone="sky"
+              className={styles.directionCard}
+            >
+              <div className="relative flex flex-1 flex-col p-6 sm:p-8 lg:p-9">
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <span className={styles.directionPill}>
+                    <span className={styles.directionPillDot} aria-hidden="true" />
+                    Purpose & Commitment
+                  </span>
+                  <div
+                    data-mission-icon
+                    className={cn(styles.directionIconBox, "size-12 sm:size-14")}
+                  >
+                    <Target aria-hidden="true" className="size-6 sm:size-7" strokeWidth={1.8} />
+                  </div>
                 </div>
-                <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Mission</h3>
-                <p className={cn(homeUi.body, "md:text-xl")}>
-                  To promote the rights, acceptance, and inclusion of children with disabilities, with a particular focus on autism and neurodivergent conditions, through awareness, advocacy, education, and accessible support.
+
+                <h3 className={cn(homeUi.heading, "mb-3 text-2xl sm:text-[1.875rem]")}>Our Mission</h3>
+
+                <p className="font-comic text-base sm:text-[1.0625rem] leading-relaxed text-[#143247] font-medium mb-6">
+                  To promote the rights, acceptance, and inclusion of children with disabilities, with a particular focus
+                  on autism and neurodivergent conditions, through awareness, advocacy, education, and accessible support.
                 </p>
+
+                <div className={styles.pillarGrid}>
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <Shield className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Rights & Awareness</h4>
+                      <p className={styles.pillarText}>
+                        Dismantling stigma, championing fundamental rights, and fostering neurodiversity acceptance across communities.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <GraduationCap className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Inclusive Education</h4>
+                      <p className={styles.pillarText}>
+                        Equipping schools, teachers, and classrooms with adaptive resources and inclusive pedagogical tools.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <Users className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Family & Community Care</h4>
+                      <p className={styles.pillarText}>
+                        Offering practical guidance, therapy navigation, and empathetic peer support circles for caregivers.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
           </ScrollReveal>
 
-          {/* VISION */}
-          <ScrollReveal animation="fade-left" delay={150} className="h-full lg:col-span-5">
-            <article className={cardShell}>
-              <div className="flex flex-1 flex-col p-5 sm:p-8 md:p-10">
-                <div className={cn(homeUi.iconCircle, HOME_TONES.lavender, "mb-5 size-14 sm:mb-7 sm:size-16")}>
-                  <Eye aria-hidden="true" className="size-7 sm:size-8" strokeWidth={1.8} />
+          {/* VISION — the future horizon */}
+          <ScrollReveal animation="fade-left" delay={150} className="h-full">
+            <article
+              data-vision-card
+              data-tone="lavender"
+              className={styles.directionCard}
+            >
+              <div className="relative flex flex-1 flex-col p-6 sm:p-8 lg:p-9">
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <span className={styles.directionPill}>
+                    <span className={styles.directionPillDot} aria-hidden="true" />
+                    The Horizon We Build
+                  </span>
+                  <div
+                    data-vision-icon
+                    className={cn(styles.directionIconBox, "size-12 sm:size-14")}
+                  >
+                    <Eye aria-hidden="true" className="size-6 sm:size-7" strokeWidth={1.8} />
+                  </div>
                 </div>
-                <h3 className={cn(homeUi.heading, "mb-4 text-xl md:text-[1.875rem]")}>Our Vision</h3>
-                <p className={homeUi.body}>
-                  An inclusive society where every child is accepted, valued, and empowered to reach their full potential.
+
+                <h3 className={cn(homeUi.heading, "mb-3 text-2xl sm:text-[1.875rem]")}>Our Vision</h3>
+
+                <p className="font-comic text-base sm:text-[1.0625rem] leading-relaxed text-[#143247] font-medium mb-6">
+                  An inclusive society where every child is accepted, valued, and empowered to reach their full potential —
+                  living with dignity, self-confidence, and genuine belonging.
                 </p>
+
+                <div className={styles.pillarGrid}>
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <Globe className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Zero Exclusion Society</h4>
+                      <p className={styles.pillarText}>
+                        Classrooms, neighborhoods, and public spaces where differences are welcomed naturally and celebrated.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <Sparkles className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Empowered Self-Advocacy</h4>
+                      <p className={styles.pillarText}>
+                        Fostering autonomy, confidence, and self-expression so neurodivergent youth lead fulfilling, self-directed lives.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={styles.pillarItem}>
+                    <div className={styles.pillarCheck} aria-hidden="true">
+                      <Heart className="size-4" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 className={styles.pillarTitle}>Universal Access & Care</h4>
+                      <p className={styles.pillarText}>
+                        Ensuring developmental resources, early intervention, and equal opportunities reach every family in need.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
           </ScrollReveal>
-
-
         </div>
+
+        {/* GUIDING VALUES RIBBON */}
+        <ScrollReveal animation="fade-up" delay={200}>
+          <div className={styles.valuesRibbon}>
+            <div className="space-y-1">
+              <span className="font-comic text-xs font-bold uppercase tracking-wider text-[#0B6FA4]">
+                Core Values
+              </span>
+              <h4 className="font-marissa text-xl sm:text-2xl text-[#063F5B]">
+                The Principles Guiding Every Step
+              </h4>
+              <p className="font-comic text-xs sm:text-sm text-[#445E7B]">
+                Grounding our programs, partnerships, and advocacy in empathy and unconditional respect.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <span className={styles.valueTag}>
+                <Heart aria-hidden="true" className="size-3.5 text-[#0B6FA4]" strokeWidth={2.2} />
+                <span>Inclusion</span>
+              </span>
+              <span className={styles.valueTag}>
+                <Leaf aria-hidden="true" className="size-3.5 text-[#1F7A62]" strokeWidth={2.2} />
+                <span>Empathy</span>
+              </span>
+              <span className={styles.valueTag}>
+                <Shield aria-hidden="true" className="size-3.5 text-[#6F3E96]" strokeWidth={2.2} />
+                <span>Advocacy</span>
+              </span>
+              <span className={styles.valueTag}>
+                <Star aria-hidden="true" className="size-3.5 text-[#9A6A00]" strokeWidth={2.2} />
+                <span>Empowerment</span>
+              </span>
+            </div>
+
+            <a href="#what-we-do" className={styles.directionCtaBtn}>
+              <span>Explore Our Work</span>
+              <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+            </a>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   )

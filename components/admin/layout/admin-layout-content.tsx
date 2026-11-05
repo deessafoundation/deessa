@@ -17,6 +17,13 @@ function AdminLayoutInner({ adminUser, children }: AdminLayoutContentProps) {
   
   return (
     <div className="min-h-screen bg-muted/30">
+      {/* Accessible skip link for keyboard & assistive technology */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:shadow-md focus:ring-2 focus:ring-primary"
+      >
+        Skip to main content
+      </a>
       <AdminSidebar adminUser={adminUser} />
       <div 
         className={cn(
@@ -25,7 +32,7 @@ function AdminLayoutInner({ adminUser, children }: AdminLayoutContentProps) {
         )}
       >
         <AdminHeader adminUser={adminUser} />
-        <main className="p-4 lg:p-6">{children}</main>
+        <main id="main-content" tabIndex={-1} className="p-4 lg:p-6 focus:outline-none">{children}</main>
       </div>
     </div>
   )

@@ -1,38 +1,227 @@
+/* ══════════════════════════════════════════════════════
+   ABOUT INTRO ("WHO WE ARE") — MODERN EDITORIAL STYLES
+   Adheres to STANDARDS.md (§3 High Contrast, §21 Inverted)
+   ══════════════════════════════════════════════════════ */
+
 .section {
-  background: #fff;
-  padding: 32px 24px;
+  position: relative;
+  background: #ffffff;
+  padding: 64px 24px 80px;
+  overflow: hidden;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 49% minmax(0, 1fr);
-  gap: 32px;
+.container {
   max-width: 1240px;
   margin: 0 auto;
-  align-items: start;
 }
 
+/* ──────────────────────────────────────────────────────────
+   HEADER & EDITORIAL MANIFESTO
+   ────────────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto 44px;
+}
+
+.eyebrowWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.eyebrowBadge {
+  font-family: var(--font-comic);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0b5f8a;
+  background: #f0f9fd;
+  border: 1px solid #bce3f5;
+  padding: 5px 16px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sinceBadge {
+  font-family: var(--font-comic);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #29b6c8;
+  background: rgba(41, 182, 200, 0.08);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--font-marissa);
+  font-size: clamp(28px, 3.2vw, 42px);
+  line-height: 1.22;
+  font-weight: 700;
+  color: #063f5b;
+  -webkit-text-stroke: 0.6px currentColor;
+  margin: 0 0 20px;
+}
+
+.manifestoBox {
+  margin-top: 20px;
+  padding: 22px 30px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(11, 95, 138, 0.1);
+  box-shadow: 0 4px 14px -3px rgba(11, 95, 138, 0.04);
+  text-align: left;
+}
+
+.manifestoText {
+  font-family: var(--font-dm-sans);
+  font-size: clamp(16px, 1.15vw, 18px);
+  line-height: 1.72;
+  color: #334155;
+  margin: 0;
+}
+
+.manifestoBrand {
+  font-weight: 700;
+  color: #0b5f8a;
+  text-transform: lowercase;
+}
+
+/* ──────────────────────────────────────────────────────────
+   BENTO GRID (VISUAL ANCHOR + PILLARS)
+   ────────────────────────────────────────────────────────── */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 32px;
+  align-items: stretch;
+  margin-bottom: 36px;
+}
+
+/* Visual Column */
+.visualCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.artworkCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(11, 95, 138, 0.12);
+  box-shadow: 0 6px 24px -6px rgba(11, 95, 138, 0.07);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  flex: 1;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.artworkImage {
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artworkCard:hover .artworkImage {
+  transform: scale(1.03);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(6, 63, 91, 0.45) 100%);
+  pointer-events: none;
+}
+
+.imageBadge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  color: #063f5b;
+  font-family: var(--font-comic);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.badgeIcon {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.artCardFooter {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  padding: 18px 20px;
+  background: #f8fafc;
+  border-top: 1px solid rgba(11, 95, 138, 0.08);
+}
+
+.artFooterItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.artFooterValue {
+  font-family: var(--font-marissa);
+  font-size: 19px;
+  font-weight: 700;
+  color: #0b5f8a;
+  line-height: 1.2;
+}
+
+.artFooterLabel {
+  font-family: var(--font-comic);
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.artFooterDivider {
+  width: 1px;
+  height: 28px;
+  background: rgba(11, 95, 138, 0.12);
+}
+
+/* Video Player Media */
 .media {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgb(11 95 138 / 14%);
-  border-radius: 18px;
-  clip-path: inset(0 round 18px);
-  background: transparent;
-}
-
-.layout[data-has-media="false"] {
-  grid-template-columns: minmax(0, 1fr);
-  max-width: 820px;
-}
-
-.media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(circle at bottom right, transparent 17px, #fff 18px) top left / 18px 18px no-repeat, radial-gradient(circle at bottom left, transparent 17px, #fff 18px) top right / 18px 18px no-repeat, radial-gradient(circle at top right, transparent 17px, #fff 18px) bottom left / 18px 18px no-repeat, radial-gradient(circle at top left, transparent 17px, #fff 18px) bottom right / 18px 18px no-repeat;
+  border: 1px solid rgba(11, 95, 138, 0.14);
+  border-radius: 20px;
+  background: #000;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .video {
@@ -40,229 +229,300 @@
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
-  border-radius: 18px;
-  clip-path: inset(0 round 18px);
   object-fit: cover;
+  border-radius: 20px;
 }
 
-.content {
+/* Pillars Column */
+.pillarsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.pillarCard {
+  display: flex;
+  gap: 18px;
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 95, 138, 0.1);
+  box-shadow: 0 2px 10px -2px rgba(11, 95, 138, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pillarCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(11, 95, 138, 0.22);
+  box-shadow: 0 8px 20px -4px rgba(11, 95, 138, 0.08);
+}
+
+.pillarIconDisc {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: #eef7fc;
+  color: #0b5f8a;
+}
+
+.pillarCard[data-tone="amber"] .pillarIconDisc {
+  background: #fef5ee;
+  color: #d97706;
+}
+
+.pillarCard[data-tone="emerald"] .pillarIconDisc {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.pillarCard[data-tone="blue"] .pillarIconDisc {
+  background: #eef7fc;
+  color: #0b5f8a;
+}
+
+.pillarBody {
+  flex: 1;
   min-width: 0;
 }
 
-.label {
+.pillarTitle {
+  font-family: var(--font-comic);
+  font-size: 15px;
+  font-weight: 700;
+  color: #063f5b;
   margin: 0 0 6px;
+}
+
+.pillarText {
+  font-family: var(--font-dm-sans);
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: #52606b;
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────────────
+   PHILOSOPHY CREED BANNER
+   ────────────────────────────────────────────────────────── */
+.philosophyBanner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 34px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f0f8fd 0%, #e5f3fa 100%);
+  border: 1px solid rgba(11, 95, 138, 0.16);
+  box-shadow: 0 4px 18px -3px rgba(11, 95, 138, 0.05);
+  margin-bottom: 36px;
+}
+
+.quoteIconWrapper {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 95, 138, 0.14);
+  color: #0b5f8a;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(11, 95, 138, 0.08);
+}
+
+.quoteIcon {
+  color: #0b5f8a;
+  stroke: currentColor;
+}
+
+.philosophyContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.philosophySubtitle {
   font-family: var(--font-comic);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #15151c;
+  color: #0b5f8a;
+  margin: 0 0 4px;
 }
 
-.title {
-  margin: 0 0 14px;
+.philosophyQuote {
+  margin: 0;
+  font-family: var(--font-dm-sans);
+  font-size: clamp(16px, 1.2vw, 19px);
+  font-weight: 600;
+  line-height: 1.55;
+  color: #063f5b;
+}
+
+.deessaLower {
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+/* ──────────────────────────────────────────────────────────
+   FLOW / PATHWAY SECTION
+   ────────────────────────────────────────────────────────── */
+.flowSection {
+  padding: 32px 28px;
+  border-radius: 20px;
+  background: #fafbfc;
+  border: 1px solid rgba(11, 95, 138, 0.09);
+}
+
+.flowHeader {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.flowSubtitle {
+  font-family: var(--font-comic);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0b5f8a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.flowTitle {
   font-family: var(--font-marissa);
-  font-size: clamp(25px, 2.15vw, 31px);
-  line-height: 1.2;
+  font-size: clamp(22px, 2vw, 26px);
   font-weight: 700;
   color: #063f5b;
-  -webkit-text-stroke: 0.7px currentColor;
-}
-
-.paragraphs {
-  font-family: var(--font-dm-sans);
-  font-size: clamp(15px, 1.15vw, 17px);
-  font-weight: 400;
-  line-height: 1.65;
-  color: #52606b;
-}
-
-.paragraphs p {
   margin: 0;
 }
 
-.paragraphs p+p {
-  margin-top: 10px;
-}
-
-.quote {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin: 14px 0 10px;
-  padding: 10px 14px;
-  border-radius: 9px;
-  background: #dff3fc;
-  color: #0B5F8A;
-}
-
-.quote svg {
-  flex-shrink: 0;
-  color: #3FABDE;
-  fill: #3fabde33;
-}
-
-.quote p {
-  margin: 0;
-  font-family: var(--font-dm-sans);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.flow {
+.flowGrid {
   display: grid;
-  grid-template-columns: var(--flow-columns, minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr) auto minmax(44px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
   list-style: none;
   margin: 0;
   padding: 0;
-  align-items: start;
-  column-gap: 12px;
 }
 
-.step {
-  min-width: 0;
-}
-
-.stepContent {
+.flowCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  text-align: center;
+  padding: 24px 18px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 95, 138, 0.1);
+  box-shadow: 0 2px 8px -2px rgba(11, 95, 138, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.flowCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -4px rgba(11, 95, 138, 0.08);
+}
+
+.flowStepNum {
+  position: absolute;
+  top: 10px;
+  right: 12px;
   font-family: var(--font-comic);
-  color: #0B5F8A;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
+  color: #94a3b8;
 }
 
-.icon {
+.flowIconContainer {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 36px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: white;
-  color: #159dd0;
+  margin-bottom: 12px;
+  background: #f0f9fd;
+  color: #0284c7;
 }
 
-.step:nth-child(3) .icon {
-  color: #D6336C;
+.flowIconContainer[data-tone="pink"] {
+  background: #fff1f2;
+  color: #e11d48;
 }
 
-.step:nth-child(4) .icon {
-  color: #65a844;
+.flowIconContainer[data-tone="green"] {
+  background: #f0fdf4;
+  color: #16a34a;
 }
 
-.step .icon[data-tone="blue"] { color: #159dd0; }
-.step .icon[data-tone="pink"] { color: #d6336c; }
-.step .icon[data-tone="green"] { color: #65a844; }
-
-.arrowItem {
-  display: grid;
-  place-items: center;
-  margin-top: 10px;
+.flowIconContainer[data-tone="blue"] {
+  background: #f0f9fd;
+  color: #0284c7;
 }
 
-.arrow {
-  color: #0B5F8A;
+.flowStepLabel {
+  font-family: var(--font-comic);
+  font-size: 16px;
+  font-weight: 700;
+  color: #063f5b;
+  margin-bottom: 6px;
 }
 
-@media (max-width: 1000px) {
-  .layout {
-    gap: 24px;
-    grid-template-columns: 45% minmax(0, 1fr);
-  }
-
-  .flow {
-    column-gap: 6px;
-  }
+.flowStepDesc {
+  font-family: var(--font-dm-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  color: #64748b;
+  margin: 0;
 }
 
-@media (max-width: 760px) {
-  .section {
-    padding: 28px 20px;
-  }
-
-  .layout {
+/* ──────────────────────────────────────────────────────────
+   RESPONSIVENESS
+   ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .bentoGrid {
     grid-template-columns: 1fr;
     gap: 24px;
-    max-width: 600px;
   }
-
-  .title {
-    font-size: 28px;
+  .imageContainer {
+    min-height: 320px;
   }
-
-  .paragraphs {
-    font-size: 16px;
-    line-height: 1.65;
-  }
-
-  .quote p {
-    font-size: 15px;
+  .flowGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
   .section {
-    padding: 24px 16px;
+    padding: 48px 16px 64px;
   }
-
-  .layout {
-    gap: 20px;
+  .manifestoBox {
+    padding: 18px 20px;
   }
-
-  .flow {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 12px;
-  }
-
-  .stepContent {
-    gap: 6px;
-    font-size: 14px;
-    line-height: 1.3;
+  .philosophyBanner {
+    flex-direction: column;
     text-align: center;
+    padding: 24px 20px;
+    gap: 16px;
   }
-
-  .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
+  .flowGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
-
-  .arrowItem {
-    display: none;
+  .artCardFooter {
+    padding: 14px 16px;
   }
-}
-
-@media (max-width: 600px) {
-  .content {
-    display: contents;
+  .artFooterValue {
+    font-size: 16px;
   }
-
-  .label {
-    grid-row: 1;
-  }
-
-  .title {
-    grid-row: 2;
-    margin-bottom: 0;
-  }
-
-  .media {
-    grid-row: 3;
-  }
-
-  .paragraphs {
-    grid-row: 4;
-  }
-
-  .quote {
-    grid-row: 5;
-  }
-
-  .flow {
-    grid-row: 6;
+  .artFooterLabel {
+    font-size: 10px;
   }
 }
 
@@ -273,8 +533,11 @@
   background: #fff !important;
 }
 
-:global(body.high-contrast) .label {
+:global(body.high-contrast) .eyebrowBadge,
+:global(body.high-contrast) .sinceBadge {
+  background: #fff !important;
   color: #000 !important;
+  border: 2px solid #000 !important;
   font-weight: 800 !important;
 }
 
@@ -285,64 +548,132 @@
   -webkit-text-stroke: 0 !important;
 }
 
-:global(body.high-contrast) .paragraphs p {
-  color: #000 !important;
-}
-
-:global(body.high-contrast) .quote,
-:global(body.high-contrast) blockquote.quote {
+:global(body.high-contrast) .manifestoBox {
   background: #fff !important;
   border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .manifestoText,
+:global(body.high-contrast) .manifestoBrand {
   color: #000 !important;
 }
 
-:global(body.high-contrast) .quote p,
-:global(body.high-contrast) .quote * {
-  color: #000 !important;
+:global(body.high-contrast) .artworkCard,
+:global(body.high-contrast) .media {
+  border: 2px solid #000 !important;
+  background: #fff !important;
 }
 
-:global(body.high-contrast) .quote svg,
-:global(body.high-contrast) .quote svg * {
+:global(body.high-contrast) .artworkImage {
+  filter: grayscale(1) !important;
+}
+
+:global(body.high-contrast) .imageBadge {
+  background: #fff !important;
   color: #000 !important;
-  fill: none !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .badgeIcon {
+  color: #000 !important;
   stroke: #000 !important;
 }
 
-:global(body.high-contrast) .stepContent,
-:global(body.high-contrast) .stepContent span {
+:global(body.high-contrast) .artCardFooter {
+  background: #fff !important;
+  border-top: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .artFooterValue,
+:global(body.high-contrast) .artFooterLabel {
   color: #000 !important;
 }
 
-:global(body.high-contrast) .icon,
-:global(body.high-contrast) .step .icon,
-:global(body.high-contrast) .step:nth-child(n) .icon,
-:global(body.high-contrast) .step:nth-child(3) .icon,
-:global(body.high-contrast) .step:nth-child(4) .icon {
+:global(body.high-contrast) .artFooterDivider {
+  background: #000 !important;
+}
+
+:global(body.high-contrast) .pillarCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .pillarIconDisc {
   background: #000 !important;
   color: #fff !important;
   border: 2px solid #000 !important;
 }
 
-:global(body.high-contrast) .icon svg,
-:global(body.high-contrast) .icon svg *,
-:global(body.high-contrast) .step .icon svg,
-:global(body.high-contrast) .step .icon svg *,
-:global(body.high-contrast) .step:nth-child(n) .icon svg,
-:global(body.high-contrast) .step:nth-child(n) .icon svg * {
-  color: #fff !important;
+:global(body.high-contrast) .pillarIconDisc svg,
+:global(body.high-contrast) .pillarIconDisc svg * {
   stroke: #fff !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .pillarTitle,
+:global(body.high-contrast) .pillarText {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .philosophyBanner {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .quoteIconWrapper {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .quoteIconWrapper svg,
+:global(body.high-contrast) .quoteIconWrapper svg * {
+  stroke: #fff !important;
+  color: #fff !important;
   fill: none !important;
 }
 
-:global(body.high-contrast) .arrow,
-:global(body.high-contrast) .arrow svg,
-:global(body.high-contrast) .arrowItem svg {
+:global(body.high-contrast) .philosophySubtitle,
+:global(body.high-contrast) .philosophyQuote {
   color: #000 !important;
-  stroke: #000 !important;
 }
 
-:global(body.high-contrast) .media {
-  border-color: #000 !important;
+:global(body.high-contrast) .flowSection {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .flowSubtitle,
+:global(body.high-contrast) .flowTitle {
+  color: #000 !important;
+}
+
+:global(body.high-contrast) .flowCard {
+  background: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .flowStepNum {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+:global(body.high-contrast) .flowIconContainer {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .flowIconContainer svg,
+:global(body.high-contrast) .flowIconContainer svg * {
+  stroke: #fff !important;
+  color: #fff !important;
+  fill: none !important;
+}
+
+:global(body.high-contrast) .flowStepLabel,
+:global(body.high-contrast) .flowStepDesc {
+  color: #000 !important;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -352,8 +683,11 @@
   background: #000 !important;
 }
 
-:global(body.inverted-contrast) .label {
+:global(body.inverted-contrast) .eyebrowBadge,
+:global(body.inverted-contrast) .sinceBadge {
+  background: #000 !important;
   color: #fff !important;
+  border: 2px solid #fff !important;
 }
 
 :global(body.inverted-contrast) .title,
@@ -363,61 +697,129 @@
   -webkit-text-stroke: 0 !important;
 }
 
-:global(body.inverted-contrast) .paragraphs p {
-  color: #fff !important;
-}
-
-:global(body.inverted-contrast) .quote,
-:global(body.inverted-contrast) blockquote.quote {
+:global(body.inverted-contrast) .manifestoBox {
   background: #000 !important;
   border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .manifestoText,
+:global(body.inverted-contrast) .manifestoBrand {
   color: #fff !important;
 }
 
-:global(body.inverted-contrast) .quote p,
-:global(body.inverted-contrast) .quote * {
-  color: #fff !important;
+:global(body.inverted-contrast) .artworkCard,
+:global(body.inverted-contrast) .media {
+  border: 2px solid #fff !important;
+  background: #000 !important;
 }
 
-:global(body.inverted-contrast) .quote svg,
-:global(body.inverted-contrast) .quote svg * {
+:global(body.inverted-contrast) .artworkImage {
+  filter: grayscale(1) !important;
+}
+
+:global(body.inverted-contrast) .imageBadge {
+  background: #000 !important;
   color: #fff !important;
-  fill: none !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .badgeIcon {
+  color: #fff !important;
   stroke: #fff !important;
 }
 
-:global(body.inverted-contrast) .stepContent,
-:global(body.inverted-contrast) .stepContent span {
+:global(body.inverted-contrast) .artCardFooter {
+  background: #000 !important;
+  border-top: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .artFooterValue,
+:global(body.inverted-contrast) .artFooterLabel {
   color: #fff !important;
 }
 
-:global(body.inverted-contrast) .icon,
-:global(body.inverted-contrast) .step .icon,
-:global(body.inverted-contrast) .step:nth-child(n) .icon,
-:global(body.inverted-contrast) .step:nth-child(3) .icon,
-:global(body.inverted-contrast) .step:nth-child(4) .icon {
+:global(body.inverted-contrast) .artFooterDivider {
+  background: #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .pillarIconDisc {
   background: #fff !important;
   color: #000 !important;
+  border: 2px solid #fff !important;
 }
 
-:global(body.inverted-contrast) .icon svg,
-:global(body.inverted-contrast) .icon svg *,
-:global(body.inverted-contrast) .step .icon svg,
-:global(body.inverted-contrast) .step .icon svg *,
-:global(body.inverted-contrast) .step:nth-child(n) .icon svg,
-:global(body.inverted-contrast) .step:nth-child(n) .icon svg * {
-  color: #000 !important;
+:global(body.inverted-contrast) .pillarIconDisc svg,
+:global(body.inverted-contrast) .pillarIconDisc svg * {
   stroke: #000 !important;
+  color: #000 !important;
+}
+
+:global(body.inverted-contrast) .pillarTitle,
+:global(body.inverted-contrast) .pillarText {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .philosophyBanner {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .quoteIconWrapper {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .quoteIconWrapper svg,
+:global(body.inverted-contrast) .quoteIconWrapper svg * {
+  stroke: #000 !important;
+  color: #000 !important;
   fill: none !important;
 }
 
-:global(body.inverted-contrast) .arrow,
-:global(body.inverted-contrast) .arrow svg,
-:global(body.inverted-contrast) .arrowItem svg {
+:global(body.inverted-contrast) .philosophySubtitle,
+:global(body.inverted-contrast) .philosophyQuote {
   color: #fff !important;
-  stroke: #fff !important;
 }
 
-:global(body.inverted-contrast) .media {
-  border-color: #fff !important;
+:global(body.inverted-contrast) .flowSection {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .flowSubtitle,
+:global(body.inverted-contrast) .flowTitle {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .flowCard {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .flowStepNum {
+  color: #fff !important;
+}
+
+:global(body.inverted-contrast) .flowIconContainer {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+:global(body.inverted-contrast) .flowIconContainer svg,
+:global(body.inverted-contrast) .flowIconContainer svg * {
+  stroke: #000 !important;
+  color: #000 !important;
+  fill: none !important;
+}
+
+:global(body.inverted-contrast) .flowStepLabel,
+:global(body.inverted-contrast) .flowStepDesc {
+  color: #fff !important;
 }
