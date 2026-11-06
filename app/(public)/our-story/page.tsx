@@ -5,11 +5,10 @@ import { ArrowRight, Brain, Eye, Flag, HandHeart, Heart, Lock, School, UserRound
 import { BrushStroke } from "@/components/ui/brush-stroke"
 import { AnimatedBrushQuote } from "./AnimatedBrushQuote"
 import { CircularTestimonials } from "@/components/shared/testimonials/circular-testimonials"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
-export const metadata: Metadata = {
-  title: "Our Story: Why We Were Founded | deessa Foundation",
-  description:
-    "Every movement begins with a story. Ours began with two little girls, Deetya and Marissa, whose journeys inspired deessa Foundation's mission of inclusion for children with disabilities across Nepal.",
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/our-story")
 }
 
 const challengeCards = [

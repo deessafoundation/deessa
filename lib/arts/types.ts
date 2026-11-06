@@ -45,6 +45,7 @@ export const ARTWORK_COLUMNS =
   "id, title, artist_credit, description, alt_text, local_image_path, storage_path, width, height, display_order, is_published, is_featured, source_filename, created_at, updated_at"
 
 export function artworkStorageUrl(path: string): string {
+  if (path.startsWith("http://") || path.startsWith("https://")) return path
   const base = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "")
   const encoded = path.split("/").map(encodeURIComponent).join("/")
   return `${base}/storage/v1/object/public/${ARTWORKS_BUCKET}/${encoded}`

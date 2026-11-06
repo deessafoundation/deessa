@@ -1,0 +1,233 @@
+/* =====================================================
+   INCLUSION MANIFESTO BANNER
+   ===================================================== */
+.manifestoSection {
+  background-color: #f8f6f1;
+  color: #1a1a2e;
+}
+
+.glowLeft {
+  background-color: rgba(41, 182, 200, 0.08);
+}
+
+.glowRight {
+  background-color: rgba(111, 62, 150, 0.07);
+}
+
+.badge {
+  background-color: rgba(41, 182, 200, 0.12);
+  color: #0b5f8a;
+  border: 1px solid rgba(41, 182, 200, 0.25);
+}
+
+.badgeIcon {
+  color: #0e7c8c;
+}
+
+.heading {
+  color: #1a1a2e;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.headingAccent {
+  color: #0b5f8a;
+}
+
+.dividerLine {
+  background-color: rgba(148, 183, 198, 0.4);
+}
+
+.dividerDot {
+  background-color: #29b6c8;
+}
+
+.journeyTrack {
+  color: #475569;
+}
+
+.journeyStep {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.stepSky {
+  color: #0b5f8a;
+  border-color: rgba(41, 182, 200, 0.3);
+}
+
+.stepMint {
+  color: #0f6e56;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stepPurple {
+  color: #6F3E96;
+  border-color: rgba(111, 62, 150, 0.3);
+}
+
+.journeyArrow {
+  color: #94a3b8;
+  font-weight: bold;
+}
+
+.bodyText {
+  color: #475569;
+}
+
+.conclusionText {
+  color: #334155;
+}
+
+.highlightText {
+  color: #0b5f8a;
+  font-weight: 700;
+}
+
+.belongText {
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+/* ── High Contrast Mode ── */
+:global(body.high-contrast) .manifestoSection {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+:global(body.high-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.high-contrast) .badge {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .badgeIcon,
+:global(body.high-contrast) .badgeIcon * {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+:global(body.high-contrast) .heading,
+:global(body.high-contrast) .headingAccent,
+:global(body.high-contrast) .bodyText,
+:global(body.high-contrast) .conclusionText,
+:global(body.high-contrast) .highlightText,
+:global(body.high-contrast) .belongText,
+:global(body.high-contrast) .journeyTrack,
+:global(body.high-contrast) .journeyArrow {
+  color: #000000 !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.high-contrast) .headingAccent {
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .dividerLine,
+:global(body.high-contrast) .dividerDot {
+  background-color: #000000 !important;
+}
+
+:global(body.high-contrast) .journeyStep {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .highlightText,
+:global(body.high-contrast) .belongText {
+  text-decoration: underline !important;
+}
+
+/* ── Inverted Contrast Mode ── */
+:global(body.inverted-contrast) .manifestoSection {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .decor {
+  display: none !important;
+}
+
+:global(body.inverted-contrast) .badge {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .badgeIcon,
+:global(body.inverted-contrast) .badgeIcon * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .heading,
+:global(body.inverted-contrast) .headingAccent,
+:global(body.inverted-contrast) .bodyText,
+:global(body.inverted-contrast) .conclusionText,
+:global(body.inverted-contrast) .highlightText,
+:global(body.inverted-contrast) .belongText,
+:global(body.inverted-contrast) .journeyTrack,
+:global(body.inverted-contrast) .journeyArrow {
+  color: #ffffff !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .headingAccent {
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .dividerLine,
+:global(body.inverted-contrast) .dividerDot {
+  background-color: #ffffff !important;
+}
+
+:global(body.inverted-contrast) .journeyStep {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .highlightText,
+:global(body.inverted-contrast) .belongText {
+  text-decoration: underline !important;
+}
+
+/* ── Forced Colours (Windows High Contrast) ── */
+@media (forced-colors: active) {
+  .badge {
+    border: 1.5px solid ButtonText;
+  }
+  .journeyStep {
+    border: 1.5px solid CanvasText;
+  }
+  .dividerLine,
+  .dividerDot {
+    background-color: CanvasText;
+  }
+  .headingAccent {
+    text-decoration: underline;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  .manifestoSection {
+    background: transparent !important;
+    color: #000 !important;
+    break-inside: avoid;
+  }
+  .decor {
+    display: none !important;
+  }
+}

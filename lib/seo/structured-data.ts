@@ -136,7 +136,8 @@ export function getOrganizationStructuredData(): WithContext<Organization> {
     alternateName: 'deessa Foundation',
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.png`,
-    description: 'A non-profit organization dedicated to sustainable development, quality education, and social upliftment for the most vulnerable in Nepal, with a special focus on children with disabilities and autism.',
+    description:
+      'A non-profit organization dedicated to autism support, neurodiversity acceptance, and inclusive education for autistic children and their families across Nepal.',
     foundingDate: '2022',
     address: {
       '@type': 'PostalAddress',
@@ -169,7 +170,8 @@ export function getWebSiteStructuredData(): WithContext<WebSite> {
     '@type': 'WebSite',
     name: ORGANIZATION_NAME,
     url: SITE_URL,
-    description: 'Empowering Nepal through education, healthcare, and social development programs.',
+    description:
+      'Empowering autistic children and their families in Nepal through education, advocacy, and community support.',
     publisher: {
       '@type': 'Organization',
       name: ORGANIZATION_NAME,

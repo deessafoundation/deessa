@@ -2,26 +2,15 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { getPublishedStories, getFeaturedStory } from "@/lib/data/stories"
 import { StoriesSections } from "./StoriesSections"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Impact Stories - Real Stories of Change in Nepal",
-  description: "Read inspiring stories of impact and transformation from our community. Discover how deessa Foundation is changing lives across Nepal through education, healthcare, and empowerment.",
-  path: "/stories",
-  keywords: [
-    "Nepal impact stories",
-    "success stories",
-    "community transformation",
-    "education impact",
-    "autism stories Nepal",
-    "social change Nepal",
-    "real impact",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/stories")
+}
 
 function formatStoryDate(story: { published_at?: string | null; created_at?: string | null }) {
   const rawDate = story.published_at || story.created_at

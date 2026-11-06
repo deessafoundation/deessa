@@ -10,23 +10,13 @@ import type { SVGProps } from "react"
 import styles from "@/components/facebook-posts/community-section.module.css"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Community Moments | deessa Foundation",
-  description: "Stories, celebrations, and everyday moments from the deessa community. See how we're making an impact through connection, learning, and support.",
-  path: "/community",
-  keywords: [
-    "deessa community",
-    "Nepal community stories",
-    "autism community Nepal",
-    "special education stories",
-    "community impact",
-    "social development stories",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/community")
+}
 
 // Lucide no longer ships brand icons; keep these decorative marks local.
 function Facebook(props: SVGProps<SVGSVGElement>) {

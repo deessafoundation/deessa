@@ -3,11 +3,10 @@ import { AboutHero } from "@/components/about/about-hero"
 import { AboutSections } from "./AboutSections"
 import { getPublicAboutPageSettings } from "@/lib/data/about-settings"
 import { getAboutTeamMembers } from "@/lib/data/about-team"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo } = await getPublicAboutPageSettings()
-  return generateSEOMetadata({ ...seo, path: "/about", image: seo.image || undefined, imageAlt: seo.imageAlt || undefined })
+  return getPageMetadata("/about")
 }
 
 export default async function AboutPage() {

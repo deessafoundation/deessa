@@ -3,7 +3,7 @@
   
 # deessa Foundation
   
-  **Empowering Nepal Through Sustainable Development**
+  **Empowering Autistic Children & Families in Nepal**
   
   [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
   [![Supabase](https://img.shields.io/badge/Supabase-2.0-green?style=flat&logo=supabase)](https://supabase.com/)
@@ -15,7 +15,7 @@
   
   ---
   
-  deessa Foundation is a non-profit organization dedicated to sustainable development, quality education, and social upliftment for the most vulnerable communities in Nepal.
+  deessa Foundation is a non-profit organization dedicated to autism support, neurodiversity acceptance, and inclusive education for autistic children and their families across Nepal.
   
   [Features](#features) • [Tech Stack](#tech-stack) • [Getting Started](#getting-started) • [Development Workflow](#-development-workflow) • [Contributing](#contributing) • [License](#license)
   
@@ -23,20 +23,18 @@
 
 ## 🌟 About
 
-Founded in 2022, deessa Foundation works to bridge the gap between potential and opportunity in Nepal's most remote communities. We focus on holistic community development through:
+Founded in 2022, deessa Foundation works to promote the rights, acceptance, and inclusion of children with disabilities, with a particular focus on autism and neurodivergent conditions across Nepal. We focus on:
 
-- **Education:** Building schools and providing educational resources
-- **Healthcare:** Delivering medical supplies and health camps
-- **Women's Empowerment:** Creating sustainable livelihoods through skill development
-- **Disaster Relief:** Emergency response and reconstruction efforts
-
-Our approach is community-driven, ensuring sustainable change that comes from within.
+- **Awareness & Community Engagement:** Breaking stigma, challenging myths, and fostering neurodiversity acceptance
+- **Training:** Equipping parents, teachers, and caregivers with practical skills for early intervention and support
+- **Accessible Resources:** Providing practical guides and toolkits for families and educators
+- **Advocacy:** Pushing for inclusive education policies that make inclusion a right, not a privilege
 
 ## 🎯 Mission & Vision
 
-**Mission:** To empower marginalized communities through sustainable education, health, and livelihood initiatives, ensuring every voice is heard.
+**Mission:** To promote the rights, acceptance, and inclusion of children with disabilities, with a particular focus on autism and neurodivergent conditions, through awareness, advocacy, education, and accessible support.
 
-**Vision:** A self-reliant Nepal where every individual, regardless of background, has the opportunity to live with dignity, hope, and prosperity.
+**Vision:** A Nepal where every child, regardless of neurodiversity or disability, is accepted, valued, and empowered to reach their full potential with dignity.
 
 ## ✨ Features
 

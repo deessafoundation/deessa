@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useMemo } from "react"
+import Link from "next/link"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +27,12 @@ import {
   Award,
   SlidersHorizontal,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Compass,
+  ExternalLink,
+  ArrowRight,
+  Info,
+  Users
 } from "lucide-react"
 import type { HomepageSettings } from "@/lib/types/homepage-settings"
 import type { HomeHeroSettings } from "@/lib/data/site-settings"
@@ -67,7 +73,7 @@ interface HomepageManagerClientProps {
   userId: string
 }
 
-type CategoryId = "showcase" | "content" | "social" | "engagement"
+type CategoryId = "live" | "overview" | "secondary"
 
 interface SubTab {
   id: string
@@ -107,7 +113,7 @@ export default function HomepageManagerClient({
   const [hasChanges, setHasChanges] = useState(false)
 
   // Navigation state: Category + Active Tab
-  const [activeCategory, setActiveCategory] = useState<CategoryId>("showcase")
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("live")
   const [activeTab, setActiveTab] = useState<string>("hero-carousel")
   const [searchQuery, setSearchQuery] = useState<string>("")
 
@@ -115,72 +121,89 @@ export default function HomepageManagerClient({
   const categories: CategoryConfig[] = useMemo(
     () => [
       {
-        id: "showcase",
-        label: "Hero & Showcase",
+        id: "live",
+        label: "Live Homepage Content",
         icon: Sparkles,
-        description: "Homepage hero carousel, banner media, and initial CTA entry points",
+        description: "Core sections currently rendered live on the public homepage & search engines",
         tabs: [
           {
             id: "hero-carousel",
             label: "Hero Carousel",
             shortLabel: "Carousel",
             icon: ImageIcon,
-            description: "High-impact visual slides with dual-device image support",
+            description: "High-impact visual banner slides with dual-device responsive image support",
             badge: heroCarousel.slides?.length ? `${heroCarousel.slides.length} slides` : undefined,
           },
-          {
-            id: "hero",
-            label: "Classic Hero",
-            shortLabel: "Hero Text",
-            icon: Sparkles,
-            description: "Title, subtitle, and badge headline configuration",
-          },
-          {
-            id: "hero-ctas",
-            label: "Hero Action Buttons",
-            shortLabel: "Hero CTAs",
-            icon: Target,
-            description: "Direct action buttons overlaid on the hero banner",
-            badge: settings.heroCTAs?.ctas?.length ? `${settings.heroCTAs.ctas.length}` : undefined,
-          },
-          {
-            id: "marquee",
-            label: "Partner Marquee",
-            shortLabel: "Marquee",
-            icon: SlidersHorizontal,
-            description: "Auto-scrolling institutional alliance logo strip",
-            badge: settings.marquee?.enabled ? "Active" : "Off",
-          },
-        ],
-      },
-      {
-        id: "content",
-        label: "Core Foundation",
-        icon: BookOpen,
-        description: "Foundational narrative, operational pillars, core programs, and milestones",
-        tabs: [
           {
             id: "story",
             label: "Our Story",
             shortLabel: "Our Story",
             icon: BookOpen,
-            description: "Narrative on how deessa Foundation started",
-            badge: story.paragraphs?.length ? `${story.paragraphs.length} paragraphs` : undefined,
+            description: "Founding journey of twin daughters Deetya & Marissa that started deessa Foundation",
+            badge: story.paragraphs?.length ? `${story.paragraphs.length} paras` : undefined,
           },
           {
             id: "what-we-do",
-            label: "What We Do",
+            label: "What We Do (4 Pillars)",
             shortLabel: "Pillars",
             icon: Target,
-            description: "Four core impact pillars with stats and themes",
+            description: "Four impact pillars: Awareness & Engagement, Training, Resources, and Advocacy",
             badge: whatWeDo.pillars?.length ? `${whatWeDo.pillars.length} pillars` : undefined,
           },
           {
-            id: "programs",
-            label: "Core Programs",
-            shortLabel: "Programs",
+            id: "testimonials",
+            label: "Global Voices (Testimonials)",
+            shortLabel: "Testimonials",
+            icon: MessageSquare,
+            description: "Video testimonials and reflections on inclusion and acceptance",
+            badge: testimonials.testimonials?.length ? `${testimonials.testimonials.length} quotes` : undefined,
+          },
+          {
+            id: "seo",
+            label: "Google Search & SEO",
+            shortLabel: "Google & SEO",
+            icon: Search,
+            description: "Meta title, Google SERP snippet description, keywords, and OpenGraph social preview",
+            badge: "Live SERP",
+          },
+        ],
+      },
+      {
+        id: "overview",
+        label: "Sections Map & Guide",
+        icon: Compass,
+        description: "Visual roadmap of all 10 live homepage sections and quick links to connected managers",
+        tabs: [
+          {
+            id: "overview",
+            label: "All 10 Homepage Sections",
+            shortLabel: "Sections Map",
             icon: Layers,
-            description: "Featured program highlights with key metric bullets",
+            description: "Interactive directory of every live homepage section and where its content is managed",
+            badge: "10 Sections",
+          },
+        ],
+      },
+      {
+        id: "secondary",
+        label: "Impact Page & Secondary Content",
+        icon: Settings,
+        description: "Settings for /impact page (Stats, Programs) and legacy homepage archive modules",
+        tabs: [
+          {
+            id: "stats",
+            label: "Impact Stats (Used on /impact)",
+            shortLabel: "Impact Stats",
+            icon: BarChart3,
+            description: "Numerical metrics displaying lives touched and communities served on /impact",
+            badge: settings.stats?.stats?.length ? `${settings.stats.stats.length} stats` : undefined,
+          },
+          {
+            id: "programs",
+            label: "Core Programs (Used on /impact)",
+            shortLabel: "Impact Programs",
+            icon: Layers,
+            description: "Featured program highlight blocks displayed on the /impact page",
             badge: settings.programs?.programs?.length ? `${settings.programs.programs.length}` : undefined,
           },
           {
@@ -191,83 +214,69 @@ export default function HomepageManagerClient({
             description: "Historical chronology of growth and field milestones",
             badge: timeline.milestones?.length ? `${timeline.milestones.length}` : undefined,
           },
-        ],
-      },
-      {
-        id: "social",
-        label: "Social Proof",
-        icon: Award,
-        description: "Impact metrics, beneficiary quotes, community stories, and credibility badges",
-        tabs: [
           {
-            id: "stats",
-            label: "Impact Stats",
-            shortLabel: "Stats",
-            icon: BarChart3,
-            description: "Numerical metrics displaying lives touched and communities served",
-            badge: settings.stats?.stats?.length ? `${settings.stats.stats.length} stats` : undefined,
+            id: "marquee",
+            label: "Partner Marquee (Legacy)",
+            shortLabel: "Marquee",
+            icon: SlidersHorizontal,
+            description: "Legacy partner logo strip (public homepage now uses dynamic Partners table)",
+            badge: "Legacy",
           },
           {
-            id: "testimonials",
-            label: "Testimonials",
-            shortLabel: "Quotes",
-            icon: MessageSquare,
-            description: "Voices from partners, educators, and beneficiary families",
-            badge: testimonials.testimonials?.length ? `${testimonials.testimonials.length}` : undefined,
+            id: "hero",
+            label: "Classic Hero Text (Legacy)",
+            shortLabel: "Classic Hero",
+            icon: Sparkles,
+            description: "Static headline text replaced by the interactive Carousel",
+            badge: "Legacy",
           },
           {
-            id: "stories",
-            label: "Featured Stories",
-            shortLabel: "Stories",
-            icon: Star,
-            description: "Editorial rules for highlighting changemaker stories",
-            badge: settings.featuredStoriesRules?.mode === "manual" ? "Manual" : "Auto",
+            id: "hero-ctas",
+            label: "Hero Action Buttons (Legacy)",
+            shortLabel: "Hero CTAs",
+            icon: Target,
+            description: "Overlay action buttons replaced by Carousel slide buttons",
+            badge: "Legacy",
           },
-          {
-            id: "trust",
-            label: "Trust Badges",
-            shortLabel: "Trust",
-            icon: Shield,
-            description: "Verification seals, legal registration, and transparency signals",
-            badge: settings.trustIndicators?.indicators?.length ? `${settings.trustIndicators.indicators.length}` : undefined,
-          },
-        ],
-      },
-      {
-        id: "engagement",
-        label: "Engagement & Global",
-        icon: Settings,
-        description: "Conversion cards, quote banners, search metadata, and runtime switches",
-        tabs: [
           {
             id: "cta-cards",
-            label: "Get Involved Cards",
+            label: "Get Involved Cards (Legacy)",
             shortLabel: "CTA Cards",
             icon: CreditCard,
             description: "Action pathway cards (Volunteer, Partner, Donate)",
-            badge: settings.ctaCards?.cards?.length ? `${settings.ctaCards.cards.length}` : undefined,
+            badge: "Legacy",
           },
           {
             id: "banners",
-            label: "Quote Banners",
+            label: "Quote Banners (Legacy)",
             shortLabel: "Banners",
             icon: Palette,
-            description: "Brush-stroke statement blocks across the homepage",
-            badge: settings.banners?.banners?.length ? `${settings.banners.banners.length}` : undefined,
+            description: "Brush-stroke statement blocks across early homepage designs",
+            badge: "Legacy",
           },
           {
-            id: "seo",
-            label: "SEO Metadata",
-            shortLabel: "SEO",
-            icon: Search,
-            description: "Page titles, descriptions, and OpenGraph social tags",
+            id: "trust",
+            label: "Trust Badges (Legacy)",
+            shortLabel: "Trust",
+            icon: Shield,
+            description: "Verification seals, legal registration, and transparency signals",
+            badge: "Legacy",
+          },
+          {
+            id: "stories",
+            label: "Featured Stories (Legacy)",
+            shortLabel: "Stories",
+            icon: Star,
+            description: "Editorial rules for highlighting changemaker stories",
+            badge: "Legacy",
           },
           {
             id: "flags",
-            label: "Feature Flags",
+            label: "Feature Flags (Legacy)",
             shortLabel: "Flags",
             icon: Settings,
-            description: "Granular toggles to enable or hide homepage modules",
+            description: "Granular toggles from earlier experimental homepage modules",
+            badge: "Legacy",
           },
         ],
       },
@@ -668,6 +677,11 @@ export default function HomepageManagerClient({
       {/* ─── Main Content Canvas ─── */}
       <div className="bg-card rounded-2xl border border-border/80 shadow-sm p-4 sm:p-6 lg:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
+          {/* HOMEPAGE SECTIONS ROADMAP */}
+          <TabsContent value="overview" className="mt-0 focus-visible:outline-none">
+            <HomepageSectionsHub onSelectTab={selectTab} />
+          </TabsContent>
+
           {/* HERO & SHOWCASE */}
           <TabsContent value="hero-carousel" className="mt-0 focus-visible:outline-none">
             <HeroCarouselManager heroCarousel={heroCarousel} onChange={updateHeroCarousel} />
@@ -791,6 +805,241 @@ export default function HomepageManagerClient({
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+interface HomepageSectionsHubProps {
+  onSelectTab: (tabId: string) => void
+}
+
+function HomepageSectionsHub({ onSelectTab }: HomepageSectionsHubProps) {
+  const sections = [
+    {
+      num: "01",
+      title: "Hero Banner Carousel",
+      location: "Top of Page",
+      status: "Managed in this CMS",
+      statusColor: "emerald" as const,
+      description: "Full-width rotating banners with dual-device responsive images, autism inclusion headlines, and call-to-action buttons.",
+      actionLabel: "Edit Carousel Slides",
+      tabId: "hero-carousel",
+      icon: ImageIcon,
+    },
+    {
+      num: "02",
+      title: "Institutional Partners Strip",
+      location: "Below Hero",
+      status: "Managed in Partners DB",
+      statusColor: "blue" as const,
+      description: "Auto-scrolling logo strip of partner organizations, inclusive schools, and community health allies.",
+      actionLabel: "Open Partners Manager",
+      href: "/admin/partners",
+      icon: Users,
+    },
+    {
+      num: "03",
+      title: "Our Story: How deessa Started",
+      location: "Section 3",
+      status: "Managed in this CMS",
+      statusColor: "emerald" as const,
+      description: "The founding origin narrative of twin daughters born with clubfoot and autism, inspiring the creation of deessa Foundation.",
+      actionLabel: "Edit Our Story",
+      tabId: "story",
+      icon: BookOpen,
+    },
+    {
+      num: "04",
+      title: "Mission, Vision & Objectives",
+      location: "Section 4",
+      status: "Core Foundation Charter",
+      statusColor: "purple" as const,
+      description: "Permanent foundation statements: acceptance for all, embracing neurodiversity, fundamental rights, and community empowerment.",
+      actionLabel: "Foundation Charter",
+      icon: Target,
+    },
+    {
+      num: "05",
+      title: "What We Do: 4 Impact Pillars",
+      location: "Section 5",
+      status: "Managed in this CMS",
+      statusColor: "emerald" as const,
+      description: "The four operational pillars: Awareness & Community Engagement, Training, Accessible Resources, and Policy Advocacy.",
+      actionLabel: "Edit Impact Pillars",
+      tabId: "what-we-do",
+      icon: Target,
+    },
+    {
+      num: "06",
+      title: "Autism Art Showcase Feature",
+      location: "Section 6",
+      status: "Managed in Artworks CMS",
+      statusColor: "blue" as const,
+      description: "Curated gallery highlight of creative expressions made by autistic children and youth.",
+      actionLabel: "Open Artworks Manager",
+      href: "/admin/artworks",
+      icon: Palette,
+    },
+    {
+      num: "07",
+      title: "Living With Autism Podcast Studio",
+      location: "Section 7",
+      status: "Podcast Media",
+      statusColor: "amber" as const,
+      description: "Podcast series hosted by Sarita & Merina, exploring real lived experiences, diagnosis stories, and neurodivergent voices.",
+      actionLabel: "Open Site Settings",
+      href: "/admin/settings",
+      icon: Sparkles,
+    },
+    {
+      num: "08",
+      title: "Global Voices (Video Testimonials)",
+      location: "Section 8",
+      status: "Managed in this CMS",
+      statusColor: "emerald" as const,
+      description: "Video testimonials and reflections from educators, international advocates (Soyun Kim, Chris Liu, Blair Chen, Marcus Brand), and parents.",
+      actionLabel: "Edit Testimonials",
+      tabId: "testimonials",
+      icon: MessageSquare,
+    },
+    {
+      num: "09",
+      title: "Community Social Feed",
+      location: "Section 9",
+      status: "Managed in Facebook Feed CMS",
+      statusColor: "blue" as const,
+      description: "Real-time curated feed of Facebook posts, awareness events, workshops, and family gatherings.",
+      actionLabel: "Curate Community Posts",
+      href: "/admin/facebook-posts",
+      icon: Award,
+    },
+    {
+      num: "10",
+      title: "Contact & Headquarters Office",
+      location: "Section 10",
+      status: "Managed in Settings",
+      statusColor: "slate" as const,
+      description: "Kathmandu office contact details, phone number (+977-9841026085), official inquiry email, and visit information.",
+      actionLabel: "Edit Organization Info",
+      href: "/admin/settings",
+      icon: Settings,
+    },
+    {
+      num: "SEO",
+      title: "Google Search SERP & Social Sharing",
+      location: "Meta Tags / SEO",
+      status: "Managed in this CMS",
+      statusColor: "emerald" as const,
+      description: "Directly controls what Google displays in search results (title, snippet description) and Facebook/Twitter OpenGraph cards.",
+      actionLabel: "Edit Google Search Snippet",
+      tabId: "seo",
+      icon: Search,
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      {/* Intro Banner */}
+      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+        <div className="flex items-start gap-3.5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Compass className="h-5 w-5" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-foreground">
+              Homepage Layout Architecture & Management Hub
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              The public homepage at <span className="font-semibold text-foreground">deessafoundation.com</span> is composed of 10 modular sections plus Google Search metadata.
+              Sections labeled <span className="font-semibold text-emerald-600 dark:text-emerald-400">Managed in this CMS</span> can be edited right here.
+              For sections connected to other databases (Partners, Artworks, Community Posts), use the 1-click links below.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid of Sections */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sections.map((section) => {
+          const Icon = section.icon
+          return (
+            <div
+              key={section.num}
+              className="flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 hover:border-primary/40 hover:shadow-sm transition-all"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted text-[11px] font-mono font-bold text-muted-foreground">
+                      {section.num}
+                    </span>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {section.location}
+                    </span>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "text-[10px] py-0 px-2 font-medium",
+                      section.statusColor === "emerald" && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800",
+                      section.statusColor === "blue" && "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800",
+                      section.statusColor === "purple" && "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-800",
+                      section.statusColor === "amber" && "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800",
+                      section.statusColor === "slate" && "bg-muted text-muted-foreground border-border"
+                    )}
+                  >
+                    {section.status}
+                  </Badge>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-muted text-primary shrink-0 mt-0.5">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground">
+                      {section.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                      {section.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 mt-3 border-t border-border/60">
+                {section.tabId ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onSelectTab(section.tabId!)}
+                    className="w-full text-xs h-8 flex items-center justify-between"
+                  >
+                    <span>{section.actionLabel}</span>
+                    <ArrowRight className="h-3.5 w-3.5 ml-1 text-muted-foreground" />
+                  </Button>
+                ) : section.href ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="w-full text-xs h-8 flex items-center justify-between"
+                  >
+                    <Link href={section.href}>
+                      <span>{section.actionLabel}</span>
+                      <ExternalLink className="h-3.5 w-3.5 ml-1 text-muted-foreground" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <div className="text-[11px] text-muted-foreground text-center py-1">
+                    Charter statement is maintained in source code
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

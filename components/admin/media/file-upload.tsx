@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   UploadCloud,
-  X,
   Loader2,
   ExternalLink,
   Image as ImageIcon,
@@ -15,6 +14,9 @@ import {
   Trash2,
   RefreshCw,
   CheckCircle2,
+  Copy,
+  Check,
+  Link2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { isSafeMediaUrl } from "@/lib/media-validation"
@@ -51,9 +53,11 @@ export function FileUpload({
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [preview, setPreview] = useState(currentUrl || "")
+  const [previewError, setPreviewError] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [useUrl, setUseUrl] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [copied, setCopied] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const busy = useRef(false)
 
@@ -61,8 +65,15 @@ export function FileUpload({
   const sessionUploadsRef = useRef<string[]>([])
 
   useEffect(() => {
-    if (!busy.current) setPreview(currentUrl || "")
+    if (!busy.current) {
+      setPreview(currentUrl || "")
+      setPreviewError(false)
+    }
   }, [currentUrl])
+
+  useEffect(() => {
+    setPreviewError(false)
+  }, [preview])
 
   function reportError(message: string | null) {
     setError(message)
@@ -187,15 +198,32 @@ export function FileUpload({
     if (valid) onUpload(value)
   }
 
-  const isImage = accept.includes("image")
-  const isVideo = accept.includes("video")
+  function copyToClipboard() {
+    if (!preview) return
+    navigator.clipboard.writeText(preview).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {})
+  }
+
+  const isVideo = accept.includes("video") || /\.(mp4|webm|mov|mkv)$/i.test(preview)
+  const isImage = !isVideo && (accept.includes("image") || /\.(jpe?g|png|webp|svg|gif|avif)$/i.test(preview) || !preview.includes("."))
   const validPreview = isSafeMediaUrl(preview)
+
+  const fileName = preview ? preview.split("/").pop()?.split("?")[0] || "media-file" : ""
+  const extension = fileName.includes(".") ? fileName.split(".").pop()?.toUpperCase() : ""
+
+  const fileTypesText = accept.includes("video")
+    ? "MP4, WebM"
+    : accept.includes("image")
+    ? "SVG, PNG, JPG, or WebP"
+    : "Supported media files"
 
   return (
     <div className={cn("space-y-3", className)}>
       {/* Header Label and Mode Switcher */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Label htmlFor={`${id}-file`} className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+        <Label htmlFor={`${id}-file`} className="text-sm font-medium text-foreground flex items-center gap-1.5">
           {label}
         </Label>
         {allowUrl && (
@@ -207,15 +235,28 @@ export function FileUpload({
             disabled={disabled || uploading}
             onClick={() => setUseUrl(!useUrl)}
           >
-            <ExternalLink className="size-3.5" aria-hidden="true" />
-            {useUrl ? "Upload File instead" : "Use Direct URL"}
+            {useUrl ? (
+              <>
+                <UploadCloud className="size-3.5" aria-hidden="true" />
+                Upload File instead
+              </>
+            ) : (
+              <>
+                <Link2 className="size-3.5" aria-hidden="true" />
+                Use Direct URL
+              </>
+            )}
           </Button>
         )}
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div id={`${id}-error`} role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center justify-between gap-2">
+        <div
+          id={`${id}-error`}
+          role="alert"
+          className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center justify-between gap-2"
+        >
           <span>{error}</span>
           <Button
             type="button"
@@ -232,75 +273,22 @@ export function FileUpload({
         </div>
       )}
 
-      {/* Manual URL Input */}
+      {/* Upload Dropzone OR Direct URL Input */}
       {useUrl ? (
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Input
             id={`${id}-url`}
             type="text"
             value={preview}
             disabled={disabled || uploading}
-            placeholder="https://... or /photos/member.jpg"
+            placeholder="https://example.org/images/photo.png or /photos/cover.jpg"
             onChange={(e) => handleUrlChange(e.target.value)}
-            className="min-h-10 text-xs font-mono"
+            className="h-10 text-sm font-mono"
             maxLength={2048}
           />
-          <p className="text-[11px] text-muted-foreground">Paste a direct image or video URL to use as reference.</p>
-        </div>
-      ) : validPreview && preview ? (
-        /* Active File Preview Card */
-        <div className="overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-4 shadow-xs transition-all">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-            {/* Thumbnail */}
-            <div className="relative size-20 sm:size-24 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-muted">
-              {isImage && (
-                <img src={preview} alt="Upload preview" className="h-full w-full object-cover" />
-              )}
-              {isVideo && (
-                <video src={preview} className="h-full w-full object-cover" muted />
-              )}
-              <span className="absolute bottom-1 right-1 rounded-md bg-black/70 p-1 text-white shadow-2xs">
-                {isImage ? <ImageIcon className="size-3" /> : <Film className="size-3" />}
-              </span>
-            </div>
-
-            {/* Information & Controls */}
-            <div className="min-w-0 flex-1 space-y-1.5">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
-                <span className="text-xs font-semibold text-foreground truncate">
-                  Image Ready
-                </span>
-              </div>
-              <p className="text-[11px] font-mono text-muted-foreground truncate" title={preview}>
-                {preview.split("/").pop() || "media-file"}
-              </p>
-              <div className="flex items-center gap-2 pt-1 flex-wrap">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={disabled || uploading}
-                  onClick={() => fileInputRef.current?.click()}
-                  className="h-8 text-xs font-medium gap-1.5 rounded-lg border-border hover:bg-muted"
-                >
-                  <RefreshCw className="size-3.5" />
-                  Replace Photo
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  disabled={disabled || uploading}
-                  onClick={handleRemove}
-                  className="h-8 text-xs font-medium text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5 rounded-lg"
-                >
-                  <Trash2 className="size-3.5" />
-                  Remove
-                </Button>
-              </div>
-            </div>
-          </div>
+          <p className="text-xs text-muted-foreground">
+            Paste a direct HTTPS image or video URL to use as reference.
+          </p>
         </div>
       ) : (
         /* Interactive Drag & Drop Upload Zone */
@@ -317,9 +305,10 @@ export function FileUpload({
           }}
           tabIndex={disabled || uploading ? -1 : 0}
           role="button"
-          aria-label={`Upload photo for ${label}`}
+          aria-label={`Upload media for ${label}`}
           className={cn(
-            "group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center transition-all duration-200 cursor-pointer outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20",
+            "group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed text-center transition-all duration-200 cursor-pointer outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20",
+            preview && validPreview ? "p-4 sm:p-5" : "p-6 sm:p-8",
             isDragging
               ? "border-primary bg-primary/10 ring-4 ring-primary/20 scale-[1.01]"
               : "border-border/80 bg-muted/20 hover:border-primary/60 hover:bg-muted/40",
@@ -333,14 +322,14 @@ export function FileUpload({
                 <Loader2 className="size-6 animate-spin" />
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-semibold text-foreground">
+                <p className="text-xs sm:text-sm font-semibold text-foreground">
                   Uploading to secure storage...
                 </p>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   Optimizing and linking to {bucket}
                 </p>
               </div>
-              <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
+              <div className="w-48 sm:w-56 h-1.5 bg-muted rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-300"
                   style={{ width: `${uploadProgress || 60}%` }}
@@ -350,20 +339,142 @@ export function FileUpload({
           ) : (
             /* Default Dropzone Prompt */
             <>
-              <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-200">
-                <UploadCloud className="size-6" />
+              <div className="mb-2.5 flex size-11 sm:size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-xs group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-200">
+                <UploadCloud className="size-5 sm:size-6" />
               </div>
               <div className="space-y-1">
                 <p className="text-xs sm:text-sm font-semibold text-foreground">
-                  Drag and drop photo here, or{" "}
-                  <span className="text-primary underline underline-offset-2">browse files</span>
+                  {preview && validPreview ? (
+                    <>
+                      Drag and drop to <span className="text-primary underline underline-offset-2">replace file</span>, or browse
+                    </>
+                  ) : (
+                    <>
+                      Drag and drop file here, or{" "}
+                      <span className="text-primary underline underline-offset-2">browse files</span>
+                    </>
+                  )}
                 </p>
-                <p className="text-[11px] text-muted-foreground">
-                  Supports JPG, PNG, WebP up to {maxSizeMB} MB
+                <p className="text-xs text-muted-foreground">
+                  Supports {fileTypesText} up to {maxSizeMB} MB
                 </p>
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {/* Live Preview Box Below (Just like in Event Partners tab) */}
+      {preview && validPreview && (
+        <div className="rounded-xl border border-border/80 bg-muted/20 p-3 sm:p-3.5 shadow-2xs transition-all">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Left: Thumbnail & Meta */}
+            <div className="flex items-center gap-3 min-w-0">
+              {/* Thumbnail with neutral checkerboard background */}
+              <div className="relative flex h-14 w-20 sm:h-16 sm:w-24 shrink-0 items-center justify-center rounded-lg border border-border/80 bg-neutral-100 dark:bg-neutral-800 p-1 overflow-hidden shadow-2xs">
+                {isImage && !previewError && (
+                  <img
+                    src={preview}
+                    alt="File preview"
+                    className="h-full w-full object-contain"
+                    onError={() => setPreviewError(true)}
+                  />
+                )}
+                {isVideo && !previewError && (
+                  <video
+                    src={preview}
+                    className="h-full w-full object-cover"
+                    muted
+                    preload="metadata"
+                    onError={() => setPreviewError(true)}
+                  />
+                )}
+                {previewError && (
+                  <div className="flex flex-col items-center justify-center text-muted-foreground p-1 text-center">
+                    <ImageIcon className="size-4 opacity-50 mb-0.5" />
+                    <span className="text-[9px]">Preview error</span>
+                  </div>
+                )}
+                <span className="absolute bottom-1 right-1 rounded-md bg-black/75 p-1 text-white shadow-2xs">
+                  {isVideo ? <Film className="size-3" /> : <ImageIcon className="size-3" />}
+                </span>
+              </div>
+
+              {/* Information */}
+              <div className="space-y-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
+                  <span className="text-xs font-semibold text-foreground">
+                    {isVideo ? "Video Ready" : "File Ready"}
+                  </span>
+                  {extension && (
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono font-medium text-muted-foreground uppercase">
+                      {extension}
+                    </span>
+                  )}
+                </div>
+                <span
+                  className="text-xs font-mono text-muted-foreground truncate block max-w-[200px] sm:max-w-[280px] md:max-w-[380px]"
+                  title={preview}
+                >
+                  {fileName}
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground gap-1.5"
+                onClick={copyToClipboard}
+                title="Copy media URL to clipboard"
+              >
+                {copied ? <Check className="size-3.5 text-emerald-500" /> : <Copy className="size-3.5" />}
+                <span className="hidden sm:inline">{copied ? "Copied" : "Copy URL"}</span>
+              </Button>
+
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => window.open(preview, "_blank", "noopener,noreferrer")}
+                title="Open original media in new tab"
+                aria-label="Open original media in new tab"
+              >
+                <ExternalLink className="size-3.5" />
+              </Button>
+
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="h-8 px-2.5 text-xs font-medium gap-1 text-muted-foreground hover:text-foreground"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={disabled || uploading}
+                title="Replace file"
+              >
+                <RefreshCw className="size-3" />
+                <span className="hidden sm:inline">Replace</span>
+              </Button>
+
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="h-8 px-2.5 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive gap-1"
+                onClick={handleRemove}
+                disabled={disabled || uploading}
+                title="Remove file"
+              >
+                <Trash2 className="size-3.5" />
+                <span>Remove</span>
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 

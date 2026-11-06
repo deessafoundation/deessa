@@ -203,10 +203,44 @@ export async function createArtwork(form: FormData): Promise<ActionResult<Artwor
   if (!fields) return { ok: false, error: "Please fix the highlighted fields.", fieldErrors }
 
   const file = getFile(form)
-  if (!file) return { ok: false, error: "Choose an image to upload.", fieldErrors: { image: "An image is required." } }
+  const imageUrl = text(form, "image_url")
+  if (!file && !imageUrl) {
+    return { ok: false, error: "Choose an image to upload or select from media.", fieldErrors: { image: "An image is required." } }
+  }
 
-  const { image, error: uploadError } = await uploadImage(file)
-  if (!image) return { ok: false, error: uploadError!, fieldErrors: { image: uploadError! } }
+  let storagePath: string | null = null
+  let localPath: string | null = null
+  let width = 800
+  let height = 600
+  let sourceFilename = "artwork-image"
+  let uploadedImage: UploadedImage | null = null
+
+  if (file) {
+    const { image, error: uploadError } = await uploadImage(file)
+    if (!image) return { ok: false, error: uploadError!, fieldErrors: { image: uploadError! } }
+    uploadedImage = image
+    storagePath = image.storagePath
+    width = image.width
+    height = image.height
+    sourceFilename = image.filename
+  } else if (imageUrl) {
+    width = Number(form.get("width")) || 800
+    height = Number(form.get("height")) || 600
+    const customFilename = text(form, "filename")
+    if (customFilename) sourceFilename = customFilename
+
+    if (imageUrl.includes(`${ARTWORKS_BUCKET}/`)) {
+      const parts = imageUrl.split(`${ARTWORKS_BUCKET}/`)
+      storagePath = parts[1] || null
+    } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      storagePath = imageUrl
+    } else {
+      localPath = imageUrl
+    }
+  }
+
+  const isPublished = form.get("is_published") === "true"
+  const isFeatured = form.get("is_featured") === "true"
 
   const supabase = createServiceRoleClient()
   const { data: last } = await supabase
@@ -220,24 +254,26 @@ export async function createArtwork(form: FormData): Promise<ActionResult<Artwor
     .from("artworks")
     .insert({
       ...fields,
-      storage_path: image.storagePath,
-      width: image.width,
-      height: image.height,
-      source_filename: image.filename,
+      storage_path: storagePath,
+      local_image_path: localPath,
+      width,
+      height,
+      source_filename: sourceFilename,
       display_order: (last?.display_order ?? 0) + 1,
-      // New works start as drafts; publishing is a deliberate second step.
-      is_published: false,
-      is_featured: false,
+      is_published: isPublished,
+      is_featured: isFeatured,
     })
     .select(ARTWORK_COLUMNS)
     .single()
 
   if (error || !data) {
-    await supabase.storage.from(ARTWORKS_BUCKET).remove([image.storagePath])
+    if (uploadedImage) await supabase.storage.from(ARTWORKS_BUCKET).remove([uploadedImage.storagePath])
     return { ok: false, error: error?.message ?? "Could not save the artwork." }
   }
 
-  await recordMediaAsset(image, fields.alt_text, admin.id)
+  if (uploadedImage) {
+    await recordMediaAsset(uploadedImage, fields.alt_text, admin.id)
+  }
   await logActivity(admin.id, "create", data.id, { title: fields.title })
   revalidateArt()
   return { ok: true, data: data as ArtworkRow }
@@ -261,7 +297,9 @@ export async function updateArtwork(id: string, form: FormData): Promise<ActionR
 
   const update: Record<string, unknown> = { ...fields }
   const file = getFile(form)
+  const imageUrl = text(form, "image_url")
   let uploaded: UploadedImage | undefined
+
   if (file) {
     const { image, error: uploadError } = await uploadImage(file)
     if (!image) return { ok: false, error: uploadError!, fieldErrors: { image: uploadError! } }
@@ -273,6 +311,34 @@ export async function updateArtwork(id: string, form: FormData): Promise<ActionR
       height: image.height,
       source_filename: image.filename,
     })
+  } else if (imageUrl) {
+    let storagePath: string | null = null
+    let localPath: string | null = null
+    if (imageUrl.includes(`${ARTWORKS_BUCKET}/`)) {
+      const parts = imageUrl.split(`${ARTWORKS_BUCKET}/`)
+      storagePath = parts[1] || null
+    } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      storagePath = imageUrl
+    } else {
+      localPath = imageUrl
+    }
+    const width = Number(form.get("width")) || 800
+    const height = Number(form.get("height")) || 600
+    Object.assign(update, {
+      storage_path: storagePath,
+      local_image_path: localPath,
+      width,
+      height,
+    })
+  }
+
+  const isPublishedStr = form.get("is_published")
+  if (isPublishedStr !== null) {
+    update.is_published = isPublishedStr === "true"
+  }
+  const isFeaturedStr = form.get("is_featured")
+  if (isFeaturedStr !== null) {
+    update.is_featured = isFeaturedStr === "true"
   }
 
   const { data, error } = await supabase.from("artworks").update(update).eq("id", id).select(ARTWORK_COLUMNS).single()
@@ -285,7 +351,7 @@ export async function updateArtwork(id: string, form: FormData): Promise<ActionR
     await recordMediaAsset(uploaded, fields.alt_text, admin.id)
     await removeStorageIfUnused(existing.storage_path)
   }
-  await logActivity(admin.id, "update", id, { title: fields.title, replacedImage: Boolean(uploaded) })
+  await logActivity(admin.id, "update", id, { title: fields.title, replacedImage: Boolean(uploaded || imageUrl) })
   revalidateArt()
   return { ok: true, data: data as ArtworkRow }
 }

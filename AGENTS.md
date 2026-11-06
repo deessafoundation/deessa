@@ -23,11 +23,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - For structural changes, review tracked and untracked Git files together. Preserve behavior, directives, exports, types, CSS selectors, runtime keys, and URLs; update all required module/reference paths and check exact filename casing and target collisions.
 - Verification is opt-in: do not run Prettier, ESLint, typecheck, or the test suites unless explicitly asked in the request. Just report which commands exist if asked.
 
-## Accessibility (mandatory for all UI work)
+## Accessibility (mandatory for public UI work; flexible for admin pages)
 
-> **Before writing or editing any UI code — especially anything under `app/(public)/` or `components/` — you MUST read `docs/in-progress/accessibility-feature/STANDARDS.md` in full.**
+- **Admin Pages (`app/admin/`, `components/admin/`)**: You do **NOT** need to follow `docs/in-progress/accessibility-feature/STANDARDS.md`. Focus entirely on delivering the best possible UI, UX, mobile responsiveness, productivity, intuitive workflows, visual polish, and layout ergonomics.
+- **Public-Facing Pages (`app/(public)/`, public components)**: You MUST strictly adhere to `docs/in-progress/accessibility-feature/STANDARDS.md` in full.
 
-Key rules derived from that document:
+Key rules for public-facing UI derived from that document:
 
 - **High-contrast / inverted-contrast modes** are implemented via `body.high-contrast` and `body.inverted-contrast` class selectors scoped inside CSS Modules (never in `globals.css` unless adding a new global pattern).
 - **Never use inline Tailwind `bg-[#…]` or `text-[#…]` arbitrary-value classes on `<button>` or `<a>` elements** (or on any ancestor that contains them). These strings match `[class*="bg-[#"] button/a` and `[class*="text-[#"]` selectors in `app/globals.css` and will override all colors with `#000`/`#fff` in high-contrast mode, making text invisible. Move per-component colors into a co-located `*.module.css` file instead.

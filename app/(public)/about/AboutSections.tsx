@@ -352,6 +352,7 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
               <div className={introStyles.flowSection}>
                 <div className={introStyles.flowHeader}>
                   <span className={introStyles.flowSubtitle}>Our Guiding Pathway</span>
+                  <span className={introStyles.flowSeparator} aria-hidden="true">·</span>
                   <h3 className={introStyles.flowTitle}>How Inclusion Comes to Life</h3>
                 </div>
                 <ol className={introStyles.flowGrid}>
@@ -362,9 +363,11 @@ export function AboutSections({ teamMembers = [], intro, howWeDoIt, settings = D
                     const desc = stepDescriptions[stepKey] || "Creating environments where every child can grow and thrive."
                     return (
                       <li key={index} className={introStyles.flowCard}>
-                        <span className={introStyles.flowStepNum}>0{index + 1}</span>
-                        <div className={introStyles.flowIconContainer} data-tone={appearance.tone}>
-                          <Icon size={24} aria-hidden="true" />
+                        <div className={introStyles.flowCardHeader}>
+                          <div className={introStyles.flowIconContainer} data-tone={appearance.tone}>
+                            <Icon size={15} aria-hidden="true" />
+                          </div>
+                          <span className={introStyles.flowStepNum}>0{index + 1}</span>
                         </div>
                         <h4 className={introStyles.flowStepLabel}>{step}</h4>
                         <p className={introStyles.flowStepDesc}>{desc}</p>

@@ -20,13 +20,14 @@ import {
   getHomepageWhatWeDo,
   getHomepageHeroCarousel,
   getHomepageTestimonials,
+  getHomepageSEO,
 } from "@/lib/data/homepage-settings"
 import { getArtsContent, getHomepageArtworks } from "@/lib/data/artworks"
 import { HomeArtFeature } from "@/components/arts/home-art-feature"
 import { CommunitySection } from "@/components/facebook-posts/community-section"
 import { getHomepageFacebookPosts } from "@/lib/data/facebook-posts"
 import { PartnersDisplay, PartnersDisplaySkeleton } from "@/components/shared/partners-display"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
 // Homepage content comes from the shared CMS. Always render it from the
 // current database value so admin updates appear on both localhost and live.
@@ -34,23 +35,9 @@ export const dynamic = "force-dynamic"
 
 /* ──────────────────  METADATA  ────────────────── */
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "deessa Foundation - Empowering Nepal Through Education & Social Development",
-  description: "A non-profit organization dedicated to sustainable development, quality education, healthcare, and social upliftment for vulnerable communities in Nepal. Focused on autism support and disability rights.",
-  path: "/",
-  keywords: [
-    "Nepal NGO",
-    "autism support Nepal",
-    "education Nepal",
-    "disability rights",
-    "child development",
-    "sustainable development Nepal",
-    "social welfare",
-    "special education",
-    "inclusive education",
-    "community empowerment Nepal",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/")
+}
 
 /* ──────────────────  PAGE  ────────────────── */
 

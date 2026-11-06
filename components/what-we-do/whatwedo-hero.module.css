@@ -21,6 +21,36 @@
 .headingAccent { color: #147fad; }
 .underline { color: #efbf39; }
 .description { color: #405868; }
+
+/* Vision text and accent */
+.visionLead {
+  color: #314d5e;
+}
+
+.visionHighlight {
+  color: #0b5f8a;
+  font-weight: 700;
+}
+
+/* Action callout container */
+.actionCallout {
+  border-left-color: #29b6c8;
+  background: rgba(41, 182, 200, 0.08);
+}
+
+.actionText {
+  color: #385161;
+}
+
+.keywordHighlight {
+  color: #0b5f8a;
+  font-weight: 700;
+}
+
+.partnerEmphasis {
+  color: #172733;
+  font-weight: 700;
+}
 .primaryBtn { background: #0b5f8a; color: #fff; border-color: #0b5f8a; box-shadow: 0 8px 20px -12px #0b5f8a; }
 .primaryBtn:hover { background: #094e72; }
 .secondaryBtn { background: transparent; color: #0b5f8a; border-color: #94b7c6; }
@@ -59,8 +89,23 @@
 :global(body.high-contrast) .eyebrow,
 :global(body.high-contrast) .heading,
 :global(body.high-contrast) .headingAccent,
-:global(body.high-contrast) .description {
+:global(body.high-contrast) .description,
+:global(body.high-contrast) .visionLead,
+:global(body.high-contrast) .visionHighlight,
+:global(body.high-contrast) .actionText,
+:global(body.high-contrast) .keywordHighlight,
+:global(body.high-contrast) .partnerEmphasis {
   color: #000 !important;
+}
+
+:global(body.high-contrast) .visionHighlight,
+:global(body.high-contrast) .keywordHighlight {
+  text-decoration: underline !important;
+}
+
+:global(body.high-contrast) .actionCallout {
+  border-left-color: #000 !important;
+  background: transparent !important;
 }
 
 :global(body.high-contrast) .heading {
@@ -135,9 +180,24 @@
 :global(body.inverted-contrast) .eyebrow,
 :global(body.inverted-contrast) .heading,
 :global(body.inverted-contrast) .headingAccent,
-:global(body.inverted-contrast) .description {
+:global(body.inverted-contrast) .description,
+:global(body.inverted-contrast) .visionLead,
+:global(body.inverted-contrast) .visionHighlight,
+:global(body.inverted-contrast) .actionText,
+:global(body.inverted-contrast) .keywordHighlight,
+:global(body.inverted-contrast) .partnerEmphasis {
   color: #fff !important;
   -webkit-text-stroke: 0 !important;
+}
+
+:global(body.inverted-contrast) .visionHighlight,
+:global(body.inverted-contrast) .keywordHighlight {
+  text-decoration: underline !important;
+}
+
+:global(body.inverted-contrast) .actionCallout {
+  border-left-color: #fff !important;
+  background: transparent !important;
 }
 
 :global(body.inverted-contrast) .headingAccent {
@@ -203,6 +263,10 @@
 
   .headingAccent {
     text-decoration: underline;
+  }
+
+  .actionCallout {
+    border-left-color: ButtonText;
   }
 }
 

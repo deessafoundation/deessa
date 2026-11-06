@@ -54,7 +54,7 @@ export const DEFAULT_WHAT_WE_DO_SETTINGS = {
   hero: {
     breadcrumb: "Programs", eyebrow: "MAKING A DIFFERENCE ACROSS NEPAL",
     headingStart: "Programs", headingEmphasis: "That", headingEnd: "Change", headingAccent: "Lives.",
-    description: "From classrooms in Karnali to clinics in the Terai, our work brings sustainable education, healthcare, and empowerment reaching Nepal's most remote communities.",
+    description: "We work to build a society where children with disabilities, particularly those with autism and other neurodivergent conditions, are understood, accepted, and included. Through awareness, capacity building, accessible resources, and advocacy, we work alongside families, educators, professionals, and communities to make inclusion a reality.",
     primaryLabel: "Explore Programs", primaryHref: "#programs", secondaryLabel: "Donate to a Program", secondaryHref: "/donate",
     photos: [
       { src: "/WhatWeDo/community_learning.jpg", alt: "Two women reviewing notes together during an inclusive education workshop." },

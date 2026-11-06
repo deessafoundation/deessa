@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 import { getArtsContent, getPublishedArtworks } from "@/lib/data/artworks"
 import { ArtsGallery } from "@/components/arts/arts-gallery"
 import { ArtsHero } from "@/components/arts/arts-hero"
@@ -19,15 +19,9 @@ import styles from "@/components/arts/arts.module.css"
 // publishing, ordering and edits appear immediately (matches the homepage).
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Art & Expression",
-  description:
-    "Discover a growing collection of art by children and artists in the deessa community, celebrating creativity, inclusion, and individual expression.",
-  path: "/arts",
-  image: "/artWork/art_pic2.jpeg",
-  imageAlt: "A wall covered with children's paintings and drawings",
-  keywords: ["children's art", "community art", "art gallery", "creative expression", "deessa Foundation"],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/arts")
+}
 
 // Same pill as the homepage "Explore Art" button.
 const pillButton = cn(

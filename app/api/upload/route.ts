@@ -7,6 +7,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB default
 // limit to allow high-resolution (1920px+) photos.
 const MAX_FILE_SIZE_BY_FOLDER: Record<string, number> = {
   'homepage-hero': 5 * 1024 * 1024, // 5MB
+  'homepage-story': 5 * 1024 * 1024, // 5MB
 }
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
@@ -17,7 +18,9 @@ const BUCKET_CONFIG: Record<string, string> = {
   testimonials: 'testimonials',
   'support-screenshots': 'support-screenshots',
   'homepage-hero': 'hero-images',
-  media: 'support-screenshots', // Temporarily using support-screenshots bucket
+  'homepage-story': 'hero-images',
+  'site-assets': 'site-assets',
+  media: 'hero-images',
 }
 
 export async function POST(request: NextRequest) {
