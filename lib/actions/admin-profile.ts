@@ -41,6 +41,7 @@ export async function updateProfile(formData: FormData) {
   })
 
   revalidatePath("/admin/profile")
+  revalidatePath("/admin", "layout")
   revalidatePath("/admin")
   return { success: true }
 }

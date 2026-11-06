@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, LogOut, User, ExternalLink, ChevronRight } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { AdminUser } from "@/lib/types/admin"
 import { adminLogout } from "@/lib/actions/admin-auth"
 import { adminNavSections, canAccessAdminNavItem } from "@/components/admin/layout/admin-nav-config"
@@ -140,9 +141,18 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
           {/* User Footer Profile & Mobile Actions */}
           <div className="shrink-0 mt-auto border-t border-border p-4 bg-muted/30 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2">
             <div className="flex items-center gap-3 rounded-xl bg-card border border-border/80 p-2.5 shadow-2xs">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground flex-shrink-0">
-                {adminUser.full_name?.charAt(0) || "A"}
-              </div>
+              <Avatar className="h-8 w-8 shrink-0">
+                {adminUser.avatar_url && (
+                  <AvatarImage
+                    src={adminUser.avatar_url}
+                    alt={adminUser.full_name || "Admin"}
+                    className="object-cover"
+                  />
+                )}
+                <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
+                  {adminUser.full_name?.charAt(0) || "A"}
+                </AvatarFallback>
+              </Avatar>
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-semibold text-foreground truncate">{adminUser.full_name}</p>
                 <p className="text-[10px] text-muted-foreground capitalize truncate">{adminUser.role.replace("_", " ")}</p>
@@ -204,16 +214,39 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full" aria-label="User account menu">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                {adminUser.full_name.charAt(0)}
-              </div>
+              <Avatar className="h-8 w-8">
+                {adminUser.avatar_url && (
+                  <AvatarImage
+                    src={adminUser.avatar_url}
+                    alt={adminUser.full_name || "Admin"}
+                    className="object-cover"
+                  />
+                )}
+                <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
+                  {adminUser.full_name?.charAt(0) || "A"}
+                </AvatarFallback>
+              </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">{adminUser.full_name}</p>
-                <p className="text-xs text-muted-foreground">{adminUser.email}</p>
+              <div className="flex items-center gap-2.5 py-0.5">
+                <Avatar className="h-8 w-8 shrink-0">
+                  {adminUser.avatar_url && (
+                    <AvatarImage
+                      src={adminUser.avatar_url}
+                      alt={adminUser.full_name || "Admin"}
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
+                    {adminUser.full_name?.charAt(0) || "A"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col space-y-0.5 min-w-0">
+                  <p className="text-sm font-medium leading-none truncate">{adminUser.full_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{adminUser.email}</p>
+                </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
