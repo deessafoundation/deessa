@@ -71,5 +71,6 @@ export const teamInputSchema = z.object({
   phone: z.string().max(100),
   is_published: z.boolean(),
   is_featured: z.boolean().default(false),
+  sort_order: z.coerce.number().int().min(0).optional(),
   social_links: z.object(Object.fromEntries(TEAM_SOCIAL_FIELDS.map(key => [key, socialUrl])) as Record<typeof TEAM_SOCIAL_FIELDS[number], typeof socialUrl>),
 })

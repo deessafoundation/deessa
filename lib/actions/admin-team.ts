@@ -14,11 +14,13 @@ async function teamAdmin() {
 }
 
 function teamValues(formData: FormData) {
+  const sortOrderRaw = formData.get("sort_order")
   const parsed = teamInputSchema.safeParse({
     ...Object.fromEntries(["name", "role", "bio", "image", "email", "phone"].map(key => [key, formData.get(key) ?? ""])),
     tier: formData.get("tier") || "vision",
     is_published: formData.get("isPublished") === "true",
     is_featured: formData.get("isFeatured") === "true",
+    sort_order: sortOrderRaw !== null && sortOrderRaw !== "" ? Number(sortOrderRaw) : undefined,
     social_links: Object.fromEntries(TEAM_SOCIAL_FIELDS.map(key => [key, formData.get(key) ?? ""])),
   })
   if (!parsed.success) return { error: parsed.error.issues[0].message } as const
@@ -78,11 +80,17 @@ export async function createTeamMember(formData: FormData) {
   const values = teamValues(formData)
   if ("error" in values) return values
   const supabase = await createClient()
-  const { data: maxOrder, error: orderError } = await supabase.from("team_members")
-    .select("sort_order").order("sort_order", { ascending: false }).limit(1).maybeSingle()
-  if (orderError) return teamFailure(orderError, "create")
+
+  let assignedOrder = values.data.sort_order
+  if (assignedOrder === undefined || assignedOrder === null || isNaN(assignedOrder)) {
+    const { data: maxOrder, error: orderError } = await supabase.from("team_members")
+      .select("sort_order").order("sort_order", { ascending: false }).limit(1).maybeSingle()
+    if (orderError) return teamFailure(orderError, "create")
+    assignedOrder = (maxOrder?.sort_order ?? -1) + 1
+  }
+
   const { data, error } = await supabase.from("team_members")
-    .insert({ ...values.data, sort_order: (maxOrder?.sort_order ?? -1) + 1 }).select().single()
+    .insert({ ...values.data, sort_order: assignedOrder }).select().single()
   // Never silently drop social links when migration 060 is missing.
   if (error) return teamFailure(error, "create")
   const warning = await finishTeamChange(supabase, { user_id: admin.id, action: "CREATE", entity_type: "team_member", entity_id: data.id, new_data: { name: values.data.name, role: values.data.role } })
