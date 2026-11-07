@@ -234,10 +234,10 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+        <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Basic Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Event Title *</Label>
             <Input
@@ -290,10 +290,10 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
         {/* Schedule & Location — 2/3 width */}
         <div className="lg:col-span-2">
           <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Schedule & Location</CardTitle>
+            <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Schedule & Location</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Start Date & Time *</Label>
@@ -330,13 +330,13 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
         {/* Settings — 1/3 width */}
         <div>
           <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Settings</CardTitle>
+            <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Settings</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <Label htmlFor="category" className="shrink-0">Category</Label>
-                <div className="w-[160px]">
+            <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                <Label htmlFor="category" className="shrink-0 text-sm">Category</Label>
+                <div className="w-full sm:w-[160px]">
                   <FancySelect
                     name="category"
                     defaultValue={event.category}
@@ -352,8 +352,8 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <Label htmlFor="is_free">Free Event</Label>
                   <p className="text-xs text-muted-foreground">
                     {isFree
@@ -365,6 +365,7 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                   id="is_free"
                   checked={isFree}
                   onCheckedChange={setIsFree}
+                  className="shrink-0"
                 />
               </div>
 
@@ -398,28 +399,28 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
       {/* Payment Methods Section — only shown when event is paid */}
       {!isFree && (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
               <QrCode className="size-5 text-muted-foreground" />
               Payment Methods
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
             <p className="text-xs text-muted-foreground">
               Choose which payment methods registrants can use. At least one must be enabled.
             </p>
 
             {/* Online Payment Toggle */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
+            <div className="flex items-center justify-between rounded-lg border p-3.5 sm:p-4 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-100">
                   <svg className="size-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
                   </svg>
                 </div>
-                <div>
-                  <Label className="font-semibold">Online Payment</Label>
-                  <p className="text-xs text-muted-foreground">
+                <div className="min-w-0">
+                  <Label className="font-semibold text-sm">Online Payment</Label>
+                  <p className="text-xs text-muted-foreground truncate">
                     Stripe, Khalti, eSewa — instant payment verification
                   </p>
                 </div>
@@ -427,18 +428,19 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
               <Switch
                 checked={allowOnlinePayment}
                 onCheckedChange={setAllowOnlinePayment}
+                className="shrink-0"
               />
             </div>
 
             {/* QR Code Payment Toggle */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-amber-100">
+            <div className="flex items-center justify-between rounded-lg border p-3.5 sm:p-4 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-amber-100">
                   <QrCode className="size-5 text-amber-600" />
                 </div>
-                <div>
-                  <Label className="font-semibold">QR Code Payment</Label>
-                  <p className="text-xs text-muted-foreground">
+                <div className="min-w-0">
+                  <Label className="font-semibold text-sm">QR Code Payment</Label>
+                  <p className="text-xs text-muted-foreground truncate">
                     User scans QR, uploads screenshot — admin verifies manually
                   </p>
                 </div>
@@ -446,20 +448,21 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
               <Switch
                 checked={allowQrPayment}
                 onCheckedChange={setAllowQrPayment}
+                className="shrink-0"
               />
             </div>
 
             {/* Pay at Venue Toggle */}
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-green-100">
+            <div className="flex items-center justify-between rounded-lg border p-3.5 sm:p-4 gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-green-100">
                   <svg className="size-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div>
-                  <Label className="font-semibold">Pay at Venue</Label>
-                  <p className="text-xs text-muted-foreground">
+                <div className="min-w-0">
+                  <Label className="font-semibold text-sm">Pay at Venue</Label>
+                  <p className="text-xs text-muted-foreground truncate">
                     User registers now, pays cash/card at the check-in desk
                   </p>
                 </div>
@@ -467,12 +470,13 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
               <Switch
                 checked={allowPayAtVenue}
                 onCheckedChange={setAllowPayAtVenue}
+                className="shrink-0"
               />
             </div>
 
             {/* QR Code Settings — only shown when QR is enabled */}
             {allowQrPayment && (
-              <div className="space-y-4 rounded-lg border border-amber-200 bg-amber-50/50 p-4 mt-2">
+              <div className="space-y-4 rounded-lg border border-amber-200 bg-amber-50/50 p-3.5 sm:p-4 mt-2">
                 <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider">QR Code Settings</p>
 
                 {/* QR Code Image Upload */}
@@ -481,8 +485,8 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                   {qrImageUrl ? (
                     <div className="space-y-3">
                       <div className="relative group inline-block rounded-xl overflow-hidden border border-border">
-                        <img src={qrImageUrl} alt="QR Code" className="h-48 w-48 object-contain bg-white" />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                        <img src={qrImageUrl} alt="QR Code" className="h-44 w-44 sm:h-48 sm:w-48 object-contain bg-white" />
+                        <div className="hidden sm:flex absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                           <button
                             type="button"
                             onClick={() => {
@@ -510,6 +514,40 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                           </button>
                         </div>
                       </div>
+
+                      {/* Mobile action bar for QR code */}
+                      <div className="flex sm:hidden items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const input = document.createElement("input")
+                            input.type = "file"
+                            input.accept = "image/*"
+                            input.onchange = (e) => {
+                              const file = (e.target as HTMLInputElement).files?.[0]
+                              if (file) handleQrFileUpload(file)
+                            }
+                            input.click()
+                          }}
+                          className="h-8 text-xs flex-1"
+                        >
+                          <Upload className="size-3.5 mr-1.5" />
+                          Replace Image
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={handleRemoveQr}
+                          className="h-8 text-xs"
+                        >
+                          <X className="size-3.5 mr-1.5" />
+                          Remove
+                        </Button>
+                      </div>
+
                       <div className="flex items-center gap-2">
                         <Input
                           value={qrImageUrl}
@@ -530,7 +568,7 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                   ) : (
                     <div className="space-y-3">
                       <div
-                        className="border-2 border-dashed rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
+                        className="border-2 border-dashed rounded-xl p-5 sm:p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
                         onDrop={handleQrDrop}
                         onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
                         onClick={() => qrInputRef.current?.click()}
@@ -543,9 +581,9 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                           className="hidden"
                         />
                         {uploadingQr ? (
-                          <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary mb-3" />
+                          <Loader2 className="mx-auto h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary mb-2 sm:mb-3" />
                         ) : (
-                          <QrCode className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                          <QrCode className="mx-auto h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-2 sm:mb-3" />
                         )}
                         <p className="text-sm font-medium text-foreground">
                           {uploadingQr ? "Uploading..." : "Click to upload or drag & drop"}
@@ -611,9 +649,9 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
                 </div>
 
                 {/* Bank Transfer Details */}
-                <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+                <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50/50 p-3.5 sm:p-4">
                   <div className="flex items-center gap-2">
-                    <svg className="size-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <svg className="size-4 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
                     </svg>
                     <p className="text-xs font-semibold text-blue-800 uppercase tracking-wider">Bank Transfer Details (Optional)</p>
@@ -662,7 +700,7 @@ export function EventDetailsForm({ event, onSave }: EventDetailsFormProps) {
       )}
 
       {/* Save Button */}
-      <Button type="submit" size="lg" disabled={isLoading} className="w-full">
+      <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11 text-base font-semibold">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Save Changes
       </Button>

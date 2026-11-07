@@ -103,18 +103,18 @@ const SAMPLE_DATA: Record<string, string> = {
 function VariablesCard() {
   return (
     <Card className="mt-4">
-      <CardHeader>
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
           <Info className="h-4 w-4" />
           Available Variables
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 sm:p-6 pt-0">
         <div className="grid gap-2 sm:grid-cols-2">
           {AVAILABLE_VARIABLES.map((v) => (
-            <div key={v.token} className="flex items-center gap-2 text-sm">
-              <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">{v.token}</code>
-              <span className="text-muted-foreground">{v.description}</span>
+            <div key={v.token} className="flex flex-wrap sm:flex-nowrap items-baseline sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+              <code className="px-1.5 py-0.5 bg-muted rounded text-[11px] sm:text-xs font-mono shrink-0 select-all">{v.token}</code>
+              <span className="text-muted-foreground text-xs leading-normal">{v.description}</span>
             </div>
           ))}
         </div>
@@ -149,12 +149,12 @@ function InlinePreview({ subject, bodyHtml, eventTitle, eventDate, eventLocation
 
   return (
     <div className="space-y-3">
-      <div className="rounded-lg bg-muted px-3 py-2 text-sm">
+      <div className="rounded-lg bg-muted px-3 py-2 text-xs sm:text-sm break-words">
         <span className="text-muted-foreground">Subject: </span>
-        <span className="font-medium">{interpolatedSubject}</span>
+        <span className="font-medium text-foreground">{interpolatedSubject}</span>
       </div>
-      <div className="rounded-lg border overflow-hidden">
-        <iframe ref={setIframeRef} title="Email Preview" className="w-full h-[550px]" sandbox="allow-same-origin" />
+      <div className="rounded-xl border overflow-hidden bg-white">
+        <iframe ref={setIframeRef} title="Email Preview" className="w-full h-[320px] sm:h-[550px] border-0" sandbox="allow-same-origin" />
       </div>
       <p className="text-xs text-muted-foreground">
         Preview uses your actual event title, date, and location. Other fields use sample data.
@@ -297,7 +297,7 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">Email Templates</h2>
           <p className="text-sm text-muted-foreground">
@@ -306,7 +306,7 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
           </p>
         </div>
         {hasMissingDefaults && (
-          <Button variant="outline" size="sm" onClick={handleSeedMissing} disabled={isSeeding}>
+          <Button variant="outline" size="sm" onClick={handleSeedMissing} disabled={isSeeding} className="w-full sm:w-auto">
             {isSeeding ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
             Add Missing Defaults
           </Button>
@@ -314,14 +314,14 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
       </div>
 
       <Card className="border-blue-200 bg-blue-50/50">
-        <CardContent className="p-4">
-          <div className="flex gap-3">
-            <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
-            <div className="text-sm space-y-1">
-              <p className="font-medium text-blue-900">About form fields in emails</p>
-              <p className="text-blue-700">
+        <CardContent className="p-3.5 sm:p-4">
+          <div className="flex gap-2.5 sm:gap-3">
+            <Info className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm space-y-1">
+              <p className="font-semibold text-blue-900">About form fields in emails</p>
+              <p className="text-blue-700 leading-relaxed">
                 The variables above are automatically filled with data from the registration form.
-                Custom form field IDs become available as <code className="px-1 py-0.5 bg-blue-100 rounded text-xs font-mono">{"{{field_id}}"}</code> variables.
+                Custom form field IDs become available as <code className="px-1 py-0.5 bg-blue-100 rounded text-[11px] sm:text-xs font-mono break-all">{"{{field_id}}"}</code> variables.
               </p>
             </div>
           </div>
@@ -353,32 +353,39 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
           return (
             <div key={type.value}>
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
+                <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <CardTitle className="flex items-center gap-2">
-                        <Mail className="h-5 w-5" />
-                        {type.label} Email
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Mail className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                        <span>{type.label} Email</span>
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{type.description}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">{type.description}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button
                         variant={previewing ? "default" : "outline"}
                         size="sm"
                         onClick={() => togglePreview(type.value)}
+                        className="flex-1 sm:flex-initial h-8 sm:h-9 text-xs sm:text-sm"
                       >
-                        {previewing ? <Code className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
-                        {previewing ? "Edit" : "Preview"}
+                        {previewing ? <Code className="mr-1.5 h-3.5 w-3.5" /> : <Eye className="mr-1.5 h-3.5 w-3.5" />}
+                        {previewing ? "Edit Mode" : "Preview"}
                       </Button>
-                      <Button variant="outline" size="sm" onClick={handleReset} disabled={isResetting === activeTab}>
-                        {isResetting === activeTab ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RotateCcw className="mr-2 h-4 w-4" />}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleReset}
+                        disabled={isResetting === activeTab}
+                        className="flex-1 sm:flex-initial h-8 sm:h-9 text-xs sm:text-sm"
+                      >
+                        {isResetting === activeTab ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="mr-1.5 h-3.5 w-3.5" />}
                         Reset
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   {previewing ? (
                     <InlinePreview
                       subject={currentTemplate?.subject || ""}
@@ -389,19 +396,22 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
                     />
                   ) : (
                     <form action={handleSaveStandard} className="space-y-4" key={currentTemplate?.id || `new-${activeTab}`}>
-                      <div className="space-y-2">
-                        <Label htmlFor="subject">Subject Line *</Label>
-                        <Input id="subject" name="subject" defaultValue={currentTemplate?.subject || ""} placeholder="e.g. Registration Confirmed - {{event_title}}" required />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="subject" className="text-xs font-semibold">Subject Line *</Label>
+                        <Input id="subject" name="subject" defaultValue={currentTemplate?.subject || ""} placeholder="e.g. Registration Confirmed - {{event_title}}" required className="h-9 text-xs sm:text-sm" />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="body_html">HTML Body *</Label>
-                        <Textarea id="body_html" name="body_html" defaultValue={currentTemplate?.body_html || ""} rows={16} className="font-mono text-sm" required />
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="body_html" className="text-xs font-semibold">HTML Body *</Label>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground font-mono">HTML / Tailwind</span>
+                        </div>
+                        <Textarea id="body_html" name="body_html" defaultValue={currentTemplate?.body_html || ""} rows={12} className="font-mono text-xs sm:text-sm min-h-[200px]" required />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="body_text">Plain Text Body</Label>
-                        <Textarea id="body_text" name="body_text" defaultValue={currentTemplate?.body_text || ""} rows={6} placeholder="Plain text version for email clients that don't support HTML" />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="body_text" className="text-xs font-semibold">Plain Text Body</Label>
+                        <Textarea id="body_text" name="body_text" defaultValue={currentTemplate?.body_text || ""} rows={4} className="font-mono text-xs sm:text-sm" placeholder="Plain text version for email clients that don't support HTML" />
                       </div>
-                      <Button type="submit" disabled={isLoading}>
+                      <Button type="submit" disabled={isLoading} className="w-full sm:w-auto h-9 text-xs sm:text-sm">
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Save Template
                       </Button>
@@ -418,16 +428,16 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
           <div>
             {showCustomForm ? (
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
+                <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <CardTitle className="flex items-center gap-2">
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                         <Button variant="ghost" size="sm" onClick={() => { setEditingCustomId(null); setShowNewCustomForm(false); setCustomPreview(false) }} className="mr-1 h-8 w-8 p-0">
                           <ArrowLeft className="h-4 w-4" />
                         </Button>
-                        {editingCustomTemplate ? "Edit Custom Template" : "New Custom Template"}
+                        <span>{editingCustomTemplate ? "Edit Custom Template" : "New Custom Template"}</span>
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">Create a custom email template for any purpose.</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">Create a custom email template for any purpose.</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button
@@ -440,41 +450,45 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
                             handleCustomPreview()
                           }
                         }}
+                        className="w-full sm:w-auto h-8 sm:h-9 text-xs sm:text-sm"
                       >
-                        {customPreview ? <Code className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
-                        {customPreview ? "Edit" : "Preview"}
+                        {customPreview ? <Code className="mr-1.5 h-3.5 w-3.5" /> : <Eye className="mr-1.5 h-3.5 w-3.5" />}
+                        {customPreview ? "Edit Mode" : "Preview"}
                       </Button>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   {customPreview ? (
                     <InlinePreview subject={customPreviewSubject} bodyHtml={customPreviewHtml} eventTitle={eventTitle} eventDate={eventDate} eventLocation={eventLocation} />
                   ) : (
                     <form action={handleSaveCustom} className="space-y-4" key={editingCustomTemplate?.id || "new-custom"}>
-                      <div className="space-y-2">
-                        <Label htmlFor="label">Template Name *</Label>
-                        <Input id="label" name="label" defaultValue={editingCustomTemplate?.label || ""} placeholder="e.g. Welcome Email, Follow-up, Thank You" required />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="label" className="text-xs font-semibold">Template Name *</Label>
+                        <Input id="label" name="label" defaultValue={editingCustomTemplate?.label || ""} placeholder="e.g. Welcome Email, Follow-up, Thank You" required className="h-9 text-xs sm:text-sm" />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="custom_subject">Subject Line *</Label>
-                        <Input id="custom_subject" name="subject" defaultValue={editingCustomTemplate?.subject || ""} placeholder="e.g. Welcome to {{event_title}}!" required />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="custom_subject" className="text-xs font-semibold">Subject Line *</Label>
+                        <Input id="custom_subject" name="subject" defaultValue={editingCustomTemplate?.subject || ""} placeholder="e.g. Welcome to {{event_title}}!" required className="h-9 text-xs sm:text-sm" />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="custom_body_html">HTML Body *</Label>
-                        <Textarea id="custom_body_html" name="body_html" defaultValue={editingCustomTemplate?.body_html || ""} rows={16} className="font-mono text-sm" placeholder="<h1>Welcome, {{full_name}}!</h1>" required />
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="custom_body_html" className="text-xs font-semibold">HTML Body *</Label>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground font-mono">HTML / Tailwind</span>
+                        </div>
+                        <Textarea id="custom_body_html" name="body_html" defaultValue={editingCustomTemplate?.body_html || ""} rows={12} className="font-mono text-xs sm:text-sm min-h-[200px]" placeholder="<h1>Welcome, {{full_name}}!</h1>" required />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="custom_body_text">Plain Text Body</Label>
-                        <Textarea id="custom_body_text" name="body_text" defaultValue={editingCustomTemplate?.body_text || ""} rows={6} placeholder="Plain text version" />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="custom_body_text" className="text-xs font-semibold">Plain Text Body</Label>
+                        <Textarea id="custom_body_text" name="body_text" defaultValue={editingCustomTemplate?.body_text || ""} rows={4} className="font-mono text-xs sm:text-sm" placeholder="Plain text version" />
                       </div>
-                      <div className="flex gap-3">
-                        <Button type="submit" disabled={isLoading}>
+                      <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">
+                        <Button type="button" variant="outline" className="w-full sm:w-auto h-9 text-xs sm:text-sm" onClick={() => { setEditingCustomId(null); setShowNewCustomForm(false); setCustomPreview(false) }}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={isLoading} className="w-full sm:w-auto h-9 text-xs sm:text-sm">
                           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                           {editingCustomTemplate ? "Update Template" : "Create Template"}
-                        </Button>
-                        <Button type="button" variant="ghost" onClick={() => { setEditingCustomId(null); setShowNewCustomForm(false); setCustomPreview(false) }}>
-                          Cancel
                         </Button>
                       </div>
                     </form>
@@ -483,24 +497,24 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
               </Card>
             ) : (
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
+                <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <CardTitle className="flex items-center gap-2">
-                        <Pencil className="h-5 w-5" />
-                        Custom Templates
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Pencil className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span>Custom Templates</span>
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
                         Create unlimited custom email templates for any purpose.
                       </p>
                     </div>
-                    <Button size="sm" onClick={() => setShowNewCustomForm(true)}>
-                      <Plus className="mr-2 h-4 w-4" />
+                    <Button size="sm" onClick={() => setShowNewCustomForm(true)} className="w-full sm:w-auto h-9 text-xs sm:text-sm gap-1.5">
+                      <Plus className="h-4 w-4" />
                       New Custom Template
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   {customTemplates.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
                       <Pencil className="mx-auto h-8 w-8 mb-3 opacity-50" />
@@ -510,42 +524,47 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
                   ) : (
                     <div className="space-y-3">
                       {customTemplates.map((tpl) => (
-                        <div key={tpl.id} className="group flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50">
+                        <div
+                          key={tpl.id}
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 rounded-xl border border-border p-3.5 sm:p-4 transition-colors hover:bg-muted/40"
+                        >
                           <div className="min-w-0 flex-1">
-                            <p className="font-medium truncate">{tpl.label || "Untitled Template"}</p>
-                            <p className="text-sm text-muted-foreground truncate">{tpl.subject}</p>
+                            <p className="font-semibold text-sm text-foreground truncate">{tpl.label || "Untitled Template"}</p>
+                            <p className="text-xs text-muted-foreground truncate mt-0.5">{tpl.subject}</p>
                           </div>
-                          <div className="flex items-center gap-1 ml-4 opacity-60 group-hover:opacity-100 transition-opacity">
-                            <Button
-                              variant={previewingCustomId === tpl.id ? "default" : "ghost"}
-                              size="icon"
-                              className="h-8 w-8"
-                              title={previewingCustomId === tpl.id ? "Close preview" : "Preview"}
-                              onClick={() => setPreviewingCustomId(previewingCustomId === tpl.id ? null : tpl.id)}
-                            >
-                              {previewingCustomId === tpl.id ? <Code className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </Button>
+                          <div className="flex items-center justify-between sm:justify-end gap-1.5 pt-2 sm:pt-0 border-t sm:border-0 border-border/60">
+                            <div className="flex items-center gap-1.5">
+                              <Button
+                                variant={previewingCustomId === tpl.id ? "default" : "outline"}
+                                size="sm"
+                                className="h-8 px-2.5 text-xs gap-1"
+                                onClick={() => setPreviewingCustomId(previewingCustomId === tpl.id ? null : tpl.id)}
+                              >
+                                {previewingCustomId === tpl.id ? <Code className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                                <span>{previewingCustomId === tpl.id ? "Close" : "Preview"}</span>
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 text-xs gap-1"
+                                onClick={() => setEditingCustomId(tpl.id)}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                                <span>Edit</span>
+                              </Button>
+                            </div>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8"
-                              title="Edit"
-                              onClick={() => setEditingCustomId(tpl.id)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              title="Delete"
+                              className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive shrink-0"
+                              title="Delete template"
                               onClick={() => setDeleteTarget(tpl)}
                               disabled={isDeleting === tpl.id}
                             >
                               {isDeleting === tpl.id ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                               ) : (
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                                <Trash2 className="h-4 w-4" />
                               )}
                             </Button>
                           </div>
@@ -559,19 +578,19 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
 
             {/* Inline preview for custom template */}
             {previewingCustomId && (
-              <Card>
-                <CardHeader>
+              <Card className="mt-4">
+                <CardHeader className="p-4 sm:p-6 pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <Eye className="h-5 w-5" />
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Eye className="h-4 w-4" />
                       {customTemplates.find((t) => t.id === previewingCustomId)?.label || "Template Preview"}
                     </CardTitle>
-                    <Button variant="ghost" size="sm" onClick={() => setPreviewingCustomId(null)}>
-                      Cancel
+                    <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => setPreviewingCustomId(null)}>
+                      Close Preview
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6 pt-0">
                   <InlinePreview
                     subject={customTemplates.find((t) => t.id === previewingCustomId)?.subject || ""}
                     bodyHtml={customTemplates.find((t) => t.id === previewingCustomId)?.body_html || ""}
@@ -590,17 +609,17 @@ export function EmailTemplateEditor({ eventId, templates, onTemplatesChanged, ev
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete template?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete <span className="font-medium text-foreground">{deleteTarget?.label || "Untitled Template"}</span>. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteTarget(null)}>Cancel</AlertDialogCancel>
+          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
+            <AlertDialogCancel className="w-full sm:w-auto" onClick={() => setDeleteTarget(null)}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => {
                 if (deleteTarget?.id) handleDelete(deleteTarget.id)
                 setDeleteTarget(null)

@@ -827,12 +827,12 @@ export function PartnersEditor({
                   </div>
 
                   {/* Category Filter Pills */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none snap-x touch-pan-x">
                     <Button
                       type="button"
                       variant={selectedCategoryFilter === "all" ? "default" : "outline"}
                       size="sm"
-                      className="h-8 text-xs shrink-0"
+                      className="h-8 text-xs shrink-0 snap-start"
                       onClick={() => setSelectedCategoryFilter("all")}
                     >
                       All ({linkedPartners.length})
@@ -845,7 +845,7 @@ export function PartnersEditor({
                           type="button"
                           variant={selectedCategoryFilter === cat.category_key ? "default" : "outline"}
                           size="sm"
-                          className="h-8 text-xs shrink-0"
+                          className="h-8 text-xs shrink-0 snap-start"
                           onClick={() => setSelectedCategoryFilter(cat.category_key)}
                         >
                           {cat.category_label} ({count})
@@ -1026,7 +1026,7 @@ export function PartnersEditor({
                                     </div>
 
                                     {/* Right: Actions (Reorder, Visibility, Edit, Delete) */}
-                                    <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                                    <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-1.5 pt-2 sm:pt-0 border-t sm:border-0 border-border/60 shrink-0">
                                       {/* Reorder Up / Down */}
                                       <div className="flex items-center rounded-md border border-border/80 bg-background">
                                         <Button
@@ -1367,7 +1367,7 @@ export function PartnersEditor({
         open={partnerModal.isOpen}
         onOpenChange={(open) => setPartnerModal((prev) => ({ ...prev, isOpen: open }))}
       >
-        <DialogContent className="max-w-md sm:max-w-lg">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               {partnerModal.mode === "add" ? "Add Event Partner" : `Edit Partner: ${partnerModal.name}`}
@@ -1609,11 +1609,11 @@ export function PartnersEditor({
             </div>
           </div>
 
-          <DialogFooter className="flex flex-row justify-end items-center gap-3 pt-4 border-t border-border/60">
+          <DialogFooter className="flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-2 pt-4 border-t border-border/60">
             <Button
               type="button"
               variant="outline"
-              className="h-9 px-4 text-xs font-medium"
+              className="w-full sm:w-auto h-9 px-4 text-xs font-medium"
               onClick={() => setPartnerModal((prev) => ({ ...prev, isOpen: false }))}
               disabled={actionLoading === "save-partner"}
             >
@@ -1621,7 +1621,7 @@ export function PartnersEditor({
             </Button>
             <Button
               type="button"
-              className="h-9 px-4 text-xs font-medium"
+              className="w-full sm:w-auto h-9 px-4 text-xs font-medium"
               onClick={handleSavePartner}
               disabled={actionLoading === "save-partner" || !partnerModal.name.trim() || isUploadingLogo}
             >
@@ -1642,7 +1642,7 @@ export function PartnersEditor({
       {/* Delete Confirmation Alert Dialog */}
       {/* ============================================================ */}
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-base font-semibold">
               {deleteTarget?.type === "category" ? "Delete Category?" : "Remove Partner from Event?"}
@@ -1653,9 +1653,9 @@ export function PartnersEditor({
                 : `Are you sure you want to remove "${deleteTarget?.name}" from this event? The partner will no longer appear on the summit page.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-row justify-end items-center gap-3 pt-3">
+          <AlertDialogFooter className="flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-2 pt-3">
             <AlertDialogCancel
-              className="h-9 px-4 text-xs font-medium"
+              className="w-full sm:w-auto h-9 px-4 text-xs font-medium"
               disabled={Boolean(actionLoading?.startsWith("delete-"))}
             >
               Cancel
@@ -1663,7 +1663,7 @@ export function PartnersEditor({
             <AlertDialogAction
               onClick={deleteTarget?.type === "category" ? handleDeleteCategory : handleRemovePartner}
               disabled={Boolean(actionLoading?.startsWith("delete-"))}
-              className="h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="w-full sm:w-auto h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {actionLoading?.startsWith("delete-") ? (
                 <>

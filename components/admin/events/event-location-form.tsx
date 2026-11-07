@@ -61,10 +61,10 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
         {/* Left: Location Fields */}
         <div className="space-y-6">
           <Card className="h-full">
-            <CardHeader className="border-b border-border bg-muted/30 px-6 py-4">
-              <CardTitle className="text-base">Venue Information</CardTitle>
+            <CardHeader className="border-b border-border bg-muted/30 px-4 sm:px-6 py-3.5 sm:py-4">
+              <CardTitle className="text-base font-semibold">Venue Information</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-4 sm:p-6 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="location">Location *</Label>
                 <Input
@@ -137,7 +137,7 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
                     () => {}
                   )
                 }}
-                className="w-full"
+                className="w-full h-10 text-xs sm:text-sm"
               >
                 <Navigation className="mr-2 size-4" />
                 Use My Current Location
@@ -149,13 +149,13 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
         {/* Right: Map Preview */}
         <div>
           <Card className="h-full overflow-hidden">
-            <CardHeader className="border-b border-border bg-muted/30 px-6 py-4">
-              <CardTitle className="text-base">Map Preview</CardTitle>
+            <CardHeader className="border-b border-border bg-muted/30 px-4 sm:px-6 py-3.5 sm:py-4">
+              <CardTitle className="text-base font-semibold">Map Preview</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {hasCoordinates ? (
-                <div className="overflow-hidden rounded-2xl">
-                  <div className="h-[400px] w-full">
+                <div className="overflow-hidden rounded-b-xl">
+                  <div className="h-[240px] sm:h-[400px] w-full relative">
                     <iframe
                       src={`https://maps.google.com/maps?q=${previewLat},${previewLng}&output=embed&z=16`}
                       width="100%"
@@ -168,17 +168,17 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
                     />
                   </div>
                   {(venueName || address) && (
-                    <div className="border-t border-border p-5">
+                    <div className="border-t border-border p-3.5 sm:p-5">
                       <div className="flex items-start gap-3">
                         <MapPin className="mt-1 size-5 shrink-0 text-primary" />
-                        <div>
+                        <div className="min-w-0">
                           {venueName && (
-                            <p className="mb-1 font-bold text-foreground">
+                            <p className="mb-0.5 font-bold text-sm sm:text-base text-foreground truncate">
                               {venueName}
                             </p>
                           )}
                           {address && (
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
                               {address}
                             </p>
                           )}
@@ -186,7 +186,7 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
                             href={`https://www.google.com/maps?q=${previewLat},${previewLng}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+                            className="mt-2 inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-primary transition-colors hover:text-primary/80"
                           >
                             Open in Google Maps
                             <ExternalLink className="size-3.5" />
@@ -197,9 +197,9 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
                   )}
                 </div>
               ) : (
-                <div className="h-[400px] flex flex-col items-center justify-center text-center p-6 bg-muted/30">
-                  <div className="size-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                    <MapPin className="size-8 text-muted-foreground/50" />
+                <div className="h-[240px] sm:h-[400px] flex flex-col items-center justify-center text-center p-6 bg-muted/30">
+                  <div className="size-14 sm:size-16 rounded-full bg-muted flex items-center justify-center mb-3 sm:mb-4">
+                    <MapPin className="size-6 sm:size-8 text-muted-foreground/50" />
                   </div>
                   <p className="text-sm font-medium text-foreground mb-1">
                     No coordinates set
@@ -215,7 +215,7 @@ export function EventLocationForm({ event, onSave }: EventLocationFormProps) {
       </div>
 
       {/* Save Button */}
-      <Button type="submit" size="lg" disabled={isLoading} className="w-full">
+      <Button type="submit" size="lg" disabled={isLoading} className="w-full h-11 text-base font-semibold">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Save Location
       </Button>

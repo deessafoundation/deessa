@@ -279,23 +279,23 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
     <div className="space-y-6">
       {/* Banner Image */}
       <Card className="overflow-hidden">
-        <CardHeader className="border-b border-border bg-muted/30 px-6 py-4">
+        <CardHeader className="border-b border-border bg-muted/30 px-4 sm:px-6 py-3.5 sm:py-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Banner Image</CardTitle>
-              <p className="text-xs text-muted-foreground mt-1">
+              <CardTitle className="text-base font-semibold">Banner Image</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5 sm:mt-1">
                 Hero image for the event detail page. Recommended: 1920x600px
               </p>
             </div>
-            {bannerUrl && <Badge variant="secondary" className="bg-green-100 text-green-700"><Check className="size-3 mr-1" /> Set</Badge>}
+            {bannerUrl && <Badge variant="secondary" className="bg-green-100 text-green-700 shrink-0"><Check className="size-3 mr-1" /> Set</Badge>}
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           {bannerUrl ? (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="relative group rounded-xl overflow-hidden border border-border">
-                <img src={bannerUrl} alt="Banner" className="w-full h-48 object-cover" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                <img src={bannerUrl} alt="Banner" className="w-full h-36 sm:h-48 object-cover" />
+                <div className="hidden sm:flex absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                   <button
                     onClick={() => {
                       const input = document.createElement("input")
@@ -321,6 +321,40 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                   </button>
                 </div>
               </div>
+
+              {/* Mobile action bar for Banner */}
+              <div className="flex sm:hidden items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const input = document.createElement("input")
+                    input.type = "file"
+                    input.accept = "image/*"
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0]
+                      if (file) handleFileUpload(file, "banner")
+                    }
+                    input.click()
+                  }}
+                  className="h-8 text-xs flex-1"
+                >
+                  <Replace className="size-3.5 mr-1.5" />
+                  Replace Banner
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setDeleteDialog({ open: true, url: bannerUrl, field: "banner" })}
+                  className="h-8 text-xs"
+                >
+                  <Trash2 className="size-3.5 mr-1.5" />
+                  Delete
+                </Button>
+              </div>
+
               <div className="flex items-center gap-2">
                 <Input
                   value={bannerUrl}
@@ -336,7 +370,7 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
           ) : (
             <div className="space-y-3">
               <div
-                className="border-2 border-dashed rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
+                className="border-2 border-dashed rounded-xl p-5 sm:p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
                 onDrop={(e) => handleDrop(e, "banner")}
                 onDragOver={handleDragOver}
                 onClick={() => bannerInputRef.current?.click()}
@@ -349,9 +383,9 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                   className="hidden"
                 />
                 {uploadingField === "banner" ? (
-                  <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary mb-3" />
+                  <Loader2 className="mx-auto h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary mb-2 sm:mb-3" />
                 ) : (
-                  <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                  <Upload className="mx-auto h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mb-2 sm:mb-3" />
                 )}
                 <p className="text-sm font-medium text-foreground">
                   {uploadingField === "banner" ? "Uploading..." : "Click to upload or drag & drop"}
@@ -393,23 +427,23 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
 
       {/* Card Thumbnail */}
       <Card className="overflow-hidden">
-        <CardHeader className="border-b border-border bg-muted/30 px-6 py-4">
+        <CardHeader className="border-b border-border bg-muted/30 px-4 sm:px-6 py-3.5 sm:py-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Card Thumbnail</CardTitle>
-              <p className="text-xs text-muted-foreground mt-1">
+              <CardTitle className="text-base font-semibold">Card Thumbnail</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5 sm:mt-1">
                 Image shown on event cards. Recommended: 400x300px
               </p>
             </div>
-            {imageUrl && <Badge variant="secondary" className="bg-green-100 text-green-700"><Check className="size-3 mr-1" /> Set</Badge>}
+            {imageUrl && <Badge variant="secondary" className="bg-green-100 text-green-700 shrink-0"><Check className="size-3 mr-1" /> Set</Badge>}
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           {imageUrl ? (
-            <div className="space-y-4">
-              <div className="relative group inline-block rounded-xl overflow-hidden border border-border">
-                <img src={imageUrl} alt="Thumbnail" className="h-40 w-64 object-cover" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="relative group inline-block rounded-xl overflow-hidden border border-border max-w-full">
+                <img src={imageUrl} alt="Thumbnail" className="h-36 sm:h-40 w-full sm:w-64 max-w-xs object-cover" />
+                <div className="hidden sm:flex absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                   <button
                     onClick={() => {
                       const input = document.createElement("input")
@@ -435,6 +469,40 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                   </button>
                 </div>
               </div>
+
+              {/* Mobile action bar for Thumbnail */}
+              <div className="flex sm:hidden items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const input = document.createElement("input")
+                    input.type = "file"
+                    input.accept = "image/*"
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0]
+                      if (file) handleFileUpload(file, "image")
+                    }
+                    input.click()
+                  }}
+                  className="h-8 text-xs flex-1"
+                >
+                  <Replace className="size-3.5 mr-1.5" />
+                  Replace Thumbnail
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setDeleteDialog({ open: true, url: imageUrl, field: "image" })}
+                  className="h-8 text-xs"
+                >
+                  <Trash2 className="size-3.5 mr-1.5" />
+                  Delete
+                </Button>
+              </div>
+
               <div className="flex items-center gap-2">
                 <Input
                   value={imageUrl}
@@ -507,25 +575,69 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
 
       {/* Gallery */}
       <Card className="overflow-hidden">
-        <CardHeader className="border-b border-border bg-muted/30 px-6 py-4">
+        <CardHeader className="border-b border-border bg-muted/30 px-4 sm:px-6 py-3.5 sm:py-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Gallery</CardTitle>
-              <p className="text-xs text-muted-foreground mt-1">
+              <CardTitle className="text-base font-semibold">Gallery</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5 sm:mt-1">
                 Additional images for the event detail page
               </p>
             </div>
-            {gallery.length > 0 && <Badge variant="secondary">{gallery.length}/{MAX_GALLERY} images</Badge>}
+            {gallery.length > 0 && <Badge variant="secondary" className="text-xs">{gallery.length}/{MAX_GALLERY} images</Badge>}
           </div>
         </CardHeader>
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-4 sm:p-6 space-y-4">
           {/* Gallery Grid */}
           {gallery.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {gallery.map((url, index) => (
-                <div key={index} className="relative group rounded-xl overflow-hidden border border-border">
-                  <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-32 object-cover" />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                <div key={index} className="relative group rounded-xl overflow-hidden border border-border bg-muted/20 flex flex-col">
+                  <div className="relative w-full h-28 sm:h-32">
+                    <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                    {/* Desktop Hover Actions */}
+                    <div className="hidden sm:flex absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
+                      <button
+                        onClick={() => {
+                          const input = document.createElement("input")
+                          input.type = "file"
+                          input.accept = "image/*"
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0]
+                            if (file) {
+                              handleFileUpload(file, "gallery-replace").then(() => {
+                                uploadFile(file).then((newUrl) => {
+                                  if (newUrl) {
+                                    const newGallery = [...gallery]
+                                    newGallery[index] = newUrl
+                                    setGallery(newGallery)
+                                    deleteFromStorage(url)
+                                  }
+                                })
+                              })
+                            }
+                          }
+                          input.click()
+                        }}
+                        className="p-1.5 rounded-lg bg-white/90 text-foreground hover:bg-white transition-colors"
+                        title="Replace image"
+                      >
+                        <Replace className="size-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteDialog({ open: true, url, field: "gallery", index })}
+                        className="p-1.5 rounded-lg bg-red-500/90 text-white hover:bg-red-600 transition-colors"
+                        title="Delete image"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5 sm:p-2">
+                      <p className="text-[10px] text-white/80 truncate">{url.split("/").pop()}</p>
+                    </div>
+                  </div>
+
+                  {/* Mobile Actions Bar for Gallery Item */}
+                  <div className="flex sm:hidden items-center justify-between border-t border-border/60 bg-background/80 p-1.5 gap-1">
                     <button
                       onClick={() => {
                         const input = document.createElement("input")
@@ -535,7 +647,6 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                           const file = (e.target as HTMLInputElement).files?.[0]
                           if (file) {
                             handleFileUpload(file, "gallery-replace").then(() => {
-                              // Replace in gallery array
                               uploadFile(file).then((newUrl) => {
                                 if (newUrl) {
                                   const newGallery = [...gallery]
@@ -549,19 +660,17 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                         }
                         input.click()
                       }}
-                      className="p-1.5 rounded-lg bg-white/90 text-foreground hover:bg-white transition-colors"
+                      className="flex-1 py-1 rounded bg-muted text-[11px] font-medium text-foreground flex items-center justify-center gap-1"
                     >
                       <Replace className="size-3" />
+                      Swap
                     </button>
                     <button
                       onClick={() => setDeleteDialog({ open: true, url, field: "gallery", index })}
-                      className="p-1.5 rounded-lg bg-red-500/90 text-white hover:bg-red-600 transition-colors"
+                      className="px-2 py-1 rounded bg-red-50 text-red-600 text-[11px] font-medium flex items-center justify-center"
                     >
                       <Trash2 className="size-3" />
                     </button>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-                    <p className="text-[10px] text-white/80 truncate">{url.split("/").pop()}</p>
                   </div>
                 </div>
               ))}
@@ -570,7 +679,7 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
 
           {/* Add Images */}
           {gallery.length >= MAX_GALLERY ? (
-            <div className="rounded-xl border border-dashed border-muted-foreground/20 bg-muted/30 p-6 text-center">
+            <div className="rounded-xl border border-dashed border-muted-foreground/20 bg-muted/30 p-4 sm:p-6 text-center">
               <p className="text-sm font-medium text-muted-foreground">
                 Maximum {MAX_GALLERY} images reached
               </p>
@@ -579,7 +688,7 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
               </p>
             </div>
           ) : (
-            <div className="border-2 border-dashed rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
+            <div className="border-2 border-dashed rounded-xl p-5 sm:p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer"
               onDrop={(e) => {
                 e.preventDefault()
                 const files = e.dataTransfer.files
@@ -600,9 +709,9 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                 className="hidden"
               />
               {uploadingField === "gallery" ? (
-                <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary mb-2" />
+                <Loader2 className="mx-auto h-7 w-7 sm:h-8 sm:w-8 animate-spin text-primary mb-2" />
               ) : (
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                <Upload className="mx-auto h-7 w-7 sm:h-8 sm:w-8 text-muted-foreground mb-2" />
               )}
               <p className="text-sm font-medium text-foreground">
                 {uploadingField === "gallery" ? "Uploading..." : "Click or drag to add images"}
@@ -615,11 +724,12 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
 
           {/* URL Input */}
           {gallery.length < MAX_GALLERY && (
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 value={newGalleryUrl}
                 onChange={(e) => setNewGalleryUrl(e.target.value)}
                 placeholder="Or enter image URL"
+                className="text-xs font-mono"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault()
@@ -627,7 +737,7 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
                   }
                 }}
               />
-              <Button type="button" variant="outline" onClick={addGalleryImage} disabled={!newGalleryUrl.trim()}>
+              <Button type="button" variant="outline" size="sm" onClick={addGalleryImage} disabled={!newGalleryUrl.trim()} className="h-9 sm:h-auto shrink-0">
                 Add URL
               </Button>
             </div>
@@ -636,14 +746,14 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
       </Card>
 
       {/* Save Button */}
-      <Button onClick={handleSave} disabled={isLoading} size="lg" className="w-full">
+      <Button onClick={handleSave} disabled={isLoading} size="lg" className="w-full h-11 text-base font-semibold">
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Save Media
       </Button>
 
       {/* Delete Confirmation Modal */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto p-4 sm:p-6 rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100">
@@ -655,16 +765,17 @@ export function EventMediaForm({ event, onSave }: EventMediaFormProps) {
               This will permanently remove the image from storage.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700 leading-relaxed">
+          <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-xs sm:text-sm text-red-700 leading-relaxed">
             ⚠ <strong>This action cannot be undone.</strong> The image will be permanently deleted from the server.
           </div>
-          <DialogFooter className="gap-3 pt-2">
-            <Button variant="outline" onClick={() => setDeleteDialog({ open: false, url: "", field: "" })}>
+          <DialogFooter className="gap-2 sm:gap-2 flex-col-reverse sm:flex-row pt-2">
+            <Button variant="outline" onClick={() => setDeleteDialog({ open: false, url: "", field: "" })} className="w-full sm:w-auto">
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={() => handleRemove(deleteDialog.field, deleteDialog.url, deleteDialog.index)}
+              className="w-full sm:w-auto"
             >
               <Trash2 className="mr-2 size-4" />
               Delete Permanently

@@ -197,14 +197,14 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">Ticket Types</h2>
           <p className="text-sm text-muted-foreground">
             {localItems.length} type{localItems.length !== 1 ? "s" : ""}
           </p>
         </div>
-        <Button onClick={() => setShowAddForm(true)} className="gap-2">
+        <Button onClick={() => setShowAddForm(true)} className="gap-2 w-full sm:w-auto">
           <Plus className="size-4" />
           Add Ticket Type
         </Button>
@@ -292,13 +292,13 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1">
-              <Button size="sm" onClick={handleAdd} disabled={isLoading === "add"} className="gap-2">
+            <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">
+              <Button size="sm" variant="outline" onClick={resetAddForm} className="w-full sm:w-auto">
+                Cancel
+              </Button>
+              <Button size="sm" onClick={handleAdd} disabled={isLoading === "add"} className="gap-2 w-full sm:w-auto">
                 {isLoading === "add" && <Loader2 className="size-3.5 animate-spin" />}
                 Add Ticket
-              </Button>
-              <Button size="sm" variant="outline" onClick={resetAddForm}>
-                Cancel
               </Button>
             </div>
           </div>
@@ -406,101 +406,112 @@ export function PricingEditor({ eventId, ticketTypes: initial, isFree }: Pricing
                       />
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-1">
-                    <Button size="sm" onClick={() => handleUpdate(ticket.id)} disabled={isLoading === ticket.id} className="gap-2">
+                  <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">
+                    <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="w-full sm:w-auto">
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={() => handleUpdate(ticket.id)} disabled={isLoading === ticket.id} className="gap-2 w-full sm:w-auto">
                       {isLoading === ticket.id && <Loader2 className="size-3.5 animate-spin" />}
                       Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => setEditingId(null)}>
-                      Cancel
                     </Button>
                   </div>
                 </div>
               ) : (
                 /* ── Display Mode ── */
-                <div className="flex items-center gap-4">
-                  {/* Price badge */}
-                  <div className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${
-                    ticket.price_tbd ? "bg-amber-50 text-amber-600" : ticket.price > 0 ? "bg-primary/10 text-primary" : "bg-emerald-50 text-emerald-600"
-                  }`}>
-                    <span className="text-xs font-black">
-                      {ticket.price_tbd ? "TBD" : ticket.price > 0 ? ticket.currency : "FREE"}
-                    </span>
-                  </div>
-
-                  {/* Info */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-semibold text-foreground">{ticket.name}</p>
-                      {!ticket.is_active && (
-                        <Badge variant="secondary" className="text-[10px]">Inactive</Badge>
-                      )}
-                    </div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-                      <span className="font-semibold text-foreground">
-                        {ticket.price_tbd ? "Pricing TBD" : ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price.toLocaleString()}`}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                  {/* Price badge + info */}
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                    <div className={`flex size-11 sm:size-12 shrink-0 items-center justify-center rounded-xl ${
+                      ticket.price_tbd ? "bg-amber-50 text-amber-600" : ticket.price > 0 ? "bg-primary/10 text-primary" : "bg-emerald-50 text-emerald-600"
+                    }`}>
+                      <span className="text-xs font-black">
+                        {ticket.price_tbd ? "TBD" : ticket.price > 0 ? ticket.currency : "FREE"}
                       </span>
-                      {ticket.capacity ? (
-                        <span className={ticket.sold_count >= ticket.capacity ? "text-red-500 font-semibold" : ""}>
-                          {ticket.sold_count >= ticket.capacity
-                            ? "Sold out"
-                            : `${ticket.capacity - ticket.sold_count} of ${ticket.capacity} remaining`}
+                    </div>
+
+                    {/* Info */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-foreground truncate">{ticket.name}</p>
+                        {!ticket.is_active && (
+                          <Badge variant="secondary" className="text-[10px] shrink-0">Inactive</Badge>
+                        )}
+                      </div>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                        <span className="font-semibold text-foreground">
+                          {ticket.price_tbd ? "Pricing TBD" : ticket.price === 0 ? "Free" : `${ticket.currency} ${ticket.price.toLocaleString()}`}
                         </span>
-                      ) : (
-                        <span>{ticket.sold_count || 0} registered</span>
-                      )}
-                      {ticket.sales_start && (
-                        <span>Sales from {new Date(ticket.sales_start).toLocaleDateString()}</span>
-                      )}
-                      {ticket.sales_end && (
-                        <span>until {new Date(ticket.sales_end).toLocaleDateString()}</span>
-                      )}
+                        {ticket.capacity ? (
+                          <span className={ticket.sold_count >= ticket.capacity ? "text-red-500 font-semibold" : ""}>
+                            {ticket.sold_count >= ticket.capacity
+                              ? "Sold out"
+                              : `${ticket.capacity - ticket.sold_count} of ${ticket.capacity} remaining`}
+                          </span>
+                        ) : (
+                          <span>{ticket.sold_count || 0} registered</span>
+                        )}
+                        {ticket.sales_start && (
+                          <span>Sales from {new Date(ticket.sales_start).toLocaleDateString()}</span>
+                        )}
+                        {ticket.sales_end && (
+                          <span>until {new Date(ticket.sales_end).toLocaleDateString()}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-1.5">
-                    <Switch
-                      checked={ticket.is_active}
-                      onCheckedChange={(checked) => handleToggleActive(ticket.id, checked)}
-                      disabled={isLoading === ticket.id}
-                    />
-                    <button
-                      onClick={() => startEdit(ticket)}
-                      className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                      title="Edit ticket"
-                    >
-                      <Pencil className="size-4" />
-                    </button>
-                    <Dialog
-                      open={deleteDialogOpen === ticket.id}
-                      onOpenChange={(open) => setDeleteDialogOpen(open ? ticket.id : null)}
-                    >
-                      <DialogTrigger asChild>
-                        <button
-                          className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
-                          title="Delete ticket"
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Delete Ticket Type</DialogTitle>
-                          <DialogDescription>
-                            Are you sure you want to delete &quot;{ticket.name}&quot;?
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                          <Button variant="outline" onClick={() => setDeleteDialogOpen(null)}>
-                            Cancel
-                          </Button>
-                          <Button variant="destructive" onClick={() => handleDelete(ticket.id)}>
-                            Delete
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                  <div className="flex items-center justify-between sm:justify-end gap-2 pt-2.5 sm:pt-0 border-t sm:border-0 border-border/60">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground sm:hidden">
+                      <span>Status:</span>
+                      <span className={ticket.is_active ? "text-foreground font-medium" : ""}>
+                        {ticket.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
+                      <Switch
+                        checked={ticket.is_active}
+                        onCheckedChange={(checked) => handleToggleActive(ticket.id, checked)}
+                        disabled={isLoading === ticket.id}
+                        aria-label="Toggle ticket active status"
+                      />
+                      <button
+                        onClick={() => startEdit(ticket)}
+                        className="flex size-9 sm:size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        title="Edit ticket"
+                      >
+                        <Pencil className="size-4" />
+                      </button>
+                      <Dialog
+                        open={deleteDialogOpen === ticket.id}
+                        onOpenChange={(open) => setDeleteDialogOpen(open ? ticket.id : null)}
+                      >
+                        <DialogTrigger asChild>
+                          <button
+                            className="flex size-9 sm:size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
+                            title="Delete ticket"
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto">
+                          <DialogHeader>
+                            <DialogTitle>Delete Ticket Type</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete &quot;{ticket.name}&quot;?
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+                            <Button variant="outline" className="w-full sm:w-auto" onClick={() => setDeleteDialogOpen(null)}>
+                              Cancel
+                            </Button>
+                            <Button variant="destructive" className="w-full sm:w-auto" onClick={() => handleDelete(ticket.id)}>
+                              Delete
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 </div>
               )}

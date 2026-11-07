@@ -212,7 +212,7 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">Schedule</h2>
           <p className="text-sm text-muted-foreground">
@@ -220,7 +220,7 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
             {totalDays} day{totalDays !== 1 ? "s" : ""}
           </p>
         </div>
-        <Button onClick={() => setShowAddForm(true)} className="gap-2">
+        <Button onClick={() => setShowAddForm(true)} className="gap-2 w-full sm:w-auto">
           <Plus className="size-4" />
           Add Session
         </Button>
@@ -302,15 +302,12 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1">
-              <Button type="submit" size="sm" disabled={isLoading === "add"} className="gap-2">
-                {isLoading === "add" && <Loader2 className="size-3.5 animate-spin" />}
-                Add Session
-              </Button>
+            <div className="flex flex-col-reverse sm:flex-row gap-2 pt-1">
               <Button
                 type="button"
                 size="sm"
                 variant="outline"
+                className="w-full sm:w-auto"
                 onClick={() => {
                   setShowAddForm(false)
                   setAddStartTime(null)
@@ -318,6 +315,10 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                 }}
               >
                 Cancel
+              </Button>
+              <Button type="submit" size="sm" disabled={isLoading === "add"} className="gap-2 w-full sm:w-auto">
+                {isLoading === "add" && <Loader2 className="size-3.5 animate-spin" />}
+                Add Session
               </Button>
             </div>
           </form>
@@ -358,16 +359,16 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
               {dayItems.map((item, idx) => (
                 <div
                   key={item.id}
-                  className={`rounded-xl border p-4 transition-colors ${
+                  className={`rounded-xl border p-3 sm:p-4 transition-colors ${
                     item.highlighted
                       ? "border-primary/30 bg-primary/5"
                       : "border-border bg-muted/20 hover:bg-muted/30"
                   }`}
                 >
                   {/* Top row */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
                     {/* Reorder arrows */}
-                    <div className="flex flex-col gap-0.5">
+                    <div className="flex flex-col gap-0.5 order-1">
                       <button
                         onClick={() => handleMove(item.id, -1)}
                         disabled={idx === 0}
@@ -387,11 +388,11 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                     </div>
 
                     {/* Number circle */}
-                    <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground order-1">
                       {idx + 1}
                     </div>
 
-                    {/* Time input */}
+                    {/* Start time input */}
                     <input
                       type="text"
                       defaultValue={item.start_time || ""}
@@ -402,11 +403,11 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                         }
                       }}
                       onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur() }}
-                      className="w-28 shrink-0 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="order-5 sm:order-2 flex-1 sm:flex-initial sm:w-28 shrink-0 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
 
                     {(item.start_time || item.end_time) && (
-                      <span className="text-xs text-muted-foreground">—</span>
+                      <span className="order-6 sm:order-3 text-xs text-muted-foreground shrink-0">—</span>
                     )}
 
                     {/* End time input */}
@@ -420,8 +421,11 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                         }
                       }}
                       onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur() }}
-                      className="w-28 shrink-0 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="order-7 sm:order-4 flex-1 sm:flex-initial sm:w-28 shrink-0 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-mono text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
+
+                    {/* Line break on mobile to keep Start/End times neatly paired */}
+                    <div className="w-full sm:hidden order-4 basis-full" />
 
                     {/* Title input */}
                     <input
@@ -433,14 +437,14 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                         }
                       }}
                       onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur() }}
-                      className="flex-1 min-w-0 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="order-2 sm:order-5 flex-1 min-w-[120px] rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
 
                     {/* Highlight / Star toggle */}
                     <button
                       onClick={() => handleToggleHighlight(item.id)}
                       title={item.highlighted ? "Remove highlight" : "Highlight session"}
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                      className={`order-3 sm:order-6 flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
                         item.highlighted
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-muted"
@@ -457,23 +461,23 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                       <DialogTrigger asChild>
                         <button
                           title="Delete session"
-                          className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
+                          className="order-4 sm:order-7 flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
                         >
                           <Trash2 className="size-4" />
                         </button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto">
                         <DialogHeader>
                           <DialogTitle>Delete Session</DialogTitle>
                           <DialogDescription>
                             Are you sure you want to delete &quot;{item.title}&quot;? This cannot be undone.
                           </DialogDescription>
                         </DialogHeader>
-                        <DialogFooter>
-                          <Button variant="outline" onClick={() => setDeleteDialogOpen(null)}>
+                        <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+                          <Button variant="outline" className="w-full sm:w-auto" onClick={() => setDeleteDialogOpen(null)}>
                             Cancel
                           </Button>
-                          <Button variant="destructive" onClick={() => handleDelete(item.id)}>
+                          <Button variant="destructive" className="w-full sm:w-auto" onClick={() => handleDelete(item.id)}>
                             Delete
                           </Button>
                         </DialogFooter>
@@ -482,7 +486,7 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                   </div>
 
                   {/* Description */}
-                  <div className="ml-[3.75rem] mt-2">
+                  <div className="ml-0 sm:ml-[3.75rem] mt-2">
                     <input
                       type="text"
                       defaultValue={item.description || ""}
@@ -499,7 +503,7 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
 
                   {/* Meta row */}
                   {(item.speaker_name || item.speaker_title || item.track_or_room) && (
-                    <div className="ml-[3.75rem] mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                    <div className="ml-0 sm:ml-[3.75rem] mt-2 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
                       {item.speaker_name && (
                         <span className="flex items-center gap-1">
                           <User className="size-3" />
@@ -526,17 +530,17 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
 
       {/* Footer */}
       {groupedByDay.length > 0 && (
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => setShowAddForm(true)}
-            className="gap-2"
+            className="gap-2 w-full sm:w-auto"
           >
             <Plus className="size-3.5" />
             Add Another Session
           </Button>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground text-center sm:text-right">
             Click <Star className="mx-0.5 inline size-3" /> to highlight a session.{" "}
             Use arrows to reorder.
           </p>
