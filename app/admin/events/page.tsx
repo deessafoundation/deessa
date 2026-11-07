@@ -101,14 +101,15 @@ export default function EventsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Events</h1>
-          <p className="text-muted-foreground">
-            Double-click an event to view registrations
+          <p className="text-sm text-muted-foreground">
+            <span className="hidden sm:inline">Double-click an event to manage registrations and settings</span>
+            <span className="sm:hidden">Tap an event to manage registrations and settings</span>
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="w-full sm:w-auto">
           <Link href="/admin/events/new">
             <Plus className="mr-2 h-4 w-4" />
             Create Event
@@ -118,68 +119,68 @@ export default function EventsPage() {
 
       {/* Stats Cards */}
       {!loading && events.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="p-2 bg-blue-50 rounded-lg shrink-0">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{events.length}</p>
-                  <p className="text-xs text-muted-foreground">Total Events</p>
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">{events.length}</p>
+                  <p className="text-xs text-muted-foreground truncate">Total Events</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-50 rounded-lg">
-                  <Eye className="h-5 w-5 text-green-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="p-2 bg-green-50 rounded-lg shrink-0">
+                  <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">
                     {events.filter((e) => e.status === "published").length}
                   </p>
-                  <p className="text-xs text-muted-foreground">Published</p>
+                  <p className="text-xs text-muted-foreground truncate">Published</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-50 rounded-lg">
-                  <FileText className="h-5 w-5 text-yellow-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="p-2 bg-yellow-50 rounded-lg shrink-0">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">
                     {events.filter((e) => e.status === "draft").length}
                   </p>
-                  <p className="text-xs text-muted-foreground">Drafts</p>
+                  <p className="text-xs text-muted-foreground truncate">Drafts</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-50 rounded-lg">
-                  <Clock className="h-5 w-5 text-purple-600" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="p-2 bg-purple-50 rounded-lg shrink-0">
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">
                     {
                       events.filter(
                         (e) => new Date(e.event_date) >= new Date()
                       ).length
                     }
                   </p>
-                  <p className="text-xs text-muted-foreground">Upcoming</p>
+                  <p className="text-xs text-muted-foreground truncate">Upcoming</p>
                 </div>
               </div>
             </CardContent>
@@ -198,8 +199,8 @@ export default function EventsPage() {
         />
       </div>
 
-      {/* Table */}
-      <Card>
+      {/* Desktop Table View */}
+      <Card className="hidden md:block">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
@@ -363,10 +364,140 @@ export default function EventsPage() {
         </CardContent>
       </Card>
 
+      {/* Mobile Card List View */}
+      <div className="md:hidden space-y-3">
+        {loading ? (
+          <Card>
+            <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              Loading events...
+            </CardContent>
+          </Card>
+        ) : paginatedEvents.length === 0 ? (
+          <Card>
+            <CardContent className="p-8 text-center text-muted-foreground">
+              {search ? (
+                <>
+                  <Search className="mx-auto h-10 w-10 mb-3 opacity-50" />
+                  <p className="font-medium text-foreground">No events found</p>
+                  <p className="text-xs mt-1">Try a different search term</p>
+                </>
+              ) : (
+                <>
+                  <Calendar className="mx-auto h-10 w-10 mb-3 opacity-50" />
+                  <p className="font-medium text-foreground">No events yet</p>
+                  <p className="text-xs mt-1">Create your first event to get started.</p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          paginatedEvents.map((event) => (
+            <Card key={event.id} className="overflow-hidden border border-border/80">
+              <CardContent className="p-4 space-y-3">
+                <div 
+                  className="flex items-start gap-3 cursor-pointer"
+                  onClick={() => router.push(`/admin/events/${event.id}`)}
+                >
+                  {event.image ? (
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="size-14 rounded-xl object-cover shrink-0"
+                    />
+                  ) : (
+                    <div className="size-14 rounded-xl bg-muted flex items-center justify-center shrink-0">
+                      <Calendar className="size-6 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold text-base leading-snug line-clamp-1 text-foreground">
+                      {event.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
+                      {event.short_description || event.description}
+                    </p>
+                    <div className="flex items-center gap-1.5 flex-wrap mt-2">
+                      <Badge
+                        variant="secondary"
+                        className={`text-[10px] px-2 py-0 ${categoryColors[event.category] || ""}`}
+                      >
+                        {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className={`text-[10px] px-2 py-0 ${statusColors[event.status] || ""}`}
+                      >
+                        {event.status === "published" && <Eye className="mr-1 h-2.5 w-2.5" />}
+                        {event.status === "draft" && <EyeOff className="mr-1 h-2.5 w-2.5" />}
+                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-border/60 text-xs text-muted-foreground space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="size-3.5 shrink-0 text-muted-foreground" />
+                    <span>
+                      {new Date(event.event_date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                      {event.event_time && ` • ${event.event_time}`}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="size-3.5 shrink-0 text-muted-foreground" />
+                    <span className="truncate">{event.location}</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="flex-1 h-9 text-xs"
+                  >
+                    <Link href={`/admin/events/${event.id}/registrations`}>
+                      <Users className="mr-1.5 h-3.5 w-3.5" />
+                      Registrations
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    asChild
+                    className="h-9 text-xs px-3"
+                  >
+                    <Link href={`/admin/events/${event.id}/settings`}>
+                      Settings
+                    </Link>
+                  </Button>
+                  {event.status === "published" && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="h-9 px-2 text-xs"
+                    >
+                      <Link href={`/events/${event.slug}`} target="_blank">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+
       {/* Pagination */}
       {!loading && filteredEvents.length > 0 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <p className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
             Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
             {Math.min(currentPage * ITEMS_PER_PAGE, filteredEvents.length)} of{" "}
             {filteredEvents.length} events
@@ -377,12 +508,12 @@ export default function EventsPage() {
               size="sm"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+              className="h-9 px-3 text-xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5 mr-1" />
               Previous
             </Button>
-            <div className="flex items-center gap-1">
+            <div className="hidden sm:flex items-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                 (page) => (
                   <Button
@@ -390,7 +521,7 @@ export default function EventsPage() {
                     variant={currentPage === page ? "default" : "outline"}
                     size="icon"
                     onClick={() => setCurrentPage(page)}
-                    className={`h-8 w-8 ${
+                    className={`h-8 w-8 text-xs ${
                       currentPage === page
                         ? "bg-primary text-primary-foreground"
                         : "hover:bg-primary/10 hover:text-primary hover:border-primary"
@@ -401,15 +532,18 @@ export default function EventsPage() {
                 )
               )}
             </div>
+            <span className="sm:hidden text-xs font-medium text-muted-foreground px-1">
+              {currentPage} / {totalPages}
+            </span>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+              className="h-9 px-3 text-xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
             >
               Next
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5 ml-1" />
             </Button>
           </div>
         </div>

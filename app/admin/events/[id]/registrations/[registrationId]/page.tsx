@@ -337,18 +337,18 @@ export default async function RegistrationDetailPage({
 
       {/* Header Card */}
       <Card>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-lg font-bold text-primary">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex size-12 sm:size-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-base sm:text-lg font-bold text-primary">
                 {initials}
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-foreground truncate">
                   {reg.full_name}
                 </h1>
-                <p className="text-sm text-muted-foreground">{reg.email?.toLowerCase()}</p>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground truncate">{reg.email?.toLowerCase()}</p>
+                <p className="mt-0.5 sm:mt-1 font-mono text-xs text-muted-foreground">
                   {shortId}
                 </p>
                 {reg.admin_notes && (
@@ -358,21 +358,21 @@ export default async function RegistrationDetailPage({
                 )}
               </div>
             </div>
-            <div className="flex flex-col items-start gap-2 sm:items-end">
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-2 sm:pt-0 border-t sm:border-0 border-border/60">
               <div className="flex items-center gap-2">
                 <StatusBadge status={reg.status} />
                 {reg.checked_in_at && (
-                  <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                  <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs">
                     <CheckCircle className="mr-1 h-3 w-3" />
                     Checked In
                   </Badge>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[11px] sm:text-xs text-muted-foreground text-right">
                 Registered {registeredAt} at {registeredTime}
               </p>
               {reg.registration_source && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs hidden sm:inline-flex">
                   Source: {reg.registration_source}
                 </Badge>
               )}
@@ -381,15 +381,25 @@ export default async function RegistrationDetailPage({
         </CardContent>
       </Card>
 
+      {/* Mobile Top Check-in Action */}
+      <div className="block lg:hidden">
+        <EventCheckInButton
+          registrationId={registrationId}
+          isCheckedIn={!!reg.checked_in_at}
+          checkedInAt={reg.checked_in_at}
+          checkedInBy={reg.checked_in_by}
+        />
+      </div>
+
       {/* Registration Context */}
       <Card className="border-blue-200 bg-blue-50/50">
-        <CardHeader className="border-b border-blue-200 px-6 py-4">
+        <CardHeader className="border-b border-blue-200 px-4 sm:px-6 py-3.5 sm:py-4">
           <CardTitle className="flex items-center gap-2 text-base text-blue-900">
             <Calendar className="size-4" />
             Registration Context
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
@@ -619,13 +629,15 @@ export default async function RegistrationDetailPage({
 
         {/* Right Column */}
         <div className="space-y-6">
-          {/* Check-in */}
-          <EventCheckInButton
-            registrationId={registrationId}
-            isCheckedIn={!!reg.checked_in_at}
-            checkedInAt={reg.checked_in_at}
-            checkedInBy={reg.checked_in_by}
-          />
+          {/* Check-in (Desktop) */}
+          <div className="hidden lg:block">
+            <EventCheckInButton
+              registrationId={registrationId}
+              isCheckedIn={!!reg.checked_in_at}
+              checkedInAt={reg.checked_in_at}
+              checkedInBy={reg.checked_in_by}
+            />
+          </div>
 
           {/* Manage Registration */}
           <Card>
