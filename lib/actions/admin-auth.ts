@@ -2,17 +2,43 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
+import { checkRateLimit } from "@/lib/rate-limit"
+import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 export async function adminLogin(formData: FormData) {
-  const email = formData.get("email") as string
+  const email = (formData.get("email") as string)?.trim().toLowerCase()
   const password = formData.get("password") as string
+  const rawRedirect = formData.get("redirectTo") as string | null
 
   if (!email || !password) {
     return { error: "Email and password are required" }
   }
 
+  // ── 1. Extract Client IP & Check Rate Limits ──────────────────────────────
+  const headerList = await headers()
+  const forwarded = headerList.get("x-forwarded-for")
+  const clientIp = (forwarded ? forwarded.split(",")[0].trim() : headerList.get("x-real-ip")) || "127.0.0.1"
+
+  const [ipLimit, emailLimit] = await Promise.all([
+    checkRateLimit({
+      identifier: `admin-login:ip:${clientIp}`,
+      maxAttempts: 5,
+      windowMinutes: 15,
+    }),
+    checkRateLimit({
+      identifier: `admin-login:email:${email}`,
+      maxAttempts: 5,
+      windowMinutes: 15,
+    }),
+  ])
+
+  if (!ipLimit.allowed || !emailLimit.allowed) {
+    return { error: "Too many sign-in attempts. Please try again in 15 minutes." }
+  }
+
+  // ── 2. Authenticate with Supabase Auth ────────────────────────────────────
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -20,11 +46,27 @@ export async function adminLogin(formData: FormData) {
     password,
   })
 
-  if (error) {
-    return { error: error.message }
+  // Helper to log failed attempts to activity_logs via service role (bypasses RLS)
+  const logFailedAttempt = async (reason: string, adminUserId?: string) => {
+    try {
+      const serviceClient = createServiceRoleClient()
+      await serviceClient.from("activity_logs").insert({
+        user_id: adminUserId || null,
+        action: "LOGIN_FAILED",
+        entity_type: "auth",
+        new_data: { email, ip: clientIp, reason },
+      })
+    } catch (logErr) {
+      console.error("Failed to record failed login log:", logErr)
+    }
   }
 
-  // Check if user is an admin
+  if (error) {
+    await logFailedAttempt("invalid_credentials")
+    return { error: "Invalid email or password" }
+  }
+
+  // ── 3. Authorize Active Admin Account ─────────────────────────────────────
   const { data: adminUser, error: adminError } = await supabase
     .from("admin_users")
     .select("id, role, is_active")
@@ -33,23 +75,32 @@ export async function adminLogin(formData: FormData) {
 
   if (adminError || !adminUser) {
     await supabase.auth.signOut()
-    return { error: "You do not have admin access" }
+    await logFailedAttempt("not_admin")
+    return { error: "Invalid email or password" }
   }
 
   if (!adminUser.is_active) {
     await supabase.auth.signOut()
-    return { error: "Your admin account has been deactivated" }
+    await logFailedAttempt("deactivated_account", adminUser.id)
+    return { error: "This administrator account is deactivated. Contact a super admin." }
   }
 
-  // Log the login activity
+  // ── 4. Log Successful Login & Redirect ────────────────────────────────────
   await supabase.from("activity_logs").insert({
     user_id: adminUser.id,
     action: "LOGIN",
     entity_type: "auth",
+    new_data: { ip: clientIp },
   })
 
-  revalidatePath("/admin")
-  redirect("/admin")
+  // Validate target redirect against open redirects
+  const target =
+    rawRedirect && rawRedirect.startsWith("/admin") && !rawRedirect.startsWith("/admin/login")
+      ? rawRedirect
+      : "/admin"
+
+  revalidatePath(target)
+  redirect(target)
 }
 
 export async function adminLogout() {
@@ -60,7 +111,11 @@ export async function adminLogout() {
   } = await supabase.auth.getUser()
 
   if (user) {
-    const { data: adminUser } = await supabase.from("admin_users").select("id").eq("user_id", user.id).single()
+    const { data: adminUser } = await supabase
+      .from("admin_users")
+      .select("id")
+      .eq("user_id", user.id)
+      .single()
 
     if (adminUser) {
       await supabase.from("activity_logs").insert({
@@ -84,19 +139,28 @@ export async function getCurrentAdmin() {
 
   if (!user) return null
 
-  const { data: adminUser } = await supabase.from("admin_users").select("*").eq("user_id", user.id).single()
+  const { data: adminUser } = await supabase
+    .from("admin_users")
+    .select("*")
+    .eq("user_id", user.id)
+    .single()
 
   return adminUser?.is_active ? adminUser : null
 }
 
 export async function createAdminUser(formData: FormData) {
-  const email = formData.get("email") as string
+  const email = (formData.get("email") as string)?.trim().toLowerCase()
   const password = formData.get("password") as string
-  const fullName = formData.get("fullName") as string
+  const fullName = (formData.get("fullName") as string)?.trim()
   const role = formData.get("role") as string
 
   if (!email || !password || !fullName || !role) {
     return { error: "All fields are required" }
+  }
+
+  const validRoles = ["SUPER_ADMIN", "ADMIN", "EDITOR", "FINANCE"]
+  if (!validRoles.includes(role)) {
+    return { error: "Invalid role specified" }
   }
 
   const supabase = await createClient()
@@ -125,6 +189,7 @@ export async function createAdminUser(formData: FormData) {
     email,
     full_name: fullName,
     role,
+    is_active: true,
   })
 
   if (adminError) {
@@ -137,47 +202,6 @@ export async function createAdminUser(formData: FormData) {
     action: "CREATE",
     entity_type: "admin_user",
     new_data: { email, full_name: fullName, role },
-  })
-
-  revalidatePath("/admin/users")
-  return { success: true }
-}
-
-export async function updateAdminUser(userId: string, formData: FormData) {
-  const fullName = formData.get("fullName") as string
-  const role = formData.get("role") as string
-  const isActive = formData.get("isActive") === "true"
-
-  const supabase = await createClient()
-
-  const currentAdmin = await getCurrentAdmin()
-  if (!currentAdmin || (currentAdmin.role !== "SUPER_ADMIN" && currentAdmin.role !== "ADMIN")) {
-    return { error: "Unauthorized" }
-  }
-
-  // Get old data for audit
-  const { data: oldData } = await supabase.from("admin_users").select("*").eq("id", userId).single()
-
-  const { error } = await supabase
-    .from("admin_users")
-    .update({
-      full_name: fullName,
-      role,
-      is_active: isActive,
-    })
-    .eq("id", userId)
-
-  if (error) {
-    return { error: error.message }
-  }
-
-  await supabase.from("activity_logs").insert({
-    user_id: currentAdmin.id,
-    action: "UPDATE",
-    entity_type: "admin_user",
-    entity_id: userId,
-    old_data: oldData,
-    new_data: { full_name: fullName, role, is_active: isActive },
   })
 
   revalidatePath("/admin/users")
