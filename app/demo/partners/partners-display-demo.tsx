@@ -49,9 +49,11 @@ interface PartnersDisplayDemoProps {
 // Editorial category title overrides matching the target mock design
 const CATEGORY_TITLES: Record<string, string> = {
   organizers: "ORGANIZING PARTNERS",
-  in_collaboration: "IN COLLABORATION WITH",
-  in_collaboration_with: "IN COLLABORATION WITH",
-  collaborating_partner: "IN COLLABORATION WITH",
+  in_collaboration: "IN PARTNERSHIP WITH",
+  in_collaboration_with: "IN PARTNERSHIP WITH",
+  collaborating_partner: "IN PARTNERSHIP WITH",
+  in_partnership: "IN PARTNERSHIP WITH",
+  in_partnership_with: "IN PARTNERSHIP WITH",
   knowledge_partner: "KNOWLEDGE PARTNER",
   technical_partner: "TECHNICAL PARTNER",
   co_organizers: "CO-ORGANIZERS",
@@ -447,11 +449,11 @@ export function PartnersDisplayDemo({
               </div>
             </div>
 
-            {/* Column 2: IN COLLABORATION WITH */}
+            {/* Column 2: IN PARTNERSHIP WITH */}
             <div className={styles.categoryColumn}>
               <div className={styles.categoryHeader}>
                 <h3 className={styles.categoryTitle}>
-                  {getCategoryDisplayTitle(collaboratingCategory, "IN COLLABORATION WITH")}
+                  {getCategoryDisplayTitle(collaboratingCategory, "IN PARTNERSHIP WITH")}
                 </h3>
                 <div className={styles.categoryUnderline} aria-hidden="true" />
               </div>

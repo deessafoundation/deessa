@@ -3,7 +3,7 @@ import { getContextPartners } from "@/lib/data/context-partners"
 import type { ContextType, ContextPartnerDetailed, CategoryKey } from "@/lib/types/partners"
 import styles from "./partners-display.module.css"
 import { cn } from "@/lib/utils"
-import { CoOrganizerLogoImage, type LogoFitOverride } from "./co-organizer-logo-image"
+import { CoOrganizerLogoImage, PartnerCategoryLogo, type LogoFitOverride } from "./co-organizer-logo-image"
 
 export interface PartnersDisplayProps {
   /**
@@ -28,9 +28,12 @@ export interface PartnersDisplayProps {
 // Editorial category title overrides matching the target mock design
 const CATEGORY_TITLES: Record<string, string> = {
   organizers: "ORGANIZING PARTNERS",
-  in_collaboration: "IN COLLABORATION WITH",
-  in_collaboration_with: "IN COLLABORATION WITH",
-  collaborating_partner: "IN COLLABORATION WITH",
+  in_collaboration: "IN PARTNERSHIP WITH",
+  in_collaboration_with: "IN PARTNERSHIP WITH",
+  collaborating_partner: "IN PARTNERSHIP WITH",
+  in_partnership: "IN PARTNERSHIP WITH",
+  in_partnership_with: "IN PARTNERSHIP WITH",
+  partnership_partner: "IN PARTNERSHIP WITH",
   knowledge_partner: "KNOWLEDGE PARTNER",
   technical_partner: "TECHNICAL PARTNER",
   co_organizers: "CO-ORGANIZERS",
@@ -187,10 +190,11 @@ export async function PartnersDisplay({
                       <>
                         <div className={styles.organizerLogoWrapper}>
                           {logoUrl ? (
-                            <img
+                            <PartnerCategoryLogo
                               src={logoUrl}
                               alt={`${partner.partner_name} logo`}
                               className={styles.organizerLogo}
+                              partnerName={cleanPartnerName(partner.partner_name)}
                             />
                           ) : (
                             <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
@@ -224,11 +228,11 @@ export async function PartnersDisplay({
             </div>
           </div>
 
-          {/* Column 2: IN COLLABORATION WITH */}
+          {/* Column 2: IN PARTNERSHIP WITH */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
               <h3 className={cn(styles.categoryTitle, "font-heading")}>
-                {getCategoryDisplayTitle(collaboratingCategory, "IN COLLABORATION WITH")}
+                {getCategoryDisplayTitle(collaboratingCategory, "IN PARTNERSHIP WITH")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
             </div>
@@ -242,10 +246,11 @@ export async function PartnersDisplay({
                     <>
                       <div className={styles.singleCardLogoWrapper}>
                         {logoUrl ? (
-                          <img
+                          <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
                             className={styles.gizLogo}
+                            partnerName={cleanPartnerName(partner.partner_name)}
                           />
                         ) : (
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
@@ -270,7 +275,7 @@ export async function PartnersDisplay({
                 })
               ) : (
                 <div className={styles.singleCardContent}>
-                  <p className={styles.partnerName}>No collaborating partner configured</p>
+                  <p className={styles.partnerName}>No partner configured</p>
                 </div>
               )}
             </div>
@@ -294,10 +299,11 @@ export async function PartnersDisplay({
                     <>
                       <div className={styles.singleCardLogoWrapper}>
                         {logoUrl ? (
-                          <img
+                          <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
                             className={styles.kuLogo}
+                            partnerName={cleanPartnerName(partner.partner_name)}
                           />
                         ) : (
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
@@ -346,10 +352,11 @@ export async function PartnersDisplay({
                     <>
                       <div className={styles.singleCardLogoWrapper}>
                         {logoUrl ? (
-                          <img
+                          <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
                             className={styles.sdgLogo}
+                            partnerName={cleanPartnerName(partner.partner_name)}
                           />
                         ) : (
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
@@ -448,6 +455,75 @@ export async function PartnersDisplay({
             </div>
           </div>
         )}
+      </div>
+    </section>
+  )
+}
+
+/**
+ * High-craft zero-CLS loading skeleton for the Partners section.
+ * Renders immediately during SSR / streaming so the screen never stays blank or white.
+ */
+export function PartnersDisplaySkeleton({
+  eyebrow = "OUR PARTNERS & COLLABORATORS",
+  titlePrefix = "Together for",
+  titleAccent = "Greater Impact",
+  className,
+}: {
+  eyebrow?: string
+  titlePrefix?: string
+  titleAccent?: string
+  className?: string
+}) {
+  return (
+    <section className={cn(styles.section, className)} aria-label="Loading partners">
+      <div className={styles.container}>
+        {/* Header Skeleton */}
+        <header className={styles.header}>
+          {eyebrow && (
+            <div className={styles.eyebrowWrapper}>
+              <span className={styles.eyebrowLine} aria-hidden="true" />
+              <span className={cn(styles.eyebrowText, "font-comic font-sans")}>{eyebrow}</span>
+              <span className={styles.eyebrowLine} aria-hidden="true" />
+            </div>
+          )}
+          <h2 className={cn(styles.title, "font-heading font-marissa")}>
+            {titlePrefix} <span className={styles.titleAccent}>{titleAccent}</span>
+          </h2>
+          <div className="h-4 w-80 max-w-full mx-auto rounded bg-muted/60 animate-pulse mt-2" />
+        </header>
+
+        {/* Top 4 Columns Skeleton */}
+        <div className={styles.topGrid}>
+          {[1, 2, 3, 4].map((col) => (
+            <div key={col} className={styles.categoryColumn}>
+              <div className="h-3.5 w-32 mx-auto mb-2 rounded bg-muted/70 animate-pulse" />
+              <div className="h-0.5 w-10 mx-auto mb-3 rounded bg-primary/40" />
+              <div className={cn(styles.card, "p-4 flex flex-col items-center justify-center min-h-[160px]")}>
+                <div className="w-24 h-14 rounded-md bg-muted/50 animate-pulse mb-3" />
+                <div className="w-20 h-3 rounded bg-muted/60 animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Co-Organizers Skeleton Row */}
+        <div className={styles.coOrganizersSection}>
+          <div className={styles.coOrganizersDividerWrapper}>
+            <div className={styles.dividerLine} aria-hidden="true" />
+            <div className="h-4 w-36 rounded bg-muted/70 animate-pulse" />
+            <div className={styles.dividerLine} aria-hidden="true" />
+          </div>
+
+          <div className={styles.coOrganizersGrid}>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className={cn(styles.coOrganizerCard, "min-h-[104px]")}>
+                <div className="w-16 h-8 rounded bg-muted/50 animate-pulse mb-2" />
+                <div className="w-14 h-2.5 rounded bg-muted/60 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

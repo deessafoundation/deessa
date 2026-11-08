@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import artHero from "@/public/home/hero/art_banner.jpeg"
 import podcastBanner from "@/public/podcast_banner.jpeg"
@@ -24,7 +25,7 @@ import { getArtsContent, getHomepageArtworks } from "@/lib/data/artworks"
 import { HomeArtFeature } from "@/components/arts/home-art-feature"
 import { CommunitySection } from "@/components/facebook-posts/community-section"
 import { getHomepageFacebookPosts } from "@/lib/data/facebook-posts"
-import { PartnersDisplay } from "@/components/shared/partners-display"
+import { PartnersDisplay, PartnersDisplaySkeleton } from "@/components/shared/partners-display"
 import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
 
 // Homepage content comes from the shared CMS. Always render it from the
@@ -116,7 +117,9 @@ export default async function HomePage() {
       />
 
       {/* 2. PARTNERS & COLLABORATORS */}
-      <PartnersDisplay />
+      <Suspense fallback={<PartnersDisplaySkeleton />}>
+        <PartnersDisplay />
+      </Suspense>
 
       {/* 3. OUR STORY - CMS POWERED */}
       <OurStorySection story={storySettings} />

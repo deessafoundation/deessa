@@ -276,6 +276,7 @@
 
 /* Logos in Single Cards (Collaborating, Knowledge, Technical) */
 .singleCardLogoWrapper {
+  position: relative;
   height: 94px;
   display: flex;
   align-items: center;
@@ -311,6 +312,7 @@
 
 /* Logos in Organizing Card */
 .organizerLogoWrapper {
+  position: relative;
   height: 44px;
   display: flex;
   align-items: center;
@@ -462,6 +464,7 @@
 }
 
 .coOrganizerLogoWrapper {
+  position: relative;
   height: 50px;
   display: flex;
   align-items: center;
@@ -505,6 +508,14 @@
 
 .coOrganizerLogo[data-scale="boost-large"] {
   transform: scale(1.5) !important;
+}
+
+.coOrganizerLogo[data-scale="boost-xl"] {
+  transform: scale(1.75) !important;
+}
+
+.coOrganizerLogo[data-scale="boost-2x"] {
+  transform: scale(2) !important;
 }
 
 .coOrganizerName {
