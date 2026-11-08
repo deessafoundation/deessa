@@ -167,24 +167,24 @@ export default function NotificationBell() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[380px] p-0">
-        <div className="flex items-center justify-between border-b px-4 py-3">
+      <DropdownMenuContent align="end" className="w-[calc(100vw-1.5rem)] sm:w-[380px] max-w-[380px] p-0">
+        <div className="flex items-center justify-between border-b px-3.5 py-2.5 sm:px-4 sm:py-3">
           <h3 className="font-semibold text-sm">Notifications</h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {unreadCount > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={markAllAsRead}
                 disabled={isLoading}
-                className="h-7 text-xs"
+                className="h-8 sm:h-7 px-2 text-xs"
               >
                 <CheckCheck className="h-3.5 w-3.5 mr-1" />
                 Mark all read
               </Button>
             )}
-            <Link href="/admin/notifications">
-              <Button variant="ghost" size="sm" className="h-7 text-xs">
+            <Link href="/admin/notifications" onClick={() => setIsOpen(false)}>
+              <Button variant="ghost" size="sm" className="h-8 sm:h-7 px-2 text-xs">
                 <ExternalLink className="h-3.5 w-3.5 mr-1" />
                 View all
               </Button>
@@ -192,39 +192,40 @@ export default function NotificationBell() {
           </div>
         </div>
 
-        <ScrollArea className="h-[400px]">
+        <ScrollArea className="max-h-[60vh] sm:max-h-[400px] h-auto">
           {notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Bell className="h-12 w-12 text-muted-foreground/30 mb-3" />
-              <p className="text-sm text-muted-foreground">No notifications yet</p>
+            <div className="flex flex-col items-center justify-center py-10 sm:py-12 px-4 text-center">
+              <Bell className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/30 mb-2 sm:mb-3" />
+              <p className="text-sm font-medium text-muted-foreground">No notifications yet</p>
+              <p className="text-xs text-muted-foreground/70 mt-0.5">We'll alert you when there are new updates</p>
             </div>
           ) : (
-            <div className="divide-y">
+            <div className="divide-y divide-border">
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
-                  className={`flex gap-3 p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
-                    !notification.is_read ? 'bg-blue-50/50' : ''
+                  className={`flex gap-3 p-3 sm:p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
+                    !notification.is_read ? 'bg-blue-50/50 dark:bg-blue-950/20' : ''
                   }`}
                 >
-                  <div className="text-2xl flex-shrink-0">
+                  <div className="text-xl sm:text-2xl flex-shrink-0 pt-0.5">
                     {getNotificationIcon(notification.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <p className="font-medium text-sm line-clamp-1">
+                      <p className="font-medium text-xs sm:text-sm line-clamp-1 text-foreground">
                         {notification.title}
                       </p>
                       {!notification.is_read && (
                         <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1" />
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2 leading-relaxed">
                       {notification.message}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between pt-0.5">
+                      <span className="text-[11px] sm:text-xs text-muted-foreground">
                         {formatTimeAgo(notification.created_at)}
                       </span>
                       <div className="flex items-center gap-1">
@@ -236,18 +237,20 @@ export default function NotificationBell() {
                               e.stopPropagation()
                               markAsRead(notification.id)
                             }}
-                            className="h-6 px-2 text-xs"
+                            className="h-7 w-7 sm:h-6 sm:w-6 p-0 text-xs"
+                            aria-label="Mark notification as read"
                           >
-                            <Check className="h-3 w-3" />
+                            <Check className="h-3.5 w-3.5" />
                           </Button>
                         )}
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={(e) => deleteNotification(notification.id, e)}
-                          className="h-6 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="h-7 w-7 sm:h-6 sm:w-6 p-0 text-xs text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                          aria-label="Delete notification"
                         >
-                          <Trash2 className="h-3 w-3" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </div>
