@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
     const { id } = await params
-    const supabase = await createClient()
+    const supabase = auth.supabase
 
     const { data: categories, error } = await supabase
       .from("partner_categories")

@@ -1,50 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from "next/server"
+import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data, error } = await supabase
-      .from('podcasts')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await auth.supabase
+      .from("podcasts")
+      .select("*")
+      .order("created_at", { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data)
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
+  if (!auth.success) return auth.response
+
   try {
-    const supabase = await createClient();
+    const body = await request.json()
+    const now = new Date().toISOString()
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await request.json();
-
-    const now = new Date().toISOString();
-    const { data, error } = await supabase
-      .from('podcasts')
+    const { data, error } = await auth.supabase
+      .from("podcasts")
       .insert({
         ...body,
         created_at: now,
@@ -52,14 +38,14 @@ export async function POST(request: NextRequest) {
         published_at: body.published ? now : null,
       })
       .select()
-      .single();
+      .single()
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data, { status: 201 });
+    return NextResponse.json(data, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
