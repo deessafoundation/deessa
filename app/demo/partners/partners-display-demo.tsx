@@ -57,6 +57,9 @@ const CATEGORY_TITLES: Record<string, string> = {
   knowledge_partner: "KNOWLEDGE PARTNER",
   technical_partner: "TECHNICAL PARTNER",
   co_organizers: "CO-ORGANIZERS",
+  in_solidarity_with: "IN SOLIDARITY WITH",
+  solidarity: "IN SOLIDARITY WITH",
+  in_solidarity: "IN SOLIDARITY WITH",
 }
 
 type TitleFont = "montserrat" | "dm-sans" | "jakarta" | "outfit"
@@ -206,6 +209,10 @@ export function PartnersDisplayDemo({
   const coOrganizersCategory = data.categories.find(
     (c) => c.category_key === "co_organizers" || c.category_key.includes("co_org")
   )
+  const solidarityCategory = data.categories.find(
+    (c) => c.category_key === "in_solidarity_with" || c.category_key.includes("solidarity")
+  )
+  const solidarityPartners = solidarityCategory?.partners || []
 
   // Build co-organizers list based on view mode
   const dbCoOrganizers = coOrganizersCategory?.partners || []
@@ -738,6 +745,55 @@ export function PartnersDisplayDemo({
                   )}
                 </>
               )}
+            </div>
+          )}
+
+          {/* In Solidarity With Section */}
+          {solidarityPartners.length > 0 && (
+            <div className={cn(styles.coOrganizersSection, "mt-10 md:mt-12")}>
+              <div className={styles.coOrganizersDividerWrapper}>
+                <div className={styles.dividerLine} aria-hidden="true" />
+                <h3 className={cn(styles.coOrganizersTitle, `font-${titleFont}`)}>
+                  {getCategoryDisplayTitle(solidarityCategory, "IN SOLIDARITY WITH")}
+                </h3>
+                <div className={styles.dividerLine} aria-hidden="true" />
+              </div>
+
+              <div className={styles.coOrganizersBalancedRow}>
+                {solidarityPartners.map((partner, index) => {
+                  const logoUrl = getPartnerLogoUrl(partner)
+                  const websiteUrl = getPartnerWebsite(partner)
+                  const content = (
+                    <>
+                      <div className={styles.coOrganizerLogoWrapper}>
+                        {logoUrl ? (
+                          <img
+                            src={logoUrl}
+                            alt={`${partner.partner_name} logo`}
+                            className={styles.coOrganizerLogo}
+                          />
+                        ) : (
+                          <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
+                        )}
+                      </div>
+                      <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
+                    </>
+                  )
+
+                  return (
+                    <a
+                      key={partner.id || partner.partner_name + index}
+                      href={websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.coOrganizerCard}
+                      aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
+                    >
+                      {content}
+                    </a>
+                  )
+                })}
+              </div>
             </div>
           )}
 

@@ -21,6 +21,10 @@ export interface PartnersDisplayProps {
   coOrganizersTitle?: string
   coOrganizersSubtitle?: string
   showCoOrganizers?: boolean
+  solidarityTitle?: string
+  solidaritySubtitle?: string
+  showSolidarity?: boolean
+  showAdditionalCategories?: boolean
   className?: string
   id?: string
 }
@@ -37,6 +41,9 @@ const CATEGORY_TITLES: Record<string, string> = {
   knowledge_partner: "KNOWLEDGE PARTNER",
   technical_partner: "TECHNICAL PARTNER",
   co_organizers: "CO-ORGANIZERS",
+  in_solidarity_with: "IN SOLIDARITY WITH",
+  solidarity: "IN SOLIDARITY WITH",
+  in_solidarity: "IN SOLIDARITY WITH",
 }
 
 function getCategoryDisplayTitle(category?: { category_key: string; category_label?: string }, fallback = ""): string {
@@ -68,6 +75,8 @@ const FALLBACK_WEBSITES: Record<string, string> = {
   "ndwa": "https://www.ndwa.org.np",
   "access planet": "https://accessplanet.org.np",
   "un global compact": "https://unglobalcompact.org",
+  "global compact nepal": "https://globalcompactnepal.org",
+  "spcsn": "https://spcsnnepal.org",
 }
 
 function getPartnerWebsite(partner: ContextPartnerDetailed): string {
@@ -89,6 +98,64 @@ function getPartnerLogoUrl(partner: ContextPartnerDetailed): string | null {
   return partner.partner_logo || null
 }
 
+// Helper to render responsive partner grid cards
+function renderPartnerGridCards(partners: ContextPartnerDetailed[]) {
+  return (
+    <div className={styles.coOrganizersGrid}>
+      {partners.map((partner, index) => {
+        const logoUrl = getPartnerLogoUrl(partner)
+        const websiteUrl = getPartnerWebsite(partner)
+
+        // Extract custom admin logoFit override if present
+        let fitOverride: LogoFitOverride = "auto"
+        if (partner.partner_description) {
+          try {
+            if (partner.partner_description.startsWith("{")) {
+              const parsed = JSON.parse(partner.partner_description)
+              if (parsed.logoFit) fitOverride = parsed.logoFit
+            } else if (partner.partner_description.includes("fit:")) {
+              const match = partner.partner_description.match(/fit:([a-z-]+)/)
+              if (match) fitOverride = match[1] as LogoFitOverride
+            }
+          } catch {}
+        }
+
+        const content = (
+          <>
+            <div className={styles.coOrganizerLogoWrapper}>
+              {logoUrl ? (
+                <CoOrganizerLogoImage
+                  src={logoUrl}
+                  alt={`${partner.partner_name} logo`}
+                  className={styles.coOrganizerLogo}
+                  partnerName={partner.partner_name}
+                  fitOverride={fitOverride}
+                />
+              ) : (
+                <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
+              )}
+            </div>
+            <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
+          </>
+        )
+
+        return (
+          <a
+            key={partner.partner_id || partner.partner_name + index}
+            href={websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.coOrganizerCard}
+            aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
+          >
+            {content}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
 export async function PartnersDisplay({
   contextType = "event",
   contextId = "52c72524-7cf7-4275-8739-30ea31119669",
@@ -99,6 +166,10 @@ export async function PartnersDisplay({
   coOrganizersTitle = "CO-ORGANIZERS",
   coOrganizersSubtitle,
   showCoOrganizers = true,
+  solidarityTitle,
+  solidaritySubtitle,
+  showSolidarity = true,
+  showAdditionalCategories = true,
   className,
   id = "partners-section",
 }: PartnersDisplayProps) {
@@ -126,8 +197,26 @@ export async function PartnersDisplay({
   const coOrganizersCategory = data.categories.find(
     (c) => c.category_key === "co_organizers" || c.category_key.includes("co_org")
   )
+  const solidarityCategory = data.categories.find(
+    (c) => c.category_key === "in_solidarity_with" || c.category_key.includes("solidarity")
+  )
 
   const coOrganizers = coOrganizersCategory?.partners || []
+  const solidarityPartners = solidarityCategory?.partners || []
+
+  // Dynamic additional categories beyond the 6 recognized sections
+  const handledKeys = new Set([
+    organizersCategory?.category_key,
+    collaboratingCategory?.category_key,
+    knowledgeCategory?.category_key,
+    technicalCategory?.category_key,
+    coOrganizersCategory?.category_key,
+    solidarityCategory?.category_key,
+  ].filter(Boolean))
+
+  const otherCategories = (data.categories || []).filter(
+    (c) => !handledKeys.has(c.category_key) && c.partners && c.partners.length > 0
+  )
 
   return (
     <section className={cn(styles.section, className)} aria-labelledby={`${id}-title`} id={id}>
@@ -401,60 +490,44 @@ export async function PartnersDisplay({
               <p className={cn(styles.coOrganizersSubtitle, "font-comic font-sans")}>{coOrganizersSubtitle}</p>
             )}
 
-            <div className={styles.coOrganizersGrid}>
-              {coOrganizers.map((partner, index) => {
-                const logoUrl = getPartnerLogoUrl(partner)
-                const websiteUrl = getPartnerWebsite(partner)
-
-                // Extract custom admin logoFit override if present
-                let fitOverride: LogoFitOverride = "auto"
-                if (partner.partner_description) {
-                  try {
-                    if (partner.partner_description.startsWith("{")) {
-                      const parsed = JSON.parse(partner.partner_description)
-                      if (parsed.logoFit) fitOverride = parsed.logoFit
-                    } else if (partner.partner_description.includes("fit:")) {
-                      const match = partner.partner_description.match(/fit:([a-z-]+)/)
-                      if (match) fitOverride = match[1] as LogoFitOverride
-                    }
-                  } catch {}
-                }
-
-                const content = (
-                  <>
-                    <div className={styles.coOrganizerLogoWrapper}>
-                      {logoUrl ? (
-                        <CoOrganizerLogoImage
-                          src={logoUrl}
-                          alt={`${partner.partner_name} logo`}
-                          className={styles.coOrganizerLogo}
-                          partnerName={partner.partner_name}
-                          fitOverride={fitOverride}
-                        />
-                      ) : (
-                        <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
-                      )}
-                    </div>
-                    <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
-                  </>
-                )
-
-                return (
-                  <a
-                    key={partner.partner_id || partner.partner_name + index}
-                    href={websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.coOrganizerCard}
-                    aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
-                  >
-                    {content}
-                  </a>
-                )
-              })}
-            </div>
+            {renderPartnerGridCards(coOrganizers)}
           </div>
         )}
+
+        {/* In Solidarity With Section */}
+        {showSolidarity && solidarityPartners.length > 0 && (
+          <div className={styles.subCategorySection}>
+            <div className={styles.coOrganizersDividerWrapper}>
+              <div className={styles.dividerLine} aria-hidden="true" />
+              <h3 className={cn(styles.coOrganizersTitle, "font-heading")}>
+                {solidarityTitle || getCategoryDisplayTitle(solidarityCategory, "IN SOLIDARITY WITH")}
+              </h3>
+              <div className={styles.dividerLine} aria-hidden="true" />
+            </div>
+
+            {solidaritySubtitle && (
+              <p className={cn(styles.coOrganizersSubtitle, "font-comic font-sans")}>{solidaritySubtitle}</p>
+            )}
+
+            {renderPartnerGridCards(solidarityPartners)}
+          </div>
+        )}
+
+        {/* Dynamic Additional Categories from Admin */}
+        {showAdditionalCategories &&
+          otherCategories.map((category) => (
+            <div key={category.category_key} className={styles.subCategorySection}>
+              <div className={styles.coOrganizersDividerWrapper}>
+                <div className={styles.dividerLine} aria-hidden="true" />
+                <h3 className={cn(styles.coOrganizersTitle, "font-heading")}>
+                  {getCategoryDisplayTitle(category, category.category_label || category.category_key)}
+                </h3>
+                <div className={styles.dividerLine} aria-hidden="true" />
+              </div>
+
+              {renderPartnerGridCards(category.partners)}
+            </div>
+          ))}
       </div>
     </section>
   )
@@ -517,6 +590,24 @@ export function PartnersDisplaySkeleton({
 
           <div className={styles.coOrganizersGrid}>
             {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className={cn(styles.coOrganizerCard, "min-h-[104px]")}>
+                <div className="w-16 h-8 rounded bg-muted/50 animate-pulse mb-2" />
+                <div className="w-14 h-2.5 rounded bg-muted/60 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* In Solidarity With Skeleton Row */}
+        <div className={styles.subCategorySection}>
+          <div className={styles.coOrganizersDividerWrapper}>
+            <div className={styles.dividerLine} aria-hidden="true" />
+            <div className="h-4 w-40 rounded bg-muted/70 animate-pulse" />
+            <div className={styles.dividerLine} aria-hidden="true" />
+          </div>
+
+          <div className={styles.coOrganizersGrid}>
+            {[1, 2].map((i) => (
               <div key={i} className={cn(styles.coOrganizerCard, "min-h-[104px]")}>
                 <div className="w-16 h-8 rounded bg-muted/50 animate-pulse mb-2" />
                 <div className="w-14 h-2.5 rounded bg-muted/60 animate-pulse" />
