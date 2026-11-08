@@ -36,6 +36,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ArrowUpDown,
+  Maximize2,
 } from "lucide-react"
 import { createTeamMember, updateTeamMember, deleteTeamMember } from "@/lib/actions/admin-team"
 import { notifications } from "@/lib/notifications"
@@ -341,7 +342,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} onChange={() => setDirty(true)} className="space-y-6 pb-24 lg:pb-0">
+    <form onSubmit={handleSubmit} onChange={() => setDirty(true)} className="space-y-4 sm:space-y-6 pb-28 lg:pb-0">
       {error && (
         <Alert variant="destructive" role="alert">
           <AlertCircle className="h-4 w-4 shrink-0" />
@@ -349,49 +350,49 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
         </Alert>
       )}
 
-      {/* Mobile Sticky Quick Jump Navigation Bar */}
-      <div className="lg:hidden sticky top-16 z-20 -mx-4 sm:-mx-4 -mt-2 mb-4 bg-background/95 backdrop-blur-md border-b border-border/80 px-4 py-2.5 shadow-2xs">
-        <div className="flex items-center justify-between gap-2">
-          <nav aria-label="Form section jumps" className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+      {/* Sticky Quick Jump Navigation & Live Preview Trigger Bar (Desktop & Mobile) */}
+      <div className="sticky top-16 z-20 -mx-4 sm:-mx-6 -mt-2 mb-4 bg-background/95 backdrop-blur-md border-b border-border/80 px-3 sm:px-4 py-2 shadow-2xs">
+        <div className="flex items-center justify-between gap-2 max-w-7xl mx-auto">
+          <nav aria-label="Form section jumps" className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto scrollbar-hide scroll-smooth py-0.5 touch-pan-x text-xs">
             <button
               type="button"
               onClick={() => scrollToSection("section-info")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Info
             </button>
             <button
               type="button"
               onClick={() => scrollToSection("section-photo")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Photo
             </button>
             <button
               type="button"
               onClick={() => scrollToSection("section-socials")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Socials
             </button>
             <button
               type="button"
               onClick={() => scrollToSection("section-contact")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Contact
             </button>
             <button
               type="button"
               onClick={() => scrollToSection("section-preview")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Preview
             </button>
             <button
               type="button"
               onClick={() => scrollToSection("section-visibility")}
-              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors"
+              className="shrink-0 px-2.5 py-1 rounded-full bg-muted hover:bg-muted/80 text-foreground font-medium transition-colors cursor-pointer"
             >
               Publish
             </button>
@@ -402,11 +403,11 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
             variant="outline"
             size="sm"
             onClick={() => setPreviewDialogOpen(true)}
-            className="shrink-0 h-7 text-[11px] gap-1 px-2.5 font-medium border-primary/30 text-primary hover:bg-primary/10"
-            title="Open live card preview dialog"
+            className="shrink-0 h-8 text-xs gap-1.5 px-3 font-semibold border-primary/40 text-primary hover:bg-primary/10 shadow-2xs cursor-pointer"
+            title="Open interactive card live preview dialog"
           >
-            <Eye className="size-3" />
-            <span>Peek Card</span>
+            <Sparkles className="size-3.5 text-primary" />
+            <span>Live Preview</span>
           </Button>
         </div>
       </div>
@@ -419,13 +420,13 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
           <div className="space-y-6 lg:col-span-7">
             {/* Identity & Role Card */}
             <Card id="section-info" className="border-border/80 shadow-xs">
-              <CardHeader className="pb-4">
+              <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
                 <CardTitle className="text-base font-semibold">Member Information</CardTitle>
                 <CardDescription className="text-xs">
                   Basic details and organizational assignment for this team member.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-xs font-semibold">
@@ -559,13 +560,13 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
 
             {/* Social Media Links Card */}
             <Card id="section-socials" className="border-border/80 shadow-xs">
-              <CardHeader className="pb-4">
+              <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
                 <CardTitle className="text-base font-semibold">Social Profiles</CardTitle>
                 <CardDescription className="text-xs">
                   Icons will appear on the member&apos;s card on the public website.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3.5">
+              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-3.5">
                 <div className="grid gap-3.5 sm:grid-cols-2">
                   {Object.entries(SOCIAL_ICONS).map(([key, config]) => {
                     const currentVal = socials[key] || ""
@@ -602,7 +603,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                             setDirty(true)
                           }}
                           placeholder={config.placeholder}
-                          className="min-h-11 sm:min-h-10 text-base sm:text-xs"
+                          className="min-h-11 sm:min-h-10 text-base sm:text-sm"
                         />
                       </div>
                     )
@@ -613,7 +614,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
 
             {/* Internal Contact Info */}
             <Card id="section-contact" className="border-border/80 shadow-xs">
-              <CardHeader className="pb-4">
+              <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <CardTitle className="text-base font-semibold">Internal Contact Details</CardTitle>
                   <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider shrink-0">
@@ -624,7 +625,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                   For foundation records and communication. These details are never rendered on the public website.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="email" className="text-xs font-semibold">
@@ -658,41 +659,55 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
           </div>
 
           {/* Right Column: Live Card Preview & Publishing Actions (Sticky on Desktop) */}
-          <div className="space-y-6 lg:col-span-5 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto lg:no-scrollbar">
+          <div className="flex flex-col gap-6 lg:col-span-5 lg:sticky lg:top-20 lg:self-start">
             {/* Live Public Card Preview */}
             <Card id="section-preview" className="border-border/80 shadow-xs overflow-hidden">
-              <CardHeader className="pb-3 border-b border-border/70 bg-muted/20">
+              <CardHeader className="p-3 sm:p-4 pb-3 border-b border-border/70 bg-muted/20">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-1.5">
                     <Sparkles className="h-4 w-4 text-primary shrink-0" />
                     <CardTitle className="text-sm font-semibold">Live Public Preview</CardTitle>
                   </div>
-                  {/* Mode switcher */}
-                  <div className="inline-flex rounded-lg border border-border p-0.5 bg-background text-xs">
-                    <button
+                  <div className="flex items-center gap-1.5">
+                    {/* Mode switcher */}
+                    <div className="inline-flex rounded-lg border border-border p-0.5 bg-background text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setPreviewMode("default")}
+                        className={cn(
+                          "px-2.5 py-1 rounded-md font-medium text-[11px] transition-colors cursor-pointer",
+                          previewMode === "default"
+                            ? "bg-muted text-foreground shadow-2xs font-semibold"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        Default
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPreviewMode("hover")}
+                        className={cn(
+                          "px-2.5 py-1 rounded-md font-medium text-[11px] transition-colors cursor-pointer",
+                          previewMode === "hover"
+                            ? "bg-muted text-foreground shadow-2xs font-semibold"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        Hover Overlay
+                      </button>
+                    </div>
+
+                    <Button
                       type="button"
-                      onClick={() => setPreviewMode("default")}
-                      className={cn(
-                        "px-2.5 py-1 rounded-md font-medium text-[11px] transition-colors",
-                        previewMode === "default"
-                          ? "bg-muted text-foreground shadow-2xs font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPreviewDialogOpen(true)}
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
+                      title="Open full interactive preview dialog"
                     >
-                      Default
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPreviewMode("hover")}
-                      className={cn(
-                        "px-2.5 py-1 rounded-md font-medium text-[11px] transition-colors",
-                        previewMode === "hover"
-                          ? "bg-muted text-foreground shadow-2xs font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      Hover Overlay
-                    </button>
+                      <Maximize2 className="h-3.5 w-3.5" />
+                      <span className="sr-only">Expand Preview</span>
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
@@ -718,13 +733,13 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
 
             {/* Publishing & Actions Card */}
             <Card id="section-visibility" className="border-border/80 shadow-xs">
-              <CardHeader className="pb-4">
+              <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
                 <CardTitle className="text-base font-semibold">Visibility & Actions</CardTitle>
                 <CardDescription className="text-xs">
                   Control publication status and directory placement.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4">
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-border/80 p-3 sm:p-3.5 bg-muted/20">
                   <div className="space-y-0.5 min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
@@ -830,9 +845,20 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                     <Button
                       type="button"
                       variant="outline"
+                      onClick={() => setPreviewDialogOpen(true)}
+                      className="min-h-10 flex-1 text-xs gap-1.5 border-primary/30 text-primary hover:bg-primary/5 cursor-pointer"
+                      title="Open full interactive preview dialog"
+                    >
+                      <Eye className="size-3.5" />
+                      <span>Preview Dialog</span>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={handleCancel}
                       disabled={busy}
-                      className="min-h-10 flex-1 text-xs"
+                      className="min-h-10 px-3 text-xs cursor-pointer"
                     >
                       Cancel
                     </Button>
@@ -843,7 +869,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
                         variant="destructive"
                         onClick={() => setDeleteOpen(true)}
                         disabled={busy}
-                        className="min-h-10 text-xs px-3"
+                        className="min-h-10 text-xs px-3 cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4 mr-1" />
                         Delete
@@ -864,28 +890,42 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
         </p>
       )}
 
-      {/* Mobile Sticky Bottom Action Bar */}
-      <div className="lg:hidden sticky bottom-0 z-30 -mx-4 -mb-4 sm:-mx-4 sm:-mb-4 border-t border-border bg-background/95 backdrop-blur-md p-3 shadow-lg pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      {/* Mobile Fixed Bottom Action Bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-border bg-background/95 backdrop-blur-md p-3 shadow-lg pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center gap-2 max-w-lg mx-auto">
           <Button
             type="button"
             variant="outline"
             onClick={handleCancel}
             disabled={busy}
-            className="min-h-11 px-3.5 text-xs font-medium"
+            className="min-h-11 px-3 text-xs font-medium"
           >
             Cancel
           </Button>
+
+          {member && (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setDeleteOpen(true)}
+              disabled={busy}
+              className="min-h-11 px-3 text-xs font-medium shrink-0"
+              title="Delete member"
+            >
+              <Trash2 className="size-3.5" />
+              <span className="sr-only sm:not-sr-only sm:ml-1">Delete</span>
+            </Button>
+          )}
 
           <Button
             type="button"
             variant="secondary"
             onClick={() => setPreviewDialogOpen(true)}
-            className="min-h-11 px-3 text-xs font-medium gap-1.5 border border-border"
+            className="min-h-11 px-2.5 sm:px-3 text-xs font-medium gap-1 border border-border shrink-0"
             title="Preview card"
           >
             <Eye className="size-3.5 text-primary" />
-            <span className="hidden sm:inline">Preview</span>
+            <span className="hidden xs:inline">Preview</span>
           </Button>
 
           <Button
@@ -901,7 +941,7 @@ export function TeamMemberForm({ member }: TeamMemberFormProps) {
 
       {/* Quick Preview Dialog for Mobile / Tablet Viewports */}
       <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
-        <DialogContent className="max-w-sm sm:max-w-md p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-2 border-b border-border/70 text-left">
             <DialogTitle className="text-base font-semibold flex items-center gap-1.5">
               <Sparkles className="size-4 text-primary" />

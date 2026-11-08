@@ -42,11 +42,13 @@ export async function changePaymentStatusPolymorphic(input: {
 
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role, full_name")
+      .select("id, role, full_name, is_active")
       .eq("user_id", user.id)
       .single()
 
-    if (adminError || !adminUser) return { ok: false, message: "Admin user not found" }
+    if (adminError || !adminUser || !adminUser.is_active) {
+      return { ok: false, message: "Unauthorized or inactive admin account" }
+    }
     if (!["ADMIN", "SUPER_ADMIN"].includes(adminUser.role)) {
       return { ok: false, message: "Insufficient permissions." }
     }
@@ -133,11 +135,13 @@ export async function addReviewNotePolymorphic(input: {
 
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role")
+      .select("id, role, is_active")
       .eq("user_id", user.id)
       .single()
 
-    if (adminError || !adminUser) return { ok: false, message: "Admin user not found" }
+    if (adminError || !adminUser || !adminUser.is_active) {
+      return { ok: false, message: "Unauthorized or inactive admin account" }
+    }
     if (!["ADMIN", "SUPER_ADMIN"].includes(adminUser.role)) {
       return { ok: false, message: "Insufficient permissions." }
     }
@@ -182,11 +186,13 @@ export async function updateReviewStatusPolymorphic(input: {
 
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role")
+      .select("id, role, is_active")
       .eq("user_id", user.id)
       .single()
 
-    if (adminError || !adminUser) return { ok: false, message: "Admin user not found" }
+    if (adminError || !adminUser || !adminUser.is_active) {
+      return { ok: false, message: "Unauthorized or inactive admin account" }
+    }
     if (!["ADMIN", "SUPER_ADMIN"].includes(adminUser.role)) {
       return { ok: false, message: "Insufficient permissions." }
     }

@@ -16,9 +16,13 @@ async function checkFinancePermission() {
 
   if (!user) return false
 
-  const { data: adminUser } = await supabase.from("admin_users").select("role").eq("user_id", user.id).single()
+  const { data: adminUser } = await supabase
+    .from("admin_users")
+    .select("role, is_active")
+    .eq("user_id", user.id)
+    .single()
 
-  if (!adminUser) return false
+  if (!adminUser || !adminUser.is_active) return false
 
   return canViewFinance(adminUser.role as AdminRole)
 }
