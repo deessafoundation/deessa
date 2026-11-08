@@ -30,6 +30,7 @@ import {
   Filter,
   Check,
   RotateCcw,
+  Globe,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -141,6 +142,20 @@ const ALL_MODULES: CMSModuleItem[] = [
     iconColor: "text-slate-600 dark:text-slate-300",
     bgSoft: "bg-slate-50 dark:bg-slate-900/40",
     keywords: ["config", "branding", "settings", "footer", "typography", "logo"],
+  },
+  {
+    id: "seo",
+    title: "SEO & Social Sharing Hub",
+    description: "Search engine meta titles, descriptions, Google SERP snippets, and social share previews",
+    category: "core",
+    categoryLabel: "Core Pages",
+    icon: Globe,
+    href: "/admin/seo",
+    permission: "settings",
+    colorBadge: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+    bgSoft: "bg-emerald-50 dark:bg-emerald-950/30",
+    keywords: ["seo", "meta", "google", "preview", "serp", "social", "sharing", "twitter", "facebook", "whatsapp", "tags"],
   },
 
   // 2. Publishing & Editorial

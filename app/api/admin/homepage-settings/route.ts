@@ -101,16 +101,19 @@ export async function POST(request: NextRequest) {
       updates.push({ key: HOMEPAGE_SETTINGS_KEYS.WHAT_WE_DO, value: whatWeDo })
     }
 
-    // Perform all updates
+    // Perform all updates using upsert so non-existent rows are created automatically
     for (const update of updates) {
       const { error } = await supabase
         .from("site_settings")
-        .update({
-          value: update.value,
-          updated_by: currentAdmin.id,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("key", update.key)
+        .upsert(
+          {
+            key: update.key,
+            value: update.value,
+            updated_by: currentAdmin.id,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "key" }
+        )
 
       if (error) {
         console.error(`Error updating ${update.key}:`, error)
@@ -122,12 +125,15 @@ export async function POST(request: NextRequest) {
     if (hero) {
       const { error: heroError } = await supabase
         .from("site_settings")
-        .update({
-          value: hero,
-          updated_by: currentAdmin.id,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("key", "home_hero")
+        .upsert(
+          {
+            key: "home_hero",
+            value: hero,
+            updated_by: currentAdmin.id,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "key" }
+        )
 
       if (heroError) {
         console.error("Error updating home_hero:", heroError)
@@ -135,18 +141,44 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Log activity
+    // Mirror homepage SEO to page_seo table if provided
+    if (settings?.seo) {
+      try {
+        await supabase.from("page_seo").upsert(
+          {
+            path: "/",
+            page_name: "Homepage",
+            category: "core",
+            title: settings.seo.title || "deessa Foundation - Empowering Autistic Children & Families in Nepal",
+            description: settings.seo.description || "",
+            keywords: settings.seo.keywords || [],
+            og_image: settings.seo.ogImage || null,
+            updated_by: currentAdmin.id,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "path" }
+        )
+      } catch (err) {
+        console.warn("Could not mirror homepage_seo to page_seo:", err)
+      }
+    }
+
+    // Log activity (best effort, do not block save if log insert fails)
     const updatedKeys = [...updates.map((u) => u.key)]
     if (hero) updatedKeys.push("home_hero")
     
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "homepage_settings",
-      entity_id: null,
-      new_data: { keys_updated: updatedKeys },
-      ip_address: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip"),
-    })
+    try {
+      await supabase.from("activity_logs").insert({
+        user_id: currentAdmin.id,
+        action: "UPDATE",
+        entity_type: "homepage_settings",
+        entity_id: null,
+        new_data: { keys_updated: updatedKeys },
+        ip_address: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip"),
+      })
+    } catch (logError) {
+      console.warn("Failed to write to activity_logs:", logError)
+    }
 
     // The public homepage reads these CMS values. Clear its route cache right
     // after a save so the next visit receives the updated carousel.

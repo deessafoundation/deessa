@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, Globe, Share2 } from "lucide-react"
+import { Search, Globe, Share2, ExternalLink, Sparkles } from "lucide-react"
 import type { HomepageSEOSettings } from "@/lib/types/homepage-settings"
 import { cn } from "@/lib/utils"
 
@@ -37,6 +38,30 @@ export default function SEOManager({ seo, onChange }: SEOManagerProps) {
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+            <Sparkles className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-foreground">
+              Site-Wide SEO & Social Sharing Hub Available
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              You can now manage metadata, Google SERP cards, and social share previews for all 12 public pages in one central place.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/admin/seo"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium transition-colors hover:bg-primary/90 shrink-0"
+        >
+          <Globe className="w-3.5 h-3.5" />
+          Open SEO Hub
+          <ExternalLink className="w-3 h-3 ml-0.5" />
+        </Link>
+      </div>
+
       <Card className="border border-border/80 shadow-sm">
         <CardHeader className="pb-4">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -64,7 +89,7 @@ export default function SEOManager({ seo, onChange }: SEOManagerProps) {
               <Input
                 value={seo.title || ""}
                 onChange={(e) => updateSEO({ title: e.target.value })}
-                placeholder="deessa Foundation - Empowering Nepal Through Inclusive Education"
+                placeholder="deessa Foundation - Empowering Autistic Children & Families in Nepal"
                 className="mt-1.5 h-9 text-sm"
                 maxLength={70}
               />
@@ -89,12 +114,12 @@ export default function SEOManager({ seo, onChange }: SEOManagerProps) {
                 value={seo.description || ""}
                 onChange={(e) => updateSEO({ description: e.target.value })}
                 rows={3}
-                placeholder="A non-profit organization dedicated to sustainable development, autism inclusion, and quality education in Nepal..."
+                placeholder="A non-profit organization dedicated to autism support, neurodiversity acceptance, and inclusive education for autistic children and their families across Nepal..."
                 className="mt-1.5 text-sm resize-none"
                 maxLength={175}
               />
               <p className="text-[11px] text-muted-foreground mt-1">
-                Optimal length is 150-160 characters for search snippets.
+                Optimal length is 150-160 characters for search snippets. This directly controls what Google shows when searching for your organization.
               </p>
             </div>
 

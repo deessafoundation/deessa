@@ -10,6 +10,24 @@ import type { Metadata } from 'next'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://deessafoundation.com'
 const SITE_NAME = 'deessa Foundation'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`
+const PRODUCTION_URL = 'https://deessafoundation.com'
+
+/**
+ * Resolves authoritative canonical URL, ensuring preview deployments (*.vercel.app)
+ * or local dev environments never pollute search engine index with staging domains.
+ */
+function resolveCanonicalUrl(pathOrUrl: string): string {
+  if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) {
+    return pathOrUrl
+  }
+
+  const cleanPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`
+  const rawBase = process.env.NEXT_PUBLIC_SITE_URL || PRODUCTION_URL
+  const isPreviewOrLocal = rawBase.includes('vercel.app') || rawBase.includes('localhost') || rawBase.includes('127.0.0.1')
+  const base = isPreviewOrLocal ? PRODUCTION_URL : rawBase
+
+  return `${base}${cleanPath === '/' ? '' : cleanPath}`
+}
 
 export interface SEOMetadataParams {
   title: string
@@ -82,7 +100,7 @@ export function generateSEOMetadata({
       creator: '@deessafoundation',
     },
     alternates: {
-      canonical: pageUrl,
+      canonical: resolveCanonicalUrl(path),
     },
   }
 

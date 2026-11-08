@@ -23,6 +23,7 @@ import {
   Palette,
   Handshake,
   User,
+  Globe,
 } from "lucide-react"
 import { type AdminRole, hasPermission, canViewFinance, canManageUsers } from "@/lib/types/admin"
 
@@ -84,6 +85,7 @@ export const adminNavSections: AdminNavSection[] = [
   {
     label: "Settings",
     items: [
+      { name: "SEO & Social Hub", href: "/admin/seo", icon: Globe, permission: "settings", description: "Search engine & social cards" },
       { name: "Site Settings", href: "/admin/settings", icon: Settings, permission: "settings", description: "General configuration & fonts" },
       { name: "Admin Users", href: "/admin/users", icon: UserCog, permission: "users", requiresAdmin: true, description: "Roles & permissions" },
       { name: "My Profile", href: "/admin/profile", icon: User, permission: null, description: "Account credentials & security" },
