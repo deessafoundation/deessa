@@ -5,23 +5,12 @@ import { Button } from "@/components/ui/button"
 import { ContactFormPrefilled } from "@/components/contact/contact-form-prefilled"
 import { isSupportEnabled } from "@/lib/support/settings"
 import Link from "next/link"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 import styles from "./contact.module.css"
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Contact Us - Get in Touch with deessa Foundation",
-  description:
-    "Get in touch with deessa Foundation. Reach out for partnerships, donations, volunteering opportunities, or general inquiries. We're here to help make a difference in Nepal.",
-  path: "/contact",
-  keywords: [
-    "contact deessa Foundation",
-    "Nepal NGO contact",
-    "volunteer Nepal",
-    "donate to Nepal",
-    "partnership opportunities",
-    "get involved",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/contact")
+}
 
 const channels = [
   {

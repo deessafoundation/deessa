@@ -4,25 +4,13 @@ import PodcastSeriesIntro from "@/components/podcasts/podcast-series-intro"
 import PodcastArchiveSection from "@/components/podcasts/podcast-archive-section"
 import AllHighlightsSection from "@/components/podcasts/all-highlights-section"
 import { getPublishedPodcasts, getAllPodcastHighlights } from "@/lib/data/podcasts"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Podcasts - Living With Autism",
-  description:
-    "Explore our podcast series featuring stories, insights, and conversations about autism, inclusion, and community impact in Nepal. Real voices, real experiences.",
-  path: "/podcasts",
-  keywords: [
-    "autism podcast",
-    "Nepal autism",
-    "disability podcast",
-    "inclusion stories",
-    "autism awareness",
-    "living with autism",
-    "special needs Nepal",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/podcasts")
+}
 
 export const revalidate = 3600 // Revalidate every hour
 

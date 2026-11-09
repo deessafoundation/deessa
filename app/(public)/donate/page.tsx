@@ -8,23 +8,11 @@ import { DonationForm } from "@/components/donations/donation-form"
 import { BankTransferPanel } from "@/components/donations/bank-transfer-panel"
 import { getDonationCheckoutProviders, getPaymentSettings, isOnlineDonationCheckoutEnabled } from "@/lib/payments/config"
 import { getConfiguredBankAccounts } from "@/lib/payments/bank-details"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Donate - Support Our Mission in Nepal",
-  description:
-    "Support our mission to empower communities in Nepal through education, healthcare, and sustainable development. Every donation makes a real difference in children's lives.",
-  path: "/donate",
-  keywords: [
-    "donate to Nepal",
-    "support Nepal NGO",
-    "charity donation",
-    "help Nepal children",
-    "education donation",
-    "autism support donation",
-    "make a difference Nepal",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/donate")
+}
 
 const donationTiers = [
   {

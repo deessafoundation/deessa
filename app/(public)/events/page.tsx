@@ -1,24 +1,13 @@
 import type { Metadata } from "next"
 import { createClient } from "@/lib/supabase/server"
-import { generateSEOMetadata } from "@/lib/seo/metadata-utils"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 import { EventsLanding, type ListingEvent } from "@/components/events/events-landing"
 import { accessibilitySummit } from "@/lib/data/accessibility-summit"
 export const revalidate = 300
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "Events - Workshops & Community Gatherings",
-  description:
-    "Browse upcoming events, workshops, and community gatherings organized by deessa Foundation. Join us in making a difference in Nepal's communities.",
-  path: "/events",
-  keywords: [
-    "Nepal events",
-    "community events Nepal",
-    "workshops Nepal",
-    "autism events",
-    "NGO events",
-    "volunteer events",
-  ],
-})
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/events")
+}
 
 async function getPublishedEvents(): Promise<ListingEvent[] | null> {
   try {
