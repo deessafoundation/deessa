@@ -121,8 +121,8 @@ export function ReceiptEmailTemplate({
                     Dear <strong>${safeDonorName}</strong>,<br /><br />
                     On behalf of everyone at <strong>deessa Foundation</strong>, we sincerely appreciate your contribution
                     of <strong>${currencyInfo.symbol}&nbsp;${formattedAmount}</strong>. Every donation, no matter the size,
-                    directly fuels our mission to empower communities through education, healthcare, and sustainable development
-                    across Nepal.<br /><br />
+                    directly fuels our mission to support autistic children and empower families through inclusive education,
+                    awareness, and advocacy across Nepal.<br /><br />
                     Your official donation receipt is attached below for your records.
                   </p>
 
@@ -250,7 +250,7 @@ export function ReceiptEmailTemplate({
                           </tr>
                           <tr>
                             <td style="padding:4px 8px 4px 0;font-size:13px;color:#166534;vertical-align:top;">🌱</td>
-                            <td style="padding:4px 0;font-size:13px;color:#166534;line-height:1.5;">Support sustainable livelihoods &amp; community development</td>
+                            <td style="padding:4px 0;font-size:13px;color:#166534;line-height:1.5;">Support children with autism &amp; promote inclusive classrooms</td>
                           </tr>
                           <tr>
                             <td style="padding:4px 8px 4px 0;font-size:13px;color:#166534;vertical-align:top;">🤝</td>

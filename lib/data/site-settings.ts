@@ -204,7 +204,7 @@ export async function getPageHeroSettings(page: string): Promise<HeroSettings> {
         "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=85",
       title: "Our Programs",
       subtitle:
-        "Empowering communities through education, healthcare, and sustainable development initiatives across Nepal.",
+        "Empowering autistic children and their families through inclusive education, therapy resources, and community advocacy across Nepal.",
       badge: "Active Projects",
       overlayOpacity: 0.7,
     },
