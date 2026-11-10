@@ -54,9 +54,34 @@ export function WhatWeDoHero({ content }: { content: WhatWeDoSettings["hero"] })
                 </svg>
               </span>
             </h1>
-            <p className={cn(styles.description, "mt-6 max-w-[33rem] font-comic text-base leading-[1.75] sm:text-lg")}>
-              {content.description}
-            </p>
+            {/* Visually structured mission and action copy */}
+            {!content.description ||
+            content.description.includes("understood, accepted, and included") ||
+            content.description.includes("From classrooms in Karnali") ? (
+              <div className="mt-6 space-y-4 max-w-[34rem]">
+                <p className={cn(styles.visionLead, "font-comic text-base leading-[1.75] sm:text-lg")}>
+                  We work to build a society where children with disabilities, particularly those with autism and other neurodivergent conditions, are{" "}
+                  <strong className={styles.visionHighlight}>understood, accepted, and included</strong>.
+                </p>
+
+                <div className={cn(styles.actionCallout, "rounded-r-xl border-l-4 py-2.5 pl-4 sm:pl-5")}>
+                  <p className={cn(styles.actionText, "font-comic text-sm sm:text-[15px] leading-[1.7]")}>
+                    Through <strong className={styles.keywordHighlight}>awareness</strong>,{" "}
+                    <strong className={styles.keywordHighlight}>capacity building</strong>,{" "}
+                    <strong className={styles.keywordHighlight}>accessible resources</strong>, and{" "}
+                    <strong className={styles.keywordHighlight}>advocacy</strong>, we work alongside{" "}
+                    <strong className={styles.partnerEmphasis}>families, educators, professionals, and communities</strong>{" "}
+                    to make inclusion a reality.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className={cn(styles.description, "mt-6 max-w-[34rem] font-comic text-base leading-[1.75] sm:text-lg space-y-3")}>
+                {content.description.split("\n\n").map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            )}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a href={content.primaryHref} data-slot="button" data-variant="default"
                 className={cn(styles.primaryBtn, buttonBase)}>

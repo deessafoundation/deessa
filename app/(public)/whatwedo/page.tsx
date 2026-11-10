@@ -9,11 +9,12 @@ import { getPublishedProgramCards } from "@/lib/programs/data"
 import { cn } from "@/lib/utils"
 import { WhatWeDoHero } from "@/components/what-we-do/whatwedo-hero"
 import { WhatWeDoPillars } from "@/components/what-we-do/whatwedo-pillars"
+import { InclusionManifesto } from "@/components/what-we-do/inclusion-manifesto"
 import programsStyles from "./whatwedo-programs.module.css"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 
-export const metadata: Metadata = {
-  title: "What We Do - deessa Foundation",
-  description: "From classrooms in Karnali to clinics in the Terai, our programs deliver sustainable education, healthcare, and empowerment across Nepal's most remote communities.",
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/whatwedo")
 }
 
 const categoryMeta: Record<string, { label: string; color: string }> = {
@@ -171,6 +172,9 @@ export default async function ProgramsPage() {
           />
         </svg>
       </div>
+
+      {/* Inclusion Manifesto Banner */}
+      <InclusionManifesto />
 
       {/* TODO: Fix "Our Programs in Action" section later
       <section
