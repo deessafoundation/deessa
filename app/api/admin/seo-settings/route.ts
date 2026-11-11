@@ -105,28 +105,6 @@ export async function POST(request: NextRequest) {
         throw error
       }
 
-      // If updating the homepage, also keep site_settings.homepage_seo in sync
-      if (cleanPath === "/") {
-        try {
-          await supabase.from("site_settings").upsert(
-            {
-              key: "homepage_seo",
-              value: {
-                title: cleanTitle,
-                description: cleanDesc,
-                keywords: cleanKeywords,
-                ogImage: page.og_image?.trim() || "",
-              },
-              updated_by: currentAdmin.id,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "key" }
-          )
-        } catch (syncErr) {
-          console.warn("Failed to mirror homepage_seo to site_settings:", syncErr)
-        }
-      }
-
       updatedPaths.push(cleanPath)
 
       // Revalidate the public route so search engines and visitors see updates immediately

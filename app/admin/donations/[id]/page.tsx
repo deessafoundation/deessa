@@ -1,7 +1,16 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { TransactionDetailClient } from "../../../../components/admin/donations/transaction-detail-client"
+
+export const metadata: Metadata = {
+  title: "Donation Detail | Admin",
+  description: "View transaction telemetry, donor dossier, audit trail, and deposit slip verification.",
+}
+
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 async function checkFinancePermission() {
   const supabase = await createClient()
@@ -27,10 +36,10 @@ async function checkFinancePermission() {
 }
 
 async function getTransactionData(donationId: string) {
-  const supabase = await createClient()
+  const serviceSupabase = createServiceRoleClient()
 
   // Fetch only the columns we need for the donation
-  const { data: donation, error: donationError } = await supabase
+  const { data: donation, error: donationError } = await serviceSupabase
     .from("donations")
     .select(
       `
@@ -71,17 +80,17 @@ async function getTransactionData(donationId: string) {
     return null
   }
 
-  // Fetch related data in parallel (with error handling for missing tables)
+  // Fetch related data in parallel using serviceSupabase to bypass table RLS policies on audit tables
   const [reviewNotesResult, statusChangesResult, paymentEventsResult, paymentsResult] = await Promise.all([
-    // Review notes with admin user info (may not exist yet)
-    supabase
+    // Review notes with admin user info
+    serviceSupabase
       .from("review_notes")
       .select(
         `
         id,
         note_text,
         created_at,
-        admin_users!inner (
+        admin_users (
           full_name,
           email
         )
@@ -94,8 +103,8 @@ async function getTransactionData(donationId: string) {
         return res
       }),
 
-    // Status change log with admin user info (may not exist yet)
-    supabase
+    // Status change log with admin user info
+    serviceSupabase
       .from("status_change_log")
       .select(
         `
@@ -104,7 +113,7 @@ async function getTransactionData(donationId: string) {
         new_status,
         reason,
         created_at,
-        admin_users!inner (
+        admin_users (
           full_name
         )
       `
@@ -116,8 +125,8 @@ async function getTransactionData(donationId: string) {
         return res
       }),
 
-    // Payment events - select all columns to avoid schema issues
-    supabase
+    // Payment events
+    serviceSupabase
       .from("payment_events")
       .select("*")
       .eq("donation_id", donationId)
@@ -127,8 +136,8 @@ async function getTransactionData(donationId: string) {
         return res
       }),
 
-    // Payments table - fetch all Stripe references
-    supabase
+    // Payments table - fetch all Stripe / gateway references
+    serviceSupabase
       .from("payments")
       .select(`
         transaction_id,
@@ -141,7 +150,7 @@ async function getTransactionData(donationId: string) {
       .eq("donation_id", donationId)
       .order("created_at", { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
       .then((res) => {
         if (res.error) console.warn("Payments fetch error:", res.error)
         return res
@@ -151,7 +160,7 @@ async function getTransactionData(donationId: string) {
   // Get reviewed by admin name if exists
   let reviewedByName = null
   if (donation.reviewed_by) {
-    const { data: reviewedBy } = await supabase
+    const { data: reviewedBy } = await serviceSupabase
       .from("admin_users")
       .select("full_name")
       .eq("id", donation.reviewed_by)
@@ -163,7 +172,7 @@ async function getTransactionData(donationId: string) {
   // signed URL must be minted with the service role. Short-lived on purpose.
   let bankProofUrl: string | null = null
   if (donation.bank_proof_path) {
-    const { data: signed } = await createServiceRoleClient()
+    const { data: signed } = await serviceSupabase
       .storage.from("bank-transfer-proofs")
       .createSignedUrl(donation.bank_proof_path, 60 * 60)
     bankProofUrl = signed?.signedUrl ?? null
@@ -201,8 +210,7 @@ export default async function TransactionDetailPage({
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">Transaction Not Found</h2>
           <p className="text-muted-foreground">
-            The transaction you're looking for doesn't exist or you don't have permission to view
-            it.
+            The transaction you're looking for doesn't exist or you don't have permission to view it.
           </p>
         </div>
       </div>

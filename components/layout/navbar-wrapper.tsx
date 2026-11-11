@@ -18,6 +18,7 @@ export async function NavbarWrapper({ siteFlags }: NavbarWrapperProps) {
       supportEnabled={supportEnabled}
       registerConfig={registerConfig}
       showBetaBadge={siteFlags.betaBadge}
+      storiesEnabled={siteFlags.storiesEnabled}
     />
   )
 }

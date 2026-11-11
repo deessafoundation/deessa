@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -40,6 +41,9 @@ import {
   ZoomIn,
   ZoomOut,
   RefreshCw,
+  ArrowRight,
+  Sparkles,
+  Share2,
 } from "lucide-react"
 import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "@/components/shared/icons/social-icons"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
@@ -396,7 +400,7 @@ export function SiteSettingsForm({ settings }: SiteSettingsFormProps) {
                 className="relative data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md hover:bg-primary/10 hover:text-primary transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:rounded-xl rounded-lg px-4 py-2.5 group"
               >
                 <Search className="h-4 w-4 mr-2 group-data-[state=active]:animate-pulse" />
-                <span className="font-semibold">SEO</span>
+                <span className="font-semibold">SEO Hub</span>
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-data-[state=active]:opacity-100 group-data-[state=active]:animate-shimmer pointer-events-none" />
               </TabsTrigger>
               <TabsTrigger 
@@ -733,73 +737,93 @@ export function SiteSettingsForm({ settings }: SiteSettingsFormProps) {
         </TabsContent>
 
         <TabsContent value="seo" className="space-y-6">
-          <form action={(formData) => handleSubmit("seo", formData)}>
-            <Card className="border-2 shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="bg-muted/30 border-b">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <div className="p-2 bg-green-500/10 rounded-lg">
-                    <Search className="h-5 w-5 text-green-600" />
+          <Card className="border-2 shadow-sm">
+            <CardHeader className="bg-muted/30 border-b pb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-primary/10 rounded-xl text-primary shrink-0">
+                    <Search className="h-6 w-6 text-primary" />
                   </div>
-                  SEO Settings
-                </CardTitle>
-                <CardDescription className="text-base">Optimize your website for search engines and social media sharing</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 pt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="metaTitle" className="text-sm font-semibold">Default Meta Title</Label>
-                  <Input
-                    id="metaTitle"
-                    name="metaTitle"
-                    defaultValue={seo.metaTitle || ""}
-                    placeholder="deessa Foundation - Empowering Communities"
-                    className="h-10"
-                  />
-                  <p className="text-xs text-muted-foreground">Appears in browser tabs and search results (50-60 characters recommended)</p>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-xl font-bold">SEO & Social Sharing Hub</CardTitle>
+                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        Centralized System
+                      </span>
+                    </div>
+                    <CardDescription className="text-sm mt-1">
+                      Manage Google SERP snippets, OpenGraph share cards, and search indexing for all public pages in one unified place.
+                    </CardDescription>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="metaDescription" className="text-sm font-semibold">Default Meta Description</Label>
-                  <Textarea
-                    id="metaDescription"
-                    name="metaDescription"
-                    rows={3}
-                    defaultValue={seo.metaDescription || ""}
-                    placeholder="A compelling description of your organization..."
-                    className="resize-none"
-                  />
-                  <p className="text-xs text-muted-foreground">Displayed in search results (150-160 characters recommended)</p>
+                <Link
+                  href="/admin/seo"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-sm hover:bg-primary/90 transition-all shrink-0"
+                >
+                  <Globe className="h-4 w-4" />
+                  Launch SEO Hub
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl border border-border/80 bg-muted/20 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <span>Single Source of Truth</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    All static public pages (/about, /whatwedo, /donate, /contact, etc.) now read directly from the high-performance database store, eliminating phantom settings and desynchronized tags.
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="keywords" className="text-sm font-semibold">Keywords (comma-separated)</Label>
-                  <Input
-                    id="keywords"
-                    name="keywords"
-                    defaultValue={seo.keywords || ""}
-                    placeholder="nonprofit, charity, education, community, empowerment"
-                    className="h-10"
-                  />
-                  <p className="text-xs text-muted-foreground">Help search engines understand your content (5-10 keywords recommended)</p>
+
+                <div className="p-4 rounded-xl border border-border/80 bg-muted/20 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Share2 className="w-4 h-4 text-sky-600" />
+                    <span>Real-Time Social Card Previews</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Live visual simulators for Google Search (Desktop & Mobile), WhatsApp, Twitter/X summary cards, and Facebook feeds with accurate character truncation limits.
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ogImage" className="text-sm font-semibold">Default Social Share Image URL</Label>
-                  <Input
-                    id="ogImage"
-                    name="ogImage"
-                    type="url"
-                    defaultValue={seo.ogImage || ""}
-                    placeholder="https://..."
-                    className="h-10"
-                  />
-                  <p className="text-xs text-muted-foreground">Appears when your site is shared on social media • Recommended size: 1200×630 pixels</p>
+
+                <div className="p-4 rounded-xl border border-border/80 bg-muted/20 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <ImageIcon className="w-4 h-4 text-emerald-600" />
+                    <span>Per-Page 1200×630 Dropzones</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Dedicated drag-and-drop file uploader with direct image preview, dimension verification, and automatic CDN asset hosting.
+                  </p>
                 </div>
-                <div className="flex justify-end pt-4 border-t">
-                  <Button type="submit" disabled={isLoading} size="lg" className="min-w-[180px]">
-                    {isLoading && <Save className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? "Saving..." : "Save SEO Settings"}
-                  </Button>
+
+                <div className="p-4 rounded-xl border border-border/80 bg-muted/20 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Globe className="w-4 h-4 text-amber-600" />
+                    <span>Canonical & Robot Safety</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Automatic protection preventing preview domains (*.vercel.app) from leaking into production search engines, plus per-page no-index controls.
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-          </form>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/20">
+                <div>
+                  <p className="text-xs font-semibold text-foreground">Ready to configure your search tags?</p>
+                  <p className="text-[11px] text-muted-foreground">Jump directly to the SEO Command Center to view or edit any page.</p>
+                </div>
+                <Link
+                  href="/admin/seo"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Open /admin/seo
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* NEW: Homepage Settings Tab */}

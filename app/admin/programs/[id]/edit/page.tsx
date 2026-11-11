@@ -2,21 +2,49 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { use, useState, useEffect, useCallback, useRef } from "react"
+import { use, useState, useEffect, useRef } from "react"
 import {
-  ArrowLeft, Loader2, Save, Globe, GlobeOff, Archive, RotateCcw, Trash2, Eye,
-  Plus, X, AlertTriangle, CheckCircle2, AlertCircle, Image as ImageIcon,
+  ArrowLeft,
+  Loader2,
+  Save,
+  Globe,
+  GlobeOff,
+  Archive,
+  RotateCcw,
+  Trash2,
+  Eye,
+  Plus,
+  X,
+  AlertTriangle,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  Layers,
+  Image as ImageIcon,
+  Sliders,
+  ExternalLink,
+  Search,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter,
-  DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import {
   getProgramDraft,
@@ -27,8 +55,12 @@ import {
   restoreProgram,
   deleteProgram,
 } from "@/lib/actions/program-crud"
-import { programDocumentSchema, type ProgramDocument, type ProgramSection, type ProgramCategory } from "@/lib/programs/content"
-import { SectionEditor } from "@/components/admin/programs/sections"
+import {
+  programDocumentSchema,
+  type ProgramDocument,
+  type ProgramSection,
+  type ProgramCategory,
+} from "@/lib/programs/content"
 import { ProgramIdProvider } from "@/components/admin/programs/sections/program-id-context"
 import { ServiceEditForm } from "@/components/admin/programs/service-edit-form"
 import { EditorialProgramEditor } from "@/components/admin/programs/editorial-program-editor"
@@ -36,17 +68,22 @@ import { readEditorHero } from "@/lib/programs/editor-hero"
 import { ProgramMediaLibrary } from "@/components/admin/programs/sections/program-media-library"
 import { VersionHistoryPanel } from "@/components/admin/programs/sections/version-history-panel"
 import { ProgramEditSkeleton } from "@/components/admin/programs/program-edit-skeleton"
+import { AssetPicker } from "@/components/admin/programs/sections/asset-picker"
 import { notifications } from "@/lib/notifications"
+import { cn } from "@/lib/utils"
+import styles from "@/components/admin/programs/programs.module.css"
 
 function formSnapshot(value: Record<string, unknown>) {
-  return JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b))))
+  return JSON.stringify(
+    Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)))
+  )
 }
 
-const CATEGORIES: { value: ProgramCategory; label: string }[] = [
-  { value: "service", label: "Service" },
-  { value: "outreach", label: "Outreach" },
-  { value: "research", label: "Research" },
-  { value: "campaign", label: "Campaign" },
+const CATEGORIES: { value: ProgramCategory; label: string; colorClass: string }[] = [
+  { value: "service", label: "Service Program", colorClass: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20" },
+  { value: "campaign", label: "Advocacy Campaign", colorClass: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20" },
+  { value: "outreach", label: "Fieldwork & Outreach", colorClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20" },
+  { value: "research", label: "Research & Evidence", colorClass: "bg-teal-500/10 text-teal-700 dark:text-teal-400 border-teal-500/20" },
 ]
 
 // ── Confirm Dialog ──────────────────────────────────────────
@@ -63,14 +100,14 @@ interface ConfirmState {
 }
 
 const CONFIRM_STYLES: Record<ConfirmVariant, { iconBg: string; iconColor: string; confirmBg: string; confirmHover: string }> = {
-  danger:  { iconBg: "bg-red-100",   iconColor: "text-red-600",   confirmBg: "bg-red-600",   confirmHover: "hover:bg-red-700" },
-  warning: { iconBg: "bg-amber-100", iconColor: "text-amber-600", confirmBg: "bg-amber-600",  confirmHover: "hover:bg-amber-700" },
-  info:    { iconBg: "bg-blue-100",  iconColor: "text-blue-600",  confirmBg: "bg-blue-600",   confirmHover: "hover:bg-blue-700" },
+  danger: { iconBg: "bg-red-100", iconColor: "text-red-600", confirmBg: "bg-red-600", confirmHover: "hover:bg-red-700" },
+  warning: { iconBg: "bg-amber-100", iconColor: "text-amber-600", confirmBg: "bg-amber-600", confirmHover: "hover:bg-amber-700" },
+  info: { iconBg: "bg-blue-100", iconColor: "text-blue-600", confirmBg: "bg-blue-600", confirmHover: "hover:bg-blue-700" },
 }
 
 function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () => void }) {
   const [loading, setLoading] = useState(false)
-  const styles = CONFIRM_STYLES[state.variant]
+  const styleConfig = CONFIRM_STYLES[state.variant]
 
   async function handleConfirm() {
     setLoading(true)
@@ -87,8 +124,8 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
       <DialogContent className="max-w-md gap-0 p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4">
           <div className="flex items-start gap-4">
-            <div className={`flex size-10 shrink-0 items-center justify-center rounded-full ${styles.iconBg}`}>
-              <AlertTriangle className={`size-5 ${styles.iconColor}`} />
+            <div className={`flex size-10 shrink-0 items-center justify-center rounded-full ${styleConfig.iconBg}`}>
+              <AlertTriangle className={`size-5 ${styleConfig.iconColor}`} />
             </div>
             <div className="space-y-1.5 min-w-0">
               <DialogTitle className="text-base">{state.title}</DialogTitle>
@@ -112,7 +149,7 @@ function ConfirmDialog({ state, onClose }: { state: ConfirmState; onClose: () =>
           <Button
             onClick={handleConfirm}
             disabled={loading}
-            className={`gap-2 text-white ${styles.confirmBg} ${styles.confirmHover}`}
+            className={`gap-2 text-white ${styleConfig.confirmBg} ${styleConfig.confirmHover}`}
           >
             {loading && <Loader2 className="size-4 animate-spin" />}
             {state.confirmLabel}
@@ -148,8 +185,19 @@ interface PublishConfirmProps {
 }
 
 function PublishConfirmDialog({
-  open, onClose, onPublish, title, slug, category, heroImage,
-  sections, seoTitle, seoDescription, tags, revision, status, issues,
+  open,
+  onClose,
+  onPublish,
+  title,
+  slug,
+  category,
+  heroImage,
+  sections,
+  seoTitle,
+  tags,
+  revision,
+  status,
+  issues,
 }: PublishConfirmProps) {
   const [loading, setLoading] = useState(false)
   const hasErrors = issues.some((i) => i.type === "error")
@@ -170,15 +218,15 @@ function PublishConfirmDialog({
       <DialogContent className="max-w-lg gap-0 p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4">
           <div className="flex items-start gap-4">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-100">
-              <Globe className="size-5 text-green-600" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+              <Globe className="size-5" />
             </div>
             <div className="space-y-1.5 min-w-0">
-              <DialogTitle className="text-base">
-                {status === "published" ? "Update publication?" : "Publish program?"}
+              <DialogTitle className="text-base font-bold">
+                {status === "published" ? "Update Public Program?" : "Publish Program to Website?"}
               </DialogTitle>
               <DialogDescription className="text-sm leading-relaxed">
-                Review the readiness summary below before going live.
+                Review the production readiness checks below before releasing live.
               </DialogDescription>
             </div>
           </div>
@@ -186,62 +234,66 @@ function PublishConfirmDialog({
 
         <div className="px-6 space-y-4">
           {/* Preview card */}
-          <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+          <div className="rounded-xl border bg-muted/30 p-4 space-y-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate">{title || "Untitled"}</p>
-                <p className="text-xs text-muted-foreground font-mono mt-0.5">/{slug || "…"}</p>
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">/whatwedo/{slug || "…"}</p>
               </div>
-              <Badge variant="outline" className="text-[10px] shrink-0">{category}</Badge>
+              <Badge variant="outline" className="text-xs font-semibold capitalize shrink-0">
+                {category}
+              </Badge>
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
-                <span className={`size-1.5 rounded-full ${heroImage?.url ? "bg-green-500" : "bg-amber-500"}`} />
-                Hero image {heroImage?.url ? "set" : "missing"}
+                <span className={`size-1.5 rounded-full ${heroImage?.url || heroImage?.assetId ? "bg-emerald-500" : "bg-amber-500"}`} />
+                Hero image {heroImage?.url || heroImage?.assetId ? "set" : "missing"}
               </span>
               <span>{enabledSections.length} section{enabledSections.length !== 1 ? "s" : ""}</span>
-              <span>{seoTitle ? "SEO set" : "No SEO title"}</span>
+              <span>{seoTitle ? "SEO configured" : "No SEO title"}</span>
               {tags.length > 0 && <span>{tags.length} tag{tags.length !== 1 ? "s" : ""}</span>}
             </div>
           </div>
 
           {/* Issues */}
           {issues.length > 0 && (
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               {issues.map((issue, i) => (
                 <div
                   key={i}
-                  className={`flex items-start gap-2 rounded-lg px-3 py-2 text-xs leading-relaxed ${
+                  className={`flex items-start gap-2.5 rounded-xl px-3.5 py-2.5 text-xs leading-relaxed ${
                     issue.type === "error"
                       ? "bg-red-50 border border-red-100 text-red-700"
                       : "bg-amber-50 border border-amber-100 text-amber-700"
                   }`}
                 >
                   {issue.type === "error" ? (
-                    <AlertCircle className="size-3.5 mt-0.5 shrink-0" />
+                    <AlertCircle className="size-4 mt-0.5 shrink-0" />
                   ) : (
-                    <AlertTriangle className="size-3.5 mt-0.5 shrink-0" />
+                    <AlertTriangle className="size-4 mt-0.5 shrink-0" />
                   )}
-                  {issue.message}
+                  <span>{issue.message}</span>
                 </div>
               ))}
             </div>
           )}
 
           {issues.length === 0 && (
-            <div className="flex items-center gap-2 rounded-lg bg-green-50 border border-green-100 px-3 py-2 text-xs text-green-700">
-              <CheckCircle2 className="size-3.5 shrink-0" />
-              All readiness checks passed
+            <div className="flex items-center gap-2.5 rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-xs font-medium text-emerald-800">
+              <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+              All production readiness checks passed seamlessly.
             </div>
           )}
 
-          {/* Section list */}
+          {/* Section list preview */}
           {enabledSections.length > 0 && (
             <div>
-              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">Sections to publish</p>
-              <div className="flex flex-wrap gap-1">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                Active Sections to Publish ({enabledSections.length})
+              </p>
+              <div className="flex flex-wrap gap-1.5">
                 {enabledSections.map((s) => (
-                  <Badge key={s.id} variant="secondary" className="text-[10px] font-mono">
+                  <Badge key={s.id} variant="secondary" className="text-[11px] font-mono">
                     {s.content.type}
                   </Badge>
                 ))}
@@ -257,7 +309,7 @@ function PublishConfirmDialog({
           <Button
             onClick={handlePublish}
             disabled={loading || hasErrors}
-            className="gap-2 text-white bg-green-600 hover:bg-green-700"
+            className="gap-2 text-white bg-emerald-600 hover:bg-emerald-700 font-semibold"
           >
             {loading && <Loader2 className="size-4 animate-spin" />}
             {status === "published" ? `Update as v${revision}` : `Publish as v${revision}`}
@@ -268,7 +320,7 @@ function PublishConfirmDialog({
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────
+// ── Main Page Component ─────────────────────────────────────
 
 interface Props {
   params: Promise<{ id: string }>
@@ -282,6 +334,7 @@ export default function EditProgramPage({ params }: Props) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
+  const [activeTab, setActiveTab] = useState<"overview" | "sections" | "media" | "seo" | "publishing">("overview")
 
   const [title, setTitle] = useState("")
   const [shortDescription, setShortDescription] = useState("")
@@ -293,8 +346,12 @@ export default function EditProgramPage({ params }: Props) {
   const [revision, setRevision] = useState(1)
   const [sections, setSections] = useState<ProgramSection[]>([])
 
-  const [editorialHero, setEditorialHero] = useState<ProgramDocument["hero"]>({ title: "", description: "", actions: [] })
-  const [editorKey, setEditorKey] = useState(0)
+  const [editorialHero, setEditorialHero] = useState<ProgramDocument["hero"]>({
+    title: "",
+    description: "",
+    actions: [],
+  })
+  const [editorKey] = useState(0)
 
   // Hero fields
   const [heroTitle, setHeroTitle] = useState("")
@@ -321,7 +378,12 @@ export default function EditProgramPage({ params }: Props) {
 
   // Confirm dialog state
   const [confirm, setConfirm] = useState<ConfirmState>({
-    open: false, title: "", description: "", confirmLabel: "", variant: "danger", onConfirm: () => {},
+    open: false,
+    title: "",
+    description: "",
+    confirmLabel: "",
+    variant: "danger",
+    onConfirm: () => {},
   })
 
   function openConfirm(opts: Omit<ConfirmState, "open">) {
@@ -334,38 +396,86 @@ export default function EditProgramPage({ params }: Props) {
   function checkPublishReadiness(): ReadinessIssue[] {
     const issues: ReadinessIssue[] = []
     const validation = programDocumentSchema.safeParse(buildDoc())
-    if (!validation.success) for (const issue of validation.error.issues) issues.push({ type: "error", message: `${issue.path.join(".")}: ${issue.message}` })
-    if (!title.trim()) issues.push({ type: "error", message: "Title is required" })
+    if (!validation.success) {
+      for (const issue of validation.error.issues) {
+        issues.push({ type: "error", message: `${issue.path.join(".")}: ${issue.message}` })
+      }
+    }
+    if (!title.trim()) issues.push({ type: "error", message: "Program Title is required" })
     if (!shortDescription.trim()) issues.push({ type: "error", message: "Short description is required" })
+
     const visibleHeroImage = category === "service" ? heroImage : editorialHero.image
-    if (category !== "research" && !visibleHeroImage?.url && !visibleHeroImage?.assetId) issues.push({ type: "warning", message: "Hero image is not set — the page will have no hero visual" })
+    if (category !== "research" && !visibleHeroImage?.url && !visibleHeroImage?.assetId) {
+      issues.push({ type: "warning", message: "Hero image is not set — page will lack a cover visual" })
+    }
     if (!seoTitle.trim()) issues.push({ type: "warning", message: "Meta title is missing — defaults to program title" })
-    if (!seoDescription.trim()) issues.push({ type: "warning", message: "Meta description is missing — hurts SEO" })
-    if (sections.filter((s) => s.enabled).length === 0) issues.push({ type: "warning", message: "No enabled sections — the page body will be empty" })
+    if (!seoDescription.trim()) issues.push({ type: "warning", message: "Meta description is missing — search engines won't have a snippet" })
+
+    if (sections.filter((s) => s.enabled).length === 0) {
+      issues.push({ type: "warning", message: "No enabled sections — the page body will be empty" })
+    }
     const emptySections = sections.filter((s) => s.enabled && !s.heading && !s.intro && !s.description)
-    if (emptySections.length > 0) issues.push({ type: "warning", message: `${emptySections.length} section${emptySections.length > 1 ? "s have" : " has"} no heading or intro text` })
+    if (emptySections.length > 0) {
+      issues.push({
+        type: "warning",
+        message: `${emptySections.length} section${emptySections.length > 1 ? "s have" : " has"} no heading or intro text`,
+      })
+    }
     return issues
   }
 
-  // Track dirty state by comparing current form to initial snapshot
+  // Track dirty state
   useEffect(() => {
     if (loading || !initialSnapshotRef.current) return
     const current = formSnapshot({
-      title, shortDescription, eyebrow, category, tags,
-      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
-      heroSecondaryCtaLabel, heroSecondaryCtaUrl,
-      heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
+      title,
+      shortDescription,
+      eyebrow,
+      category,
+      tags,
+      heroTitle,
+      heroDescription,
+      heroCtaLabel,
+      heroCtaUrl,
+      editorialHero,
+      heroSecondaryCtaLabel,
+      heroSecondaryCtaUrl,
+      heroNoteText,
+      heroNoteIcon,
+      heroStickerText,
+      heroStickerIcon,
+      heroPhotoNote,
       heroImage,
-      seoTitle, seoDescription, sections,
+      seoTitle,
+      seoDescription,
+      sections,
     })
     latestSnapshotRef.current = current
     setIsDirty(current !== initialSnapshotRef.current)
-  }, [title, shortDescription, eyebrow, category, tags,
-    heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
-    heroSecondaryCtaLabel, heroSecondaryCtaUrl,
-    heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
+  }, [
+    title,
+    shortDescription,
+    eyebrow,
+    category,
+    tags,
+    heroTitle,
+    heroDescription,
+    heroCtaLabel,
+    heroCtaUrl,
+    editorialHero,
+    heroSecondaryCtaLabel,
+    heroSecondaryCtaUrl,
+    heroNoteText,
+    heroNoteIcon,
+    heroStickerText,
+    heroStickerIcon,
+    heroPhotoNote,
     heroImage,
-    seoTitle, seoDescription, sections, loading])
+    seoTitle,
+    seoDescription,
+    sections,
+    loading,
+  ])
 
   // Warn before leaving with unsaved changes
   useEffect(() => {
@@ -430,12 +540,12 @@ export default function EditProgramPage({ params }: Props) {
       setLoading(false)
 
       setTimeout(() => {
-        const hero = readEditorHero(draft.hero, program.title, program.short_description || "")
+        const heroData = readEditorHero(draft.hero, program.title, program.short_description || "")
         let heroImg = undefined
-        if (hero.image && typeof hero.image === "object" && (hero.image.url || hero.image.assetId)) {
-          heroImg = { ...hero.image, alt: hero.image.alt || hero.title || "" }
-        } else if (hero.image && typeof hero.image === "string" && hero.image) {
-          heroImg = { url: hero.image, alt: hero.title || "" }
+        if (heroData.image && typeof heroData.image === "object" && (heroData.image.url || heroData.image.assetId)) {
+          heroImg = { ...heroData.image, alt: heroData.image.alt || heroData.title || "" }
+        } else if (heroData.image && typeof heroData.image === "string" && heroData.image) {
+          heroImg = { url: heroData.image, alt: heroData.title || "" }
         }
         initialSnapshotRef.current = formSnapshot({
           title: program.title,
@@ -443,18 +553,18 @@ export default function EditProgramPage({ params }: Props) {
           eyebrow: program.eyebrow || "",
           category: program.category || "service",
           tags: program.tags || [],
-          editorialHero: readEditorHero(hero, program.title, program.short_description || ""),
-          heroTitle: hero.title || "",
-          heroDescription: hero.description || "",
-          heroCtaLabel: readEditorHero(hero, "", "").actions[0]?.label || "",
-          heroCtaUrl: readEditorHero(hero, "", "").actions[0]?.url || "",
-          heroSecondaryCtaLabel: readEditorHero(hero, "", "").actions[1]?.label || "",
-          heroSecondaryCtaUrl: readEditorHero(hero, "", "").actions[1]?.url || "",
-          heroNoteText: hero.note?.text || "",
-          heroNoteIcon: hero.note?.icon || "",
-          heroStickerText: hero.sticker?.text || "",
-          heroStickerIcon: hero.sticker?.icon || "",
-          heroPhotoNote: hero.photoNote || "",
+          editorialHero: readEditorHero(heroData, program.title, program.short_description || ""),
+          heroTitle: heroData.title || "",
+          heroDescription: heroData.description || "",
+          heroCtaLabel: readEditorHero(heroData, "", "").actions[0]?.label || "",
+          heroCtaUrl: readEditorHero(heroData, "", "").actions[0]?.url || "",
+          heroSecondaryCtaLabel: readEditorHero(heroData, "", "").actions[1]?.label || "",
+          heroSecondaryCtaUrl: readEditorHero(heroData, "", "").actions[1]?.url || "",
+          heroNoteText: heroData.note?.text || "",
+          heroNoteIcon: heroData.note?.icon || "",
+          heroStickerText: heroData.sticker?.text || "",
+          heroStickerIcon: heroData.sticker?.icon || "",
+          heroPhotoNote: heroData.photoNote || "",
           heroImage: heroImg,
           seoTitle: draft.seo_title || "",
           seoDescription: draft.seo_description || "",
@@ -467,12 +577,27 @@ export default function EditProgramPage({ params }: Props) {
 
   function resetSnapshot() {
     initialSnapshotRef.current = formSnapshot({
-      title, shortDescription, eyebrow, category, tags,
-      heroTitle, heroDescription, heroCtaLabel, heroCtaUrl, editorialHero,
-      heroSecondaryCtaLabel, heroSecondaryCtaUrl,
-      heroNoteText, heroNoteIcon, heroStickerText, heroStickerIcon, heroPhotoNote,
+      title,
+      shortDescription,
+      eyebrow,
+      category,
+      tags,
+      heroTitle,
+      heroDescription,
+      heroCtaLabel,
+      heroCtaUrl,
+      editorialHero,
+      heroSecondaryCtaLabel,
+      heroSecondaryCtaUrl,
+      heroNoteText,
+      heroNoteIcon,
+      heroStickerText,
+      heroStickerIcon,
+      heroPhotoNote,
       heroImage,
-      seoTitle, seoDescription, sections,
+      seoTitle,
+      seoDescription,
+      sections,
     })
     setIsDirty(latestSnapshotRef.current !== initialSnapshotRef.current)
   }
@@ -485,17 +610,29 @@ export default function EditProgramPage({ params }: Props) {
       eyebrow: eyebrow || undefined,
       category,
       tags,
-      hero: category !== "service" ? { ...editorialHero, actions: editorialHero.actions.filter(action => action.label.trim() || action.url.trim()) } : {
-        title: heroTitle || title,
-        description: heroDescription || shortDescription || title,
-        image: heroImage,
-        actions: heroCtaLabel && heroCtaUrl
-          ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }, ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }] : [])]
-          : [],
-        note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined,
-        sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined,
-        photoNote: heroPhotoNote || undefined,
-      },
+      hero:
+        category !== "service"
+          ? {
+              ...editorialHero,
+              actions: editorialHero.actions.filter((action) => action.label.trim() || action.url.trim()),
+            }
+          : {
+              title: heroTitle || title,
+              description: heroDescription || shortDescription || title,
+              image: heroImage,
+              actions:
+                heroCtaLabel && heroCtaUrl
+                  ? [
+                      { label: heroCtaLabel, url: heroCtaUrl, variant: "primary" },
+                      ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl
+                        ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }]
+                        : []),
+                    ]
+                  : [],
+              note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined,
+              sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined,
+              photoNote: heroPhotoNote || undefined,
+            },
       seo: {
         title: seoTitle || undefined,
         description: seoDescription || undefined,
@@ -565,10 +702,10 @@ export default function EditProgramPage({ params }: Props) {
     setRevision(result.data.revision)
     setLastSavedAt(new Date())
     resetSnapshot()
-    notifications.showSuccess({ description: "Draft saved" })
+    notifications.showSuccess({ description: "Draft saved successfully" })
   }
 
-  async function handlePublish() {
+  function handlePublish() {
     setPublishOpen(true)
   }
 
@@ -581,24 +718,27 @@ export default function EditProgramPage({ params }: Props) {
       setPublishing(false)
       return
     }
-    setRevision(saveResult.data.revision)
-    resetSnapshot()
-
-    const result = await publishProgram(programId, "Published from editor", saveResult.data.revision)
+    const result = await publishProgram(programId)
     setPublishing(false)
     if (!result.ok) {
       notifications.showError({ title: "Publish failed", description: result.error })
       return
     }
     setStatus("published")
-    notifications.showSuccess({ description: `Published as version ${result.data.versionNumber}` })
+    setRevision(result.data.versionNumber + 1)
+    setLastSavedAt(new Date())
+    resetSnapshot()
+    notifications.showSuccess({
+      title: "Program Published!",
+      description: `“${title}” is live on /whatwedo/${slug} as v${result.data.versionNumber}`,
+    })
   }
 
   async function handleUnpublish() {
     if (!programId) return
     openConfirm({
       title: "Unpublish program?",
-      description: "This program will no longer be visible publicly. You can re-publish it later.",
+      description: "This program will no longer be visible publicly. You can re-publish it at any time.",
       confirmLabel: "Unpublish",
       variant: "warning",
       onConfirm: async () => {
@@ -608,7 +748,7 @@ export default function EditProgramPage({ params }: Props) {
           return
         }
         setStatus("draft")
-        notifications.showSuccess({ description: "Program unpublished" })
+        notifications.showSuccess({ description: "Program unpublished to draft" })
       },
     })
   }
@@ -617,7 +757,7 @@ export default function EditProgramPage({ params }: Props) {
     if (!programId) return
     openConfirm({
       title: "Archive program?",
-      description: "This program will be moved to archive. You can restore it later from the archive.",
+      description: "This program will be archived and hidden from public search. You can restore it later.",
       confirmLabel: "Archive",
       variant: "warning",
       onConfirm: async () => {
@@ -640,14 +780,14 @@ export default function EditProgramPage({ params }: Props) {
       return
     }
     setStatus("draft")
-    notifications.showSuccess({ description: "Restored to draft" })
+    notifications.showSuccess({ description: "Restored to draft status" })
   }
 
   async function handleDelete() {
     if (!programId) return
     openConfirm({
       title: "Delete program permanently?",
-      description: "This will permanently delete the program and all its content. This action is irreversible.",
+      description: "This will permanently delete the program and all its content blocks. This action is irreversible.",
       confirmLabel: "Delete permanently",
       variant: "danger",
       onConfirm: async () => {
@@ -656,245 +796,841 @@ export default function EditProgramPage({ params }: Props) {
           notifications.showError({ title: "Delete failed", description: result.error })
           return
         }
-        notifications.showSuccess({ description: "Program deleted" })
+        notifications.showSuccess({ description: "Program deleted successfully" })
         router.push("/admin/programs")
       },
     })
   }
 
-  // ── Render ────────────────────────────────────────────────
-
   if (loading) {
     return <ProgramEditSkeleton />
   }
 
-  const statusVariant = status === "published" ? "default" : status === "archived" ? "secondary" : "outline"
+  const activeCategoryObj = CATEGORIES.find((c) => c.value === category) || CATEGORIES[0]
+  const enabledSectionsCount = sections.filter((s) => s.enabled).length
+  const issues = checkPublishReadiness()
+  const readinessScore = Math.max(0, 100 - issues.filter((i) => i.type === "error").length * 30 - issues.filter((i) => i.type === "warning").length * 10)
 
   return (
-    <div className="space-y-4">
-      {/* Sticky header */}
-      <div className="sticky top-0 z-40 -mx-6 border-b bg-background/95 px-6 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <Button variant="ghost" size="sm" asChild className="shrink-0">
-              <Link href="/admin/programs"><ArrowLeft className="mr-1 h-4 w-4" />Back</Link>
-            </Button>
-            <div className="min-w-0">
-              <h1 className="text-sm font-semibold truncate">{title || "Untitled Program"}</h1>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Badge variant={statusVariant} className="text-[10px]">{status}</Badge>
-                <span>v{revision}</span>
-                {isDirty && <span className="text-amber-600">Unsaved</span>}
-                {lastSavedAt && !isDirty && <span>Saved {lastSavedAt.toLocaleTimeString()}</span>}
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Button variant="ghost" size="sm" onClick={handlePreview} disabled={saving || publishing} className="text-xs gap-1">
-              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Eye className="h-3 w-3" />}Preview
-            </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving || publishing || !isDirty} className="text-xs gap-1">
-              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}Save
-            </Button>
-            <Button size="sm" onClick={handlePublish} disabled={publishing || saving || status === "archived"} className="text-xs gap-1 bg-green-600 hover:bg-green-700">
-              {publishing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Globe className="h-3 w-3" />}
-              {status === "published" ? "Update" : "Publish"}
-            </Button>
-            {status === "published" && (
-              <Button variant="ghost" size="sm" onClick={handleUnpublish} className="text-xs gap-1 text-amber-600 hover:text-amber-700">
-                <GlobeOff className="h-3 w-3" />Unpublish
-              </Button>
+    <div className={cn(styles.root, "space-y-6 pb-24")}>
+      {/* BREADCRUMB & CONTEXT HEADER */}
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground border-b pb-3">
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+          <Link href="/admin" className="hover:text-foreground transition-colors">
+            Admin
+          </Link>
+          <span>/</span>
+          <Link href="/admin/programs" className="hover:text-foreground transition-colors">
+            Programs
+          </Link>
+          <span>/</span>
+          <span className="text-foreground font-semibold truncate max-w-[240px] sm:max-w-md">
+            {title || "Untitled Program"}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className={cn(
+              "text-[11px] font-semibold px-2 py-0.5 capitalize",
+              status === "published"
+                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                : status === "draft"
+                  ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20"
+                  : "bg-muted text-muted-foreground"
             )}
-            <div className="h-5 w-px bg-border mx-1" />
-            {status !== "archived" ? (
-              <Button variant="ghost" size="sm" onClick={handleArchive} className="text-xs gap-1">
-                <Archive className="h-3 w-3" />Archive
-              </Button>
+          >
+            {status}
+          </Badge>
+          <span className="text-xs font-mono font-medium text-muted-foreground">v{revision}</span>
+        </div>
+      </div>
+
+      {/* DESKTOP STICKY HEADER & ACTION BAR (top-16) */}
+      <div className="sticky top-16 z-20 flex items-center justify-between gap-3 rounded-2xl border bg-background/95 backdrop-blur-md p-3 sm:p-4 shadow-sm">
+        <div className="flex items-center gap-3 min-w-0">
+          <Button variant="ghost" size="sm" asChild className="h-9 px-2.5 text-xs text-muted-foreground shrink-0">
+            <Link href="/admin/programs">
+              <ArrowLeft className="size-4 mr-1.5" />
+              Programs
+            </Link>
+          </Button>
+
+          <span className="text-muted-foreground/30 hidden sm:inline">|</span>
+
+          <div className="flex items-center gap-2 min-w-0">
+            <Badge variant="outline" className={cn("text-xs font-semibold px-2 py-0.5 shrink-0 hidden sm:inline-flex", activeCategoryObj.colorClass)}>
+              {activeCategoryObj.label}
+            </Badge>
+
+            <span className="font-bold text-sm truncate max-w-[160px] sm:max-w-xs md:max-w-sm hidden sm:inline">
+              {title || "Untitled Program"}
+            </span>
+
+            <Badge
+              variant="outline"
+              className={cn(
+                "px-2 py-0.5 text-[11px] font-semibold shrink-0 hidden md:inline-flex",
+                isDirty
+                  ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20"
+                  : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+              )}
+            >
+              <span className={cn("size-1.5 rounded-full mr-1.5", isDirty ? "bg-amber-500 animate-pulse" : "bg-emerald-500")} />
+              {isDirty ? "Unsaved edits" : lastSavedAt ? `Saved ${lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Up to date"}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 shrink-0">
+          {status === "published" && slug && (
+            <Button variant="outline" size="sm" asChild className="h-10 text-xs px-3 hidden lg:inline-flex">
+              <Link href={`/whatwedo/${slug}`} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="size-3.5 mr-1.5" />
+                Live Page
+              </Link>
+            </Button>
+          )}
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handlePreview}
+            disabled={saving || publishing}
+            className="h-10 px-3 text-xs hidden sm:inline-flex"
+          >
+            {saving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Eye className="size-3.5 mr-1.5" />}
+            Preview
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleSave}
+            disabled={saving || publishing || !isDirty}
+            className="h-10 px-3.5 text-xs sm:text-sm font-medium"
+          >
+            {saving ? <Loader2 className="mr-1.5 size-3.5 animate-spin" /> : <Save className="mr-1.5 size-3.5" />}
+            Save
+          </Button>
+
+          <Button
+            type="button"
+            onClick={handlePublish}
+            disabled={publishing || saving || status === "archived"}
+            className="h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold shadow-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+          >
+            {publishing ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Updating…
+              </>
             ) : (
-              <Button variant="ghost" size="sm" onClick={handleRestore} className="text-xs gap-1">
-                <RotateCcw className="h-3 w-3" />Restore
-              </Button>
+              <>
+                <Globe className="mr-2 size-4" />
+                {status === "published" ? "Update" : "Publish"}
+              </>
             )}
-            {status !== "published" && (
-              <Button variant="ghost" size="sm" onClick={handleDelete} className="text-xs gap-1 text-destructive hover:text-destructive">
-                <Trash2 className="h-3 w-3" />Delete
-              </Button>
-            )}
-          </div>
+          </Button>
         </div>
       </div>
 
-      {/* Program Info — full width */}
-      <div className="rounded-lg border bg-card p-5 space-y-5">
-        <div className="grid gap-4 sm:grid-cols-[1fr_180px]">
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="title" className="text-xs text-muted-foreground">Title</Label>
-              <span className={`text-[10px] tabular-nums ${title.length > 120 ? "text-destructive" : title.length > 100 ? "text-amber-500" : "text-muted-foreground/50"}`}>{title.length}/120</span>
-            </div>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} className="text-lg font-semibold h-10" />
+      {/* MOBILE FLOATING BOTTOM ACTION PILL */}
+      {isDirty && (
+        <div className="md:hidden fixed bottom-4 left-4 right-4 z-40 flex items-center justify-between gap-3 p-3 rounded-2xl border bg-background/95 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-4">
+          <div className="flex items-center gap-2 pl-1 min-w-0">
+            <span className="size-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+            <span className="text-xs font-semibold text-foreground truncate">Unsaved edits</span>
           </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Category</Label>
-            <Select value={category} onValueChange={changeCategory}>
-              <SelectTrigger className="h-10"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {CATEGORIES.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-[280px_1fr]">
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="eyebrow" className="text-xs text-muted-foreground">Eyebrow</Label>
-              <span className={`text-[10px] tabular-nums ${eyebrow.length > 120 ? "text-destructive" : eyebrow.length > 100 ? "text-amber-500" : "text-muted-foreground/50"}`}>{eyebrow.length}/120</span>
-            </div>
-            <Input id="eyebrow" value={eyebrow} onChange={(e) => setEyebrow(e.target.value)} placeholder="SERVICES & PROGRAMS" maxLength={120} className="h-9 text-sm" />
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="description" className="text-xs text-muted-foreground">Short Description</Label>
-              <span className={`text-[10px] tabular-nums ${shortDescription.length > 400 ? "text-destructive" : shortDescription.length > 320 ? "text-amber-500" : "text-muted-foreground/50"}`}>{shortDescription.length}/400</span>
-            </div>
-            <textarea id="description" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} maxLength={400} rows={1} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm min-h-[38px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none" />
-          </div>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {/* Tags */}
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Tags</Label>
-            <div className="flex gap-1.5">
-              <Input
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                placeholder="Add tag"
-                maxLength={40}
-                className="h-9 text-sm"
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag() } }}
-              />
-              <Button variant="outline" size="icon" onClick={addTag} disabled={!tagInput.trim()} className="h-9 w-9 shrink-0">
-                <Plus className="h-3.5 w-3.5" />
-              </Button>
-            </div>
-            {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="gap-1 text-[11px]">
-                    {tag}
-                    <button onClick={() => removeTag(tag)} className="ml-0.5 hover:text-destructive"><X className="h-2.5 w-2.5" /></button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* SEO Title */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="seo-title" className="text-xs text-muted-foreground">Meta Title</Label>
-              <span className={`text-[10px] tabular-nums ${seoTitle.length > 160 ? "text-destructive" : seoTitle.length > 128 ? "text-amber-500" : "text-muted-foreground/50"}`}>{seoTitle.length}/160</span>
-            </div>
-            <Input id="seo-title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="Defaults to program title" maxLength={160} className="h-9 text-sm" />
-          </div>
-          {/* SEO Description */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="seo-desc" className="text-xs text-muted-foreground">Meta Description</Label>
-              <span className={`text-[10px] tabular-nums ${seoDescription.length > 320 ? "text-destructive" : seoDescription.length > 256 ? "text-amber-500" : "text-muted-foreground/50"}`}>{seoDescription.length}/320</span>
-            </div>
-            <Input id="seo-desc" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="For search results" maxLength={320} className="h-9 text-sm" />
-          </div>
-        </div>
-      </div>
 
-      {/* Hero — hidden for template-based categories (handled by their respective forms) */}
-      {!(["service", "outreach", "research", "campaign"] as ProgramCategory[]).includes(category) && (
-        <details open className="rounded-lg border bg-card">
-          <summary className="px-5 py-3 text-sm font-medium cursor-pointer select-none hover:bg-muted/50 transition-colors">Hero Section</summary>
-          <div className="border-t px-5 py-5 space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label htmlFor="hero-title" className="text-xs text-muted-foreground">Title</Label>
-                <Input id="hero-title" value={heroTitle} onChange={(e) => setHeroTitle(e.target.value)} placeholder="Defaults to program title" maxLength={180} className="h-8 text-sm" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="hero-desc" className="text-xs text-muted-foreground">Description</Label>
-                <Input id="hero-desc" value={heroDescription} onChange={(e) => setHeroDescription(e.target.value)} placeholder="Defaults to short description" maxLength={800} className="h-8 text-sm" />
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label htmlFor="hero-cta-label" className="text-xs text-muted-foreground">Button Text</Label>
-                <Input id="hero-cta-label" value={heroCtaLabel} onChange={(e) => setHeroCtaLabel(e.target.value)} placeholder="Find support" maxLength={80} className="h-8 text-sm" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="hero-cta-url" className="text-xs text-muted-foreground">Button URL</Label>
-                <Input id="hero-cta-url" value={heroCtaUrl} onChange={(e) => setHeroCtaUrl(e.target.value)} placeholder="/whatwedo/program-slug" maxLength={500} className="h-8 text-sm font-mono" />
-              </div>
-            </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="outline"
+              className="h-10 text-xs px-3 font-medium"
+              onClick={handleSave}
+              disabled={saving}
+            >
+              {saving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Save className="size-3.5 mr-1.5" />}
+              Save
+            </Button>
+            <Button
+              className="h-10 text-xs px-4 font-semibold shadow-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+              onClick={handlePublish}
+              disabled={publishing || saving}
+            >
+              <Globe className="size-3.5 mr-1.5" />
+              Publish
+            </Button>
           </div>
-        </details>
+        </div>
       )}
 
-      {/* Content Sections — full width */}
-      <div className="rounded-lg border bg-card">
-        <div className="px-5 py-3 border-b">
-          <h2 className="text-sm font-medium">Page Content</h2>
-        </div>
-        <div className="p-5">
-          {programId ? (
-            <ProgramIdProvider programId={programId}>
-              {category === "service" ? (
-                <ServiceEditForm
-                  data={{ hero: { title: heroTitle || title, description: heroDescription || shortDescription || title, image: heroImage, actions: heroCtaLabel && heroCtaUrl ? [{ label: heroCtaLabel, url: heroCtaUrl, variant: "primary" }, ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }] : [])] : [], note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined, sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined, photoNote: heroPhotoNote || undefined }, eyebrow, shortDescription, sections }}
-                  onChange={(data) => {
-                    setHeroTitle(data.hero.title)
-                    setHeroDescription(data.hero.description)
-                    setHeroImage(data.hero.image)
-                    if (data.hero.actions?.[0]) { setHeroCtaLabel(data.hero.actions[0].label); setHeroCtaUrl(data.hero.actions[0].url) }
-                    if (data.hero.actions?.[1]) { setHeroSecondaryCtaLabel(data.hero.actions[1].label); setHeroSecondaryCtaUrl(data.hero.actions[1].url) }
-                    setHeroNoteText(data.hero.note?.text || "")
-                    setHeroNoteIcon(data.hero.note?.icon || "")
-                    setHeroStickerText(data.hero.sticker?.text || "")
-                    setHeroStickerIcon(data.hero.sticker?.icon || "")
-                    setHeroPhotoNote(data.hero.photoNote || "")
-                    setEyebrow(data.eyebrow)
-                    setShortDescription(data.shortDescription)
-                    setSections(data.sections)
-                  }}
-                />
-              ) : (
-                <EditorialProgramEditor
-                  key={editorKey}
-                  programId={programId}
-                  category={category}
-                  data={{ hero: editorialHero, eyebrow, shortDescription, sections }}
-                  onSectionsChange={setSections}
-                  onChange={(data) => {
-                    setEditorialHero(data.hero)
-                    setHeroImage(data.hero.image)
-                    setHeroTitle(data.hero.title)
-                    setHeroDescription(data.hero.description)
-                    setEyebrow(data.eyebrow)
-                    setShortDescription(data.shortDescription)
-                  }}
-                />
+      {/* HORIZONTALLY SCROLLABLE STUDIO TABS */}
+      <Card className="border shadow-xs">
+        <CardContent className="overflow-x-auto p-1.5 sm:p-2 scrollbar-none">
+          <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as typeof activeTab)}>
+            <TabsList
+              aria-label="Program editor tabs"
+              className={cn(
+                styles.track,
+                "flex h-auto w-max sm:w-full min-w-full sm:min-w-0 items-center justify-start gap-1 sm:gap-1.5 rounded-xl p-1"
               )}
-            </ProgramIdProvider>
-          ) : null}
+            >
+              <TabsTrigger
+                value="overview"
+                className={cn(
+                  styles.tab,
+                  "h-11 sm:h-10 gap-2 rounded-lg px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center shrink-0 flex-1"
+                )}
+              >
+                <FileText className="size-4 shrink-0" />
+                <span>Overview &amp; Hero</span>
+              </TabsTrigger>
+
+              <TabsTrigger
+                value="sections"
+                className={cn(
+                  styles.tab,
+                  "h-11 sm:h-10 gap-2 rounded-lg px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center shrink-0 flex-1"
+                )}
+              >
+                <Layers className="size-4 shrink-0" />
+                <span>Page Sections</span>
+                <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0 font-semibold">
+                  {enabledSectionsCount}
+                </Badge>
+              </TabsTrigger>
+
+              <TabsTrigger
+                value="media"
+                className={cn(
+                  styles.tab,
+                  "h-11 sm:h-10 gap-2 rounded-lg px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center shrink-0 flex-1"
+                )}
+              >
+                <ImageIcon className="size-4 shrink-0" />
+                <span>Media Library</span>
+              </TabsTrigger>
+
+              <TabsTrigger
+                value="seo"
+                className={cn(
+                  styles.tab,
+                  "h-11 sm:h-10 gap-2 rounded-lg px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center shrink-0 flex-1"
+                )}
+              >
+                <Search className="size-4 shrink-0" />
+                <span>SEO &amp; Preview</span>
+                {seoTitle && <span className="size-1.5 rounded-full bg-emerald-500" />}
+              </TabsTrigger>
+
+              <TabsTrigger
+                value="publishing"
+                className={cn(
+                  styles.tab,
+                  "h-11 sm:h-10 gap-2 rounded-lg px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center shrink-0 flex-1"
+                )}
+              >
+                <Sliders className="size-4 shrink-0" />
+                <span>Publishing &amp; History</span>
+                <span className="ml-1 text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-muted/60">
+                  {readinessScore}%
+                </span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* ========================================================================= */}
+      {/* TAB 1: OVERVIEW & HERO SECTION */}
+      {/* ========================================================================= */}
+      {activeTab === "overview" && (
+        <div className="space-y-6">
+          {/* Identity Card */}
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b bg-card/60">
+              <CardTitle className="text-base font-bold">Program Identity &amp; Classification</CardTitle>
+              <CardDescription className="text-xs">
+                Essential metadata that governs the initiative’s categorization and public header.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                {/* Title */}
+                <div className="sm:col-span-8 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="title" className="text-sm font-semibold">
+                      Program Title <span className="text-destructive">*</span>
+                    </Label>
+                    <span className="text-xs text-muted-foreground font-mono">{title.length}/120</span>
+                  </div>
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={120}
+                    className="h-11 text-base font-semibold rounded-xl"
+                  />
+                </div>
+
+                {/* Category Switcher */}
+                <div className="sm:col-span-4 space-y-2">
+                  <Label className="text-sm font-semibold">Initiative Category</Label>
+                  <Select value={category} onValueChange={(val) => changeCategory(val as ProgramCategory)}>
+                    <SelectTrigger className="h-11 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((c) => (
+                        <SelectItem key={c.value} value={c.value}>
+                          {c.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Eyebrow & Slug */}
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                <div className="sm:col-span-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="eyebrow" className="text-sm font-semibold">
+                      Eyebrow Subheading
+                    </Label>
+                    <span className="text-xs text-muted-foreground font-mono">{eyebrow.length}/120</span>
+                  </div>
+                  <Input
+                    id="eyebrow"
+                    value={eyebrow}
+                    onChange={(e) => setEyebrow(e.target.value)}
+                    placeholder="SERVICES & PROGRAMS"
+                    maxLength={120}
+                    className="h-11 text-sm rounded-xl font-mono"
+                  />
+                </div>
+
+                <div className="sm:col-span-8 space-y-2">
+                  <Label htmlFor="slug" className="text-sm font-semibold">
+                    Public Permalink Slug
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="slug"
+                      value={slug}
+                      readOnly
+                      disabled
+                      className="h-11 text-sm font-mono rounded-xl bg-muted/40 cursor-not-allowed pl-3"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground font-mono truncate">
+                    Public route: /whatwedo/{slug || "…"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Short Description */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="shortDescription" className="text-sm font-semibold">
+                    Short Description / Summary <span className="text-destructive">*</span>
+                  </Label>
+                  <span className="text-xs text-muted-foreground font-mono">{shortDescription.length}/400</span>
+                </div>
+                <textarea
+                  id="shortDescription"
+                  value={shortDescription}
+                  onChange={(e) => setShortDescription(e.target.value)}
+                  maxLength={400}
+                  rows={3}
+                  className="flex w-full rounded-xl border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 leading-relaxed"
+                  placeholder="Concise overview of the program for search results, index cards, and hero subtext..."
+                />
+              </div>
+
+              {/* Tags Cloud */}
+              <div className="space-y-2 pt-2 border-t">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold">Program Tags &amp; Keywords</Label>
+                  <span className="text-xs text-muted-foreground font-mono">{tags.length}/20</span>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Add keyword tag (e.g. speech-therapy)..."
+                    maxLength={40}
+                    className="h-10 text-sm rounded-xl"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault()
+                        addTag()
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addTag}
+                    disabled={!tagInput.trim()}
+                    className="h-10 px-4 text-xs font-semibold shrink-0"
+                  >
+                    <Plus className="size-3.5 mr-1" /> Add Tag
+                  </Button>
+                </div>
+
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="gap-1.5 text-xs px-2.5 py-1">
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="hover:text-destructive text-muted-foreground transition-colors"
+                        >
+                          <X className="size-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Visual & Action CTA Configuration */}
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b bg-card/60">
+              <CardTitle className="text-base font-bold">Hero Showcase &amp; Call-To-Action</CardTitle>
+              <CardDescription className="text-xs">
+                Configure the primary visual asset, focal point, and action buttons shown at the top of the program page.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-5 space-y-4">
+              {/* Asset Picker for Hero Image */}
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">Hero Cover Visual</Label>
+                {programId && (
+                  <ProgramIdProvider programId={programId}>
+                    <AssetPicker
+                      assetId={category === "service" ? heroImage?.assetId || null : editorialHero.image?.assetId || null}
+                      url={category === "service" ? heroImage?.url : editorialHero.image?.url}
+                      alt={category === "service" ? heroImage?.alt || title : editorialHero.image?.alt || title}
+                      label="Program Hero Cover Image"
+                      onPick={(image) => {
+                        if (category === "service") {
+                          setHeroImage({ ...heroImage, ...image, alt: heroImage?.alt || title })
+                        } else {
+                          setEditorialHero({
+                            ...editorialHero,
+                            image: { ...editorialHero.image, ...image, alt: editorialHero.image?.alt || title },
+                          })
+                        }
+                      }}
+                      onClear={() => {
+                        if (category === "service") setHeroImage(undefined)
+                        else setEditorialHero({ ...editorialHero, image: undefined })
+                      }}
+                    />
+                  </ProgramIdProvider>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t">
+                {/* Primary Button */}
+                <div className="space-y-3 p-3.5 rounded-xl border bg-muted/20">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-primary" />
+                    <Label className="text-xs font-bold uppercase tracking-wider">Primary Button</Label>
+                  </div>
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Button Text (e.g. Enroll Now)"
+                      value={heroCtaLabel}
+                      onChange={(e) => setHeroCtaLabel(e.target.value)}
+                      className="h-10 text-sm rounded-lg"
+                    />
+                    <Input
+                      placeholder="Button URL (e.g. /contact or /donate)"
+                      value={heroCtaUrl}
+                      onChange={(e) => setHeroCtaUrl(e.target.value)}
+                      className="h-10 text-xs font-mono rounded-lg"
+                    />
+                  </div>
+                </div>
+
+                {/* Secondary Button */}
+                <div className="space-y-3 p-3.5 rounded-xl border bg-muted/20">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-muted-foreground" />
+                    <Label className="text-xs font-bold uppercase tracking-wider">Secondary Button</Label>
+                  </div>
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Button Text (e.g. Download Brochure)"
+                      value={heroSecondaryCtaLabel}
+                      onChange={(e) => setHeroSecondaryCtaLabel(e.target.value)}
+                      className="h-10 text-sm rounded-lg"
+                    />
+                    <Input
+                      placeholder="Button URL (e.g. /resources)"
+                      value={heroSecondaryCtaUrl}
+                      onChange={(e) => setHeroSecondaryCtaUrl(e.target.value)}
+                      className="h-10 text-xs font-mono rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      )}
 
-      {/* Media Library */}
-      {programId && <ProgramMediaLibrary programId={programId} />}
+      {/* ========================================================================= */}
+      {/* TAB 2: PAGE SECTIONS & CONTENT */}
+      {/* ========================================================================= */}
+      {activeTab === "sections" && (
+        <div className="space-y-6">
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b bg-card/60">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold">
+                    {activeCategoryObj.label} Content Builder
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Custom blocks and interactive sections configured for this initiative.
+                  </CardDescription>
+                </div>
+                <Badge variant="outline" className={cn("text-xs font-semibold px-2.5 py-0.5", activeCategoryObj.colorClass)}>
+                  {activeCategoryObj.label}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-5">
+              {programId ? (
+                <ProgramIdProvider programId={programId}>
+                  {category === "service" ? (
+                    <ServiceEditForm
+                      data={{
+                        hero: {
+                          title: heroTitle || title,
+                          description: heroDescription || shortDescription || title,
+                          image: heroImage,
+                          actions:
+                            heroCtaLabel && heroCtaUrl
+                              ? [
+                                  { label: heroCtaLabel, url: heroCtaUrl, variant: "primary" },
+                                  ...(heroSecondaryCtaLabel && heroSecondaryCtaUrl
+                                    ? [{ label: heroSecondaryCtaLabel, url: heroSecondaryCtaUrl, variant: "secondary" as const }]
+                                    : []),
+                                ]
+                              : [],
+                          note: heroNoteText ? { text: heroNoteText, icon: heroNoteIcon || undefined } : undefined,
+                          sticker: heroStickerText ? { text: heroStickerText, icon: heroStickerIcon || undefined } : undefined,
+                          photoNote: heroPhotoNote || undefined,
+                        },
+                        eyebrow,
+                        shortDescription,
+                        sections,
+                      }}
+                      onChange={(data) => {
+                        setHeroTitle(data.hero.title)
+                        setHeroDescription(data.hero.description)
+                        setHeroImage(data.hero.image)
+                        if (data.hero.actions?.[0]) {
+                          setHeroCtaLabel(data.hero.actions[0].label)
+                          setHeroCtaUrl(data.hero.actions[0].url)
+                        }
+                        if (data.hero.actions?.[1]) {
+                          setHeroSecondaryCtaLabel(data.hero.actions[1].label)
+                          setHeroSecondaryCtaUrl(data.hero.actions[1].url)
+                        }
+                        setHeroNoteText(data.hero.note?.text || "")
+                        setHeroNoteIcon(data.hero.note?.icon || "")
+                        setHeroStickerText(data.hero.sticker?.text || "")
+                        setHeroStickerIcon(data.hero.sticker?.icon || "")
+                        setHeroPhotoNote(data.hero.photoNote || "")
+                        setEyebrow(data.eyebrow)
+                        setShortDescription(data.shortDescription)
+                        setSections(data.sections)
+                      }}
+                    />
+                  ) : (
+                    <EditorialProgramEditor
+                      key={editorKey}
+                      programId={programId}
+                      category={category}
+                      data={{ hero: editorialHero, eyebrow, shortDescription, sections }}
+                      onSectionsChange={setSections}
+                      onChange={(data) => {
+                        setEditorialHero(data.hero)
+                        setHeroImage(data.hero.image)
+                        setHeroTitle(data.hero.title)
+                        setHeroDescription(data.hero.description)
+                        setEyebrow(data.eyebrow)
+                        setShortDescription(data.shortDescription)
+                      }}
+                    />
+                  )}
+                </ProgramIdProvider>
+              ) : null}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
-      {/* Version History */}
-      {programId && (
-        <VersionHistoryPanel
-          programId={programId}
-          currentRevision={revision}
-          onRestored={() => { window.location.reload() }}
-        />
+      {/* ========================================================================= */}
+      {/* TAB 3: MEDIA LIBRARY */}
+      {/* ========================================================================= */}
+      {activeTab === "media" && (
+        <div className="space-y-6">
+          {programId && (
+            <ProgramIdProvider programId={programId}>
+              <ProgramMediaLibrary programId={programId} />
+            </ProgramIdProvider>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 4: SEO & SEARCH PREVIEW */}
+      {/* ========================================================================= */}
+      {activeTab === "seo" && (
+        <div className="max-w-3xl space-y-6">
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b bg-card/60">
+              <CardTitle className="text-base font-bold">Search Engine Optimization (SEO)</CardTitle>
+              <CardDescription className="text-xs">
+                Fine-tune meta tags for Google indexing, social media cards, and browser tabs.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-5 space-y-5">
+              {/* Google Search Result Snippet Preview Card */}
+              <div className="p-4 rounded-xl border bg-card/70 space-y-1.5 shadow-2xs">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  Google Search Snippet Preview
+                </span>
+                <p className="text-base font-semibold text-blue-600 dark:text-blue-400 hover:underline truncate cursor-pointer">
+                  {seoTitle || title || "Program Title — Deesha Foundation"}
+                </p>
+                <p className="text-xs font-mono text-emerald-700 dark:text-emerald-400 truncate">
+                  https://deeshafoundation.org/whatwedo/{slug || "program-slug"}
+                </p>
+                <p className="text-xs text-muted-foreground line-clamp-2">
+                  {seoDescription || shortDescription || "Explore Deesha Foundation's community initiatives and evidence-based programs."}
+                </p>
+              </div>
+
+              {/* Meta Title Input */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="seo-title" className="text-sm font-semibold">
+                    Meta Title
+                  </Label>
+                  <span className={cn("text-xs font-mono", seoTitle.length > 160 ? "text-destructive font-bold" : "text-muted-foreground")}>
+                    {seoTitle.length}/160
+                  </span>
+                </div>
+                <Input
+                  id="seo-title"
+                  value={seoTitle}
+                  onChange={(e) => setSeoTitle(e.target.value)}
+                  placeholder="Defaults to program title"
+                  maxLength={160}
+                  className="h-11 text-sm rounded-xl"
+                />
+              </div>
+
+              {/* Meta Description Input */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="seo-desc" className="text-sm font-semibold">
+                    Meta Description
+                  </Label>
+                  <span className={cn("text-xs font-mono", seoDescription.length > 320 ? "text-destructive font-bold" : "text-muted-foreground")}>
+                    {seoDescription.length}/320
+                  </span>
+                </div>
+                <textarea
+                  id="seo-desc"
+                  value={seoDescription}
+                  onChange={(e) => setSeoDescription(e.target.value)}
+                  placeholder="Summary for search engines..."
+                  maxLength={320}
+                  rows={3}
+                  className="flex w-full rounded-xl border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 leading-relaxed"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 5: PUBLISHING & VERSION HISTORY */}
+      {/* ========================================================================= */}
+      {activeTab === "publishing" && (
+        <div className="max-w-3xl space-y-6">
+          {/* Production Readiness Checklist */}
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b bg-card/60">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base font-bold">Production Readiness Audit</CardTitle>
+                  <CardDescription className="text-xs">
+                    Automated checklist verifying all required content before public release.
+                  </CardDescription>
+                </div>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "text-xs font-mono font-bold px-2.5 py-1",
+                    readinessScore === 100
+                      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20"
+                  )}
+                >
+                  {readinessScore}% Score
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-5 space-y-3">
+              {issues.length > 0 ? (
+                <div className="space-y-2">
+                  {issues.map((issue, idx) => (
+                    <div
+                      key={idx}
+                      className={cn(
+                        "flex items-start gap-2.5 p-3 rounded-xl border text-xs",
+                        issue.type === "error"
+                          ? "bg-red-500/5 border-red-500/20 text-red-700 dark:text-red-400"
+                          : "bg-amber-500/5 border-amber-500/20 text-amber-700 dark:text-amber-400"
+                      )}
+                    >
+                      {issue.type === "error" ? (
+                        <AlertCircle className="size-4 shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertTriangle className="size-4 shrink-0 mt-0.5" />
+                      )}
+                      <span>{issue.message}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 p-3 rounded-xl border bg-emerald-500/5 border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium">
+                  <CheckCircle2 className="size-4 shrink-0" />
+                  All production readiness checks passed! Ready for live broadcast.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Publication Control Cards */}
+          <Card className="border shadow-xs">
+            <CardHeader className="p-5 pb-3 border-b">
+              <CardTitle className="text-base font-bold">Publication Controls</CardTitle>
+            </CardHeader>
+            <CardContent className="p-5 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl border bg-card">
+                <div>
+                  <p className="font-bold text-sm">Status: <span className="capitalize">{status}</span> (v{revision})</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {status === "published"
+                      ? "Currently public on /whatwedo/" + slug
+                      : "Saved in internal drafts. Hidden from public."}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {status === "published" ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleUnpublish}
+                      className="h-10 text-xs text-amber-600 hover:text-amber-700 font-semibold"
+                    >
+                      <GlobeOff className="size-3.5 mr-1.5" />
+                      Unpublish
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={handlePublish}
+                      disabled={publishing || saving || status === "archived"}
+                      className="h-10 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                    >
+                      <Globe className="size-3.5 mr-1.5" />
+                      Publish Live
+                    </Button>
+                  )}
+
+                  {status !== "archived" ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleArchive}
+                      className="h-10 text-xs"
+                    >
+                      <Archive className="size-3.5 mr-1.5" />
+                      Archive
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleRestore}
+                      className="h-10 text-xs"
+                    >
+                      <RotateCcw className="size-3.5 mr-1.5" />
+                      Restore
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Version History Panel */}
+          {programId && (
+            <VersionHistoryPanel
+              programId={programId}
+              currentRevision={revision}
+              onRestored={() => {
+                window.location.reload()
+              }}
+            />
+          )}
+
+          {/* Danger Zone */}
+          {status !== "published" && (
+            <Card className="border border-destructive/30 bg-destructive/5 shadow-xs">
+              <CardHeader className="p-5 pb-3">
+                <CardTitle className="text-base font-bold text-destructive">Danger Zone</CardTitle>
+                <CardDescription className="text-xs text-destructive/80">
+                  Permanently delete this program draft and all associated content blocks from the database.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-5 pt-0">
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleDelete}
+                  className="h-10 px-4 text-xs font-semibold"
+                >
+                  <Trash2 className="size-3.5 mr-1.5" />
+                  Permanently Delete Program
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       )}
 
       {/* Confirm Dialog */}

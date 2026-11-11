@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import { useState, type FormEvent } from "react"
 import { Send, CheckCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { subscribeToNewsletter } from "@/lib/actions/newsletter"
@@ -14,22 +12,29 @@ interface NewsletterFormProps {
 
 export function NewsletterForm({ variant = "inline", className = "" }: NewsletterFormProps) {
   const [email, setEmail] = useState("")
+  const [honeypot, setHoneypot] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!email) {
-      setError("Please enter your email address.")
+    // Bot trap: if honeypot is filled, simulate success without database insertion
+    if (honeypot) {
+      setIsSubmitted(true)
+      return
+    }
+
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email address.")
       return
     }
 
     setIsLoading(true)
     setError(null)
 
-    const result = await subscribeToNewsletter(email)
+    const result = await subscribeToNewsletter(email, { source: variant })
 
     setIsLoading(false)
 
@@ -49,9 +54,24 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
     )
   }
 
+  // Hidden honeypot field to block automated web scrapers
+  const honeypotField = (
+    <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }} aria-hidden="true">
+      <input
+        type="text"
+        name="company_fax_hp"
+        tabIndex={-1}
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        autoComplete="off"
+      />
+    </div>
+  )
+
   if (variant === "footer") {
     return (
       <form onSubmit={handleSubmit} className={className} noValidate>
+        {honeypotField}
         <label
           htmlFor="footer-newsletter-email"
           className="font-comic mb-1.5 block text-[0.7rem] font-bold text-newsletter-navy"
@@ -100,9 +120,10 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
   if (variant === "stacked") {
     const errorId = "newsletter-error-stacked"
     const inputId = "newsletter-email-stacked"
-    
+
     return (
       <form onSubmit={handleSubmit} className={`space-y-3 ${className}`}>
+        {honeypotField}
         <div>
           <label htmlFor={inputId} className="sr-only">
             Email address for newsletter subscription
@@ -143,9 +164,10 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
 
   const errorId = "newsletter-error-inline"
   const inputId = "newsletter-email-inline"
-  
+
   return (
     <form onSubmit={handleSubmit} className={`flex gap-2 ${className}`}>
+      {honeypotField}
       <div className="flex-1">
         <label htmlFor={inputId} className="sr-only">
           Email address for newsletter subscription

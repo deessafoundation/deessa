@@ -1,0 +1,148 @@
+/* Partners Hub Styling - Scoped styles, animations & contrast tokens */
+
+.shimmerTab {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmerTab::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  animation: tabShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tabShimmer {
+  0% {
+    left: -100%;
+  }
+  40%, 100% {
+    left: 200%;
+  }
+}
+
+.kpiCard {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+}
+
+.partnerCard {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.partnerCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* Logo canvas wrapper (High-contrast safe container) */
+.logoCanvas {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+:global(.dark) .logoCanvas {
+  background-color: #0f172a;
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
+/* Type badge variants */
+.badgePartner {
+  background-color: rgba(63, 171, 222, 0.12);
+  color: #0b5f8a;
+  border-color: rgba(63, 171, 222, 0.35);
+}
+
+.badgeSponsor {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.badgeDonor {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+:global(.dark) .badgePartner {
+  background-color: rgba(63, 171, 222, 0.18);
+  color: #3fabde;
+  border-color: rgba(63, 171, 222, 0.45);
+}
+
+:global(.dark) .badgeSponsor {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+:global(.dark) .badgeDonor {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+/* Scope badge variants */
+.badgeGlobal {
+  background-color: rgba(63, 171, 222, 0.12);
+  color: #0b5f8a;
+  border-color: rgba(63, 171, 222, 0.35);
+}
+
+.badgeEvent {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+:global(.dark) .badgeGlobal {
+  background-color: rgba(63, 171, 222, 0.18);
+  color: #3fabde;
+  border-color: rgba(63, 171, 222, 0.45);
+}
+
+:global(.dark) .badgeEvent {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* High Contrast Mode Overrides */
+:global(body.high-contrast) .logoCanvas {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .partnerCard {
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .logoCanvas {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .partnerCard {
+  border: 2px solid #ffffff !important;
+}

@@ -1,16 +1,31 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
+import { revalidatePath } from "next/cache"
 
 /**
  * Clear old payment logs
  */
 export async function clearOldLogs(daysOld: number = 90) {
   try {
-    const supabase = await createClient()
+    const authClient = await createClient()
+    const {
+      data: { user },
+    } = await authClient.auth.getUser()
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Not authenticated",
+        deleted: 0,
+      }
+    }
+
+    const serviceSupabase = createServiceRoleClient()
     const cutoffDate = new Date(Date.now() - daysOld * 24 * 60 * 60 * 1000).toISOString()
 
-    const { data, error } = await supabase
+    const { data, error } = await serviceSupabase
       .from("payment_events")
       .delete()
       .lt("created_at", cutoffDate)
@@ -23,6 +38,9 @@ export async function clearOldLogs(daysOld: number = 90) {
         deleted: 0,
       }
     }
+
+    revalidatePath("/admin/payments/logs")
+    revalidatePath("/admin/payments/operations")
 
     return {
       success: true,
@@ -43,15 +61,28 @@ export async function clearOldLogs(daysOld: number = 90) {
  */
 export async function exportLogs(filters?: { provider?: string; dateFrom?: string; dateTo?: string }) {
   try {
-    const supabase = await createClient()
+    const authClient = await createClient()
+    const {
+      data: { user },
+    } = await authClient.auth.getUser()
 
-    let query = supabase
+    if (!user) {
+      return {
+        success: false,
+        message: "Not authenticated",
+        data: null,
+      }
+    }
+
+    const serviceSupabase = createServiceRoleClient()
+
+    let query = serviceSupabase
       .from("payment_events")
       .select("*, donations(id, donor_name, donor_email, amount, currency)")
       .order("created_at", { ascending: false })
-      .limit(1000) // Limit to 1000 for export
+      .limit(1000)
 
-    if (filters?.provider) {
+    if (filters?.provider && filters.provider !== "all") {
       query = query.eq("provider", filters.provider)
     }
 

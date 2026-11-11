@@ -29,6 +29,8 @@ interface NavbarProps {
   registerConfig?: RegisterButtonConfig
   /** Show the amber "Beta" pill. From site_settings.site_ui_flags.betaBadge. */
   showBetaBadge?: boolean
+  /** If false, hides the Stories link across all navbar menus. */
+  storiesEnabled?: boolean
 }
 
 const primaryNavLinks = [
@@ -61,7 +63,7 @@ function isNavLinkActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/")
 }
 
-export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = true }: NavbarProps) {
+export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = true, storiesEnabled = true }: NavbarProps) {
   const registerHref = registerConfig?.enabled ? (registerConfig.href || "/events") : "/events"
   const registerLabel = registerConfig?.label || "Register"
   const pathname = usePathname()
@@ -72,13 +74,18 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
   const mobileToggleRef = useRef<HTMLButtonElement>(null)
   const LOGO_ZONE_WIDTH = 220
 
-  // Filter nav links based on support status
+  // Filter nav links based on visibility flags
+  const filteredPrimaryNavLinks = primaryNavLinks.filter(link => 
+    storiesEnabled || link.href !== '/stories'
+  )
+
   const filteredSecondaryNavLinks = secondaryNavLinks.filter(link => 
     supportEnabled || link.href !== '/support'
   )
   
   const filteredTabletQuickLinks = tabletQuickLinks.filter(link => 
-    supportEnabled || link.href !== '/support'
+    (supportEnabled || link.href !== '/support') &&
+    (storiesEnabled || link.href !== '/stories')
   )
 
   useEffect(() => {
@@ -273,7 +280,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
 
             <div className="hidden min-w-0 flex-1 items-center justify-center lg:flex lg:pl-1">
               <div className="flex flex-wrap items-center justify-center gap-x-0">
-                {primaryNavLinks.map((link, i) =>
+                {filteredPrimaryNavLinks.map((link, i) =>
                   renderNavLink(link, { variant: "primary", showDivider: i > 0 })
                 )}
               </div>
@@ -523,7 +530,7 @@ export function Navbar({ supportEnabled = true, registerConfig, showBetaBadge = 
                 <div className="space-y-1">
                   {[
                     // { href: "/impact", label: "Impact", icon: Award },
-                    { href: "/stories", label: "Stories", icon: FileText },
+                    ...(storiesEnabled ? [{ href: "/stories", label: "Stories", icon: FileText }] : []),
                     { href: "/events", label: "Events", icon: Calendar },
                     { href: "/podcasts", label: "Podcasts", icon: Headphones },
                   ].map((link) => {

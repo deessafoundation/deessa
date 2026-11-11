@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo, useRef } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -8,6 +9,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 import { notifications } from "@/lib/notifications"
 import { cn } from "@/lib/utils"
 import type { PageSEORecord, PageSEOCategory } from "@/lib/types/page-seo"
@@ -40,6 +49,8 @@ import {
   PenSquare,
   Eye,
   Plus,
+  Clock,
+  AlertTriangle,
 } from "lucide-react"
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://deessafoundation.com"
@@ -81,10 +92,30 @@ const QUICK_TAG_SUGGESTIONS = [
 ]
 
 export default function SeoManagerClient({ initialPages }: SeoManagerClientProps) {
+  const searchParams = useSearchParams()
+  const pageParam = searchParams.get("page")
+
   const [pages, setPages] = useState<PageSEORecord[]>(initialPages)
-  const [selectedPath, setSelectedPath] = useState<string>(initialPages[0]?.path || "/")
+  const [selectedPath, setSelectedPath] = useState<string>(() => {
+    if (pageParam && initialPages.some((p) => p.path === pageParam)) {
+      return pageParam
+    }
+    return initialPages[0]?.path || "/"
+  })
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [activeCategory, setActiveCategory] = useState<PageSEOCategory | "all">("all")
+
+  // Auto-switch active tab/category if incoming deep-link page is outside current category
+  useEffect(() => {
+    if (pageParam && pages.some((p) => p.path === pageParam)) {
+      setSelectedPath(pageParam)
+      const target = pages.find((p) => p.path === pageParam)
+      if (target && activeCategory !== "all" && target.category !== activeCategory) {
+        setActiveCategory("all")
+      }
+    }
+  }, [pageParam, pages, activeCategory])
+
   const [previewTab, setPreviewTab] = useState<PreviewTab>("google")
   const [googleDevice, setGoogleDevice] = useState<"desktop" | "mobile">("mobile")
   const [mobileView, setMobileView] = useState<MobileViewMode>("editor")
@@ -96,12 +127,27 @@ export default function SeoManagerClient({ initialPages }: SeoManagerClientProps
   const [isDragging, setIsDragging] = useState(false)
   const [copiedSnippet, setCopiedSnippet] = useState(false)
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showIndexingInfoModal, setShowIndexingInfoModal] = useState(false)
+  const [copiedUrl, setCopiedUrl] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Current selected page
   const currentPage = useMemo(() => {
     return pages.find((p) => p.path === selectedPath) || pages[0]
   }, [pages, selectedPath])
+
+  const fullCurrentPageUrl = `${CANONICAL_ORIGIN}${currentPage.path === "/" ? "" : currentPage.path}`
+
+  const handleCopyCurrentPageUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(fullCurrentPageUrl)
+      setCopiedUrl(true)
+      notifications.success("Page URL copied to clipboard")
+      setTimeout(() => setCopiedUrl(false), 2000)
+    } catch {
+      notifications.error("Failed to copy URL")
+    }
+  }
 
   // Filtered pages for the category tabs and search
   const filteredPages = useMemo(() => {
@@ -361,6 +407,19 @@ export default function SeoManagerClient({ initialPages }: SeoManagerClientProps
             >
               <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
               <span>Visit Page</span>
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowIndexingInfoModal(true)}
+              className="h-9 px-2.5 text-xs touch-manipulation text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-primary/5 shrink-0"
+              title="Why search changes don't appear immediately & Google Search Console manual trigger guide"
+              aria-label="Indexing delay and Search Console manual trigger guide"
+            >
+              <Info className="w-4 h-4 text-primary" />
+              <span className="hidden sm:inline ml-1.5 text-xs font-medium">Indexing Info</span>
             </Button>
 
             <Button
@@ -1411,6 +1470,282 @@ export default function SeoManagerClient({ initialPages }: SeoManagerClientProps
           </Card>
         </div>
       </div>
+
+      {/* ─── Search Engine Indexing & Search Console Guide Modal ─── */}
+      <Dialog open={showIndexingInfoModal} onOpenChange={setShowIndexingInfoModal}>
+        <DialogContent className="max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 gap-5">
+          <DialogHeader className="space-y-2 text-left">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                <Info className="w-5 h-5" />
+              </div>
+              <div>
+                <DialogTitle className="text-lg sm:text-xl font-bold">
+                  Why Search Updates Don&apos;t Appear Immediately
+                </DialogTitle>
+                <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                  How search engines crawl, expected delay timelines, and how to fast-track indexing via Google Search Console.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          {/* Core Concept Banner */}
+          <div className="p-3.5 sm:p-4 rounded-xl border border-primary/20 bg-primary/5 flex items-start gap-3">
+            <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm space-y-1">
+              <p className="font-semibold text-foreground">
+                Your live website updates in 0 seconds — Google updates on a schedule.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                When you click <strong className="text-foreground">Save Changes</strong>, the title, description, and social tags in your HTML change immediately on our live server. However, Google and Bing show cached snapshots stored in their own index. They only update what searchers see after <span className="font-medium text-foreground">Googlebot</span> visits and re-indexes your page.
+              </p>
+            </div>
+          </div>
+
+          {/* Timeline Comparison Cards */}
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Industry Turnaround Timelines (Google Search Central Data)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+              {/* Natural / Organic Crawl */}
+              <div className="p-3.5 rounded-xl border border-border/70 bg-card space-y-2 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[11px] font-semibold text-muted-foreground uppercase">Organic Crawl</span>
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-muted/40 font-mono">
+                      Passive
+                    </Badge>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-foreground">
+                    <Clock className="w-3.5 h-3.5 text-muted-foreground shrink-0 self-center" />
+                    <span className="text-lg font-bold">1 – 4 Weeks</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1 leading-normal">
+                    Googlebot periodically crawls websites based on crawl budget and traffic. Without intervention, changes can take weeks to appear.
+                  </p>
+                </div>
+              </div>
+
+              {/* Fast Track with Search Console */}
+              <div className="p-3.5 rounded-xl border-2 border-emerald-500/40 bg-emerald-500/[0.04] space-y-2 flex flex-col justify-between shadow-xs">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase">Search Console</span>
+                    <Badge className="text-[10px] px-1.5 py-0 h-4 bg-emerald-600 text-white font-semibold">
+                      Fast-Track
+                    </Badge>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-emerald-700 dark:text-emerald-400">
+                    <Sparkles className="w-3.5 h-3.5 shrink-0 self-center" />
+                    <span className="text-lg font-bold">12h – 2 Days</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1 leading-normal">
+                    Using Google Search Console&apos;s <strong>&ldquo;Request Indexing&rdquo;</strong> pushes your URL into Google&apos;s priority crawl queue.
+                  </p>
+                </div>
+              </div>
+
+              {/* Social Platforms */}
+              <div className="p-3.5 rounded-xl border border-border/70 bg-card space-y-2 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[11px] font-semibold text-muted-foreground uppercase">Social Previews</span>
+                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-sky-500/10 text-sky-600 border-sky-500/20 font-mono">
+                      Social
+                    </Badge>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-foreground">
+                    <Share2 className="w-3.5 h-3.5 text-muted-foreground shrink-0 self-center" />
+                    <span className="text-lg font-bold">Instant – 7d</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1 leading-normal">
+                    Facebook & LinkedIn cache link previews for ~7 days, but you can flush their cache in 10 seconds via their URL debuggers.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step-by-Step Manual Trigger Guide */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-muted/20 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-primary" />
+                <h4 className="text-sm font-bold text-foreground">
+                  How to Trigger Immediate Re-Indexing (Step-by-Step)
+                </h4>
+              </div>
+              <a
+                href="https://search.google.com/search-console"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline"
+              >
+                <span>Open Search Console</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            {/* Current Active Page URL Pill with Copy */}
+            <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-card border border-border/80">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <Globe className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                <span className="text-xs font-mono text-foreground truncate">
+                  {fullCurrentPageUrl}
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCopyCurrentPageUrl}
+                className="h-7 px-2.5 text-xs font-medium shrink-0 touch-manipulation"
+              >
+                {copiedUrl ? (
+                  <>
+                    <Check className="w-3 h-3 mr-1 text-emerald-600" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copy URL
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {/* Steps Ordered List */}
+            <ol className="space-y-3 text-xs sm:text-sm">
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  1
+                </span>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground">
+                    Go to Google Search Console
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Log into <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-primary underline">search.google.com/search-console</a> and select the verified property <span className="font-semibold text-foreground font-mono">https://deessafoundation.com</span>.
+                  </p>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  2
+                </span>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground">
+                    Paste the URL into the URL Inspection tool
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Click the search bar at the very top of Google Search Console (labeled <em className="text-foreground">&ldquo;Inspect any URL in &lsquo;https://deessafoundation.com&rsquo;&rdquo;</em>). Paste the copied URL and press <kbd className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded border">Enter</kbd>.
+                  </p>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  3
+                </span>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground">
+                    Click &ldquo;Request Indexing&rdquo;
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Google will retrieve data from its index. Click the button labeled <strong className="text-foreground">&ldquo;Request Indexing&rdquo;</strong> (or click <em>&ldquo;Test Live URL&rdquo;</em> first to verify that Google receives the new title and description). Google will add the URL to its priority queue.
+                  </p>
+                </div>
+              </li>
+            </ol>
+
+            {/* Pro-Tips Warning Box */}
+            <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 space-y-1">
+              <div className="flex items-center gap-1.5 font-semibold">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                <span>Important Pro-Tips</span>
+              </div>
+              <ul className="list-disc pl-4 space-y-0.5 text-[11px] leading-relaxed text-muted-foreground dark:text-amber-200/80">
+                <li>
+                  <strong>Check last crawl time:</strong> In Search Console, look at <em>&ldquo;Last crawl&rdquo;</em>. If it shows a date before your changes, Google has not re-scanned the page yet.
+                </li>
+                <li>
+                  <strong>Do not spam the button:</strong> Submitting the same URL multiple times does NOT increase speed and will burn through your daily Search Console quota. Once requested, allow 1–2 days for Google&apos;s serving cache to refresh.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Social Media Debuggers Links */}
+          <div className="p-3.5 rounded-xl border border-border/70 bg-card space-y-2">
+            <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <Share2 className="w-3.5 h-3.5 text-primary" />
+              <span>Instant Social Media Cache Clearers</span>
+            </h4>
+            <p className="text-[11px] text-muted-foreground leading-normal">
+              If WhatsApp, Facebook, or LinkedIn still show old thumbnails when you paste a link, use these official free tools to force an instant scrape:
+            </p>
+            <div className="flex flex-wrap gap-2 pt-1">
+              <a
+                href="https://developers.facebook.com/tools/debug/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted text-foreground text-xs font-medium hover:bg-muted/80 transition-colors"
+              >
+                <span>Facebook Sharing Debugger (click &ldquo;Scrape Again&rdquo;)</span>
+                <ExternalLink className="w-3 h-3 text-muted-foreground" />
+              </a>
+              <a
+                href="https://www.linkedin.com/post-inspector/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted text-foreground text-xs font-medium hover:bg-muted/80 transition-colors"
+              >
+                <span>LinkedIn Post Inspector</span>
+                <ExternalLink className="w-3 h-3 text-muted-foreground" />
+              </a>
+            </div>
+          </div>
+
+          <DialogFooter className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2 pt-2 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopyCurrentPageUrl}
+              className="text-xs"
+            >
+              {copiedUrl ? <Check className="w-3.5 h-3.5 mr-1 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+              {copiedUrl ? "Copied Current URL" : "Copy Page URL"}
+            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowIndexingInfoModal(false)}
+                className="text-xs"
+              >
+                Close
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  window.open("https://search.google.com/search-console", "_blank")
+                }}
+                className="text-xs font-semibold gap-1.5"
+              >
+                <span>Open Search Console</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* ─── Floating Unsaved Changes Bar (Mobile & Safe-Area Aware) ─── */}
       {hasChanges && (

@@ -201,14 +201,19 @@ export function StatusChangeModal({
           )}
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting} className="touch-manipulation min-h-[44px]">
+        <DialogFooter className="flex flex-row items-center justify-end gap-2.5 sm:gap-3">
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            disabled={isSubmitting}
+            className="flex-1 sm:flex-none touch-manipulation min-h-[44px]"
+          >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || reason.trim().length < 10 || newStatus === currentStatus}
-            className="touch-manipulation min-h-[44px]"
+            className="flex-1 sm:flex-none touch-manipulation min-h-[44px] font-semibold"
           >
             {isSubmitting ? "Updating..." : showConfirmation ? "Confirm Change" : "Update Status"}
           </Button>

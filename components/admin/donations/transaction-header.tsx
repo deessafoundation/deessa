@@ -1,9 +1,29 @@
 "use client"
 
-import { ArrowLeft, Mail, FileDown, ExternalLink } from "lucide-react"
+import { useState } from "react"
+import Link from "next/link"
+import {
+  ArrowLeft,
+  Mail,
+  FileDown,
+  ExternalLink,
+  ShieldAlert,
+  Building,
+  CreditCard,
+  Copy,
+  Check,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  AlertTriangle,
+  Loader2,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
+import { copyToClipboard } from "@/lib/utils/clipboard"
+import { notifications } from "@/lib/notifications"
+import { cn } from "@/lib/utils"
+import styles from "./donations.module.css"
 
 interface TransactionHeaderProps {
   donationId: string
@@ -30,129 +50,232 @@ export function TransactionHeader({
   onViewDashboard,
   isLoading = false,
 }: TransactionHeaderProps) {
-  // Check if user has admin permissions
+  const [copied, setCopied] = useState(false)
+
   const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(userRole)
   const hasFinanceAccess = ["ADMIN", "SUPER_ADMIN", "FINANCE"].includes(userRole)
 
-  // Get status badge color
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "completed":
-        return "bg-green-100 text-green-800 border-green-200"
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
-      case "failed":
-        return "bg-red-100 text-red-800 border-red-200"
-      case "review":
-        return "bg-orange-100 text-orange-800 border-orange-200"
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+  const handleCopyId = async () => {
+    const success = await copyToClipboard(donationId)
+    if (success) {
+      setCopied(true)
+      notifications.showSuccess("Transaction ID copied to clipboard")
+      setTimeout(() => setCopied(false), 2000)
     }
   }
 
-  // Get provider badge color
-  const getProviderColor = (provider: string) => {
-    switch (provider.toLowerCase()) {
-      case "stripe":
-        return "bg-purple-100 text-purple-800 border-purple-200"
-      case "khalti":
-        return "bg-purple-100 text-purple-800 border-purple-200"
-      case "esewa":
-        return "bg-green-100 text-green-800 border-green-200"
-      case "fonepay":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+  // Status badge styling with optical status dot/pulse
+  const getStatusConfig = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return {
+          label: "Completed",
+          className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+          icon: <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400" />,
+        }
+      case "pending":
+        return {
+          label: "Pending Verification",
+          className: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
+          icon: <Clock className="size-3.5 text-amber-600 dark:text-amber-400 animate-pulse" />,
+        }
+      case "failed":
+        return {
+          label: "Failed / Declined",
+          className: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30",
+          icon: <XCircle className="size-3.5 text-rose-600 dark:text-rose-400" />,
+        }
+      case "review":
+        return {
+          label: "Under Review",
+          className: "bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30",
+          icon: <AlertTriangle className="size-3.5 text-orange-600 dark:text-orange-400 animate-pulse" />,
+        }
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return {
+          label: status.toUpperCase(),
+          className: "bg-muted text-muted-foreground border-border",
+          icon: <Clock className="size-3.5 text-muted-foreground" />,
+        }
     }
   }
+
+  // Provider badge styling
+  const getProviderConfig = (provider: string) => {
+    const p = (provider || "").toLowerCase()
+    switch (p) {
+      case "stripe":
+        return {
+          label: "Stripe",
+          className: styles.badgeStripe,
+          icon: <CreditCard className="size-3" />,
+        }
+      case "khalti":
+        return {
+          label: "Khalti",
+          className: styles.badgeKhalti,
+          icon: <Building className="size-3" />,
+        }
+      case "esewa":
+        return {
+          label: "eSewa",
+          className: styles.badgeEsewa,
+          icon: <Building className="size-3" />,
+        }
+      case "bank":
+      case "bank_transfer":
+        return {
+          label: "Bank Transfer",
+          className: styles.badgeBank,
+          icon: <Building className="size-3" />,
+        }
+      default:
+        return {
+          label: (provider || "Manual").toUpperCase(),
+          className: "bg-muted text-muted-foreground border-border",
+          icon: <CreditCard className="size-3" />,
+        }
+    }
+  }
+
+  const statusConfig = getStatusConfig(paymentStatus)
+  const provConfig = getProviderConfig(paymentProvider)
 
   return (
     <div className="space-y-4">
-      {/* Back button and title */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/admin/donations">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back to Donations</span>
-              <span className="sm:hidden">Back</span>
-            </Button>
+      {/* Top Breadcrumbs */}
+      <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/donations"
+            className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="size-3.5" />
+            <span>Donations Ledger</span>
           </Link>
+          <span>/</span>
+          <span className="text-foreground font-mono">#{donationId.slice(0, 8)}</span>
         </div>
+
+        <Link
+          href={`/admin/donations/review`}
+          className="hover:text-foreground transition-colors text-[11px] hidden sm:inline"
+        >
+          Review Queue &rarr;
+        </Link>
       </div>
 
-      {/* Title and badges */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Transaction Details</h1>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" className={getStatusColor(paymentStatus)}>
-              {paymentStatus.toUpperCase()}
-            </Badge>
-            <Badge variant="outline" className={getProviderColor(paymentProvider)}>
-              {paymentProvider.toUpperCase()}
-            </Badge>
+      {/* Main Title & Action Bar */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pb-2 border-b border-border/60">
+        <div className="space-y-1.5 min-w-0">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              Donation #{donationId.slice(0, 8)}
+            </h1>
+
+            {/* Quick Copy UUID Button */}
+            <button
+              type="button"
+              onClick={handleCopyId}
+              title="Copy full Transaction UUID"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-mono bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer border border-border/60"
+            >
+              {copied ? (
+                <Check className="size-3 text-emerald-500" />
+              ) : (
+                <Copy className="size-3" />
+              )}
+              <span className="hidden sm:inline">UUID</span>
+            </button>
+
+            {/* Status & Gateway Badges */}
+            <div className="flex items-center gap-1.5">
+              <Badge
+                variant="outline"
+                className={cn("text-xs font-semibold gap-1.5 px-2.5 py-0.5", statusConfig.className)}
+              >
+                {statusConfig.icon}
+                <span>{statusConfig.label}</span>
+              </Badge>
+
+              <Badge
+                variant="outline"
+                className={cn("text-xs font-medium gap-1 px-2.5 py-0.5", provConfig.className)}
+              >
+                {provConfig.icon}
+                <span>{provConfig.label}</span>
+              </Badge>
+            </div>
           </div>
+
+          <p className="text-xs sm:text-sm text-muted-foreground font-mono truncate">
+            Canonical Ref: {donationId}
+          </p>
         </div>
 
-        {/* Action buttons - responsive layout */}
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          {/* Re-send Receipt - only if receipt exists and user is admin */}
-          {isAdmin && hasReceipt && onResendReceipt && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onResendReceipt}
-              disabled={isLoading}
-              className="gap-2 w-full sm:w-auto touch-manipulation min-h-[44px]"
-            >
-              <Mail className="h-4 w-4" />
-              <span className="hidden md:inline">Re-send Receipt</span>
-              <span className="md:hidden">Resend</span>
-            </Button>
-          )}
-
-          {/* Change Status - only for admin */}
+        {/* Action Buttons Toolbar */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2 w-full lg:w-auto">
+          {/* Change Status - Admin Only */}
           {isAdmin && onChangeStatus && (
             <Button
               variant="outline"
               size="sm"
               onClick={onChangeStatus}
               disabled={isLoading}
-              className="gap-2 w-full sm:w-auto touch-manipulation min-h-[44px]"
+              className="gap-2 h-9 text-xs font-medium shadow-2xs touch-manipulation cursor-pointer"
             >
-              <span className="hidden md:inline">Change Status</span>
-              <span className="md:hidden">Status</span>
+              <ShieldAlert className="size-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Change Status</span>
             </Button>
           )}
 
-          {/* Export PDF - for all with finance access */}
+          {/* Resend Receipt */}
+          {isAdmin && hasReceipt && onResendReceipt && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onResendReceipt}
+              disabled={isLoading}
+              className="gap-2 h-9 text-xs font-medium shadow-2xs touch-manipulation cursor-pointer"
+            >
+              {isLoading ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Mail className="size-3.5 text-primary" />
+              )}
+              <span>Resend Receipt</span>
+            </Button>
+          )}
+
+          {/* Export PDF */}
           {hasFinanceAccess && onExportPDF && (
             <Button
               variant="outline"
               size="sm"
               onClick={onExportPDF}
               disabled={isLoading}
-              className="gap-2 w-full sm:w-auto touch-manipulation min-h-[44px]"
+              className="gap-2 h-9 text-xs font-medium shadow-2xs touch-manipulation cursor-pointer"
             >
-              <FileDown className="h-4 w-4" />
-              <span className="hidden md:inline">Export</span>
-              <span className="md:hidden">Export</span>
+              {isLoading ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <FileDown className="size-3.5" />
+              )}
+              <span>Export PDF</span>
             </Button>
           )}
 
-          {/* View in Provider Dashboard */}
-          {hasFinanceAccess && onViewDashboard && (
+          {/* View Gateway Dashboard */}
+          {onViewDashboard && (
             <Button
-              variant="default"
+              variant="outline"
               size="sm"
               onClick={onViewDashboard}
               disabled={isLoading}
-              className="gap-2 w-full sm:w-auto touch-manipulation min-h-[44px]"
+              className="gap-2 h-9 text-xs font-medium shadow-2xs touch-manipulation cursor-pointer"
             >
-              <ExternalLink className="h-4 w-4" />
-              <span className="hidden md:inline">View in Dashboard</span>
-              <span className="md:hidden">Dashboard</span>
+              <ExternalLink className="size-3.5 text-muted-foreground" />
+              <span>Gateway</span>
             </Button>
           )}
         </div>

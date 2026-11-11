@@ -117,7 +117,7 @@ export async function submitSupportReport(formData: FormData): Promise<SupportSu
       }
     }
 
-    const supabase = await createClient()
+    const supabase = createServiceRoleClient()
     const { error } = await supabase.from("contact_submissions").insert({
       id: submissionId,
       name: values.name,

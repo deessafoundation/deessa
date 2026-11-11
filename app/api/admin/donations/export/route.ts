@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type")
     const search = searchParams.get("search")
     const currency = searchParams.get("currency")
+    const provider = searchParams.get("provider")
 
     // Build query — no pagination, fetch ALL matching records
     let query = supabase
@@ -41,8 +42,11 @@ export async function GET(request: NextRequest) {
     if (currency && currency !== "all") {
       query = query.eq("currency", currency)
     }
+    if (provider && provider !== "all") {
+      query = query.eq("provider", provider)
+    }
     if (search) {
-      query = query.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%`)
+      query = query.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%,receipt_number.ilike.%${search}%`)
     }
 
     const { data, error } = await query

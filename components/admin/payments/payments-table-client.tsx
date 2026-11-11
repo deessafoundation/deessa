@@ -1,12 +1,18 @@
 "use client"
 
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useCallback, useEffect, useRef, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { FancySelect } from "@/components/ui/fancy-select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   Table,
   TableBody,
@@ -16,41 +22,48 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  Calendar,
-  Loader2,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  CreditCard,
+  DollarSign,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
   Search,
   X,
-  DollarSign,
-  CreditCard,
-  TrendingUp,
-  AlertCircle,
-  Clock,
-  ChevronDown,
-  Filter,
   RotateCcw,
+  Table as TableIcon,
+  LayoutGrid,
+  MoreVertical,
+  Eye,
+  Copy,
+  Check,
+  Loader2,
+  Archive,
+  ArchiveRestore,
+  Filter,
   Heart,
   CalendarDays,
   Users,
-  Archive,
-  CheckSquare,
-  Square,
+  Building2,
+  FileText,
+  ArrowRight,
+  ShieldAlert,
 } from "lucide-react"
 import { formatCurrency } from "@/lib/utils/currency"
-import { Skeleton } from "@/components/ui/skeleton"
 import { notifications } from "@/lib/notifications"
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PaymentRecord = Record<string, any>
-
-interface PaymentStats {
-  totalAmount: number
-  byType: Record<string, number>
-  byStatus: Record<string, number>
-  byProvider: Record<string, number>
-}
+import { cn } from "@/lib/utils"
+import type { UnifiedPaymentRecord, PaymentStats } from "@/lib/data/payments"
+import { archivePayment, unarchivePayment } from "@/lib/actions/archive-payment"
+import styles from "./payments.module.css"
 
 interface PaymentsDashboardProps {
-  initialPayments: PaymentRecord[]
+  initialPayments: UnifiedPaymentRecord[]
   initialTotal: number
   initialStats: PaymentStats
   pageSize?: number
@@ -72,101 +85,85 @@ const DEFAULT_FILTERS: Filters = {
   showArchived: false,
 }
 
-const statusConfig: Record<string, { className: string; icon: React.ReactNode }> = {
+// ── Status Configuration ───────────────────────────────────────────────────
+const statusConfig: Record<string, { label: string; className: string; dotColor: string }> = {
   paid: {
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
-    icon: <DollarSign className="h-3 w-3" />,
+    label: "Paid",
+    className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+    dotColor: "bg-emerald-500",
   },
   completed: {
-    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800",
-    icon: <DollarSign className="h-3 w-3" />,
+    label: "Completed",
+    className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+    dotColor: "bg-emerald-500",
   },
   pending: {
-    className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800",
-    icon: <Clock className="h-3 w-3" />,
+    label: "Pending",
+    className: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+    dotColor: "bg-amber-500",
   },
   unpaid: {
-    className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800",
-    icon: <Clock className="h-3 w-3" />,
+    label: "Unpaid",
+    className: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+    dotColor: "bg-amber-500",
   },
   failed: {
-    className: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800",
-    icon: <AlertCircle className="h-3 w-3" />,
+    label: "Failed",
+    className: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
+    dotColor: "bg-red-500",
   },
   refunded: {
-    className: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-800",
-    icon: <AlertCircle className="h-3 w-3" />,
+    label: "Refunded",
+    className: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20",
+    dotColor: "bg-purple-500",
   },
   review: {
-    className: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-800",
-    icon: <AlertCircle className="h-3 w-3" />,
+    label: "In Review",
+    className: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20",
+    dotColor: "bg-sky-500",
   },
 }
 
-const typeConfig: Record<string, { className: string; icon: React.ReactNode; label: string }> = {
-  donation: {
-    className: "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950/40 dark:text-pink-400 dark:border-pink-800",
-    icon: <Heart className="h-3 w-3" />,
-    label: "Donation",
-  },
-  event: {
-    className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800",
-    icon: <CalendarDays className="h-3 w-3" />,
-    label: "Event",
-  },
-  conference: {
-    className: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-800",
-    icon: <Users className="h-3 w-3" />,
-    label: "Conference",
-  },
+function getProviderBadge(provider: string | null) {
+  const p = (provider || "unknown").toLowerCase()
+  switch (p) {
+    case "stripe":
+      return { label: "Stripe", className: styles.badgeStripe }
+    case "khalti":
+      return { label: "Khalti", className: styles.badgeKhalti }
+    case "esewa":
+      return { label: "eSewa", className: styles.badgeEsewa }
+    case "bank":
+      return { label: "Bank Transfer", className: styles.badgeBank }
+    default:
+      return { label: provider || "Manual / Other", className: "bg-muted text-muted-foreground border-border" }
+  }
 }
 
-function buildQueryString(filters: Filters, page: number, limit: number) {
-  const params = new URLSearchParams()
-  params.set("page", String(page))
-  params.set("limit", String(limit))
-  if (filters.status !== "all") params.set("status", filters.status)
-  if (filters.type !== "all") params.set("type", filters.type)
-  if (filters.provider !== "all") params.set("provider", filters.provider)
-  if (filters.search.trim()) params.set("search", filters.search.trim())
-  if (filters.showArchived) params.set("showArchived", "true")
-  return params.toString()
+function getTypeBadge(type: string) {
+  switch (type) {
+    case "donation":
+      return { label: "Donation", icon: Heart, className: styles.badgeDonation }
+    case "event":
+      return { label: "Event", icon: CalendarDays, className: styles.badgeEvent }
+    case "conference":
+      return { label: "Conference", icon: Users, className: styles.badgeConference }
+    default:
+      return { label: type, icon: CreditCard, className: "bg-muted text-muted-foreground" }
+  }
 }
 
-function StatCard({
-  title,
-  value,
-  subtitle,
-  icon,
-  color,
-}: {
-  title: string
-  value: React.ReactNode
-  subtitle?: string
-  icon: React.ReactNode
-  color: string
-}) {
-  return (
-    <Card className="relative overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
-      <div className={`absolute inset-0 ${color} opacity-[0.04]`} />
-      <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1.5">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              {title}
-            </p>
-            <div className="text-2xl font-bold tracking-tight">{value}</div>
-            {subtitle && (
-              <p className="text-xs text-muted-foreground">{subtitle}</p>
-            )}
-          </div>
-          <div className={`h-10 w-10 rounded-xl ${color} flex items-center justify-center`}>
-            {icon}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
+function formatRelativeTime(dateStr: string) {
+  try {
+    const diffSec = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
+    if (diffSec < 60) return "just now"
+    if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
+    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
+    if (diffSec < 604800) return `${Math.floor(diffSec / 86400)}d ago`
+    return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  } catch {
+    return dateStr
+  }
 }
 
 export function PaymentsDashboard({
@@ -176,16 +173,22 @@ export function PaymentsDashboard({
   pageSize = 25,
 }: PaymentsDashboardProps) {
   const router = useRouter()
-  const [payments, setPayments] = useState<PaymentRecord[]>(initialPayments)
+  const [isPending, startTransition] = useTransition()
+
+  const [payments, setPayments] = useState<UnifiedPaymentRecord[]>(initialPayments)
   const [total, setTotal] = useState(initialTotal)
   const [stats, setStats] = useState<PaymentStats>(initialStats)
   const [page, setPage] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [filtersLoading, setFiltersLoading] = useState(false)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table")
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [bulkLoading, setBulkLoading] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasLoadedRef = useRef(false)
 
   const hasMore = payments.length < total
   const hasActiveFilters =
@@ -197,21 +200,36 @@ export function PaymentsDashboard({
 
   const selectedCount = Object.keys(selected).length
 
+  // Build query string for API requests
+  const buildQuery = (f: Filters, p: number, l: number) => {
+    const params = new URLSearchParams()
+    params.set("page", String(p))
+    params.set("limit", String(l))
+    if (f.status !== "all") params.set("status", f.status)
+    if (f.type !== "all") params.set("type", f.type)
+    if (f.provider !== "all") params.set("provider", f.provider)
+    if (f.search.trim()) params.set("search", f.search.trim())
+    if (f.showArchived) params.set("showArchived", "true")
+    return params.toString()
+  }
+
+  // Fetch with active filters
   const fetchFiltered = useCallback(
     async (newFilters: Filters) => {
       setFiltersLoading(true)
       setSelected({})
       try {
-        const qs = buildQueryString(newFilters, 0, pageSize)
+        const qs = buildQuery(newFilters, 0, pageSize)
         const res = await fetch(`/api/admin/payments?${qs}`)
-        if (!res.ok) throw new Error("Failed to fetch")
+        if (!res.ok) throw new Error("Failed to fetch payments")
         const data = await res.json()
-        setPayments(data.payments)
-        setTotal(data.total)
-        setStats(data.stats)
+        setPayments(data.payments || [])
+        setTotal(data.total || 0)
+        if (data.stats) setStats(data.stats)
         setPage(0)
       } catch (err) {
-        console.error("Filter fetch error:", err)
+        console.error("Payment filter fetch error:", err)
+        notifications.showError({ description: "Failed to reload payment records" })
       } finally {
         setFiltersLoading(false)
       }
@@ -219,26 +237,29 @@ export function PaymentsDashboard({
     [pageSize]
   )
 
-  const loadMore = useCallback(async () => {
-    setLoading(true)
+  // Load More (Pagination)
+  const handleLoadMore = async () => {
+    if (loadingMore || !hasMore) return
+    setLoadingMore(true)
     try {
       const nextPage = page + 1
-      const qs = buildQueryString(filters, nextPage, pageSize)
+      const qs = buildQuery(filters, nextPage, pageSize)
       const res = await fetch(`/api/admin/payments?${qs}`)
-      if (!res.ok) throw new Error("Failed to fetch")
+      if (!res.ok) throw new Error("Failed to load more payments")
       const data = await res.json()
-      setPayments((prev) => [...prev, ...data.payments])
-      setTotal(data.total)
-      setStats(data.stats)
+      setPayments((prev) => [...prev, ...(data.payments || [])])
+      setTotal(data.total || 0)
       setPage(nextPage)
     } catch (err) {
-      console.error("Load more error:", err)
+      console.error("Load more payments error:", err)
+      notifications.showError({ description: "Failed to load additional records" })
     } finally {
-      setLoading(false)
+      setLoadingMore(false)
     }
-  }, [page, filters, pageSize])
+  }
 
-  function updateFilter(key: keyof Filters, value: string) {
+  // Filter updates
+  function updateFilter(key: keyof Filters, value: any) {
     const next = { ...filters, [key]: value }
     setFilters(next)
     if (key !== "search") {
@@ -246,20 +267,38 @@ export function PaymentsDashboard({
     }
   }
 
-  function handleSearchChange(value: string) {
-    setFilters((f) => ({ ...f, search: value }))
+  function handleSearchChange(val: string) {
+    setFilters((prev) => ({ ...prev, search: val }))
     if (searchTimer.current) clearTimeout(searchTimer.current)
     searchTimer.current = setTimeout(() => {
-      fetchFiltered({ ...filters, search: value })
-    }, 400)
+      fetchFiltered({ ...filters, search: val })
+    }, 350)
   }
 
   function clearFilters() {
     setFilters(DEFAULT_FILTERS)
-    setSelected({})
     fetchFiltered(DEFAULT_FILTERS)
   }
 
+  function handleScopeTab(scopeStatus: string) {
+    const next = {
+      ...filters,
+      status: scopeStatus,
+      showArchived: scopeStatus === "archived",
+    }
+    setFilters(next)
+    fetchFiltered(next)
+  }
+
+  // Copy helper
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedId(text)
+    notifications.showSuccess({ description: `${label} copied to clipboard.` })
+    setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  // Selection
   function toggleSelect(id: string) {
     setSelected((prev) => {
       const next = { ...prev }
@@ -279,7 +318,26 @@ export function PaymentsDashboard({
     })
   }
 
-  async function handleBulkArchive() {
+  // Single archive / unarchive
+  const handleToggleArchive = async (payment: UnifiedPaymentRecord) => {
+    try {
+      if (payment.archived_at) {
+        const res = await unarchivePayment(payment.id, payment.type)
+        if (!res.success) throw new Error(res.error)
+        notifications.showSuccess({ description: "Record restored from archive." })
+      } else {
+        const res = await archivePayment(payment.id, payment.type)
+        if (!res.success) throw new Error(res.error)
+        notifications.showSuccess({ description: "Record moved to archive." })
+      }
+      fetchFiltered(filters)
+    } catch (err: any) {
+      notifications.showError({ description: err.message || "Failed to update archive status" })
+    }
+  }
+
+  // Bulk Archive
+  const handleBulkArchive = async () => {
     const keys = Object.keys(selected)
     if (keys.length === 0) return
     setBulkLoading(true)
@@ -293,7 +351,9 @@ export function PaymentsDashboard({
       if (result.error) {
         notifications.showError({ description: result.error })
       } else {
-        notifications.showSuccess({ description: `${result.archived} record${result.archived === 1 ? "" : "s"} archived.` })
+        notifications.showSuccess({
+          description: `${result.archived} record${result.archived === 1 ? "" : "s"} archived.`,
+        })
         setSelected({})
         fetchFiltered(filters)
       }
@@ -305,399 +365,673 @@ export function PaymentsDashboard({
   }
 
   useEffect(() => {
-    fetchFiltered(DEFAULT_FILTERS)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
     return () => {
       if (searchTimer.current) clearTimeout(searchTimer.current)
     }
   }, [])
 
-  const totalDonations = stats.byType?.donation || 0
-  const totalEvents = stats.byType?.event || 0
-  const totalConference = stats.byType?.conference || 0
-  const pendingCount = (stats.byStatus?.pending || 0) + (stats.byStatus?.unpaid || 0)
-  const reviewCount = stats.byStatus?.review || 0
-  const failedCount = stats.byStatus?.failed || 0
+  // KPI calculations
+  const totalSettledCount = (stats.byStatus?.paid || 0)
+  const totalPendingCount = (stats.byStatus?.pending || 0)
+  const totalReviewCount = (stats.byStatus?.review || 0)
+  const totalFailedCount = (stats.byStatus?.failed || 0)
+  const successRate = total > 0 ? Math.round((totalSettledCount / total) * 100) : 100
 
   return (
     <div className="space-y-6">
-      {/* ── Stat Cards ──────────────────────────────────────────────── */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Revenue"
-          value={formatCurrency(stats.totalAmount || 0, "NPR", { showCode: true })}
-          subtitle={`${total} total payment${total === 1 ? "" : "s"}`}
-          icon={<DollarSign className="h-5 w-5 text-white" />}
-          color="bg-emerald-500"
-        />
-        <StatCard
-          title="By Type"
-          value={
-            <div className="space-y-0.5 text-sm">
-              <div className="flex items-center gap-1.5">
-                <Heart className="h-3 w-3 text-pink-500" />
-                {totalDonations} donations
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CalendarDays className="h-3 w-3 text-blue-500" />
-                {totalEvents} events
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Users className="h-3 w-3 text-indigo-500" />
-                {totalConference} conference
+      {/* ── 1. KPI Shimmer Metric Strip ──────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Total Settled Volume */}
+        <Card className={cn(styles.kpiCard, "border-border/70 shadow-xs")}>
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Total Settled Volume
+              </span>
+              <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <DollarSign className="size-4" />
               </div>
             </div>
-          }
-          subtitle="Payment sources"
-          icon={<CreditCard className="h-5 w-5 text-white" />}
-          color="bg-blue-500"
-        />
-        <StatCard
-          title="Pending"
-          value={pendingCount}
-          subtitle="Awaiting payment"
-          icon={<Clock className="h-5 w-5 text-white" />}
-          color="bg-amber-500"
-        />
-        <StatCard
-          title="Failed"
-          value={failedCount}
-          subtitle="Unsuccessful attempts"
-          icon={<AlertCircle className="h-5 w-5 text-white" />}
-          color="bg-red-500"
-        />
-      </div>
-
-      {/* ── Filters + Table Card ────────────────────────────────────── */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <CardTitle className="text-lg">All Payments</CardTitle>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {filtersLoading ? (
-                  "Updating…"
-                ) : (
-                  <>
-                    Showing <span className="font-semibold text-foreground">{payments.length}</span> of{" "}
-                    <span className="font-semibold text-foreground">{total}</span> records
-                    {hasActiveFilters && " (filtered)"}
-                  </>
-                )}
+            <div className="mt-2 space-y-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight tabular-nums text-foreground">
+                {formatCurrency(stats.totalAmount || 0, "NPR", { showCode: true })}
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                  {totalSettledCount}
+                </span>{" "}
+                completed transaction{totalSettledCount === 1 ? "" : "s"}
               </p>
             </div>
-            <div className="flex items-center gap-2 self-start">
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-muted-foreground hover:text-foreground gap-1.5"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  Clear filters
-                </Button>
+          </CardContent>
+        </Card>
+
+        {/* Multi-Source Breakdown */}
+        <Card className={cn(styles.kpiCard, "border-border/70 shadow-xs")}>
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                All Sources
+              </span>
+              <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <CreditCard className="size-4" />
+              </div>
+            </div>
+            <div className="mt-2 space-y-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight tabular-nums text-foreground">
+                {total}
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium flex-wrap">
+                <span className="text-pink-600 dark:text-pink-400">{stats.byType?.donation || 0} Don</span>
+                <span>•</span>
+                <span className="text-blue-600 dark:text-blue-400">{stats.byType?.event || 0} Evt</span>
+                <span>•</span>
+                <span className="text-purple-600 dark:text-purple-400">{stats.byType?.conference || 0} Conf</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pending & Verification */}
+        <Card
+          onClick={() => handleScopeTab("pending")}
+          className={cn(
+            styles.kpiCard,
+            "border-border/70 shadow-xs cursor-pointer hover:border-amber-500/40"
+          )}
+        >
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Pending Settlement
+              </span>
+              <div className="size-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <Clock className="size-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-amber-600 dark:text-amber-400 tabular-nums">
+                {totalPendingCount + totalReviewCount}
+              </span>
+              {totalReviewCount > 0 && (
+                <Badge variant="secondary" className="text-[10px] bg-sky-500/10 text-sky-700 dark:text-sky-300">
+                  {totalReviewCount} in review
+                </Badge>
               )}
             </div>
-          </div>
-        </CardHeader>
+            <p className="text-[11px] text-muted-foreground mt-1">awaiting gateway / review</p>
+          </CardContent>
+        </Card>
 
-        <CardContent className="pt-0">
-          {/* ── Filter Row ────────────────────────────────────────── */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center mb-5">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name or email…"
-                value={filters.search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-9 h-9"
-              />
-              {filters.search && (
-                <button
-                  onClick={() => handleSearchChange("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+        {/* Settlement Health & Failures */}
+        <Card className={cn(styles.kpiCard, "border-border/70 shadow-xs")}>
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Success Health
+              </span>
+              <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="size-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400 tabular-nums">
+                {successRate}%
+              </span>
+              {totalFailedCount > 0 && (
+                <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+                  {totalFailedCount} failed
+                </Badge>
               )}
             </div>
+            <p className="text-[11px] text-muted-foreground mt-1">gateway settlement rate</p>
+          </CardContent>
+        </Card>
+      </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              <Filter className="h-4 w-4 text-muted-foreground hidden sm:block" />
-
-              <FancySelect
-                value={filters.type}
-                onValueChange={(v) => updateFilter("type", v)}
-                options={[
-                  { value: "all", label: "All Types" },
-                  { value: "donation", label: "Donation" },
-                  { value: "event", label: "Event" },
-                  { value: "conference", label: "Conference" },
-                ]}
-                className="w-[140px]"
-                size="sm"
-              />
-
-              <FancySelect
-                value={filters.status}
-                onValueChange={(v) => updateFilter("status", v)}
-                options={[
-                  { value: "all", label: "All Status" },
-                  { value: "paid", label: "Paid" },
-                  { value: "pending", label: "Pending" },
-                  { value: "unpaid", label: "Unpaid" },
-                  { value: "failed", label: "Failed" },
-                  { value: "refunded", label: "Refunded" },
-                  { value: "review", label: "Under Review" },
-                ]}
-                className="w-[140px]"
-                size="sm"
-              />
-
-              <FancySelect
-                value={filters.provider}
-                onValueChange={(v) => updateFilter("provider", v)}
-                options={[
-                  { value: "all", label: "All Providers" },
-                  { value: "stripe", label: "Stripe" },
-                  { value: "khalti", label: "Khalti" },
-                  { value: "esewa", label: "eSewa" },
-                ]}
-                className="w-[140px]"
-                size="sm"
-              />
-
-              <button
-                onClick={() => {
-                  const next = { ...filters, showArchived: !filters.showArchived }
-                  setFilters(next)
-                  fetchFiltered(next)
-                }}
-                className={`h-9 px-3 rounded-lg border text-xs font-medium transition-colors ${
-                  filters.showArchived
-                    ? "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100"
-                    : "bg-background border-border text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                {filters.showArchived ? "Hide archived" : "Show archived"}
-              </button>
-
-              {selectedCount > 0 && (
-                <button
-                  onClick={handleBulkArchive}
-                  disabled={bulkLoading}
-                  className="h-9 px-3 rounded-lg border border-amber-200 bg-amber-50 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors flex items-center gap-1.5 disabled:opacity-60"
-                >
-                  {bulkLoading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Archive className="h-3.5 w-3.5" />
+      {/* ── 2. Scope Shimmer Tab Strip ───────────────────────────────── */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-border/70 scrollbar-none">
+        {[
+          { key: "all", label: "All Records", count: total },
+          { key: "paid", label: "Settled / Paid", count: totalSettledCount },
+          { key: "pending", label: "Pending", count: totalPendingCount },
+          { key: "review", label: "Review Queue", count: totalReviewCount },
+          { key: "failed", label: "Failed", count: totalFailedCount },
+          { key: "archived", label: "Archived", count: null },
+        ].map((tab) => {
+          const isActive = tab.key === "archived" ? filters.showArchived : !filters.showArchived && filters.status === tab.key
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => handleScopeTab(tab.key)}
+              className={cn(
+                "flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all shrink-0 cursor-pointer",
+                isActive
+                  ? cn(
+                      "bg-primary text-primary-foreground shadow-xs",
+                      styles.oceanShimmerTab
+                    )
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              <span>{tab.label}</span>
+              {tab.count !== null && (
+                <span
+                  className={cn(
+                    "text-[11px] font-bold px-1.5 py-0.2 rounded-full tabular-nums",
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-muted text-muted-foreground"
                   )}
-                  Archive {selectedCount} selected
-                </button>
+                >
+                  {tab.count}
+                </span>
               )}
-            </div>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* ── 3. Filters & Action Toolbar ─────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-card p-3 rounded-xl border border-border/70 shadow-2xs">
+        {/* Search Input */}
+        <div className="relative flex-1 min-w-[220px] max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Input
+            value={filters.search}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Search by name, email, or transaction ID..."
+            className="pl-9 pr-8 h-9 text-xs sm:text-sm bg-muted/30"
+          />
+          {filters.search && (
+            <button
+              type="button"
+              onClick={() => handleSearchChange("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Right Toolbar Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Source Type Filter */}
+          <Select
+            value={filters.type}
+            onValueChange={(val) => updateFilter("type", val)}
+          >
+            <SelectTrigger className="h-9 text-xs w-[130px] bg-muted/30">
+              <SelectValue placeholder="Source Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sources</SelectItem>
+              <SelectItem value="donation">Donations</SelectItem>
+              <SelectItem value="event">Events</SelectItem>
+              <SelectItem value="conference">Conferences</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Gateway Provider Filter */}
+          <Select
+            value={filters.provider}
+            onValueChange={(val) => updateFilter("provider", val)}
+          >
+            <SelectTrigger className="h-9 text-xs w-[130px] bg-muted/30">
+              <SelectValue placeholder="Gateway" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Gateways</SelectItem>
+              <SelectItem value="stripe">Stripe</SelectItem>
+              <SelectItem value="khalti">Khalti</SelectItem>
+              <SelectItem value="esewa">eSewa</SelectItem>
+              <SelectItem value="bank">Bank Transfer</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Clear Filters */}
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-9 text-xs px-2 text-muted-foreground hover:text-foreground"
+              title="Reset all filters"
+            >
+              <RotateCcw className="size-3.5 mr-1" />
+              Reset
+            </Button>
+          )}
+
+          {/* Bulk Archive Button */}
+          {selectedCount > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleBulkArchive}
+              disabled={bulkLoading}
+              className="h-9 text-xs font-semibold border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20"
+            >
+              {bulkLoading ? (
+                <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <Archive className="size-3.5 mr-1.5" />
+              )}
+              Archive ({selectedCount})
+            </Button>
+          )}
+
+          {/* View Switcher: Table vs Bento Grid */}
+          <div className="flex items-center border border-border/70 rounded-lg p-0.5 bg-muted/30">
+            <button
+              type="button"
+              onClick={() => setViewMode("table")}
+              title="Table View"
+              className={cn(
+                "p-1.5 rounded-md transition-all cursor-pointer",
+                viewMode === "table"
+                  ? "bg-card text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <TableIcon className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              title="Bento Card View"
+              className={cn(
+                "p-1.5 rounded-md transition-all cursor-pointer",
+                viewMode === "grid"
+                  ? "bg-card text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <LayoutGrid className="size-4" />
+            </button>
           </div>
+        </div>
+      </div>
 
-          {/* ── Table ─────────────────────────────────────────────── */}
-          <div className="rounded-lg border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/40 hover:bg-muted/40">
-                  <TableHead className="w-10">
-                    <button onClick={toggleSelectAll} className="flex items-center justify-center">
-                      {payments.length > 0 && payments.every((p) => selected[`${p.type}-${p.id}`]) ? (
-                        <CheckSquare className="h-4 w-4 text-primary" />
-                      ) : (
-                        <Square className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead className="font-semibold">Name</TableHead>
-                  <TableHead className="font-semibold">Type</TableHead>
-                  <TableHead className="font-semibold">Amount</TableHead>
-                  <TableHead className="font-semibold">Provider</TableHead>
-                  <TableHead className="font-semibold">Status</TableHead>
-                  <TableHead className="font-semibold">Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtersLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={`skeleton-${i}`}>
-                      <TableCell><Skeleton className="h-4 w-4" /></TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-8 w-8 rounded-full" />
-                          <div className="space-y-1.5">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-3 w-40" />
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    </TableRow>
-                  ))
-                ) : payments.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-16">
-                      <div className="flex flex-col items-center gap-2">
-                        <CreditCard className="h-10 w-10 text-muted-foreground/40" />
-                        <p className="font-medium text-muted-foreground">No payments found</p>
-                        {hasActiveFilters && (
-                          <p className="text-sm text-muted-foreground">
-                            Try adjusting your filters
-                          </p>
-                        )}
-                      </div>
-                    </TableCell>
+      {/* ── 4. Main Records Presentation ────────────────────────────── */}
+      {filtersLoading ? (
+        <Card className="border border-border/70">
+          <CardContent className="py-20 flex flex-col items-center justify-center text-center">
+            <Loader2 className="size-8 animate-spin text-primary mb-3" />
+            <p className="text-sm font-semibold text-foreground">Loading payment records…</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Fetching aggregated financial entries</p>
+          </CardContent>
+        </Card>
+      ) : payments.length === 0 ? (
+        <Card className="border-dashed border-2">
+          <CardContent className="py-16 flex flex-col items-center justify-center text-center">
+            <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+              <CreditCard className="size-7" />
+            </div>
+            <h3 className="text-lg font-bold">No Payments Found</h3>
+            <p className="text-sm text-muted-foreground max-w-md mt-1 mb-6">
+              {hasActiveFilters
+                ? "No transaction records matched your active filters. Try adjusting your search query or reset your filters."
+                : "No payment transactions have been logged in the system yet."}
+            </p>
+            {hasActiveFilters && (
+              <Button variant="outline" size="sm" onClick={clearFilters} className="gap-2">
+                <RotateCcw className="size-4" />
+                Reset Filters
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      ) : viewMode === "table" ? (
+        /* ── DESKTOP HIGH-DENSITY TABLE (with explicit S.No) ──────── */
+        <Card className="border-border/70 shadow-xs overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="bg-muted/40">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-10 text-center">
+                      <input
+                        type="checkbox"
+                        checked={payments.length > 0 && payments.every((p) => selected[`${p.type}-${p.id}`])}
+                        onChange={toggleSelectAll}
+                        className="rounded border-border/80 text-primary focus:ring-primary/30 size-3.5 cursor-pointer"
+                        aria-label="Select all"
+                      />
+                    </TableHead>
+                    <TableHead className="w-[60px] text-center font-semibold">S.No</TableHead>
+                    <TableHead className="font-semibold">Customer / Payer</TableHead>
+                    <TableHead className="font-semibold">Type</TableHead>
+                    <TableHead className="font-semibold">Amount</TableHead>
+                    <TableHead className="font-semibold">Gateway</TableHead>
+                    <TableHead className="font-semibold">Status</TableHead>
+                    <TableHead className="font-semibold">Date</TableHead>
+                    <TableHead className="text-right font-semibold">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  payments.map((payment, idx) => {
-                    const normalizedStatus = (payment.status || "").toLowerCase()
-                    const sc = statusConfig[normalizedStatus] || statusConfig.pending
-                    const tc = typeConfig[payment.type] || typeConfig.donation
-
+                </TableHeader>
+                <TableBody>
+                  {payments.map((payment, idx) => {
                     const rowKey = `${payment.type}-${payment.id}`
                     const isSelected = !!selected[rowKey]
+                    const sc = statusConfig[payment.status.toLowerCase()] || statusConfig.pending
+                    const tb = getTypeBadge(payment.type)
+                    const pb = getProviderBadge(payment.provider)
+                    const TypeIcon = tb.icon
 
                     return (
                       <TableRow
                         key={rowKey}
-                        className={`cursor-pointer ${
-                          payment.archived_at
-                            ? "opacity-50 hover:opacity-75"
-                            : isSelected
-                              ? "bg-primary/5 hover:bg-primary/10"
-                              : idx % 2 === 0
-                                ? "bg-transparent hover:bg-muted/30"
-                                : "bg-muted/10 hover:bg-muted/30"
-                        }`}
-                        onClick={() => router.push(`/admin/payments/${payment.id}?type=${payment.type}`)}
+                        onClick={() => {
+                          startTransition(() => {
+                            router.push(`/admin/payments/${payment.id}?type=${payment.type}`)
+                          })
+                        }}
+                        className={cn(
+                          "cursor-pointer transition-colors group",
+                          payment.archived_at && "opacity-60",
+                          isSelected
+                            ? "bg-primary/5 hover:bg-primary/10"
+                            : idx % 2 === 0
+                              ? "bg-transparent hover:bg-muted/30"
+                              : "bg-muted/10 hover:bg-muted/30"
+                        )}
                       >
-                        <TableCell onClick={(e) => { e.stopPropagation(); toggleSelect(rowKey) }}>
-                          <div className="flex items-center justify-center cursor-pointer">
-                            {isSelected ? (
-                              <CheckSquare className="h-4 w-4 text-primary" />
-                            ) : (
-                              <Square className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                            )}
-                          </div>
+                        {/* Checkbox */}
+                        <TableCell onClick={(e) => e.stopPropagation()} className="text-center">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelect(rowKey)}
+                            className="rounded border-border/80 text-primary focus:ring-primary/30 size-3.5 cursor-pointer"
+                          />
                         </TableCell>
+
+                        {/* Explicit S.No column */}
+                        <TableCell className="text-center font-mono text-xs text-muted-foreground font-semibold">
+                          {page * pageSize + idx + 1}
+                        </TableCell>
+
+                        {/* Customer / Payer Details */}
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                            <div className="size-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">
                               {(payment.name || "?")
                                 .split(" ")
-                                .map((w: string) => w[0])
+                                .map((w) => w[0])
                                 .join("")
                                 .slice(0, 2)
                                 .toUpperCase()}
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <p className="font-medium text-sm truncate">{payment.name}</p>
+                                <p className="font-semibold text-sm truncate text-foreground group-hover:text-primary transition-colors">
+                                  {payment.name}
+                                </p>
                                 {payment.archived_at && (
-                                  <span className="shrink-0 text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded px-1 py-0.5 leading-none">
+                                  <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 py-0 px-1">
                                     Archived
-                                  </span>
+                                  </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-muted-foreground truncate">
-                                {payment.email}
-                              </p>
+                              <p className="text-xs text-muted-foreground truncate">{payment.email}</p>
                               {payment.context && payment.context !== "General Donation" && payment.context !== "Conference" && (
-                                <p className="text-xs text-muted-foreground truncate">
+                                <p className="text-[11px] text-muted-foreground/80 truncate">
                                   {payment.context}
                                 </p>
                               )}
                             </div>
                           </div>
                         </TableCell>
+
+                        {/* Source Type Badge */}
                         <TableCell>
                           <Badge
                             variant="outline"
-                            className={`gap-1 ${tc.className}`}
+                            className={cn("text-[11px] font-medium gap-1 px-2 py-0.5", tb.className)}
                           >
-                            {tc.icon}
-                            {tc.label}
+                            <TypeIcon className="size-3" />
+                            {tb.label}
                           </Badge>
                         </TableCell>
+
+                        {/* Amount */}
                         <TableCell>
-                          <span className="font-semibold text-sm tabular-nums">
-                            {payment.amount
-                              ? formatCurrency(payment.amount, payment.currency, { showCode: true })
-                              : "—"}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <span className="text-sm capitalize">
-                            {payment.provider || "—"}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className={`gap-1 ${sc.className}`}
-                          >
-                            {sc.icon}
-                            <span className="capitalize">{normalizedStatus}</span>
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                            <Calendar className="h-3.5 w-3.5" />
-                            {new Date(payment.created_at).toLocaleDateString("en-GB", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
+                          <div className="flex flex-col">
+                            <span className="font-bold text-sm tracking-tight tabular-nums text-foreground">
+                              {payment.amount !== null
+                                ? formatCurrency(payment.amount, payment.currency || "NPR", { showCode: true })
+                                : "—"}
+                            </span>
+                            {payment.has_slip && (
+                              <span className="text-[10px] font-medium text-primary flex items-center gap-0.5">
+                                <FileText className="size-2.5" /> Slip Attached
+                              </span>
+                            )}
                           </div>
+                        </TableCell>
+
+                        {/* Gateway Provider */}
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <Badge
+                            variant="outline"
+                            className={cn("text-[11px] font-medium px-2 py-0.5", pb.className)}
+                          >
+                            {pb.label}
+                          </Badge>
+                        </TableCell>
+
+                        {/* Status */}
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={cn("text-[11px] font-medium gap-1.5 px-2.5 py-0.5", sc.className)}
+                          >
+                            <span className={cn("size-1.5 rounded-full animate-pulse", sc.dotColor)} />
+                            {sc.label}
+                          </Badge>
+                        </TableCell>
+
+                        {/* Date */}
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-medium text-foreground">
+                              {formatRelativeTime(payment.created_at)}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {new Date(payment.created_at).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </span>
+                          </div>
+                        </TableCell>
+
+                        {/* Row Actions Menu */}
+                        <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-8 text-muted-foreground hover:text-foreground"
+                              >
+                                <MoreVertical className="size-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-52">
+                              <DropdownMenuItem
+                                onClick={() => router.push(`/admin/payments/${payment.id}?type=${payment.type}`)}
+                              >
+                                <Eye className="size-4 mr-2 text-primary" />
+                                <span>Inspect Details</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleCopy(payment.id, "Payment ID")}>
+                                {copiedId === payment.id ? (
+                                  <Check className="size-4 mr-2 text-emerald-600" />
+                                ) : (
+                                  <Copy className="size-4 mr-2" />
+                                )}
+                                <span>Copy ID</span>
+                              </DropdownMenuItem>
+                              {payment.email && (
+                                <DropdownMenuItem onClick={() => handleCopy(payment.email, "Email")}>
+                                  <Copy className="size-4 mr-2" />
+                                  <span>Copy Payer Email</span>
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleToggleArchive(payment)}>
+                                {payment.archived_at ? (
+                                  <>
+                                    <ArchiveRestore className="size-4 mr-2 text-emerald-600" />
+                                    <span>Restore from Archive</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Archive className="size-4 mr-2 text-amber-600" />
+                                    <span>Move to Archive</span>
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     )
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-
-          {/* ── Load More ─────────────────────────────────────────── */}
-          {hasMore && !filtersLoading && (
-            <div className="flex flex-col items-center gap-2 pt-6">
-              <Button
-                variant="outline"
-                onClick={loadMore}
-                disabled={loading}
-                className="min-w-[220px] gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Loading…
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4" />
-                    Load More ({total - payments.length} remaining)
-                  </>
-                )}
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Page {page + 1} • {pageSize} per page
-              </p>
+                  })}
+                </TableBody>
+              </Table>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      ) : (
+        /* ── BENTO CARD VIEW (Mobile & Grid Mode) ───────────────────── */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+          {payments.map((payment, idx) => {
+            const sc = statusConfig[payment.status.toLowerCase()] || statusConfig.pending
+            const tb = getTypeBadge(payment.type)
+            const pb = getProviderBadge(payment.provider)
+            const TypeIcon = tb.icon
+
+            return (
+              <div
+                key={`${payment.type}-${payment.id}`}
+                onClick={() => router.push(`/admin/payments/${payment.id}?type=${payment.type}`)}
+                className={cn(
+                  styles.paymentBentoCard,
+                  "p-4 sm:p-5 rounded-2xl border border-border/70 bg-card cursor-pointer flex flex-col justify-between shadow-2xs gap-3",
+                  payment.archived_at && "opacity-60"
+                )}
+              >
+                {/* Header: S.No + Name + Type Badge */}
+                <div className="flex items-start justify-between gap-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="font-mono text-xs text-muted-foreground font-semibold shrink-0">
+                      S.No {page * pageSize + idx + 1}
+                    </span>
+                    <div className="size-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                      {(payment.name || "?")
+                        .split(" ")
+                        .map((w) => w[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-semibold text-sm text-foreground truncate">{payment.name}</h4>
+                      <p className="text-xs text-muted-foreground truncate">{payment.email}</p>
+                    </div>
+                  </div>
+
+                  <Badge
+                    variant="outline"
+                    className={cn("text-[10px] font-medium shrink-0 gap-1 px-2 py-0.5", tb.className)}
+                  >
+                    <TypeIcon className="size-3" />
+                    {tb.label}
+                  </Badge>
+                </div>
+
+                {/* Amount, Context & Slip Indicator */}
+                <div className="py-2 border-y border-border/40 flex items-center justify-between">
+                  <div>
+                    <span className="text-lg font-bold tracking-tight text-foreground tabular-nums">
+                      {payment.amount !== null
+                        ? formatCurrency(payment.amount, payment.currency || "NPR", { showCode: true })
+                        : "—"}
+                    </span>
+                    {payment.context && (
+                      <p className="text-[11px] text-muted-foreground truncate max-w-[180px]">
+                        {payment.context}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant="outline" className={cn("text-[10px] font-medium px-2 py-0.5", pb.className)}>
+                      {pb.label}
+                    </Badge>
+                    {payment.has_slip && (
+                      <span className="text-[10px] font-medium text-primary flex items-center gap-0.5">
+                        <FileText className="size-2.5" /> Slip Attached
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Footer: Status, Relative Date & Action */}
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <Badge
+                    variant="outline"
+                    className={cn("text-[10px] font-medium gap-1.5 px-2 py-0.5", sc.className)}
+                  >
+                    <span className={cn("size-1.5 rounded-full animate-pulse", sc.dotColor)} />
+                    {sc.label}
+                  </Badge>
+                  <span className="text-[11px] text-muted-foreground">
+                    {formatRelativeTime(payment.created_at)}
+                  </span>
+                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/admin/payments/${payment.id}?type=${payment.type}`)}
+                      className="h-7 px-2 text-xs font-medium text-primary gap-1"
+                    >
+                      <span>Details</span>
+                      <ArrowRight className="size-3" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* ── 5. Pagination Bar ────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-border/70 text-xs text-muted-foreground">
+        <div>
+          Showing <span className="font-semibold text-foreground">{payments.length}</span> of{" "}
+          <span className="font-semibold text-foreground">{total}</span> transactions
+          {hasActiveFilters && " (filtered)"}
+        </div>
+
+        {hasMore && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLoadMore}
+            disabled={loadingMore}
+            className="w-full sm:w-auto h-9 font-medium shadow-2xs"
+          >
+            {loadingMore && <Loader2 className="mr-2 size-3.5 animate-spin" />}
+            Load Next {Math.min(pageSize, total - payments.length)} Records
+          </Button>
+        )}
+      </div>
     </div>
   )
 }

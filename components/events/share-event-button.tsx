@@ -1,6 +1,7 @@
 "use client"
 
 import { Share2 } from "lucide-react"
+import { showToast } from "@/components/ui/toast"
 
 interface ShareEventButtonProps {
   title: string
@@ -16,12 +17,12 @@ export function ShareEventButton({ title, description }: ShareEventButtonProps) 
         url: window.location.href,
       }).catch((err) => {
         // User cancelled or error occurred
-        console.log('Share cancelled or failed:', err)
+        console.log("Share cancelled or failed:", err)
       })
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href)
-      alert('Link copied to clipboard!')
+      showToast.success("Event link copied to clipboard!")
     }
   }
 

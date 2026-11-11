@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { AdminSidebar } from "@/components/admin/layout/admin-sidebar"
 import { AdminHeader } from "@/components/admin/layout/admin-header"
 import { AdminNavigationGuard } from "@/components/admin/common/admin-navigation-guard"
@@ -39,11 +40,24 @@ function AdminLayoutInner({ adminUser, children }: AdminLayoutContentProps) {
 }
 
 export function AdminLayoutContent({ adminUser, children }: AdminLayoutContentProps) {
+  const pathname = usePathname() || ""
+  const isAuthPage =
+    pathname.includes("/admin/login") ||
+    pathname.includes("/admin/reset-password") ||
+    pathname.includes("/admin/setup") ||
+    pathname.includes("/admin/auth")
+
+  if (isAuthPage) {
+    return <>{children}</>
+  }
+
   return (
-    <SidebarProvider><AdminNavigationGuard>
-      <AdminLayoutInner adminUser={adminUser}>
-        {children}
-      </AdminLayoutInner>
-    </AdminNavigationGuard></SidebarProvider>
+    <SidebarProvider>
+      <AdminNavigationGuard>
+        <AdminLayoutInner adminUser={adminUser}>
+          {children}
+        </AdminLayoutInner>
+      </AdminNavigationGuard>
+    </SidebarProvider>
   )
 }

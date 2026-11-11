@@ -9,8 +9,13 @@ function copyCookies(source: NextResponse, target: NextResponse): NextResponse {
 }
 
 export async function updateSession(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-pathname", request.nextUrl.pathname)
+
   let supabaseResponse = NextResponse.next({
-    request,
+    request: {
+      headers: requestHeaders,
+    },
   })
 
   const supabase = createServerClient(
@@ -24,7 +29,9 @@ export async function updateSession(request: NextRequest) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
-            request,
+            request: {
+              headers: requestHeaders,
+            },
           })
           cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
         },
@@ -54,7 +61,11 @@ export async function updateSession(request: NextRequest) {
       return copyCookies(supabaseResponse, response)
     }
 
-    if (pathname === "/admin/login") {
+    if (
+      pathname === "/admin/login" ||
+      pathname === "/admin/reset-password" ||
+      pathname === "/admin/auth/callback"
+    ) {
       return supabaseResponse
     }
 
@@ -110,8 +121,12 @@ export async function updateSession(request: NextRequest) {
   // 2. Guard Admin Page Routes (/admin/*) -> Redirect to /admin/login
   // =========================================================================
   if (isAdminPage) {
-    // Exemption: Setup page component checks if setup is still required
-    if (pathname === "/admin/setup") {
+    // Exemption: Setup, password reset, and auth callback handlers
+    if (
+      pathname === "/admin/setup" ||
+      pathname === "/admin/reset-password" ||
+      pathname === "/admin/auth/callback"
+    ) {
       return supabaseResponse
     }
 

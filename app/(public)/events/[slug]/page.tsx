@@ -226,7 +226,7 @@ export default async function EventDetailPage({
   ])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-24 lg:pb-0">
       <StructuredData data={[eventStructuredData, breadcrumbStructuredData]} />
       
       {/* ═══════════════════════════════════════════
@@ -302,47 +302,47 @@ export default async function EventDetailPage({
           ═══════════════════════════════════════════ */}
       <section className="relative z-10 -mt-6">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <div className="flex flex-wrap items-center gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-lg md:gap-10">
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+          <div className="grid grid-cols-2 gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg sm:p-5 md:flex md:flex-wrap md:items-center md:gap-8 lg:gap-10">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                 <Calendar className="size-5 text-primary" />
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-black/30">Date</p>
-                <p className="text-sm font-bold text-black">{formatShortDate(event.event_date)}</p>
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-black/40">Date</p>
+                <p className="truncate text-sm font-bold text-black">{formatShortDate(event.event_date)}</p>
               </div>
             </div>
 
             {event.event_time && (
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                   <Clock className="size-5 text-primary" />
                 </div>
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-black/30">Time</p>
-                  <p className="text-sm font-bold text-black">{event.event_time}</p>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-black/40">Time</p>
+                  <p className="truncate text-sm font-bold text-black">{event.event_time}</p>
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <div className="flex items-center gap-3 min-w-0 col-span-2 sm:col-span-1">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                 <MapPin className="size-5 text-primary" />
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-black/30">Location</p>
-                <p className="text-sm font-bold text-black">{event.venue_name || event.location}</p>
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-black/40">Location</p>
+                <p className="truncate text-sm font-bold text-black">{event.venue_name || event.location}</p>
               </div>
             </div>
 
             {event.max_capacity && (
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                   <Users className="size-5 text-primary" />
                 </div>
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-black/30">Capacity</p>
-                  <p className="text-sm font-bold text-black">{event.max_capacity.toLocaleString()}</p>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-black/40">Capacity</p>
+                  <p className="truncate text-sm font-bold text-black">{event.max_capacity.toLocaleString()}</p>
                 </div>
               </div>
             )}
@@ -629,19 +629,19 @@ export default async function EventDetailPage({
           <div className="mb-6 h-1 w-12 rounded-full bg-[#0B5F8A]" />
 
           {hasGallery ? (
-            <div className="grid grid-cols-4 gap-2 md:gap-3">
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4 md:gap-3">
               {event.gallery.map((url: string, idx: number) => (
                 <div
                   key={idx}
                   className={`group relative overflow-hidden rounded-xl bg-gray-100 ${
-                    idx === 0 ? "col-span-2 row-span-2" : ""
-                  } ${idx === 0 ? "aspect-square" : "aspect-square"}`}
+                    idx === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square"
+                  }`}
                 >
                   <SafeImage
                     src={url}
                     alt={`${event.title} - Photo ${idx + 1}`}
                     fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
@@ -667,7 +667,7 @@ export default async function EventDetailPage({
 
           {hasMap ? (
             <div className="overflow-hidden rounded-2xl border border-gray-200">
-              <div className="h-[420px] w-full">
+              <div className="h-[280px] sm:h-[350px] md:h-[420px] w-full">
                 <iframe
                   src={`https://maps.google.com/maps?q=${event.latitude},${event.longitude}&output=embed&z=16`}
                   width="100%"
@@ -730,6 +730,40 @@ export default async function EventDetailPage({
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          MOBILE FLOATING REGISTRATION BAR (< lg)
+          ═══════════════════════════════════════════ */}
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur-md shadow-2xl lg:hidden">
+        <div className="mx-auto flex max-w-md items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-black/40">Admission</p>
+            <p className="truncate text-base font-black text-black">
+              {event.is_free ? (
+                <span className="text-emerald-600">Free</span>
+              ) : lowestPrice !== null ? (
+                `NPR ${lowestPrice.toLocaleString()}`
+              ) : (
+                "TBA"
+              )}
+            </p>
+          </div>
+          {isRegistrationClosed ? (
+            <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-xs font-bold text-black/40">
+              <CheckCircle2 className="size-3.5" />
+              <span>{isPastEvent ? "Event Ended" : "Closed"}</span>
+            </div>
+          ) : (
+            <Link
+              href={`/events/${event.slug}/register`}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-primary/20 transition-all active:scale-95"
+            >
+              <span>Register Now</span>
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

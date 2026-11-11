@@ -20,13 +20,20 @@ export async function PATCH(
           ? body.published
           : undefined
 
-    if (isPublished === undefined) {
+    const isFeatured =
+      typeof body.is_featured === "boolean"
+        ? body.is_featured
+        : typeof body.featured === "boolean"
+          ? body.featured
+          : undefined
+
+    if (isPublished === undefined && isFeatured === undefined) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
     }
 
-    const updateData: Record<string, unknown> = {
-      is_published: isPublished,
-    }
+    const updateData: Record<string, unknown> = {}
+    if (isPublished !== undefined) updateData.is_published = isPublished
+    if (isFeatured !== undefined) updateData.is_featured = isFeatured
 
     if (isPublished) {
       const { data: existing, error: existingError } = await auth.supabase
@@ -48,7 +55,7 @@ export async function PATCH(
       .from("stories")
       .update(updateData)
       .eq("id", id)
-      .select("id, is_published")
+      .select("id, is_published, is_featured")
       .single()
 
     if (error) {

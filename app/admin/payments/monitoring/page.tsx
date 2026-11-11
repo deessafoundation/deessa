@@ -1,13 +1,41 @@
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { PostPaymentMonitoringClient } from "./monitoring-client"
+import { canViewFinance, type AdminRole } from "@/lib/types/admin"
+import Link from "next/link"
+import { ArrowLeft, Activity, ShieldCheck } from "lucide-react"
 
 export const metadata = {
-  title: "Post-Payment Monitoring | Admin",
-  description: "Monitor receipt generation and email sending success rates",
+  title: "Delivery Monitoring | Admin",
+  description: "Monitor receipt generation and email dispatch success curves",
 }
 
-async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClient>>) {
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
+async function checkFinancePermission() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return null
+
+  const { data: adminUser } = await supabase
+    .from("admin_users")
+    .select("role")
+    .eq("user_id", user.id)
+    .single()
+
+  if (!adminUser || !canViewFinance(adminUser.role as AdminRole)) return null
+
+  return adminUser.role
+}
+
+async function getMonitoringStats() {
+  const supabase = createServiceRoleClient()
+
   // Get confirmed donations for different time periods
   const now = new Date()
   const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)
@@ -57,25 +85,24 @@ async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClie
     supabase
       .from("donations")
       .select("id", { count: "exact", head: true })
-      .eq("payment_status", "completed")
+      .in("payment_status", ["completed", "paid"])
       .gte("created_at", last24h.toISOString()),
     supabase
       .from("donations")
       .select("id", { count: "exact", head: true })
-      .eq("payment_status", "completed")
+      .in("payment_status", ["completed", "paid"])
       .gte("created_at", last7d.toISOString()),
     supabase
       .from("donations")
       .select("id", { count: "exact", head: true })
-      .eq("payment_status", "completed")
+      .in("payment_status", ["completed", "paid"])
       .gte("created_at", last30d.toISOString()),
   ])
 
   // Recent failures (last 10)
   const { data: recentReceiptFailures } = await supabase
     .from("receipt_failures")
-    .select(
-      `
+    .select(`
       *,
       donations (
         id,
@@ -83,16 +110,14 @@ async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClie
         amount,
         currency
       )
-    `
-    )
+    `)
     .is("resolved_at", null)
     .order("last_attempt_at", { ascending: false })
     .limit(10)
 
   const { data: recentEmailFailures } = await supabase
     .from("email_failures")
-    .select(
-      `
+    .select(`
       *,
       donations (
         id,
@@ -100,8 +125,7 @@ async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClie
         amount,
         currency
       )
-    `
-    )
+    `)
     .is("resolved_at", null)
     .order("last_attempt_at", { ascending: false })
     .limit(10)
@@ -129,26 +153,43 @@ async function getMonitoringStats(supabase: Awaited<ReturnType<typeof createClie
 }
 
 export default async function PostPaymentMonitoringPage() {
-  const supabase = await createClient()
-
-  // Check authentication
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  const role = await checkFinancePermission()
+  if (!role) {
     redirect("/admin/login")
   }
 
-  const stats = await getMonitoringStats(supabase)
+  const stats = await getMonitoringStats()
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Post-Payment Monitoring</h1>
-        <p className="text-muted-foreground">
-          Monitor receipt generation and email sending success rates
-        </p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border/50">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+            <Link
+              href="/admin/payments/operations"
+              className="hover:text-foreground transition-colors flex items-center gap-1 font-medium"
+            >
+              <ArrowLeft className="size-3.5" />
+              <span>Operations Hub</span>
+            </Link>
+            <span>/</span>
+            <span className="font-semibold text-foreground">Delivery Monitoring</span>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <div className="size-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-2xs">
+              <ShieldCheck className="size-5" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                Delivery Success Monitoring
+              </h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Track receipt PDF generation and confirmation email dispatch curves
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <PostPaymentMonitoringClient stats={stats} />

@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+import { getPageMetadata } from "@/lib/seo/page-metadata"
+
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/terms")
+}
+
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background py-20">

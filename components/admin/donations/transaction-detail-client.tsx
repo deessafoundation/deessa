@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { TransactionHeader } from "@/components/admin/donations/transaction-header"
 import { TransactionOverview } from "@/components/admin/donations/transaction-overview"
 import { DonorInformation } from "@/components/admin/donations/donor-information"
@@ -17,10 +18,15 @@ import { notifications } from "@/lib/notifications"
 
 interface TransactionDetailClientProps {
   data: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     donation: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reviewNotes: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     statusChanges: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     paymentEvents: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     paymentData: any
     reviewedByName: string | null
   }
@@ -28,12 +34,16 @@ interface TransactionDetailClientProps {
 }
 
 export function TransactionDetailClient({ data, userRole }: TransactionDetailClientProps) {
+  const router = useRouter()
+  const [, startTransition] = useTransition()
+
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const { donation, reviewNotes, statusChanges, paymentEvents, paymentData, reviewedByName } = data
 
   // Build activity timeline with error handling
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let timelineEvents: any[] = []
   try {
     timelineEvents = buildActivityTimeline({
@@ -50,79 +60,62 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
     })
   }
 
-  // Handle resend receipt with comprehensive error handling
+  // Handle resend receipt
   const handleResendReceipt = async () => {
     setIsLoading(true)
     try {
       const result = await resendReceipt({ donationId: donation.id })
       if (result.ok) {
         notifications.showSuccess({
-          title: "Success",
-          description: result.message,
+          title: "Receipt Sent",
+          description: result.message || "Tax receipt has been dispatched to donor email.",
         })
       } else {
-        // Handle specific error cases
-        if (result.message.includes("Rate limit") || result.message.includes("rate limit")) {
+        if (result.message?.toLowerCase().includes("rate limit")) {
           notifications.showError({
             title: "Rate Limit Exceeded",
             description: "You can only resend receipts 3 times per hour. Please try again later.",
             duration: 5000,
           })
-        } else if (result.message.includes("No receipt")) {
+        } else if (result.message?.toLowerCase().includes("no receipt")) {
           notifications.showError({
             title: "No Receipt Found",
-            description: "This donation doesn't have a receipt yet. Generate one first.",
-          })
-        } else if (result.message.includes("network") || result.message.includes("Network")) {
-          notifications.showError({
-            title: "Network Error",
-            description: "Unable to connect to the server. Please check your internet connection and try again.",
-            duration: 5000,
+            description: "This donation doesn't have an issued receipt yet. Generate one first.",
           })
         } else {
           notifications.showError({
-            title: "Error",
-            description: result.message,
+            title: "Receipt Error",
+            description: result.message || "Failed to resend receipt.",
           })
         }
       }
     } catch (error) {
       console.error("Resend receipt error:", error)
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        notifications.showError({
-          title: "Network Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          duration: 5000,
-        })
-      } else {
-        notifications.showError({
-          title: "Error",
-          description: "Failed to resend receipt. Please try again.",
-        })
-      }
+      notifications.showError({
+        title: "Error",
+        description: "Failed to resend receipt. Please try again.",
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Handle export PDF with error handling
+  // Handle export PDF
   const handleExportPDF = async () => {
     setIsLoading(true)
     try {
       const result = await exportTransactionPDF({ donationId: donation.id })
       if (result.ok && result.pdfUrl) {
-        // Create a download link and trigger it
-        const link = document.createElement('a')
+        const link = document.createElement("a")
         link.href = result.pdfUrl
         link.download = result.fileName || `transaction-${donation.id}.pdf`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
-        
+
         notifications.showSuccess({
-          title: "Success",
-          description: result.message,
+          title: "PDF Exported",
+          description: result.message || "Transaction document downloaded.",
         })
       } else {
         notifications.showError({
@@ -132,19 +125,10 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
       }
     } catch (error) {
       console.error("Export PDF error:", error)
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        notifications.showError({
-          title: "Network Error",
-          description: "Unable to connect to the server. Please check your internet connection and try again.",
-          duration: 5000,
-        })
-      } else {
-        notifications.showError({
-          title: "Error",
-          description: "Failed to export transaction. Please try again.",
-        })
-      }
+      notifications.showError({
+        title: "Error",
+        description: "Failed to export transaction. Please try again.",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -153,32 +137,20 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
   // Handle view in provider dashboard
   const handleViewDashboard = () => {
     try {
-      // Debug: Log what we have
-      console.log('Dashboard link debug:', {
-        provider: donation.provider,
-        payment_intent_id: paymentData?.payment_intent_id,
-        session_id: paymentData?.session_id,
-        payment_id: donation.payment_id,
-        paymentData: paymentData,
-      })
-
-      // Use all available payment references
       const donationData = {
         provider: donation.provider,
         payment_intent_id: paymentData?.payment_intent_id || null,
         session_id: paymentData?.session_id || null,
-        payment_id: donation.payment_id || null, // Legacy fallback
+        payment_id: donation.payment_id || null,
       }
       const url = getProviderDashboardUrl(donation.provider, donationData)
-      
-      console.log('Generated URL:', url)
-      
+
       if (url) {
         window.open(url, "_blank")
       } else {
         notifications.showError({
           title: "Not Available",
-          description: "Provider dashboard link is not available for this transaction. The required provider reference may be missing.",
+          description: "Direct dashboard URL is not available for this transaction reference.",
         })
       }
     } catch (error) {
@@ -193,8 +165,8 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
   const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(userRole)
 
   return (
-    <main className="space-y-6" role="main" aria-label="Transaction Detail Page">
-      {/* Header */}
+    <main className="space-y-6 max-w-7xl mx-auto" role="main" aria-label="Transaction Detail Console">
+      {/* Top Header & Quick Actions */}
       <header>
         <ErrorBoundary>
           <TransactionHeader
@@ -212,79 +184,82 @@ export function TransactionDetailClient({ data, userRole }: TransactionDetailCli
         </ErrorBoundary>
       </header>
 
-      {/* Transaction Overview Section */}
+      {/* Hero: Master Contribution Overview & Lifecycle Stepper */}
       <section aria-labelledby="transaction-overview-heading">
         <ErrorBoundary>
           <TransactionOverview donation={donation} reviewedByName={reviewedByName} />
         </ErrorBoundary>
       </section>
 
-      {/* Donor and Payment Information Section */}
-      <section aria-labelledby="donor-payment-info-heading" className="grid gap-6 md:grid-cols-2">
-        <h2 id="donor-payment-info-heading" className="sr-only">Donor and Payment Information</h2>
-        <ErrorBoundary>
-          <DonorInformation
-            donor={{
-              name: donation.donor_name,
-              email: donation.donor_email,
-              phone: donation.donor_phone,
-              message: donation.donor_message,
-            }}
-          />
-        </ErrorBoundary>
-        <ErrorBoundary>
-          <PaymentTechnical
-            payment={{
-              payment_intent_id: paymentData?.payment_intent_id,
-              session_id: paymentData?.session_id,
-              subscription_id: paymentData?.subscription_id,
-              customer_id: paymentData?.customer_id,
-              payment_id: donation.payment_id,
-              verification_id: donation.verification_id,
-              bank_account_id: donation.bank_account_id,
-              bank_transfer_date: donation.bank_transfer_date,
-              bank_proof_url: donation.bank_proof_url,
-            }}
-            provider={donation.provider}
-          />
-        </ErrorBoundary>
-      </section>
+      {/* Main 2-Column Responsive Bento Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Left Column (lg:col-span-2): Technical Proof & Activity Timeline */}
+        <div className="lg:col-span-2 space-y-6">
+          <ErrorBoundary>
+            <PaymentTechnical
+              payment={{
+                payment_intent_id: paymentData?.payment_intent_id,
+                session_id: paymentData?.session_id,
+                subscription_id: paymentData?.subscription_id,
+                customer_id: paymentData?.customer_id,
+                payment_id: donation.payment_id,
+                verification_id: donation.verification_id,
+                bank_account_id: donation.bank_account_id,
+                bank_transfer_date: donation.bank_transfer_date,
+                bank_proof_url: donation.bank_proof_url,
+              }}
+              provider={donation.provider}
+            />
+          </ErrorBoundary>
 
-      {/* Review Management Section - only for admins */}
-      {isAdmin && (
-        <section aria-labelledby="review-management-heading">
-          <h2 id="review-management-heading" className="sr-only">Review Management</h2>
-          <div className="space-y-6">
-            <ErrorBoundary>
-              <ReviewStatusCard
-                donationId={donation.id}
-                currentStatus={donation.review_status || "unreviewed"}
-                userRole={userRole}
-              />
-            </ErrorBoundary>
-            <ErrorBoundary>
-              <ReviewNotesSection donationId={donation.id} notes={reviewNotes} userRole={userRole} />
-            </ErrorBoundary>
-          </div>
-        </section>
-      )}
+          <ErrorBoundary>
+            <ActivityTimeline events={timelineEvents} />
+          </ErrorBoundary>
+        </div>
 
-      {/* Activity Timeline Section */}
-      <section aria-labelledby="activity-timeline-heading">
-        <ErrorBoundary>
-          <ActivityTimeline events={timelineEvents} />
-        </ErrorBoundary>
-      </section>
+        {/* Right Column (lg:col-span-1): Donor Dossier, Governance & Notes */}
+        <div className="space-y-6">
+          <ErrorBoundary>
+            <DonorInformation
+              donor={{
+                name: donation.donor_name,
+                email: donation.donor_email,
+                phone: donation.donor_phone,
+                message: donation.donor_message,
+              }}
+            />
+          </ErrorBoundary>
 
-      {/* Status Change Modal */}
+          {isAdmin && (
+            <>
+              <ErrorBoundary>
+                <ReviewStatusCard
+                  donationId={donation.id}
+                  currentStatus={donation.review_status || "unreviewed"}
+                  userRole={userRole}
+                />
+              </ErrorBoundary>
+
+              <ErrorBoundary>
+                <ReviewNotesSection donationId={donation.id} notes={reviewNotes} userRole={userRole} />
+              </ErrorBoundary>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Status Change Modal with Smooth Transition */}
       <StatusChangeModal
         donationId={donation.id}
         currentStatus={donation.payment_status}
         isOpen={isStatusModalOpen}
         onClose={() => setIsStatusModalOpen(false)}
         onSuccess={() => {
-          // Page will revalidate automatically
-          window.location.reload()
+          setIsStatusModalOpen(false)
+          startTransition(() => {
+            router.refresh()
+          })
+          notifications.showSuccess("Transaction status updated successfully")
         }}
       />
     </main>

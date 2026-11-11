@@ -9,7 +9,21 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, AlertCircle, PenSquare, Eye, AlertTriangle } from "lucide-react"
+import {
+  Loader2,
+  AlertCircle,
+  PenSquare,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  FileText,
+  Globe,
+  Sparkles,
+  Star,
+  CheckCircle2,
+} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import { PrintButton } from "@/components/ui/print-button"
 import { notifications } from "@/lib/notifications"
 import { createStory, updateStory } from "@/lib/actions/admin-stories"
@@ -34,6 +48,20 @@ export function StoryForm({ story }: StoryFormProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [showBackupRestore, setShowBackupRestore] = useState(false)
   const [backupContent, setBackupContent] = useState<string | null>(null)
+
+  const [title, setTitle] = useState(story?.title || "")
+  const [excerpt, setExcerpt] = useState(story?.excerpt || "")
+  const [isPublished, setIsPublished] = useState(story?.is_published ?? false)
+  const [isFeatured, setIsFeatured] = useState(story?.is_featured ?? false)
+
+  const currentSlug = story?.slug || (title
+    ? title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+    : "")
+
   const [previewData, setPreviewData] = useState({
     title: story?.title || "",
     excerpt: story?.excerpt || "",
@@ -47,8 +75,10 @@ export function StoryForm({ story }: StoryFormProps) {
     if (story?.id) {
       const backup = getAutosaveBackup(story.id)
       if (backup && backup.content !== story.content) {
-        setBackupContent(backup.content)
-        setShowBackupRestore(true)
+        queueMicrotask(() => {
+          setBackupContent(backup.content)
+          setShowBackupRestore(true)
+        })
       }
     }
   }, [story?.id, story?.content])
@@ -95,8 +125,8 @@ export function StoryForm({ story }: StoryFormProps) {
     const formData = new FormData(form)
 
     setPreviewData({
-      title: (formData.get("title") as string) || "",
-      excerpt: (formData.get("excerpt") as string) || "",
+      title: title || (formData.get("title") as string) || "",
+      excerpt: excerpt || (formData.get("excerpt") as string) || "",
       category: (formData.get("category") as string) || "",
       readTime: (formData.get("readTime") as string) || "",
     })
@@ -109,12 +139,12 @@ export function StoryForm({ story }: StoryFormProps) {
     setError(null)
 
     // Validate required fields
-    const title = formData.get("title") as string
-    const excerpt = formData.get("excerpt") as string
-    const category = formData.get("category") as string
-    const isPublished = formData.get("isPublished") === "true"
+    const titleVal = ((formData.get("title") as string) || title || "").trim()
+    const excerptVal = ((formData.get("excerpt") as string) || excerpt || "").trim()
+    const category = (formData.get("category") as string)?.trim()
+    const isPublishedVal = formData.get("isPublished") === "true"
 
-    if (!title?.trim()) {
+    if (!titleVal) {
       setError("Title is required")
       setIsLoading(false)
       // Scroll to title field
@@ -123,7 +153,7 @@ export function StoryForm({ story }: StoryFormProps) {
       return
     }
 
-    if (!excerpt?.trim()) {
+    if (!excerptVal) {
       setError("Excerpt is required")
       setIsLoading(false)
       document.getElementById("excerpt")?.scrollIntoView({ behavior: "smooth", block: "center" })
@@ -131,7 +161,7 @@ export function StoryForm({ story }: StoryFormProps) {
       return
     }
 
-    if (!category?.trim()) {
+    if (!category) {
       setError("Category is required")
       setIsLoading(false)
       document.getElementById("category")?.scrollIntoView({ behavior: "smooth", block: "center" })
@@ -140,7 +170,7 @@ export function StoryForm({ story }: StoryFormProps) {
     }
 
     // Warn if publishing with empty content
-    if (isPublished && !content?.trim()) {
+    if (isPublishedVal && !content?.trim()) {
       const confirmed = window.confirm(
         "You are about to publish a story with empty content. Are you sure you want to continue?"
       )
@@ -208,47 +238,263 @@ export function StoryForm({ story }: StoryFormProps) {
         </Alert>
       )}
 
-      <Card className="rounded-xl">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl">Story Setup</CardTitle>
+      {/* ──────────────────────────────────────────
+          STORY SETUP & VISIBILITY CARD
+          ────────────────────────────────────────── */}
+      <Card className="overflow-hidden rounded-2xl border border-border/80 shadow-xs">
+        <CardHeader className="border-b bg-gradient-to-r from-sky-50/50 via-background to-background p-5 sm:p-6 dark:from-sky-950/20">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400">
+                <FileText className="size-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg sm:text-xl font-bold tracking-tight">Story Setup</CardTitle>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                  Headline, URL slug, summary hook, and public visibility controls.
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Status Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              {isPublished ? (
+                <Badge
+                  variant="outline"
+                  className="gap-1.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold text-xs py-1 px-3"
+                >
+                  <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Live to Public
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="gap-1.5 border-dashed border-slate-300 bg-slate-100 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 font-semibold text-xs py-1 px-3"
+                >
+                  <EyeOff className="size-3" />
+                  Draft (Private)
+                </Badge>
+              )}
+              {isFeatured && (
+                <Badge
+                  variant="outline"
+                  className="gap-1.5 border-yellow-500/30 bg-yellow-500/15 text-yellow-700 dark:text-yellow-400 font-semibold text-xs py-1 px-3"
+                >
+                  <Star className="size-3 fill-yellow-500 text-yellow-500" />
+                  Featured
+                </Badge>
+              )}
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
+
+        <CardContent className="p-5 sm:p-6">
           {/* Print-only metadata */}
           <div className="story-metadata hidden mb-6">
-            <h1>{previewData.title || story?.title || "Untitled Story"}</h1>
+            <h1>{title || story?.title || "Untitled Story"}</h1>
             <div>
-              <strong>Status:</strong> {story?.is_published ? "Published" : "Draft"} | 
+              <strong>Status:</strong> {isPublished ? "Published" : "Draft"} | 
               <strong> Category:</strong> {previewData.category || story?.category || "Uncategorized"} | 
               <strong> Read Time:</strong> {previewData.readTime || story?.read_time || "N/A"}
             </div>
-            {(previewData.excerpt || story?.excerpt) && (
+            {excerpt && (
               <div style={{ marginTop: "0.5cm", fontStyle: "italic" }}>
-                {previewData.excerpt || story?.excerpt}
+                {excerpt}
               </div>
             )}
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-12">
-            <div className="space-y-2 lg:col-span-8">
-              <Label htmlFor="title">Title *</Label>
-              <Input id="title" name="title" defaultValue={story?.title} required className="h-11 text-base" />
+          <div className="grid gap-6 lg:grid-cols-12 items-stretch">
+            {/* Left 8 columns: Content metadata (Title & Excerpt) */}
+            <div className="flex flex-col gap-4 lg:col-span-8">
+              {/* Title Section */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="title" className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                    <span>Story Title</span>
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <span
+                    className={cn(
+                      "text-[11px] font-mono",
+                      title.length > 90 ? "text-amber-600 font-bold" : "text-muted-foreground"
+                    )}
+                  >
+                    {title.length} characters
+                  </span>
+                </div>
+                <Input
+                  id="title"
+                  name="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Finding Aryan's Voice: A Journey Through Speech Therapy"
+                  required
+                  className="h-11 text-base font-medium shadow-2xs focus-visible:ring-sky-500/30"
+                />
+
+                {/* Live Slug Preview */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400">
+                    <Globe className="size-3.5 text-sky-600" />
+                    <span>Public Slug:</span>
+                  </span>
+                  <code className="rounded-md bg-muted px-2 py-0.5 font-mono text-[11px] text-foreground/80 break-all select-all">
+                    /stories/{currentSlug || "your-story-title"}
+                  </code>
+                </div>
+              </div>
+
+              {/* Excerpt Section (Positioned directly below title, expanding to fill card height) */}
+              <div className="flex flex-1 flex-col space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="excerpt" className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                    <span>Story Excerpt / Abstract</span>
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <span
+                    className={cn(
+                      "text-[11px] font-mono",
+                      excerpt.length > 260
+                        ? "text-destructive font-bold"
+                        : excerpt.length >= 100
+                          ? "text-emerald-600 font-medium"
+                          : "text-muted-foreground"
+                    )}
+                  >
+                    {excerpt.length} / 260 chars
+                  </span>
+                </div>
+                <Textarea
+                  id="excerpt"
+                  name="excerpt"
+                  value={excerpt}
+                  onChange={(e) => setExcerpt(e.target.value)}
+                  placeholder="At four years old, Aryan had not spoken a single word. His parents feared the silence would last forever — until a dedicated therapist at Deessa Foundation changed everything."
+                  rows={7}
+                  required
+                  className="flex-1 min-h-[175px] resize-y text-sm leading-relaxed shadow-2xs focus-visible:ring-sky-500/30"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Displayed on story cards, the homepage impact rail, search engine snippets, and social sharing previews.
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-lg border bg-muted/20 p-4 lg:col-span-4">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="isPublished">Published</Label>
-                <Switch id="isPublished" name="isPublished" defaultChecked={story?.is_published} value="true" />
+            {/* Right 4 columns: Publishing Controls */}
+            <div className="flex flex-col justify-between gap-4 lg:col-span-4 rounded-xl border border-border/80 bg-slate-50/70 p-4 sm:p-5 dark:bg-slate-900/50">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 border-b border-border/60 pb-3">
+                  <Sparkles className="size-4 text-sky-600" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-foreground">
+                    Visibility & Publishing
+                  </span>
+                </div>
+
+                {/* Published Toggle Card */}
+                <div
+                  className={cn(
+                    "rounded-xl border p-3.5 transition-all",
+                    isPublished
+                      ? "border-emerald-500/40 bg-emerald-500/5 shadow-2xs"
+                      : "border-border/70 bg-background"
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="isPublished" className="text-sm font-semibold cursor-pointer">
+                        Public Status
+                      </Label>
+                      <p className="text-xs text-muted-foreground leading-snug">
+                        {isPublished ? "Visible to visitors on public /stories" : "Saved as an internal draft"}
+                      </p>
+                    </div>
+                    <Switch
+                      id="isPublished"
+                      checked={isPublished}
+                      onCheckedChange={setIsPublished}
+                    />
+                    <input type="hidden" name="isPublished" value={isPublished ? "true" : "false"} />
+                  </div>
+                  <div className="mt-2.5 pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">Current State:</span>
+                    {isPublished ? (
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <span className="size-1.5 rounded-full bg-emerald-500 inline-block" />
+                        Live Public
+                      </span>
+                    ) : (
+                      <span className="font-medium text-slate-500 flex items-center gap-1">
+                        <EyeOff className="size-3" />
+                        Draft Only
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Featured Toggle Card */}
+                <div
+                  className={cn(
+                    "rounded-xl border p-3.5 transition-all",
+                    isFeatured
+                      ? "border-yellow-500/40 bg-yellow-500/5 shadow-2xs"
+                      : "border-border/70 bg-background"
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="isFeatured" className="text-sm font-semibold cursor-pointer">
+                        Featured Story
+                      </Label>
+                      <p className="text-xs text-muted-foreground leading-snug">
+                        {isFeatured
+                          ? "Highlighted on homepage and hero spotlights"
+                          : "Standard catalog listing"}
+                      </p>
+                    </div>
+                    <Switch
+                      id="isFeatured"
+                      checked={isFeatured}
+                      onCheckedChange={setIsFeatured}
+                    />
+                    <input type="hidden" name="isFeatured" value={isFeatured ? "true" : "false"} />
+                  </div>
+                  <div className="mt-2.5 pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">Placement:</span>
+                    {isFeatured ? (
+                      <span className="font-semibold text-yellow-600 dark:text-yellow-400 flex items-center gap-1">
+                        <Star className="size-3 fill-yellow-500 text-yellow-500 inline-block" />
+                        Pinned Spotlight
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Standard</span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="mt-4 flex items-center justify-between">
-                <Label htmlFor="isFeatured">Featured</Label>
-                <Switch id="isFeatured" name="isFeatured" defaultChecked={story?.is_featured} value="true" />
+
+              {/* Story Checklist Helper */}
+              <div className="rounded-lg bg-background/80 p-3 text-xs border border-border/60 text-muted-foreground space-y-1.5">
+                <div className="font-semibold text-foreground text-[11px] uppercase tracking-wider">
+                  Story Readiness
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={cn("size-3.5", title.trim() ? "text-emerald-600" : "text-slate-300 dark:text-slate-600")}
+                  />
+                  <span className={title.trim() ? "text-foreground font-medium" : ""}>Headline set</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={cn(
+                      "size-3.5",
+                      excerpt.trim() ? "text-emerald-600" : "text-slate-300 dark:text-slate-600"
+                    )}
+                  />
+                  <span className={excerpt.trim() ? "text-foreground font-medium" : ""}>Summary hook ready</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-5 space-y-2">
-            <Label htmlFor="excerpt">Excerpt *</Label>
-            <Textarea id="excerpt" name="excerpt" defaultValue={story?.excerpt} rows={3} required />
           </div>
         </CardContent>
       </Card>

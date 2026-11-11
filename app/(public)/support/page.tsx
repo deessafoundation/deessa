@@ -1,3 +1,4 @@
+import { getPageMetadata } from "@/lib/seo/page-metadata"
 import type { Metadata } from "next"
 import Link from "next/link"
 import {
@@ -16,9 +17,8 @@ import { SupportForm } from "@/components/support/support-form"
 import { isSupportEnabled } from "@/lib/support/settings"
 import { notFound } from "next/navigation"
 
-export const metadata: Metadata = {
-  title: "Support & Feedback - deessa Foundation",
-  description: "Report bugs, share suggestions, and help us improve the website before launch.",
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata("/support")
 }
 
 const supportHighlights = [

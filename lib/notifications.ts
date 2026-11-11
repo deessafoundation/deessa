@@ -27,8 +27,15 @@ class NotificationManager {
   }
 
   showError(
-    notification: { title?: string; description: string; duration?: number }
+    notification: { title?: string; description?: string; duration?: number } | string
   ) {
+    if (typeof notification === 'string') {
+      return toast.error({
+        title: 'Error',
+        description: notification,
+      })
+    }
+
     return toast.error({
       title: notification.title || 'Error',
       description: notification.description,

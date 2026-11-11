@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Loader2, Megaphone, Tag } from "lucide-react"
+import { Loader2, Megaphone, Tag, BookOpen } from "lucide-react"
 import { notifications } from "@/lib/notifications"
 import { updateSiteSetting } from "@/lib/actions/admin-settings"
 import { SITE_UI_FLAGS_KEY, type SiteUiFlags } from "@/lib/site-status/types"
@@ -17,7 +17,7 @@ interface SiteStatusCardProps {
 
 /**
  * Admin → Site Settings → Site tab.
- * Toggles the homepage development notice popup and the navbar Beta badge.
+ * Toggles the homepage development notice popup, the navbar Beta badge, and the public Stories feature.
  * Replaces the build-time `NEXT_PUBLIC_SITE_STATUS` env var.
  */
 export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
@@ -25,6 +25,7 @@ export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
   const [flags, setFlags] = useState<SiteUiFlags>({
     devNotice: initialFlags?.devNotice ?? true,
     betaBadge: initialFlags?.betaBadge ?? true,
+    storiesEnabled: initialFlags?.storiesEnabled ?? true,
   })
   const [saving, setSaving] = useState<keyof SiteUiFlags | null>(null)
 
@@ -37,6 +38,7 @@ export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
     const result = await updateSiteSetting(SITE_UI_FLAGS_KEY, {
       devNotice: next.devNotice,
       betaBadge: next.betaBadge,
+      storiesEnabled: next.storiesEnabled,
     })
 
     setSaving(null)
@@ -55,7 +57,9 @@ export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
       description:
         key === "devNotice"
           ? `Development notice popup ${value ? "enabled" : "disabled"}.`
-          : `Navbar Beta badge ${value ? "enabled" : "disabled"}.`,
+          : key === "betaBadge"
+          ? `Navbar Beta badge ${value ? "enabled" : "disabled"}.`
+          : `Public Stories page ${value ? "enabled and visible" : "hidden from public site (returns 404)"}.`,
     })
     router.refresh()
   }
@@ -68,6 +72,14 @@ export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
     enabledText: string
     disabledText: string
   }> = [
+    {
+      key: "storiesEnabled",
+      icon: <BookOpen className="h-5 w-5" aria-hidden="true" />,
+      label: "Public Stories & Impact page",
+      description: "Controls the public visibility of the /stories page, story articles, and navigation links while under review",
+      enabledText: "Publicly visible in navbar and accessible at /stories",
+      disabledText: "Hidden from navbar and public traffic (returns 404 Not Found)",
+    },
     {
       key: "devNotice",
       icon: <Megaphone className="h-5 w-5" aria-hidden="true" />,
@@ -91,10 +103,10 @@ export function SiteStatusCard({ initialFlags }: SiteStatusCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Tag className="h-5 w-5" aria-hidden="true" />
-          Site Status Indicators
+          Site Features & Status Indicators
         </CardTitle>
         <CardDescription>
-          Show or hide the development notice popup and the Beta badge. Changes apply to the public site immediately.
+          Control public visibility for section pages (like Stories), beta indicators, and development notices. Changes apply immediately.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

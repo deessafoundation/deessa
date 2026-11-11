@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -10,7 +11,7 @@ import { FileUpload } from "@/components/admin/media/file-upload"
 import type { AboutPageSettings } from "@/lib/types/about-settings"
 import { ABOUT_CATEGORY_ICONS, ABOUT_CATEGORY_TONES, ABOUT_FLOW_ICONS, ABOUT_FLOW_TONES } from "@/lib/types/about-sections"
 import { ContentField, ImageField, ColorField, TextListEditor, aboutFieldId } from "./content-fields"
-import { ChevronDown, ExternalLink, Sparkles } from "lucide-react"
+import { ChevronDown, ExternalLink, Sparkles, Search, Globe, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export type AboutSection = "hero" | "intro" | "howWeDoIt" | "governance" | "people" | "partnerSection" | "getInvolved" | "pageSettings"
@@ -618,23 +619,34 @@ export function AboutSectionEditor({ section, settings, onUpdate, errors, focusP
         {/* PAGE SETTINGS & SEO */}
         {section === "pageSettings" && (
           <>
-            <div className="space-y-3">
-              {field("seo.title", "SEO Meta Title", settings.seo.title, title => patch("seo", { title }))}
-              {field("seo.description", "SEO Meta Description", settings.seo.description, description => patch("seo", { description }), true, "Search engines use the first 160 characters. Route canonical is /about.")}
-              <TextListEditor path="seo.keywords" label="SEO Keyword" values={settings.seo.keywords} errors={errors} onChange={keywords => patch("seo", { keywords })} />
-              
-              {/* MediaPicker for Social Share Image */}
-              <ImageField
-                path="seo.image"
-                label="Social Share Image (OpenGraph / Twitter)"
-                value={settings.seo.image || ""}
-                onChange={image => patch("seo", { image })}
-                error={errors["seo.image"]}
-                help="Recommended resolution: 1200x630. Displayed when sharing on social media."
-                bucket="site-assets"
-              />
-              {field("seo.imageAlt", "Social Image Description", settings.seo.imageAlt, imageAlt => patch("seo", { imageAlt }))}
-              {toggle("seo.noIndex", "Exclude from Search Engines (noindex)", settings.seo.noIndex, noIndex => patch("seo", { noIndex }))}
+            {/* Centralized SEO & Social Sharing Notice */}
+            <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 text-primary">
+                  <Search className="w-4 h-4" />
+                </div>
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-foreground">SEO & Social Sharing Hub</span>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      Centralized
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Search engine metadata, Google SERP snippets, OpenGraph 1200×630 share cards, and canonical URLs for <span className="font-mono text-foreground font-semibold">/about</span> are managed centrally in the SEO Hub.
+                  </p>
+                </div>
+              </div>
+              <div className="pt-1 flex justify-end">
+                <Link
+                  href="/admin/seo?page=/about"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  Manage /about in SEO Hub
+                  <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
+                </Link>
+              </div>
             </div>
 
             {/* Section Visibility Toggles */}

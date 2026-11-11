@@ -412,53 +412,38 @@ export async function getHomepageMarqueeSettings(): Promise<HomepageMarqueeSetti
 // ============================================================================
 
 /**
- * Get homepage SEO metadata overrides
+ * Get homepage SEO metadata overrides (reads directly from the centralized page_seo store)
  */
 export async function getHomepageSEO(): Promise<HomepageSEOSettings> {
-  const defaultSEO: HomepageSEOSettings = {
-    title: "deessa Foundation - Empowering Autistic Children & Families in Nepal",
-    description:
-      "A non-profit organization dedicated to autism support, neurodiversity acceptance, and inclusive education for autistic children and their families across Nepal.",
-    ogImage: "/og-image.png",
-    keywords: [
-      "Nepal NGO",
-      "autism Nepal",
-      "autism support Nepal",
-      "autistic children Nepal",
-      "neurodiversity Nepal",
-      "inclusive education",
-      "special education Nepal",
-      "disability rights Nepal",
-      "child development Nepal",
-      "deessa Foundation",
-    ],
-  }
-
-  const result = await getHomepageSetting<HomepageSEOSettings>(
-    HOMEPAGE_SETTINGS_KEYS.SEO,
-    defaultSEO
-  )
-
-  // If the stored description is still the legacy template containing "sustainable development"
-  // or "transforming lives through education, healthcare", sanitize it to the accurate autism mission.
-  if (
-    !result.description ||
-    result.description.toLowerCase().includes("sustainable development") ||
-    result.description.toLowerCase().includes("transforming lives through education, healthcare")
-  ) {
+  try {
+    const { getPageSEO } = await import("@/lib/data/seo-settings")
+    const pageSEO = await getPageSEO("/")
     return {
-      ...result,
-      title:
-        result.title && !result.title.includes("Empowering Communities Across Nepal")
-          ? result.title
-          : defaultSEO.title,
-      description: defaultSEO.description,
-      keywords: result.keywords?.length ? result.keywords : defaultSEO.keywords,
-      ogImage: result.ogImage || defaultSEO.ogImage,
+      title: pageSEO.title,
+      description: pageSEO.description,
+      keywords: pageSEO.keywords || [],
+      ogImage: pageSEO.og_image || "/og-image.png",
+    }
+  } catch {
+    return {
+      title: "deessa Foundation - Empowering Autistic Children & Families in Nepal",
+      description:
+        "A non-profit organization dedicated to autism support, neurodiversity acceptance, and inclusive education for autistic children and their families across Nepal.",
+      ogImage: "/og-image.png",
+      keywords: [
+        "Nepal NGO",
+        "autism Nepal",
+        "autism support Nepal",
+        "autistic children Nepal",
+        "neurodiversity Nepal",
+        "inclusive education",
+        "special education Nepal",
+        "disability rights Nepal",
+        "child development Nepal",
+        "deessa Foundation",
+      ],
     }
   }
-
-  return result
 }
 
 // ============================================================================

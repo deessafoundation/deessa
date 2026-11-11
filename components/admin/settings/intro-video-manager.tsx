@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 import {
   Card,
   CardContent,
@@ -56,11 +55,16 @@ interface IntroVideoManagerProps {
 
 export function IntroVideoManager({ initialConfig }: IntroVideoManagerProps) {
   const router = useRouter()
-  const [config, setConfig] = useState<IntroVideoConfig>(
-    initialConfig || DEFAULT_INTRO_VIDEO_CONFIG
-  )
+  const baselineConfig = initialConfig || DEFAULT_INTRO_VIDEO_CONFIG
+  const [config, setConfig] = useState<IntroVideoConfig>(baselineConfig)
   const [isSaving, setIsSaving] = useState(false)
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop")
+
+  const isDirty = JSON.stringify(config) !== JSON.stringify(baselineConfig)
+
+  const handleReset = () => {
+    setConfig(baselineConfig)
+  }
 
   const handleSave = async () => {
     setIsSaving(true)
@@ -569,29 +573,52 @@ export function IntroVideoManager({ initialConfig }: IntroVideoManagerProps) {
               </div>
             )}
           </div>
-
-          <div className="flex items-center justify-end gap-3 pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setConfig(DEFAULT_INTRO_VIDEO_CONFIG)}
-              className="gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Reset to Defaults
-            </Button>
-
-            <Button onClick={handleSave} disabled={isSaving} className="gap-2">
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4" />
-              )}
-              Save Configuration
-            </Button>
-          </div>
         </CardContent>
       </Card>
+
+      {/* Floating Action Bar */}
+      <div className="flex items-center justify-between p-4 bg-card rounded-xl border shadow-sm sticky bottom-4 z-10">
+        <div className="text-sm text-muted-foreground">
+          {isDirty ? (
+            <span className="text-amber-600 dark:text-amber-400 font-medium">
+              You have unsaved changes in intro video settings.
+            </span>
+          ) : (
+            <span>Intro video configuration is saved and up-to-date.</span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleReset}
+            disabled={!isDirty || isSaving}
+            className="h-10"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Discard
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={!isDirty || isSaving}
+            className="h-10 min-w-[160px]"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Save Video Config
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

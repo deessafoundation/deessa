@@ -32,8 +32,15 @@ export async function getSiteUiFlags(): Promise<SiteUiFlags> {
     return {
       devNotice: value.devNotice !== false,
       betaBadge: value.betaBadge !== false,
+      storiesEnabled: value.storiesEnabled !== false,
     }
   } catch {
     return DEFAULT_SITE_UI_FLAGS
   }
+}
+
+/** Helper to check if public stories are enabled. */
+export async function isStoriesEnabled(): Promise<boolean> {
+  const flags = await getSiteUiFlags()
+  return flags.storiesEnabled
 }

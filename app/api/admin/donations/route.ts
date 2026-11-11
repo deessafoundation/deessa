@@ -16,10 +16,11 @@ export async function GET(request: NextRequest) {
     const to = from + limit - 1
 
     // Filter params
-    const status = searchParams.get("status") // completed | pending | failed
+    const status = searchParams.get("status") // completed | pending | failed | review
     const type = searchParams.get("type") // monthly | one-time
-    const search = searchParams.get("search") // donor name/email search
+    const search = searchParams.get("search") // donor name/email/receipt search
     const currency = searchParams.get("currency") // NPR | USD etc.
+    const provider = searchParams.get("provider") // stripe | khalti | esewa | bank etc.
 
     // Build query
     let query = supabase
@@ -38,8 +39,11 @@ export async function GET(request: NextRequest) {
     if (currency && currency !== "all") {
       query = query.eq("currency", currency)
     }
+    if (provider && provider !== "all") {
+      query = query.eq("provider", provider)
+    }
     if (search) {
-      query = query.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%`)
+      query = query.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%,receipt_number.ilike.%${search}%`)
     }
 
     // Apply pagination
@@ -52,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Also compute stats for the current filter set
     let statsQuery = supabase
       .from("donations")
-      .select("amount, is_monthly, payment_status, currency")
+      .select("amount, is_monthly, payment_status, currency, provider")
 
     if (status && status !== "all") {
       statsQuery = statsQuery.eq("payment_status", status)
@@ -65,8 +69,11 @@ export async function GET(request: NextRequest) {
     if (currency && currency !== "all") {
       statsQuery = statsQuery.eq("currency", currency)
     }
+    if (provider && provider !== "all") {
+      statsQuery = statsQuery.eq("provider", provider)
+    }
     if (search) {
-      statsQuery = statsQuery.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%`)
+      statsQuery = statsQuery.or(`donor_name.ilike.%${search}%,donor_email.ilike.%${search}%,receipt_number.ilike.%${search}%`)
     }
 
     const { data: statsDonations } = await statsQuery
