@@ -1,0 +1,115 @@
+.root .track {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.root .tab {
+  background: transparent;
+  color: var(--muted-foreground);
+  border: 0;
+  font-weight: 500;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.root .tab:not([data-state="active"]):hover {
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.root .tab[data-state="active"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+}
+
+.root .tab:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Museum Gallery Frame & Canvas */
+.galleryFrame {
+  background: radial-gradient(circle at 50% 20%, #ffffff 0%, #f6f3ec 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 10px 25px -5px rgba(28, 20, 10, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+:global(.dark) .galleryFrame {
+  background: radial-gradient(circle at 50% 20%, #1e242d 0%, #12151c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 10px 25px -5px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.galleryMat {
+  background-color: #faf7f2;
+  box-shadow: 
+    inset 0 0 0 1px #e5decfa0,
+    inset 0 2px 4px rgba(0, 0, 0, 0.04),
+    0 4px 12px -2px rgba(0, 0, 0, 0.04);
+}
+
+:global(.dark) .galleryMat {
+  background-color: #161a22;
+  box-shadow: 
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 4px 12px -2px rgba(0, 0, 0, 0.2);
+}
+
+.plaque {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(246, 242, 233, 0.95) 100%);
+  border: 1px solid #e3dcce;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+:global(.dark) .plaque {
+  background: linear-gradient(180deg, rgba(30, 36, 46, 0.85) 0%, rgba(20, 24, 32, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dropzonePattern {
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.12;
+}
+
+:global(body.high-contrast) .root .track,
+:global(body.inverted-contrast) .root .track {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .root .tab,
+:global(body.inverted-contrast) .root .tab {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .root .tab svg,
+:global(body.inverted-contrast) .root .tab svg {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+:global(body.high-contrast) .root .tab[data-state="active"],
+:global(body.inverted-contrast) .root .tab[data-state="active"] {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:global(body.high-contrast) .root .tab[data-state="active"] svg,
+:global(body.inverted-contrast) .root .tab[data-state="active"] svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
