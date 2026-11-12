@@ -19,7 +19,17 @@ const fields = z.object({
   tags: z.array(z.string().trim().min(1).max(50)).max(10).optional(),
   published_at: z.string().datetime().nullable().optional(),
 })
-type Result = { ok: true; id?: string } | { ok: false; error: string }
+export type CommunityPostActionResult = { ok: true; id?: string } | { ok: false; error: string }
+type Result = CommunityPostActionResult
+
+export interface CommunityPostsStats {
+  total: number
+  published: number
+  drafts: number
+  scheduled: number
+  totalViews: number
+  totalClicks: number
+}
 
 function databaseError(code: string): string {
   if (code === "23505") return "That Facebook post has already been added."
@@ -134,6 +144,65 @@ export async function deleteFacebookPost(id: string): Promise<Result> {
     refresh()
     return { ok: true }
   } catch { return { ok: false, error: "Could not remove the entry. Please try again." } }
+}
+
+export async function toggleFacebookPostPublish(id: string, is_published: boolean): Promise<Result> {
+  try {
+    if (!await authorized()) return { ok: false, error: "You do not have permission to manage community posts." }
+    if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid post." }
+
+    const { error } = await createServiceRoleClient()
+      .from("facebook_posts")
+      .update({ is_published, updated_at: new Date().toISOString() })
+      .eq("id", id)
+
+    if (error) return { ok: false, error: databaseError(error.code) }
+    refresh()
+    return { ok: true }
+  } catch {
+    return { ok: false, error: "Could not update post status. Please try again." }
+  }
+}
+
+export async function getCommunityPostsStats(): Promise<{ stats: CommunityPostsStats; error: string | null }> {
+  try {
+    if (!await authorized()) {
+      return {
+        stats: { total: 0, published: 0, drafts: 0, scheduled: 0, totalViews: 0, totalClicks: 0 },
+        error: "You do not have permission to view community posts.",
+      }
+    }
+
+    const { data, error } = await createServiceRoleClient()
+      .from("facebook_posts")
+      .select("is_published, views, clicks, published_at")
+
+    if (error) {
+      return {
+        stats: { total: 0, published: 0, drafts: 0, scheduled: 0, totalViews: 0, totalClicks: 0 },
+        error: databaseError(error.code),
+      }
+    }
+
+    const items = data || []
+    const now = new Date()
+    const total = items.length
+    const published = items.filter(p => p.is_published).length
+    const drafts = total - published
+    const scheduled = items.filter(p => p.published_at && new Date(p.published_at) > now).length
+    const totalViews = items.reduce((sum, p) => sum + (p.views || 0), 0)
+    const totalClicks = items.reduce((sum, p) => sum + (p.clicks || 0), 0)
+
+    return {
+      stats: { total, published, drafts, scheduled, totalViews, totalClicks },
+      error: null,
+    }
+  } catch {
+    return {
+      stats: { total: 0, published: 0, drafts: 0, scheduled: 0, totalViews: 0, totalClicks: 0 },
+      error: "Could not load statistics.",
+    }
+  }
 }
 
 // Bulk operations

@@ -1,5 +1,5 @@
 import { CommunityPostsList } from "@/components/admin/facebook-posts/community-posts-list"
-import { listFacebookPosts } from "@/lib/actions/facebook-posts"
+import { listFacebookPosts, getCommunityPostsStats } from "@/lib/actions/facebook-posts"
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
@@ -23,7 +23,18 @@ export default async function CommunityPostsPage({
   const search = params.q
   const status = params.status as "published" | "draft" | "all" | undefined
   
-  const result = await listFacebookPosts(page, search, status)
+  const [result, statsResult] = await Promise.all([
+    listFacebookPosts(page, search, status),
+    getCommunityPostsStats(),
+  ])
   
-  return <CommunityPostsList initialResult={result} initialPage={page} initialSearch={search} initialStatus={status} />
+  return (
+    <CommunityPostsList 
+      initialResult={result} 
+      initialPage={page} 
+      initialSearch={search} 
+      initialStatus={status}
+      systemStats={statsResult.stats}
+    />
+  )
 }

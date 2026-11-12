@@ -41,14 +41,16 @@ export function normalizeFacebookPostUrl(value: string): string | null {
     const canonical = new URL(`https://www.facebook.com${path}`)
     
     // Share links - these are the cleanest for photo posts
-    if (/^\/share\/p\/[A-Za-z0-9]+$/.test(path)) return canonical.href
-    if (/^\/share\/v\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    if (/^\/share\/p\/[A-Za-z0-9_-]+$/i.test(path)) return canonical.href
+    if (/^\/share\/v\/[A-Za-z0-9_-]+$/i.test(path)) return canonical.href
+    if (/^\/share\/r\/[A-Za-z0-9_-]+$/i.test(path)) return canonical.href
+    if (/^\/share\/[A-Za-z0-9_-]+$/i.test(path)) return canonical.href
     
     // Reels and videos
-    if (/^\/reel\/[A-Za-z0-9]+$/.test(path)) return canonical.href
+    if (/^\/reel\/[A-Za-z0-9_-]+$/i.test(path)) return canonical.href
     if (path === "/watch") {
       const v = url.searchParams.get("v")
-      if (v && /^[A-Za-z0-9]+$/.test(v)) {
+      if (v && /^[A-Za-z0-9_-]+$/.test(v)) {
         canonical.pathname = "/watch"
         canonical.searchParams.set("v", v)
         return canonical.href
@@ -65,7 +67,7 @@ export function normalizeFacebookPostUrl(value: string): string | null {
     }
     
     // Regular page posts
-    if (/^\/[\w.-]+\/posts\/[\w]+$/.test(path)) return canonical.href
+    if (/^\/[\w.-]+\/posts\/[\w.-]+$/i.test(path)) return canonical.href
     
     // Permalink format
     if (path === "/permalink.php" || path === "/story.php") {
@@ -88,7 +90,7 @@ export function facebookEmbedUrl(postUrl: string, showText: boolean = false): st
   const canonical = normalizeFacebookPostUrl(postUrl)
   if (!canonical) return null
   const parsed = new URL(canonical)
-  const isVideoOrReel = parsed.pathname.startsWith("/reel/") || parsed.pathname.startsWith("/watch") || parsed.pathname.startsWith("/share/v/")
+  const isVideoOrReel = parsed.pathname.startsWith("/reel/") || parsed.pathname.startsWith("/watch") || parsed.pathname.startsWith("/share/v/") || parsed.pathname.startsWith("/share/r/")
   const endpoint = isVideoOrReel
     ? "https://www.facebook.com/plugins/video.php"
     : "https://www.facebook.com/plugins/post.php"
