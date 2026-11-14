@@ -258,66 +258,58 @@ export async function PartnersDisplay({
           {subtitle && <p className={cn(styles.subtitle, "font-comic font-sans")}>{subtitle}</p>}
         </header>
 
-        {/* Top Row: 4 Category Columns */}
-        <div className={styles.topGrid}>
-          {/* Column 1: ORGANIZING PARTNERS */}
-          <div className={styles.categoryColumn}>
-            <div className={styles.categoryHeader}>
+        {/* Level 1: ORGANIZING PARTNERS */}
+        {organizersCategory && (
+          <div className={styles.organizersSection}>
+            <div className={styles.organizersHeader}>
               <h3 className={cn(styles.categoryTitle, "font-heading")}>
                 {getCategoryDisplayTitle(organizersCategory, "ORGANIZING PARTNERS")}
               </h3>
               <div className={styles.categoryUnderline} aria-hidden="true" />
             </div>
 
-            <div className={styles.card}>
-              <div className={styles.stackedCardContent}>
-                {organizersCategory?.partners && organizersCategory.partners.length > 0 ? (
-                  organizersCategory.partners.map((partner, index) => {
-                    const logoUrl = getPartnerLogoUrl(partner)
-                    const websiteUrl = getPartnerWebsite(partner)
-                    const content = (
-                      <>
-                        <div className={styles.organizerLogoWrapper}>
-                          {logoUrl ? (
-                            <PartnerCategoryLogo
-                              src={logoUrl}
-                              alt={`${partner.partner_name} logo`}
-                              className={styles.organizerLogo}
-                              partnerName={cleanPartnerName(partner.partner_name)}
-                            />
-                          ) : (
-                            <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
-                          )}
-                        </div>
-                        <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
-                      </>
-                    )
-
-                    return (
-                      <React.Fragment key={partner.partner_id || partner.partner_name + index}>
-                        {index > 0 && <div className={styles.stackedDivider} aria-hidden="true" />}
-                        <a
-                          href={websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.partnerItemLink}
-                          aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
-                        >
-                          {content}
-                        </a>
-                      </React.Fragment>
-                    )
-                  })
-                ) : (
-                  <div className={styles.singleCardContent}>
-                    <p className={styles.partnerName}>No organizing partners configured</p>
-                  </div>
-                )}
-              </div>
+            <div className={styles.organizersGrid}>
+              {organizersCategory.partners && organizersCategory.partners.length > 0 ? (
+                organizersCategory.partners.map((partner, index) => {
+                  const logoUrl = getPartnerLogoUrl(partner)
+                  const websiteUrl = getPartnerWebsite(partner)
+                  return (
+                    <a
+                      key={partner.partner_id || partner.partner_name + index}
+                      href={websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.organizerCard}
+                      aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
+                    >
+                      <div className={styles.organizerLogoWrapper}>
+                        {logoUrl ? (
+                          <PartnerCategoryLogo
+                            src={logoUrl}
+                            alt={`${partner.partner_name} logo`}
+                            className={styles.organizerLogo}
+                            partnerName={cleanPartnerName(partner.partner_name)}
+                          />
+                        ) : (
+                          <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
+                        )}
+                      </div>
+                      <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
+                    </a>
+                  )
+                })
+              ) : (
+                <div className={styles.organizerCard}>
+                  <p className={styles.partnerName}>No organizing partners configured</p>
+                </div>
+              )}
             </div>
           </div>
+        )}
 
-          {/* Column 2: IN PARTNERSHIP WITH */}
+        {/* Level 2: Three Category Columns (In Partnership With, Knowledge Partner, Technical Partner) */}
+        <div className={styles.partnerCategoriesGrid}>
+          {/* Column 1: IN PARTNERSHIP WITH */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
               <h3 className={cn(styles.categoryTitle, "font-heading")}>
@@ -370,7 +362,7 @@ export async function PartnersDisplay({
             </div>
           </div>
 
-          {/* Column 3: KNOWLEDGE PARTNER */}
+          {/* Column 2: KNOWLEDGE PARTNER */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
               <h3 className={cn(styles.categoryTitle, "font-heading")}>
@@ -423,7 +415,7 @@ export async function PartnersDisplay({
             </div>
           </div>
 
-          {/* Column 4: TECHNICAL PARTNER */}
+          {/* Column 3: TECHNICAL PARTNER */}
           <div className={styles.categoryColumn}>
             <div className={styles.categoryHeader}>
               <h3 className={cn(styles.categoryTitle, "font-heading")}>
@@ -566,9 +558,23 @@ export function PartnersDisplaySkeleton({
           <div className="h-4 w-80 max-w-full mx-auto rounded bg-muted/60 animate-pulse mt-2" />
         </header>
 
-        {/* Top 4 Columns Skeleton */}
-        <div className={styles.topGrid}>
-          {[1, 2, 3, 4].map((col) => (
+        {/* Level 1: Organizers Skeleton */}
+        <div className={styles.organizersSection}>
+          <div className="h-3.5 w-44 mx-auto mb-2 rounded bg-muted/70 animate-pulse" />
+          <div className="h-0.5 w-10 mx-auto mb-4 rounded bg-primary/40" />
+          <div className={styles.organizersGrid}>
+            {[1, 2].map((i) => (
+              <div key={i} className={cn(styles.organizerCard, "min-h-[160px]")}>
+                <div className="w-28 h-16 rounded-md bg-muted/50 animate-pulse mb-3" />
+                <div className="w-24 h-3.5 rounded bg-muted/60 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Level 2: Three Category Columns Skeleton */}
+        <div className={styles.partnerCategoriesGrid}>
+          {[1, 2, 3].map((col) => (
             <div key={col} className={styles.categoryColumn}>
               <div className="h-3.5 w-32 mx-auto mb-2 rounded bg-muted/70 animate-pulse" />
               <div className="h-0.5 w-10 mx-auto mb-3 rounded bg-primary/40" />

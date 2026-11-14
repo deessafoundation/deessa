@@ -137,9 +137,82 @@
 }
 
 /* =============================================
- * Top Row: 4 Category Columns
+ * Level 1: Organizing Partners (Full Width / Prominent Row)
  * ============================================= */
 
+.organizersSection {
+  margin: 0 auto 3rem;
+  max-width: 60rem;
+  text-align: center;
+}
+
+.organizersHeader {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.organizersGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.organizerCard {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 14px rgba(15, 23, 42, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.25rem 1.5rem;
+  min-height: 160px;
+  min-width: 220px;
+  max-width: 320px;
+  flex: 1 1 240px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.organizerCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -2px rgba(63, 171, 222, 0.22);
+  border-color: #3fabde;
+}
+
+.organizerCard:hover .partnerName {
+  color: #0b5f8a;
+}
+
+.organizerCard:focus-visible {
+  outline: 3px solid #3fabde;
+  outline-offset: 4px;
+  border-radius: 0.875rem;
+}
+
+/* =============================================
+ * Level 2: Three Category Columns (In Partnership, Knowledge, Technical)
+ * ============================================= */
+
+.partnerCategoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 2rem;
+  row-gap: 1.75rem;
+  align-items: stretch;
+  max-width: 60rem;
+  margin: 0 auto 3rem;
+}
+
+/* Legacy Top Row: 4 Category Columns fallback */
 .topGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -313,16 +386,18 @@
 /* Logos in Organizing Card */
 .organizerLogoWrapper {
   position: relative;
-  height: 44px;
+  height: 84px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .organizerLogo {
-  max-height: 40px;
-  max-width: 85%;
+  max-height: 76px;
+  max-width: 90%;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -544,6 +619,14 @@
  * ============================================= */
 
 @media (max-width: 1100px) {
+  .partnerCategoriesGrid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 52rem;
+    column-gap: 1.25rem;
+    row-gap: 1.5rem;
+    margin: 0 auto 2.5rem;
+  }
+
   .topGrid {
     grid-template-columns: repeat(2, 1fr);
     max-width: 44rem;
@@ -580,6 +663,15 @@
   }
 }
 
+@media (max-width: 860px) {
+  .partnerCategoriesGrid {
+    grid-template-columns: 1fr;
+    max-width: 24rem;
+    gap: 1.5rem;
+    margin: 0 auto 2.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .coOrganizersGrid .coOrganizerCard,
   .coOrganizersBalancedRow .coOrganizerCard {
@@ -598,6 +690,24 @@
     margin-bottom: 2rem;
   }
 
+  .organizersSection {
+    margin-bottom: 2rem;
+  }
+
+  .organizersGrid {
+    gap: 1rem;
+    width: 100%;
+    max-width: 24rem;
+  }
+
+  .organizerCard {
+    flex: 1 1 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 145px;
+    padding: 1rem 0.75rem;
+  }
+
   .topGrid {
     grid-template-columns: 1fr;
     max-width: 24rem;
@@ -609,6 +719,14 @@
   .singleCardContent {
     min-height: 145px;
     padding: 0.75rem 0.625rem;
+  }
+
+  .organizerLogoWrapper {
+    height: 72px;
+  }
+
+  .organizerLogo {
+    max-height: 64px;
   }
 
   .singleCardLogoWrapper {
@@ -743,14 +861,13 @@
   background: none !important;
 }
 
-:global(body.high-contrast) .card,
-:global(body.high-contrast) .coOrganizerCard {
+:global(body.high-contrast) :is(.card, .organizerCard, .coOrganizerCard) {
   background: #ffffff !important;
   border: 2px solid #000000 !important;
   box-shadow: none !important;
 }
 
-:global(body.high-contrast) .interactiveCard:hover {
+:global(body.high-contrast) :is(.interactiveCard, .organizerCard):hover {
   transform: translateY(-3px);
   box-shadow: none !important;
   border: 2px solid #000000 !important;
@@ -772,7 +889,7 @@
   filter: grayscale(1) !important;
 }
 
-:global(body.high-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+:global(body.high-contrast) :is(.singleCardContent, .partnerItemLink, .organizerCard, .coOrganizerCard):focus-visible {
   outline: 3px solid #000000 !important;
 }
 
@@ -796,14 +913,13 @@
   background: none !important;
 }
 
-:global(body.inverted-contrast) .card,
-:global(body.inverted-contrast) .coOrganizerCard {
+:global(body.inverted-contrast) :is(.card, .organizerCard, .coOrganizerCard) {
   background: #000000 !important;
   border: 2px solid #ffffff !important;
   box-shadow: none !important;
 }
 
-:global(body.inverted-contrast) .interactiveCard:hover {
+:global(body.inverted-contrast) :is(.interactiveCard, .organizerCard):hover {
   transform: translateY(-3px);
   box-shadow: none !important;
   border: 2px solid #ffffff !important;
@@ -825,7 +941,7 @@
   filter: grayscale(1) invert(1) !important;
 }
 
-:global(body.inverted-contrast) :is(.singleCardContent, .partnerItemLink, .coOrganizerCard):focus-visible {
+:global(body.inverted-contrast) :is(.singleCardContent, .partnerItemLink, .organizerCard, .coOrganizerCard):focus-visible {
   outline: 3px solid #ffffff !important;
 }
 
@@ -835,8 +951,7 @@
     color: #000000 !important;
     padding: 1rem 0 !important;
   }
-  .card,
-  .coOrganizerCard {
+  :is(.card, .organizerCard, .coOrganizerCard) {
     box-shadow: none !important;
     border: 1px solid #000000 !important;
     break-inside: avoid;
