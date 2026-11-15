@@ -15,6 +15,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Plus,
   Eye,
   EyeOff,
@@ -27,23 +34,28 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Settings,
+  Table as TableIcon,
+  LayoutGrid,
+  X,
 } from "lucide-react"
 import { useState, useEffect, useMemo } from "react"
+import { cn } from "@/lib/utils"
 import type { EventModuleEvent } from "@/lib/types/events-module"
 
-const statusColors: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-700",
-  published: "bg-green-100 text-green-700",
-  disabled: "bg-yellow-100 text-yellow-700",
-  archived: "bg-red-100 text-red-700",
+const statusBadgeStyles: Record<string, string> = {
+  published: "bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 font-semibold border-0",
+  draft: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 font-semibold border-0",
+  disabled: "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/60 dark:text-yellow-300 font-semibold border-0",
+  archived: "bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 font-semibold border-0",
 }
 
-const categoryColors: Record<string, string> = {
-  conference: "bg-blue-100 text-blue-700",
-  workshop: "bg-purple-100 text-purple-700",
-  seminar: "bg-indigo-100 text-indigo-700",
-  meetup: "bg-pink-100 text-pink-700",
-  general: "bg-gray-100 text-gray-600",
+const categoryBadgeStyles: Record<string, string> = {
+  conference: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
+  workshop: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20",
+  seminar: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20",
+  meetup: "bg-pink-500/10 text-pink-700 dark:text-pink-400 border-pink-500/20",
+  general: "bg-muted text-muted-foreground border-border",
 }
 
 const ITEMS_PER_PAGE = 8
@@ -53,7 +65,24 @@ export default function EventsPage() {
   const [events, setEvents] = useState<EventModuleEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [categoryFilter, setCategoryFilter] = useState("all")
+  const [viewMode, setViewMode] = useState<"table" | "cards">("table")
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Initialize view mode based on screen width on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const mql = window.matchMedia("(max-width: 767px)")
+    if (mql.matches) {
+      requestAnimationFrame(() => setViewMode("cards"))
+    }
+    const handler = (e: MediaQueryListEvent) => {
+      setViewMode(e.matches ? "cards" : "table")
+    }
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [])
 
   useEffect(() => {
     async function fetchEvents() {
@@ -71,47 +100,67 @@ export default function EventsPage() {
   }, [])
 
   const filteredEvents = useMemo(() => {
-    if (!search.trim()) return events
-    const q = search.toLowerCase()
-    return events.filter(
-      (e) =>
-        e.title.toLowerCase().includes(q) ||
-        e.location?.toLowerCase().includes(q) ||
-        e.category?.toLowerCase().includes(q) ||
-        e.description?.toLowerCase().includes(q) ||
-        e.short_description?.toLowerCase().includes(q)
-    )
-  }, [events, search])
+    return events.filter((e) => {
+      // Search text filter
+      if (search.trim()) {
+        const q = search.toLowerCase()
+        const matchesQuery =
+          e.title.toLowerCase().includes(q) ||
+          e.location?.toLowerCase().includes(q) ||
+          e.category?.toLowerCase().includes(q) ||
+          e.description?.toLowerCase().includes(q) ||
+          e.short_description?.toLowerCase().includes(q)
+        if (!matchesQuery) return false
+      }
 
-  const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE)
+      // Status filter
+      if (statusFilter !== "all" && e.status !== statusFilter) {
+        return false
+      }
+
+      // Category filter
+      if (categoryFilter !== "all" && e.category !== categoryFilter) {
+        return false
+      }
+
+      return true
+    })
+  }, [events, search, statusFilter, categoryFilter])
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / ITEMS_PER_PAGE))
   const paginatedEvents = filteredEvents.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
 
-  // Reset to page 1 when search changes
   const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(1)
   }
 
-  function handleRowDoubleClick(eventId: string) {
-    router.push(`/admin/events/${eventId}`)
+  const handleStatusFilterChange = (val: string) => {
+    setStatusFilter(val)
+    setCurrentPage(1)
+  }
+
+  const handleCategoryFilterChange = (val: string) => {
+    setCategoryFilter(val)
+    setCurrentPage(1)
   }
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Events</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Events</h1>
           <p className="text-sm text-muted-foreground">
-            <span className="hidden sm:inline">Double-click an event to manage registrations and settings</span>
-            <span className="sm:hidden">Tap an event to manage registrations and settings</span>
+            Manage summits, workshops, ticketing, and attendee registrations.
           </p>
         </div>
-        <Button asChild className="w-full sm:w-auto">
+        <Button asChild className="w-full sm:w-auto shadow-2xs gap-1.5 font-medium">
           <Link href="/admin/events/new">
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             Create Event
           </Link>
         </Button>
@@ -120,28 +169,28 @@ export default function EventsPage() {
       {/* Stats Cards */}
       {!loading && events.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg shrink-0">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+          <Card className="border-border/80 shadow-2xs">
+            <CardContent className="p-3.5 sm:p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 shrink-0">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">{events.length}</p>
+                  <p className="text-xl sm:text-2xl font-bold tracking-tight">{events.length}</p>
                   <p className="text-xs text-muted-foreground truncate">Total Events</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="p-2 bg-green-50 rounded-lg shrink-0">
-                  <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+          <Card className="border-border/80 shadow-2xs">
+            <CardContent className="p-3.5 sm:p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                  <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">
+                  <p className="text-xl sm:text-2xl font-bold tracking-tight">
                     {events.filter((e) => e.status === "published").length}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">Published</p>
@@ -150,14 +199,14 @@ export default function EventsPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="p-2 bg-yellow-50 rounded-lg shrink-0">
-                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
+          <Card className="border-border/80 shadow-2xs">
+            <CardContent className="p-3.5 sm:p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">
+                  <p className="text-xl sm:text-2xl font-bold tracking-tight">
                     {events.filter((e) => e.status === "draft").length}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">Drafts</p>
@@ -166,19 +215,15 @@ export default function EventsPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="p-2 bg-purple-50 rounded-lg shrink-0">
-                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+          <Card className="border-border/80 shadow-2xs">
+            <CardContent className="p-3.5 sm:p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 shrink-0">
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">
-                    {
-                      events.filter(
-                        (e) => new Date(e.event_date) >= new Date()
-                      ).length
-                    }
+                  <p className="text-xl sm:text-2xl font-bold tracking-tight">
+                    {events.filter((e) => new Date(e.event_date) >= new Date()).length}
                   </p>
                   <p className="text-xs text-muted-foreground truncate">Upcoming</p>
                 </div>
@@ -188,362 +233,449 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search events by name, location, or category..."
-          value={search}
-          onChange={(e) => handleSearchChange(e.target.value)}
-          className="pl-10 h-10"
-        />
+      {/* Filter & View Toolbar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search events by title, venue, or description..."
+            value={search}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="pl-9 pr-9 h-10 text-xs sm:text-sm"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => handleSearchChange("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Filter Dropdowns & View Mode Switcher */}
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          {/* Status Filter */}
+          <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
+            <SelectTrigger className="h-10 w-[130px] text-xs">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="disabled">Disabled</SelectItem>
+              <SelectItem value="archived">Archived</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Category Filter */}
+          <Select value={categoryFilter} onValueChange={handleCategoryFilterChange}>
+            <SelectTrigger className="h-10 w-[130px] text-xs">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="conference">Conference</SelectItem>
+              <SelectItem value="workshop">Workshop</SelectItem>
+              <SelectItem value="seminar">Seminar</SelectItem>
+              <SelectItem value="meetup">Meetup</SelectItem>
+              <SelectItem value="general">General</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* View Mode Toggle Pill (Table vs Cards) */}
+          <div className="flex items-center gap-1 rounded-lg border border-border/80 bg-muted/40 p-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => setViewMode("table")}
+              className={cn(
+                "flex items-center justify-center rounded-md p-1.5 transition-all cursor-pointer",
+                viewMode === "table"
+                  ? "bg-background text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              title="Table View"
+              aria-label="Table View"
+            >
+              <TableIcon className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("cards")}
+              className={cn(
+                "flex items-center justify-center rounded-md p-1.5 transition-all cursor-pointer",
+                viewMode === "cards"
+                  ? "bg-background text-foreground shadow-2xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              title="Card Grid View"
+              aria-label="Card Grid View"
+            >
+              <LayoutGrid className="size-4" />
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Desktop Table View */}
-      <Card className="hidden md:block">
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-center w-[160px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center py-12 text-muted-foreground"
-                  >
-                    Loading events...
-                  </TableCell>
-                </TableRow>
-              ) : paginatedEvents.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center py-12 text-muted-foreground"
-                  >
-                    {search ? (
-                      <>
-                        <Search className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                        <p className="text-lg font-medium">No events found</p>
-                        <p className="text-sm">
-                          Try a different search term
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <Calendar className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                        <p className="text-lg font-medium">No events yet</p>
-                        <p className="text-sm">
-                          Create your first event to get started.
-                        </p>
-                      </>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                paginatedEvents.map((event) => (
-                  <TableRow
-                    key={event.id}
-                    className="cursor-pointer select-none hover:bg-muted/50"
-                    onDoubleClick={() => handleRowDoubleClick(event.id)}
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {event.image ? (
-                          <img
-                            src={event.image}
-                            alt={event.title}
-                            className="h-12 w-12 rounded-xl object-cover"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center">
-                            <Calendar className="h-6 w-6 text-muted-foreground" />
+      {/* Loading Skeleton */}
+      {loading ? (
+        <Card className="border border-border/80 shadow-2xs">
+          <CardContent className="p-6 space-y-4">
+            <div className="h-10 w-full rounded-lg bg-muted animate-pulse" />
+            <div className="h-16 w-full rounded-lg bg-muted animate-pulse" />
+            <div className="h-16 w-full rounded-lg bg-muted animate-pulse" />
+            <div className="h-16 w-full rounded-lg bg-muted animate-pulse" />
+          </CardContent>
+        </Card>
+      ) : paginatedEvents.length === 0 ? (
+        <Card className="border border-dashed border-border/80 shadow-2xs">
+          <CardContent className="p-12 text-center text-muted-foreground">
+            {search || statusFilter !== "all" || categoryFilter !== "all" ? (
+              <>
+                <Search className="mx-auto h-12 w-12 mb-3 opacity-40" />
+                <p className="text-base font-semibold text-foreground">No events match your criteria</p>
+                <p className="text-xs mt-1">Try clearing filters or adjusting your search query.</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearch("")
+                    setStatusFilter("all")
+                    setCategoryFilter("all")
+                    setCurrentPage(1)
+                  }}
+                  className="mt-4 text-xs"
+                >
+                  Reset Filters
+                </Button>
+              </>
+            ) : (
+              <>
+                <Calendar className="mx-auto h-12 w-12 mb-3 opacity-40" />
+                <p className="text-base font-semibold text-foreground">No events found</p>
+                <p className="text-xs mt-1 mb-4">Create your first event to start accepting registrations.</p>
+                <Button asChild size="sm" className="text-xs gap-1.5">
+                  <Link href="/admin/events/new">
+                    <Plus className="h-3.5 w-3.5" />
+                    Create First Event
+                  </Link>
+                </Button>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      ) : viewMode === "table" ? (
+        /* TABLE VIEW */
+        <Card className="border border-border/80 shadow-2xs overflow-hidden">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableHead className="w-[320px]">Event</TableHead>
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right pr-6">Quick Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginatedEvents.map((event) => (
+                    <TableRow
+                      key={event.id}
+                      onClick={() => router.push(`/admin/events/${event.id}`)}
+                      className="cursor-pointer hover:bg-muted/40 transition-colors group"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          router.push(`/admin/events/${event.id}`)
+                        }
+                      }}
+                    >
+                      {/* Title + Thumbnail */}
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          {event.image ? (
+                            <img
+                              src={event.image}
+                              alt={event.title}
+                              className="size-11 rounded-lg object-cover border border-border/80 shrink-0"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="size-11 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border/60">
+                              <Calendar className="size-5 text-muted-foreground" />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                              {event.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                              {event.short_description || event.description}
+                            </p>
                           </div>
-                        )}
-                        <div>
-                          <p className="font-medium">{event.title}</p>
-                          <p className="text-sm text-muted-foreground truncate max-w-[250px]">
-                            {event.short_description || event.description}
-                          </p>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {new Date(event.event_date).toLocaleDateString(
-                            "en-US",
-                            {
+                      </TableCell>
+
+                      {/* Date */}
+                      <TableCell>
+                        <div className="text-xs">
+                          <p className="font-medium text-foreground">
+                            {new Date(event.event_date).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
                               year: "numeric",
-                            }
-                          )}
-                        </p>
-                        {event.event_time && (
-                          <p className="text-xs text-muted-foreground">
-                            {event.event_time}
+                            })}
                           </p>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="truncate max-w-[140px]">
-                          {event.location}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className={categoryColors[event.category] || ""}
-                      >
-                        {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className={statusColors[event.status] || ""}
-                      >
-                        {event.status === "published" && (
-                          <Eye className="mr-1 h-3 w-3" />
-                        )}
-                        {event.status === "draft" && (
-                          <EyeOff className="mr-1 h-3 w-3" />
-                        )}
-                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        <Button
+                          {event.event_time && (
+                            <p className="text-muted-foreground text-[11px] mt-0.5">{event.event_time}</p>
+                          )}
+                        </div>
+                      </TableCell>
+
+                      {/* Location */}
+                      <TableCell>
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground max-w-[160px]">
+                          <MapPin className="size-3.5 shrink-0" />
+                          <span className="truncate">{event.location || "Venue TBD"}</span>
+                        </div>
+                      </TableCell>
+
+                      {/* Category */}
+                      <TableCell>
+                        <Badge
                           variant="outline"
-                          size="sm"
-                          asChild
-                          className="hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                          className={cn("text-[11px] px-2 py-0.5 font-medium capitalize", categoryBadgeStyles[event.category])}
                         >
-                          <Link href={`/admin/events/${event.id}/registrations`}>
-                            <Users className="h-4 w-4" />
-                            View
-                          </Link>
-                        </Button>
-                        {event.status === "published" && (
+                          {event.category}
+                        </Badge>
+                      </TableCell>
+
+                      {/* Status */}
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={cn("text-[11px] px-2 py-0.5 font-medium capitalize", statusBadgeStyles[event.status])}
+                        >
+                          {event.status === "published" && <Eye className="mr-1 h-3 w-3 inline" />}
+                          {event.status === "draft" && <EyeOff className="mr-1 h-3 w-3 inline" />}
+                          {event.status}
+                        </Badge>
+                      </TableCell>
+
+                      {/* Actions */}
+                      <TableCell className="text-right pr-6" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                            className="h-8 px-2.5 text-xs gap-1.5 shadow-2xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                          >
+                            <Link href={`/admin/events/${event.id}`}>
+                              <Users className="size-3.5" />
+                              <span>Registrations</span>
+                            </Link>
+                          </Button>
+
                           <Button
                             variant="ghost"
                             size="sm"
                             asChild
-                            className="hover:bg-primary/10 hover:text-primary transition-colors"
+                            className="h-8 px-2.5 text-xs gap-1 hover:bg-muted"
                           >
-                            <Link
-                              href={`/events/${event.slug}`}
-                              target="_blank"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              Live
+                            <Link href={`/admin/events/${event.id}/settings`}>
+                              <Settings className="size-3.5 text-muted-foreground" />
+                              <span className="hidden sm:inline">Settings</span>
                             </Link>
                           </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
 
-      {/* Mobile Card List View */}
-      <div className="md:hidden space-y-3">
-        {loading ? (
-          <Card>
-            <CardContent className="p-6 text-center text-sm text-muted-foreground">
-              Loading events...
-            </CardContent>
-          </Card>
-        ) : paginatedEvents.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center text-muted-foreground">
-              {search ? (
-                <>
-                  <Search className="mx-auto h-10 w-10 mb-3 opacity-50" />
-                  <p className="font-medium text-foreground">No events found</p>
-                  <p className="text-xs mt-1">Try a different search term</p>
-                </>
-              ) : (
-                <>
-                  <Calendar className="mx-auto h-10 w-10 mb-3 opacity-50" />
-                  <p className="font-medium text-foreground">No events yet</p>
-                  <p className="text-xs mt-1">Create your first event to get started.</p>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          paginatedEvents.map((event) => (
-            <Card key={event.id} className="overflow-hidden border border-border/80">
-              <CardContent className="p-4 space-y-3">
-                <div 
-                  className="flex items-start gap-3 cursor-pointer"
-                  onClick={() => router.push(`/admin/events/${event.id}`)}
-                >
+                          {event.status === "published" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              asChild
+                              className="h-8 px-2 text-xs"
+                              title="View Public Summit Page"
+                            >
+                              <Link href={`/events/${event.slug || event.id}`} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="size-3.5 text-muted-foreground" />
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        /* CARD / GRID VIEW */
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {paginatedEvents.map((event) => (
+            <Card
+              key={event.id}
+              onClick={() => router.push(`/admin/events/${event.id}`)}
+              className="border border-border/80 shadow-2xs overflow-hidden cursor-pointer hover:border-border hover:shadow-xs transition-all flex flex-col justify-between group"
+            >
+              <div>
+                {/* Poster / Header Image */}
+                <div className="relative h-40 w-full bg-muted/60 overflow-hidden border-b border-border/60">
                   {event.image ? (
                     <img
                       src={event.image}
                       alt={event.title}
-                      className="size-14 rounded-xl object-cover shrink-0"
+                      className="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                      loading="lazy"
                     />
                   ) : (
-                    <div className="size-14 rounded-xl bg-muted flex items-center justify-center shrink-0">
-                      <Calendar className="size-6 text-muted-foreground" />
+                    <div className="h-full w-full flex flex-col items-center justify-center text-muted-foreground/50">
+                      <Calendar className="size-10 mb-1" />
+                      <span className="text-xs font-medium">No cover image</span>
                     </div>
                   )}
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-base leading-snug line-clamp-1 text-foreground">
-                      {event.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
-                      {event.short_description || event.description}
-                    </p>
-                    <div className="flex items-center gap-1.5 flex-wrap mt-2">
-                      <Badge
-                        variant="secondary"
-                        className={`text-[10px] px-2 py-0 ${categoryColors[event.category] || ""}`}
-                      >
-                        {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
-                      </Badge>
-                      <Badge
-                        variant="secondary"
-                        className={`text-[10px] px-2 py-0 ${statusColors[event.status] || ""}`}
-                      >
-                        {event.status === "published" && <Eye className="mr-1 h-2.5 w-2.5" />}
-                        {event.status === "draft" && <EyeOff className="mr-1 h-2.5 w-2.5" />}
-                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="pt-2 border-t border-border/60 text-xs text-muted-foreground space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="size-3.5 shrink-0 text-muted-foreground" />
-                    <span>
-                      {new Date(event.event_date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                      {event.event_time && ` • ${event.event_time}`}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="size-3.5 shrink-0 text-muted-foreground" />
-                    <span className="truncate">{event.location}</span>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    asChild
-                    className="flex-1 h-9 text-xs"
-                  >
-                    <Link href={`/admin/events/${event.id}/registrations`}>
-                      <Users className="mr-1.5 h-3.5 w-3.5" />
-                      Registrations
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    asChild
-                    className="h-9 text-xs px-3"
-                  >
-                    <Link href={`/admin/events/${event.id}/settings`}>
-                      Settings
-                    </Link>
-                  </Button>
-                  {event.status === "published" && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      className="h-9 px-2 text-xs"
+                  {/* Top Floating Badges */}
+                  <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2">
+                    <Badge
+                      variant="outline"
+                      className={cn("text-[10px] px-2 py-0.5 font-semibold capitalize backdrop-blur-md bg-background/80 shadow-2xs", categoryBadgeStyles[event.category])}
                     >
-                      <Link href={`/events/${event.slug}`} target="_blank">
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
-                  )}
+                      {event.category}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className={cn("text-[10px] px-2 py-0.5 font-semibold capitalize backdrop-blur-md bg-background/80 shadow-2xs", statusBadgeStyles[event.status])}
+                    >
+                      {event.status === "published" && <Eye className="mr-1 h-3 w-3 inline" />}
+                      {event.status === "draft" && <EyeOff className="mr-1 h-3 w-3 inline" />}
+                      {event.status}
+                    </Badge>
+                  </div>
                 </div>
-              </CardContent>
+
+                {/* Content */}
+                <CardContent className="p-4 space-y-2.5">
+                  <h3 className="font-semibold text-base leading-snug line-clamp-1 text-foreground group-hover:text-primary transition-colors">
+                    {event.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    {event.short_description || event.description || "No description provided."}
+                  </p>
+
+                  <div className="pt-2 border-t border-border/60 space-y-1.5 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="size-3.5 text-primary shrink-0" />
+                      <span className="font-medium text-foreground">
+                        {new Date(event.event_date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                        {event.event_time && ` • ${event.event_time}`}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 min-w-0">
+                      <MapPin className="size-3.5 text-muted-foreground shrink-0" />
+                      <span className="truncate">{event.location || "Venue TBD"}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </div>
+
+              {/* Card Footer Actions */}
+              <div
+                className="p-3 bg-muted/20 border-t border-border/60 flex items-center gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="flex-1 h-8 text-xs gap-1.5 shadow-2xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                >
+                  <Link href={`/admin/events/${event.id}`}>
+                    <Users className="size-3.5" />
+                    <span>Registrations</span>
+                  </Link>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  asChild
+                  className="h-8 text-xs gap-1 px-3 shadow-2xs"
+                >
+                  <Link href={`/admin/events/${event.id}/settings`}>
+                    <Settings className="size-3.5" />
+                    <span>Settings</span>
+                  </Link>
+                </Button>
+
+                {event.status === "published" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="h-8 px-2 text-xs"
+                    title="View Public Page"
+                  >
+                    <Link href={`/events/${event.slug || event.id}`} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="size-3.5 text-muted-foreground" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </Card>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {!loading && filteredEvents.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <p className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
+          <p className="text-xs text-muted-foreground text-center sm:text-left">
             Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
             {Math.min(currentPage * ITEMS_PER_PAGE, filteredEvents.length)} of{" "}
             {filteredEvents.length} events
           </p>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-1.5">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="h-9 px-3 text-xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+              className="h-8 px-2.5 text-xs gap-1 shadow-2xs"
             >
-              <ChevronLeft className="h-3.5 w-3.5 mr-1" />
-              Previous
+              <ChevronLeft className="h-3.5 w-3.5" />
+              <span>Previous</span>
             </Button>
-            <div className="hidden sm:flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="icon"
-                    onClick={() => setCurrentPage(page)}
-                    className={`h-8 w-8 text-xs ${
-                      currentPage === page
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-primary/10 hover:text-primary hover:border-primary"
-                    } transition-colors`}
-                  >
-                    {page}
-                  </Button>
-                )
-              )}
-            </div>
-            <span className="sm:hidden text-xs font-medium text-muted-foreground px-1">
-              {currentPage} / {totalPages}
+
+            <span className="text-xs font-medium px-2 text-muted-foreground">
+              Page {currentPage} of {totalPages}
             </span>
+
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="h-9 px-3 text-xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+              className="h-8 px-2.5 text-xs gap-1 shadow-2xs"
             >
-              Next
-              <ChevronRight className="h-3.5 w-3.5 ml-1" />
+              <span>Next</span>
+              <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

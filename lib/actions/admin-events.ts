@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function generateSlug(title: string): string {
   return title
@@ -94,12 +95,15 @@ export async function createEvent(formData: FormData) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "CREATE",
-    entity_type: "event",
-    entity_id: data.id,
-    new_data: { title, category, type },
+  void logAdminActivity({
+    action: "EVENT_CREATED",
+    domain: "EVENT",
+    entityType: "events",
+    entityId: data.id,
+    description: `Created event "${title}" (${category || "General"})`,
+    newData: { title, category, type, isPublished },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/events")
@@ -146,13 +150,16 @@ export async function updateEvent(id: string, formData: FormData) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "event",
-    entity_id: id,
-    old_data: oldData,
-    new_data: { title, category, type, is_published: isPublished },
+  void logAdminActivity({
+    action: "EVENT_UPDATED",
+    domain: "EVENT",
+    entityType: "events",
+    entityId: id,
+    description: `Updated event "${title}"`,
+    oldData,
+    newData: { title, category, type, is_published: isPublished },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/events")
@@ -175,12 +182,15 @@ export async function deleteEvent(id: string) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "event",
-    entity_id: id,
-    old_data: event,
+  void logAdminActivity({
+    action: "EVENT_DELETED",
+    domain: "EVENT",
+    entityType: "events",
+    entityId: id,
+    description: `Deleted event "${event?.title || id}"`,
+    oldData: event,
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/events")

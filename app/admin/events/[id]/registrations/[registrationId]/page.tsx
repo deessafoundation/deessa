@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import {
-  ArrowLeft,
   Mail,
-  Globe,
   Calendar,
   Users,
   ChevronRight,
@@ -13,7 +11,18 @@ import {
   FileJson,
   Ticket,
   CheckCircle,
-  QrCode,
+  CheckCircle2,
+  CreditCard,
+  Camera,
+  RotateCcw,
+  DollarSign,
+  MailCheck,
+  MailX,
+  XCircle,
+  LogIn,
+  AlertCircle,
+  UserPlus,
+  type LucideIcon,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -27,7 +36,8 @@ import { EventDeleteRegistrationButton } from "@/components/admin/events/event-d
 import { EventCommunicationLog } from "@/components/admin/events/event-communication-log"
 import { EventPaymentInfo } from "@/components/admin/events/event-payment-info"
 import { createServiceRoleClient } from "@/lib/supabase/service"
-import type { FormSchema } from "@/lib/types/event-form-schema"
+import { cn } from "@/lib/utils"
+import type { FormSchema, FormStep, FormField } from "@/lib/types/event-form-schema"
 
 function getInitials(name: string | null | undefined) {
   return (name ?? "")
@@ -42,24 +52,24 @@ function getInitials(name: string | null | undefined) {
 function StatusBadge({ status }: { status: string }) {
   if (status === "confirmed")
     return (
-      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-sm px-3 py-1">
+      <Badge className="bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 hover:bg-green-100 text-xs sm:text-sm px-3 py-1 font-semibold border-0">
         Confirmed
       </Badge>
     )
   if (status === "cancelled")
     return (
-      <Badge className="bg-red-100 text-red-700 hover:bg-red-100 text-sm px-3 py-1">
+      <Badge className="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 hover:bg-red-100 text-xs sm:text-sm px-3 py-1 font-semibold border-0">
         Cancelled
       </Badge>
     )
   if (status === "expired")
     return (
-      <Badge className="bg-slate-100 text-slate-500 hover:bg-slate-100 text-sm px-3 py-1">
+      <Badge className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-100 text-xs sm:text-sm px-3 py-1 font-semibold border-0">
         Expired
       </Badge>
     )
   return (
-    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 text-sm px-3 py-1">
+    <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 hover:bg-amber-100 text-xs sm:text-sm px-3 py-1 font-semibold border-0">
       Pending
     </Badge>
   )
@@ -118,7 +128,7 @@ export default async function RegistrationDetailPage({
   } | null
 
   // Fetch form schema for field labels
-  let formSteps: any[] | null = null
+  let formSteps: FormStep[] | null = null
   if (reg.form_schema_version) {
     const { createClient } = await import("@/lib/supabase/server")
     const supabase = await createClient()
@@ -169,31 +179,42 @@ export default async function RegistrationDetailPage({
   }
 
   // Build timeline
-  const timeline: { icon: string; label: string; ts: string; color: string }[] = [
+  type TimelineItem = {
+    icon: LucideIcon
+    label: string
+    ts: string
+    iconBg: string
+    iconColor: string
+  }
+
+  const timeline: TimelineItem[] = [
     {
-      icon: "📝",
+      icon: UserPlus,
       label: "Registration submitted",
       ts: formatTs(reg.created_at),
-      color: "text-primary",
+      iconBg: "bg-primary/10",
+      iconColor: "text-primary",
     },
   ]
 
   if (reg.last_registration_email_sent_at) {
     timeline.push({
-      icon: "📧",
+      icon: Mail,
       label: "Registration email sent",
       ts: formatTs(reg.last_registration_email_sent_at),
-      color: "text-primary",
+      iconBg: "bg-blue-500/10",
+      iconColor: "text-blue-600 dark:text-blue-400",
     })
   }
 
   // QR payment screenshot uploaded
   if (regAny.payment_screenshot_url) {
     timeline.push({
-      icon: "📸",
+      icon: Camera,
       label: "Payment screenshot uploaded",
       ts: formatTs(reg.created_at),
-      color: "text-blue-600",
+      iconBg: "bg-indigo-500/10",
+      iconColor: "text-indigo-600 dark:text-indigo-400",
     })
   }
 
@@ -202,47 +223,52 @@ export default async function RegistrationDetailPage({
       ? reg.payment_provider.charAt(0).toUpperCase() + reg.payment_provider.slice(1)
       : "Gateway"
     timeline.push({
-      icon: "💳",
+      icon: CreditCard,
       label: `Payment initiated via ${provider}`,
       ts: formatTs(reg.payment_initiated_at),
-      color: "text-amber-600",
+      iconBg: "bg-amber-500/10",
+      iconColor: "text-amber-600 dark:text-amber-400",
     })
   }
 
   if (reg.status === "pending" && reg.payment_status !== "paid" && reg.expires_at) {
     timeline.push({
-      icon: "⌛",
+      icon: Clock,
       label: `Awaiting payment — expires ${formatTs(reg.expires_at)}`,
       ts: "",
-      color: "text-amber-500",
+      iconBg: "bg-amber-500/10",
+      iconColor: "text-amber-600 dark:text-amber-400",
     })
   }
 
   if (reg.payment_status === "failed" && reg.payment_failed_at) {
     timeline.push({
-      icon: "❌",
+      icon: AlertCircle,
       label: "Payment attempt failed",
       ts: formatTs(reg.payment_failed_at),
-      color: "text-red-600",
+      iconBg: "bg-rose-500/10",
+      iconColor: "text-rose-600 dark:text-rose-400",
     })
   }
 
   if (reg.payment_status === "refunded") {
     timeline.push({
-      icon: "↩️",
+      icon: RotateCcw,
       label: "Payment refunded",
       ts: reg.payment_paid_at ? formatTs(reg.payment_paid_at) : "—",
-      color: "text-purple-600",
+      iconBg: "bg-purple-500/10",
+      iconColor: "text-purple-600 dark:text-purple-400",
     })
   }
 
   if (reg.payment_id === "manual:admin-override") {
     const by = reg.payment_override_by ? ` by ${reg.payment_override_by}` : ""
     timeline.push({
-      icon: "💰",
+      icon: DollarSign,
       label: `Payment manually marked as paid${by}`,
       ts: reg.payment_paid_at ? formatTs(reg.payment_paid_at) : "—",
-      color: "text-green-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     })
   }
 
@@ -251,67 +277,74 @@ export default async function RegistrationDetailPage({
       ? reg.payment_provider.charAt(0).toUpperCase() + reg.payment_provider.slice(1)
       : "Gateway"
     timeline.push({
-      icon: "✅",
+      icon: CheckCircle2,
       label: `Payment verified via ${provider}`,
       ts: reg.payment_paid_at ? formatTs(reg.payment_paid_at) : "—",
-      color: "text-green-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     })
   }
 
   if (reg.confirmed_at) {
     const by = reg.confirmed_by ? ` by ${reg.confirmed_by}` : ""
     timeline.push({
-      icon: "✅",
+      icon: CheckCircle,
       label: `Registration confirmed${by}`,
       ts: formatTs(reg.confirmed_at),
-      color: "text-green-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     })
   }
 
   if (reg.last_confirmation_email_sent_at) {
     timeline.push({
-      icon: "📩",
+      icon: MailCheck,
       label: "Confirmation email sent",
       ts: formatTs(reg.last_confirmation_email_sent_at),
-      color: "text-green-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     })
   }
 
   if (reg.cancelled_at) {
     const by = reg.cancelled_by ? ` by ${reg.cancelled_by}` : ""
     timeline.push({
-      icon: "❌",
+      icon: XCircle,
       label: `Registration cancelled${by}`,
       ts: formatTs(reg.cancelled_at),
-      color: "text-red-600",
+      iconBg: "bg-rose-500/10",
+      iconColor: "text-rose-600 dark:text-rose-400",
     })
   }
 
   if (reg.last_cancellation_email_sent_at) {
     timeline.push({
-      icon: "📩",
+      icon: MailX,
       label: "Cancellation email sent",
       ts: formatTs(reg.last_cancellation_email_sent_at),
-      color: "text-red-600",
+      iconBg: "bg-rose-500/10",
+      iconColor: "text-rose-600 dark:text-rose-400",
     })
   }
 
   if (reg.status === "expired") {
     timeline.push({
-      icon: "⌛",
+      icon: Clock,
       label: "Registration expired — payment not received in time",
       ts: reg.expires_at ? formatTs(reg.expires_at) : "—",
-      color: "text-slate-500",
+      iconBg: "bg-slate-500/10",
+      iconColor: "text-slate-600 dark:text-slate-400",
     })
   }
 
   if (reg.checked_in_at) {
     const by = reg.checked_in_by ? ` by ${reg.checked_in_by}` : ""
     timeline.push({
-      icon: "🚪",
+      icon: LogIn,
       label: `Checked in${by}`,
       ts: formatTs(reg.checked_in_at),
-      color: "text-green-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
     })
   }
 
@@ -322,18 +355,30 @@ export default async function RegistrationDetailPage({
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link
-          href={`/admin/events/${id}`}
-          className="hover:text-foreground transition-colors flex items-center gap-1"
-        >
-          <ArrowLeft className="size-4" />
+      {/* Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground flex-wrap">
+        <Link href="/admin/events" className="hover:text-foreground transition-colors font-medium">
+          Events
+        </Link>
+        <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
+        {event && (
+          <>
+            <Link
+              href={`/admin/events/${id}`}
+              className="hover:text-foreground transition-colors truncate max-w-[150px] sm:max-w-xs font-medium"
+              title={event.title}
+            >
+              {event.title}
+            </Link>
+            <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
+          </>
+        )}
+        <Link href={`/admin/events/${id}`} className="hover:text-foreground transition-colors">
           Registrations
         </Link>
-        <ChevronRight className="size-4" />
-        <span className="font-medium text-foreground">{shortId}</span>
-      </div>
+        <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
+        <span className="font-mono text-foreground font-semibold">{shortId}</span>
+      </nav>
 
       {/* Header Card */}
       <Card>
@@ -362,7 +407,7 @@ export default async function RegistrationDetailPage({
               <div className="flex items-center gap-2">
                 <StatusBadge status={reg.status} />
                 {reg.checked_in_at && (
-                  <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs">
+                  <Badge className="bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 font-semibold border-0 text-xs">
                     <CheckCircle className="mr-1 h-3 w-3" />
                     Checked In
                   </Badge>
@@ -392,22 +437,22 @@ export default async function RegistrationDetailPage({
       </div>
 
       {/* Registration Context */}
-      <Card className="border-blue-200 bg-blue-50/50">
-        <CardHeader className="border-b border-blue-200 px-4 sm:px-6 py-3.5 sm:py-4">
-          <CardTitle className="flex items-center gap-2 text-base text-blue-900">
-            <Calendar className="size-4" />
+      <Card className="border-border bg-card">
+        <CardHeader className="border-b border-border px-4 sm:px-6 py-3.5 sm:py-4">
+          <CardTitle className="flex items-center gap-2 text-base text-foreground">
+            <Calendar className="size-4 text-primary" />
             Registration Context
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+            <div className="space-y-1.5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Event
               </p>
               <div>
-                <p className="font-medium text-blue-900">{event!.title}</p>
-                <p className="text-sm text-blue-700 mt-1">
+                <p className="font-semibold text-foreground text-sm sm:text-base">{event!.title}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                   {eventDate.toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -415,20 +460,22 @@ export default async function RegistrationDetailPage({
                   })}
                   {event!.event_time && ` • ${event!.event_time}`}
                 </p>
-                <p className="text-sm text-blue-700">{event!.location}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{event!.location}</p>
               </div>
             </div>
             {reg.form_schema_version && (
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Form Used
                 </p>
-                <Badge
-                  variant="outline"
-                  className="bg-white border-blue-300 text-blue-900 font-mono"
-                >
-                  Version {reg.form_schema_version}
-                </Badge>
+                <div>
+                  <Badge
+                    variant="outline"
+                    className="bg-muted text-foreground border-border font-mono text-xs"
+                  >
+                    Version {reg.form_schema_version}
+                  </Badge>
+                </div>
               </div>
             )}
           </div>
@@ -442,7 +489,7 @@ export default async function RegistrationDetailPage({
           {formSteps ? (
             formSteps.map((step) => {
               const visibleFields = (step.fields || []).filter(
-                (f: any) => f.type !== "heading" && f.type !== "paragraph"
+                (f: FormField) => f.type !== "heading" && f.type !== "paragraph"
               )
               if (visibleFields.length === 0) return null
 
@@ -455,7 +502,7 @@ export default async function RegistrationDetailPage({
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-6 py-2">
-                    {visibleFields.map((field: any) => {
+                    {visibleFields.map((field: FormField) => {
                       // Core DB columns that exist on event_registrations table
                       const DB_COLUMNS: Record<string, string> = {
                         full_name: "full_name",
@@ -465,7 +512,7 @@ export default async function RegistrationDetailPage({
                         consent_marketing: "consent_marketing",
                       }
 
-                      const dbCol = DB_COLUMNS[field.id] || field.coreColumn
+                      const dbCol = DB_COLUMNS[field.id] || (field as FormField & { coreColumn?: string }).coreColumn
                       let value: unknown
                       if (dbCol && reg[dbCol] !== undefined) {
                         value = reg[dbCol]
@@ -587,23 +634,29 @@ export default async function RegistrationDetailPage({
             </CardHeader>
             <CardContent className="p-6">
               <div className="relative flex flex-col gap-0">
-                {timeline.map((event, i) => (
-                  <div key={i} className="flex gap-4">
+                {timeline.map((item, i) => (
+                  <div key={i} className="flex gap-3 sm:gap-4">
                     <div className="flex flex-col items-center">
-                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-base">
-                        {event.icon}
+                      <div
+                        className={cn(
+                          "flex size-8 shrink-0 items-center justify-center rounded-xl border border-border/80 shadow-xs",
+                          item.iconBg,
+                          item.iconColor
+                        )}
+                      >
+                        <item.icon className="size-4" />
                       </div>
                       {i < timeline.length - 1 && (
-                        <div className="w-px flex-1 bg-border my-1" />
+                        <div className="w-px flex-1 bg-border my-1.5" />
                       )}
                     </div>
-                    <div className="pb-5 pt-1">
-                      <p className={`text-sm font-medium ${event.color}`}>
-                        {event.label}
+                    <div className="pb-5 pt-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground">
+                        {item.label}
                       </p>
-                      {event.ts && (
+                      {item.ts && (
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {event.ts}
+                          {item.ts}
                         </p>
                       )}
                     </div>
@@ -665,6 +718,7 @@ export default async function RegistrationDetailPage({
                 </p>
                 <EventDeleteRegistrationButton
                   registrationId={registrationId}
+                  eventId={id}
                   shortId={shortId}
                   fullName={reg.full_name}
                   email={reg.email}
@@ -682,14 +736,14 @@ export default async function RegistrationDetailPage({
             paymentCurrency={reg.payment_currency}
             paymentProvider={reg.payment_provider}
             paymentId={reg.payment_id}
-            stripeSessionId={(reg as any).stripe_session_id ?? null}
-            khaltiPidx={(reg as any).khalti_pidx ?? null}
-            esewaTransactionUuid={(reg as any).esewa_transaction_uuid ?? null}
+            stripeSessionId={(reg as Record<string, unknown>).stripe_session_id as string | null ?? null}
+            khaltiPidx={(reg as Record<string, unknown>).khalti_pidx as string | null ?? null}
+            esewaTransactionUuid={(reg as Record<string, unknown>).esewa_transaction_uuid as string | null ?? null}
             paymentInitiatedAt={reg.payment_initiated_at}
             paymentPaidAt={reg.payment_paid_at}
             paymentFailedAt={reg.payment_failed_at}
-            paymentReviewAt={(reg as any).payment_review_at ?? null}
-            paymentOverrideBy={(reg as any).payment_override_by ?? null}
+            paymentReviewAt={(reg as Record<string, unknown>).payment_review_at as string | null ?? null}
+            paymentOverrideBy={(reg as Record<string, unknown>).payment_override_by as string | null ?? null}
             expiresAt={reg.expires_at}
             email={reg.email}
             fullName={reg.full_name}
@@ -734,13 +788,13 @@ export default async function RegistrationDetailPage({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 rounded-xl bg-amber-50 border border-amber-100 p-3">
-                  <Clock className="size-4 shrink-0 text-amber-600 mt-0.5" />
+                <div className="flex items-start gap-3 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3">
+                  <Clock className="size-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-amber-700/70">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-amber-700/80 dark:text-amber-400/80">
                       Countdown
                     </p>
-                    <p className="text-sm font-bold text-amber-700">
+                    <p className="text-sm font-bold text-amber-700 dark:text-amber-400">
                       {days > 0 ? `${days} days to go` : "Event has started!"}
                     </p>
                   </div>

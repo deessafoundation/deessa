@@ -64,17 +64,20 @@ export function EventCheckInButton({
 
   return (
     <>
-      <div className="rounded-xl border border-border p-4">
-        <div className="flex items-center justify-between">
+      <div className="rounded-xl border border-border bg-card p-4 shadow-xs">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Check-in Status
             </p>
             {isCheckedIn ? (
               <div className="mt-1">
-                <p className="text-sm font-medium text-green-600">Checked In</p>
+                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle className="size-3.5" />
+                  Checked In
+                </p>
                 {checkedInAt && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {new Date(checkedInAt).toLocaleString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -96,7 +99,8 @@ export function EventCheckInButton({
               variant="outline"
               size="sm"
               onClick={() => setShowUndoModal(true)}
-              className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+              disabled={loading}
+              className="text-amber-700 dark:text-amber-400 hover:bg-amber-500/10 border-amber-500/30"
             >
               <Undo2 className="mr-1 h-3.5 w-3.5" />
               Undo
@@ -105,7 +109,8 @@ export function EventCheckInButton({
             <Button
               size="sm"
               onClick={handleCheckIn}
-              className="bg-green-600 hover:bg-green-700"
+              disabled={loading}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
             >
               <CheckCircle className="mr-1 h-3.5 w-3.5" />
               Check In

@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   EventTicketType,
   CreateTicketTypeInput,
@@ -9,22 +11,18 @@ import type {
 } from "@/lib/types/events-module";
 
 // Auth guard for admin operations
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
-  let user;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    throw new Error("Session expired. Please log in again.");
+  const admin = await getCurrentAdmin();
+
+  if (!admin) {
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
   }
-  if (!user) throw new Error("Unauthorized");
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!admin) throw new Error("Unauthorized: Not an admin user");
+
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
+  }
+
   return { supabase, admin };
 }
 
@@ -98,6 +96,15 @@ export async function createTicketType(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "TICKET_PRICING_CREATED",
+      domain: "EVENTS",
+      entityType: "event_ticket_types",
+      entityId: data.id,
+      summary: `Admin created ticket type "${data.name}" (${data.currency} ${data.price})`,
+      newData: data,
+    });
+
     revalidatePath(`/admin/events/${input.event_id}/pricing`);
     return { success: true, data: data as EventTicketType };
   } catch (err) {
@@ -137,6 +144,15 @@ export async function updateTicketType(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "TICKET_PRICING_UPDATED",
+      domain: "EVENTS",
+      entityType: "event_ticket_types",
+      entityId: id,
+      summary: `Admin updated ticket type "${data.name}"`,
+      newData: updateData,
+    });
+
     if (input.event_id) {
       revalidatePath(`/admin/events/${input.event_id}/pricing`);
     }
@@ -164,6 +180,15 @@ export async function deleteTicketType(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      action: "TICKET_PRICING_DELETED",
+      domain: "EVENTS",
+      entityType: "event_ticket_types",
+      entityId: id,
+      summary: `Admin deleted ticket type ${id} for event ${eventId}`,
+      oldData: { id, eventId },
+    });
 
     revalidatePath(`/admin/events/${eventId}/pricing`);
     return { success: true };

@@ -6,6 +6,8 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
+import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import type { FormSchema } from "@/lib/types/event-form-schema"
 
 type Result<T = void> = { success: true; data?: T } | { success: false; error: string }
@@ -86,7 +88,7 @@ export async function getEventTemplateCategories(): Promise<Result<string[]>> {
 
     const categories = [...new Set(data.map((row) => row.category).filter(Boolean))] as string[]
     return { success: true, data: categories }
-  } catch (error) {
+  } catch {
     return { success: false, error: "An unexpected error occurred" }
   }
 }
@@ -104,11 +106,9 @@ export async function saveEventFormAsTemplate(params: {
   try {
     const supabase = await createClient()
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return { success: false, error: "Authentication required" }
+    const admin = await getCurrentAdmin()
+    if (!admin) {
+      return { success: false, error: "Unauthorized: Inactive or unauthorized admin session." }
     }
 
     // Use service role client for template operations (bypasses RLS)
@@ -123,7 +123,7 @@ export async function saveEventFormAsTemplate(params: {
         category: params.category,
         is_public: params.isPublic || false,
         form_config: params.formConfig,
-        created_by: user.id,
+        created_by: admin.user_id,
       })
       .select("id")
       .single()
@@ -132,6 +132,17 @@ export async function saveEventFormAsTemplate(params: {
       console.error("Error saving event template:", error)
       return { success: false, error: "Failed to save template: " + error.message }
     }
+
+    void logAdminActivity({
+      action: "EVENT_FORM_TEMPLATE_SAVED",
+      domain: "EVENT",
+      entityType: "event_form_templates",
+      entityId: data.id,
+      description: `Saved event form template "${params.name}"`,
+      newData: { name: params.name, category: params.category, isPublic: params.isPublic },
+      actorId: user.id,
+      actorEmail: user.email,
+    })
 
     return { success: true, data: data.id }
   } catch (error) {
@@ -212,6 +223,15 @@ export async function applyEventTemplateToEvent(params: {
       console.error("Error applying template:", error)
       return { success: false, error: "Failed to apply template: " + error.message }
     }
+
+    void logAdminActivity({
+      action: "EVENT_FORM_TEMPLATE_APPLIED",
+      domain: "EVENT",
+      entityType: "event_form_schemas",
+      entityId: `${params.eventId}-v${nextVersion}`,
+      description: `Applied template ${params.templateId} to event ${params.eventId} as schema v${nextVersion}`,
+      newData: { event_id: params.eventId, template_id: params.templateId, version: nextVersion, is_active: params.activate },
+    })
 
     revalidatePath(`/admin/events/${params.eventId}/settings`)
     return { success: true }

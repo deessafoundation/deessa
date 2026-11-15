@@ -6,7 +6,6 @@ import {
   CheckCircle,
   XCircle,
   Loader2,
-  CreditCard,
   Clock,
   ShieldCheck,
   AlertTriangle,
@@ -111,8 +110,8 @@ export function EventStatusActions({
       {inlineMessage && (
         <div className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium mb-4 ${
           inlineMessage.type === "success"
-            ? "border-green-200 bg-green-50 text-green-700"
-            : "border-red-200 bg-red-50 text-red-700"
+            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+            : "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-400"
         }`}>
           {inlineMessage.type === "success" ? (
             <CheckCircle className="mt-0.5 size-5 shrink-0" />
@@ -129,7 +128,7 @@ export function EventStatusActions({
           onClick={() => setShowConfirmModal(true)}
           disabled={!!loading || isConfirmed}
           title={!isPaid && !isConfirmed ? "Payment not received — will force-confirm" : undefined}
-          className="group flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-green-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-md"
+          className="group flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-xs transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-xs"
         >
           {loading === "confirm" ? <Loader2 className="size-4 animate-spin" /> : <CheckCircle className="size-4 transition-transform group-hover:scale-110" />}
           {isConfirmed ? "Already Confirmed" : !isPaid ? "Force Confirm" : "Confirm Registration"}
@@ -138,7 +137,7 @@ export function EventStatusActions({
         <button
           onClick={() => setShowCancelModal(true)}
           disabled={!!loading || isCancelled}
-          className="group flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-red-200 bg-red-50 px-6 py-3 text-sm font-bold text-red-600 transition-all hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-100 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+          className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-6 py-3 text-sm font-bold text-rose-700 dark:text-rose-400 transition-all hover:-translate-y-0.5 hover:bg-rose-500/20 hover:shadow-xs disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
         >
           {loading === "cancel" ? <Loader2 className="size-4 animate-spin" /> : <XCircle className="size-4 transition-transform group-hover:scale-110" />}
           {isCancelled ? "Already Cancelled" : "Cancel Registration"}
@@ -152,7 +151,7 @@ export function EventStatusActions({
             <button
               onClick={() => setShowMarkPaidModal(true)}
               disabled={!!loading}
-              className="group flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-2.5 text-xs font-bold text-amber-700 transition-all hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0"
+              className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs font-bold text-amber-700 dark:text-amber-400 transition-all hover:-translate-y-0.5 hover:bg-amber-500/20 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0"
             >
               {loading === "markPaid" ? <Loader2 className="size-3.5 animate-spin" /> : <ShieldCheck className="size-3.5 transition-transform group-hover:scale-110" />}
               Mark as Paid
@@ -163,7 +162,7 @@ export function EventStatusActions({
             <button
               onClick={() => setShowExtendModal(true)}
               disabled={!!loading}
-              className="group flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-purple-200 bg-purple-50 px-4 py-2.5 text-xs font-bold text-purple-700 transition-all hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0"
+              className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-4 py-2.5 text-xs font-bold text-purple-700 dark:text-purple-400 transition-all hover:-translate-y-0.5 hover:bg-purple-500/20 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0"
             >
               {loading === "extendExpiry" ? <Loader2 className="size-3.5 animate-spin" /> : <Clock className="size-3.5 transition-transform group-hover:scale-110" />}
               Extend Expiry +24h
@@ -177,7 +176,7 @@ export function EventStatusActions({
         <p className="mt-3 text-xs text-muted-foreground text-center leading-relaxed">
           {!isPaid ? (
             <>
-              <span className="font-medium text-amber-600">Payment not received.</span>{" "}
+              <span className="font-medium text-amber-600 dark:text-amber-400">Payment not received.</span>{" "}
               Use &quot;Mark as Paid&quot; to confirm without requiring payment, or &quot;Force Confirm&quot; to confirm anyway.
             </>
           ) : (
@@ -194,8 +193,8 @@ export function EventStatusActions({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle className="size-5 text-green-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="size-5" />
               </div>
               {isPaid ? "Confirm Registration" : "Force Confirm"}
             </DialogTitle>
@@ -207,18 +206,18 @@ export function EventStatusActions({
           </DialogHeader>
           <div className={`rounded-xl border p-4 text-sm leading-relaxed ${
             isPaid
-              ? "border-green-100 bg-green-50 text-green-700"
-              : "border-amber-100 bg-amber-50 text-amber-800"
+              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+              : "border-amber-500/20 bg-amber-500/10 text-amber-800 dark:text-amber-300"
           }`}>
             {isPaid ? (
-              <>A <strong>confirmation email</strong> will be sent to <span className="font-semibold">{email}</span>.</>
+              <>A <strong>confirmation email</strong> will be sent to <span className="font-semibold text-foreground">{email}</span>.</>
             ) : (
               <>⚠ This will confirm without payment. Use only when payment was received through another channel.</>
             )}
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setShowConfirmModal(false)}>Cancel</Button>
-            <Button onClick={handleConfirm} disabled={loading === "confirm"} className="bg-green-600 hover:bg-green-700 text-white">
+            <Button onClick={handleConfirm} disabled={loading === "confirm"} className="bg-emerald-600 hover:bg-emerald-700 text-white">
               {loading === "confirm" && <Loader2 className="mr-2 size-4 animate-spin" />}
               {isPaid ? "Yes, Confirm" : "Yes, Force Confirm"}
             </Button>
@@ -231,8 +230,8 @@ export function EventStatusActions({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100">
-                <AlertTriangle className="size-5 text-red-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400">
+                <AlertTriangle className="size-5" />
               </div>
               Cancel Registration
             </DialogTitle>
@@ -240,9 +239,9 @@ export function EventStatusActions({
               You are about to cancel <strong className="text-foreground">{fullName}</strong>&apos;s registration.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700 leading-relaxed">
+          <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-700 dark:text-rose-400 leading-relaxed">
             A <strong>cancellation email</strong> will be sent to{" "}
-            <span className="font-semibold">{email}</span>.
+            <span className="font-semibold text-foreground">{email}</span>.
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setShowCancelModal(false)}>Keep Registration</Button>
@@ -259,8 +258,8 @@ export function EventStatusActions({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-amber-100">
-                <ShieldCheck className="size-5 text-amber-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                <ShieldCheck className="size-5" />
               </div>
               Manual Payment Override
             </DialogTitle>
@@ -268,8 +267,8 @@ export function EventStatusActions({
               Manually mark <strong className="text-foreground">{fullName}</strong>&apos;s registration as paid and confirmed.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-800 leading-relaxed">
-            ⚠ This will <strong>bypass the payment gateway</strong>. Use only when you&apos;ve confirmed payment was received through another channel (e.g. bank transfer). This action is logged.
+          <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-300 leading-relaxed">
+            ⚠ This will <strong>bypass the payment gateway</strong>. Use only when you&apos;ve confirmed payment was received through another channel (e.g. bank transfer). This action is logged in audit history.
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setShowMarkPaidModal(false)}>Cancel</Button>
@@ -286,8 +285,8 @@ export function EventStatusActions({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-purple-100">
-                <Clock className="size-5 text-purple-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400">
+                <Clock className="size-5" />
               </div>
               Extend Payment Expiry
             </DialogTitle>
@@ -295,7 +294,7 @@ export function EventStatusActions({
               Extend the payment window for <strong className="text-foreground">{fullName}</strong> by 24 hours.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-purple-100 bg-purple-50 p-4 text-sm text-purple-700 leading-relaxed">
+          <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-4 text-sm text-purple-700 dark:text-purple-400 leading-relaxed">
             The current expiry deadline will be pushed forward by <strong>24 hours</strong>.
           </div>
           <DialogFooter className="gap-2 sm:gap-0">

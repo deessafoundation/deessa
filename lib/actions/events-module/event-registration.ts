@@ -15,6 +15,8 @@ import { startEsewaPayment } from "@/lib/payments/esewa";
 import { getAppBaseUrl } from "@/lib/utils";
 import { sendEventConfirmationEmail } from "@/lib/email/event-mailer";
 import { incrementTicketSoldCount, decrementTicketSoldCount } from "@/lib/utils/ticket-capacity";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   EventRegistration,
   RegisterForEventInput,
@@ -779,19 +781,16 @@ export async function getEventRegistrationStatus(
 // Admin Actions
 // =============================================
 
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id, email")
-    .eq("user_id", user.id)
-    .single();
-  if (!admin) throw new Error("Unauthorized: Not an admin user");
-  return { supabase, admin, user };
+  const admin = await getCurrentAdmin();
+  if (!admin) {
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
+  }
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
+  }
+  return { supabase, admin };
 }
 
 // ── Confirm Registration ─────────────────────────────────────────────────────
@@ -853,6 +852,18 @@ export async function confirmEventRegistration(
       await incrementTicketSoldCount(supabase, reg.ticket_type_id);
     }
 
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_CONFIRMED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin confirmed registration ${id} (${reg.full_name})`,
+      newData: { status: "confirmed", confirmed_by: admin.email || admin.id },
+      oldData: { status: reg.status },
+    });
+
     return { success: true };
   } catch (err) {
     return {
@@ -907,6 +918,18 @@ export async function cancelEventRegistration(
       await decrementTicketSoldCount(supabase, reg.ticket_type_id);
     }
 
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_CANCELLED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin cancelled registration ${id}`,
+      newData: { status: "cancelled" },
+      oldData: { status: reg.status },
+    });
+
     return { success: true };
   } catch (err) {
     return {
@@ -922,7 +945,7 @@ export async function markEventPaymentManual(
   id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { supabase, admin } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin(["SUPER_ADMIN", "ADMIN", "FINANCE"]);
 
     const { error } = await supabase
       .from("event_registrations")
@@ -937,6 +960,17 @@ export async function markEventPaymentManual(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_PAYMENT_OVERRIDDEN",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin manually approved payment for registration ${id}`,
+      newData: { payment_status: "paid", payment_id: "manual:admin-override" },
+    });
 
     return { success: true };
   } catch (err) {
@@ -954,7 +988,7 @@ export async function extendEventRegistrationExpiry(
   hours: number = 24
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     // Clamp hours to valid range
     const clampedHours = Math.max(1, Math.min(168, Math.floor(hours)));
@@ -986,6 +1020,17 @@ export async function extendEventRegistrationExpiry(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_EXPIRY_EXTENDED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin extended registration ${id} expiry by ${clampedHours} hours`,
+      newData: { expires_at: newExpiry, extended_hours: clampedHours },
+    });
 
     return { success: true };
   } catch (err) {
@@ -1037,6 +1082,17 @@ export async function checkInEventRegistration(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_CHECKED_IN",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin checked in attendee for registration ${id}`,
+      newData: { checked_in_at: new Date().toISOString() },
+    });
+
     return { success: true };
   } catch (err) {
     return {
@@ -1050,7 +1106,7 @@ export async function undoCheckInEventRegistration(
   id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     const { error } = await supabase
       .from("event_registrations")
@@ -1063,6 +1119,17 @@ export async function undoCheckInEventRegistration(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_CHECKIN_REVERTED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin reverted check-in for registration ${id}`,
+      newData: { checked_in_at: null },
+    });
 
     return { success: true };
   } catch (err) {
@@ -1150,7 +1217,7 @@ export async function deleteEventRegistration(
   id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin(["SUPER_ADMIN", "ADMIN"]);
 
     // Only allow deletion of cancelled registrations
     const { data: reg, error: fetchError } = await supabase
@@ -1178,6 +1245,17 @@ export async function deleteEventRegistration(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATION_DELETED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      entityId: id,
+      summary: `Admin deleted cancelled registration ${id}`,
+      oldData: reg,
+    });
 
     return { success: true };
   } catch (err) {
@@ -1412,6 +1490,16 @@ export async function bulkConfirmEventRegistrations(
       }
     }
 
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATIONS_BULK_CONFIRMED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      summary: `Admin bulk confirmed ${data?.length || 0} registrations`,
+      newData: { count: data?.length || 0, ids: data?.map((d) => d.id) },
+    });
+
     return { success: true, count: data?.length || 0 };
   } catch (err) {
     return {
@@ -1455,6 +1543,16 @@ export async function bulkCancelEventRegistrations(
     }
 
     // Capacity is now checked by counting actual registrations — sold_count sync not required
+
+    await logAdminActivity({
+      actorId: admin.id,
+      actorEmail: admin.email,
+      action: "REGISTRATIONS_BULK_CANCELLED",
+      domain: "EVENTS",
+      entityType: "event_registrations",
+      summary: `Admin bulk cancelled ${data?.length || 0} registrations`,
+      newData: { count: data?.length || 0, ids: data?.map((d) => d.id) },
+    });
 
     return { success: true, count: data?.length || 0 };
   } catch (err) {

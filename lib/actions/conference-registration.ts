@@ -33,6 +33,8 @@ import type {
   StartConferencePaymentResult,
 } from "@/lib/types/conference";
 
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+
 // ── Input types ───────────────────────────────────────────────────────────────
 
 import { CORE_FIELD_COLUMN_MAP, isCoreField } from "@/lib/types/event-form-schema";
@@ -803,6 +805,16 @@ export async function confirmConferenceRegistration(
     })
     .catch((err) => console.error("Non-fatal: confirmation email failed:", err))
 
+  void logAdminActivity({
+    action: "CONFERENCE_REGISTRATION_CONFIRMED",
+    domain: "EVENTS",
+    entityType: "conference_registrations",
+    entityId: id,
+    description: `Confirmed conference registration for ${reg.full_name} (${reg.email})`,
+    oldData: { status: reg.status, payment_status: reg.payment_status },
+    newData: { status: "confirmed", confirmed_at: new Date().toISOString() },
+  })
+
   return { success: true };
 }
 
@@ -853,6 +865,16 @@ export async function cancelConferenceRegistration(
       })
       .catch((err) => console.error("Non-fatal: cancellation email failed:", err))
   }
+
+  void logAdminActivity({
+    action: "CONFERENCE_REGISTRATION_CANCELLED",
+    domain: "EVENTS",
+    entityType: "conference_registrations",
+    entityId: id,
+    description: `Cancelled conference registration for ${reg?.full_name || id}`,
+    oldData: { status: "active" },
+    newData: { status: "cancelled", cancelled_at: new Date().toISOString() },
+  })
 
   return { success: true };
 }
@@ -929,6 +951,16 @@ export async function markConferencePaymentManual(
     })
     .catch((err) => console.error("Non-fatal: admin-override confirmation email failed:", err))
 
+  void logAdminActivity({
+    action: "CONFERENCE_PAYMENT_OVERRIDDEN",
+    domain: "EVENTS",
+    entityType: "conference_registrations",
+    entityId: id,
+    description: `Admin manually marked conference registration paid for ${reg.full_name}`,
+    oldData: { payment_status: reg.payment_status, status: reg.status },
+    newData: { payment_status: "paid", status: "confirmed", payment_override_by: adminEmail || "admin" },
+  })
+
   return { success: true };
 }
 
@@ -990,6 +1022,16 @@ export async function extendConferenceRegistrationExpiry(
   if (updateErr) {
     return { success: false, error: updateErr.message };
   }
+
+  void logAdminActivity({
+    action: "CONFERENCE_EXPIRY_EXTENDED",
+    domain: "EVENTS",
+    entityType: "conference_registrations",
+    entityId: id,
+    description: `Extended conference registration expiry by ${hours} hours to ${newExpiresAt}`,
+    oldData: { expires_at: reg.expires_at, status: reg.status },
+    newData: { expires_at: newExpiresAt, status: reg.status === "expired" ? "pending_payment" : reg.status },
+  })
 
   return { success: true, newExpiresAt };
 }
@@ -1353,6 +1395,15 @@ export async function deleteConferenceRegistration(
     console.error("deleteConferenceRegistration error:", deleteErr)
     return { success: false, error: deleteErr.message }
   }
+
+  void logAdminActivity({
+    action: "CONFERENCE_REGISTRATION_DELETED",
+    domain: "EVENTS",
+    entityType: "conference_registrations",
+    entityId: registrationId,
+    description: `Permanently deleted cancelled conference registration for ${reg.full_name} (${email})`,
+    oldData: { status: reg.status, full_name: reg.full_name, email },
+  })
 
   return { success: true }
 }

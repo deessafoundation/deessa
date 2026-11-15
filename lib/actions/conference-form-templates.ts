@@ -6,7 +6,9 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { FormSchema } from "@/lib/types/event-form-schema"
-import { Result } from "@/lib/types"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
+
+type Result<T = void> = { success: true; data?: T } | { success: false; error: string }
 
 export interface FormTemplate {
   id: string
@@ -149,6 +151,15 @@ export async function saveFormAsTemplate(params: {
       return { success: false, error: "Failed to save template" }
     }
 
+    void logAdminActivity({
+      action: "CONFERENCE_TEMPLATE_CREATED",
+      domain: "EVENTS",
+      entityType: "conference_form_templates",
+      entityId: data.id,
+      description: `Created conference form template "${params.name}"`,
+      newData: { name: params.name, category: params.category, isPublic: params.isPublic },
+    })
+
     return { success: true, data: data.id }
   } catch (error) {
     console.error("Error in saveFormAsTemplate:", error)
@@ -170,7 +181,7 @@ export async function updateFormTemplate(params: {
   try {
     const supabase = await createClient()
 
-    const updates: any = {}
+    const updates: Record<string, unknown> = {}
     if (params.name) updates.name = params.name
     if (params.description !== undefined) updates.description = params.description
     if (params.category !== undefined) updates.category = params.category
@@ -186,6 +197,15 @@ export async function updateFormTemplate(params: {
       console.error("Error updating template:", error)
       return { success: false, error: "Failed to update template" }
     }
+
+    void logAdminActivity({
+      action: "CONFERENCE_TEMPLATE_UPDATED",
+      domain: "EVENTS",
+      entityType: "conference_form_templates",
+      entityId: params.templateId,
+      description: `Updated conference form template ${params.name || params.templateId}`,
+      newData: updates,
+    })
 
     return { success: true }
   } catch (error) {
@@ -213,6 +233,14 @@ export async function deleteFormTemplate(
       return { success: false, error: "Failed to delete template" }
     }
 
+    void logAdminActivity({
+      action: "CONFERENCE_TEMPLATE_DELETED",
+      domain: "EVENTS",
+      entityType: "conference_form_templates",
+      entityId: templateId,
+      description: `Deleted conference form template ${templateId}`,
+    })
+
     return { success: true }
   } catch (error) {
     console.error("Error in deleteFormTemplate:", error)
@@ -233,10 +261,16 @@ export async function applyTemplateToEvent(params: {
 
     // Fetch the template
     const templateResult = await getFormTemplateById(params.templateId)
-    if (!templateResult.success || !templateResult.data) {
+    if (!templateResult.success) {
       return {
         success: false,
         error: templateResult.error || "Template not found",
+      }
+    }
+    if (!templateResult.data) {
+      return {
+        success: false,
+        error: "Template not found",
       }
     }
 
@@ -292,6 +326,15 @@ export async function applyTemplateToEvent(params: {
       .from("conference_form_templates")
       .update({ times_used: template.timesUsed + 1 })
       .eq("id", params.templateId)
+
+    void logAdminActivity({
+      action: "CONFERENCE_TEMPLATE_APPLIED",
+      domain: "EVENTS",
+      entityType: "conference_form_schemas",
+      entityId: `${params.eventId}:v${nextVersion}`,
+      description: `Applied template "${template.name}" to event ${params.eventId} as version ${nextVersion}`,
+      newData: { eventId: params.eventId, templateId: params.templateId, version: nextVersion, activated: params.activate },
+    })
 
     return { success: true, data: nextVersion }
   } catch (error) {
