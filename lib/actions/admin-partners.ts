@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { partnerInputSchema } from "@/lib/types/partner-input"
 import type { Partner, PartnerType, ContextType } from "@/lib/types/partners"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export interface PartnerEventLink {
   event_id: string
@@ -51,7 +52,7 @@ function partnerValues(formData: FormData) {
     logo: formData.get("logo") ?? "",
     website: formData.get("website") ?? "",
     description: formData.get("description") ?? "",
-    is_published: isPublishedRaw === "true" || isPublishedRaw === true,
+    is_published: isPublishedRaw === "true" || isPublishedRaw === "on",
   })
   if (!parsed.success) return { error: parsed.error.issues[0].message } as const
   const logoStoragePath = (formData.get("logo_storage_path") as string) || null
@@ -68,8 +69,14 @@ function partnerValues(formData: FormData) {
 
 async function logPartner(supabase: Awaited<ReturnType<typeof createClient>>, row: Record<string, unknown>) {
   try {
-    const { error } = await supabase.from("activity_logs").insert(row)
-    if (error) throw error
+    await logAdminActivity({
+      action: `PARTNER_${String(row.action || "MUTATION").toUpperCase()}`,
+      domain: "CONTENT",
+      entityType: "partner",
+      entityId: String(row.entity_id || "partner"),
+      description: `Partner ${String(row.action)}: ${row.entity_id}`,
+      newData: (row.new_data as Record<string, unknown>) || undefined,
+    })
   } catch (error) {
     console.error("Partner saved; activity log failed", error)
     return "The partner change was saved, but its activity log could not be recorded."
@@ -149,7 +156,9 @@ export async function getPartners(): Promise<PartnerWithUsage[]> {
         const catLabel =
           categoryLabelsMap.get(`${link.context_id}:${link.category_key}`) ||
           categoryLabelsMap.get(link.category_key) ||
-          link.category_key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+          (link.category_key
+            ? link.category_key.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
+            : "")
 
         // Avoid duplicate event entries for the same partner
         const alreadyLinked = entry.eventLinks.some(

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
 import {
   Select,
   SelectContent,
@@ -69,7 +70,7 @@ import {
   reorderPartners,
 } from "@/lib/actions/context-partners"
 import type { PartnerCategory, Partner, ContextPartnerDetailed } from "@/lib/types/partners"
-import { DEFAULT_EVENT_CATEGORIES } from "@/lib/types/partners"
+import { DEFAULT_EVENT_CATEGORIES, parsePartnerMetadata } from "@/lib/types/partners"
 
 interface PartnersEditorProps {
   eventId: string
@@ -101,6 +102,10 @@ interface PartnerModalState {
   logo: string
   uploadMethod: "upload" | "url"
   logoFit: LogoFitOption
+  isDualLogo: boolean
+  secondaryLogo: string
+  secondaryLogoName: string
+  secondaryUploadMethod: "upload" | "url"
 }
 
 export function PartnersEditor({
@@ -145,10 +150,18 @@ export function PartnersEditor({
     logo: "",
     uploadMethod: "upload",
     logoFit: "auto",
+    isDualLogo: false,
+    secondaryLogo: "",
+    secondaryLogoName: "",
+    secondaryUploadMethod: "upload",
   })
   const [isUploadingLogo, setIsUploadingLogo] = useState(false)
   const [isDraggingLogo, setIsDraggingLogo] = useState(false)
   const logoFileInputRef = useRef<HTMLInputElement>(null)
+
+  const [isUploadingSecondaryLogo, setIsUploadingSecondaryLogo] = useState(false)
+  const [isDraggingSecondaryLogo, setIsDraggingSecondaryLogo] = useState(false)
+  const secondaryLogoFileInputRef = useRef<HTMLInputElement>(null)
 
   // Category Edit state
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
@@ -216,17 +229,34 @@ export function PartnersEditor({
       logo: "",
       uploadMethod: "upload",
       logoFit: "auto",
+      isDualLogo: false,
+      secondaryLogo: "",
+      secondaryLogoName: "",
+      secondaryUploadMethod: "upload",
     })
   }
 
   // Open modal for Editing Partner
   const handleOpenEditModal = (partner: ContextPartnerDetailed) => {
     let initialFit: LogoFitOption = "auto"
+    let initialIsDualLogo = false
+    let initialSecondaryLogo = ""
+    let initialSecondaryLogoName = ""
+    let initialSecondaryUploadMethod: "upload" | "url" = "upload"
+
     if (partner.partner_description) {
       try {
         if (partner.partner_description.startsWith("{")) {
           const parsed = JSON.parse(partner.partner_description)
           if (parsed.logoFit) initialFit = parsed.logoFit
+          if (parsed.isDualLogo) initialIsDualLogo = true
+          if (parsed.secondaryLogo) {
+            initialSecondaryLogo = parsed.secondaryLogo
+            if (!parsed.secondaryLogo.includes("supabase.co")) {
+              initialSecondaryUploadMethod = "url"
+            }
+          }
+          if (parsed.secondaryLogoName) initialSecondaryLogoName = parsed.secondaryLogoName
         } else if (partner.partner_description.includes("fit:")) {
           const match = partner.partner_description.match(/fit:([a-z-]+)/)
           if (match) initialFit = match[1] as LogoFitOption
@@ -245,11 +275,15 @@ export function PartnersEditor({
       logo: partner.partner_logo || "",
       uploadMethod: partner.partner_logo && !partner.partner_logo.includes("supabase.co") ? "url" : "upload",
       logoFit: initialFit,
+      isDualLogo: initialIsDualLogo,
+      secondaryLogo: initialSecondaryLogo,
+      secondaryLogoName: initialSecondaryLogoName,
+      secondaryUploadMethod: initialSecondaryUploadMethod,
     })
   }
 
   // Handle Logo Upload via Supabase Storage
-  const handleLogoUpload = async (file: File) => {
+  const handleLogoUpload = async (file: File, target: "primary" | "secondary" = "primary") => {
     const MAX_SIZE_MB = 2
     const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
     const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"]
@@ -264,7 +298,11 @@ export function PartnersEditor({
       return
     }
 
-    setIsUploadingLogo(true)
+    if (target === "secondary") {
+      setIsUploadingSecondaryLogo(true)
+    } else {
+      setIsUploadingLogo(true)
+    }
 
     try {
       const { createClient } = await import("@/lib/supabase/client")
@@ -276,7 +314,8 @@ export function PartnersEditor({
 
       if (!user) {
         notifications.showError({ description: "You must be logged in to upload files." })
-        setIsUploadingLogo(false)
+        if (target === "secondary") setIsUploadingSecondaryLogo(false)
+        else setIsUploadingLogo(false)
         return
       }
 
@@ -291,7 +330,8 @@ export function PartnersEditor({
       if (uploadError) {
         console.error("Storage upload error:", uploadError)
         notifications.showError({ description: "Failed to upload logo image." })
-        setIsUploadingLogo(false)
+        if (target === "secondary") setIsUploadingSecondaryLogo(false)
+        else setIsUploadingLogo(false)
         return
       }
 
@@ -299,15 +339,28 @@ export function PartnersEditor({
         data: { publicUrl },
       } = supabase.storage.from("partner-logos").getPublicUrl(filePath)
 
-      setPartnerModal((prev) => ({ ...prev, logo: publicUrl }))
-      notifications.showSuccess({ description: "Logo uploaded successfully" })
+      if (target === "secondary") {
+        setPartnerModal((prev) => ({ ...prev, secondaryLogo: publicUrl }))
+      } else {
+        setPartnerModal((prev) => ({ ...prev, logo: publicUrl }))
+      }
+      notifications.showSuccess({
+        description: target === "secondary" ? "Secondary logo uploaded successfully" : "Logo uploaded successfully",
+      })
     } catch (err) {
       console.error("Logo upload failed:", err)
       notifications.showError({ description: "Error processing logo upload." })
     } finally {
-      setIsUploadingLogo(false)
-      if (logoFileInputRef.current) {
-        logoFileInputRef.current.value = ""
+      if (target === "secondary") {
+        setIsUploadingSecondaryLogo(false)
+        if (secondaryLogoFileInputRef.current) {
+          secondaryLogoFileInputRef.current.value = ""
+        }
+      } else {
+        setIsUploadingLogo(false)
+        if (logoFileInputRef.current) {
+          logoFileInputRef.current.value = ""
+        }
       }
     }
   }
@@ -333,6 +386,15 @@ export function PartnersEditor({
 
     const trimmedLogo = partnerModal.logo.trim()
 
+    // Serialize logoFit and dual logo co-branding configuration
+    const metadataPayload = {
+      logoFit: partnerModal.logoFit,
+      isDualLogo: partnerModal.isDualLogo,
+      secondaryLogo: partnerModal.isDualLogo ? partnerModal.secondaryLogo.trim() || null : null,
+      secondaryLogoName: partnerModal.isDualLogo ? partnerModal.secondaryLogoName.trim() || null : null,
+    }
+    const descriptionJson = JSON.stringify(metadataPayload)
+
     if (partnerModal.mode === "add") {
       setActionLoading("save-partner")
       try {
@@ -341,7 +403,7 @@ export function PartnersEditor({
           name: trimmedName,
           website: trimmedWebsite || undefined,
           logo: trimmedLogo || undefined,
-          description: JSON.stringify({ logoFit: partnerModal.logoFit }),
+          description: descriptionJson,
           type: "partner",
           is_published: true,
           created_context_type: "event",
@@ -384,7 +446,7 @@ export function PartnersEditor({
           partner_logo_storage_path: null,
           partner_logo_uploaded_at: null,
           partner_website: trimmedWebsite || null,
-          partner_description: JSON.stringify({ logoFit: partnerModal.logoFit }),
+          partner_description: descriptionJson,
           partner_type: "partner",
           category_label: matchingCategory?.category_label || partnerModal.category_key,
           category_display_order: matchingCategory?.display_order || 0,
@@ -406,9 +468,9 @@ export function PartnersEditor({
         // 1. Update partner details
         const updateResult = await updatePartner(partnerModal.partnerId, {
           name: trimmedName,
-          website: trimmedWebsite || null,
-          logo: trimmedLogo || null,
-          description: JSON.stringify({ logoFit: partnerModal.logoFit }),
+          website: trimmedWebsite || undefined,
+          logo: trimmedLogo || undefined,
+          description: descriptionJson,
         })
 
         if (!updateResult.success) {
@@ -438,7 +500,7 @@ export function PartnersEditor({
                 partner_name: trimmedName,
                 partner_website: trimmedWebsite || null,
                 partner_logo: trimmedLogo || null,
-                partner_description: JSON.stringify({ logoFit: partnerModal.logoFit }),
+                partner_description: descriptionJson,
                 category_key: partnerModal.category_key,
                 category_label: matchingCategory?.category_label || p.category_label,
               }
@@ -941,7 +1003,7 @@ export function PartnersEditor({
                                     }`}
                                   >
                                     {/* Left: Index + Logo + Info */}
-                                    <div className="flex items-center gap-3.5 min-w-0">
+                                    <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto flex-1">
                                       {/* Order Indicator */}
                                       <div
                                         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[11px] font-semibold ${
@@ -953,59 +1015,113 @@ export function PartnersEditor({
                                         #{index + 1}
                                       </div>
 
-                                      {/* Logo Thumbnail Container (High Contrast Safe) */}
-                                      <div
-                                        className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border p-1.5 shadow-2xs overflow-hidden transition-all ${
-                                          partner.is_visible
-                                            ? "border-border/80 bg-neutral-100/90 dark:bg-neutral-800/90"
-                                            : "border-border/60 bg-neutral-200/50 dark:bg-neutral-800/50"
-                                        }`}
-                                      >
-                                        {partner.partner_logo ? (
-                                          <img
-                                            src={partner.partner_logo}
-                                            alt={partner.partner_name}
-                                            className={`h-full w-full object-contain transition-all ${
-                                              !partner.is_visible ? "opacity-50 grayscale" : ""
-                                            }`}
-                                            loading="lazy"
-                                          />
-                                        ) : (
-                                          <Building2
-                                            className={`h-6 w-6 ${
+                                      {/* Logo Thumbnail Container (Dual Logo Supported) */}
+                                      {(() => {
+                                        const meta = parsePartnerMetadata(partner.partner_description)
+                                        const isDual = meta.isDualLogo && meta.secondaryLogo
+                                        if (isDual) {
+                                          return (
+                                            <div
+                                              className={`relative flex h-14 w-20 shrink-0 items-center justify-center rounded-lg border p-1 shadow-2xs overflow-hidden gap-1 transition-all ${
+                                                partner.is_visible
+                                                  ? "border-border/80 bg-neutral-100/90 dark:bg-neutral-800/90"
+                                                  : "border-border/60 bg-neutral-200/50 dark:bg-neutral-800/50"
+                                              }`}
+                                              title={`Dual logo: ${partner.partner_name} | ${meta.secondaryLogoName || "Affiliate"}`}
+                                            >
+                                              <div className="relative flex-1 flex items-center justify-center h-full min-w-0">
+                                                {partner.partner_logo ? (
+                                                  <img
+                                                    src={partner.partner_logo}
+                                                    alt={partner.partner_name}
+                                                    className={`max-h-full max-w-full object-contain ${
+                                                      !partner.is_visible ? "opacity-50 grayscale" : ""
+                                                    }`}
+                                                    loading="lazy"
+                                                  />
+                                                ) : (
+                                                  <Building2 className="h-4 w-4 text-muted-foreground/60" />
+                                                )}
+                                              </div>
+                                              <div className="w-[1px] h-6 bg-border shrink-0" aria-hidden="true" />
+                                              <div className="relative flex-1 flex items-center justify-center h-full min-w-0">
+                                                <img
+                                                  src={meta.secondaryLogo!}
+                                                  alt={meta.secondaryLogoName || "Secondary logo"}
+                                                  className={`max-h-full max-w-full object-contain ${
+                                                    !partner.is_visible ? "opacity-50 grayscale" : ""
+                                                  }`}
+                                                  loading="lazy"
+                                                />
+                                              </div>
+                                            </div>
+                                          )
+                                        }
+                                        return (
+                                          <div
+                                            className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border p-1.5 shadow-2xs overflow-hidden transition-all ${
                                               partner.is_visible
-                                                ? "text-muted-foreground/60"
-                                                : "text-muted-foreground/40"
+                                                ? "border-border/80 bg-neutral-100/90 dark:bg-neutral-800/90"
+                                                : "border-border/60 bg-neutral-200/50 dark:bg-neutral-800/50"
                                             }`}
-                                          />
-                                        )}
-                                      </div>
+                                          >
+                                            {partner.partner_logo ? (
+                                              <img
+                                                src={partner.partner_logo}
+                                                alt={partner.partner_name}
+                                                className={`h-full w-full object-contain transition-all ${
+                                                  !partner.is_visible ? "opacity-50 grayscale" : ""
+                                                }`}
+                                                loading="lazy"
+                                              />
+                                            ) : (
+                                              <Building2
+                                                className={`h-6 w-6 ${
+                                                  partner.is_visible
+                                                    ? "text-muted-foreground/60"
+                                                    : "text-muted-foreground/40"
+                                                }`}
+                                              />
+                                            )}
+                                          </div>
+                                        )
+                                      })()}
 
                                       {/* Name & Website & Status */}
-                                      <div className="min-w-0 space-y-1">
+                                      <div className="min-w-0 flex-1 space-y-1">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           <span
-                                            className={`font-semibold text-sm truncate ${
+                                            className={`font-semibold text-sm truncate max-w-full ${
                                               partner.is_visible
                                                 ? "text-foreground"
                                                 : "text-muted-foreground line-through decoration-muted-foreground/40"
                                             }`}
+                                            title={partner.partner_name}
                                           >
                                             {partner.partner_name}
                                           </span>
+
+                                          {parsePartnerMetadata(partner.partner_description).isDualLogo && (
+                                            <Badge
+                                              variant="outline"
+                                              className="text-[10px] px-1.5 py-0 h-4 border-primary/40 text-primary font-medium shrink-0"
+                                            >
+                                              Dual Logo
+                                            </Badge>
+                                          )}
 
                                           {/* Visibility Status Badge */}
                                           {partner.is_visible ? (
                                             <Badge
                                               variant="secondary"
-                                              className="text-[10px] px-1.5 py-0 h-4 font-normal text-muted-foreground"
+                                              className="text-[10px] px-1.5 py-0 h-4 font-normal text-muted-foreground shrink-0"
                                             >
                                               Live
                                             </Badge>
                                           ) : (
                                             <Badge
                                               variant="outline"
-                                              className="text-[10px] px-1.5 py-0 h-4 border-neutral-300 bg-neutral-200/70 dark:bg-neutral-800 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 font-medium flex items-center gap-1"
+                                              className="text-[10px] px-1.5 py-0 h-4 border-neutral-300 bg-neutral-200/70 dark:bg-neutral-800 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 font-medium flex items-center gap-1 shrink-0"
                                             >
                                               <EyeOff className="h-2.5 w-2.5" />
                                               Hidden
@@ -1018,16 +1134,21 @@ export function PartnersEditor({
                                             Hidden from public summit page • Click &quot;Unhide&quot; to restore
                                           </p>
                                         ) : partner.partner_website ? (
-                                          <a
-                                            href={partner.partner_website}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline truncate max-w-xs sm:max-w-sm"
-                                          >
-                                            <Globe className="h-3 w-3 shrink-0" />
-                                            <span className="truncate">{partner.partner_website}</span>
-                                            <ExternalLink className="h-2.5 w-2.5 shrink-0" />
-                                          </a>
+                                          <div className="min-w-0 max-w-full">
+                                            <a
+                                              href={partner.partner_website}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              title={partner.partner_website}
+                                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline max-w-full"
+                                            >
+                                              <Globe className="h-3 w-3 shrink-0" />
+                                              <span className="truncate min-w-0">
+                                                {partner.partner_website.replace(/^https?:\/\//i, "")}
+                                              </span>
+                                              <ExternalLink className="h-2.5 w-2.5 shrink-0" />
+                                            </a>
+                                          </div>
                                         ) : (
                                           <span className="text-xs text-muted-foreground italic">No website link</span>
                                         )}
@@ -1577,6 +1698,211 @@ export function PartnersEditor({
                   >
                     Remove
                   </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Dual Logo Co-branding (INGO / Affiliate) */}
+            <div className="rounded-lg border border-border/80 bg-muted/20 p-3 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="dual-logo-toggle" className="text-xs font-semibold cursor-pointer">
+                      Dual Logo Co-branding (INGO / Affiliate)
+                    </Label>
+                    <Badge variant="outline" className="text-[10px] py-0 h-4 border-primary/40 text-primary">
+                      Logo 1 | Logo 2
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Display an affiliated INGO or co-branding partner logo side-by-side in the same card.
+                  </p>
+                </div>
+                <Switch
+                  id="dual-logo-toggle"
+                  checked={partnerModal.isDualLogo}
+                  onCheckedChange={(checked) => setPartnerModal((prev) => ({ ...prev, isDualLogo: checked }))}
+                />
+              </div>
+
+              {partnerModal.isDualLogo && (
+                <div className="space-y-3 pt-2 border-t border-border/60">
+                  {/* Secondary Affiliate Name */}
+                  <div className="space-y-1">
+                    <Label className="text-xs font-medium">Secondary Affiliate / INGO Name (optional)</Label>
+                    <Input
+                      value={partnerModal.secondaryLogoName}
+                      onChange={(e) => setPartnerModal((prev) => ({ ...prev, secondaryLogoName: e.target.value }))}
+                      placeholder="e.g. CBM Global, GIZ, UN Agency"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+
+                  {/* Secondary Logo Upload / URL Switch */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-medium">Secondary Logo</Label>
+                      <div className="flex rounded-md border border-border/80 p-0.5 bg-muted/30">
+                        <button
+                          type="button"
+                          onClick={() => setPartnerModal((prev) => ({ ...prev, secondaryUploadMethod: "upload" }))}
+                          className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                            partnerModal.secondaryUploadMethod === "upload"
+                              ? "bg-background text-foreground shadow-xs"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          Upload File
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPartnerModal((prev) => ({ ...prev, secondaryUploadMethod: "url" }))}
+                          className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                            partnerModal.secondaryUploadMethod === "url"
+                              ? "bg-background text-foreground shadow-xs"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          Image URL
+                        </button>
+                      </div>
+                    </div>
+
+                    {partnerModal.secondaryUploadMethod === "upload" ? (
+                      <div
+                        onDragOver={(e) => {
+                          e.preventDefault()
+                          setIsDraggingSecondaryLogo(true)
+                        }}
+                        onDragLeave={() => setIsDraggingSecondaryLogo(false)}
+                        onDrop={(e) => {
+                          e.preventDefault()
+                          setIsDraggingSecondaryLogo(false)
+                          const file = e.dataTransfer.files?.[0]
+                          if (file) handleLogoUpload(file, "secondary")
+                        }}
+                        onClick={() => secondaryLogoFileInputRef.current?.click()}
+                        className={`relative flex flex-col items-center justify-center p-3 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                          isDraggingSecondaryLogo
+                            ? "border-primary bg-primary/5"
+                            : "border-border/80 hover:border-primary/50 hover:bg-muted/20"
+                        }`}
+                      >
+                        <input
+                          ref={secondaryLogoFileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) handleLogoUpload(file, "secondary")
+                          }}
+                          disabled={isUploadingSecondaryLogo}
+                        />
+
+                        {isUploadingSecondaryLogo ? (
+                          <div className="flex flex-col items-center gap-1.5 py-1">
+                            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                            <span className="text-xs font-medium">Uploading secondary logo...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center gap-1 py-1 text-center">
+                            <Upload className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-xs font-medium">Upload secondary logo</span>
+                            <span className="text-[10px] text-muted-foreground">
+                              PNG, SVG, JPG up to 2MB
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <Input
+                          type="url"
+                          value={partnerModal.secondaryLogo}
+                          onChange={(e) => setPartnerModal((prev) => ({ ...prev, secondaryLogo: e.target.value }))}
+                          placeholder="https://example.org/ingo-logo.png"
+                          className="h-9 text-xs"
+                        />
+                      </div>
+                    )}
+
+                    {partnerModal.secondaryLogo && (
+                      <div className="flex items-center justify-between p-2 rounded-lg border border-border/80 bg-background">
+                        <div className="flex items-center gap-2.5">
+                          <div className="relative flex h-10 w-16 shrink-0 items-center justify-center rounded border border-border/80 bg-neutral-100/90 dark:bg-neutral-800/90 p-1 overflow-hidden">
+                            <img
+                              src={partnerModal.secondaryLogo}
+                              alt="Secondary logo preview"
+                              className="h-full w-full object-contain"
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none"
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-0.5">
+                            <span className="text-xs font-semibold text-foreground flex items-center gap-1">
+                              <Check className="h-3 w-3 text-primary" />
+                              Secondary Logo Ready
+                            </span>
+                            <span className="text-[10px] text-muted-foreground block truncate max-w-[180px]">
+                              {partnerModal.secondaryLogo}
+                            </span>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive px-2"
+                          onClick={() => setPartnerModal((prev) => ({ ...prev, secondaryLogo: "" }))}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Live Combined Dual Logo Preview Card */}
+                  {(partnerModal.logo || partnerModal.secondaryLogo) && (
+                    <div className="space-y-1.5 pt-1">
+                      <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                        Live Dual Logo Card Preview
+                      </Label>
+                      <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-border/80 bg-card shadow-xs min-h-[96px]">
+                        <div className="flex items-center justify-center w-full h-12 gap-2 px-2">
+                          <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+                            {partnerModal.logo ? (
+                              <img
+                                src={partnerModal.logo}
+                                alt="Primary logo"
+                                className="max-h-full max-w-full object-contain"
+                              />
+                            ) : (
+                              <span className="text-[11px] text-muted-foreground italic">Primary Logo</span>
+                            )}
+                          </div>
+                          <div className="w-[1.5px] h-7 bg-slate-300 dark:bg-slate-600 rounded-full shrink-0 mx-1" aria-hidden="true" />
+                          <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+                            {partnerModal.secondaryLogo ? (
+                              <img
+                                src={partnerModal.secondaryLogo}
+                                alt="Secondary logo"
+                                className="max-h-full max-w-full object-contain"
+                              />
+                            ) : (
+                              <span className="text-[11px] text-muted-foreground italic">Secondary Logo</span>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-xs font-semibold text-foreground text-center mt-2">
+                          {partnerModal.name || "Partner Name"}
+                          {partnerModal.secondaryLogoName ? ` / ${partnerModal.secondaryLogoName}` : ""}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -1,9 +1,10 @@
 import React from "react"
 import { getContextPartners } from "@/lib/data/context-partners"
 import type { ContextType, ContextPartnerDetailed, CategoryKey } from "@/lib/types/partners"
+import { parsePartnerMetadata, type PartnerMetadata } from "@/lib/types/partners"
 import styles from "./partners-display.module.css"
 import { cn } from "@/lib/utils"
-import { CoOrganizerLogoImage, PartnerCategoryLogo, type LogoFitOverride } from "./co-organizer-logo-image"
+import { CoOrganizerLogoImage, PartnerCategoryLogo, DualPartnerLogo, type LogoFitOverride } from "./co-organizer-logo-image"
 
 export interface PartnersDisplayProps {
   /**
@@ -98,6 +99,16 @@ function getPartnerLogoUrl(partner: ContextPartnerDetailed): string | null {
   return partner.partner_logo || null
 }
 
+function getPartnerSecondaryLogoUrl(metadata: PartnerMetadata): string | null {
+  if (metadata.secondaryLogoStoragePath) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (supabaseUrl) {
+      return `${supabaseUrl}/storage/v1/object/public/partner-logos/${metadata.secondaryLogoStoragePath}`
+    }
+  }
+  return metadata.secondaryLogo || null
+}
+
 // Helper to render responsive partner grid cards
 function renderPartnerGridCards(partners: ContextPartnerDetailed[]) {
   return (
@@ -105,25 +116,30 @@ function renderPartnerGridCards(partners: ContextPartnerDetailed[]) {
       {partners.map((partner, index) => {
         const logoUrl = getPartnerLogoUrl(partner)
         const websiteUrl = getPartnerWebsite(partner)
-
-        // Extract custom admin logoFit override if present
-        let fitOverride: LogoFitOverride = "auto"
-        if (partner.partner_description) {
-          try {
-            if (partner.partner_description.startsWith("{")) {
-              const parsed = JSON.parse(partner.partner_description)
-              if (parsed.logoFit) fitOverride = parsed.logoFit
-            } else if (partner.partner_description.includes("fit:")) {
-              const match = partner.partner_description.match(/fit:([a-z-]+)/)
-              if (match) fitOverride = match[1] as LogoFitOverride
-            }
-          } catch {}
-        }
+        const metadata = parsePartnerMetadata(partner.partner_description)
+        const secondaryLogoUrl = metadata.isDualLogo ? getPartnerSecondaryLogoUrl(metadata) : null
+        const fitOverride = (metadata.logoFit as LogoFitOverride) || "auto"
 
         const content = (
           <>
             <div className={styles.coOrganizerLogoWrapper}>
-              {logoUrl ? (
+              {secondaryLogoUrl && logoUrl ? (
+                <DualPartnerLogo
+                  primarySrc={logoUrl}
+                  secondarySrc={secondaryLogoUrl}
+                  primaryAlt={`${partner.partner_name} logo`}
+                  secondaryAlt={
+                    metadata.secondaryLogoName
+                      ? `${metadata.secondaryLogoName} logo`
+                      : `${partner.partner_name} affiliate logo`
+                  }
+                  partnerName={partner.partner_name}
+                  secondaryPartnerName={metadata.secondaryLogoName || undefined}
+                  fitOverride={fitOverride}
+                  className={styles.coOrganizerLogo}
+                  dividerClassName={styles.dualLogoDivider}
+                />
+              ) : logoUrl ? (
                 <CoOrganizerLogoImage
                   src={logoUrl}
                   alt={`${partner.partner_name} logo`}
@@ -135,7 +151,11 @@ function renderPartnerGridCards(partners: ContextPartnerDetailed[]) {
                 <span className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</span>
               )}
             </div>
-            <span className={styles.coOrganizerName}>{cleanPartnerName(partner.partner_name)}</span>
+            <span className={styles.coOrganizerName}>
+              {metadata.secondaryLogoName && metadata.isDualLogo
+                ? `${cleanPartnerName(partner.partner_name)} / ${cleanPartnerName(metadata.secondaryLogoName)}`
+                : cleanPartnerName(partner.partner_name)}
+            </span>
           </>
         )
 
@@ -273,6 +293,10 @@ export async function PartnersDisplay({
                 organizersCategory.partners.map((partner, index) => {
                   const logoUrl = getPartnerLogoUrl(partner)
                   const websiteUrl = getPartnerWebsite(partner)
+                  const metadata = parsePartnerMetadata(partner.partner_description)
+                  const secondaryLogoUrl = metadata.isDualLogo ? getPartnerSecondaryLogoUrl(metadata) : null
+                  const fitOverride = (metadata.logoFit as LogoFitOverride) || "auto"
+
                   return (
                     <a
                       key={partner.partner_id || partner.partner_name + index}
@@ -283,7 +307,23 @@ export async function PartnersDisplay({
                       aria-label={`Visit ${cleanPartnerName(partner.partner_name)} website`}
                     >
                       <div className={styles.organizerLogoWrapper}>
-                        {logoUrl ? (
+                        {secondaryLogoUrl && logoUrl ? (
+                          <DualPartnerLogo
+                            primarySrc={logoUrl}
+                            secondarySrc={secondaryLogoUrl}
+                            primaryAlt={`${partner.partner_name} logo`}
+                            secondaryAlt={
+                              metadata.secondaryLogoName
+                                ? `${metadata.secondaryLogoName} logo`
+                                : `${partner.partner_name} affiliate logo`
+                            }
+                            partnerName={cleanPartnerName(partner.partner_name)}
+                            secondaryPartnerName={metadata.secondaryLogoName || undefined}
+                            fitOverride={fitOverride}
+                            className={styles.organizerLogo}
+                            dividerClassName={styles.dualLogoDivider}
+                          />
+                        ) : logoUrl ? (
                           <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
@@ -294,7 +334,11 @@ export async function PartnersDisplay({
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
                         )}
                       </div>
-                      <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
+                      <p className={styles.partnerName}>
+                        {metadata.secondaryLogoName && metadata.isDualLogo
+                          ? `${cleanPartnerName(partner.partner_name)} / ${cleanPartnerName(metadata.secondaryLogoName)}`
+                          : cleanPartnerName(partner.partner_name)}
+                      </p>
                     </a>
                   )
                 })
@@ -323,10 +367,30 @@ export async function PartnersDisplay({
                 collaboratingCategory.partners.map((partner) => {
                   const logoUrl = getPartnerLogoUrl(partner)
                   const websiteUrl = getPartnerWebsite(partner)
+                  const metadata = parsePartnerMetadata(partner.partner_description)
+                  const secondaryLogoUrl = metadata.isDualLogo ? getPartnerSecondaryLogoUrl(metadata) : null
+                  const fitOverride = (metadata.logoFit as LogoFitOverride) || "auto"
+
                   const content = (
                     <>
                       <div className={styles.singleCardLogoWrapper}>
-                        {logoUrl ? (
+                        {secondaryLogoUrl && logoUrl ? (
+                          <DualPartnerLogo
+                            primarySrc={logoUrl}
+                            secondarySrc={secondaryLogoUrl}
+                            primaryAlt={`${partner.partner_name} logo`}
+                            secondaryAlt={
+                              metadata.secondaryLogoName
+                                ? `${metadata.secondaryLogoName} logo`
+                                : `${partner.partner_name} affiliate logo`
+                            }
+                            partnerName={cleanPartnerName(partner.partner_name)}
+                            secondaryPartnerName={metadata.secondaryLogoName || undefined}
+                            fitOverride={fitOverride}
+                            className={styles.gizLogo}
+                            dividerClassName={styles.dualLogoDivider}
+                          />
+                        ) : logoUrl ? (
                           <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
@@ -337,7 +401,11 @@ export async function PartnersDisplay({
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
                         )}
                       </div>
-                      <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
+                      <p className={styles.partnerName}>
+                        {metadata.secondaryLogoName && metadata.isDualLogo
+                          ? `${cleanPartnerName(partner.partner_name)} / ${cleanPartnerName(metadata.secondaryLogoName)}`
+                          : cleanPartnerName(partner.partner_name)}
+                      </p>
                     </>
                   )
 
@@ -376,10 +444,30 @@ export async function PartnersDisplay({
                 knowledgeCategory.partners.map((partner) => {
                   const logoUrl = getPartnerLogoUrl(partner)
                   const websiteUrl = getPartnerWebsite(partner)
+                  const metadata = parsePartnerMetadata(partner.partner_description)
+                  const secondaryLogoUrl = metadata.isDualLogo ? getPartnerSecondaryLogoUrl(metadata) : null
+                  const fitOverride = (metadata.logoFit as LogoFitOverride) || "auto"
+
                   const content = (
                     <>
                       <div className={styles.singleCardLogoWrapper}>
-                        {logoUrl ? (
+                        {secondaryLogoUrl && logoUrl ? (
+                          <DualPartnerLogo
+                            primarySrc={logoUrl}
+                            secondarySrc={secondaryLogoUrl}
+                            primaryAlt={`${partner.partner_name} logo`}
+                            secondaryAlt={
+                              metadata.secondaryLogoName
+                                ? `${metadata.secondaryLogoName} logo`
+                                : `${partner.partner_name} affiliate logo`
+                            }
+                            partnerName={cleanPartnerName(partner.partner_name)}
+                            secondaryPartnerName={metadata.secondaryLogoName || undefined}
+                            fitOverride={fitOverride}
+                            className={styles.kuLogo}
+                            dividerClassName={styles.dualLogoDivider}
+                          />
+                        ) : logoUrl ? (
                           <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
@@ -390,7 +478,11 @@ export async function PartnersDisplay({
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
                         )}
                       </div>
-                      <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
+                      <p className={styles.partnerName}>
+                        {metadata.secondaryLogoName && metadata.isDualLogo
+                          ? `${cleanPartnerName(partner.partner_name)} / ${cleanPartnerName(metadata.secondaryLogoName)}`
+                          : cleanPartnerName(partner.partner_name)}
+                      </p>
                     </>
                   )
 
@@ -429,10 +521,30 @@ export async function PartnersDisplay({
                 technicalCategory.partners.map((partner) => {
                   const logoUrl = getPartnerLogoUrl(partner)
                   const websiteUrl = getPartnerWebsite(partner)
+                  const metadata = parsePartnerMetadata(partner.partner_description)
+                  const secondaryLogoUrl = metadata.isDualLogo ? getPartnerSecondaryLogoUrl(metadata) : null
+                  const fitOverride = (metadata.logoFit as LogoFitOverride) || "auto"
+
                   const content = (
                     <>
                       <div className={styles.singleCardLogoWrapper}>
-                        {logoUrl ? (
+                        {secondaryLogoUrl && logoUrl ? (
+                          <DualPartnerLogo
+                            primarySrc={logoUrl}
+                            secondarySrc={secondaryLogoUrl}
+                            primaryAlt={`${partner.partner_name} logo`}
+                            secondaryAlt={
+                              metadata.secondaryLogoName
+                                ? `${metadata.secondaryLogoName} logo`
+                                : `${partner.partner_name} affiliate logo`
+                            }
+                            partnerName={cleanPartnerName(partner.partner_name)}
+                            secondaryPartnerName={metadata.secondaryLogoName || undefined}
+                            fitOverride={fitOverride}
+                            className={styles.sdgLogo}
+                            dividerClassName={styles.dualLogoDivider}
+                          />
+                        ) : logoUrl ? (
                           <PartnerCategoryLogo
                             src={logoUrl}
                             alt={`${partner.partner_name} logo`}
@@ -443,7 +555,11 @@ export async function PartnersDisplay({
                           <div className={styles.logoFallback}>{cleanPartnerName(partner.partner_name)}</div>
                         )}
                       </div>
-                      <p className={styles.partnerName}>{cleanPartnerName(partner.partner_name)}</p>
+                      <p className={styles.partnerName}>
+                        {metadata.secondaryLogoName && metadata.isDualLogo
+                          ? `${cleanPartnerName(partner.partner_name)} / ${cleanPartnerName(metadata.secondaryLogoName)}`
+                          : cleanPartnerName(partner.partner_name)}
+                      </p>
                     </>
                   )
 
