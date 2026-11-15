@@ -298,6 +298,7 @@ export function UserDetailModal({
   }, [open, handleSave])
 
   const handleDelete = async () => {
+    if (!user) return
     setIsDeleting(true)
 
     try {

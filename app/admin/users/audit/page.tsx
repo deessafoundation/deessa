@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { canManageUsers, type AdminRole } from "@/lib/types/admin"
+import { canViewAuditLedger, type AdminRole } from "@/lib/types/admin"
 import { getSystemAuditLogs } from "@/lib/actions/admin-users"
 import { SystemAuditClient } from "@/components/admin/users/system-audit-client"
 
@@ -12,8 +12,8 @@ export const metadata = {
 export default async function AdminAuditTrailPage() {
   const currentAdmin = await getCurrentAdmin()
 
-  if (!currentAdmin || !canManageUsers(currentAdmin.role as AdminRole)) {
-    redirect("/admin")
+  if (!currentAdmin || !canViewAuditLedger(currentAdmin.role as AdminRole)) {
+    redirect("/admin/profile")
   }
 
   const logsResult = await getSystemAuditLogs({ limit: 150 })
