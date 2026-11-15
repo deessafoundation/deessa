@@ -141,7 +141,7 @@ export function validateSetting(key: string, value: unknown) {
 
   const result = schema.safeParse(value)
   if (!result.success) {
-    const errorMessages = result.error.errors.map((e) => `${e.path.join(".") || "field"}: ${e.message}`).join(", ")
+    const errorMessages = result.error.issues.map((e: any) => `${Array.isArray(e.path) ? e.path.join(".") : "field"}: ${e.message}`).join(", ")
     return { success: false, error: errorMessages }
   }
 

@@ -16,6 +16,10 @@ export default async function EditStatPage({ params }: { params: Promise<{ id: s
     notFound()
   }
 
+  if (!stat) {
+    notFound()
+  }
+
   return (
     <div className="space-y-6">
       <div>

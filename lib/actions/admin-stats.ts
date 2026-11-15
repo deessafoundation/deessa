@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission, type ImpactStat } from "@/lib/types/admin"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export interface SaveImpactStatInput {
   id?: string
@@ -83,12 +84,15 @@ export async function saveImpactStatAction(
     if (error) return { success: false, error: error.message }
     savedStat = data as ImpactStat
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "impact_stat",
-      entity_id: input.id,
-      new_data: { label, value, category: input.category },
+    void logAdminActivity({
+      action: "IMPACT_STAT_UPDATED",
+      domain: "CONTENT",
+      entityType: "impact_stats",
+      entityId: input.id,
+      description: `Updated impact stat "${label}" (${value})`,
+      newData: { label, value, category: input.category },
+      actorId: admin.id,
+      actorEmail: admin.email,
     })
   } else {
     // Create new stat
@@ -123,12 +127,15 @@ export async function saveImpactStatAction(
     if (error) return { success: false, error: error.message }
     savedStat = data as ImpactStat
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "impact_stat",
-      entity_id: savedStat.id,
-      new_data: { label, value, category: input.category },
+    void logAdminActivity({
+      action: "IMPACT_STAT_CREATED",
+      domain: "CONTENT",
+      entityType: "impact_stats",
+      entityId: savedStat.id,
+      description: `Created impact stat "${label}" (${value})`,
+      newData: { label, value, category: input.category },
+      actorId: admin.id,
+      actorEmail: admin.email,
     })
   }
 
@@ -159,12 +166,15 @@ export async function toggleStatPublishedAction(
 
   if (error) return { success: false, error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "impact_stat",
-    entity_id: id,
-    new_data: { is_published },
+  void logAdminActivity({
+    action: is_published ? "IMPACT_STAT_PUBLISHED" : "IMPACT_STAT_UNPUBLISHED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: id,
+    description: `${is_published ? "Published" : "Unpublished"} impact stat ${id}`,
+    newData: { is_published },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/stats")
@@ -194,6 +204,17 @@ export async function reorderStatsAction(
       })
       .eq("id", id)
   }
+
+  void logAdminActivity({
+    action: "IMPACT_STATS_REORDERED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: "reorder",
+    description: `Reordered ${orderedIds.length} impact stat(s)`,
+    newData: { orderedIds },
+    actorId: admin.id,
+    actorEmail: admin.email,
+  })
 
   revalidatePath("/admin/stats")
   revalidatePath("/")
@@ -304,11 +325,15 @@ export async function seedDefaultStatsAction(): Promise<{
 
   if (error) return { success: false, error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "CREATE",
-    entity_type: "impact_stat",
-    new_data: { action: "SEED_DEFAULT_STATS", count: data.length },
+  void logAdminActivity({
+    action: "IMPACT_STATS_SEEDED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: "seed",
+    description: `Seeded ${data.length} default impact stats`,
+    newData: { count: data.length },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/stats")
@@ -359,12 +384,15 @@ export async function createImpactStat(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "CREATE",
-    entity_type: "impact_stat",
-    entity_id: data.id,
-    new_data: { label, value },
+  void logAdminActivity({
+    action: "IMPACT_STAT_CREATED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: data.id,
+    description: `Created impact stat "${label}" (${value})`,
+    newData: { label, value, category, isPublished },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/stats")
@@ -403,11 +431,15 @@ export async function updateImpactStat(id: string, formData: FormData) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "impact_stat",
-    entity_id: id,
+  void logAdminActivity({
+    action: "IMPACT_STAT_UPDATED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: id,
+    description: `Updated impact stat "${label}" (${value})`,
+    newData: { label, value, category, isPublished },
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/stats")
@@ -425,11 +457,14 @@ export async function deleteImpactStat(id: string) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "impact_stat",
-    entity_id: id,
+  void logAdminActivity({
+    action: "IMPACT_STAT_DELETED",
+    domain: "CONTENT",
+    entityType: "impact_stats",
+    entityId: id,
+    description: `Deleted impact stat ${id}`,
+    actorId: admin.id,
+    actorEmail: admin.email,
   })
 
   revalidatePath("/admin/stats")

@@ -4,6 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission } from "@/lib/types/admin"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 import { sendSupportReplyEmail } from "@/lib/email/support-reply"
 import { sendSupportAssignmentEmail } from "@/lib/email/support-assignment"
 import { sendReassignmentEmails } from "@/lib/email/support-reassignment-mailer"
@@ -85,17 +86,19 @@ export async function updateSupportStatus(input: UpdateSupportStatusInput) {
     const adminIdentity = admin.full_name || admin.email || admin.id
 
     // 1. Unified system audit log
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `SUPPORT_STATUS_${normalizedStatus.toUpperCase()}`,
-      entity_type: "support_report",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: input.id,
+      description: `Updated support ticket #${input.id} status to ${normalizedStatus}`,
+      newData: {
         status: normalizedStatus,
         notes: input.adminNotes || null,
         reviewed_by: adminIdentity,
-        timestamp: new Date().toISOString(),
       },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     // 2. Legacy support_admin_actions audit log for backward-compatible timelines
@@ -303,16 +306,20 @@ export async function assignSupportTicket(input: AssignSupportTicketInput) {
     }
 
     // 3. System activity log
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: targetEmail ? "SUPPORT_ASSIGNED" : "SUPPORT_UNASSIGNED",
-      entity_type: "support_report",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: input.id,
+      description: targetEmail
+        ? `Assigned support ticket #${input.id} to ${targetEmail}`
+        : `Unassigned support ticket #${input.id}`,
+      newData: {
         assignee: targetEmail,
         assigned_by: performer,
-        timestamp: new Date().toISOString(),
       },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     // 4. Legacy timeline action
@@ -374,12 +381,15 @@ export async function saveSupportInternalNotes(input: SaveSupportNotesInput) {
       return { success: false, error: updateError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "SUPPORT_NOTE_SAVED",
-      entity_type: "support_report",
-      entity_id: input.id,
-      new_data: { note: input.internalNotes.trim(), author: performer },
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: input.id,
+      description: `Saved internal note on support ticket #${input.id}`,
+      newData: { note: input.internalNotes.trim(), author: performer },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     try {
@@ -456,17 +466,20 @@ export async function sendSupportReply(input: SendSupportReplyInput) {
       .eq("id", input.id)
 
     // 4. Log to activity_logs
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "SUPPORT_REPLY_SENT",
-      entity_type: "support_report",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: input.id,
+      description: `Sent official reply to ${ticket.email} for ticket #${input.id}`,
+      newData: {
         to: ticket.email,
         subject,
         markResolved: Boolean(input.markResolved),
         sent_by: performer,
       },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     revalidatePath("/admin/support")
@@ -499,12 +512,15 @@ export async function archiveSupportReport(id: string, archived: boolean) {
       return { success: false, error: updateError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: archived ? "SUPPORT_ARCHIVED" : "SUPPORT_RESTORED",
-      entity_type: "support_report",
-      entity_id: id,
-      new_data: { archived, updated_by: admin.email || admin.id },
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: id,
+      description: `${archived ? "Archived" : "Restored"} support ticket #${id}`,
+      newData: { archived },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     try {
@@ -566,12 +582,14 @@ export async function deleteSupportReport(id: string) {
       return { success: false, error: deleteError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "SUPPORT_DELETED",
-      entity_type: "support_report",
-      entity_id: id,
-      new_data: { deleted_by: admin.email || admin.id },
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: id,
+      description: `Permanently deleted support ticket #${id}`,
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     revalidatePath("/admin/support")
@@ -612,19 +630,16 @@ export async function bulkUpdateSupportStatus(ids: string[], status: SupportStat
       return { success: false, error: updateError.message }
     }
 
-    const logs = ids.map((id) => ({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `SUPPORT_BULK_STATUS_${normalizedStatus.toUpperCase()}`,
-      entity_type: "support_report",
-      entity_id: id,
-      new_data: {
-        status: normalizedStatus,
-        updated_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
-    }))
-
-    await serviceSupabase.from("activity_logs").insert(logs)
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: "bulk",
+      description: `Bulk updated ${ids.length} support ticket(s) to ${normalizedStatus}`,
+      newData: { ids, status: normalizedStatus },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    })
 
     revalidatePath("/admin/support")
     revalidatePath("/admin")
@@ -660,19 +675,16 @@ export async function bulkArchiveSupportReports(ids: string[], archived: boolean
       return { success: false, error: updateError.message }
     }
 
-    const logs = ids.map((id) => ({
-      user_id: admin.id,
+    void logAdminActivity({
       action: archived ? "SUPPORT_BULK_ARCHIVED" : "SUPPORT_BULK_RESTORED",
-      entity_type: "support_report",
-      entity_id: id,
-      new_data: {
-        archived,
-        updated_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
-    }))
-
-    await serviceSupabase.from("activity_logs").insert(logs)
+      domain: "COMMUNICATION",
+      entityType: "support_report",
+      entityId: "bulk",
+      description: `Bulk ${archived ? "archived" : "restored"} ${ids.length} support ticket(s)`,
+      newData: { ids, archived },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    })
 
     revalidatePath("/admin/support")
     revalidatePath("/admin")

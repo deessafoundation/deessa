@@ -11,6 +11,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { ABOUT_PAGE_SETTINGS_KEY, aboutPageSettingsSchema } from "@/lib/types/about-settings"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,6 +55,18 @@ export async function POST(request: NextRequest) {
       console.error("Error updating about_page_content:", error)
       return NextResponse.json({ error: "Could not save content. Your edits are still in the editor." }, { status: 500 })
     }
+
+    await logAdminActivity({
+      actorId: currentAdmin.id,
+      actorEmail: currentAdmin.email,
+      actorRole: currentAdmin.role,
+      action: "ABOUT_SETTINGS_UPDATED",
+      domain: "CONTENT",
+      entityType: "site_settings",
+      entityId: ABOUT_PAGE_SETTINGS_KEY,
+      summary: "Admin updated About Page content and sections",
+      newData: { key: ABOUT_PAGE_SETTINGS_KEY },
+    })
     // Persistence already succeeded: a refresh failure must not tell editors their save failed.
     try {
       revalidatePath("/about")

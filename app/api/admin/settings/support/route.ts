@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function GET() {
   const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN"])
@@ -62,6 +63,19 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 })
       }
     }
+
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "SUPPORT_SETTING_UPDATED",
+      domain: "SETTINGS",
+      entityType: "site_settings",
+      entityId: "support_enabled",
+      summary: `Admin ${enabled ? "enabled" : "disabled"} support system`,
+      newData: { support_enabled: enabled },
+      oldData: existing ? { support_enabled: existing } : null,
+    })
 
     return NextResponse.json({ success: true, enabled })
   } catch (error) {

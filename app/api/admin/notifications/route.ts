@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
+import { logAdminActivity } from '@/lib/audit/audit-logger'
 
 // GET - Fetch notifications for current user
 export async function GET(request: NextRequest) {
@@ -80,6 +81,15 @@ export async function POST(request: NextRequest) {
       console.error('Error creating notification:', error)
       return NextResponse.json({ error: 'Failed to create notification' }, { status: 500 })
     }
+
+    void logAdminActivity({
+      action: "ADMIN_NOTIFICATION_CREATED",
+      domain: "SYSTEM",
+      entityType: "admin_notifications",
+      entityId: notification.id,
+      description: `Dispatched admin notification "${title}" to user ${user_id}`,
+      newData: { user_id, type, title, message },
+    })
 
     return NextResponse.json({ notification })
   } catch (error) {

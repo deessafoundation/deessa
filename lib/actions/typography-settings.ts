@@ -7,6 +7,7 @@ import {
   SITE_TYPOGRAPHY_KEY,
   type TypographyConfig,
 } from "@/lib/typography/types"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 /**
  * Server Action to update the typography configuration in `site_settings`.
@@ -54,11 +55,13 @@ export async function updateTypographyConfig(config: TypographyConfig) {
   }
 
   // Audit trail entry
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "site_setting",
-    new_data: { key: SITE_TYPOGRAPHY_KEY, value: config },
+  void logAdminActivity({
+    action: "TYPOGRAPHY_SETTINGS_UPDATED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: SITE_TYPOGRAPHY_KEY,
+    description: "Updated typography settings",
+    newData: { key: SITE_TYPOGRAPHY_KEY, value: config },
   })
 
   // Purge relevant route caches

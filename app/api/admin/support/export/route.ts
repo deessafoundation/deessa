@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
+import { logAdminActivity } from '@/lib/audit/audit-logger'
 
 export async function GET(req: Request) {
   try {
@@ -21,6 +22,16 @@ export async function GET(req: Request) {
     const supabase = createServiceRoleClient()
     const { data, error } = await supabase.from('contact_submissions').select('*').eq('id', id).single()
     if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+    void logAdminActivity({
+      action: "SUPPORT_TICKET_EXPORTED",
+      domain: "COMMUNICATION",
+      entityType: "contact_submissions",
+      entityId: id,
+      description: `Exported support ticket #${id} data`,
+      actorId: currentAdmin.user_id,
+      actorEmail: currentAdmin.email,
+    })
 
     const json = JSON.stringify(data, null, 2)
     return new Response(json, {

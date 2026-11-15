@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
+import { logAdminActivity } from '@/lib/audit/audit-logger'
 
 export async function DELETE(
   request: NextRequest,
@@ -69,6 +70,18 @@ export async function DELETE(
       console.error('[DELETE] Error deleting support report:', deleteError)
       return NextResponse.json({ error: 'Failed to delete support report' }, { status: 500 })
     }
+
+    await logAdminActivity({
+      actorId: currentAdmin.id,
+      actorEmail: currentAdmin.email,
+      actorRole: currentAdmin.role,
+      action: "SUPPORT_REPORT_DELETED",
+      domain: "CRM",
+      entityType: "contact_submissions",
+      entityId: id,
+      summary: `Admin deleted support report ${id}`,
+      oldData: report,
+    })
 
     return NextResponse.json({ success: true, message: 'Support report deleted successfully' })
   } catch (error) {
