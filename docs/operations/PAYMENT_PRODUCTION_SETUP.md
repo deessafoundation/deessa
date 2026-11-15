@@ -109,21 +109,33 @@ The foundation uses Gmail SMTP to dispatch automated donation receipts and alert
 
 ## 4. Background Reconciliation & Crons
 
-Stuck donations (e.g., if a donor closed their browser before redirecting back) are automatically recovered by an hourly reconciliation task.
+Stuck donations (e.g., if a donor closed their browser before redirecting back) can be recovered by the reconciliation route (`/api/cron/reconcile-payments`).
 
-1. `vercel.json` contains:
+> [!NOTE]
+> **Vercel Hobby Plan Restriction**: Vercel Hobby accounts limit cron jobs to at most **once per day** (`0 0 * * *`). The hourly cron was removed from `vercel.json` so deployments succeed without requiring a paid Vercel Pro plan.
+
+### How to run reconciliation without Vercel Pro:
+1. **Option A: Daily on Vercel Hobby (Free)**:
+   Add to `vercel.json`:
    ```json
    {
      "crons": [
        {
          "path": "/api/cron/reconcile-payments",
-         "schedule": "0 * * * *"
+         "schedule": "0 2 * * *"
        }
      ]
    }
    ```
-2. When deploying to Vercel, Vercel automatically creates the cron job.
-3. In Vercel, set `CRON_SECRET=some_strong_random_secret`. Vercel automatically includes this as a Bearer token when triggering the cron.
+   *(Runs once daily at 2:00 AM UTC — allowed on Hobby plan).*
+
+2. **Option B: Free External Scheduler (e.g. cron-job.org / GitHub Actions)**:
+   Set up a free hourly HTTP GET request to:
+   `https://deessafoundation.com/api/cron/reconcile-payments`
+   Header: `Authorization: Bearer <YOUR_CRON_SECRET>`
+
+3. **Option C: Manual / Webhook-driven**:
+   Normal Stripe payments are confirmed in real-time via webhooks (`checkout.session.completed`) and do not require crons to complete. The reconciliation route can be called on-demand whenever an admin wishes to audit stuck transactions.
 
 ---
 
