@@ -87,11 +87,12 @@ export async function reconcilePendingDonations(options?: {
   // Calculate cutoff time
   const cutoffTime = new Date(Date.now() - maxAge).toISOString()
 
-  // Query pending donations older than cutoff
+  // Query pending donations older than cutoff (exclude manual bank transfers — they require statement verification)
   const { data: pendingDonations, error: queryError } = await supabase
     .from('donations')
     .select('*')
     .eq('payment_status', 'pending')
+    .in('provider', ['stripe', 'khalti', 'esewa'])
     .lt('created_at', cutoffTime)
     .order('created_at', { ascending: true })
     .limit(limit)
@@ -267,6 +268,18 @@ async function reconcileDonation(
       eventId: `reconciliation:${donationId}:${Date.now()}`,
     })
 
+    if (!confirmResult.success) {
+      console.error(`[Reconciliation] Failed to confirm donation ${donationId}:`, confirmResult.error)
+      return {
+        donationId,
+        provider,
+        previousStatus,
+        newStatus: previousStatus,
+        action: 'error',
+        error: confirmResult.error || 'Confirmation failed',
+      }
+    }
+
     console.log(`[Reconciliation] Confirmed donation ${donationId}`, confirmResult)
 
     return {
@@ -299,6 +312,18 @@ async function reconcileDonation(
       verificationResult,
       eventId: `reconciliation:${donationId}:${Date.now()}`,
     })
+
+    if (!confirmResult.success) {
+      console.error(`[Reconciliation] Failed to update failed donation ${donationId}:`, confirmResult.error)
+      return {
+        donationId,
+        provider,
+        previousStatus,
+        newStatus: previousStatus,
+        action: 'error',
+        error: confirmResult.error || 'Failed state transition rejected',
+      }
+    }
 
     console.log(`[Reconciliation] Failed donation ${donationId}`, confirmResult)
 

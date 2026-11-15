@@ -86,6 +86,11 @@ export async function POST(request: Request) {
     // Fallback: khalti_pidx may not have been saved (e.g. RLS blocked the UPDATE
     // in donation.ts before the service-role fix). Khalti always sends
     // purchase_order_id = donation.id in the return URL, so use that.
+    //
+    // SECURITY: do NOT backfill khalti_pidx here. The pidx is client-supplied and
+    // unverified at this point. Backfill happens only after khaltiAdapter.verify()
+    // confirms the pidx belongs to this donation (see cross-reference check below).
+    let needsBackfill = false
     if (!donation && purchaseOrderId) {
       const uuidValidation = validateUUID(purchaseOrderId)
       if (uuidValidation.valid) {
@@ -96,15 +101,7 @@ export async function POST(request: Request) {
           .single()
         if (byId) {
           donation = byId
-          // Backfill khalti_pidx so future lookups work
-          await supabase
-            .from("donations")
-            .update({ khalti_pidx: pidx, provider_ref: pidx, payment_id: `khalti:${pidx}` })
-            .eq("id", purchaseOrderId)
-          logPaymentEvent("Khalti verify - backfilled khalti_pidx", {
-            donationId: purchaseOrderId,
-            pidx: maskSensitiveData(pidx),
-          }, "warn")
+          needsBackfill = true
         }
       }
     }
@@ -187,6 +184,39 @@ export async function POST(request: Request) {
         { pidx, donation_id: donation.id, amount: donation.amount },
         {}
       )
+
+      // Cross-reference check: confirm that the Khalti API's own purchase_order_id
+      // matches our donation ID. This proves the client-supplied pidx genuinely
+      // belongs to this donation and prevents an attacker from binding an arbitrary
+      // pidx to a victim donation via the fallback lookup path.
+      if (needsBackfill) {
+        const apiPurchaseOrderId = (verificationResult.metadata as Record<string, unknown>)?.purchaseOrderId
+        if (!apiPurchaseOrderId || apiPurchaseOrderId !== donation.id) {
+          logPaymentEvent("Khalti verify - purchase_order_id cross-reference FAILED (possible fraud attempt)", {
+            donationId: donation.id,
+            apiPurchaseOrderId: apiPurchaseOrderId ?? "(absent)",
+            pidx: maskSensitiveData(pidx),
+          }, "error")
+          return NextResponse.json(
+            {
+              ok: false,
+              error: "Payment verification failed",
+              message: "Payment identifier does not match the specified donation",
+            },
+            { status: 400 },
+          )
+        }
+
+        // Cross-reference passed: backfill now that we know this pidx belongs to this donation
+        await supabase
+          .from("donations")
+          .update({ khalti_pidx: pidx, provider_ref: pidx, payment_id: `khalti:${pidx}` })
+          .eq("id", donation.id)
+        logPaymentEvent("Khalti verify - backfilled khalti_pidx after verified cross-reference", {
+          donationId: donation.id,
+          pidx: maskSensitiveData(pidx),
+        }, "warn")
+      }
 
       // Use PaymentService to confirm the donation
       const confirmResult = await paymentService.confirmDonation({

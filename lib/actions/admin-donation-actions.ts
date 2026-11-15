@@ -6,6 +6,7 @@ import { renderTransactionExportToPDF } from "@/lib/admin/transaction-export-pdf
 import type { TransactionExportData } from "@/lib/admin/transaction-export-document"
 import { revalidatePath } from "next/cache"
 import { generateReceiptForDonation } from "./donation-receipt"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -84,13 +85,17 @@ export async function changePaymentStatus(
     // 2. Verify admin role
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role, full_name")
+      .select("id, role, full_name, is_active")
       .eq("user_id", user.id)
       .single()
 
     if (adminError || !adminUser) {
       console.error("Admin user lookup error:", adminError)
       return { ok: false, message: "Admin user not found" }
+    }
+
+    if (!adminUser.is_active) {
+      return { ok: false, message: "Unauthorized: Account is inactive" }
     }
 
     // Check role - must be ADMIN or SUPER_ADMIN
@@ -169,6 +174,19 @@ export async function changePaymentStatus(
       },
     })
 
+    // 8b. Centralized Enterprise Audit Ledger
+    await logAdminActivity({
+      action: "DONATION_STATUS_CHANGED",
+      domain: "TREASURY",
+      entityType: "donation",
+      entityId: input.donationId,
+      actorId: adminUser.id,
+      actorRole: adminUser.role,
+      summary: `${adminUser.full_name} changed donation status from ${donation.payment_status} to ${input.newStatus}: "${input.reason.trim()}"`,
+      oldData: { payment_status: donation.payment_status },
+      newData: { payment_status: input.newStatus, reason: input.reason.trim() },
+    })
+
     // 9. Revalidate page
     revalidatePath(`/admin/donations/${input.donationId}`)
     revalidatePath("/admin/donations")
@@ -210,13 +228,17 @@ export async function addReviewNote(input: AddReviewNoteInput): Promise<AddRevie
     // 2. Verify admin role
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role")
+      .select("id, role, is_active")
       .eq("user_id", user.id)
       .single()
 
     if (adminError || !adminUser) {
       console.error("Admin user lookup error:", adminError)
       return { ok: false, message: "Admin user not found" }
+    }
+
+    if (!adminUser.is_active) {
+      return { ok: false, message: "Unauthorized: Account is inactive" }
     }
 
     // Check role - must be ADMIN or SUPER_ADMIN
@@ -241,6 +263,18 @@ export async function addReviewNote(input: AddReviewNoteInput): Promise<AddRevie
       console.error("Failed to add review note:", insertError)
       return { ok: false, message: "Failed to add note" }
     }
+
+    // Centralized Enterprise Audit Ledger
+    await logAdminActivity({
+      action: "DONATION_NOTE_ADDED",
+      domain: "TREASURY",
+      entityType: "donation",
+      entityId: input.donationId,
+      actorId: adminUser.id,
+      actorRole: adminUser.role,
+      summary: `Admin added internal review note to donation ${input.donationId}: "${input.noteText.trim()}"`,
+      newData: { note_text: input.noteText.trim() },
+    })
 
     // 5. Revalidate page
     revalidatePath(`/admin/donations/${input.donationId}`)
@@ -280,13 +314,17 @@ export async function updateReviewStatus(
     // 2. Verify admin role
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role")
+      .select("id, role, is_active")
       .eq("user_id", user.id)
       .single()
 
     if (adminError || !adminUser) {
       console.error("Admin user lookup error:", adminError)
       return { ok: false, message: "Admin user not found" }
+    }
+
+    if (!adminUser.is_active) {
+      return { ok: false, message: "Unauthorized: Account is inactive" }
     }
 
     // Check role - must be ADMIN or SUPER_ADMIN
@@ -309,6 +347,18 @@ export async function updateReviewStatus(
       console.error("Failed to update review status:", updateError)
       return { ok: false, message: "Failed to update review status" }
     }
+
+    // Centralized Enterprise Audit Ledger
+    await logAdminActivity({
+      action: "DONATION_REVIEW_STATUS_CHANGED",
+      domain: "TREASURY",
+      entityType: "donation",
+      entityId: input.donationId,
+      actorId: adminUser.id,
+      actorRole: adminUser.role,
+      summary: `Admin updated review status to "${input.reviewStatus}" for donation ${input.donationId}`,
+      newData: { review_status: input.reviewStatus },
+    })
 
     // 4. Revalidate page
     revalidatePath(`/admin/donations/${input.donationId}`)
@@ -348,13 +398,17 @@ export async function resendReceipt(input: ResendReceiptInput): Promise<ResendRe
     // 2. Verify admin role
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role")
+      .select("id, role, is_active")
       .eq("user_id", user.id)
       .single()
 
     if (adminError || !adminUser) {
       console.error("Admin user lookup error:", adminError)
       return { ok: false, message: "Admin user not found" }
+    }
+
+    if (!adminUser.is_active) {
+      return { ok: false, message: "Unauthorized: Account is inactive" }
     }
 
     // Check role - must be ADMIN or SUPER_ADMIN
@@ -419,6 +473,18 @@ export async function resendReceipt(input: ResendReceiptInput): Promise<ResendRe
       },
     })
 
+    // Centralized Enterprise Audit Ledger
+    await logAdminActivity({
+      action: "RECEIPT_RESENT",
+      domain: "TREASURY",
+      entityType: "donation",
+      entityId: input.donationId,
+      actorId: adminUser.id,
+      actorRole: adminUser.role,
+      summary: `Admin resent receipt email for donation ${input.donationId}`,
+      newData: { donation_id: input.donationId },
+    })
+
     // 7. Revalidate page
     revalidatePath(`/admin/donations/${input.donationId}`)
 
@@ -468,7 +534,7 @@ export async function exportTransactionPDF(
     // 2. Verify admin role and finance permission
     const { data: adminUser, error: adminError } = await supabase
       .from("admin_users")
-      .select("id, role, full_name")
+      .select("id, role, full_name, is_active")
       .eq("user_id", user.id)
       .single()
 
@@ -477,7 +543,12 @@ export async function exportTransactionPDF(
       return { ok: false, message: "Admin user not found" }
     }
 
+    if (!adminUser.is_active) {
+      return { ok: false, message: "Unauthorized: Account is inactive" }
+    }
+
     // Check if user has finance permission (ADMIN, SUPER_ADMIN, or FINANCE roles)
+    // FINANCE role is intentionally allowed here — PDF export is read-only
     if (!["ADMIN", "SUPER_ADMIN", "FINANCE"].includes(adminUser.role)) {
       return { ok: false, message: "Insufficient permissions. Finance access required." }
     }

@@ -125,16 +125,29 @@ export async function POST(request: Request) {
       );
     }
 
-    // Ownership verification: if stripe_session_id not yet stored, verify via email
+    // Ownership verification: if stripe_session_id not yet stored, store it now and proceed.
+    // The (rid + sessionId) pair is sufficient proof of ownership:
+    //   - rid is a UUID verified against the DB record above
+    //   - sessionId came from Stripe's redirect URL and is cryptographically unguessable
+    // Email is NOT an ownership proof (multiple registrations may share an email).
+    // If stripe_session_id IS already stored, the mismatch check at line 102 above already
+    // rejected any attacker who supplied a different sessionId.
     if (!reg.stripe_session_id) {
-      const sessionEmail = String(session.customer_email || "").toLowerCase().trim();
-      const regEmail = String(reg.email || "").toLowerCase().trim();
+      // Store the session ID now so subsequent calls go through the strict equality check.
+      const { error: storeErr } = await supabase
+        .from("event_registrations")
+        .update({ stripe_session_id: sessionId })
+        .eq("id", rid)
+        .is("stripe_session_id", null); // CAS: only write if still NULL (avoid overwrite race)
 
-      if (!sessionEmail || sessionEmail !== regEmail) {
-        return NextResponse.json(
-          { ok: false, error: "Session ownership verification failed" },
-          { status: 403 },
-        );
+      if (storeErr) {
+        // Non-fatal: the final UPDATE in step 4 also writes stripe_session_id.
+        // Log but continue — the rid+sessionId pair already proves ownership.
+        console.warn("confirm-stripe-session: failed to pre-store stripe_session_id", {
+          rid,
+          sessionId,
+          error: storeErr,
+        });
       }
     }
 
@@ -197,26 +210,58 @@ export async function POST(request: Request) {
         return NextResponse.json({ ok: true, status: "review" });
       }
 
-      // Currency mismatch is non-fatal — sync DB to Stripe's currency
+      // Currency mismatch is FAIL-CLOSED — flag for admin review, do NOT overwrite the
+      // expected currency and do NOT confirm the registration.
+      // Same policy as amount mismatch: the DB record reflects what the user agreed to pay,
+      // and Stripe returning a different currency signals something unexpected happened.
       if (regCurrency !== sessionCurrency) {
-        const { error: currencyErr } = await supabase
+        const { data: currencyReviewRows, error: currencyReviewErr } = await supabase
           .from("event_registrations")
-          .update({ payment_currency: sessionCurrency.toUpperCase() })
-          .eq("id", rid);
+          .update({
+            payment_status: "review",
+            payment_review_at: new Date().toISOString(),
+            stripe_session_id: sessionId,
+          })
+          .eq("id", rid)
+          .not("status", "in", '("cancelled","expired")')
+          .select("id");
 
-        if (currencyErr) {
-          console.error("confirm-stripe-session: Failed to sync payment_currency", {
+        if (currencyReviewErr) {
+          console.error("confirm-stripe-session: Failed to flag currency mismatch for review", {
             rid,
             sessionId,
+            regCurrency,
             sessionCurrency,
-            error: currencyErr,
+            error: currencyReviewErr,
           });
-          // Non-fatal — continue with confirmation
+          return NextResponse.json(
+            { ok: false, error: "Failed to flag payment for review" },
+            { status: 500 },
+          );
         }
+
+        if (!currencyReviewRows || currencyReviewRows.length === 0) {
+          return NextResponse.json(
+            { ok: false, error: "Registration is no longer in a confirmable state" },
+            { status: 409 },
+          );
+        }
+
+        console.warn("confirm-stripe-session: currency mismatch — flagged for review", {
+          rid,
+          sessionId,
+          expected: regCurrency,
+          actual: sessionCurrency,
+        });
+        return NextResponse.json({ ok: true, status: "review" });
       }
     }
 
-    // ── 4. Confirm registration (only if not cancelled/expired by webhook) ─────
+    // ── 4. Confirm registration (CAS: only if not cancelled, expired, OR already confirmed) ──
+    // Adding "confirmed" to the exclusion list is the concurrency guard: if two simultaneous
+    // POST requests both pass the idempotency check at line 82 (race window between fetch and
+    // update), only the first UPDATE matches — the second sees 0 rows and we re-fetch to
+    // return a friendly already_confirmed response instead of a 409.
     const { data: confirmRows, error: updateErr } = await supabase
       .from("event_registrations")
       .update({
@@ -230,7 +275,7 @@ export async function POST(request: Request) {
         confirmed_at: new Date().toISOString(),
       })
       .eq("id", rid)
-      .not("status", "in", '("cancelled","expired")')
+      .not("status", "in", '("cancelled","expired","confirmed")')
       .select("id");
 
     if (updateErr) {
@@ -242,6 +287,20 @@ export async function POST(request: Request) {
     }
 
     if (!confirmRows || confirmRows.length === 0) {
+      // 0 rows updated: either another concurrent call already confirmed this registration,
+      // or the webhook beat us to it. Re-fetch to distinguish from a genuine terminal state.
+      const { data: refetched } = await supabase
+        .from("event_registrations")
+        .select("status, payment_status")
+        .eq("id", rid)
+        .single();
+
+      if (refetched?.status === "confirmed" && refetched?.payment_status === "paid") {
+        // Concurrent confirmation succeeded — this is idempotent, treat as success.
+        console.log("confirm-stripe-session: concurrent confirmation detected, returning already_confirmed", rid);
+        return NextResponse.json({ ok: true, status: "confirmed", alreadyConfirmed: true });
+      }
+
       return NextResponse.json(
         { ok: false, error: "Registration is no longer in a confirmable state" },
         { status: 409 },

@@ -47,6 +47,34 @@ function sanitizeText(value: string) {
   return value.replace(/[<>]/g, "").trim()
 }
 
+function validateProofMagicBytes(buffer: Buffer, declaredType: string): boolean {
+  if (buffer.length < 4) return false
+
+  if (declaredType === "application/pdf") {
+    return buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46
+  }
+  if (declaredType === "image/png") {
+    return buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47
+  }
+  if (declaredType === "image/jpeg") {
+    return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff
+  }
+  if (declaredType === "image/webp") {
+    return (
+      buffer[0] === 0x52 &&
+      buffer[1] === 0x49 &&
+      buffer[2] === 0x46 &&
+      buffer[3] === 0x46 &&
+      buffer.length >= 12 &&
+      buffer[8] === 0x57 &&
+      buffer[9] === 0x45 &&
+      buffer[10] === 0x42 &&
+      buffer[11] === 0x50
+    )
+  }
+  return false
+}
+
 export async function submitBankTransfer(formData: FormData): Promise<BankDonationResult> {
   try {
     if (getConfiguredBankAccounts().length === 0) {
@@ -91,6 +119,21 @@ export async function submitBankTransfer(formData: FormData): Promise<BankDonati
       }
     }
 
+    // Reject duplicate submissions with the same transaction reference
+    const { data: existingRef } = await createServiceRoleClient()
+      .from("donations")
+      .select("id")
+      .eq("provider", "bank")
+      .eq("provider_ref", values.transactionRef)
+      .maybeSingle()
+
+    if (existingRef) {
+      return {
+        ok: false,
+        message: "A bank transfer with this transaction reference has already been submitted.",
+      }
+    }
+
     // Optional proof of transfer (deposit slip / screenshot).
     const proofFile = formData.get("proof")
     let proofPath: string | null = null
@@ -103,12 +146,17 @@ export async function submitBankTransfer(formData: FormData): Promise<BankDonati
         return { ok: false, message: "Proof must be 5MB or smaller." }
       }
 
+      const fileBuffer = Buffer.from(await proofFile.arrayBuffer())
+      if (!validateProofMagicBytes(fileBuffer, proofFile.type)) {
+        return { ok: false, message: "Uploaded proof file content does not match its declared image/PDF type." }
+      }
+
       const extension = proofFile.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "bin"
       proofPath = `${randomUUID()}/proof.${extension}`
 
       const { error: uploadError } = await createServiceRoleClient()
         .storage.from(PROOF_BUCKET)
-        .upload(proofPath, Buffer.from(await proofFile.arrayBuffer()), {
+        .upload(proofPath, fileBuffer, {
           contentType: proofFile.type,
           upsert: false,
           cacheControl: "3600",
@@ -120,10 +168,11 @@ export async function submitBankTransfer(formData: FormData): Promise<BankDonati
       }
     }
 
-    // Insert through the anon client so the RLS policy from migration 040 still
-    // applies: pending only, no confirmation or provider-reference fields.
-    const supabase = await createClient()
-    const { data: donation, error } = await supabase
+    // Insert using service role client: anon INSERT has no matching SELECT policy,
+    // so .select() after an anon insert fails RETURNING with 42501 under deployed RLS.
+    // This is a trusted server action (input already validated via Zod above).
+    const serviceClient = createServiceRoleClient()
+    const { data: donation, error } = await serviceClient
       .from("donations")
       .insert({
         amount: Number(values.amount.toFixed(2)),
@@ -135,39 +184,25 @@ export async function submitBankTransfer(formData: FormData): Promise<BankDonati
         is_monthly: false,
         payment_status: "pending",
         provider: "bank",
-      })
-      .select()
-      .single()
-
-    if (error || !donation) {
-      console.error("Bank donation insert failed:", error)
-      if (proofPath) {
-        try {
-          await createServiceRoleClient().storage.from(PROOF_BUCKET).remove([proofPath])
-        } catch {
-          // Ignore cleanup failures.
-        }
-      }
-      return { ok: false, message: "We could not record your transfer. Please try again." }
-    }
-
-    // provider_ref / payment_id are blocked for anon by policy 040, so set them
-    // with the service role — same two-step the gateway flow uses.
-    const { error: updateError } = await createServiceRoleClient()
-      .from("donations")
-      .update({
         provider_ref: values.transactionRef,
         payment_id: `bank:${values.transactionRef}`,
         bank_account_id: account.id,
         bank_transfer_date: values.transferDate || null,
         bank_proof_path: proofPath,
       })
-      .eq("id", donation.id)
+      .select("id")
+      .single()
 
-    if (updateError) {
-      // The donation row exists and an admin can still match it by name/amount,
-      // so this is logged rather than surfaced as a failure to the donor.
-      console.error("Failed to attach bank transfer reference:", updateError)
+    if (error || !donation) {
+      console.error("Bank donation insert failed:", error)
+      if (proofPath) {
+        try {
+          await serviceClient.storage.from(PROOF_BUCKET).remove([proofPath])
+        } catch {
+          // Ignore cleanup failures.
+        }
+      }
+      return { ok: false, message: "We could not record your transfer. Please try again." }
     }
 
     return {

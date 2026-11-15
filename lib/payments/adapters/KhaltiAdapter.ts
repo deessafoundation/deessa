@@ -50,7 +50,13 @@ type KhaltiStatus =
   | 'Partially Refunded'
 
 /**
- * Khalti lookup API response structure
+ * Khalti lookup API response structure.
+ *
+ * Note: `purchase_order_id` is included in the Khalti lookup response and
+ * echoes back the value that was supplied when the payment was initiated.
+ * We use it in `verifyLookupResponse` to populate metadata so the verify
+ * route can cross-reference it against the donation ID and confirm the pidx
+ * truly belongs to that donation before backfilling.
  */
 interface KhaltiLookupResponse {
   pidx: string
@@ -59,6 +65,7 @@ interface KhaltiLookupResponse {
   transaction_id: string | null
   fee: number
   refunded: boolean
+  purchase_order_id?: string
   detail?: string
   error_key?: string
 }
@@ -307,13 +314,15 @@ export class KhaltiAdapter extends BaseProviderAdapter {
     // Convert amount from paisa to NPR
     const amount = this.convertToMajorUnits(lookupResponse.total_amount, 100)
 
-    // Build metadata
+    // Build metadata — include purchase_order_id from Khalti's response so the
+    // verify route can cross-reference it against the donation ID before backfilling.
     const metadata: Record<string, unknown> = {
       pidx: lookupResponse.pidx,
       transactionId: lookupResponse.transaction_id,
       khaltiStatus: lookupResponse.status,
       fee: lookupResponse.fee,
       refunded: lookupResponse.refunded,
+      purchaseOrderId: lookupResponse.purchase_order_id ?? null,
     }
 
     // Determine success based on status
