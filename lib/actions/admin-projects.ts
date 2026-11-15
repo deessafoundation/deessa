@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function generateSlug(title: string): string {
   return title
@@ -98,12 +99,13 @@ export async function createProject(formData: FormData) {
   }
 
   // Log activity
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "CREATE",
-    entity_type: "project",
-    entity_id: data.id,
-    new_data: { title, category, status },
+  void logAdminActivity({
+    action: "PROJECT_CREATED",
+    domain: "CONTENT",
+    entityType: "projects",
+    entityId: data.id,
+    description: `Created project "${title}"`,
+    newData: { title, category, status },
   })
 
   revalidatePath("/admin/projects")
@@ -152,13 +154,14 @@ export async function updateProject(id: string, formData: FormData) {
   }
 
   // Log activity
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "project",
-    entity_id: id,
-    old_data: oldData,
-    new_data: { title, category, status, is_published: isPublished },
+  void logAdminActivity({
+    action: "PROJECT_UPDATED",
+    domain: "CONTENT",
+    entityType: "projects",
+    entityId: id,
+    description: `Updated project "${title}"`,
+    oldData: oldData,
+    newData: { title, category, status, is_published: isPublished },
   })
 
   revalidatePath("/admin/projects")
@@ -183,12 +186,13 @@ export async function deleteProject(id: string) {
   }
 
   // Log activity
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "project",
-    entity_id: id,
-    old_data: project,
+  void logAdminActivity({
+    action: "PROJECT_DELETED",
+    domain: "CONTENT",
+    entityType: "projects",
+    entityId: id,
+    description: `Deleted project "${project?.title || id}"`,
+    oldData: project,
   })
 
   revalidatePath("/admin/projects")
@@ -208,11 +212,13 @@ export async function toggleProjectPublished(id: string, published: boolean) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: published ? "PUBLISH" : "UNPUBLISH",
-    entity_type: "project",
-    entity_id: id,
+  void logAdminActivity({
+    action: published ? "PROJECT_PUBLISHED" : "PROJECT_UNPUBLISHED",
+    domain: "CONTENT",
+    entityType: "projects",
+    entityId: id,
+    description: `${published ? "Published" : "Unpublished"} project ${id}`,
+    newData: { is_published: published },
   })
 
   revalidatePath("/admin/projects")

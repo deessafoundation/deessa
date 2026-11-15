@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 import {
   type StorageFileUsage,
@@ -684,6 +685,15 @@ export async function trackStorageFile(file: StorageFile) {
 
     if (error) throw error
 
+    void logAdminActivity({
+      action: "STORAGE_FILE_TRACKED",
+      domain: "MEDIA",
+      entityType: "storage_files",
+      entityId: `${file.bucket}/${file.name}`,
+      description: `Registered storage file "${file.name}" in media assets (${file.bucket})`,
+      newData: { bucket: file.bucket, name: file.name, size: file.size, assetId: data?.id },
+    })
+
     return { success: true, error: null, data }
   } catch (error: any) {
     console.error("[Storage Browser] Error tracking storage file:", error)
@@ -724,6 +734,15 @@ export async function deleteStorageFile(file: StorageFile) {
         .eq("bucket", file.bucket)
         .eq("storage_path", file.name)
     }
+
+    void logAdminActivity({
+      action: "STORAGE_FILE_DELETED",
+      domain: "MEDIA",
+      entityType: "storage_files",
+      entityId: `${file.bucket}/${file.name}`,
+      description: `Deleted file "${file.name}" from storage bucket "${file.bucket}"`,
+      oldData: { bucket: file.bucket, name: file.name, size: file.size, assetId: file.assetId },
+    })
 
     return { success: true, error: null }
   } catch (error: any) {
@@ -778,6 +797,19 @@ export async function bulkDeleteStorageFiles(files: StorageFile[]) {
     if (assetIdsToDelete.length > 0) {
       await supabase.from("media_assets").delete().in("id", assetIdsToDelete)
     }
+
+    void logAdminActivity({
+      action: "STORAGE_FILES_BULK_DELETED",
+      domain: "MEDIA",
+      entityType: "storage_files",
+      entityId: "bulk",
+      description: `Bulk deleted ${deletedCount} file(s) from storage across ${bucketGroups.size} bucket(s)`,
+      oldData: {
+        count: files.length,
+        deletedCount,
+        files: files.map((f) => ({ bucket: f.bucket, name: f.name })),
+      },
+    })
 
     return { success: true, error: null, deletedCount }
   } catch (error: any) {

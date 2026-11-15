@@ -7,6 +7,7 @@ import {
   INTRO_VIDEO_SETTINGS_KEY,
   type IntroVideoConfig,
 } from "@/lib/types/intro-video"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 /**
  * Server Action to update the intro video configuration in `site_settings`.
@@ -54,11 +55,13 @@ export async function updateIntroVideoConfig(config: IntroVideoConfig) {
   }
 
   // Audit trail
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "site_setting",
-    new_data: { key: INTRO_VIDEO_SETTINGS_KEY, config },
+  void logAdminActivity({
+    action: "INTRO_VIDEO_SETTINGS_UPDATED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: INTRO_VIDEO_SETTINGS_KEY,
+    description: "Updated intro video settings",
+    newData: { key: INTRO_VIDEO_SETTINGS_KEY, config },
   })
 
   // Invalidate cache so changes reflect instantly

@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "./admin-auth"
 import { revalidatePath } from "next/cache"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { hasPermission, ROLE_PERMISSIONS, type AdminRole } from "@/lib/types/admin"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 // ─── Constants ──────────────────────────────────────────────
 
@@ -189,6 +190,15 @@ export async function uploadProgramAsset(
       return { ok: false, error: "Failed to save asset record" }
     }
 
+    void logAdminActivity({
+      action: "PROGRAM_ASSET_UPLOADED",
+      domain: "MEDIA",
+      entityType: "program_assets",
+      entityId: asset.id,
+      description: `Uploaded program asset "${file.name}" for program ${programId}`,
+      newData: { filename: file.name, programId, storagePath, size: file.size },
+    })
+
     revalidatePath("/admin/programs")
     return { ok: true, asset: asset as AssetRecord }
   } catch (e) {
@@ -226,6 +236,15 @@ export async function updateProgramAsset(
     if (error) {
       return { ok: false, error: error.message }
     }
+
+    void logAdminActivity({
+      action: "PROGRAM_ASSET_UPDATED",
+      domain: "MEDIA",
+      entityType: "program_assets",
+      entityId: assetId,
+      description: `Updated program asset metadata for ${assetId}`,
+      newData: updates,
+    })
 
     revalidatePath("/admin/programs")
     return { ok: true, asset: data as AssetRecord }
@@ -281,6 +300,15 @@ export async function deleteProgramAsset(assetId: string): Promise<{ ok: boolean
     if (deleteError) {
       return { ok: false, error: deleteError.message }
     }
+
+    void logAdminActivity({
+      action: "PROGRAM_ASSET_DELETED",
+      domain: "MEDIA",
+      entityType: "program_assets",
+      entityId: assetId,
+      description: `Deleted program asset "${asset.storage_path}"`,
+      oldData: { storage_path: asset.storage_path, program_id: asset.program_id },
+    })
 
     revalidatePath("/admin/programs")
     return { ok: true }

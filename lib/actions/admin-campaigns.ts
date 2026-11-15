@@ -13,6 +13,7 @@ import {
   sendNewsletterCampaignBatch,
   type RecipientInfo,
 } from "@/lib/email/newsletter-mailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 async function getAuthorizedAdmin() {
   const admin = await getCurrentAdmin()
@@ -72,6 +73,15 @@ export async function saveCampaignDraft(input: SaveCampaignDraftInput) {
         return { success: false, error: error.message }
       }
 
+      void logAdminActivity({
+        action: "NEWSLETTER_CAMPAIGN_UPDATED",
+        domain: "CONTENT",
+        entityType: "newsletter_campaigns",
+        entityId: input.id,
+        description: `Updated campaign draft "${title}"`,
+        newData: { title, subject, isPublic },
+      })
+
       revalidatePath("/admin/newsletter")
       return { success: true, campaign: updated as NewsletterCampaign }
     } else {
@@ -94,12 +104,13 @@ export async function saveCampaignDraft(input: SaveCampaignDraftInput) {
         return { success: false, error: error.message }
       }
 
-      await serviceSupabase.from("activity_logs").insert({
-        user_id: admin.user_id,
-        action: "CREATE",
-        entity_type: "newsletter_campaign",
-        entity_id: inserted.id,
-        new_data: { title, subject },
+      void logAdminActivity({
+        action: "NEWSLETTER_CAMPAIGN_CREATED",
+        domain: "CONTENT",
+        entityType: "newsletter_campaigns",
+        entityId: inserted.id,
+        description: `Created campaign draft "${title}"`,
+        newData: { title, subject, isPublic },
       })
 
       revalidatePath("/admin/newsletter")
@@ -119,7 +130,7 @@ export async function saveCampaignDraft(input: SaveCampaignDraftInput) {
  */
 export async function deleteCampaignDraft(id: string) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error } = await serviceSupabase
@@ -132,11 +143,12 @@ export async function deleteCampaignDraft(id: string) {
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "DELETE",
-      entity_type: "newsletter_campaign",
-      entity_id: id,
+    void logAdminActivity({
+      action: "NEWSLETTER_CAMPAIGN_DELETED",
+      domain: "CONTENT",
+      entityType: "newsletter_campaigns",
+      entityId: id,
+      description: `Deleted campaign draft ${id}`,
     })
 
     revalidatePath("/admin/newsletter")
@@ -191,7 +203,7 @@ export async function sendTestCampaignEmailAction({
  */
 export async function broadcastCampaignAction(campaignId: string) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const campaign = await fetchNewsletterCampaignById(campaignId)
@@ -282,12 +294,13 @@ export async function broadcastCampaignAction(campaignId: string) {
     }
 
     // 6. Audit log
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "BROADCAST",
-      entity_type: "newsletter_campaign",
-      entity_id: campaignId,
-      new_data: {
+    void logAdminActivity({
+      action: "NEWSLETTER_CAMPAIGN_BROADCAST",
+      domain: "CONTENT",
+      entityType: "newsletter_campaigns",
+      entityId: campaignId,
+      description: `Broadcasted newsletter campaign "${campaign.title}" to ${result.total} recipients (${result.sent} sent, ${result.failed} failed)`,
+      newData: {
         title: campaign.title,
         recipients: result.total,
         sent: result.sent,

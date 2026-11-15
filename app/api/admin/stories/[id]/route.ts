@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function PATCH(
   request: NextRequest,
@@ -62,6 +63,18 @@ export async function PATCH(
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "STORY_UPDATED",
+      domain: "CONTENT",
+      entityType: "stories",
+      entityId: id,
+      summary: `Admin updated story ${id} (published: ${data.is_published}, featured: ${data.is_featured})`,
+      newData: data,
+    })
+
     revalidatePath("/admin/stories")
     revalidatePath("/stories")
 
@@ -86,6 +99,18 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "STORY_DELETED",
+      domain: "CONTENT",
+      entityType: "stories",
+      entityId: id,
+      summary: `Admin deleted story ${id}`,
+      oldData: { id },
+    })
 
     revalidatePath("/admin/stories")
     revalidatePath("/stories")

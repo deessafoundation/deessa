@@ -4,6 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { sendVolunteerStatusEmail } from "@/lib/email/volunteer-mailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export interface UpdateVolunteerInput {
   id: string
@@ -41,18 +42,17 @@ export async function updateVolunteerApplication(input: UpdateVolunteerInput) {
     }
 
     // 3. Record review metadata in activity_logs
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `VOLUNTEER_${input.status.toUpperCase()}`,
-      entity_type: "volunteer_application",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "volunteer_applications",
+      entityId: input.id,
+      description: `Updated volunteer application status to ${input.status}`,
+      newData: {
         status: input.status,
         notes: input.adminNotes || null,
         assigned_role: input.assignedRole || null,
-        reviewed_by: admin.email || admin.id,
         notification_sent: !!input.sendNotification,
-        timestamp: new Date().toISOString(),
       },
     })
 
@@ -126,17 +126,19 @@ export async function sendCandidateNotification(
 
     if (result.success) {
       // Log that notification was sent
-      await serviceSupabase.from("activity_logs").insert({
-        user_id: admin.id,
+      void logAdminActivity({
         action: "VOLUNTEER_EMAIL_NOTIFIED",
-        entity_type: "volunteer_application",
-        entity_id: id,
-        new_data: {
+        domain: "VOLUNTEER",
+        entityType: "volunteer_applications",
+        entityId: id,
+        description: `Dispatched volunteer status email notification to ${record.email}`,
+        newData: {
           recipient: record.email,
           status: record.status,
           assigned_role: assignedRole,
-          timestamp: new Date().toISOString(),
         },
+        actorId: admin.user_id,
+        actorEmail: admin.email,
       })
     }
 
@@ -187,21 +189,19 @@ export async function bulkUpdateVolunteerStatus(
       return { success: false, error: updateError.message }
     }
 
-    // Insert activity logs for each bulk item
-    const logs = ids.map((id) => ({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `VOLUNTEER_BULK_${status.toUpperCase()}`,
-      entity_type: "volunteer_application",
-      entity_id: id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "volunteer_applications",
+      entityId: "bulk",
+      description: `Bulk updated ${ids.length} volunteer application(s) to ${status}`,
+      newData: {
         status,
         notes: adminNotes || "Bulk status change",
-        reviewed_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
+        count: ids.length,
+        ids,
       },
-    }))
-
-    await serviceSupabase.from("activity_logs").insert(logs)
+    })
 
     revalidatePath("/admin/volunteers")
     revalidatePath("/admin")
@@ -236,15 +236,12 @@ export async function deleteVolunteerApplication(id: string) {
     }
 
     // Log deletion
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "VOLUNTEER_DELETED",
-      entity_type: "volunteer_application",
-      entity_id: id,
-      new_data: {
-        deleted_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
+      domain: "COMMUNICATIONS",
+      entityType: "volunteer_applications",
+      entityId: id,
+      description: `Deleted volunteer application ${id}`,
     })
 
     revalidatePath("/admin/volunteers")
@@ -301,19 +298,19 @@ export async function createManualVolunteer(data: {
       return { success: false, error: error.message }
     }
 
-    if (data.adminNotes) {
-      await serviceSupabase.from("activity_logs").insert({
-        user_id: admin.id,
-        action: "VOLUNTEER_MANUAL_REGISTRATION",
-        entity_type: "volunteer_application",
-        entity_id: newRow.id,
-        new_data: {
-          notes: data.adminNotes,
-          created_by: admin.email || admin.id,
-          timestamp: new Date().toISOString(),
-        },
-      })
-    }
+    void logAdminActivity({
+      action: "VOLUNTEER_MANUAL_REGISTRATION",
+      domain: "COMMUNICATIONS",
+      entityType: "volunteer_applications",
+      entityId: newRow.id,
+      description: `Created manual volunteer registration for ${data.fullName}`,
+      newData: {
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        notes: data.adminNotes || null,
+      },
+    })
 
     revalidatePath("/admin/volunteers")
     revalidatePath("/admin")
