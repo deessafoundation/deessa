@@ -36,12 +36,15 @@ const DEFAULT_PAYMENT_SETTINGS: PaymentSettings = {
 export function isProviderEnvConfigured(provider: PaymentProvider): boolean {
   switch (provider) {
     case "stripe":
-      // Stripe secret key is required, webhook secret is optional (webhooks won't work without it, but checkout will)
+      // In production, both secret key and webhook secret are required for safe verification
+      if (process.env.NODE_ENV === "production") {
+        return Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET)
+      }
       return Boolean(process.env.STRIPE_SECRET_KEY)
     case "khalti":
       return Boolean(process.env.KHALTI_SECRET_KEY && process.env.KHALTI_BASE_URL)
     case "esewa":
-      return Boolean(process.env.ESEWA_MERCHANT_ID && process.env.ESEWA_BASE_URL)
+      return Boolean(process.env.ESEWA_MERCHANT_ID && process.env.ESEWA_BASE_URL && process.env.ESEWA_SECRET_KEY)
     default:
       return false
   }

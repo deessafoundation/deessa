@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { sendAdminPasswordResetEmail } from "@/lib/email/auth-mailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
@@ -47,23 +48,23 @@ export async function adminLogin(formData: FormData) {
     password,
   })
 
-  // Helper to log failed attempts to activity_logs via service role (bypasses RLS)
-  const logFailedAttempt = async (reason: string, adminUserId?: string) => {
-    try {
-      const serviceClient = createServiceRoleClient()
-      await serviceClient.from("activity_logs").insert({
-        user_id: adminUserId || null,
-        action: "LOGIN_FAILED",
-        entity_type: "auth",
-        new_data: { email, ip: clientIp, reason },
-      })
-    } catch (logErr) {
-      console.error("Failed to record failed login log:", logErr)
-    }
+  // Helper to log failed attempts to audit ledger
+  const logFailedAttempt = (reason: string, adminUserId?: string) => {
+    void logAdminActivity({
+      action: "ADMIN_LOGIN_FAILED",
+      domain: "AUTH",
+      entityType: "auth",
+      entityId: email,
+      description: `Failed login attempt for "${email}" (Reason: ${reason})`,
+      actorId: adminUserId || undefined,
+      actorEmail: email,
+      status: "FAILURE",
+      newData: { email, reason },
+    })
   }
 
   if (error) {
-    await logFailedAttempt("invalid_credentials")
+    logFailedAttempt("invalid_credentials")
     return { error: "Invalid email or password" }
   }
 
@@ -76,22 +77,26 @@ export async function adminLogin(formData: FormData) {
 
   if (adminError || !adminUser) {
     await supabase.auth.signOut()
-    await logFailedAttempt("not_admin")
+    logFailedAttempt("not_admin")
     return { error: "Invalid email or password" }
   }
 
   if (!adminUser.is_active) {
     await supabase.auth.signOut()
-    await logFailedAttempt("deactivated_account", adminUser.id)
+    logFailedAttempt("deactivated_account", adminUser.id)
     return { error: "This administrator account is deactivated. Contact a super admin." }
   }
 
   // ── 4. Log Successful Login & Redirect ────────────────────────────────────
-  await supabase.from("activity_logs").insert({
-    user_id: adminUser.id,
-    action: "LOGIN",
-    entity_type: "auth",
-    new_data: { ip: clientIp },
+  void logAdminActivity({
+    action: "ADMIN_LOGIN_SUCCESS",
+    domain: "AUTH",
+    entityType: "auth",
+    entityId: adminUser.user_id,
+    description: `Admin "${adminUser.email}" logged in successfully`,
+    actorId: adminUser.user_id,
+    actorEmail: adminUser.email,
+    newData: { role: adminUser.role },
   })
 
   // Validate target redirect against open redirects & personal preferences
@@ -121,15 +126,19 @@ export async function adminLogout() {
   if (user) {
     const { data: adminUser } = await supabase
       .from("admin_users")
-      .select("id")
+      .select("id, email, user_id")
       .eq("user_id", user.id)
       .single()
 
     if (adminUser) {
-      await supabase.from("activity_logs").insert({
-        user_id: adminUser.id,
-        action: "LOGOUT",
-        entity_type: "auth",
+      void logAdminActivity({
+        action: "ADMIN_LOGOUT",
+        domain: "AUTH",
+        entityType: "auth",
+        entityId: user.id,
+        description: `Admin "${adminUser.email}" logged out`,
+        actorId: user.id,
+        actorEmail: adminUser.email,
       })
     }
   }
@@ -154,6 +163,59 @@ export async function getCurrentAdmin() {
     .single()
 
   return adminUser?.is_active ? adminUser : null
+}
+
+/**
+ * Shared authorization guard for financial mutations.
+ *
+ * Checks in order:
+ *  1. Authenticated session (auth.users)
+ *  2. Exists in admin_users
+ *  3. is_active is true
+ *  4. role is ADMIN or SUPER_ADMIN
+ *
+ * Returns `{ authorized: true, adminUser, user }` on success, or
+ * `{ authorized: false, error: string }` on any failure.
+ *
+ * Usage:
+ *   const auth = await requireFinancialAdmin()
+ *   if (!auth.authorized) return { ok: false, message: auth.error }
+ *   const { adminUser, user } = auth
+ */
+export async function requireFinancialAdmin(): Promise<
+  | { authorized: true; adminUser: { id: string; role: string; full_name: string; is_active: boolean }; user: { id: string; email?: string } }
+  | { authorized: false; error: string }
+> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { authorized: false, error: "Unauthorized: No active user session" }
+  }
+
+  const serviceSupabase = createServiceRoleClient()
+  const { data: adminUser, error: adminError } = await serviceSupabase
+    .from("admin_users")
+    .select("id, role, full_name, is_active")
+    .eq("user_id", user.id)
+    .single()
+
+  if (adminError || !adminUser) {
+    return { authorized: false, error: "Unauthorized: Not registered as an admin user" }
+  }
+
+  if (!adminUser.is_active) {
+    return { authorized: false, error: "Unauthorized: Account is inactive" }
+  }
+
+  if (!["ADMIN", "SUPER_ADMIN"].includes(adminUser.role)) {
+    return { authorized: false, error: "Unauthorized: Insufficient permissions for financial actions" }
+  }
+
+  return { authorized: true, adminUser, user }
 }
 
 async function getSiteOrigin(): Promise<string> {
@@ -222,7 +284,7 @@ export async function requestAdminPasswordReset(
 
     const { data: adminUser } = await supabaseAdmin
       .from("admin_users")
-      .select("id, email, full_name, is_active")
+      .select("id, email, full_name, is_active, user_id")
       .eq("email", email)
       .single()
 
@@ -252,11 +314,14 @@ export async function requestAdminPasswordReset(
       requestedByAdminName: "Self-Service Recovery Portal",
     })
 
-    await supabaseAdmin.from("activity_logs").insert({
-      user_id: adminUser.id,
-      action: "FORGOT_PASSWORD_REQUESTED",
-      entity_type: "auth",
-      new_data: { ip: clientIp, email },
+    void logAdminActivity({
+      action: "ADMIN_PASSWORD_RESET_REQUESTED",
+      domain: "AUTH",
+      entityType: "auth",
+      entityId: adminUser.user_id,
+      description: `Password reset requested for admin "${adminUser.email}"`,
+      actorId: adminUser.user_id,
+      actorEmail: adminUser.email,
     })
 
     return genericSuccess

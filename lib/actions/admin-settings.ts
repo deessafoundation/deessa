@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { validateSetting } from "@/lib/validations/settings"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function getSiteSettings() {
   const supabase = await createClient()
@@ -51,15 +52,17 @@ export async function updateSiteSetting(key: string, value: Record<string, unkno
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "site_setting",
-    new_data: {
-      key,
-      value: payloadToSave,
-      previous_value: existing?.value ?? null,
-    },
+  await logAdminActivity({
+    actorId: admin.id,
+    actorEmail: admin.email,
+    actorRole: admin.role,
+    action: "SETTING_UPDATED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: key,
+    summary: `Admin updated site setting "${key}"`,
+    oldData: existing?.value ? (existing.value as Record<string, unknown>) : null,
+    newData: payloadToSave as Record<string, unknown>,
   })
 
   revalidatePath("/admin/settings")
@@ -79,11 +82,16 @@ export async function deleteSiteSetting(key: string) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "site_setting",
-    new_data: { key },
+  await logAdminActivity({
+    actorId: admin.id,
+    actorEmail: admin.email,
+    actorRole: admin.role,
+    action: "SETTING_DELETED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: key,
+    summary: `Admin deleted site setting "${key}"`,
+    oldData: { key },
   })
 
   revalidatePath("/admin/settings")
@@ -169,11 +177,16 @@ export async function saveRegisterButtonConfig(config: RegisterButtonSaveInput) 
 
   if (error) return { error: error.message }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "site_setting",
-    new_data: { key: "register_button", value },
+  await logAdminActivity({
+    actorId: admin.id,
+    actorEmail: admin.email,
+    actorRole: admin.role,
+    action: "REGISTER_BUTTON_CONFIG_UPDATED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: "register_button",
+    summary: `Admin updated registration button config (enabled: ${config.enabled})`,
+    newData: value,
   })
 
   revalidatePath("/admin/events")

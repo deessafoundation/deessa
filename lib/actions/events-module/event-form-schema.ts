@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   FormSchema,
   FormSchemaMeta,
@@ -9,18 +11,18 @@ import type {
 import type { ActionResult } from "@/lib/types/events-module";
 
 // Auth guard for admin operations
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!admin) throw new Error("Unauthorized: Not an admin user");
+  const admin = await getCurrentAdmin();
+
+  if (!admin) {
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
+  }
+
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
+  }
+
   return { supabase, admin };
 }
 
@@ -109,6 +111,7 @@ export async function createFormSchema(
   publish: boolean = false
 ): Promise<ActionResult<{ version: number }>> {
   try {
+    const { admin } = await requireAdmin();
     const { createServiceRoleClient } = await import("@/lib/supabase/service");
     const supabase = createServiceRoleClient();
 
@@ -172,6 +175,17 @@ export async function createFormSchema(
 
     console.log("Schema inserted successfully:", insertData);
 
+    void logAdminActivity({
+      action: publish ? "EVENT_FORM_SCHEMA_PUBLISHED" : "EVENT_FORM_SCHEMA_SAVED",
+      domain: "EVENT",
+      entityType: "event_form_schemas",
+      entityId: insertData?.[0]?.id || `${eventId}-v${nextVersion}`,
+      description: `${publish ? "Published" : "Saved draft"} form schema v${nextVersion} for event ${eventId}`,
+      newData: { event_id: eventId, version: nextVersion, is_active: publish },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
+
     revalidatePath(`/admin/events/${eventId}/form-builder`);
     revalidatePath(`/admin/events/${eventId}/settings`);
     if (publish) {
@@ -192,7 +206,7 @@ export async function activateSchemaVersion(
   version: number
 ): Promise<ActionResult<void>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     // Deactivate all schemas for this event
     const { error: deactivateError } = await supabase
@@ -215,6 +229,17 @@ export async function activateSchemaVersion(
     if (activateError) {
       return { success: false, error: activateError.message };
     }
+
+    void logAdminActivity({
+      action: "EVENT_FORM_SCHEMA_ACTIVATED",
+      domain: "EVENT",
+      entityType: "event_form_schemas",
+      entityId: `${eventId}-v${version}`,
+      description: `Activated form schema v${version} for event ${eventId}`,
+      newData: { event_id: eventId, version },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
 
     revalidatePath(`/admin/events/${eventId}/form-builder`);
     revalidatePath(`/admin/events/${eventId}/settings`);

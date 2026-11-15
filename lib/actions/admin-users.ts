@@ -7,6 +7,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
 import { sendAdminPasswordResetEmail } from "@/lib/email/auth-mailer"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 async function getSiteOrigin(): Promise<string> {
   try {
@@ -57,7 +58,7 @@ export async function createAdminUser(
 
     const validation = createAdminUserSchema.safeParse(rawPayload)
     if (!validation.success) {
-      const message = validation.error.errors.map((e) => e.message).join(", ")
+      const message = validation.error.issues.map((e: { message: string }) => e.message).join(", ")
       return { error: message }
     }
 
@@ -108,12 +109,13 @@ export async function createAdminUser(
     }
 
     // 4. Audit logging
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "CREATE",
-      entity_type: "admin_user",
-      entity_id: insertedAdmin?.id,
-      new_data: { email, full_name: fullName, role, is_active: true },
+    void logAdminActivity({
+      action: "ADMIN_USER_CREATED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: insertedAdmin?.id,
+      description: `Created administrator account for ${fullName} (${email}) with role ${role}`,
+      newData: { email, full_name: fullName, role, is_active: true },
     })
 
     revalidatePath("/admin/users")
@@ -142,7 +144,7 @@ export async function updateAdminUser(
     // Validate payload
     const validation = updateAdminUserSchema.safeParse(data)
     if (!validation.success) {
-      const message = validation.error.errors.map((e) => e.message).join(", ")
+      const message = validation.error.issues.map((e: { message: string }) => e.message).join(", ")
       return { error: message }
     }
 
@@ -228,19 +230,18 @@ export async function updateAdminUser(
     }
 
     // Audit logging
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "admin_user",
-      entity_id: userId,
-      new_data: {
-        updates,
-        previous_data: {
-          role: existingUser.role,
-          is_active: existingUser.is_active,
-          full_name: existingUser.full_name,
-        },
+    void logAdminActivity({
+      action: "ADMIN_USER_UPDATED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: userId,
+      description: `Updated administrator account for ${existingUser.full_name} (${existingUser.email})`,
+      oldData: {
+        role: existingUser.role,
+        is_active: existingUser.is_active,
+        full_name: existingUser.full_name,
       },
+      newData: updates,
     })
 
     revalidatePath("/admin/users")
@@ -325,17 +326,16 @@ export async function deleteAdminUser(
     }
 
     // 3. Audit logging
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "DELETE",
-      entity_type: "admin_user",
-      entity_id: userId,
-      new_data: {
-        deleted_user: {
-          email: adminUser.email,
-          full_name: adminUser.full_name,
-          role: adminUser.role,
-        },
+    void logAdminActivity({
+      action: "ADMIN_USER_DELETED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: userId,
+      description: `Permanently deleted administrator account for ${adminUser.full_name} (${adminUser.email})`,
+      oldData: {
+        email: adminUser.email,
+        full_name: adminUser.full_name,
+        role: adminUser.role,
       },
     })
 
@@ -387,12 +387,13 @@ export async function resetAdminUserPassword(
       return { error: updateError.message }
     }
 
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "admin_user",
-      entity_id: userId,
-      new_data: { action: "PASSWORD_RESET", email: adminUser.email },
+    void logAdminActivity({
+      action: "ADMIN_PASSWORD_RESET",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: userId,
+      description: `Reset password for administrator ${adminUser.email}`,
+      newData: { email: adminUser.email },
     })
 
     return { success: true }
@@ -484,12 +485,13 @@ export async function generateAdminPasswordResetLink(
       return { error: linkError?.message || "Failed to generate recovery link." }
     }
 
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "GENERATE_RESET_LINK",
-      entity_type: "admin_user",
-      entity_id: userId,
-      new_data: { target_email: adminUser.email },
+    void logAdminActivity({
+      action: "ADMIN_RESET_LINK_GENERATED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: userId,
+      description: `Generated password recovery link for ${adminUser.email}`,
+      newData: { target_email: adminUser.email },
     })
 
     return { success: true, link: data.properties.action_link }
@@ -564,12 +566,13 @@ export async function sendAdminPasswordResetEmailAction(
     }
 
     // Audit logging
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "SEND_RESET_EMAIL",
-      entity_type: "admin_user",
-      entity_id: userId,
-      new_data: { target_email: adminUser.email, recipient_name: adminUser.full_name },
+    void logAdminActivity({
+      action: "ADMIN_RESET_EMAIL_DISPATCHED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: userId,
+      description: `Dispatched password reset email to ${adminUser.email}`,
+      newData: { target_email: adminUser.email, recipient_name: adminUser.full_name },
     })
 
     return { success: true }
@@ -688,11 +691,13 @@ export async function bulkUpdateAdminUsers(
     }
 
     // Record bulk action in activity logs
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: `BULK_${action.toUpperCase()}`,
-      entity_type: "admin_user",
-      new_data: {
+    void logAdminActivity({
+      action: `ADMIN_USER_BULK_${action.toUpperCase()}`,
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: "bulk",
+      description: `Bulk ${action} executed on ${targetIds.length} administrator account(s)`,
+      newData: {
         affected_count: targetIds.length,
         user_ids: targetIds,
         assigned_role: role || null,
@@ -716,6 +721,14 @@ export interface SystemAuditLogItem {
   actor_id?: string
   actor_name?: string
   actor_email?: string
+  actor_role?: string
+  domain?: string
+  summary?: string
+  diff?: Record<string, unknown>
+  status?: string
+  ip_address?: string
+  user_agent?: string
+  duration_ms?: number
   new_data?: Record<string, unknown>
   created_at: string
 }
@@ -723,10 +736,21 @@ export interface SystemAuditLogItem {
 /**
  * Retrieves system-wide security and administrative audit logs across all admin users.
  */
+function maskIpAddress(ip?: string): string | undefined {
+  if (!ip) return undefined
+  if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") return ip
+  const parts = ip.split(".")
+  if (parts.length === 4) {
+    return `${parts[0]}.${parts[1]}.***.***`
+  }
+  return ip.slice(0, 8) + "..."
+}
+
 export async function getSystemAuditLogs(params?: {
   limit?: number
   action?: string
   search?: string
+  domain?: string
 }): Promise<{ logs: SystemAuditLogItem[]; error?: string }> {
   try {
     const currentAdmin = await getCurrentAdmin()
@@ -734,14 +758,32 @@ export async function getSystemAuditLogs(params?: {
       return { logs: [], error: "Unauthorized." }
     }
 
+    const currentRole = currentAdmin.role as AdminRole
+    const isSuperAdmin = currentRole === "SUPER_ADMIN"
+    const isAdmin = currentRole === "ADMIN"
+    const isFinance = currentRole === "FINANCE"
+    const isEditor = currentRole === "EDITOR"
+
+    const currentUserId = currentAdmin.id
+    const currentAuthUserId = currentAdmin.user_id
+
     const limit = params?.limit || 50
     const supabase = await createClient()
 
     let query = supabase
       .from("activity_logs")
-      .select("id, action, entity_type, entity_id, user_id, new_data, created_at")
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(limit)
+
+    // Approach 3: Database query scoping by role
+    if (isEditor) {
+      // Editor can only query their own actions
+      query = query.or(`user_id.eq.${currentUserId},user_id.eq.${currentAuthUserId}`)
+    } else if (isFinance) {
+      // Finance can query DONATION domain or their own actions
+      query = query.or(`domain.eq.DONATION,user_id.eq.${currentUserId},user_id.eq.${currentAuthUserId}`)
+    }
 
     if (params?.action && params.action !== "ALL") {
       query = query.ilike("action", `%${params.action}%`)
@@ -755,7 +797,7 @@ export async function getSystemAuditLogs(params?: {
 
     // Look up actor profiles from admin_users
     const actorIds = Array.from(
-      new Set((logsData || []).map((l) => l.user_id).filter(Boolean))
+      new Set((logsData || []).map((l: { user_id?: string }) => l.user_id).filter(Boolean))
     )
 
     let actorsMap = new Map<string, { full_name: string; email: string }>()
@@ -763,44 +805,98 @@ export async function getSystemAuditLogs(params?: {
       const { data: actors } = await supabase
         .from("admin_users")
         .select("id, full_name, email")
-        .in("id", actorIds)
+        .in("id", actorIds as string[])
 
       if (actors) {
         actorsMap = new Map(actors.map((a) => [a.id, { full_name: a.full_name, email: a.email }]))
       }
     }
 
-    const mappedLogs: SystemAuditLogItem[] = (logsData || []).map((l) => {
-      const actor = l.user_id ? actorsMap.get(l.user_id) : undefined
+    const mappedLogs: SystemAuditLogItem[] = (logsData || []).map((l: Record<string, unknown>) => {
+      const userId = (l.user_id as string) || undefined
+      const actor = userId ? actorsMap.get(userId) : undefined
+      const meta = (l.new_data as Record<string, unknown>)?._audit_meta as Record<string, unknown> | undefined
+
+      const isOwnLog =
+        userId === currentUserId ||
+        userId === currentAuthUserId ||
+        (Boolean(l.actor_email) && l.actor_email === currentAdmin.email)
+
+      const rawIp = (l.ip_address as string) || (meta?.ip_address as string) || undefined
+      const ipAddress = isSuperAdmin || isOwnLog ? rawIp : maskIpAddress(rawIp)
+
+      const rawUa = (l.user_agent as string) || (meta?.user_agent as string) || undefined
+      const userAgent = isSuperAdmin || isOwnLog ? rawUa : rawUa ? "Redacted for privacy" : undefined
+
       return {
-        id: l.id,
-        action: l.action,
-        entity_type: l.entity_type,
-        entity_id: l.entity_id || undefined,
-        actor_id: l.user_id || undefined,
+        id: String(l.id),
+        action: String(l.action),
+        entity_type: String(l.entity_type),
+        entity_id: l.entity_id ? String(l.entity_id) : undefined,
+        actor_id: userId,
         actor_name: actor?.full_name || undefined,
-        actor_email: actor?.email || undefined,
+        actor_email: (l.actor_email as string) || (meta?.actor_email as string) || actor?.email || undefined,
+        actor_role: (l.actor_role as string) || (meta?.actor_role as string) || undefined,
+        domain: (l.domain as string) || (meta?.domain as string) || undefined,
+        summary: (l.summary as string) || (meta?.summary as string) || undefined,
+        diff: ((l.diff || meta?.diff) as Record<string, unknown>) || undefined,
+        status: (l.status as string) || (meta?.status as string) || "SUCCESS",
+        ip_address: ipAddress,
+        user_agent: userAgent,
+        duration_ms: typeof l.duration_ms === "number" ? l.duration_ms : typeof meta?.duration_ms === "number" ? meta.duration_ms : undefined,
         new_data: (l.new_data as Record<string, unknown>) || undefined,
-        created_at: l.created_at,
+        created_at: String(l.created_at),
       }
     })
+
+    // Approach 3: Post-mapping filtering for sensitive peer events
+    let filtered = mappedLogs.filter((l) => {
+      if (isSuperAdmin) return true
+
+      const isOwnLog =
+        l.actor_id === currentUserId ||
+        l.actor_id === currentAuthUserId ||
+        (Boolean(l.actor_email) && l.actor_email === currentAdmin.email)
+
+      if (isOwnLog) return true
+
+      // If ADMIN: hide raw brute-force attacks / failed login investigations on peers
+      if (isAdmin) {
+        if (l.action === "ADMIN_LOGIN_FAILED" || l.action === "ADMIN_PASSWORD_RESET_REQUESTED") {
+          return false
+        }
+        if (
+          l.action === "ADMIN_USER_ROLE_CHANGED" ||
+          l.action === "ADMIN_USER_DELETED" ||
+          l.action === "INITIAL_SUPER_ADMIN_CREATED"
+        ) {
+          return false
+        }
+      }
+
+      return true
+    })
+
+    if (params?.domain && params.domain !== "ALL") {
+      const d = params.domain.toLowerCase()
+      filtered = filtered.filter((l) => (l.domain || "").toLowerCase() === d)
+    }
 
     // Filter by search if specified
     if (params?.search) {
       const q = params.search.toLowerCase().trim()
-      return {
-        logs: mappedLogs.filter(
-          (l) =>
-            l.action.toLowerCase().includes(q) ||
-            l.entity_type.toLowerCase().includes(q) ||
-            l.actor_name?.toLowerCase().includes(q) ||
-            l.actor_email?.toLowerCase().includes(q) ||
-            (l.new_data && JSON.stringify(l.new_data).toLowerCase().includes(q))
-        ),
-      }
+      filtered = filtered.filter(
+        (l) =>
+          l.action.toLowerCase().includes(q) ||
+          l.entity_type.toLowerCase().includes(q) ||
+          (l.summary && l.summary.toLowerCase().includes(q)) ||
+          l.actor_name?.toLowerCase().includes(q) ||
+          l.actor_email?.toLowerCase().includes(q) ||
+          (l.new_data && JSON.stringify(l.new_data).toLowerCase().includes(q))
+      )
     }
 
-    return { logs: mappedLogs }
+    return { logs: filtered }
   } catch (err) {
     return {
       logs: [],

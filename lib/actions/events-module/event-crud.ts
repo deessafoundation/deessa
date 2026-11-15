@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   EventModuleEvent,
   EventStatus,
@@ -16,25 +18,16 @@ import type {
 // =============================================
 // Auth Guard (defense-in-depth)
 // =============================================
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  // Verify admin status
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id, role")
-    .eq("user_id", user.id)
-    .single();
+  const admin = await getCurrentAdmin();
 
   if (!admin) {
-    throw new Error("Unauthorized: Not an admin user");
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
+  }
+
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
   }
 
   return { supabase, admin };
@@ -302,6 +295,16 @@ export async function createEvent(
       console.error("Failed to create default email templates:", tplError);
     }
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "EVENT_CREATED",
+      domain: "EVENTS",
+      entityType: "events",
+      entityId: data.id,
+      summary: `Admin created event: "${data.title}"`,
+      newData: data,
+    });
+
     return { success: true, data: data as EventModuleEvent };
   } catch (err) {
     console.error("Error creating event:", err);
@@ -399,6 +402,15 @@ export async function updateEvent(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "EVENT_UPDATED",
+      domain: "EVENTS",
+      entityType: "events",
+      entityId: id,
+      summary: `Admin updated event "${data.title || id}"`,
+      newData: updateData,
+    });
+
     return { success: true, data: data as EventModuleEvent };
   } catch (err) {
     console.error("Error updating event:", err);
@@ -461,6 +473,16 @@ export async function setEventStatus(
       console.error("Failed to set event status:", error);
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      action: "EVENT_STATUS_CHANGED",
+      domain: "EVENTS",
+      entityType: "events",
+      entityId: id,
+      summary: `Admin changed event status from "${currentStatus}" to "${newStatus}"`,
+      oldData: { status: currentStatus },
+      newData: { status: newStatus },
+    });
 
     revalidatePath("/admin/events");
     revalidatePath(`/admin/events/${id}`);
@@ -632,6 +654,16 @@ export async function duplicateEvent(
     revalidatePath("/admin/events");
     revalidatePath(`/admin/events/${newEvent.id}`);
 
+    await logAdminActivity({
+      action: "EVENT_DUPLICATED",
+      domain: "EVENTS",
+      entityType: "events",
+      entityId: newEvent.id,
+      summary: `Admin duplicated event "${original.title}" as "${newEvent.title}"`,
+      newData: newEvent,
+      oldData: { originalId: id, originalSlug: original.slug },
+    });
+
     return { success: true, data: newEvent as EventModuleEvent };
   } catch (err) {
     console.error("Error duplicating event:", err);
@@ -668,7 +700,7 @@ export async function deleteEvent(
   id: string
 ): Promise<ActionResult<void>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin(["SUPER_ADMIN", "ADMIN"]);
 
     // Check if event can be deleted (no registrations)
     const { data: canDelete } = await supabase.rpc("can_delete_event", {
@@ -690,6 +722,15 @@ export async function deleteEvent(
       console.error("Failed to delete event:", error);
       return { success: false, error: error.message };
     }
+
+    await logAdminActivity({
+      action: "EVENT_DELETED",
+      domain: "EVENTS",
+      entityType: "events",
+      entityId: id,
+      summary: `Admin deleted event ${id}`,
+      oldData: { id },
+    });
 
     return { success: true };
   } catch (err) {

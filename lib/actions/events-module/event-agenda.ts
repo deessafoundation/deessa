@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   EventAgendaItem,
   CreateAgendaItemInput,
@@ -9,24 +11,18 @@ import type {
 } from "@/lib/types/events-module";
 
 // Auth guard for admin operations
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
+  const admin = await getCurrentAdmin();
 
-  let user;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    throw new Error("Session expired. Please log in again.");
+  if (!admin) {
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
   }
 
-  if (!user) throw new Error("Unauthorized");
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!admin) throw new Error("Unauthorized: Not an admin user");
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
+  }
+
   return { supabase, admin };
 }
 
@@ -136,6 +132,15 @@ export async function createAgendaItem(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "EVENT_AGENDA_CREATED",
+      domain: "EVENTS",
+      entityType: "event_agenda_items",
+      entityId: data.id,
+      summary: `Admin added agenda item "${data.title}" (Day ${data.day_number})`,
+      newData: data,
+    });
+
     revalidatePath(`/admin/events/${input.event_id}/settings`);
     return { success: true, data: data as EventAgendaItem };
   } catch (err) {
@@ -179,6 +184,15 @@ export async function updateAgendaItem(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "EVENT_AGENDA_UPDATED",
+      domain: "EVENTS",
+      entityType: "event_agenda_items",
+      entityId: id,
+      summary: `Admin updated agenda item "${data.title}"`,
+      newData: updateData,
+    });
+
     if (input.event_id) {
       revalidatePath(`/admin/events/${input.event_id}/settings`);
     }
@@ -207,6 +221,15 @@ export async function deleteAgendaItem(
       return { success: false, error: error.message };
     }
 
+    await logAdminActivity({
+      action: "EVENT_AGENDA_DELETED",
+      domain: "EVENTS",
+      entityType: "event_agenda_items",
+      entityId: id,
+      summary: `Admin deleted agenda item ${id} for event ${eventId}`,
+      oldData: { id, eventId },
+    });
+
     revalidatePath(`/admin/events/${eventId}/settings`);
     return { success: true };
   } catch (err) {
@@ -234,6 +257,15 @@ export async function reorderAgendaItems(
     );
 
     await Promise.all(updates);
+
+    await logAdminActivity({
+      action: "EVENT_AGENDA_REORDERED",
+      domain: "EVENTS",
+      entityType: "event_agenda_items",
+      entityId: eventId,
+      summary: `Admin reordered ${itemIds.length} agenda items for event ${eventId}`,
+      newData: { count: itemIds.length, itemIds },
+    });
 
     revalidatePath(`/admin/events/${eventId}/settings`);
     return { success: true };

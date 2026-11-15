@@ -18,7 +18,7 @@ export const createAdminUserSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(100, "Password is too long"),
   role: z.enum(ADMIN_ROLES, {
-    errorMap: () => ({ message: "Please select a valid system role" }),
+    message: "Please select a valid system role",
   }),
 })
 

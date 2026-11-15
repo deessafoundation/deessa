@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ExcelJS from "exceljs"
 import { Input } from "@/components/ui/input"
@@ -38,7 +38,13 @@ import {
   FileText,
   Filter,
   X,
+  LayoutGrid,
+  Table as TableIcon,
+  Mail,
+  Phone,
+  Calendar,
 } from "lucide-react"
+import { cn } from "@/lib/utils"
 import type { EventRegistration } from "@/lib/types/events-module"
 
 function getInitials(name: string | null | undefined) {
@@ -52,12 +58,12 @@ function getInitials(name: string | null | undefined) {
 }
 
 const AVATAR_COLORS = [
-  "bg-blue-100 text-blue-700",
-  "bg-purple-100 text-purple-700",
-  "bg-orange-100 text-orange-700",
-  "bg-green-100 text-green-700",
-  "bg-red-100 text-red-700",
-  "bg-pink-100 text-pink-700",
+  "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300",
+  "bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300",
+  "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300",
+  "bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300",
+  "bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300",
+  "bg-pink-100 text-pink-700 dark:bg-pink-950/60 dark:text-pink-300",
 ]
 
 function avatarColor(name: string | null | undefined) {
@@ -68,45 +74,84 @@ function avatarColor(name: string | null | undefined) {
 
 function StatusBadge({ status }: { status: string }) {
   if (status === "confirmed")
-    return <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Confirmed</Badge>
+    return (
+      <Badge className="bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 hover:bg-green-100 text-xs font-semibold border-0">
+        Confirmed
+      </Badge>
+    )
   if (status === "cancelled")
-    return <Badge className="bg-red-100 text-red-700 hover:bg-red-100">Cancelled</Badge>
+    return (
+      <Badge className="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 hover:bg-red-100 text-xs font-semibold border-0">
+        Cancelled
+      </Badge>
+    )
   if (status === "expired")
-    return <Badge className="bg-slate-100 text-slate-500 hover:bg-slate-100">Expired</Badge>
-  return <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">Pending</Badge>
+    return (
+      <Badge className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-100 text-xs font-semibold border-0">
+        Expired
+      </Badge>
+    )
+  return (
+    <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 hover:bg-amber-100 text-xs font-semibold border-0">
+      Pending
+    </Badge>
+  )
 }
 
 function PaymentBadge({ status }: { status?: string | null }) {
   if (status === "paid")
-    return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-[10px] px-2">Paid</Badge>
+    return (
+      <Badge className="bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 hover:bg-green-100 text-[11px] px-2 py-0 font-semibold border-0">
+        Paid
+      </Badge>
+    )
   if (status === "failed")
-    return <Badge className="bg-red-100 text-red-700 hover:bg-red-100 text-[10px] px-2">Failed</Badge>
+    return (
+      <Badge className="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 hover:bg-red-100 text-[11px] px-2 py-0 font-semibold border-0">
+        Failed
+      </Badge>
+    )
   if (status === "refunded")
-    return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 text-[10px] px-2">Refunded</Badge>
+    return (
+      <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 hover:bg-purple-100 text-[11px] px-2 py-0 font-semibold border-0">
+        Refunded
+      </Badge>
+    )
   if (status === "review")
-    return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 text-[10px] px-2">Under Review</Badge>
-  return <Badge className="bg-slate-100 text-slate-400 hover:bg-slate-100 text-[10px] px-2">Unpaid</Badge>
+    return (
+      <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 text-[11px] px-2 py-0 font-semibold border-0">
+        In Review
+      </Badge>
+    )
+  return (
+    <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 hover:bg-amber-100 text-[11px] px-2 py-0 font-semibold border-0">
+      Unpaid
+    </Badge>
+  )
 }
 
 function PaymentMethodBadge({ method }: { method?: string | null }) {
   if (!method) return <span className="text-xs text-muted-foreground">—</span>
-  if (method === "venue") return (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-700">
-      Pay at Venue
-    </span>
-  )
-  if (method === "qr") return (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700">
-      QR Code
-    </span>
-  )
-  if (method === "online") return (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-700">
-      Online
-    </span>
-  )
+  if (method === "venue")
+    return (
+      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300">
+        Pay at Venue
+      </span>
+    )
+  if (method === "qr")
+    return (
+      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+        QR Code
+      </span>
+    )
+  if (method === "online")
+    return (
+      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
+        Online
+      </span>
+    )
   return (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-slate-100 text-slate-600">
+    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
       {method.charAt(0).toUpperCase() + method.slice(1)}
     </span>
   )
@@ -115,7 +160,7 @@ function PaymentMethodBadge({ method }: { method?: string | null }) {
 function ModeBadge({ mode }: { mode?: string | null }) {
   if (!mode) return <span className="text-xs text-muted-foreground">—</span>
   return (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
+    <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
       {mode.charAt(0).toUpperCase() + mode.slice(1)}
     </span>
   )
@@ -191,7 +236,6 @@ function exportToCsv(rows: Record<string, string>[], filename: string) {
       headers
         .map((h) => {
           const val = row[h] ?? ""
-          // Escape quotes and wrap in quotes if contains comma, quote, or newline
           if (val.includes(",") || val.includes('"') || val.includes("\n")) {
             return `"${val.replace(/"/g, '""')}"`
           }
@@ -214,7 +258,6 @@ async function exportToExcel(rows: Record<string, string>[], filename: string) {
   // Add header row
   const headerRow = sheet.addRow(headers.map((h) => h.toUpperCase()))
 
-  // Style header row - brand blue bg, white bold text
   headerRow.eachCell((cell) => {
     cell.fill = {
       type: "pattern",
@@ -278,10 +321,8 @@ async function exportToExcel(rows: Record<string, string>[], filename: string) {
     col.width = Math.max(header.length + 4, maxDataLen + 4, 14)
   })
 
-  // Freeze header row
   sheet.views = [{ state: "frozen", ySplit: 1 }]
 
-  // Generate buffer and download
   const buffer = await workbook.xlsx.writeBuffer()
   const blob = new Blob([buffer], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -331,12 +372,27 @@ export function RegistrationsTable({
   hasModeField = false,
 }: RegistrationsTableProps) {
   const router = useRouter()
+  const [viewMode, setViewMode] = useState<"table" | "card">("table")
   const [search, setSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [paymentFilter, setPaymentFilter] = useState<string>("all")
   const [paymentMethodFilter, setPaymentMethodFilter] = useState<string>("all")
   const [paymentProviderFilter, setPaymentProviderFilter] = useState<string>("all")
+
+  // Responsive default: cards on mobile, table on desktop
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const mql = window.matchMedia("(max-width: 767px)")
+    if (mql.matches) {
+      requestAnimationFrame(() => setViewMode("card"))
+    }
+    const handler = (e: MediaQueryListEvent) => {
+      setViewMode(e.matches ? "card" : "table")
+    }
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [])
 
   const filtered = useMemo(() => {
     return registrations.filter((r) => {
@@ -386,7 +442,12 @@ export function RegistrationsTable({
     })
   }, [registrations, search, statusFilter, paymentFilter, paymentMethodFilter, paymentProviderFilter, hasRoleField, hasModeField])
 
-  const hasActiveFilters = statusFilter !== "all" || paymentFilter !== "all" || paymentMethodFilter !== "all" || paymentProviderFilter !== "all" || search.trim() !== ""
+  const hasActiveFilters =
+    statusFilter !== "all" ||
+    paymentFilter !== "all" ||
+    paymentMethodFilter !== "all" ||
+    paymentProviderFilter !== "all" ||
+    search.trim() !== ""
 
   const clearFilters = () => {
     setStatusFilter("all")
@@ -394,9 +455,10 @@ export function RegistrationsTable({
     setPaymentMethodFilter("all")
     setPaymentProviderFilter("all")
     setSearch("")
+    setCurrentPage(1)
   }
 
-  // Get unique payment providers from registrations
+  // Get unique payment providers
   const paymentProviders = useMemo(() => {
     const providers = new Set<string>()
     registrations.forEach((r) => {
@@ -431,58 +493,104 @@ export function RegistrationsTable({
     [filtered, hasRoleField, hasModeField]
   )
 
-  const totalCols = 7 + (hasRoleField ? 1 : 0) + (hasModeField ? 1 : 0) + 2 // id, name, email, phone, method, status, payment + role? + mode? + amount, registered
-
   return (
-    <Card>
-      <CardHeader className="border-b border-border px-4 sm:px-6 py-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center justify-between sm:justify-start gap-2">
-            <CardTitle className="text-base font-bold">All Registrations</CardTitle>
-            <Badge variant="outline" className="text-xs">
+    <Card className="border-border shadow-xs overflow-hidden">
+      <CardHeader className="border-b border-border bg-card px-4 sm:px-6 py-4 space-y-3">
+        {/* Top Control Bar: Title, Search, View Mode Toggle & Export */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base sm:text-lg font-bold tracking-tight">
+              All Registrations
+            </CardTitle>
+            <Badge variant="outline" className="text-xs font-semibold px-2 py-0.5">
               {filtered.length}
             </Badge>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-72">
+
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+            {/* Search Input */}
+            <div className="relative flex-1 sm:w-64 md:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search ID, name, email..."
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-9 h-9 text-xs"
+                className="pl-9 h-9 text-xs sm:text-sm bg-background"
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => handleSearchChange("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
             </div>
+
+            {/* View Mode Toggle Pill (Table vs Card) */}
+            <div className="flex items-center rounded-lg border border-border bg-muted/40 p-0.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setViewMode("table")}
+                className={cn(
+                  "flex items-center justify-center rounded-md p-1.5 transition-colors",
+                  viewMode === "table"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                title="Table View"
+                aria-label="Table View"
+              >
+                <TableIcon className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("card")}
+                className={cn(
+                  "flex items-center justify-center rounded-md p-1.5 transition-colors",
+                  viewMode === "card"
+                    ? "bg-background text-foreground shadow-xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                title="Card View"
+                aria-label="Card View"
+              >
+                <LayoutGrid className="size-4" />
+              </button>
+            </div>
+
+            {/* Export Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" size="sm" className="gap-1.5 shrink-0 h-9">
-                  <Download className="h-4 w-4" />
-                  <span className="hidden xs:inline">Export</span>
+                <Button variant="outline" size="sm" className="gap-1.5 shrink-0 h-9 text-xs sm:text-sm">
+                  <Download className="h-4 w-4 text-muted-foreground" />
+                  <span>Export</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => handleExport("csv")}>
-                  <FileText className="h-4 w-4 mr-2" />
+                <DropdownMenuItem onClick={() => handleExport("csv")} className="cursor-pointer text-xs sm:text-sm">
+                  <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
                   Export as CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport("excel")}>
-                  <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  Export as Excel
+                <DropdownMenuItem onClick={() => handleExport("excel")} className="cursor-pointer text-xs sm:text-sm">
+                  <FileSpreadsheet className="h-4 w-4 mr-2 text-muted-foreground" />
+                  Export as Excel (.xlsx)
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        {/* Desktop Filter Row */}
-        <div className="hidden sm:flex items-center gap-3 mt-3 flex-wrap">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Filter className="h-4 w-4" />
-            <span>Filters:</span>
+        {/* Filter Selects Row */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/60">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground shrink-0 mr-1">
+            <Filter className="h-3.5 w-3.5" />
+            <span className="font-medium">Filter:</span>
           </div>
 
           <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1) }}>
-            <SelectTrigger className="w-[140px] h-8 text-xs">
+            <SelectTrigger className="w-[125px] sm:w-[135px] h-8 text-xs bg-background">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -495,7 +603,7 @@ export function RegistrationsTable({
           </Select>
 
           <Select value={paymentFilter} onValueChange={(v) => { setPaymentFilter(v); setCurrentPage(1) }}>
-            <SelectTrigger className="w-[140px] h-8 text-xs">
+            <SelectTrigger className="w-[125px] sm:w-[135px] h-8 text-xs bg-background">
               <SelectValue placeholder="Payment" />
             </SelectTrigger>
             <SelectContent>
@@ -509,7 +617,7 @@ export function RegistrationsTable({
           </Select>
 
           <Select value={paymentMethodFilter} onValueChange={(v) => { setPaymentMethodFilter(v); setCurrentPage(1) }}>
-            <SelectTrigger className="w-[140px] h-8 text-xs">
+            <SelectTrigger className="w-[125px] sm:w-[135px] h-8 text-xs bg-background">
               <SelectValue placeholder="Method" />
             </SelectTrigger>
             <SelectContent>
@@ -523,7 +631,7 @@ export function RegistrationsTable({
 
           {paymentProviders.length > 1 && (
             <Select value={paymentProviderFilter} onValueChange={(v) => { setPaymentProviderFilter(v); setCurrentPage(1) }}>
-              <SelectTrigger className="w-[140px] h-8 text-xs">
+              <SelectTrigger className="w-[125px] sm:w-[135px] h-8 text-xs bg-background">
                 <SelectValue placeholder="Provider" />
               </SelectTrigger>
               <SelectContent>
@@ -542,197 +650,189 @@ export function RegistrationsTable({
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+              className="h-8 gap-1 text-xs text-muted-foreground hover:text-foreground ml-auto"
             >
               <X className="h-3.5 w-3.5" />
-              Clear filters
+              <span>Clear filters</span>
             </Button>
-          )}
-
-          {hasActiveFilters && (
-            <Badge variant="secondary" className="ml-1 text-xs">
-              {filtered.length} of {registrations.length}
-            </Badge>
-          )}
-        </div>
-
-        {/* Mobile Filter Row */}
-        <div className="flex sm:hidden flex-col gap-2 mt-3 pt-3 border-t border-border/60">
-          <div className="grid grid-cols-2 gap-2">
-            <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1) }}>
-              <SelectTrigger className="w-full h-8 text-xs">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="confirmed">Confirmed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-                <SelectItem value="expired">Expired</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={paymentFilter} onValueChange={(v) => { setPaymentFilter(v); setCurrentPage(1) }}>
-              <SelectTrigger className="w-full h-8 text-xs">
-                <SelectValue placeholder="Payment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Payment</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="unpaid">Unpaid</SelectItem>
-                <SelectItem value="review">Under Review</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-                <SelectItem value="refunded">Refunded</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={paymentMethodFilter} onValueChange={(v) => { setPaymentMethodFilter(v); setCurrentPage(1) }}>
-              <SelectTrigger className="w-full h-8 text-xs">
-                <SelectValue placeholder="Method" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Methods</SelectItem>
-                <SelectItem value="online">Online</SelectItem>
-                <SelectItem value="qr">QR Code</SelectItem>
-                <SelectItem value="venue">Pay at Venue</SelectItem>
-                <SelectItem value="__none__">Free / No Method</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {paymentProviders.length > 1 && (
-              <Select value={paymentProviderFilter} onValueChange={(v) => { setPaymentProviderFilter(v); setCurrentPage(1) }}>
-                <SelectTrigger className="w-full h-8 text-xs">
-                  <SelectValue placeholder="Provider" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Providers</SelectItem>
-                  {paymentProviders.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p === "free" ? "Free" : p.charAt(0).toUpperCase() + p.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {hasActiveFilters && (
-            <div className="flex items-center justify-between pt-1">
-              <Badge variant="secondary" className="text-xs">
-                {filtered.length} of {registrations.length}
-              </Badge>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearFilters}
-                className="h-7 text-xs text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-3.5 w-3.5 mr-1" /> Clear filters
-              </Button>
-            </div>
           )}
         </div>
       </CardHeader>
+
       <CardContent className="p-0">
-        {/* Desktop Table View */}
-        <div className="hidden md:block overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[120px]">ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                {hasRoleField && <TableHead>Role</TableHead>}
-                {hasModeField && <TableHead>Mode</TableHead>}
-                <TableHead>Method</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Payment</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Registered</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginated.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={totalCols} className="py-16 text-center text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                      {hasActiveFilters ? (
-                        <>
-                          <Filter className="size-10 text-muted-foreground/40" />
-                          <p className="font-medium">No matching registrations</p>
-                          <p className="text-sm">Try adjusting your filters or search term</p>
-                          <Button variant="outline" size="sm" onClick={clearFilters} className="mt-2">
-                            <X className="h-4 w-4 mr-1.5" />
-                            Clear all filters
-                          </Button>
-                        </>
-                      ) : search ? (
-                        <>
-                          <Search className="size-10 text-muted-foreground/40" />
-                          <p className="font-medium">No registrations found</p>
-                          <p className="text-sm">Try a different search term</p>
-                        </>
-                      ) : (
-                        <>
-                          <Users className="size-10 text-muted-foreground/40" />
-                          <p className="font-medium">No registrations yet</p>
-                          <p className="text-sm">Registrations will appear here once users start signing up.</p>
-                        </>
+        {paginated.length === 0 ? (
+          <div className="py-16 text-center text-muted-foreground space-y-3 px-4">
+            <div className="flex size-12 mx-auto items-center justify-center rounded-2xl bg-muted/60 text-muted-foreground/60">
+              {hasActiveFilters ? <Filter className="size-6" /> : <Users className="size-6" />}
+            </div>
+            <div>
+              <p className="font-semibold text-foreground text-sm sm:text-base">
+                {hasActiveFilters ? "No matching registrations found" : "No attendees registered yet"}
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 max-w-sm mx-auto">
+                {hasActiveFilters
+                  ? "Try resetting filters or search terms to see registrations."
+                  : "Registrations will appear here once attendees sign up for this event."}
+              </p>
+            </div>
+            {hasActiveFilters && (
+              <Button variant="outline" size="sm" onClick={clearFilters} className="text-xs h-8">
+                Clear all filters
+              </Button>
+            )}
+          </div>
+        ) : viewMode === "card" ? (
+          /* Card View Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 p-4 sm:p-5 bg-muted/15">
+            {paginated.map((reg) => {
+              const custom = (reg.custom_fields || {}) as Record<string, unknown>
+              const role = hasRoleField ? formatCustomValue(custom.role) : null
+              const mode = hasModeField ? formatCustomValue(custom.attendance_mode || custom.mode) : null
+              const shortId = `deessa-${reg.id.slice(0, 6).toUpperCase()}`
+
+              return (
+                <div
+                  key={reg.id}
+                  onClick={() => router.push(`/admin/events/${eventId}/registrations/${reg.id}`)}
+                  className="group relative flex flex-col justify-between rounded-xl border border-border bg-card p-4 shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40 cursor-pointer"
+                >
+                  <div className="space-y-3">
+                    {/* Header Row: Avatar, Name, ShortId, Badges */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div
+                          className={cn(
+                            "flex size-9 shrink-0 items-center justify-center rounded-xl text-xs font-bold",
+                            avatarColor(reg.full_name)
+                          )}
+                        >
+                          {getInitials(reg.full_name)}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">
+                            {reg.full_name}
+                          </p>
+                          <p className="font-mono text-[10px] text-muted-foreground">{shortId}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <StatusBadge status={reg.status} />
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div className="space-y-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <Mail className="size-3 shrink-0 text-muted-foreground/70" />
+                        <span className="truncate">{reg.email?.toLowerCase()}</span>
+                      </div>
+                      {reg.phone && (
+                        <div className="flex items-center gap-1.5">
+                          <Phone className="size-3 shrink-0 text-muted-foreground/70" />
+                          <span>{reg.phone}</span>
+                        </div>
                       )}
                     </div>
-                  </TableCell>
+
+                    {/* Custom Attributes (Role, Attendance Mode) */}
+                    {(role && role !== "—" || mode && mode !== "—") && (
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {role && role !== "—" && (
+                          <Badge variant="outline" className="text-[10px] font-normal py-0">
+                            {role}
+                          </Badge>
+                        )}
+                        {mode && mode !== "—" && <ModeBadge mode={mode} />}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer Row: Payment & Date */}
+                  <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-foreground">
+                        {reg.payment_amount
+                          ? `${reg.payment_currency || "NPR"} ${Number(reg.payment_amount).toLocaleString()}`
+                          : "Free"}
+                      </span>
+                      <PaymentBadge status={reg.payment_status} />
+                      <PaymentMethodBadge method={reg.payment_method} />
+                    </div>
+                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground shrink-0">
+                      <Calendar className="size-3 text-muted-foreground/60" />
+                      <span>
+                        {new Date(reg.created_at).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          /* Table View */
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/30">
+                  <TableHead className="w-[110px] text-xs font-semibold">ID</TableHead>
+                  <TableHead className="text-xs font-semibold">Attendee</TableHead>
+                  <TableHead className="text-xs font-semibold">Email</TableHead>
+                  <TableHead className="text-xs font-semibold">Phone</TableHead>
+                  {hasRoleField && <TableHead className="text-xs font-semibold">Role</TableHead>}
+                  {hasModeField && <TableHead className="text-xs font-semibold">Mode</TableHead>}
+                  <TableHead className="text-xs font-semibold">Status</TableHead>
+                  <TableHead className="text-xs font-semibold">Payment</TableHead>
+                  <TableHead className="text-xs font-semibold">Method</TableHead>
+                  <TableHead className="text-xs font-semibold">Amount</TableHead>
+                  <TableHead className="text-xs font-semibold">Registered</TableHead>
+                  <TableHead className="w-[40px]"></TableHead>
                 </TableRow>
-              ) : (
-                paginated.map((reg) => {
+              </TableHeader>
+              <TableBody>
+                {paginated.map((reg) => {
                   const custom = (reg.custom_fields || {}) as Record<string, unknown>
                   const role = hasRoleField ? formatCustomValue(custom.role) : null
-                  const mode = hasModeField
-                    ? formatCustomValue(custom.attendance_mode || custom.mode)
-                    : null
+                  const mode = hasModeField ? formatCustomValue(custom.attendance_mode || custom.mode) : null
+                  const shortId = `deessa-${reg.id.slice(0, 6).toUpperCase()}`
 
                   return (
                     <TableRow
                       key={reg.id}
-                      className="hover:bg-primary/5 transition-colors cursor-pointer"
                       onClick={() => router.push(`/admin/events/${eventId}/registrations/${reg.id}`)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault()
-                          router.push(`/admin/events/${eventId}/registrations/${reg.id}`)
-                        }
-                      }}
-                      tabIndex={0}
-                      role="link"
-                      aria-label={`View ${reg.full_name}'s registration`}
+                      className="cursor-pointer hover:bg-muted/40 transition-colors"
                     >
-                      <TableCell>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          deessa-{reg.id.slice(0, 6).toUpperCase()}
-                        </span>
+                      <TableCell className="font-mono text-xs font-medium text-muted-foreground">
+                        {shortId}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2.5">
                           <div
-                            className={`flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ${avatarColor(reg.full_name)}`}
+                            className={cn(
+                              "flex size-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
+                              avatarColor(reg.full_name)
+                            )}
                           >
                             {getInitials(reg.full_name)}
                           </div>
-                          <div>
-                            <p className="font-medium text-foreground">{reg.full_name}</p>
-                          </div>
+                          <span className="font-semibold text-xs sm:text-sm text-foreground">
+                            {reg.full_name}
+                          </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-xs text-muted-foreground">
                         {reg.email?.toLowerCase()}
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-xs text-muted-foreground">
                         {reg.phone || "—"}
                       </TableCell>
                       {hasRoleField && (
-                        <TableCell className="text-sm">
-                          {role !== "—" ? (
-                            <Badge variant="outline" className="font-normal">
+                        <TableCell className="text-xs">
+                          {role && role !== "—" ? (
+                            <Badge variant="outline" className="font-normal text-[11px] py-0">
                               {role}
                             </Badge>
                           ) : (
@@ -746,219 +846,94 @@ export function RegistrationsTable({
                         </TableCell>
                       )}
                       <TableCell>
-                        <PaymentMethodBadge method={reg.payment_method} />
-                      </TableCell>
-                      <TableCell>
                         <StatusBadge status={reg.status} />
                       </TableCell>
                       <TableCell>
                         <PaymentBadge status={reg.payment_status} />
                       </TableCell>
-                      <TableCell className="text-sm font-medium">
+                      <TableCell>
+                        <PaymentMethodBadge method={reg.payment_method} />
+                      </TableCell>
+                      <TableCell className="text-xs font-bold text-foreground">
                         {reg.payment_amount
                           ? `${reg.payment_currency || "NPR"} ${Number(reg.payment_amount).toLocaleString()}`
-                          : "—"}
+                          : "Free"}
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                         {new Date(reg.created_at).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
                         })}
                       </TableCell>
+                      <TableCell>
+                        <ChevronRight className="size-4 text-muted-foreground/60" />
+                      </TableCell>
                     </TableRow>
                   )
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
 
-        {/* Mobile Card List View */}
-        <div className="md:hidden p-3 space-y-2.5">
-          {paginated.length === 0 ? (
-            <div className="py-12 text-center text-muted-foreground space-y-2">
-              {hasActiveFilters ? (
-                <>
-                  <Filter className="size-8 mx-auto text-muted-foreground/40" />
-                  <p className="font-medium text-foreground">No matching registrations</p>
-                  <p className="text-xs">Try adjusting your filters or search query.</p>
-                  <Button variant="outline" size="sm" onClick={clearFilters} className="mt-2 text-xs">
-                    Clear filters
-                  </Button>
-                </>
-              ) : search ? (
-                <>
-                  <Search className="size-8 mx-auto text-muted-foreground/40" />
-                  <p className="font-medium text-foreground">No registrations found</p>
-                  <p className="text-xs">Try a different search term.</p>
-                </>
-              ) : (
-                <>
-                  <Users className="size-8 mx-auto text-muted-foreground/40" />
-                  <p className="font-medium text-foreground">No registrations yet</p>
-                  <p className="text-xs">Registrations will appear here once attendees sign up.</p>
-                </>
-              )}
-            </div>
-          ) : (
-            paginated.map((reg) => {
-              const custom = (reg.custom_fields || {}) as Record<string, unknown>
-              const role = hasRoleField ? formatCustomValue(custom.role) : null
-              const mode = hasModeField ? formatCustomValue(custom.attendance_mode || custom.mode) : null
-
-              return (
-                <div
-                  key={reg.id}
-                  onClick={() => router.push(`/admin/events/${eventId}/registrations/${reg.id}`)}
-                  className="p-3.5 rounded-xl border border-border bg-card hover:bg-muted/30 transition-all cursor-pointer space-y-2.5 active:scale-[0.99]"
-                >
-                  {/* Top row: Avatar + Name + Status Badges */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div
-                        className={`flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold ${avatarColor(reg.full_name)}`}
-                      >
-                        {getInitials(reg.full_name)}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-sm text-foreground truncate">{reg.full_name}</p>
-                        <p className="font-mono text-[10px] text-muted-foreground">deessa-{reg.id.slice(0, 6).toUpperCase()}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <StatusBadge status={reg.status} />
-                      <PaymentBadge status={reg.payment_status} />
-                    </div>
-                  </div>
-
-                  {/* Middle row: Email & Phone */}
-                  <div className="text-xs text-muted-foreground space-y-0.5">
-                    <p className="truncate">{reg.email?.toLowerCase()}</p>
-                    {reg.phone && <p>{reg.phone}</p>}
-                  </div>
-
-                  {/* Extra custom badges if role or mode present */}
-                  {(role && role !== "—" || mode && mode !== "—") && (
-                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                      {role && role !== "—" && (
-                        <Badge variant="outline" className="text-[10px] font-normal">
-                          {role}
-                        </Badge>
-                      )}
-                      {mode && mode !== "—" && (
-                        <ModeBadge mode={mode} />
-                      )}
-                    </div>
-                  )}
-
-                  {/* Bottom row: Payment amount + method + date */}
-                  <div className="flex items-center justify-between text-xs pt-2 border-t border-border/60">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-foreground">
-                        {reg.payment_amount
-                          ? `${reg.payment_currency || "NPR"} ${Number(reg.payment_amount).toLocaleString()}`
-                          : "Free"}
-                      </span>
-                      <PaymentMethodBadge method={reg.payment_method} />
-                    </div>
-                    <span className="text-[11px] text-muted-foreground">
-                      {new Date(reg.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </span>
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>
-
-        {/* Footer / Pagination */}
+        {/* Pagination Controls */}
         {filtered.length > 0 && (
-          <>
-            {/* Desktop Pagination */}
-            <div className="hidden sm:flex items-center justify-between border-t border-border px-6 py-3 text-xs text-muted-foreground">
-              <p>
-                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
-                {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of{" "}
-                {filtered.length} registrations
-                {search && (
-                  <span className="ml-1 text-primary">
-                    ({filtered.length} match{filtered.length !== 1 ? "es" : ""})
-                  </span>
-                )}
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="h-7 px-2 text-xs"
-                >
-                  <ChevronLeft className="h-3 w-3" />
-                </Button>
-                <div className="flex items-center gap-1">
-                  {getPaginationPages(currentPage, totalPages).map((page, i) =>
-                    page === "..." ? (
-                      <span key={`ellipsis-${i}`} className="px-1 text-xs text-muted-foreground">
-                        ...
-                      </span>
-                    ) : (
-                      <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => setCurrentPage(page as number)}
-                        className={`h-7 w-7 text-xs ${
-                          currentPage === page
-                            ? "bg-primary text-primary-foreground"
-                            : ""
-                        }`}
-                      >
-                        {page}
-                      </Button>
-                    )
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="h-7 px-2 text-xs"
-                >
-                  <ChevronRight className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between border-t border-border px-4 sm:px-6 py-3 gap-3 text-xs text-muted-foreground bg-card">
+            <p>
+              Showing <span className="font-medium text-foreground">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{" "}
+              <span className="font-medium text-foreground">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of{" "}
+              <span className="font-medium text-foreground">{filtered.length}</span> registrations
+              {search && <span className="ml-1 text-primary">({filtered.length} matching)</span>}
+            </p>
 
-            {/* Mobile Pagination */}
-            <div className="flex sm:hidden items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">
-                Page {currentPage} of {totalPages}
-              </span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="h-8 px-3 text-xs"
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="h-8 px-3 text-xs"
-                >
-                  Next
-                </Button>
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="h-8 px-2.5 text-xs"
+              >
+                <ChevronLeft className="h-3.5 w-3.5 sm:mr-1" />
+                <span className="hidden sm:inline">Previous</span>
+              </Button>
+
+              <div className="flex items-center gap-1">
+                {getPaginationPages(currentPage, totalPages).map((page, i) =>
+                  page === "..." ? (
+                    <span key={`ellipsis-${i}`} className="px-1 text-xs text-muted-foreground">
+                      ...
+                    </span>
+                  ) : (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => setCurrentPage(page as number)}
+                      className={cn(
+                        "h-8 w-8 text-xs font-medium",
+                        currentPage === page ? "bg-primary text-primary-foreground" : ""
+                      )}
+                    >
+                      {page}
+                    </Button>
+                  )
+                )}
               </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="h-8 px-2.5 text-xs"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRight className="h-3.5 w-3.5 sm:ml-1" />
+              </Button>
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>

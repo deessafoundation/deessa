@@ -317,3 +317,44 @@ export interface PartnerWithContexts extends Partner {
     category_label: string;
   }>;
 }
+
+// =============================================
+// Partner Metadata (packed in description JSON)
+// =============================================
+
+export interface PartnerMetadata {
+  text?: string;
+  logoFit?: string;
+  isDualLogo?: boolean;
+  secondaryLogo?: string | null;
+  secondaryLogoStoragePath?: string | null;
+  secondaryLogoName?: string | null;
+}
+
+export function parsePartnerMetadata(description?: string | null): PartnerMetadata {
+  if (!description) return { logoFit: "auto", isDualLogo: false };
+  if (description.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(description);
+      return {
+        text: parsed.text || "",
+        logoFit: parsed.logoFit || "auto",
+        isDualLogo: Boolean(parsed.isDualLogo && (parsed.secondaryLogo || parsed.secondaryLogoStoragePath)),
+        secondaryLogo: parsed.secondaryLogo || null,
+        secondaryLogoStoragePath: parsed.secondaryLogoStoragePath || null,
+        secondaryLogoName: parsed.secondaryLogoName || null,
+      };
+    } catch {
+      return { text: description, logoFit: "auto", isDualLogo: false };
+    }
+  }
+  if (description.includes("fit:")) {
+    const match = description.match(/fit:([a-z0-9-]+)/);
+    return {
+      text: description,
+      logoFit: match ? match[1] : "auto",
+      isDualLogo: false,
+    };
+  }
+  return { text: description, logoFit: "auto", isDualLogo: false };
+}

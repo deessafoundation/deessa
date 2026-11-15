@@ -77,7 +77,7 @@ export async function GET(request: Request) {
 
     const { data: donation, error: queryError } = await supabase
       .from("donations")
-      .select("id, amount, currency, donor_name, donor_email, donor_phone, is_monthly, payment_status, provider_ref, khalti_pidx, created_at")
+      .select("id, amount, currency, payment_status")
       .eq("khalti_pidx", pidx)
       .single()
 
@@ -92,23 +92,14 @@ export async function GET(request: Request) {
       )
     }
 
-    // 4. Return current status (no mutation)
+    // 4. Return minimal status fields only — no donor PII
     return NextResponse.json({
       success: true,
-      donation: {
-        id: donation.id,
-        amount: donation.amount,
-        currency: donation.currency,
-        donor_name: donation.donor_name,
-        donor_email: donation.donor_email,
-        donor_phone: donation.donor_phone,
-        is_monthly: donation.is_monthly,
-        payment_status: donation.payment_status,
-        provider_ref: donation.provider_ref,
-        khalti_pidx: donation.khalti_pidx,
-        created_at: donation.created_at,
-      },
       status: donation.payment_status,
+      amount: donation.amount,
+      currency: donation.currency,
+      provider: "khalti",
+      donationId: donation.id,
     })
 
   } catch (error) {

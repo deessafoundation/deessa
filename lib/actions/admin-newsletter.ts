@@ -9,6 +9,7 @@ import {
   normalizeSubscriber,
 } from "@/lib/data/newsletter"
 import { sendWelcomeNewsletterEmail } from "@/lib/email/newsletter-mailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 async function getAuthorizedAdmin() {
   const admin = await getCurrentAdmin()
@@ -33,7 +34,7 @@ export interface AddSubscriberInput {
  */
 export async function addNewsletterSubscriber(input: AddSubscriberInput) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const email = input.email.trim().toLowerCase()
@@ -47,7 +48,7 @@ export async function addNewsletterSubscriber(input: AddSubscriberInput) {
     // Check existing
     const { data: existing } = await serviceSupabase
       .from("newsletter_subscriptions")
-      .select("id, email, status, is_active, unsubscribe_token")
+      .select("id, email, name, status, is_active, unsubscribe_token")
       .eq("email", email)
       .maybeSingle()
 
@@ -100,12 +101,13 @@ export async function addNewsletterSubscriber(input: AddSubscriberInput) {
     }
 
     // Audit log
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "CREATE",
-      entity_type: "newsletter_subscription",
-      entity_id: recordId,
-      new_data: { email, name, source },
+    void logAdminActivity({
+      action: "NEWSLETTER_SUBSCRIBER_ADDED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: recordId,
+      description: `Added newsletter subscriber ${email}`,
+      newData: { email, name, source },
     })
 
     revalidatePath("/admin/newsletter")
@@ -124,7 +126,7 @@ export async function addNewsletterSubscriber(input: AddSubscriberInput) {
  */
 export async function toggleSubscriberStatus(id: string, currentStatus: SubscriberStatus) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const newStatus: SubscriberStatus = currentStatus === "active" ? "unsubscribed" : "active"
@@ -146,12 +148,13 @@ export async function toggleSubscriberStatus(id: string, currentStatus: Subscrib
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "UPDATE",
-      entity_type: "newsletter_subscription",
-      entity_id: id,
-      new_data: { status: newStatus, is_active: isActive },
+    void logAdminActivity({
+      action: isActive ? "NEWSLETTER_SUBSCRIBER_ACTIVATED" : "NEWSLETTER_SUBSCRIBER_UNSUBSCRIBED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: id,
+      description: `${isActive ? "Activated" : "Unsubscribed"} newsletter subscriber ${id}`,
+      newData: { status: newStatus, is_active: isActive },
     })
 
     revalidatePath("/admin/newsletter")
@@ -177,7 +180,7 @@ export interface UpdateSubscriberInput {
  */
 export async function updateSubscriberDetails(input: UpdateSubscriberInput) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const isActive = input.status === "active"
@@ -200,12 +203,13 @@ export async function updateSubscriberDetails(input: UpdateSubscriberInput) {
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "UPDATE",
-      entity_type: "newsletter_subscription",
-      entity_id: input.id,
-      new_data: { name: input.name, status: input.status, source: input.source },
+    void logAdminActivity({
+      action: "NEWSLETTER_SUBSCRIBER_UPDATED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: input.id,
+      description: `Updated subscriber details for ${input.id}`,
+      newData: { name: input.name, status: input.status, source: input.source },
     })
 
     revalidatePath("/admin/newsletter")
@@ -259,7 +263,7 @@ export async function sendManualWelcomeEmail(subscriberId: string) {
  */
 export async function deleteNewsletterSubscriber(id: string) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error } = await serviceSupabase
@@ -271,11 +275,12 @@ export async function deleteNewsletterSubscriber(id: string) {
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "DELETE",
-      entity_type: "newsletter_subscription",
-      entity_id: id,
+    void logAdminActivity({
+      action: "NEWSLETTER_SUBSCRIBER_DELETED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: id,
+      description: `Deleted newsletter subscriber ${id}`,
     })
 
     revalidatePath("/admin/newsletter")
@@ -294,7 +299,7 @@ export async function deleteNewsletterSubscriber(id: string) {
  */
 export async function bulkUpdateSubscriberStatus(ids: string[], newStatus: SubscriberStatus) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const isActive = newStatus === "active"
@@ -313,11 +318,13 @@ export async function bulkUpdateSubscriberStatus(ids: string[], newStatus: Subsc
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "BULK_UPDATE",
-      entity_type: "newsletter_subscription",
-      new_data: { count: ids.length, status: newStatus },
+    void logAdminActivity({
+      action: "NEWSLETTER_SUBSCRIBERS_BULK_UPDATED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: "bulk",
+      description: `Bulk updated ${ids.length} newsletter subscriber(s) to ${newStatus}`,
+      newData: { count: ids.length, status: newStatus, ids },
     })
 
     revalidatePath("/admin/newsletter")
@@ -336,7 +343,7 @@ export async function bulkUpdateSubscriberStatus(ids: string[], newStatus: Subsc
  */
 export async function bulkDeleteSubscribers(ids: string[]) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error } = await serviceSupabase
@@ -348,11 +355,13 @@ export async function bulkDeleteSubscribers(ids: string[]) {
       return { success: false, error: error.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.user_id,
-      action: "BULK_DELETE",
-      entity_type: "newsletter_subscription",
-      new_data: { count: ids.length },
+    void logAdminActivity({
+      action: "NEWSLETTER_SUBSCRIBERS_BULK_DELETED",
+      domain: "COMMUNICATIONS",
+      entityType: "newsletter_subscriptions",
+      entityId: "bulk",
+      description: `Bulk deleted ${ids.length} newsletter subscriber(s)`,
+      newData: { count: ids.length, ids },
     })
 
     revalidatePath("/admin/newsletter")

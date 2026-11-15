@@ -12,6 +12,7 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { getAllPagesSEO } from "@/lib/data/seo-settings"
 import type { PageSEORecord } from "@/lib/types/page-seo"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 /**
  * Strip potential HTML tags and control characters to prevent stored XSS
@@ -118,18 +119,17 @@ export async function POST(request: NextRequest) {
     revalidatePath("/admin/seo")
 
     // Record in activity log
-    try {
-      await supabase.from("activity_logs").insert({
-        user_id: currentAdmin.id,
-        action: "UPDATE",
-        entity_type: "page_seo",
-        entity_id: null,
-        new_data: { updated_paths: updatedPaths },
-        ip_address: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip"),
-      })
-    } catch (logErr) {
-      console.warn("Failed to write to activity_logs:", logErr)
-    }
+    await logAdminActivity({
+      actorId: currentAdmin.id,
+      actorEmail: currentAdmin.email,
+      actorRole: currentAdmin.role,
+      action: "PAGE_SEO_UPDATED",
+      domain: "SETTINGS",
+      entityType: "page_seo",
+      entityId: updatedPaths.length === 1 ? updatedPaths[0] : `batch:${updatedPaths.length}`,
+      summary: `Admin updated SEO settings for ${updatedPaths.join(", ")}`,
+      newData: { updatedPaths },
+    })
 
     return NextResponse.json({
       success: true,

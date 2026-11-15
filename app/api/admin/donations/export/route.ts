@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function escapeXml(val: string): string {
   return val
@@ -56,6 +57,17 @@ export async function GET(request: NextRequest) {
     }
 
     const donations = data || []
+
+    void logAdminActivity({
+      action: "DONATIONS_EXPORTED",
+      domain: "DONATION",
+      entityType: "donations",
+      entityId: "export",
+      description: `Exported ${donations.length} donation records to Excel`,
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      newData: { count: donations.length, filter: { status, type, currency, provider, search } },
+    })
 
     // Complete column headers
     const headers = [

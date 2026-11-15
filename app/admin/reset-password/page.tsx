@@ -215,7 +215,9 @@ function ResetPasswordContent() {
       if (!isMounted) return
 
       if (event === "PASSWORD_RECOVERY" || (session?.user && (event === "SIGNED_IN" || event === "INITIAL_SESSION"))) {
-        await verifyAdminActive(session.user)
+        if (session?.user) {
+          await verifyAdminActive(session.user)
+        }
         setIsLoadingSession(false)
       }
     })

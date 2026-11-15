@@ -23,6 +23,8 @@ import {
   CalendarDays,
   MapPin,
   Star,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react"
 import {
   createAgendaItem,
@@ -370,20 +372,24 @@ export function AgendaEditor({ eventId, items: initialItems }: AgendaEditorProps
                     {/* Reorder arrows */}
                     <div className="flex flex-col gap-0.5 order-1">
                       <button
+                        type="button"
                         onClick={() => handleMove(item.id, -1)}
                         disabled={idx === 0}
-                        className="flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-muted disabled:opacity-30 text-xs"
+                        className="flex size-6 sm:size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-20 transition-colors"
                         title="Move up"
+                        aria-label="Move session up"
                       >
-                        ▲
+                        <ChevronUp className="size-3.5" />
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleMove(item.id, 1)}
                         disabled={idx === dayItems.length - 1}
-                        className="flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-muted disabled:opacity-30 text-xs"
+                        className="flex size-6 sm:size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-20 transition-colors"
                         title="Move down"
+                        aria-label="Move session down"
                       >
-                        ▼
+                        <ChevronDown className="size-3.5" />
                       </button>
                     </div>
 

@@ -7,6 +7,7 @@ import {
   ACCESSIBILITY_SETTINGS_KEY,
   type AccessibilityConfig,
 } from "@/lib/types/accessibility-settings"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 /**
  * Server Action to update the accessibility configuration in `site_settings`.
@@ -54,11 +55,13 @@ export async function updateAccessibilityConfig(config: AccessibilityConfig) {
   }
 
   // Audit trail
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "site_setting",
-    new_data: { key: ACCESSIBILITY_SETTINGS_KEY, config },
+  void logAdminActivity({
+    action: "ACCESSIBILITY_SETTINGS_UPDATED",
+    domain: "SETTINGS",
+    entityType: "site_settings",
+    entityId: ACCESSIBILITY_SETTINGS_KEY,
+    description: "Updated accessibility settings",
+    newData: { key: ACCESSIBILITY_SETTINGS_KEY, config },
   })
 
   // Invalidate cache so changes reflect instantly across the public site

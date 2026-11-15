@@ -51,7 +51,7 @@ export async function subscribeToNewsletter(
     // 2. Check for existing subscription
     const { data: existing, error: selectError } = await serviceSupabase
       .from("newsletter_subscriptions")
-      .select("id, email, status, is_active, unsubscribe_token")
+      .select("id, email, name, status, is_active, unsubscribe_token")
       .eq("email", cleanEmail)
       .maybeSingle()
 

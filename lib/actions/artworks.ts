@@ -16,6 +16,7 @@ import {
   type ArtworkRow,
 } from "@/lib/arts/types"
 import { ARTS_CONTENT_KEY, ARTS_CONTENT_LIMITS, DEFAULT_ARTS_CONTENT, type ArtsContent } from "@/lib/arts/content"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 type ActionResult<T = undefined> = { ok: true; data?: T } | { ok: false; error: string; fieldErrors?: Record<string, string> }
 
@@ -36,17 +37,14 @@ function revalidateArt() {
 }
 
 async function logActivity(adminId: string, action: string, entityId: string | null, data: Record<string, unknown>) {
-  try {
-    await createServiceRoleClient().from("activity_logs").insert({
-      user_id: adminId,
-      action,
-      entity_type: "artwork",
-      entity_id: entityId,
-      new_data: data,
-    })
-  } catch {
-    // Logging must never block the content change.
-  }
+  void logAdminActivity({
+    action: `ARTWORK_${action.toUpperCase()}`,
+    domain: "CONTENT",
+    entityType: "artwork",
+    entityId: entityId || "arts_content",
+    description: `Artwork ${action}: ${String(data.title || data.key || entityId || "action")}`,
+    newData: data,
+  })
 }
 
 // ---------------------------------------------------------------------------

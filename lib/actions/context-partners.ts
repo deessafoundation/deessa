@@ -3,7 +3,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import type {
-  ContextType,
   Partner,
   PartnerCategory,
   ContextPartner,
@@ -18,6 +17,7 @@ import type {
   ReorderPartnersInput,
   ActionResult,
 } from "@/lib/types/partners"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 // =============================================
 // Auth Guard
@@ -51,7 +51,7 @@ async function requireAdmin() {
  */
 export async function createPartner(input: CreatePartnerInput): Promise<ActionResult<Partner>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("partners")
@@ -75,12 +75,13 @@ export async function createPartner(input: CreatePartnerInput): Promise<ActionRe
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "partner",
-      entity_id: data.id,
-      new_data: { 
+    void logAdminActivity({
+      action: "PARTNER_CREATED",
+      domain: "CONTENT",
+      entityType: "partners",
+      entityId: data.id,
+      description: `Created partner "${input.name}"`,
+      newData: { 
         name: input.name,
         context_type: input.created_context_type,
         context_id: input.created_context_id,
@@ -102,7 +103,7 @@ export async function createPartner(input: CreatePartnerInput): Promise<ActionRe
  */
 export async function updatePartner(partnerId: string, input: UpdatePartnerInput): Promise<ActionResult<Partner>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("partners")
@@ -127,11 +128,13 @@ export async function updatePartner(partnerId: string, input: UpdatePartnerInput
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "partner",
-      entity_id: partnerId,
+    void logAdminActivity({
+      action: "PARTNER_UPDATED",
+      domain: "CONTENT",
+      entityType: "partners",
+      entityId: partnerId,
+      description: `Updated partner ${partnerId}`,
+      newData: { ...input },
     })
 
     revalidatePath("/admin/partners")
@@ -149,7 +152,7 @@ export async function updatePartner(partnerId: string, input: UpdatePartnerInput
  */
 export async function deletePartner(partnerId: string): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { error } = await supabase.from("partners").delete().eq("id", partnerId)
 
@@ -159,11 +162,12 @@ export async function deletePartner(partnerId: string): Promise<ActionResult> {
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "DELETE",
-      entity_type: "partner",
-      entity_id: partnerId,
+    void logAdminActivity({
+      action: "PARTNER_DELETED",
+      domain: "CONTENT",
+      entityType: "partners",
+      entityId: partnerId,
+      description: `Deleted partner ${partnerId}`,
     })
 
     revalidatePath("/admin/partners")
@@ -245,7 +249,7 @@ export async function createPartnerCategory(
   input: CreatePartnerCategoryInput
 ): Promise<ActionResult<PartnerCategory>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("partner_categories")
@@ -265,12 +269,13 @@ export async function createPartnerCategory(
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "partner_category",
-      entity_id: data.id,
-      new_data: { context_type: input.context_type, category_key: input.category_key },
+    void logAdminActivity({
+      action: "PARTNER_CATEGORY_CREATED",
+      domain: "CONTENT",
+      entityType: "partner_categories",
+      entityId: data.id,
+      description: `Created partner category "${input.category_key}" for ${input.context_type}`,
+      newData: { context_type: input.context_type, category_key: input.category_key },
     })
 
     revalidatePath("/admin/partners")
@@ -290,7 +295,7 @@ export async function updatePartnerCategory(
   input: UpdatePartnerCategoryInput
 ): Promise<ActionResult<PartnerCategory>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("partner_categories")
@@ -308,11 +313,13 @@ export async function updatePartnerCategory(
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "partner_category",
-      entity_id: categoryId,
+    void logAdminActivity({
+      action: "PARTNER_CATEGORY_UPDATED",
+      domain: "CONTENT",
+      entityType: "partner_categories",
+      entityId: categoryId,
+      description: `Updated partner category ${categoryId}`,
+      newData: { ...input },
     })
 
     revalidatePath("/admin/partners")
@@ -329,7 +336,7 @@ export async function updatePartnerCategory(
  */
 export async function deletePartnerCategory(categoryId: string): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     // First, get the category to remove associated context_partners
     const { data: category } = await supabase.from("partner_categories").select("*").eq("id", categoryId).single()
@@ -352,11 +359,12 @@ export async function deletePartnerCategory(categoryId: string): Promise<ActionR
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "DELETE",
-      entity_type: "partner_category",
-      entity_id: categoryId,
+    void logAdminActivity({
+      action: "PARTNER_CATEGORY_DELETED",
+      domain: "CONTENT",
+      entityType: "partner_categories",
+      entityId: categoryId,
+      description: `Deleted partner category ${categoryId}`,
     })
 
     revalidatePath("/admin/partners")
@@ -373,7 +381,7 @@ export async function deletePartnerCategory(categoryId: string): Promise<ActionR
  */
 export async function reorderCategories(input: ReorderCategoriesInput): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     // Update each category's display_order
     for (const { category_key, display_order } of input.category_orders) {
@@ -405,12 +413,13 @@ export async function reorderCategories(input: ReorderCategoriesInput): Promise<
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "partner_categories",
-      entity_id: input.context_type,
-      new_data: { context_type: input.context_type, action: "reorder" },
+    void logAdminActivity({
+      action: "PARTNER_CATEGORIES_REORDERED",
+      domain: "CONTENT",
+      entityType: "partner_categories",
+      entityId: input.context_type,
+      description: `Reordered partner categories for ${input.context_type}`,
+      newData: { context_type: input.context_type, count: input.category_orders.length },
     })
 
     revalidatePath("/admin/partners")
@@ -433,7 +442,7 @@ export async function createContextPartner(
   input: CreateContextPartnerInput
 ): Promise<ActionResult<ContextPartner>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("context_partners")
@@ -466,12 +475,13 @@ export async function createContextPartner(
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "context_partner",
-      entity_id: data.id,
-      new_data: { context_type: input.context_type, partner_id: input.partner_id },
+    void logAdminActivity({
+      action: "CONTEXT_PARTNER_LINKED",
+      domain: "CONTENT",
+      entityType: "context_partners",
+      entityId: data.id,
+      description: `Linked partner ${input.partner_id} to ${input.context_type} under ${input.category_key}`,
+      newData: { context_type: input.context_type, partner_id: input.partner_id, category_key: input.category_key },
     })
 
     revalidatePath("/admin/partners")
@@ -492,7 +502,7 @@ export async function updateContextPartner(
   input: UpdateContextPartnerInput
 ): Promise<ActionResult<ContextPartner>> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { data, error } = await supabase
       .from("context_partners")
@@ -511,11 +521,13 @@ export async function updateContextPartner(
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "context_partner",
-      entity_id: linkId,
+    void logAdminActivity({
+      action: "CONTEXT_PARTNER_UPDATED",
+      domain: "CONTENT",
+      entityType: "context_partners",
+      entityId: linkId,
+      description: `Updated context partner link ${linkId}`,
+      newData: { ...input },
     })
 
     revalidatePath("/admin/partners")
@@ -533,7 +545,7 @@ export async function updateContextPartner(
  */
 export async function deleteContextPartner(linkId: string): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const { error } = await supabase.from("context_partners").delete().eq("id", linkId)
 
@@ -543,11 +555,12 @@ export async function deleteContextPartner(linkId: string): Promise<ActionResult
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "DELETE",
-      entity_type: "context_partner",
-      entity_id: linkId,
+    void logAdminActivity({
+      action: "CONTEXT_PARTNER_REMOVED",
+      domain: "CONTENT",
+      entityType: "context_partners",
+      entityId: linkId,
+      description: `Removed partner link ${linkId}`,
     })
 
     revalidatePath("/admin/partners")
@@ -565,7 +578,7 @@ export async function deleteContextPartner(linkId: string): Promise<ActionResult
  */
 export async function bulkCreateContextPartners(input: BulkCreateContextPartnersInput): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     const records = input.partners.map((p) => ({
       context_type: input.context_type,
@@ -584,12 +597,13 @@ export async function bulkCreateContextPartners(input: BulkCreateContextPartners
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "context_partners_bulk",
-      entity_id: input.context_type,
-      new_data: { context_type: input.context_type, count: input.partners.length },
+    void logAdminActivity({
+      action: "CONTEXT_PARTNERS_BULK_LINKED",
+      domain: "CONTENT",
+      entityType: "context_partners",
+      entityId: input.context_type,
+      description: `Bulk linked ${input.partners.length} partner(s) to ${input.context_type}`,
+      newData: { context_type: input.context_type, count: input.partners.length },
     })
 
     revalidatePath("/admin/partners")
@@ -607,7 +621,7 @@ export async function bulkCreateContextPartners(input: BulkCreateContextPartners
  */
 export async function reorderPartners(input: ReorderPartnersInput): Promise<ActionResult> {
   try {
-    const { supabase, admin } = await requireAdmin()
+    const { supabase } = await requireAdmin()
 
     // Update each partner's display_order
     for (const { partner_id, display_order } of input.partner_orders) {
@@ -632,12 +646,13 @@ export async function reorderPartners(input: ReorderPartnersInput): Promise<Acti
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "context_partners",
-      entity_id: `${input.context_type}_${input.category_key}`,
-      new_data: { context_type: input.context_type, category_key: input.category_key, action: "reorder" },
+    void logAdminActivity({
+      action: "CONTEXT_PARTNERS_REORDERED",
+      domain: "CONTENT",
+      entityType: "context_partners",
+      entityId: `${input.context_type}_${input.category_key}`,
+      description: `Reordered partners in ${input.context_type} category ${input.category_key}`,
+      newData: { context_type: input.context_type, category_key: input.category_key, count: input.partner_orders.length },
     })
 
     revalidatePath("/admin/partners")

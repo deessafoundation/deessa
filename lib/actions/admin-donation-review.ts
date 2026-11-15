@@ -5,11 +5,21 @@
 
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { createClient as createServiceClient } from "@supabase/supabase-js"
+import { requireFinancialAdmin } from "./admin-auth"
 import { generateReceiptForDonation } from "./donation-receipt"
 import { revalidatePath } from "next/cache"
 import nodemailer from "nodemailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+}
 
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -38,36 +48,19 @@ export async function reviewDonation(
   input: ReviewDonationInput
 ): Promise<ReviewDonationResult> {
   try {
-    const supabase = await createClient()
     const serviceSupabase = getServiceSupabase()
 
-    // 1. Get current authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
+    // 1. Verify authenticated financial admin (session + role + is_active)
+    const authResult = await requireFinancialAdmin()
+    if (!authResult.authorized) {
       return {
         success: false,
-        message: "Unauthorized: No active user session",
+        message: authResult.error,
       }
     }
+    const { adminUser, user } = authResult
 
-    // 2. Verify admin user
-    const { data: adminUser, error: adminError } = await serviceSupabase
-      .from("admin_users")
-      .select("id, role, full_name")
-      .eq("user_id", user.id)
-      .single()
-
-    if (adminError || !adminUser) {
-      return {
-        success: false,
-        message: "Unauthorized: Not registered as an admin user",
-      }
-    }
-
-    // 3. Get donation details
+    // 2. Get donation details
     const { data: donation, error: fetchError } = await serviceSupabase
       .from("donations")
       .select("*")
@@ -159,6 +152,20 @@ export async function reviewDonation(
         },
       })
 
+      // Centralized Enterprise Audit Ledger
+      await logAdminActivity({
+        action: "DONATION_REVIEW_APPROVED",
+        domain: "TREASURY",
+        entityType: "donation",
+        entityId: input.donationId,
+        actorId: adminUser.id,
+        actorEmail: user.email,
+        actorRole: adminUser.role,
+        summary: `${adminUser.full_name} verified and approved donation ${input.donationId}: "${input.notes}"`,
+        oldData: { payment_status: "review", review_status: donation.review_status },
+        newData: { payment_status: "completed", review_status: "verified", notes: input.notes },
+      })
+
       // Revalidate affected routes
       revalidatePath("/admin/donations")
       revalidatePath("/admin/donations/review")
@@ -225,6 +232,20 @@ export async function reviewDonation(
         },
       })
 
+      // Centralized Enterprise Audit Ledger
+      await logAdminActivity({
+        action: "DONATION_REVIEW_FLAGGED",
+        domain: "TREASURY",
+        entityType: "donation",
+        entityId: input.donationId,
+        actorId: adminUser.id,
+        actorEmail: user.email,
+        actorRole: adminUser.role,
+        summary: `${adminUser.full_name} flagged and rejected donation ${input.donationId}: "${input.notes}"`,
+        oldData: { payment_status: "review", review_status: donation.review_status },
+        newData: { payment_status: "failed", review_status: "flagged", notes: input.notes },
+      })
+
       // Send donor notification email if email credentials configured
       try {
         const googleEmail = process.env.GOOGLE_EMAIL
@@ -246,15 +267,15 @@ export async function reviewDonation(
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6;">
                 <h2 style="color: #0b5f8a;">Donation Verification Notice</h2>
-                <p>Dear ${donation.donor_name || "Valued Supporter"},</p>
+                <p>Dear ${escapeHtml(donation.donor_name || "Valued Supporter")},</p>
                 <p>We are contacting you regarding your donation pledge. Following our administrative cross-verification, we were unable to confirm this transaction.</p>
                 <div style="background-color: #f8fafc; border-left: 4px solid #f43f5e; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
                   <strong>Reason recorded by staff:</strong><br/>
-                  ${input.notes}
+                  ${escapeHtml(input.notes)}
                 </div>
                 <p>If you have questions or made a deposit that needs verification, please reply to this email or visit our website to submit a new donation.</p>
                 <p>Thank you for your understanding and ongoing support of our mission.</p>
-                <p>Warm regards,<br/><strong>Finance & Governance Team</strong><br/>Deesha Education Foundation</p>
+                <p>Warm regards,<br/><strong>Finance & Governance Team</strong><br/>deessa Foundation</p>
               </div>
             `,
           })

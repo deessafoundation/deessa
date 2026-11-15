@@ -4,6 +4,7 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { WHAT_WE_DO_SETTINGS_KEY, whatWeDoSettingsSchema } from "@/lib/types/what-we-do-settings"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,6 +20,19 @@ export async function POST(request: NextRequest) {
     key: WHAT_WE_DO_SETTINGS_KEY, value: parsed.data, updated_by: admin.id, updated_at: new Date().toISOString(),
   }, { onConflict: "key" })
   if (error) return NextResponse.json({ error: "Could not save content. Your changes are still in the editor." }, { status: 500 })
+
+  await logAdminActivity({
+    actorId: admin.id,
+    actorEmail: admin.email,
+    actorRole: admin.role,
+    action: "WHAT_WE_DO_SETTINGS_UPDATED",
+    domain: "CONTENT",
+    entityType: "site_settings",
+    entityId: WHAT_WE_DO_SETTINGS_KEY,
+    summary: "Admin updated 'What We Do' strategic pillars and areas",
+    newData: { key: WHAT_WE_DO_SETTINGS_KEY },
+  })
+
   revalidatePath("/whatwedo")
   for (const slug of Object.keys(parsed.data.areas)) revalidatePath(`/whatwedo/${slug}`)
   revalidatePath("/admin/what-we-do")

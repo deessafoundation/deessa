@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 import type {
   MediaAsset,
   CreateMediaAssetInput,
@@ -54,9 +55,9 @@ export async function getMediaAssets(
     if (error) throw error
 
     return { data: data as MediaAsset[], error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching media assets:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
   }
 }
 
@@ -83,9 +84,10 @@ export async function getMediaAsset(
     if (error) throw error
 
     return { data: data as MediaAsset, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error fetching media asset:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }
 
@@ -114,10 +116,21 @@ export async function createMediaAsset(
 
     if (error) throw error
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "MEDIA_ASSET_CREATED",
+      domain: "MEDIA",
+      entityType: "media_assets",
+      entityId: data.id,
+      summary: `Admin uploaded media asset: ${data.filename} (${data.type})`,
+      newData: data,
+    })
+
     return { data: data as MediaAsset, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error creating media asset:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }
 
@@ -144,10 +157,21 @@ export async function updateMediaAsset(
 
     if (error) throw error
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "MEDIA_ASSET_UPDATED",
+      domain: "MEDIA",
+      entityType: "media_assets",
+      entityId: id,
+      summary: `Admin updated media asset: ${data.filename}`,
+      newData: data,
+    })
+
     return { data: data as MediaAsset, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error updating media asset:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }
 
@@ -173,10 +197,21 @@ export async function deleteMediaAsset(
 
     if (error) throw error
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "MEDIA_ASSET_DELETED",
+      domain: "MEDIA",
+      entityType: "media_assets",
+      entityId: id,
+      summary: `Admin soft-deleted media asset ${id}`,
+      newData: { is_deleted: true },
+    })
+
     return { success: true, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error deleting media asset:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: message }
   }
 }
 
@@ -222,10 +257,21 @@ export async function permanentlyDeleteMediaAsset(
 
     if (deleteError) throw deleteError
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "MEDIA_ASSET_PURGED",
+      domain: "MEDIA",
+      entityType: "media_assets",
+      entityId: id,
+      summary: `Admin permanently purged media asset: ${asset.filename} (${asset.bucket})`,
+      oldData: asset,
+    })
+
     return { success: true, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error permanently deleting media asset:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: message }
   }
 }
 
@@ -249,10 +295,20 @@ export async function bulkDeleteMediaAssets(
 
     if (error) throw error
 
+    await logAdminActivity({
+      actorId: admin.id,
+      action: "MEDIA_ASSETS_BULK_DELETED",
+      domain: "MEDIA",
+      entityType: "media_assets",
+      summary: `Admin bulk soft-deleted ${ids.length} media assets`,
+      newData: { count: ids.length, ids },
+    })
+
     return { success: true, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error bulk deleting media assets:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: message }
   }
 }
 
@@ -278,9 +334,10 @@ export async function updateMediaUsage(
     if (error) throw error
 
     return { success: true, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error updating media usage:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: message }
   }
 }
 
@@ -316,9 +373,10 @@ export async function getMediaLibraryStats(): Promise<{
     }
 
     return { data: stats, error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error fetching media library stats:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }
 
@@ -348,9 +406,10 @@ export async function searchMediaAssets(
     if (error) throw error
 
     return { data: data as MediaAsset[], error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error searching media assets:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }
 
@@ -377,8 +436,9 @@ export async function getMediaAssetsByBucket(
     if (error) throw error
 
     return { data: data as MediaAsset[], error: null }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error fetching media assets by bucket:", error)
-    return { data: null, error: error.message }
+    return { data: null, error: message }
   }
 }

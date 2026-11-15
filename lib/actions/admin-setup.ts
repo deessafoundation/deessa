@@ -2,6 +2,7 @@
 
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { redirect } from "next/navigation"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function checkSetupRequired(): Promise<boolean> {
   try {
@@ -90,10 +91,15 @@ export async function setupFirstAdmin(formData: FormData) {
   }
 
   // Log the setup activity
-  await supabaseAdmin.from("activity_logs").insert({
-    action: "CREATE",
-    entity_type: "setup",
-    new_data: { message: "Initial super admin setup completed", email },
+  void logAdminActivity({
+    action: "INITIAL_SUPER_ADMIN_CREATED",
+    domain: "AUTH",
+    entityType: "admin_users",
+    entityId: authData.user.id,
+    description: `Initial super admin account created for ${email}`,
+    newData: { email, full_name: fullName, role: "SUPER_ADMIN" },
+    actorId: authData.user.id,
+    actorEmail: email,
   })
 
   redirect("/admin/login?setup=success")

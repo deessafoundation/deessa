@@ -1,19 +1,21 @@
 /**
  * Payment Architecture V2 - Khalti Webhook Handler
- * 
+ *
  * This endpoint handles webhook notifications from Khalti for payment events.
  * It routes all verification and confirmation logic through the centralized
  * PaymentService to ensure consistency and transactional integrity.
- * 
+ *
  * Flow:
  * 1. Receive webhook payload from Khalti
- * 2. Verify webhook signature (when Khalti implements webhook signatures)
- * 3. Use KhaltiAdapter to verify and normalize the payment
+ * 2. ⚠️  UNSIGNED WEBHOOK — Khalti does not currently provide webhook signatures,
+ *    so we cannot cryptographically verify that a request originated from Khalti.
+ *    To reduce abuse risk this endpoint re-verifies every payment by calling
+ *    the Khalti lookup API server-to-server (via KhaltiAdapter.verify) before
+ *    any state change is made. A spoofed webhook cannot confirm a donation that
+ *    Khalti's own API does not report as Completed.
+ * 3. Use KhaltiAdapter to verify and normalize the payment via server-side lookup
  * 4. Call PaymentService.confirmDonation() to update donation status
  * 5. Return 200 OK to Khalti within 2 seconds
- * 
- * Note: As of implementation, Khalti may not have webhook signature verification.
- * This endpoint is prepared for future webhook support with signature verification.
  */
 
 import { NextResponse } from 'next/server'

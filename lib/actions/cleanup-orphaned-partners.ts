@@ -2,12 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
-
-interface OrphanedPartner {
-  id: string
-  partner_id: string
-  category_key: string
-}
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 interface CleanupResult {
   success: boolean
@@ -33,7 +28,7 @@ export async function cleanupOrphanedPartners(eventId: string): Promise<CleanupR
       return { success: false, orphanedCount: 0, deletedIds: [], error: "Unauthorized" }
     }
 
-    const { data: admin } = await supabase.from("admin_users").select("id").eq("user_id", user.id).single()
+    const { data: admin } = await supabase.from("admin_users").select("id, email, user_id").eq("user_id", user.id).single()
 
     if (!admin) {
       return { success: false, orphanedCount: 0, deletedIds: [], error: "Unauthorized: Not an admin" }
@@ -91,16 +86,20 @@ export async function cleanupOrphanedPartners(eventId: string): Promise<CleanupR
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "DELETE",
-      entity_type: "context_partners_orphaned",
-      entity_id: eventId,
-      new_data: {
+    void logAdminActivity({
+      action: "ORPHANED_PARTNERS_CLEANED",
+      domain: "EVENT",
+      entityType: "context_partners",
+      entityId: eventId,
+      description: `Cleaned up ${orphanedIds.length} orphaned partner link(s) for event ${eventId}`,
+      oldData: {
         event_id: eventId,
         deleted_count: orphanedIds.length,
+        orphaned_ids: orphanedIds,
         orphaned_partner_ids: orphanedRecords.map((r) => r.partner_id),
       },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
     })
 
     revalidatePath(`/admin/events/${eventId}/settings`)

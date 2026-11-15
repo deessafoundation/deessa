@@ -10,6 +10,7 @@ import {
 import { startStripeCheckout } from "@/lib/payments/stripe"
 import { startKhaltiPayment } from "@/lib/payments/khalti"
 import { startEsewaPayment } from "@/lib/payments/esewa"
+import { checkRateLimit } from "@/lib/rate-limit"
 
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -53,11 +54,34 @@ export async function startDonation(input: StartDonationInput): Promise<StartDon
       }
     }
 
-    if (!input.amount || input.amount <= 0) {
-      return { ok: false, message: "Invalid donation amount" }
-    }
-    if (!input.donorEmail || !input.donorName) {
+    const trimmedEmail = input.donorEmail?.trim().toLowerCase()
+    const trimmedName = input.donorName?.trim()
+
+    if (!trimmedEmail || !trimmedName) {
       return { ok: false, message: "Donor name and email are required" }
+    }
+    if (!Number.isFinite(input.amount) || input.amount <= 0 || input.amount > 1_000_000) {
+      return { ok: false, message: "Invalid donation amount (must be positive and under 1,000,000)" }
+    }
+    if (trimmedEmail.length > 254 || !trimmedEmail.includes("@")) {
+      return { ok: false, message: "Please provide a valid email address" }
+    }
+    if (trimmedName.length > 150) {
+      return { ok: false, message: "Donor name is too long" }
+    }
+
+    // Rate limiting: 10 donation initiations per 5 minutes per email
+    const rateLimit = await checkRateLimit({
+      identifier: `start-donation:${trimmedEmail}`,
+      maxAttempts: 10,
+      windowMinutes: 5,
+    })
+
+    if (!rateLimit.allowed) {
+      return {
+        ok: false,
+        message: "Too many donation requests. Please wait a few minutes before trying again.",
+      }
     }
 
     const settings = await getPaymentSettings()

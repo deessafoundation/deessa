@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "./admin-auth"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 import {
   updateProfileSchema,
   updatePreferencesSchema,
@@ -51,7 +52,7 @@ export async function updateProfile(
 
     const validation = updateProfileSchema.safeParse(rawPayload)
     if (!validation.success) {
-      const message = validation.error.errors.map((e) => e.message).join(", ")
+      const message = validation.error.issues.map((e: { message: string }) => e.message).join(", ")
       return { error: message }
     }
 
@@ -107,24 +108,23 @@ export async function updateProfile(
     }
 
     // 3. Log audit event with previous vs new diff
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "profile",
-      entity_id: currentAdmin.id,
-      new_data: {
-        previous: {
-          full_name: currentAdmin.full_name,
-          avatar_url: currentAdmin.avatar_url,
-          designation: currentAdmin.designation,
-          phone: currentAdmin.phone,
-        },
-        current: {
-          full_name: fullName,
-          avatar_url: avatarUrl || null,
-          designation: designation || null,
-          phone: phone || null,
-        },
+    void logAdminActivity({
+      action: "ADMIN_PROFILE_UPDATED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: currentAdmin.id,
+      description: `Updated profile details for administrator ${currentAdmin.email}`,
+      oldData: {
+        full_name: currentAdmin.full_name,
+        avatar_url: currentAdmin.avatar_url,
+        designation: currentAdmin.designation,
+        phone: currentAdmin.phone,
+      },
+      newData: {
+        full_name: fullName,
+        avatar_url: avatarUrl || null,
+        designation: designation || null,
+        phone: phone || null,
       },
     })
 
@@ -192,7 +192,7 @@ export async function changePassword(
 
     const validation = changePasswordSchema.safeParse(rawPayload)
     if (!validation.success) {
-      const message = validation.error.errors.map((e) => e.message).join(", ")
+      const message = validation.error.issues.map((e: { message: string }) => e.message).join(", ")
       return { error: message }
     }
 
@@ -232,15 +232,13 @@ export async function changePassword(
     }
 
     // 6. Log security audit event (Note: NEVER log passwords or plaintext tokens)
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "password",
-      entity_id: currentAdmin.id,
-      new_data: {
-        action: "PASSWORD_CHANGED",
-        ip: clientIp,
-      },
+    void logAdminActivity({
+      action: "ADMIN_PASSWORD_CHANGED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: currentAdmin.id,
+      description: `Password changed for administrator ${currentAdmin.email}`,
+      newData: { ip: clientIp },
     })
 
     revalidatePath("/admin/profile")
@@ -266,7 +264,7 @@ export async function updatePreferences(
 
     const validation = updatePreferencesSchema.safeParse(input)
     if (!validation.success) {
-      const message = validation.error.errors.map((e) => e.message).join(", ")
+      const message = validation.error.issues.map((e: { message: string }) => e.message).join(", ")
       return { error: message }
     }
 
@@ -301,12 +299,13 @@ export async function updatePreferences(
     }
 
     // 3. Log audit event
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "UPDATE",
-      entity_type: "preferences",
-      entity_id: currentAdmin.id,
-      new_data: { preferences },
+    void logAdminActivity({
+      action: "ADMIN_PREFERENCES_UPDATED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: currentAdmin.id,
+      description: `Preferences updated for administrator ${currentAdmin.email}`,
+      newData: { preferences },
     })
 
     revalidatePath("/admin/profile")
@@ -341,15 +340,15 @@ export async function revokeOtherSessions(): Promise<{ success?: boolean; error?
     const clientIp = (forwarded ? forwarded.split(",")[0].trim() : headerList.get("x-real-ip")) || "127.0.0.1"
 
     // Log security audit event
-    await supabase.from("activity_logs").insert({
-      user_id: currentAdmin.id,
-      action: "REVOKE_OTHER_SESSIONS",
-      entity_type: "auth",
-      entity_id: currentAdmin.id,
-      new_data: {
+    void logAdminActivity({
+      action: "ADMIN_SESSIONS_REVOKED",
+      domain: "SECURITY",
+      entityType: "admin_users",
+      entityId: currentAdmin.id,
+      description: `Revoked other active sessions for administrator ${currentAdmin.email}`,
+      newData: {
         scope: "others",
         ip: clientIp,
-        timestamp: new Date().toISOString(),
       },
     })
 

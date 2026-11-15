@@ -6,6 +6,7 @@ import { sendReassignmentEmails } from '@/lib/email/support-reassignment-mailer'
 import { sendUnassignmentEmail } from '@/lib/email/support-unassignment-mailer'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
+import { logAdminActivity } from '@/lib/audit/audit-logger'
 
 export async function POST(req: Request) {
   try {
@@ -16,13 +17,15 @@ export async function POST(req: Request) {
     const supabase = createServiceRoleClient()
 
     // require authenticated admin session and resolve performer from admin profile
-    let performerFromAuth: string | null = null
+    let performerFromAuth = 'admin'
+    let actorEmail = ''
     try {
       const currentAdmin = await getCurrentAdmin()
       if (!currentAdmin) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
       }
       performerFromAuth = currentAdmin.full_name || currentAdmin.email || 'admin'
+      actorEmail = currentAdmin.email || ''
     } catch (e) {
       console.error('Auth lookup failed', e)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -38,6 +41,16 @@ export async function POST(req: Request) {
     }
 
     await supabase.from('support_admin_actions').insert(record)
+
+    await logAdminActivity({
+      actorEmail: actorEmail || performerFromAuth,
+      action: `SUPPORT_ACTION_${action.toUpperCase().replace(/-/g, '_')}`,
+      domain: "CRM",
+      entityType: "contact_submissions",
+      entityId: id,
+      summary: `Admin performed "${action}" on support report ${id}`,
+      newData: payload || {},
+    })
 
     // also update summary fields on contact_submissions for some actions
     if (action === 'mark-reviewed') {

@@ -558,6 +558,17 @@
   padding: 0 0.375rem;
 }
 
+.dualLogoDivider {
+  width: 1.5px;
+  height: 55%;
+  min-height: 20px;
+  max-height: 48px;
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  margin: 0 0.125rem;
+}
+
 .coOrganizerLogo {
   max-height: 40px;
   max-width: 86%;
@@ -876,6 +887,7 @@
 :global(body.high-contrast) .categoryUnderline,
 :global(body.high-contrast) .eyebrowLine,
 :global(body.high-contrast) .dividerLine,
+:global(body.high-contrast) .dualLogoDivider,
 :global(body.high-contrast) .stackedDivider {
   background-color: #000000 !important;
 }
@@ -928,6 +940,7 @@
 :global(body.inverted-contrast) .categoryUnderline,
 :global(body.inverted-contrast) .eyebrowLine,
 :global(body.inverted-contrast) .dividerLine,
+:global(body.inverted-contrast) .dualLogoDivider,
 :global(body.inverted-contrast) .stackedDivider {
   background-color: #ffffff !important;
 }

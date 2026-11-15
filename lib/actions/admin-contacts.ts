@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { sendContactReplyEmail } from "@/lib/email/contact-mailer"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export type ContactStatus = "open" | "in_progress" | "resolved" | "closed"
 
@@ -50,7 +51,7 @@ async function getAuthorizedAdmin() {
  */
 export async function updateContactStatus(input: UpdateContactStatusInput) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const updatePayload: Record<string, unknown> = {
@@ -72,16 +73,15 @@ export async function updateContactStatus(input: UpdateContactStatusInput) {
     }
 
     // Record audit trail in activity_logs
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `CONTACT_STATUS_${input.status.toUpperCase()}`,
-      entity_type: "contact_submission",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: input.id,
+      description: `Updated contact inquiry status to ${input.status}`,
+      newData: {
         status: input.status,
         notes: input.adminNotes || null,
-        reviewed_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
       },
     })
 
@@ -103,7 +103,7 @@ export async function updateContactStatus(input: UpdateContactStatusInput) {
  */
 export async function assignContact(input: AssignContactInput) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     // Fetch current status to automatically promote "open" to "in_progress" upon assignment
@@ -136,16 +136,15 @@ export async function assignContact(input: AssignContactInput) {
     }
 
     // Log assignment audit
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "CONTACT_ASSIGNED",
-      entity_type: "contact_submission",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: input.id,
+      description: `Assigned contact inquiry to ${input.assigneeEmail || "Unassigned"}`,
+      newData: {
         assignee: input.assigneeEmail || "Unassigned",
         status: newStatus,
-        assigned_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
       },
     })
 
@@ -167,7 +166,7 @@ export async function assignContact(input: AssignContactInput) {
  */
 export async function saveContactInternalNotes(input: SaveContactNotesInput) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error: updateError } = await serviceSupabase
@@ -181,15 +180,14 @@ export async function saveContactInternalNotes(input: SaveContactNotesInput) {
       return { success: false, error: updateError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "CONTACT_NOTES_UPDATED",
-      entity_type: "contact_submission",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: input.id,
+      description: `Updated internal notes on contact inquiry ${input.id}`,
+      newData: {
         notes_preview: input.internalNotes.slice(0, 100),
-        author: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
       },
     })
 
@@ -259,18 +257,17 @@ export async function sendContactReply(input: SendContactReplyInput) {
     }
 
     // 3. Record audit trail
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "CONTACT_EMAIL_REPLIED",
-      entity_type: "contact_submission",
-      entity_id: input.id,
-      new_data: {
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: input.id,
+      description: `Sent official email reply to ${record.email} regarding "${record.subject || "General Inquiry"}"`,
+      newData: {
         recipient: record.email,
         subject: record.subject,
         reply_preview: input.replyContent.slice(0, 120),
         status: targetStatus,
-        sent_by: admin.email || admin.id,
-        timestamp: nowIso,
       },
     })
 
@@ -295,7 +292,7 @@ export async function sendContactReply(input: SendContactReplyInput) {
  */
 export async function archiveContact(id: string, archived: boolean) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error: updateError } = await serviceSupabase
@@ -307,16 +304,13 @@ export async function archiveContact(id: string, archived: boolean) {
       return { success: false, error: updateError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: archived ? "CONTACT_ARCHIVED" : "CONTACT_RESTORED",
-      entity_type: "contact_submission",
-      entity_id: id,
-      new_data: {
-        archived,
-        author: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: id,
+      description: `${archived ? "Archived" : "Restored"} contact inquiry ${id}`,
+      newData: { archived },
     })
 
     revalidatePath("/admin/contacts")
@@ -337,7 +331,7 @@ export async function archiveContact(id: string, archived: boolean) {
  */
 export async function deleteContactSubmission(id: string) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     const serviceSupabase = createServiceRoleClient()
 
     const { error: deleteError } = await serviceSupabase
@@ -349,15 +343,12 @@ export async function deleteContactSubmission(id: string) {
       return { success: false, error: deleteError.message }
     }
 
-    await serviceSupabase.from("activity_logs").insert({
-      user_id: admin.id,
+    void logAdminActivity({
       action: "CONTACT_DELETED",
-      entity_type: "contact_submission",
-      entity_id: id,
-      new_data: {
-        deleted_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: id,
+      description: `Permanently deleted contact inquiry ${id}`,
     })
 
     revalidatePath("/admin/contacts")
@@ -381,7 +372,7 @@ export async function bulkUpdateContactStatus(
   status: ContactStatus
 ) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     if (!ids || ids.length === 0) {
       return { success: false, error: "No inquiries selected" }
     }
@@ -397,19 +388,14 @@ export async function bulkUpdateContactStatus(
       return { success: false, error: updateError.message }
     }
 
-    const logs = ids.map((id) => ({
-      user_id: admin.id,
+    void logAdminActivity({
       action: `CONTACT_BULK_${status.toUpperCase()}`,
-      entity_type: "contact_submission",
-      entity_id: id,
-      new_data: {
-        status,
-        updated_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
-    }))
-
-    await serviceSupabase.from("activity_logs").insert(logs)
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: "bulk",
+      description: `Bulk updated ${ids.length} contact inquiry/inquiries to ${status}`,
+      newData: { count: ids.length, status, ids },
+    })
 
     revalidatePath("/admin/contacts")
     revalidatePath("/admin")
@@ -429,7 +415,7 @@ export async function bulkUpdateContactStatus(
  */
 export async function bulkArchiveContacts(ids: string[], archived: boolean) {
   try {
-    const admin = await getAuthorizedAdmin()
+    await getAuthorizedAdmin()
     if (!ids || ids.length === 0) {
       return { success: false, error: "No inquiries selected" }
     }
@@ -445,19 +431,14 @@ export async function bulkArchiveContacts(ids: string[], archived: boolean) {
       return { success: false, error: updateError.message }
     }
 
-    const logs = ids.map((id) => ({
-      user_id: admin.id,
+    void logAdminActivity({
       action: archived ? "CONTACT_BULK_ARCHIVED" : "CONTACT_BULK_RESTORED",
-      entity_type: "contact_submission",
-      entity_id: id,
-      new_data: {
-        archived,
-        updated_by: admin.email || admin.id,
-        timestamp: new Date().toISOString(),
-      },
-    }))
-
-    await serviceSupabase.from("activity_logs").insert(logs)
+      domain: "COMMUNICATIONS",
+      entityType: "contact_submissions",
+      entityId: "bulk",
+      description: `Bulk ${archived ? "archived" : "restored"} ${ids.length} contact inquiry/inquiries`,
+      newData: { count: ids.length, archived, ids },
+    })
 
     revalidatePath("/admin/contacts")
     revalidatePath("/admin")

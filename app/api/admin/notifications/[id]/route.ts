@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
+import { logAdminActivity } from '@/lib/audit/audit-logger'
 
 // PATCH - Mark notification as read
 export async function PATCH(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -31,6 +32,16 @@ export async function PATCH(
       return NextResponse.json({ error: 'Failed to update notification' }, { status: 500 })
     }
 
+    void logAdminActivity({
+      action: "ADMIN_NOTIFICATION_MARKED_READ",
+      domain: "SYSTEM",
+      entityType: "admin_notifications",
+      entityId: id,
+      description: `Marked notification ${id} as read`,
+      actorId: currentAdmin.user_id,
+      actorEmail: currentAdmin.email,
+    })
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error in PATCH /api/admin/notifications/[id]:', error)
@@ -40,7 +51,7 @@ export async function PATCH(
 
 // DELETE - Delete notification
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -63,6 +74,16 @@ export async function DELETE(
       console.error('Error deleting notification:', error)
       return NextResponse.json({ error: 'Failed to delete notification' }, { status: 500 })
     }
+
+    void logAdminActivity({
+      action: "ADMIN_NOTIFICATION_DELETED",
+      domain: "SYSTEM",
+      entityType: "admin_notifications",
+      entityId: id,
+      description: `Deleted notification ${id}`,
+      actorId: currentAdmin.user_id,
+      actorEmail: currentAdmin.email,
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {

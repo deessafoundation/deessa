@@ -67,14 +67,34 @@ interface PartnerModalProps {
   defaultEventId?: string
 }
 
-function parsePartnerDescription(descriptionStr?: string | null): { text: string; logoFit: LogoFitOption } {
-  if (!descriptionStr) return { text: "", logoFit: "auto" }
+function parsePartnerDescription(descriptionStr?: string | null): {
+  text: string
+  logoFit: LogoFitOption
+  isDualLogo: boolean
+  secondaryLogo: string
+  secondaryLogoName: string
+  secondaryLogoStoragePath: string | null
+} {
+  if (!descriptionStr) {
+    return {
+      text: "",
+      logoFit: "auto",
+      isDualLogo: false,
+      secondaryLogo: "",
+      secondaryLogoName: "",
+      secondaryLogoStoragePath: null,
+    }
+  }
   try {
     if (descriptionStr.startsWith("{")) {
       const parsed = JSON.parse(descriptionStr)
       return {
         text: parsed.text || "",
         logoFit: (parsed.logoFit as LogoFitOption) || "auto",
+        isDualLogo: Boolean(parsed.isDualLogo && (parsed.secondaryLogo || parsed.secondaryLogoStoragePath)),
+        secondaryLogo: parsed.secondaryLogo || "",
+        secondaryLogoName: parsed.secondaryLogoName || "",
+        secondaryLogoStoragePath: parsed.secondaryLogoStoragePath || null,
       }
     }
     if (descriptionStr.includes("fit:")) {
@@ -82,12 +102,23 @@ function parsePartnerDescription(descriptionStr?: string | null): { text: string
       return {
         text: descriptionStr,
         logoFit: (match ? match[1] : "auto") as LogoFitOption,
+        isDualLogo: false,
+        secondaryLogo: "",
+        secondaryLogoName: "",
+        secondaryLogoStoragePath: null,
       }
     }
   } catch {
     // fallback
   }
-  return { text: descriptionStr, logoFit: "auto" }
+  return {
+    text: descriptionStr,
+    logoFit: "auto",
+    isDualLogo: false,
+    secondaryLogo: "",
+    secondaryLogoName: "",
+    secondaryLogoStoragePath: null,
+  }
 }
 
 function PartnerModalForm({
@@ -114,6 +145,18 @@ function PartnerModalForm({
   const [logo, setLogo] = useState(partner?.logo || "")
   const [logoStoragePath, setLogoStoragePath] = useState<string | null>(partner?.logo_storage_path || null)
   const [logoFit, setLogoFit] = useState<LogoFitOption>(initialParsed.logoFit)
+  const [isDualLogo, setIsDualLogo] = useState<boolean>(initialParsed.isDualLogo)
+  const [secondaryLogo, setSecondaryLogo] = useState<string>(initialParsed.secondaryLogo)
+  const [secondaryLogoStoragePath, setSecondaryLogoStoragePath] = useState<string | null>(
+    initialParsed.secondaryLogoStoragePath
+  )
+  const [secondaryLogoName, setSecondaryLogoName] = useState<string>(initialParsed.secondaryLogoName)
+  const [secondaryUploadMethod, setSecondaryUploadMethod] = useState<"upload" | "url">(
+    initialParsed.secondaryLogo && !initialParsed.secondaryLogo.includes("supabase.co") ? "url" : "upload"
+  )
+  const [isUploadingSecondary, setIsUploadingSecondary] = useState(false)
+  const [isDraggingSecondary, setIsDraggingSecondary] = useState(false)
+  const secondaryFileInputRef = useRef<HTMLInputElement>(null)
   const [uploadMethod, setUploadMethod] = useState<"upload" | "url">(
     partner?.logo && !partner.logo.includes("supabase.co") ? "url" : "upload"
   )
@@ -188,6 +231,57 @@ function PartnerModalForm({
     }
   }
 
+  // Secondary logo file upload handler
+  const handleSecondaryFileUpload = async (file: File) => {
+    const MAX_SIZE_MB = 2
+    const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"]
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      notifications.showError({ description: "Please upload a PNG, JPG, WebP, or SVG logo." })
+      return
+    }
+
+    if (file.size > MAX_SIZE_BYTES) {
+      notifications.showError({ description: `Logo exceeds ${MAX_SIZE_MB}MB size limit.` })
+      return
+    }
+
+    setIsUploadingSecondary(true)
+    try {
+      const { createClient } = await import("@/lib/supabase/client")
+      const supabase = createClient()
+
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "png"
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      const filePath = `partners/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from("partner-logos")
+        .upload(filePath, file, { cacheControl: "3600", upsert: false })
+
+      if (uploadError) {
+        console.error("Storage upload error:", uploadError)
+        notifications.showError({ description: "Failed to upload logo to storage." })
+        return
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("partner-logos").getPublicUrl(filePath)
+
+      setSecondaryLogo(publicUrl)
+      setSecondaryLogoStoragePath(filePath)
+      notifications.showSuccess({ description: "Secondary logo uploaded successfully" })
+    } catch (err) {
+      console.error("Upload error:", err)
+      notifications.showError({ description: "Error uploading secondary logo." })
+    } finally {
+      setIsUploadingSecondary(false)
+      if (secondaryFileInputRef.current) secondaryFileInputRef.current.value = ""
+    }
+  }
+
   const normalizedWebsite = website.trim()
     ? /^https?:\/\//i.test(website.trim())
       ? website.trim()
@@ -238,10 +332,14 @@ function PartnerModalForm({
 
     setIsSaving(true)
 
-    // Pack description with logoFit metadata for visual fidelity
+    // Pack description with logoFit and dual logo metadata for visual fidelity
     const serializedDescription = JSON.stringify({
       text: description.trim(),
       logoFit,
+      isDualLogo,
+      secondaryLogo: isDualLogo ? secondaryLogo.trim() || null : null,
+      secondaryLogoStoragePath: isDualLogo ? secondaryLogoStoragePath : null,
+      secondaryLogoName: isDualLogo ? secondaryLogoName.trim() || null : null,
     })
 
     const result = await savePartnerAction({
@@ -749,6 +847,207 @@ function PartnerModalForm({
           <p className="text-[11px] text-muted-foreground leading-relaxed">
             Leave as <strong>Auto-balance</strong> for automatic sizing, or choose an override if the logo has excessive padding or needs custom scaling.
           </p>
+        </div>
+
+        {/* Dual Logo Co-branding (INGO / Affiliate) */}
+        <div className="rounded-xl border border-border/80 bg-background/80 p-3.5 space-y-3 shadow-2xs">
+          <div className="flex items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="dual-logo-toggle" className="text-xs font-semibold cursor-pointer">
+                  Dual Logo Co-branding (INGO / Affiliate)
+                </Label>
+                <Badge variant="outline" className="text-[10px] py-0 h-4 border-primary/40 text-primary">
+                  Logo 1 | Logo 2
+                </Badge>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Display an affiliated INGO or co-branding partner logo side-by-side in the same card.
+              </p>
+            </div>
+            <Switch
+              id="dual-logo-toggle"
+              checked={isDualLogo}
+              onCheckedChange={(checked) => setIsDualLogo(checked)}
+            />
+          </div>
+
+          {isDualLogo && (
+            <div className="space-y-3 pt-2.5 border-t border-border/60">
+              {/* Secondary Affiliate Name */}
+              <div className="space-y-1">
+                <Label className="text-xs font-medium">Secondary Affiliate / INGO Name (optional)</Label>
+                <Input
+                  value={secondaryLogoName}
+                  onChange={(e) => setSecondaryLogoName(e.target.value)}
+                  placeholder="e.g. CBM Global, GIZ, UN Agency"
+                  className="h-9 text-xs"
+                />
+              </div>
+
+              {/* Secondary Logo Upload / URL Switch */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-medium">Secondary Logo</Label>
+                  <div className="inline-flex items-center rounded-lg border bg-background p-0.5 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setSecondaryUploadMethod("upload")}
+                      className={cn(
+                        "rounded-md px-2.5 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
+                        secondaryUploadMethod === "upload"
+                          ? "bg-primary text-primary-foreground shadow-2xs font-semibold"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      File Upload
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSecondaryUploadMethod("url")}
+                      className={cn(
+                        "rounded-md px-2.5 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
+                        secondaryUploadMethod === "url"
+                          ? "bg-primary text-primary-foreground shadow-2xs font-semibold"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Image URL
+                    </button>
+                  </div>
+                </div>
+
+                {secondaryUploadMethod === "upload" ? (
+                  <div
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      setIsDraggingSecondary(true)
+                    }}
+                    onDragLeave={() => setIsDraggingSecondary(false)}
+                    onDrop={(e) => {
+                      e.preventDefault()
+                      setIsDraggingSecondary(false)
+                      const file = e.dataTransfer.files?.[0]
+                      if (file) handleSecondaryFileUpload(file)
+                    }}
+                    onClick={() => secondaryFileInputRef.current?.click()}
+                    className={cn(
+                      "relative flex flex-col items-center justify-center p-3 border-2 border-dashed rounded-xl cursor-pointer transition-all",
+                      isDraggingSecondary
+                        ? "border-primary bg-primary/10"
+                        : "border-border/80 hover:border-primary/50 hover:bg-background/80"
+                    )}
+                  >
+                    <input
+                      ref={secondaryFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleSecondaryFileUpload(file)
+                      }}
+                      disabled={isUploadingSecondary}
+                    />
+
+                    {isUploadingSecondary ? (
+                      <div className="flex flex-col items-center gap-1.5 py-1">
+                        <Loader2 className="size-5 animate-spin text-primary" />
+                        <span className="text-xs font-medium text-primary">Uploading secondary logo...</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1 py-1 text-center">
+                        <Upload className="size-4 text-muted-foreground" />
+                        <span className="text-xs font-semibold text-foreground">Upload secondary logo</span>
+                        <span className="text-[10px] text-muted-foreground">PNG, SVG, JPG up to 2MB</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <Input
+                      type="url"
+                      value={secondaryLogo}
+                      onChange={(e) => setSecondaryLogo(e.target.value)}
+                      placeholder="https://example.org/ingo-logo.png"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                )}
+
+                {secondaryLogo && (
+                  <div className="flex items-center justify-between p-2 rounded-xl border border-border/80 bg-background/80 shadow-2xs">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="relative flex h-10 w-16 shrink-0 items-center justify-center rounded border border-border/80 bg-neutral-100/90 dark:bg-neutral-800/90 p-1 overflow-hidden">
+                        <img
+                          src={secondaryLogo}
+                          alt="Secondary logo preview"
+                          className="h-full w-full object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none"
+                          }}
+                        />
+                      </div>
+                      <div className="space-y-0.5 min-w-0">
+                        <span className="text-xs font-semibold text-foreground flex items-center gap-1">
+                          <Check className="size-3 text-primary" />
+                          Secondary Logo Ready
+                        </span>
+                        <span className="text-[10px] text-muted-foreground block truncate max-w-[180px]">
+                          {secondaryLogo}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive px-2"
+                      onClick={() => {
+                        setSecondaryLogo("")
+                        setSecondaryLogoStoragePath(null)
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Live Combined Dual Logo Preview Card */}
+              {(logo || secondaryLogo) && (
+                <div className="space-y-1.5 pt-1">
+                  <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    Live Dual Logo Card Preview
+                  </Label>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-border/80 bg-background shadow-xs min-h-[96px]">
+                    <div className="flex items-center justify-center w-full h-12 gap-2 px-2">
+                      <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+                        {logo ? (
+                          <img src={logo} alt="Primary logo" className="max-h-full max-w-full object-contain" />
+                        ) : (
+                          <span className="text-[11px] text-muted-foreground italic">Primary Logo</span>
+                        )}
+                      </div>
+                      <div className="w-[1.5px] h-7 bg-slate-300 dark:bg-slate-600 rounded-full shrink-0 mx-1" aria-hidden="true" />
+                      <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+                        {secondaryLogo ? (
+                          <img src={secondaryLogo} alt="Secondary logo" className="max-h-full max-w-full object-contain" />
+                        ) : (
+                          <span className="text-[11px] text-muted-foreground italic">Secondary Logo</span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-xs font-semibold text-foreground text-center mt-2">
+                      {name || "Partner Name"}
+                      {secondaryLogoName ? ` / ${secondaryLogoName}` : ""}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

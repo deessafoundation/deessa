@@ -50,6 +50,11 @@ function getSafeOverrideUrl(override: string | undefined, baseUrl: string): stri
   if (!override) return undefined
 
   try {
+    // Reject protocol-relative URLs like "//attacker.com"
+    if (override.startsWith("//")) {
+      return undefined
+    }
+
     // Allow relative paths – normalise them against baseUrl
     if (override.startsWith("/")) {
       return new URL(override, baseUrl).toString()

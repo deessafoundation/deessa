@@ -6,10 +6,10 @@ import { getCurrentAdmin } from "./admin-auth"
 import { programDocumentSchema, programDraftSchema, type ProgramDocument } from "@/lib/programs/content"
 import { uniqueSlug } from "@/lib/programs/slug"
 import { revalidatePath } from "next/cache"
-import { z } from "zod"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { readEditorHero } from "@/lib/programs/editor-hero"
 import { hasPermission, ROLE_PERMISSIONS, type AdminRole } from "@/lib/types/admin"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 const BUCKET = "program-assets"
 
@@ -140,12 +140,13 @@ export async function createProgram(input: {
       return { ok: false, error: draftError.message }
     }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "CREATE",
-      entity_type: "program",
-      entity_id: program.id,
-      new_data: { title: input.title, category: input.category, slug },
+    void logAdminActivity({
+      action: "PROGRAM_CREATED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: program.id,
+      description: `Created program "${input.title}" (${slug})`,
+      newData: { title: input.title, category: input.category, slug },
     })
 
     revalidatePath("/admin/programs")
@@ -225,12 +226,13 @@ export async function updateProgramDraft(
 
     if (masterError) return { ok: false, error: "Content saved, but program details could not be saved. Reload before retrying: " + masterError.message }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UPDATE",
-      entity_type: "program",
-      entity_id: programId,
-      new_data: { revision: newRevision, change_summary: changeSummary },
+    void logAdminActivity({
+      action: "PROGRAM_DRAFT_UPDATED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Updated program draft for "${doc.title}" (revision ${newRevision})`,
+      newData: { revision: newRevision, change_summary: changeSummary },
     })
 
     revalidatePath("/admin/programs")
@@ -366,12 +368,13 @@ export async function publishProgram(
     }
     if (!published) return { ok: false, error: "Program status changed during publication. Reload to check its current state." }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "PUBLISH",
-      entity_type: "program",
-      entity_id: programId,
-      new_data: { version: versionNumber, slug: program.slug },
+    void logAdminActivity({
+      action: "PROGRAM_PUBLISHED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Published program "${program.title}" as version ${versionNumber}`,
+      newData: { version: versionNumber, slug: program.slug },
     })
 
     revalidatePath("/admin/programs")
@@ -424,11 +427,13 @@ export async function unpublishProgram(
       .select("id").maybeSingle()
     if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "UNPUBLISH",
-      entity_type: "program",
-      entity_id: programId,
+    void logAdminActivity({
+      action: "PROGRAM_UNPUBLISHED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Unpublished program "${program.slug}"`,
+      newData: { slug: program.slug },
     })
 
     revalidatePath("/admin/programs")
@@ -487,11 +492,13 @@ export async function archiveProgram(
       .select("id").maybeSingle()
     if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "ARCHIVE",
-      entity_type: "program",
-      entity_id: programId,
+    void logAdminActivity({
+      action: "PROGRAM_ARCHIVED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Archived program "${program.slug}"`,
+      newData: { slug: program.slug },
     })
 
     revalidatePath("/admin/programs")
@@ -515,7 +522,7 @@ export async function restoreProgram(
 
     const { data: program } = await supabase
       .from("programs")
-      .select("id, status")
+      .select("id, status, slug")
       .eq("id", programId)
       .single()
 
@@ -530,11 +537,13 @@ export async function restoreProgram(
       .select("id").maybeSingle()
     if (statusError || !changed) return { ok: false, error: statusError?.message || "Program status changed. Reload before retrying." }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "RESTORE",
-      entity_type: "program",
-      entity_id: programId,
+    void logAdminActivity({
+      action: "PROGRAM_RESTORED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Restored program "${program.slug || programId}" from archive`,
+      newData: { slug: program.slug },
     })
 
     revalidatePath("/admin/programs")
@@ -550,7 +559,7 @@ export async function deleteProgram(
   programId: string
 ): Promise<CrudResult<null>> {
   try {
-    const admin = await requireAdmin()
+    await requireAdmin()
     const supabase = await createClient()
     const serviceClient = createServiceRoleClient()
 
@@ -588,12 +597,13 @@ export async function deleteProgram(
     if (!deleted?.length)
       return { ok: false, error: "Program could not be deleted (missing database permission). Apply P12 migration." }
 
-    await supabase.from("activity_logs").insert({
-      user_id: admin.id,
-      action: "DELETE",
-      entity_type: "program",
-      entity_id: programId,
-      old_data: { slug: program.slug },
+    void logAdminActivity({
+      action: "PROGRAM_DELETED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Deleted program "${program.slug}"`,
+      oldData: { slug: program.slug },
     })
 
     revalidatePath("/admin/programs")
@@ -723,6 +733,15 @@ export async function restoreProgramVersion(
         .eq("id", programId)
       if (metadataError) return { ok: false, error: "Content restored, but metadata could not be restored. Reload before retrying: " + metadataError.message }
     }
+
+    void logAdminActivity({
+      action: "PROGRAM_VERSION_RESTORED",
+      domain: "CONTENT",
+      entityType: "programs",
+      entityId: programId,
+      description: `Restored program version ${versionNumber} (revision ${newRevision})`,
+      newData: { versionNumber, revision: newRevision },
+    })
 
     revalidatePath("/admin/programs")
     return { ok: true, data: { revision: newRevision } }

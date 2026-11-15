@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function GET(_request: NextRequest) {
   const auth = await verifyAdminApiRequest(["SUPER_ADMIN", "ADMIN", "EDITOR"])
@@ -43,6 +44,18 @@ export async function POST(request: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "PODCAST_CREATED",
+      domain: "CONTENT",
+      entityType: "podcasts",
+      entityId: data.id,
+      summary: `Admin created podcast: "${data.title || "Untitled"}"`,
+      newData: data,
+    })
 
     return NextResponse.json(data, { status: 201 })
   } catch (error) {

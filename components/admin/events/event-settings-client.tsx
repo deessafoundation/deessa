@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,26 +13,21 @@ import {
   DollarSign,
   FileText,
   CreditCard,
-  Calendar,
   MapPin,
-  ExternalLink,
   Eye,
-  EyeOff,
+  ExternalLink,
   Loader2,
   ImageIcon,
   LayoutList,
   FormInput,
   Mail,
   Pause,
-  Play,
   Archive,
   RotateCcw,
   Trash2,
   Copy,
-  ChevronRight,
   AlertTriangle,
   Megaphone,
-  Link as LinkIcon,
   ToggleLeft,
   ToggleRight,
   ClipboardList,
@@ -44,7 +39,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { EventDetailsForm } from "./event-details-form"
@@ -69,6 +63,7 @@ import type {
   EventStatus,
 } from "@/lib/types/events-module"
 import type { FormSchema } from "@/lib/types/event-form-schema"
+import type { PartnerCategory, Partner, ContextPartnerDetailed } from "@/lib/types/partners"
 
 interface SettingsData {
   event: EventModuleEvent
@@ -87,10 +82,10 @@ interface SettingsData {
 }
 
 const statusColors: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-700",
-  published: "bg-green-100 text-green-700",
-  disabled: "bg-yellow-100 text-yellow-700",
-  archived: "bg-red-100 text-red-700",
+  draft: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 font-semibold border-0",
+  published: "bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 font-semibold border-0",
+  disabled: "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/60 dark:text-yellow-300 font-semibold border-0",
+  archived: "bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 font-semibold border-0",
 }
 
 const statusLabels: Record<EventStatus, string> = {
@@ -112,15 +107,48 @@ const tabs = [
   { label: "Promote", id: "promote", icon: Megaphone },
 ]
 
+const VALID_TABS = tabs.map((t) => t.id)
+
 interface EventSettingsClientProps {
   eventId: string
 }
 
 export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get("tab")
   const [data, setData] = useState<SettingsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState("details")
+  const [activeTab, setActiveTab] = useState(
+    tabParam && VALID_TABS.includes(tabParam) ? tabParam : "details"
+  )
+
+  // Synchronize tab state with browser forward/back navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const p = new URLSearchParams(window.location.search).get("tab")
+      if (p && VALID_TABS.includes(p)) {
+        setActiveTab(p)
+      } else {
+        setActiveTab("details")
+      }
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
+
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab)
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href)
+      if (newTab === "details") {
+        url.searchParams.delete("tab")
+      } else {
+        url.searchParams.set("tab", newTab)
+      }
+      window.history.replaceState(null, "", url.toString())
+    }
+  }
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
@@ -130,7 +158,7 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
   const [emailTemplates, setEmailTemplates] = useState<EventEmailTemplate[]>([])
   const [emailTemplatesVersion, setEmailTemplatesVersion] = useState(0)
   const [formSchema, setFormSchema] = useState<FormSchema | null>(null)
-  const [formSchemaVersion, setFormSchemaVersion] = useState(0)
+  const [, setFormSchemaVersion] = useState(0)
   const [fetchedTabs, setFetchedTabs] = useState<Set<string>>(new Set())
   const [formSchemaLoaded, setFormSchemaLoaded] = useState(false)
   const [registerConfig, setRegisterConfig] = useState<{
@@ -140,14 +168,12 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
     eventId: string | null
     eventTitle: string | null
   } | null>(null)
-  const [registerConfigLoading, setRegisterConfigLoading] = useState(false)
   const [registerConfigSaving, setRegisterConfigSaving] = useState(false)
   const [partnersData, setPartnersData] = useState<{
-    categories: any[]
-    availablePartners: any[]
-    linkedPartners: any[]
+    categories: PartnerCategory[]
+    availablePartners: Partner[]
+    linkedPartners: ContextPartnerDetailed[]
   } | null>(null)
-  const [partnersLoading, setPartnersLoading] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -257,7 +283,6 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         .catch(() => {})
     }
     if (activeTab === "promote" && !fetchedTabs.has("promote")) {
-      setRegisterConfigLoading(true)
       fetch(`/api/admin/events/${eventId}/register-button`)
         .then((r) => r.json())
         .then((json) => {
@@ -268,12 +293,8 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
           setRegisterConfig({ enabled: false, label: "Register", href: `/events/${data?.event?.slug || ""}`, eventId: null, eventTitle: null })
           setFetchedTabs((prev) => new Set(prev).add("promote"))
         })
-        .finally(() => setRegisterConfigLoading(false))
     }
     if (activeTab === "partners" && !fetchedTabs.has("partners")) {
-      if (!partnersData) {
-        setPartnersLoading(true)
-      }
       Promise.all([
         fetch(`/api/admin/events/${eventId}/partners/categories`).then((r) => r.json()),
         fetch(`/api/admin/events/${eventId}/partners/available`).then((r) => r.json()),
@@ -295,8 +316,8 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               linkedPartners: [],
             }
           )
+          setFetchedTabs((prev) => new Set(prev).add("partners"))
         })
-        .finally(() => setPartnersLoading(false))
     }
   }, [activeTab, data, eventId, emailTemplatesVersion, fetchedTabs])
 
@@ -473,19 +494,34 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold">{event.title}</h1>
+          <div className="flex items-center gap-2 mb-1">
+            <Link
+              href={`/admin/events/${event.id}`}
+              className="text-xs font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
+            >
+              ← Back to Registrations
+            </Link>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">{event.title}</h1>
+            <Badge className={cn("text-xs font-semibold px-2.5 py-0.5", statusColors[event.status])}>
+              {statusLabels[event.status]}
+            </Badge>
+          </div>
           <p className="text-xs sm:text-sm text-muted-foreground capitalize">{event.category}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" className={statusColors[event.status]}>
-            {event.status === "published" && <Eye className="mr-1 h-3 w-3" />}
-            {event.status === "draft" && <EyeOff className="mr-1 h-3 w-3" />}
-            {event.status}
-          </Badge>
+          <Link
+            href={`/admin/events/${event.id}`}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3.5 py-2 text-xs sm:text-sm font-medium text-foreground hover:bg-muted transition-all shadow-xs"
+          >
+            <Users className="size-4" />
+            Registrations ({stats.total})
+          </Link>
           {event.status === "published" && (
-            <Button asChild variant="ghost" size="sm" className="h-8 text-xs">
-              <Link href={`/events/${event.slug}`} target="_blank">
-                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+            <Button asChild variant="outline" size="sm" className="h-9 gap-1.5 text-xs sm:text-sm">
+              <Link href={`/events/${event.slug}`} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="size-3.5 text-muted-foreground" />
                 View Public
               </Link>
             </Button>
@@ -495,59 +531,61 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
-        <Card>
-          <CardContent className="p-3 sm:p-4">
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-blue-50 rounded-lg shrink-0">
-                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+        <Link href={`/admin/events/${eventId}`} className="block group">
+          <Card className="h-full border-border shadow-xs hover:border-primary/50 transition-all cursor-pointer">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="p-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg shrink-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold text-foreground">{stats.total}</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground truncate group-hover:text-primary transition-colors">
+                    Registrations &rarr;
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold">{stats.total}</p>
-                <p className="text-[11px] sm:text-xs text-muted-foreground truncate">Registrations</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
+        <Card className="border-border shadow-xs">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-green-50 rounded-lg shrink-0">
-                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+              <div className="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg shrink-0">
+                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold">{stats.confirmed}</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">{stats.confirmed}</p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">Confirmed</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border shadow-xs">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-yellow-50 rounded-lg shrink-0">
-                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
+              <div className="p-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg shrink-0">
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold">{stats.pending}</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">{stats.pending}</p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">Pending</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border shadow-xs">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-purple-50 rounded-lg shrink-0">
-                <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+              <div className="p-2 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg shrink-0">
+                <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm sm:text-base font-bold truncate">
-                  {stats.formVersion > 0
-                    ? `v${stats.formVersion}`
-                    : "None"}
+                <p className="text-sm sm:text-base font-bold text-foreground truncate">
+                  {stats.formVersion > 0 ? `v${stats.formVersion}` : "None"}
                 </p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
                   Form ({stats.formStatus})
@@ -557,14 +595,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border shadow-xs">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-orange-50 rounded-lg shrink-0">
-                <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600" />
+              <div className="p-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg shrink-0">
+                <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold">{stats.ticketTypes}</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">{stats.ticketTypes}</p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
                   {stats.isFree ? "Free Event" : "Ticket Types"}
                 </p>
@@ -573,14 +611,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border shadow-xs">
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="p-2 bg-emerald-50 rounded-lg shrink-0">
-                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+              <div className="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg shrink-0">
+                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold truncate">
+                <p className="text-lg sm:text-2xl font-bold text-foreground truncate">
                   {stats.isFree ? "Free" : `NPR ${stats.revenue.toLocaleString()}`}
                 </p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">Revenue</p>
@@ -590,82 +628,29 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         </Card>
       </div>
 
-      {/* Event Overview */}
-      <Card>
-        <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
-          <CardTitle className="text-base sm:text-lg">Event Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>Date</span>
-              </div>
-              <p className="font-medium text-sm sm:text-base">
-                {new Date(event.event_date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-                {event.event_time && ` • ${event.event_time}`}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>Location</span>
-              </div>
-              <p className="font-medium text-sm sm:text-base truncate">{event.location}</p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <FileText className="h-4 w-4" />
-                <span>Form</span>
-              </div>
-              <p className="font-medium text-sm sm:text-base">
-                {stats.formVersion > 0
-                  ? `v${stats.formVersion} (${stats.formStatus})`
-                  : "No form created"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <CreditCard className="h-4 w-4" />
-                <span>Tickets</span>
-              </div>
-              <p className="font-medium text-sm sm:text-base">
-                {stats.isFree ? "Free Event" : `${stats.ticketTypes} active`}
-              </p>
-            </div>
-          </div>
-          {event.description && (
-            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground line-clamp-2">
-              {event.description}
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Tabs */}
-      <Card>
+      {/* Subtabs Bar */}
+      <Card className="border-border shadow-xs">
         <CardContent className="p-2 sm:p-4">
-          <div className="flex gap-1.5 rounded-xl bg-muted p-1 overflow-x-auto scrollbar-none snap-x touch-pan-x">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex shrink-0 items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap snap-start",
-                  activeTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
-                )}
-              >
-                <tab.icon className="h-4 w-4 shrink-0" />
-                {tab.label}
-              </button>
-            ))}
+          <div className="relative">
+            <div className="flex gap-1.5 rounded-xl bg-muted p-1 overflow-x-auto scrollbar-none snap-x touch-pan-x">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={cn(
+                    "flex shrink-0 items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap snap-start",
+                    activeTab === tab.id
+                      ? "bg-primary text-primary-foreground shadow-md font-semibold"
+                      : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                  )}
+                >
+                  <tab.icon className="h-4 w-4 shrink-0" />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            {/* Subtle mobile right-edge fade indicator */}
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-card via-card/50 to-transparent sm:hidden rounded-r-xl" />
           </div>
         </CardContent>
       </Card>
@@ -826,12 +811,12 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         )}
         {activeTab === "partners" && (
           <div>
-            {partnersLoading && !partnersData ? (
+            {!partnersData ? (
               <div className="space-y-4 animate-pulse">
-                <div className="h-40 w-full rounded-lg bg-gray-100" />
-                <div className="h-40 w-full rounded-lg bg-gray-100" />
+                <div className="h-40 w-full rounded-lg bg-muted" />
+                <div className="h-40 w-full rounded-lg bg-muted" />
               </div>
-            ) : partnersData ? (
+            ) : (
               <PartnersEditor
                 eventId={eventId}
                 categories={partnersData.categories}
@@ -845,12 +830,6 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
                   })
                 }}
               />
-            ) : (
-              <Card>
-                <CardContent className="p-8 text-center text-muted-foreground">
-                  Failed to load partners data. Please refresh the page.
-                </CardContent>
-              </Card>
             )}
           </div>
         )}
@@ -863,15 +842,15 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-              {registerConfigLoading ? (
+              {!registerConfig ? (
                 <div className="space-y-4 animate-pulse">
-                  <div className="h-10 w-full rounded-lg bg-gray-100" />
-                  <div className="h-10 w-full rounded-lg bg-gray-100" />
-                  <div className="h-10 w-3/4 rounded-lg bg-gray-100" />
+                  <div className="h-10 w-full rounded-lg bg-muted" />
+                  <div className="h-10 w-full rounded-lg bg-muted" />
+                  <div className="h-10 w-3/4 rounded-lg bg-muted" />
                 </div>
-              ) : registerConfig ? (
+              ) : (
                 <>
-                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-3.5 sm:p-4 text-xs sm:text-sm text-blue-700">
+                  <div className="rounded-xl border border-primary/20 bg-primary/10 p-3.5 sm:p-4 text-xs sm:text-sm text-foreground">
                     <p className="font-semibold mb-1">How it works</p>
                     <p>Enable this to set <strong>{event.title}</strong> as the target of the <strong>Register</strong> button in the website navbar. Only one event can be assigned at a time.</p>
                   </div>
@@ -880,16 +859,16 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
                   {(() => {
                     const isAssignedToOther = registerConfig.eventId !== null && registerConfig.eventId !== event.id
                     return (
-                      <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between rounded-xl border p-3.5 sm:p-4 gap-3", isAssignedToOther ? "border-amber-200 bg-amber-50" : "border-gray-200 bg-gray-50")}>
+                      <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between rounded-xl border p-3.5 sm:p-4 gap-3", isAssignedToOther ? "border-amber-500/20 bg-amber-500/10 text-amber-900 dark:text-amber-200" : "border-border bg-muted/40")}>
                         <div className="flex items-start sm:items-center gap-3 min-w-0">
                           {registerConfig.enabled && !isAssignedToOther ? (
-                            <ToggleRight className="h-7 w-7 sm:h-8 sm:w-8 text-green-600 shrink-0 mt-0.5 sm:mt-0" />
+                            <ToggleRight className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 sm:mt-0" />
                           ) : (
-                            <ToggleLeft className="h-7 w-7 sm:h-8 sm:w-8 text-gray-400 shrink-0 mt-0.5 sm:mt-0" />
+                            <ToggleLeft className="h-7 w-7 sm:h-8 sm:w-8 text-muted-foreground shrink-0 mt-0.5 sm:mt-0" />
                           )}
                           <div className="min-w-0">
-                            <p className="font-semibold text-sm sm:text-base text-gray-900">Set as Navbar Register Button</p>
-                            <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">
+                            <p className="font-semibold text-sm sm:text-base text-foreground">Set as Navbar Register Button</p>
+                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
                               {isAssignedToOther
                                 ? `Assigned to "${registerConfig.eventTitle}" — disable that event first`
                                 : registerConfig.enabled
@@ -909,7 +888,7 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
                             className={cn(
                               "relative inline-flex h-7 w-12 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none",
                               isAssignedToOther ? "cursor-not-allowed opacity-50" : "cursor-pointer",
-                              registerConfig.enabled && !isAssignedToOther ? "bg-green-600" : "bg-gray-300"
+                              registerConfig.enabled && !isAssignedToOther ? "bg-emerald-600" : "bg-muted-foreground/30"
                             )}
                           >
                             <span
@@ -926,20 +905,20 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
 
                   {/* Label */}
                   <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-medium text-gray-700">Button Label</label>
+                    <label className="text-xs sm:text-sm font-medium text-foreground">Button Label</label>
                     <input
                       type="text"
                       value={registerConfig.label}
                       onChange={(e) => setRegisterConfig({ ...registerConfig, label: e.target.value })}
                       placeholder="Register"
-                      className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
 
                   {/* Preview */}
                   <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-medium text-gray-700">Preview</label>
-                    <div className="rounded-xl border border-gray-200 bg-white p-3.5 sm:p-4">
+                    <label className="text-xs sm:text-sm font-medium text-foreground">Preview</label>
+                    <div className="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                         <div className="flex items-center gap-2 rounded-xl border border-primary/50 px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-[15px] font-medium text-primary w-fit">
                           <ClipboardList className="size-3.5" />
@@ -967,8 +946,6 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
                     </Button>
                   </div>
                 </>
-              ) : (
-                <p className="text-sm text-muted-foreground">Failed to load register button configuration.</p>
               )}
             </CardContent>
           </Card>
@@ -992,14 +969,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               <button
                 onClick={() => handleStatusChange("published")}
                 disabled={isLoading !== null}
-                className="group flex items-center gap-3 rounded-xl border-2 border-green-200 bg-green-50 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-green-300 hover:bg-green-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+                className="group flex items-center gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-emerald-500/15 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-green-100 transition-colors group-hover:bg-green-200">
-                  {isLoading === "published" ? <Loader2 className="size-4 animate-spin text-green-600" /> : <Eye className="size-4 text-green-600 transition-transform group-hover:scale-110" />}
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 transition-colors">
+                  {isLoading === "published" ? <Loader2 className="size-4 animate-spin" /> : <Eye className="size-4 transition-transform group-hover:scale-110" />}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-green-700">{event.status === "draft" ? "Publish" : "Re-enable"}</p>
-                  <p className="text-xs text-green-600/70 truncate">{event.status === "draft" ? "Make event live" : "Restore event"}</p>
+                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{event.status === "draft" ? "Publish" : "Re-enable"}</p>
+                  <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 truncate">{event.status === "draft" ? "Make event live" : "Restore event"}</p>
                 </div>
               </button>
             )}
@@ -1009,14 +986,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               <button
                 onClick={() => handleStatusChange("disabled")}
                 disabled={isLoading !== null}
-                className="group flex items-center gap-3 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+                className="group flex items-center gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-amber-500/15 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 transition-colors group-hover:bg-amber-200">
-                  {isLoading === "disabled" ? <Loader2 className="size-4 animate-spin text-amber-600" /> : <Pause className="size-4 text-amber-600 transition-transform group-hover:scale-110" />}
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 transition-colors">
+                  {isLoading === "disabled" ? <Loader2 className="size-4 animate-spin" /> : <Pause className="size-4 transition-transform group-hover:scale-110" />}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-amber-700">Disable</p>
-                  <p className="text-xs text-amber-600/70 truncate">Take event offline</p>
+                  <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Disable</p>
+                  <p className="text-xs text-amber-600/80 dark:text-amber-400/80 truncate">Take event offline</p>
                 </div>
               </button>
             )}
@@ -1026,14 +1003,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               <button
                 onClick={() => setArchiveDialogOpen(true)}
                 disabled={isLoading !== null}
-                className="group flex items-center gap-3 rounded-xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+                className="group flex items-center gap-3 rounded-xl border border-slate-500/20 bg-slate-500/10 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-slate-500/15 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 transition-colors group-hover:bg-slate-200">
-                  <Archive className="size-4 text-slate-600 transition-transform group-hover:scale-110" />
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-500/15 text-slate-600 dark:text-slate-400 transition-colors">
+                  <Archive className="size-4 transition-transform group-hover:scale-110" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-700">Archive</p>
-                  <p className="text-xs text-slate-500 truncate">Hide from listings</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Archive</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Hide from listings</p>
                 </div>
               </button>
             )}
@@ -1043,14 +1020,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               <button
                 onClick={() => handleStatusChange("draft")}
                 disabled={isLoading !== null}
-                className="group flex items-center gap-3 rounded-xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+                className="group flex items-center gap-3 rounded-xl border border-slate-500/20 bg-slate-500/10 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-slate-500/15 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 transition-colors group-hover:bg-slate-200">
-                  {isLoading === "draft" ? <Loader2 className="size-4 animate-spin text-slate-600" /> : <RotateCcw className="size-4 text-slate-600 transition-transform group-hover:scale-110" />}
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-500/15 text-slate-600 dark:text-slate-400 transition-colors">
+                  {isLoading === "draft" ? <Loader2 className="size-4 animate-spin" /> : <RotateCcw className="size-4 transition-transform group-hover:scale-110" />}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-700">Restore</p>
-                  <p className="text-xs text-slate-500 truncate">Back to draft</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Restore</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Back to draft</p>
                 </div>
               </button>
             )}
@@ -1059,10 +1036,10 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
             <button
               onClick={() => setDuplicateDialogOpen(true)}
               disabled={isLoading !== null}
-              className="group flex items-center gap-3 rounded-xl border-2 border-primary/20 bg-primary/5 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/10 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+              className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
             >
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
-                <Copy className="size-4 text-primary transition-transform group-hover:scale-110" />
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors">
+                <Copy className="size-4 transition-transform group-hover:scale-110" />
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-bold text-primary">Duplicate</p>
@@ -1074,14 +1051,14 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
             <button
               onClick={() => setDeleteDialogOpen(true)}
               disabled={isLoading !== null}
-              className="group flex items-center gap-3 rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-100 hover:shadow-sm disabled:opacity-60 disabled:hover:translate-y-0 w-full"
+              className="group flex items-center gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-rose-500/15 hover:shadow-xs disabled:opacity-60 disabled:hover:translate-y-0 w-full"
             >
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-red-100 transition-colors group-hover:bg-red-200">
-                <Trash2 className="size-4 text-red-600 transition-transform group-hover:scale-110" />
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-400 transition-colors">
+                <Trash2 className="size-4 transition-transform group-hover:scale-110" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-bold text-red-600">Delete</p>
-                <p className="text-xs text-red-500/70 truncate">Permanent removal</p>
+                <p className="text-sm font-bold text-rose-700 dark:text-rose-400">Delete</p>
+                <p className="text-xs text-rose-600/80 dark:text-rose-400/80 truncate">Permanent removal</p>
               </div>
             </button>
           </div>
@@ -1093,8 +1070,8 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto p-4 sm:p-6 rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100">
-                <Archive className="size-5 text-slate-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-500/15 text-slate-600 dark:text-slate-400">
+                <Archive className="size-5" />
               </div>
               Archive Event
             </DialogTitle>
@@ -1102,12 +1079,12 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               Archive <strong className="text-foreground">{event.title}</strong>? It will be hidden from public listings.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+          <div className="rounded-xl border border-slate-500/20 bg-slate-500/10 p-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             The event can be <strong>restored to draft</strong> later if needed. Existing registrations will not be affected.
           </div>
           <DialogFooter className="gap-2 sm:gap-2 flex-col-reverse sm:flex-row">
             <Button variant="outline" onClick={() => setArchiveDialogOpen(false)} className="w-full sm:w-auto">Keep Active</Button>
-            <Button onClick={() => { setArchiveDialogOpen(false); handleStatusChange("archived") }} disabled={isLoading === "archived"} className="bg-slate-600 hover:bg-slate-700 text-white w-full sm:w-auto">
+            <Button onClick={() => { setArchiveDialogOpen(false); handleStatusChange("archived") }} disabled={isLoading === "archived"} className="bg-slate-700 hover:bg-slate-800 text-white w-full sm:w-auto">
               {isLoading === "archived" && <Loader2 className="mr-2 size-4 animate-spin" />}
               Yes, Archive
             </Button>
@@ -1120,8 +1097,8 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto p-4 sm:p-6 rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                <Copy className="size-5 text-primary" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Copy className="size-5" />
               </div>
               Duplicate Event
             </DialogTitle>
@@ -1129,7 +1106,7 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               Create a new draft event with the same details, agenda, ticket types, email templates, and form schema.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-border bg-muted/30 p-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <div className="rounded-xl border border-border bg-muted/40 p-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
             Registrations will <strong>NOT</strong> be copied. The new event will be created as a draft.
           </div>
           <DialogFooter className="gap-2 sm:gap-2 flex-col-reverse sm:flex-row">
@@ -1147,8 +1124,8 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
         <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto p-4 sm:p-6 rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100">
-                <AlertTriangle className="size-5 text-red-600" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400">
+                <AlertTriangle className="size-5" />
               </div>
               Delete Event
             </DialogTitle>
@@ -1156,7 +1133,7 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               Are you sure you want to delete &quot;{event.title}&quot;?
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs sm:text-sm text-red-700 leading-relaxed">
+          <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-xs sm:text-sm text-rose-700 dark:text-rose-400 leading-relaxed">
             ⚠ <strong>This action cannot be undone.</strong> All event data, agenda, forms, and email templates will be permanently deleted.
           </div>
           <DialogFooter className="gap-2 sm:gap-2 flex-col-reverse sm:flex-row">

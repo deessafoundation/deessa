@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAdminApiRequest } from "@/lib/supabase/admin-auth-guard"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function GET(
   _request: NextRequest,
@@ -70,6 +71,18 @@ export async function PATCH(
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "PODCAST_UPDATED",
+      domain: "CONTENT",
+      entityType: "podcasts",
+      entityId: id,
+      summary: `Admin updated podcast ${id}`,
+      newData: data,
+    })
+
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
@@ -90,6 +103,18 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    await logAdminActivity({
+      actorId: auth.adminUser.user_id,
+      actorEmail: auth.adminUser.email,
+      actorRole: auth.adminUser.role,
+      action: "PODCAST_DELETED",
+      domain: "CONTENT",
+      entityType: "podcasts",
+      entityId: id,
+      summary: `Admin deleted podcast ${id}`,
+      oldData: { id },
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {

@@ -262,6 +262,10 @@ export function canManageUsers(role: AdminRole): boolean {
   return role === "SUPER_ADMIN" || role === "ADMIN"
 }
 
+export function canViewAuditLedger(role: AdminRole): boolean {
+  return role === "SUPER_ADMIN" || role === "ADMIN" || role === "FINANCE"
+}
+
 export function canViewFinance(role: AdminRole): boolean {
   return role === "SUPER_ADMIN" || role === "ADMIN" || role === "FINANCE"
 }

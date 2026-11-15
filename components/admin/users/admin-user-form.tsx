@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FancySelect } from "@/components/ui/fancy-select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
-import { createAdminUser } from "@/lib/actions/admin-auth"
+import { createAdminUser } from "@/lib/actions/admin-users"
 
 export function AdminUserForm() {
   const [error, setError] = useState<string | null>(null)

@@ -192,3 +192,72 @@ export function PartnerCategoryLogo({
     </div>
   )
 }
+
+/**
+ * Dual Logo renderer for organizations tied with an INGO or secondary affiliate:
+ * Renders [ Logo 1 | Logo 2 ] with an accessible vertical divider between them.
+ */
+export interface DualPartnerLogoProps {
+  primarySrc: string
+  secondarySrc: string
+  primaryAlt: string
+  secondaryAlt: string
+  partnerName?: string
+  secondaryPartnerName?: string
+  fitOverride?: LogoFitOverride
+  className?: string
+  containerClassName?: string
+  dividerClassName?: string
+  eager?: boolean
+}
+
+export function DualPartnerLogo({
+  primarySrc,
+  secondarySrc,
+  primaryAlt,
+  secondaryAlt,
+  partnerName,
+  secondaryPartnerName,
+  fitOverride = "auto",
+  className,
+  containerClassName,
+  dividerClassName,
+  eager = true,
+}: DualPartnerLogoProps) {
+  return (
+    <div
+      className={cn(
+        "relative flex items-center justify-center w-full h-full gap-1.5 sm:gap-2 px-1",
+        containerClassName
+      )}
+    >
+      <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+        <CoOrganizerLogoImage
+          src={primarySrc}
+          alt={primaryAlt}
+          partnerName={partnerName}
+          fitOverride={fitOverride}
+          eager={eager}
+          className={cn("max-h-full max-w-full object-contain", className)}
+        />
+      </div>
+      <div
+        className={cn(
+          "w-[1.5px] h-[55%] min-h-[20px] max-h-[48px] bg-slate-300 dark:bg-slate-600 rounded-full shrink-0 mx-0.5",
+          dividerClassName
+        )}
+        aria-hidden="true"
+      />
+      <div className="relative flex-1 flex items-center justify-center h-full min-w-0 max-w-[48%]">
+        <CoOrganizerLogoImage
+          src={secondarySrc}
+          alt={secondaryAlt}
+          partnerName={secondaryPartnerName || partnerName}
+          fitOverride={fitOverride}
+          eager={eager}
+          className={cn("max-h-full max-w-full object-contain", className)}
+        />
+      </div>
+    </div>
+  )
+}

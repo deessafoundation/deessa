@@ -7,6 +7,7 @@ import { getCurrentAdmin } from "./admin-auth"
 import { hasPermission } from "@/lib/types/admin"
 import { teamInputSchema, TEAM_SOCIAL_FIELDS } from "@/lib/types/team-input"
 import { deleteStorageFile } from "@/lib/storage-helpers"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 async function teamAdmin() {
   const admin = await getCurrentAdmin()
@@ -42,8 +43,14 @@ function teamFailure(error: { message: string; code?: string }, action: string) 
 async function finishTeamChange(supabase: Awaited<ReturnType<typeof createClient>>, log: Record<string, unknown>) {
   const warnings: string[] = []
   try {
-    const { error } = await supabase.from("activity_logs").insert(log)
-    if (error) throw error
+    await logAdminActivity({
+      action: `TEAM_${String(log.action || "MUTATION").toUpperCase()}`,
+      domain: "CONTENT",
+      entityType: "team_members",
+      entityId: String(log.entity_id || "bulk_order"),
+      description: `Team member ${String(log.action)}: ${log.entity_id || "reorder"}`,
+      newData: (log.new_data as Record<string, unknown>) || undefined,
+    })
   } catch (error) {
     console.error("Team change saved; activity log failed", error)
     warnings.push("The change was saved, but its activity log could not be recorded.")

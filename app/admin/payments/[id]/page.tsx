@@ -251,7 +251,7 @@ async function getEventData(id: string) {
     paymentId: reg.payment_id,
     verificationId: null,
     createdAt: reg.created_at,
-    confirmedAt: reg.confirmed_at || null,
+    confirmedAt: (reg as any).confirmed_at || null,
     context: evt?.title || "Event",
     contextDetail: ticket ? `${ticket.name} — ${reg.payment_currency || "NPR"} ${ticket.price}` : undefined,
     donorMessage: null,

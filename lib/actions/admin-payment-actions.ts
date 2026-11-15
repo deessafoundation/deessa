@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { revalidatePath } from "next/cache"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function getServiceSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -79,7 +80,7 @@ export async function changePaymentStatusPolymorphic(input: {
     if (updateError) return { ok: false, message: "Failed to update status" }
 
     // Log to status_change_log
-    const logPayload: any = {
+    const logPayload: Record<string, unknown> = {
       admin_user_id: adminUser.id,
       old_status: record.payment_status,
       new_status: input.newStatus,
@@ -90,7 +91,7 @@ export async function changePaymentStatusPolymorphic(input: {
     await serviceSupabase.from("status_change_log").insert(logPayload)
 
     // Log to payment_events
-    const eventPayload: any = {
+    const eventPayload: Record<string, unknown> = {
       provider: "system",
       event_id: `manual_status_change:${input.entityId}:${Date.now()}`,
       event_type: "manual_status_change",
@@ -105,6 +106,17 @@ export async function changePaymentStatusPolymorphic(input: {
     eventPayload[reviewFkColumn[input.entityType]] = input.entityId
 
     await serviceSupabase.from("payment_events").insert(eventPayload)
+
+    await logAdminActivity({
+      actorId: adminUser.id,
+      action: "PAYMENT_STATUS_CHANGED",
+      domain: "TREASURY",
+      entityType: table,
+      entityId: input.entityId,
+      summary: `Admin changed ${input.entityType} payment status from ${record.payment_status} to ${input.newStatus}. Reason: ${input.reason.trim()}`,
+      oldData: { payment_status: record.payment_status },
+      newData: { payment_status: input.newStatus, reason: input.reason.trim() },
+    })
 
     revalidatePath(`/admin/payments/${input.entityId}`)
     revalidatePath("/admin/payments")
@@ -153,7 +165,7 @@ export async function addReviewNotePolymorphic(input: {
     const serviceSupabase = getServiceSupabase()
     const fkCol = reviewFkColumn[input.entityType]
 
-    const insertPayload: any = {
+    const insertPayload: Record<string, unknown> = {
       admin_user_id: adminUser.id,
       note_text: input.noteText.trim(),
     }
@@ -161,6 +173,16 @@ export async function addReviewNotePolymorphic(input: {
 
     const { error: insertError } = await serviceSupabase.from("review_notes").insert(insertPayload)
     if (insertError) return { ok: false, message: "Failed to add note" }
+
+    await logAdminActivity({
+      actorId: adminUser.id,
+      action: "DONATION_NOTE_ADDED",
+      domain: "TREASURY",
+      entityType: tableMap[input.entityType],
+      entityId: input.entityId,
+      summary: `Admin added review note to ${input.entityType} payment ${input.entityId}`,
+      newData: { note_text: input.noteText.trim() },
+    })
 
     revalidatePath(`/admin/payments/${input.entityId}`)
     return { ok: true, message: "Review note added successfully" }
@@ -210,6 +232,16 @@ export async function updateReviewStatusPolymorphic(input: {
       .eq("id", input.entityId)
 
     if (updateError) return { ok: false, message: "Failed to update review status" }
+
+    await logAdminActivity({
+      actorId: adminUser.id,
+      action: "DONATION_REVIEW_STATUS_CHANGED",
+      domain: "TREASURY",
+      entityType: table,
+      entityId: input.entityId,
+      summary: `Admin updated review status for ${input.entityType} payment ${input.entityId} to "${input.reviewStatus}"`,
+      newData: { review_status: input.reviewStatus },
+    })
 
     revalidatePath(`/admin/payments/${input.entityId}`)
     revalidatePath("/admin/payments")

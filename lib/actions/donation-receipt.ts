@@ -196,13 +196,23 @@ export async function getReceiptForDisplay(donationId: string) {
     const { data: donation, error } = await supabase
       .from("donations")
       .select(
-        "id, receipt_number, receipt_url, receipt_generated_at, receipt_sent_at, receipt_download_count, donor_name, donor_email, donor_phone, amount, currency, is_monthly, created_at, provider",
+        "id, receipt_number, receipt_url, receipt_generated_at, receipt_sent_at, receipt_download_count, donor_name, donor_email, donor_phone, amount, currency, is_monthly, created_at, provider, payment_status",
       )
       .eq("id", donationId)
       .single()
 
-    if (error || !donation) {
+    if (error || !donation || donation.payment_status !== "completed") {
       return null
+    }
+
+    // Generate fresh scoped, signed download token URL
+    if (donation.receipt_number) {
+      try {
+        const { generateReceiptDownloadUrl } = await import("@/lib/receipts/token")
+        donation.receipt_url = await generateReceiptDownloadUrl(donation.id, donation.receipt_number)
+      } catch {
+        // Keep stored receipt_url if token generation is unavailable
+      }
     }
 
     return donation

@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { createServiceRoleClient } from "@/lib/supabase/service"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { FACEBOOK_POST_COLUMNS, normalizeFacebookPostUrl, type FacebookPost } from "@/lib/facebook-posts/types"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 const fields = z.object({
   id: z.uuid().optional(),
@@ -130,6 +131,16 @@ export async function saveFacebookPost(input: unknown): Promise<Result> {
       : await db.insert(values).select("id").single()
     if (result.error) return { ok: false, error: databaseError(result.error.code) }
     if (!result.data) return { ok: false, error: "This entry no longer exists. Refresh the page." }
+
+    await logAdminActivity({
+      action: id ? "COMMUNITY_POST_UPDATED" : "COMMUNITY_POST_CREATED",
+      domain: "CONTENT",
+      entityType: "facebook_posts",
+      entityId: result.data.id,
+      summary: `Admin ${id ? "updated" : "created"} community post: "${post.title}"`,
+      newData: values,
+    })
+
     refresh()
     return { ok: true, id: result.data.id }
   } catch { return { ok: false, error: "Could not save the post. Please try again." } }
@@ -141,6 +152,16 @@ export async function deleteFacebookPost(id: string): Promise<Result> {
     if (!z.uuid().safeParse(id).success) return { ok: false, error: "Invalid post." }
     const { data, error } = await createServiceRoleClient().from("facebook_posts").delete().eq("id", id).select("id").maybeSingle()
     if (error || !data) return { ok: false, error: "Could not remove the entry. Refresh and try again." }
+
+    await logAdminActivity({
+      action: "COMMUNITY_POST_DELETED",
+      domain: "CONTENT",
+      entityType: "facebook_posts",
+      entityId: id,
+      summary: `Admin deleted community post ${id}`,
+      oldData: { id },
+    })
+
     refresh()
     return { ok: true }
   } catch { return { ok: false, error: "Could not remove the entry. Please try again." } }
@@ -157,6 +178,16 @@ export async function toggleFacebookPostPublish(id: string, is_published: boolea
       .eq("id", id)
 
     if (error) return { ok: false, error: databaseError(error.code) }
+
+    await logAdminActivity({
+      action: is_published ? "COMMUNITY_POST_PUBLISHED" : "COMMUNITY_POST_UNPUBLISHED",
+      domain: "CONTENT",
+      entityType: "facebook_posts",
+      entityId: id,
+      summary: `Admin ${is_published ? "published" : "unpublished"} community post ${id}`,
+      newData: { is_published },
+    })
+
     refresh()
     return { ok: true }
   } catch {
@@ -230,6 +261,14 @@ export async function bulkUpdateFacebookPosts(
       if (error) return { ok: false, error: "Could not update posts. Please try again." }
     }
     
+    await logAdminActivity({
+      action: "COMMUNITY_POSTS_BULK_UPDATED",
+      domain: "CONTENT",
+      entityType: "facebook_posts",
+      summary: `Admin performed bulk ${action} on ${validIds.length} community posts`,
+      newData: { action, count: validIds.length, ids: validIds },
+    })
+
     refresh()
     return { ok: true }
   } catch { return { ok: false, error: "Could not complete bulk action. Please try again." } }
@@ -258,6 +297,14 @@ export async function reorderFacebookPosts(reorderedIds: string[]): Promise<Resu
     
     if (failed.length > 0) return { ok: false, error: "Could not reorder all posts. Please try again." }
     
+    await logAdminActivity({
+      action: "COMMUNITY_POSTS_REORDERED",
+      domain: "CONTENT",
+      entityType: "facebook_posts",
+      summary: `Admin reordered ${validIds.length} community posts`,
+      newData: { count: validIds.length, reorderedIds: validIds },
+    })
+
     refresh()
     return { ok: true }
   } catch { return { ok: false, error: "Could not reorder posts. Please try again." } }

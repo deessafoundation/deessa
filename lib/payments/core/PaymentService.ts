@@ -121,10 +121,10 @@ export class PaymentService {
 
       const currentStatus = donation.payment_status as DonationStatus
 
-      // ── Idempotency check FIRST ───────────────────────────────────────────
+      // â”€â”€ Idempotency check FIRST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       // Must run before validateStateTransition so a Stripe retry on an
       // already-confirmed donation gracefully returns already_processed
-      // instead of throwing → 500 → infinite Stripe retries.
+      // instead of throwing â†’ 500 â†’ infinite Stripe retries.
       if (eventId) {
         const isAlreadyProcessed = await this.checkIdempotency(provider, eventId)
 
@@ -152,12 +152,12 @@ export class PaymentService {
         }
       }
 
-      // ── Short-circuit for already-completed donations ─────────────────────
+      // â”€â”€ Short-circuit for already-completed donations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       // Handles duplicate webhooks on donations confirmed by V1 or a prior V2
       // run where no payment_events row exists yet.
       // Cast to string: 'completed' is V1's DB value and isn't in DonationStatus.
       if ((currentStatus as string) === 'completed' || currentStatus === 'confirmed') {
-        console.warn('[PaymentService] Donation already completed — returning already_processed', { donationId, currentStatus })
+        console.warn('[PaymentService] Donation already completed â€” returning already_processed', { donationId, currentStatus })
         return {
           success: true,
           status: 'already_processed',
@@ -173,7 +173,7 @@ export class PaymentService {
         }
       }
 
-      // ── State transition validation ───────────────────────────────────────
+      // â”€â”€ State transition validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       this.validateStateTransition(currentStatus, 'confirmed', donationId)
 
       // Verify amount matches expected
@@ -240,7 +240,7 @@ export class PaymentService {
       }
 
       // Execute conditional update with WHERE clause to prevent race conditions
-      // Map internal 'confirmed' → 'completed' so V2 payments are visible to all
+      // Map internal 'confirmed' â†’ 'completed' so V2 payments are visible to all
       // existing admin pages, receipt triggers, and monitoring queries that look
       // for payment_status = 'completed' (the V1 canonical value).
       const dbStatus = finalStatus === 'confirmed' ? 'completed' : finalStatus
@@ -283,7 +283,7 @@ export class PaymentService {
           .single()
 
         if (refetched?.payment_status === 'completed' || refetched?.payment_status === 'confirmed') {
-          console.warn('[PaymentService] Race condition — donation already completed, returning already_processed', { donationId })
+          console.warn('[PaymentService] Race condition â€” donation already completed, returning already_processed', { donationId })
           return {
             success: true,
             status: 'already_processed',
@@ -318,7 +318,7 @@ export class PaymentService {
         reason: reviewReason,
       })
 
-      // Insert payment record (supplementary — non-fatal if table not migrated yet)
+      // Insert payment record (supplementary â€” non-fatal if table not migrated yet)
       try {
         const { error: paymentInsertError } = await this.supabase
           .from('payments')
@@ -369,7 +369,7 @@ export class PaymentService {
           })
 
         if (enhancedErr) {
-          // Column doesn't exist yet (migration 023 not run) — try minimal schema
+          // Column doesn't exist yet (migration 023 not run) â€” try minimal schema
           if (enhancedErr.code === '42703' || enhancedErr.message?.includes('column')) {
             const { error: minimalErr } = await this.supabase
               .from('payment_events')
@@ -386,7 +386,7 @@ export class PaymentService {
 
         if (eventInsertError) {
           if (eventInsertError.code === '23505') {
-            // Duplicate event — already processed (idempotent)
+            // Duplicate event â€” already processed (idempotent)
             return {
               success: true,
               status: 'already_processed',
@@ -405,8 +405,15 @@ export class PaymentService {
         }
       }
 
-      // TODO: Enqueue post-payment job for receipt generation and email
-      // This will be implemented in Phase 4
+      // Enqueue durable post-payment job for receipt generation and delivery
+      if (finalStatus === 'confirmed') {
+        try {
+          const { enqueuePostPaymentJob } = await import('@/lib/payments/workers/JobQueue')
+          await enqueuePostPaymentJob(donationId)
+        } catch (jobQueueErr) {
+          console.error('[PaymentService] Failed to enqueue post-payment job:', jobQueueErr)
+        }
+      }
       if (finalStatus === 'confirmed') {
         // Log confirmation success (log the status as stored in DB: 'completed')
         const durationMs = Date.now() - startTime
@@ -539,7 +546,7 @@ export class PaymentService {
    * Mirrors confirmDonation() but targets event_registrations table with:
    * - CAS on payment_status='unpaid' (not 'pending')
    * - TOCTOU guard on status='pending'
-   * - State machine: unpaid → paid/review/failed
+   * - State machine: unpaid â†’ paid/review/failed
    * - Post-payment hooks: sold_count increment, confirmation email
    *
    * @param input - Confirmation input with registration ID, provider, and verification result
@@ -551,7 +558,7 @@ export class PaymentService {
     const { entityId: registrationId, provider, verificationResult, eventId } = input
     const startTime = Date.now()
 
-    // Log confirmation attempt (reuse donation logger — same interface)
+    // Log confirmation attempt (reuse donation logger â€” same interface)
     await logConfirmationAttempt({
       donationId: registrationId, // logged as donationId for consistency
       provider,
@@ -606,7 +613,7 @@ export class PaymentService {
 
       // Step 3: Short-circuit for already-completed registrations
       if (currentPaymentStatus === 'paid' || currentStatus === 'confirmed') {
-        console.warn('[PaymentService] Registration already completed — returning already_processed', { registrationId, currentPaymentStatus })
+        console.warn('[PaymentService] Registration already completed â€” returning already_processed', { registrationId, currentPaymentStatus })
         return {
           success: true,
           status: 'already_processed',
@@ -717,7 +724,7 @@ export class PaymentService {
         updateData.payment_failed_at = new Date().toISOString()
       }
 
-      // Step 10: CAS UPDATE — guards payment_status='unpaid' AND status='pending'
+      // Step 10: CAS UPDATE â€” guards payment_status='unpaid' AND status='pending'
       // The status guard prevents TOCTOU: if registration was cancelled between
       // Step 1 (fetch) and Step 10 (update), the CAS will fail gracefully.
       const { data: updatedReg, error: updateError } = await this.supabase
@@ -739,7 +746,7 @@ export class PaymentService {
 
         // Another process confirmed/paid this registration
         if (refetched?.payment_status === 'paid' || refetched?.status === 'confirmed') {
-          console.warn('[PaymentService] Race condition — registration already processed', { registrationId })
+          console.warn('[PaymentService] Race condition â€” registration already processed', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -756,7 +763,7 @@ export class PaymentService {
         // Another process set this to review (amount mismatch on duplicate webhook)
         // Return already_processed to prevent infinite Stripe retries (500 on duplicate)
         if (refetched?.payment_status === 'review') {
-          console.warn('[PaymentService] Registration in review state — duplicate webhook ignored', { registrationId })
+          console.warn('[PaymentService] Registration in review state â€” duplicate webhook ignored', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -770,9 +777,9 @@ export class PaymentService {
           }
         }
 
-        // Registration was cancelled/expired during processing — ignore webhook
+        // Registration was cancelled/expired during processing â€” ignore webhook
         if (refetched?.status === 'cancelled' || refetched?.status === 'expired') {
-          console.warn('[PaymentService] Registration cancelled/expired during processing — ignoring', { registrationId })
+          console.warn('[PaymentService] Registration cancelled/expired during processing â€” ignoring', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -862,7 +869,7 @@ export class PaymentService {
 
         if (eventInsertError) {
           if (eventInsertError.code === '23505') {
-            // Duplicate event — already processed (idempotent)
+            // Duplicate event â€” already processed (idempotent)
             return {
               success: true,
               status: 'already_processed',
@@ -879,7 +886,7 @@ export class PaymentService {
         }
       }
 
-      // Step 15: Post-payment hooks (non-fatal — failures logged but don't block confirmation)
+      // Step 15: Post-payment hooks (non-fatal â€” failures logged but don't block confirmation)
 
       // 15a: Increment sold_count (only if payment confirmed, non-fatal on error)
       if (finalStatus === 'paid') {
@@ -1148,14 +1155,14 @@ export class PaymentService {
    * Validate state transition according to state machine rules
    * 
    * Enforces valid state transitions:
-   * - PENDING → CONFIRMED (payment verified)
-   * - PENDING → REVIEW (amount/currency mismatch)
-   * - PENDING → FAILED (verification failed)
+   * - PENDING â†’ CONFIRMED (payment verified)
+   * - PENDING â†’ REVIEW (amount/currency mismatch)
+   * - PENDING â†’ FAILED (verification failed)
    * 
    * Prevents invalid transitions:
-   * - CONFIRMED → PENDING (cannot un-confirm)
-   * - CONFIRMED → FAILED (cannot fail after confirmation)
-   * - FAILED → CONFIRMED (cannot confirm after failure)
+   * - CONFIRMED â†’ PENDING (cannot un-confirm)
+   * - CONFIRMED â†’ FAILED (cannot fail after confirmation)
+   * - FAILED â†’ CONFIRMED (cannot confirm after failure)
    * 
    * @param currentStatus - Current donation status
    * @param attemptedStatus - Status attempting to transition to
@@ -1202,14 +1209,14 @@ export class PaymentService {
    * Validate state transition for event registrations
    *
    * Enforces valid transitions:
-   * - UNPAID → PAID (payment verified)
-   * - UNPAID → REVIEW (amount/currency mismatch)
-   * - UNPAID → FAILED (verification failed)
+   * - UNPAID â†’ PAID (payment verified)
+   * - UNPAID â†’ REVIEW (amount/currency mismatch)
+   * - UNPAID â†’ FAILED (verification failed)
    *
    * Prevents invalid transitions:
-   * - PAID → UNPAID (cannot un-pay)
-   * - PAID → FAILED (cannot fail after payment)
-   * - FAILED → PAID (cannot confirm after failure)
+   * - PAID â†’ UNPAID (cannot un-pay)
+   * - PAID â†’ FAILED (cannot fail after payment)
+   * - FAILED â†’ PAID (cannot confirm after failure)
    *
    * @param currentPaymentStatus - Current payment_status on the registration
    * @param currentStatus - Current status (pending, confirmed, cancelled, expired)
@@ -1221,12 +1228,12 @@ export class PaymentService {
     currentStatus: string,
     registrationId: string
   ): void {
-    // Already paid → return already_processed (handled in confirmRegistration)
+    // Already paid â†’ return already_processed (handled in confirmRegistration)
     if (currentPaymentStatus === 'paid' || currentStatus === 'confirmed') {
       throw StateTransitionError.alreadyConfirmed(registrationId)
     }
 
-    // Already failed → return already_processed (handled in confirmRegistration)
+    // Already failed â†’ return already_processed (handled in confirmRegistration)
     if (currentPaymentStatus === 'failed') {
       throw StateTransitionError.alreadyFailed(registrationId)
     }
@@ -1254,7 +1261,7 @@ export class PaymentService {
    *
    * Mirrors confirmRegistration() but targets conference_registrations table:
    * - CAS on payment_status='unpaid' + status='pending'
-   * - State machine: unpaid → paid/review/failed
+   * - State machine: unpaid â†’ paid/review/failed
    * - Post-payment hooks: confirmation email via conference-mailer
    * - No sold_count (conferences don't track ticket capacity)
    *
@@ -1267,7 +1274,7 @@ export class PaymentService {
     const { entityId: registrationId, provider, verificationResult, eventId } = input
     const startTime = Date.now()
 
-    // Log confirmation attempt (reuse donation logger — same interface)
+    // Log confirmation attempt (reuse donation logger â€” same interface)
     await logConfirmationAttempt({
       donationId: registrationId,
       provider,
@@ -1322,7 +1329,7 @@ export class PaymentService {
 
       // Step 3: Short-circuit for already-completed registrations
       if (currentPaymentStatus === 'paid' || currentStatus === 'confirmed') {
-        console.warn('[PaymentService] Conference registration already completed — returning already_processed', { registrationId, currentPaymentStatus })
+        console.warn('[PaymentService] Conference registration already completed â€” returning already_processed', { registrationId, currentPaymentStatus })
         return {
           success: true,
           status: 'already_processed',
@@ -1432,7 +1439,7 @@ export class PaymentService {
         updateData.payment_failed_at = new Date().toISOString()
       }
 
-      // Step 10: CAS UPDATE — guards payment_status='unpaid' AND status='pending'
+      // Step 10: CAS UPDATE â€” guards payment_status='unpaid' AND status='pending'
       const { data: updatedReg, error: updateError } = await this.supabase
         .from('conference_registrations')
         .update(updateData)
@@ -1451,7 +1458,7 @@ export class PaymentService {
           .single()
 
         if (refetched?.payment_status === 'paid' || refetched?.status === 'confirmed') {
-          console.warn('[PaymentService] Race condition — conference registration already processed', { registrationId })
+          console.warn('[PaymentService] Race condition â€” conference registration already processed', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -1466,7 +1473,7 @@ export class PaymentService {
         }
 
         if (refetched?.payment_status === 'review') {
-          console.warn('[PaymentService] Conference registration in review state — duplicate webhook ignored', { registrationId })
+          console.warn('[PaymentService] Conference registration in review state â€” duplicate webhook ignored', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -1481,7 +1488,7 @@ export class PaymentService {
         }
 
         if (refetched?.status === 'cancelled' || refetched?.status === 'expired') {
-          console.warn('[PaymentService] Conference registration cancelled/expired during processing — ignoring', { registrationId })
+          console.warn('[PaymentService] Conference registration cancelled/expired during processing â€” ignoring', { registrationId })
           return {
             success: true,
             status: 'already_processed',
@@ -1586,7 +1593,7 @@ export class PaymentService {
         }
       }
 
-      // Step 15: Post-payment hooks (non-fatal — failures logged but don't block confirmation)
+      // Step 15: Post-payment hooks (non-fatal â€” failures logged but don't block confirmation)
 
       // 15a: Send confirmation email (non-fatal, fire-and-forget)
       if (finalStatus === 'paid') {

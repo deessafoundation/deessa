@@ -7,9 +7,7 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  AlertTriangle,
   Loader2,
-  ExternalLink,
   RotateCcw,
   ShieldCheck,
   Send,
@@ -18,6 +16,10 @@ import {
   Check,
   Eye,
   X,
+  Smartphone,
+  QrCode,
+  Wallet,
+  Camera,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -74,14 +76,34 @@ function formatTs(iso: string | null) {
 
 function PaymentBadge({ status }: { status?: string | null }) {
   if (status === "paid")
-    return <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Paid</Badge>
+    return (
+      <Badge className="bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 hover:bg-green-100 font-semibold border-0">
+        Paid
+      </Badge>
+    )
   if (status === "failed")
-    return <Badge className="bg-red-100 text-red-700 hover:bg-red-100">Failed</Badge>
+    return (
+      <Badge className="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 hover:bg-red-100 font-semibold border-0">
+        Failed
+      </Badge>
+    )
   if (status === "refunded")
-    return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">Refunded</Badge>
+    return (
+      <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 hover:bg-purple-100 font-semibold border-0">
+        Refunded
+      </Badge>
+    )
   if (status === "review")
-    return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100">Under Review</Badge>
-  return <Badge className="bg-slate-100 text-slate-500 hover:bg-slate-100">Unpaid</Badge>
+    return (
+      <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 font-semibold border-0">
+        Under Review
+      </Badge>
+    )
+  return (
+    <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 hover:bg-amber-100 font-semibold border-0">
+      Unpaid
+    </Badge>
+  )
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -97,7 +119,7 @@ function CopyButton({ text }: { text: string }) {
       className="ml-1 inline-flex items-center text-muted-foreground hover:text-foreground transition-colors"
       title="Copy to clipboard"
     >
-      {copied ? <Check className="size-3 text-green-600" /> : <Copy className="size-3" />}
+      {copied ? <Check className="size-3 text-emerald-600" /> : <Copy className="size-3" />}
     </button>
   )
 }
@@ -106,14 +128,15 @@ function ProviderIcon({ provider }: { provider: string | null }) {
   if (!provider) return <CreditCard className="size-4 text-muted-foreground" />
   switch (provider.toLowerCase()) {
     case "stripe":
-      return <span className="text-sm">💳</span>
+      return <CreditCard className="size-4 text-primary" />
     case "khalti":
-      return <span className="text-sm">🟣</span>
+      return <Wallet className="size-4 text-purple-600 dark:text-purple-400" />
     case "esewa":
-      return <span className="text-sm">🟢</span>
+      return <Wallet className="size-4 text-emerald-600 dark:text-emerald-400" />
     case "qr":
+      return <QrCode className="size-4 text-amber-600 dark:text-amber-400" />
     case "manual":
-      return <span className="text-sm">📱</span>
+      return <Smartphone className="size-4 text-blue-600 dark:text-blue-400" />
     default:
       return <CreditCard className="size-4 text-muted-foreground" />
   }
@@ -148,8 +171,6 @@ export function EventPaymentInfo({
   const [inlineMessage, setInlineMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   const isPaid = paymentStatus === "paid"
-  const isFailed = paymentStatus === "failed"
-  const isReview = paymentStatus === "review"
   const isUnpaid = !paymentStatus || paymentStatus === "unpaid"
 
   const showFeedback = (type: "success" | "error", text: string) => {
@@ -359,10 +380,10 @@ export function EventPaymentInfo({
 
         {/* Expiry warning */}
         {expiresAt && !isPaid && (
-          <div className={`rounded-lg border px-3 py-2 text-xs ${
+          <div className={`rounded-xl border px-3.5 py-2.5 text-xs ${
             new Date(expiresAt) < new Date()
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-amber-200 bg-amber-50 text-amber-700"
+              ? "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-400"
+              : "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400"
           }`}>
             <div className="flex items-center gap-2">
               <Clock className="size-3.5" />
@@ -377,29 +398,29 @@ export function EventPaymentInfo({
 
         {/* Payment Screenshot (QR payments) */}
         {paymentScreenshotUrl && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 sm:p-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm">📸</span>
-              <p className="text-xs font-semibold text-blue-700">Payment Screenshot</p>
+              <Camera className="size-4 text-primary" />
+              <p className="text-xs font-semibold text-foreground">Payment Screenshot</p>
             </div>
             <button
               type="button"
               onClick={() => setShowScreenshotModal(true)}
-              className="group relative w-full rounded-lg overflow-hidden border border-blue-200 bg-white cursor-pointer"
+              className="group relative w-full rounded-lg overflow-hidden border border-border bg-background cursor-pointer"
             >
               <img
                 src={paymentScreenshotUrl}
                 alt="Payment screenshot"
                 className="w-full h-auto max-h-64 object-contain transition-all duration-200 group-hover:opacity-80"
               />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-                <div className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 shadow-lg">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/40">
+                <div className="flex items-center gap-2 rounded-full bg-background/90 px-4 py-2 shadow-lg border border-border">
                   <Eye className="size-4 text-foreground" />
-                  <span className="text-sm font-medium text-foreground">View Full Image</span>
+                  <span className="text-xs font-semibold text-foreground">View Full Image</span>
                 </div>
               </div>
             </button>
-            <p className="mt-2 text-[11px] text-blue-600">
+            <p className="mt-2 text-[11px] text-muted-foreground">
               Uploaded by attendee — verify payment details above
             </p>
           </div>

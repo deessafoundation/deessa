@@ -48,15 +48,20 @@ async function verifyAuthentication(request: NextRequest): Promise<{
     }
   }
   
-  // Check if user is admin
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
+  // Check if user is admin in admin_users
+  const serviceSupabase = getServiceSupabase()
+  const { data: adminUser } = await serviceSupabase
+    .from("admin_users")
+    .select("role, is_active")
+    .eq("user_id", user.id)
     .single()
-  
-  const isAdmin = profile?.role === "admin"
-  
+
+  const isAdmin = Boolean(
+    adminUser &&
+    adminUser.is_active &&
+    ["SUPER_ADMIN", "ADMIN"].includes(adminUser.role)
+  )
+
   return {
     authenticated: true,
     isAdmin,
@@ -100,14 +105,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 4. Resolve access: admin session/API key, OR the caller supplies the
-    // exact donor email on file (proves ownership without requiring login).
+    // 4. Resolve access: Must be verified financial admin or API key,
+    // OR the caller proves ownership by supplying the exact donor email on file.
     const isOwner = Boolean(email) && email.toLowerCase() === donation.donor_email.toLowerCase()
 
-    if (!auth.authenticated && !isOwner) {
+    if (!auth.isAdmin && !isOwner) {
       return NextResponse.json(
-        { error: auth.error || "Authentication required" },
-        { status: 401 },
+        { error: "Unauthorized: You do not have permission to resend this receipt" },
+        { status: 403 },
       )
     }
 

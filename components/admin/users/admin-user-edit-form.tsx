@@ -21,13 +21,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { updateAdminUser, deleteAdminUser } from "@/lib/actions/admin-users"
+import type { AdminRole } from "@/lib/types/admin"
 
 interface AdminUserEditFormProps {
   user: {
     id: string
     email: string
     full_name: string
-    role: string
+    role: AdminRole | string
     is_active: boolean
   }
   currentAdminId: string
@@ -35,7 +36,7 @@ interface AdminUserEditFormProps {
 
 export function AdminUserEditForm({ user, currentAdminId }: AdminUserEditFormProps) {
   const router = useRouter()
-  const [role, setRole] = useState(user.role)
+  const [role, setRole] = useState<AdminRole>(user.role as AdminRole)
   const [isActive, setIsActive] = useState(user.is_active)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -100,7 +101,7 @@ export function AdminUserEditForm({ user, currentAdminId }: AdminUserEditFormPro
           <Label htmlFor="role">Role</Label>
           <FancySelect
             value={role}
-            onValueChange={setRole}
+            onValueChange={(val) => setRole(val as AdminRole)}
             placeholder="Select role"
             disabled={isSelf}
             options={[

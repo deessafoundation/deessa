@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 import {
   listFilesRecursive,
   getAvailableBuckets,
@@ -95,6 +96,17 @@ export async function syncStorageToMediaAssets(bucketName: string) {
       }
     }
 
+    void logAdminActivity({
+      action: "MEDIA_STORAGE_SYNCED",
+      domain: "MEDIA",
+      entityType: "storage_bucket",
+      entityId: bucketName,
+      description: `Synced storage bucket "${bucketName}": ${syncedCount} new, ${skippedCount} skipped (${files.length} total)`,
+      newData: { bucket: bucketName, syncedCount, skippedCount, total: files.length },
+      actorId: admin.id,
+      actorEmail: admin.email,
+    })
+
     return {
       success: true,
       error: null,
@@ -145,6 +157,15 @@ export async function syncAllBuckets() {
       totalSynced += res.synced || 0
       totalSkipped += res.skipped || 0
     }
+
+    void logAdminActivity({
+      action: "MEDIA_STORAGE_ALL_SYNCED",
+      domain: "MEDIA",
+      entityType: "storage_bucket",
+      entityId: "all",
+      description: `Synced all storage buckets: ${totalSynced} new files across ${buckets.length} bucket(s)`,
+      newData: { totalSynced, totalSkipped, bucketCount: buckets.length },
+    })
 
     return {
       success: true,

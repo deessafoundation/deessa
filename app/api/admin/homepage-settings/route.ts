@@ -11,6 +11,7 @@ import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
 import { HOMEPAGE_SETTINGS_KEYS } from "@/lib/types/homepage-settings"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 export async function POST(request: NextRequest) {
   try {
@@ -160,22 +161,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Log activity (best effort, do not block save if log insert fails)
+    // Log activity
     const updatedKeys = [...updates.map((u) => u.key)]
     if (hero) updatedKeys.push("home_hero")
     
-    try {
-      await supabase.from("activity_logs").insert({
-        user_id: currentAdmin.id,
-        action: "UPDATE",
-        entity_type: "homepage_settings",
-        entity_id: null,
-        new_data: { keys_updated: updatedKeys },
-        ip_address: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip"),
-      })
-    } catch (logError) {
-      console.warn("Failed to write to activity_logs:", logError)
-    }
+    await logAdminActivity({
+      actorId: currentAdmin.id,
+      actorEmail: currentAdmin.email,
+      actorRole: currentAdmin.role,
+      action: "HOMEPAGE_SETTINGS_UPDATED",
+      domain: "CONTENT",
+      entityType: "homepage_settings",
+      entityId: updatedKeys.join(","),
+      summary: `Admin updated homepage sections: ${updatedKeys.join(", ")}`,
+      newData: { keys_updated: updatedKeys },
+    })
 
     // The public homepage reads these CMS values. Clear its route cache right
     // after a save so the next visit receives the updated carousel.

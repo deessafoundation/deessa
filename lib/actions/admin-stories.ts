@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "./admin-auth"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 function generateSlug(title: string): string {
   return title
@@ -85,12 +86,13 @@ export async function createStory(formData: FormData) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "CREATE",
-    entity_type: "story",
-    entity_id: data.id,
-    new_data: { title, category },
+  void logAdminActivity({
+    action: "STORY_CREATED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: data.id,
+    description: `Created story "${title}"`,
+    newData: { title, category },
   })
 
   revalidatePath("/admin/stories")
@@ -137,13 +139,14 @@ export async function updateStory(id: string, formData: FormData) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "UPDATE",
-    entity_type: "story",
-    entity_id: id,
-    old_data: oldData,
-    new_data: { title, category, is_published: isPublished },
+  void logAdminActivity({
+    action: "STORY_UPDATED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: id,
+    description: `Updated story "${title}"`,
+    oldData: oldData,
+    newData: { title, category, is_published: isPublished },
   })
 
   revalidatePath("/admin/stories")
@@ -166,12 +169,13 @@ export async function deleteStory(id: string) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "story",
-    entity_id: id,
-    old_data: story,
+  void logAdminActivity({
+    action: "STORY_DELETED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: id,
+    description: `Deleted story "${story?.title || id}"`,
+    oldData: story,
   })
 
   revalidatePath("/admin/stories")
@@ -193,12 +197,13 @@ export async function deleteStoryAction(id: string) {
     return { error: error.message }
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: admin.id,
-    action: "DELETE",
-    entity_type: "story",
-    entity_id: id,
-    old_data: story,
+  void logAdminActivity({
+    action: "STORY_DELETED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: id,
+    description: `Deleted story "${story?.title || id}"`,
+    oldData: story,
   })
 
   revalidatePath("/admin/stories")
@@ -220,6 +225,15 @@ export async function toggleStoryFeaturedAction(id: string, isFeatured: boolean)
   if (error) {
     return { error: error.message }
   }
+
+  void logAdminActivity({
+    action: isFeatured ? "STORY_FEATURED" : "STORY_UNFEATURED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: id,
+    description: `${isFeatured ? "Featured" : "Unfeatured"} story ${id}`,
+    newData: { is_featured: isFeatured },
+  })
 
   revalidatePath("/admin/stories")
   revalidatePath("/stories")
@@ -257,6 +271,19 @@ export async function toggleStoryPublishedAction(id: string, isPublished: boolea
   if (error) {
     return { error: error.message }
   }
+
+  void logAdminActivity({
+    action: isPublished ? "STORY_PUBLISHED" : "STORY_UNPUBLISHED",
+    domain: "CONTENT",
+    entityType: "stories",
+    entityId: id,
+    description: `${isPublished ? "Published" : "Unpublished"} story ${id}`,
+    newData: { is_published: isPublished },
+  })
+
+  revalidatePath("/admin/stories")
+  revalidatePath("/stories")
+  return { success: true }
 
   revalidatePath("/admin/stories")
   revalidatePath("/stories")

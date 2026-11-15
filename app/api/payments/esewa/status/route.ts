@@ -75,9 +75,10 @@ export async function GET(request: Request) {
 
     const supabase = createServiceClient(supabaseUrl, serviceRoleKey)
 
+    // Select only the fields needed for the safe public response — no PII columns
     let { data: donation, error: queryError } = await supabase
       .from("donations")
-      .select("id, amount, currency, donor_name, donor_email, donor_phone, is_monthly, payment_status, provider_ref, esewa_transaction_uuid, created_at")
+      .select("id, amount, currency, payment_status, provider")
       .eq("esewa_transaction_uuid", transactionUuid)
       .maybeSingle()
 
@@ -85,7 +86,7 @@ export async function GET(request: Request) {
     if (!donation) {
       const { data: byRef } = await supabase
         .from("donations")
-        .select("id, amount, currency, donor_name, donor_email, donor_phone, is_monthly, payment_status, provider_ref, esewa_transaction_uuid, created_at")
+        .select("id, amount, currency, payment_status, provider")
         .eq("provider_ref", transactionUuid)
         .maybeSingle()
       if (byRef) {
@@ -96,32 +97,23 @@ export async function GET(request: Request) {
 
     if (queryError || !donation) {
       return NextResponse.json(
-        { 
+        {
           success: false,
           error: "Donation not found",
-          status: null
+          status: null,
         },
-        { status: 404 }
+        { status: 404 },
       )
     }
 
-    // 4. Return current status (no mutation)
+    // 4. Return minimal status fields only — no donor PII exposed
     return NextResponse.json({
       success: true,
-      donation: {
-        id: donation.id,
-        amount: donation.amount,
-        currency: donation.currency,
-        donor_name: donation.donor_name,
-        donor_email: donation.donor_email,
-        donor_phone: donation.donor_phone,
-        is_monthly: donation.is_monthly,
-        payment_status: donation.payment_status,
-        provider_ref: donation.provider_ref,
-        esewa_transaction_uuid: donation.esewa_transaction_uuid,
-        created_at: donation.created_at,
-      },
       status: donation.payment_status,
+      amount: donation.amount,
+      currency: donation.currency,
+      provider: donation.provider,
+      donationId: donation.id,
     })
 
   } catch (error) {

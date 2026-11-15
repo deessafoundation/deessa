@@ -102,7 +102,59 @@ export interface AuditDomain {
 /**
  * Maps raw entity types and actions to executive foundation domains (WHERE).
  */
-export function getAuditDomain(entityType?: string, action?: string): AuditDomain {
+export function getAuditDomain(entityType?: string, action?: string, explicitDomain?: string): AuditDomain {
+  if (explicitDomain) {
+    const d = explicitDomain.toUpperCase()
+    if (d === "IAM" || d === "ACCESS") {
+      return {
+        id: "iam",
+        label: "IAM & Security",
+        badgeClass: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/25",
+        icon: Shield,
+      }
+    }
+    if (d === "TREASURY") {
+      return {
+        id: "finances",
+        label: "Finances & Donations",
+        badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/25",
+        icon: CreditCard,
+      }
+    }
+    if (d === "MEDIA") {
+      return {
+        id: "media",
+        label: "Media Library",
+        badgeClass: "bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/25",
+        icon: Layers,
+      }
+    }
+    if (d === "EVENTS") {
+      return {
+        id: "events",
+        label: "Events & Tickets",
+        badgeClass: "bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-500/25",
+        icon: Calendar,
+      }
+    }
+    if (d === "CONTENT") {
+      return {
+        id: "cms",
+        label: "Content & CMS",
+        badgeClass: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/25",
+        icon: FileText,
+      }
+    }
+    if (d === "SETTINGS") {
+      return {
+        id: "settings",
+        label: "Platform Settings",
+        badgeClass: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/25",
+        icon: Sliders,
+      }
+    }
+  }
+
   const ent = (entityType || "").toLowerCase()
   const act = (action || "").toLowerCase()
 
@@ -464,6 +516,7 @@ function formatRelativeTime(timestamp: string, now: number): string {
 
 export function SystemAuditClient({
   initialLogs,
+  currentAdminRole,
 }: SystemAuditClientProps) {
   const [logs, setLogs] = useState<SystemAuditLogItem[]>(initialLogs)
   const [loading, setLoading] = useState(false)
@@ -741,10 +794,32 @@ export function SystemAuditClient({
               <History className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                Security & Activity Audit Trail
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                  Security & Activity Audit Trail
+                </h1>
+                {currentAdminRole === "SUPER_ADMIN" && (
+                  <Badge className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 font-semibold gap-1 text-[11px] py-0.5 shadow-2xs">
+                    <ShieldAlert className="h-3 w-3" /> Super Admin • Master Clearance
+                  </Badge>
+                )}
+                {currentAdminRole === "ADMIN" && (
+                  <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30 font-semibold gap-1 text-[11px] py-0.5 shadow-2xs">
+                    <Shield className="h-3 w-3" /> Operational Audit Clearance
+                  </Badge>
+                )}
+                {currentAdminRole === "FINANCE" && (
+                  <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-semibold gap-1 text-[11px] py-0.5 shadow-2xs">
+                    <CreditCard className="h-3 w-3" /> Finance & Treasury Clearance
+                  </Badge>
+                )}
+                {currentAdminRole === "EDITOR" && (
+                  <Badge className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/30 font-semibold gap-1 text-[11px] py-0.5 shadow-2xs">
+                    <User className="h-3 w-3" /> Personal Activity Only
+                  </Badge>
+                )}
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                 Cryptographic immutable ledger recording authentication events, credential updates, and administrative operations.
               </p>
             </div>
@@ -1192,10 +1267,10 @@ export function SystemAuditClient({
             {paginatedLogs.map((log, idx) => {
               const globalIndex = startIndex + idx + 1
               const theme = getActionTheme(log.action, log.entity_type)
-              const domain = getAuditDomain(log.entity_type, log.action)
+              const domain = getAuditDomain(log.entity_type, log.action, log.domain)
               const Icon = theme.icon
               const DomainIcon = domain.icon
-              const ip = (log.new_data?.ip as string) || null
+              const ip = log.ip_address || (log.new_data?.ip as string) || null
               const plain = formatAuditLogToPlainLanguage(log)
               const relativeTime = formatRelativeTime(log.created_at, currentTime)
 
@@ -1296,7 +1371,7 @@ export function SystemAuditClient({
 
                   {/* Human Narrative Sentence */}
                   <p className="text-xs sm:text-[13px] text-foreground/90 font-normal leading-relaxed">
-                    {plain.narrative || plain.headline}
+                    {log.summary || plain.narrative || plain.headline}
                   </p>
 
                   {/* Micro Metadata Line (attributes and IP) */}
@@ -1346,10 +1421,10 @@ export function SystemAuditClient({
                 {paginatedLogs.map((log, idx) => {
                   const globalIndex = startIndex + idx + 1
                   const theme = getActionTheme(log.action, log.entity_type)
-                  const domain = getAuditDomain(log.entity_type, log.action)
+                  const domain = getAuditDomain(log.entity_type, log.action, log.domain)
                   const Icon = theme.icon
                   const DomainIcon = domain.icon
-                  const ip = (log.new_data?.ip as string) || "—"
+                  const ip = log.ip_address || (log.new_data?.ip as string) || "—"
                   const relativeTime = formatRelativeTime(log.created_at, currentTime)
 
                   return (
@@ -1569,12 +1644,12 @@ export function SystemAuditClient({
         <DialogContent className="w-[92vw] sm:max-w-2xl max-w-2xl max-h-[82vh] h-auto p-0 flex flex-col overflow-hidden rounded-2xl border border-border/80 shadow-2xl bg-card">
           {selectedLog && (() => {
             const theme = getActionTheme(selectedLog.action, selectedLog.entity_type)
-            const domain = getAuditDomain(selectedLog.entity_type, selectedLog.action)
+            const domain = getAuditDomain(selectedLog.entity_type, selectedLog.action, selectedLog.domain)
             const ThemeIcon = theme.icon
             const DomainIcon = domain.icon
             const plainLog = formatAuditLogToPlainLanguage(selectedLog)
             const relativeTime = formatRelativeTime(selectedLog.created_at, currentTime)
-            const ip = (selectedLog.new_data?.ip as string) || null
+            const ip = selectedLog.ip_address || (selectedLog.new_data?.ip as string) || null
 
             return (
               <>
@@ -1781,9 +1856,37 @@ export function SystemAuditClient({
                       </span>
                     </div>
                     <p className="text-xs sm:text-[13px] text-foreground font-medium leading-relaxed">
-                      {plainLog.narrative}
+                      {selectedLog.summary || plainLog.narrative}
                     </p>
                   </div>
+
+                  {/* Delta Diff Box (Before vs After) */}
+                  {selectedLog.diff && Object.keys(selectedLog.diff).length > 0 && (
+                    <div className="p-3 rounded-xl border border-border/70 bg-muted/20 space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                        <Activity className="h-3.5 w-3.5 text-primary" />
+                        <span>State Delta (Old vs New)</span>
+                      </span>
+                      <div className="space-y-1.5 max-h-[140px] overflow-y-auto font-mono text-[11px]">
+                        {Object.entries(selectedLog.diff).map(([key, change]) => {
+                          const c = change as { old?: unknown; new?: unknown }
+                          return (
+                            <div key={key} className="p-2 rounded-lg bg-background border border-border/60 space-y-1">
+                              <span className="font-bold text-foreground font-sans">{key}</span>
+                              <div className="grid grid-cols-2 gap-2 text-[10.5px]">
+                                <div className="text-rose-600 dark:text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded truncate">
+                                  - {typeof c?.old === "object" ? JSON.stringify(c.old) : String(c?.old ?? "null")}
+                                </div>
+                                <div className="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded truncate">
+                                  + {typeof c?.new === "object" ? JSON.stringify(c.new) : String(c?.new ?? "null")}
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Captured Properties Grid (if any) */}
                   {plainLog.attributes.length > 0 && (

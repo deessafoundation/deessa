@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
 import type { FormSchema, FormSchemaMeta } from "@/lib/types/event-form-schema"
+import { logAdminActivity } from "@/lib/audit/audit-logger"
 
 // ── Get the active form schema for an event ──────────────────────────────────
 // Falls back to current event if no eventId provided (backward compatible).
@@ -117,6 +118,15 @@ export async function createFormSchema(
       return { success: false, error: error.message }
     }
 
+    void logAdminActivity({
+      action: "CONFERENCE_FORM_SCHEMA_CREATED",
+      domain: "EVENTS",
+      entityType: "conference_form_schemas",
+      entityId: `${eventId}:v${nextVersion}`,
+      description: `Created conference form schema version ${nextVersion} for event ${eventId}`,
+      newData: { eventId, version: nextVersion, notes },
+    })
+
     return { success: true, version: nextVersion }
   } catch (err) {
     return {
@@ -162,6 +172,15 @@ export async function activateSchemaVersion(
     if (activateError) {
       return { success: false, error: activateError.message }
     }
+
+    void logAdminActivity({
+      action: "CONFERENCE_FORM_SCHEMA_ACTIVATED",
+      domain: "EVENTS",
+      entityType: "conference_form_schemas",
+      entityId: `${eventId}:v${version}`,
+      description: `Activated conference form schema version ${version} for event ${eventId}`,
+      newData: { eventId, version },
+    })
 
     revalidatePath("/conference/register")
     revalidatePath("/admin/conference/settings/form-builder")
@@ -262,6 +281,15 @@ export async function updateFormSchema(
     if (error) {
       return { success: false, error: error.message }
     }
+
+    void logAdminActivity({
+      action: publish ? "CONFERENCE_FORM_SCHEMA_PUBLISHED" : "CONFERENCE_FORM_SCHEMA_SAVED",
+      domain: "EVENTS",
+      entityType: "conference_form_schemas",
+      entityId: `${targetEventId}:v${nextVersion}`,
+      description: `${publish ? "Published" : "Saved draft"} conference form schema version ${nextVersion} for event ${targetEventId}`,
+      newData: { eventId: targetEventId, version: nextVersion, published: publish },
+    })
 
     // Revalidate paths
     if (publish) {

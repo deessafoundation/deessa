@@ -3,6 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { getDefaultTemplateHtml } from "@/lib/email/templates/default-event-templates";
+import { logAdminActivity } from "@/lib/audit/audit-logger";
+import { getCurrentAdmin } from "@/lib/actions/admin-auth";
 import type {
   EventEmailTemplate,
   EmailTemplateType,
@@ -11,18 +13,18 @@ import type {
 } from "@/lib/types/events-module";
 
 // Auth guard for admin operations
-async function requireAdmin() {
+async function requireAdmin(allowedRoles?: string[]) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!admin) throw new Error("Unauthorized: Not an admin user");
+  const admin = await getCurrentAdmin();
+
+  if (!admin) {
+    throw new Error("Unauthorized: Inactive or unauthorized admin session.");
+  }
+
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(admin.role)) {
+    throw new Error("Forbidden: Insufficient role permissions for this operation.");
+  }
+
   return { supabase, admin };
 }
 
@@ -83,7 +85,7 @@ export async function upsertEmailTemplate(
   input: CreateEmailTemplateInput
 ): Promise<ActionResult<EventEmailTemplate>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     // If an id is provided, update that specific template (used for editing custom templates)
     if (input.id) {
@@ -104,6 +106,17 @@ export async function upsertEmailTemplate(
       if (error) {
         return { success: false, error: error.message };
       }
+
+      void logAdminActivity({
+        action: "EVENT_EMAIL_TEMPLATE_SAVED",
+        domain: "EVENT",
+        entityType: "event_email_templates",
+        entityId: data.id,
+        description: `Updated event email template "${data.template_type}" (${data.subject})`,
+        newData: { event_id: input.event_id, template_type: data.template_type, subject: data.subject, is_active: data.is_active },
+        actorId: admin.user_id,
+        actorEmail: admin.email,
+      });
 
       revalidatePath(`/admin/events/${input.event_id}/settings`);
       return { success: true, data: data as EventEmailTemplate };
@@ -136,6 +149,17 @@ export async function upsertEmailTemplate(
           return { success: false, error: error.message };
         }
 
+        void logAdminActivity({
+          action: "EVENT_EMAIL_TEMPLATE_SAVED",
+          domain: "EVENT",
+          entityType: "event_email_templates",
+          entityId: data.id,
+          description: `Updated event email template "${data.template_type}" (${data.subject})`,
+          newData: { event_id: input.event_id, template_type: data.template_type, subject: data.subject, is_active: data.is_active },
+          actorId: admin.user_id,
+          actorEmail: admin.email,
+        });
+
         revalidatePath(`/admin/events/${input.event_id}/settings`);
         return { success: true, data: data as EventEmailTemplate };
       }
@@ -160,6 +184,17 @@ export async function upsertEmailTemplate(
       return { success: false, error: error.message };
     }
 
+    void logAdminActivity({
+      action: "EVENT_EMAIL_TEMPLATE_SAVED",
+      domain: "EVENT",
+      entityType: "event_email_templates",
+      entityId: data.id,
+      description: `Created event email template "${data.template_type}" (${data.subject})`,
+      newData: { event_id: input.event_id, template_type: data.template_type, subject: data.subject, is_active: data.is_active },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
+
     revalidatePath(`/admin/events/${input.event_id}/settings`);
     return { success: true, data: data as EventEmailTemplate };
   } catch (err) {
@@ -175,7 +210,7 @@ export async function deleteEmailTemplate(
   eventId: string
 ): Promise<ActionResult<void>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     const { error } = await supabase
       .from("event_email_templates")
@@ -185,6 +220,17 @@ export async function deleteEmailTemplate(
     if (error) {
       return { success: false, error: error.message };
     }
+
+    void logAdminActivity({
+      action: "EVENT_EMAIL_TEMPLATE_DELETED",
+      domain: "EVENT",
+      entityType: "event_email_templates",
+      entityId: id,
+      description: `Deleted event email template ${id}`,
+      newData: { event_id: eventId },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
 
     revalidatePath(`/admin/events/${eventId}/email-templates`);
     return { success: true };
@@ -208,7 +254,7 @@ export async function createDefaultEmailTemplates(
   eventId: string
 ): Promise<ActionResult<void>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     const templateTypes = [
       "confirmation",
@@ -242,6 +288,17 @@ export async function createDefaultEmailTemplates(
       return { success: false, error: error.message };
     }
 
+    void logAdminActivity({
+      action: "EVENT_EMAIL_TEMPLATES_DEFAULTS_CREATED",
+      domain: "EVENT",
+      entityType: "event_email_templates",
+      entityId: eventId,
+      description: `Created default email templates for event ${eventId}`,
+      newData: { event_id: eventId, count: templateTypes.length },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
+
     revalidatePath(`/admin/events/${eventId}/settings`);
     return { success: true };
   } catch (err) {
@@ -261,7 +318,7 @@ export async function seedMissingTemplates(
   eventId: string
 ): Promise<ActionResult<{ inserted: number }>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     const templateTypes = ["confirmation", "payment_receipt", "reminder", "cancellation"] as const;
 
@@ -298,6 +355,17 @@ export async function seedMissingTemplates(
       return { success: false, error: error.message };
     }
 
+    void logAdminActivity({
+      action: "EVENT_EMAIL_TEMPLATES_SEEDED",
+      domain: "EVENT",
+      entityType: "event_email_templates",
+      entityId: eventId,
+      description: `Seeded ${missingTypes.length} missing email template(s) for event ${eventId}`,
+      newData: { event_id: eventId, seeded: missingTypes },
+      actorId: admin.user_id,
+      actorEmail: admin.email,
+    });
+
     revalidatePath(`/admin/events/${eventId}/settings`);
     return { success: true, data: { inserted: missingTypes.length } };
   } catch (err) {
@@ -316,7 +384,7 @@ export async function resetToDefaultTemplate(
   templateType: EmailTemplateType
 ): Promise<ActionResult<EventEmailTemplate>> {
   try {
-    const { supabase } = await requireAdmin();
+    const { supabase, admin } = await requireAdmin();
 
     // Only the 4 standard types have defaults
     if (templateType === "custom") {
@@ -351,6 +419,17 @@ export async function resetToDefaultTemplate(
         return { success: false, error: error.message };
       }
 
+      void logAdminActivity({
+        action: "EVENT_EMAIL_TEMPLATE_RESET",
+        domain: "EVENT",
+        entityType: "event_email_templates",
+        entityId: eventId,
+        description: `Reset email template "${templateType}" to default for event ${eventId}`,
+        newData: { event_id: eventId, template_type: templateType },
+        actorId: admin.user_id,
+        actorEmail: admin.email,
+      });
+
       revalidatePath(`/admin/events/${eventId}/settings`);
       return { success: true, data: data as EventEmailTemplate };
     } else {
@@ -370,6 +449,17 @@ export async function resetToDefaultTemplate(
       if (error) {
         return { success: false, error: error.message };
       }
+
+      void logAdminActivity({
+        action: "EVENT_EMAIL_TEMPLATE_RESET",
+        domain: "EVENT",
+        entityType: "event_email_templates",
+        entityId: eventId,
+        description: `Reset email template "${templateType}" to default for event ${eventId}`,
+        newData: { event_id: eventId, template_type: templateType },
+        actorId: admin.user_id,
+        actorEmail: admin.email,
+      });
 
       revalidatePath(`/admin/events/${eventId}/settings`);
       return { success: true, data: data as EventEmailTemplate };

@@ -277,11 +277,31 @@ export class EsewaAdapter extends BaseProviderAdapter {
   }
 
   /**
+   * The exact set of fields eSewa includes in its HMAC signature.
+   * Hardcoded to prevent an attacker from influencing which fields are signed
+   * by supplying a crafted `signed_field_names` value in the payload.
+   *
+   * If eSewa's API changes this set, update here and in the HMAC verification test.
+   */
+  private static readonly EXPECTED_SIGNED_FIELDS = new Set([
+    'total_amount',
+    'transaction_uuid',
+    'product_code',
+  ])
+
+  /**
    * Verify HMAC-SHA256 signature
-   * 
+   *
    * Generates expected signature and compares with provided signature.
    * Uses timing-safe comparison to prevent timing attacks.
-   * 
+   *
+   * Security: `signed_field_names` comes from the attacker-influenced callback
+   * payload. We validate it against a hardcoded expected set (order-insensitive)
+   * before trusting its contents. The payload must claim exactly the expected
+   * fields — no more, no fewer — to prevent field-injection or field-omission
+   * attacks where an attacker omits a critical field (e.g. total_amount) from
+   * the signed set while still passing the required-fields presence check.
+   *
    * @param data - Callback data with signature
    * @throws VerificationError if signature verification fails
    */
@@ -295,17 +315,23 @@ export class EsewaAdapter extends BaseProviderAdapter {
       )
     }
 
-    // Parse signed field names
+    // Parse signed field names from payload
     const fields = signed_field_names.split(',').map(s => s.trim()).filter(Boolean)
-    
-    // Validate required fields are included
-    const requiredFields = ['total_amount', 'transaction_uuid', 'product_code']
-    const missingRequired = requiredFields.filter(field => !fields.includes(field))
-    
-    if (missingRequired.length > 0) {
+    const payloadFieldSet = new Set(fields)
+
+    // Harden: reject if the payload's signed_field_names does not match the
+    // hardcoded expected set exactly (order-insensitive). This prevents an
+    // attacker from crafting a payload that omits critical fields from the
+    // signed set or injects extra fields to influence the signature message.
+    const expectedFields = EsewaAdapter.EXPECTED_SIGNED_FIELDS
+    const isExactMatch =
+      payloadFieldSet.size === expectedFields.size &&
+      [...expectedFields].every(f => payloadFieldSet.has(f))
+
+    if (!isExactMatch) {
       throw VerificationError.signatureVerificationFailed(
         'esewa',
-        `Signed fields missing required fields: ${missingRequired.join(', ')}`
+        `signed_field_names does not match expected set. Got: [${fields.join(', ')}], expected: [${[...expectedFields].join(', ')}]`
       )
     }
 

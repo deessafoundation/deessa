@@ -33,6 +33,7 @@ import {
   Receipt,
   Clock,
   XCircle,
+  type LucideIcon,
 } from "lucide-react"
 import { interpolateTemplate } from "@/lib/utils/template-interpolation"
 import {
@@ -60,7 +61,7 @@ const STANDARD_TEMPLATE_TYPES: {
   value: EmailTemplateType
   label: string
   description: string
-  icon: React.ComponentType<{ className?: string }>
+  icon: LucideIcon
 }[] = [
   { value: "confirmation", label: "Confirmation", description: "Sent when registration is confirmed", icon: CheckCircle },
   { value: "payment_receipt", label: "Payment Receipt", description: "Sent after successful payment", icon: Receipt },
