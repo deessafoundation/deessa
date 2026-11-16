@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
 import { logAdminActivity } from '@/lib/audit/audit-logger'
 
@@ -12,9 +12,9 @@ export async function POST() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = await createClient()
+    const serviceSupabase = createServiceRoleClient()
     
-    const { error } = await supabase
+    const { error } = await serviceSupabase
       .from('admin_notifications')
       .update({ 
         is_read: true, 

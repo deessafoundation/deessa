@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
 import { logAdminActivity } from '@/lib/audit/audit-logger'
 
-// GET - Fetch notifications for current user
+// GET - Fetch notifications for current user or all system notifications if SUPER_ADMIN
 export async function GET(request: NextRequest) {
   try {
     const currentAdmin = await getCurrentAdmin()
@@ -12,17 +13,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = await createClient()
     const { searchParams } = new URL(request.url)
-    const limit = parseInt(searchParams.get('limit') || '50')
+    const limit = parseInt(searchParams.get('limit') || '100')
     const unreadOnly = searchParams.get('unreadOnly') === 'true'
+    const scope = searchParams.get('scope') || (currentAdmin.role === 'SUPER_ADMIN' ? 'all' : 'mine')
+
+    const isSuperAdminAll = currentAdmin.role === 'SUPER_ADMIN' && scope === 'all'
+    const supabase = isSuperAdminAll ? createServiceRoleClient() : await createClient()
 
     let query = supabase
       .from('admin_notifications')
       .select('*')
-      .eq('user_id', currentAdmin.user_id)
       .order('created_at', { ascending: false })
       .limit(limit)
+
+    if (!isSuperAdminAll) {
+      query = query.eq('user_id', currentAdmin.user_id)
+    }
 
     if (unreadOnly) {
       query = query.eq('is_read', false)
@@ -59,15 +66,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { user_id, type, title, message, link, metadata } = body
 
-    if (!user_id || !type || !title || !message) {
+    const targetUserId = user_id || currentAdmin.user_id
+
+    if (!targetUserId || !type || !title || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const supabase = await createClient()
+    const supabase = createServiceRoleClient()
     const { data: notification, error } = await supabase
       .from('admin_notifications')
       .insert({
-        user_id,
+        user_id: targetUserId,
         type,
         title,
         message,
@@ -87,11 +96,12 @@ export async function POST(request: NextRequest) {
       domain: "SYSTEM",
       entityType: "admin_notifications",
       entityId: notification.id,
-      description: `Dispatched admin notification "${title}" to user ${user_id}`,
-      newData: { user_id, type, title, message },
+      description: `Created notification: ${title}`,
+      actorId: currentAdmin.user_id,
+      actorEmail: currentAdmin.email,
     })
 
-    return NextResponse.json({ notification })
+    return NextResponse.json({ notification }, { status: 201 })
   } catch (error) {
     console.error('Error in POST /api/admin/notifications:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

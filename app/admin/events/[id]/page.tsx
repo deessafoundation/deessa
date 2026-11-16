@@ -207,9 +207,19 @@ export default async function EventRegistrationsPage({
                 <DollarSign className="size-4" />
               </div>
             </div>
-            <p className="mt-2 text-xl sm:text-3xl font-bold tracking-tight text-foreground truncate">
-              {event.is_free ? "Free" : `NPR ${revenue.toLocaleString()}`}
-            </p>
+            <div className="mt-2 min-w-0">
+              {!event.is_free && (
+                <span className="block text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider leading-none mb-0.5">
+                  NPR
+                </span>
+              )}
+              <p
+                className="text-xl sm:text-3xl font-bold tracking-tight text-foreground truncate leading-tight"
+                title={event.is_free ? "Free" : `NPR ${revenue.toLocaleString()}`}
+              >
+                {event.is_free ? "Free" : revenue.toLocaleString()}
+              </p>
+            </div>
             <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground truncate">
               {event.is_free ? "No charges" : "Total collected"}
             </p>

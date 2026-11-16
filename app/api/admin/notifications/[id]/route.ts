@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getCurrentAdmin } from '@/lib/actions/admin-auth'
 import { logAdminActivity } from '@/lib/audit/audit-logger'
 
-// PATCH - Mark notification as read
+// PATCH - Mark notification as read or unread
 export async function PATCH(
-  _request: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -16,33 +16,49 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = await createClient()
+    let isRead = true
+    try {
+      const body = await request.json()
+      if (typeof body?.is_read === 'boolean') {
+        isRead = body.is_read
+      }
+    } catch {
+      // Default to true if no body provided
+    }
+
+    const isSuperAdmin = currentAdmin.role === 'SUPER_ADMIN'
+    const serviceSupabase = createServiceRoleClient()
     
-    const { error } = await supabase
+    let query = serviceSupabase
       .from('admin_notifications')
       .update({ 
-        is_read: true, 
-        read_at: new Date().toISOString() 
+        is_read: isRead, 
+        read_at: isRead ? new Date().toISOString() : null,
       })
       .eq('id', id)
-      .eq('user_id', currentAdmin.user_id)
+
+    if (!isSuperAdmin) {
+      query = query.eq('user_id', currentAdmin.user_id)
+    }
+
+    const { error } = await query
 
     if (error) {
-      console.error('Error marking notification as read:', error)
+      console.error('Error updating notification read state:', error)
       return NextResponse.json({ error: 'Failed to update notification' }, { status: 500 })
     }
 
     void logAdminActivity({
-      action: "ADMIN_NOTIFICATION_MARKED_READ",
+      action: isRead ? "ADMIN_NOTIFICATION_MARKED_READ" : "ADMIN_NOTIFICATION_MARKED_UNREAD",
       domain: "SYSTEM",
       entityType: "admin_notifications",
       entityId: id,
-      description: `Marked notification ${id} as read`,
+      description: `Marked notification ${id} as ${isRead ? 'read' : 'unread'}`,
       actorId: currentAdmin.user_id,
       actorEmail: currentAdmin.email,
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, is_read: isRead })
   } catch (error) {
     console.error('Error in PATCH /api/admin/notifications/[id]:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -62,13 +78,19 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = await createClient()
+    const isSuperAdmin = currentAdmin.role === 'SUPER_ADMIN'
+    const serviceSupabase = createServiceRoleClient()
     
-    const { error } = await supabase
+    let query = serviceSupabase
       .from('admin_notifications')
       .delete()
       .eq('id', id)
-      .eq('user_id', currentAdmin.user_id)
+
+    if (!isSuperAdmin) {
+      query = query.eq('user_id', currentAdmin.user_id)
+    }
+
+    const { error } = await query
 
     if (error) {
       console.error('Error deleting notification:', error)

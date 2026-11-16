@@ -44,18 +44,18 @@ import { cn } from "@/lib/utils"
 import type { EventModuleEvent } from "@/lib/types/events-module"
 
 const statusBadgeStyles: Record<string, string> = {
-  published: "bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 font-semibold border-0",
-  draft: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 font-semibold border-0",
-  disabled: "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/60 dark:text-yellow-300 font-semibold border-0",
-  archived: "bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 font-semibold border-0",
+  published: "bg-green-100 text-green-700 dark:bg-green-950/80 dark:text-green-300 border-0",
+  draft: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-0",
+  disabled: "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/80 dark:text-yellow-300 border-0",
+  archived: "bg-red-100 text-red-700 dark:bg-red-950/80 dark:text-red-300 border-0",
 }
 
 const categoryBadgeStyles: Record<string, string> = {
-  conference: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
-  workshop: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20",
-  seminar: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20",
-  meetup: "bg-pink-500/10 text-pink-700 dark:text-pink-400 border-pink-500/20",
-  general: "bg-muted text-muted-foreground border-border",
+  conference: "bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 border-0",
+  workshop: "bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 border-0",
+  seminar: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300 border-0",
+  meetup: "bg-pink-100 text-pink-700 dark:bg-pink-950/80 dark:text-pink-300 border-0",
+  general: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-0",
 }
 
 const ITEMS_PER_PAGE = 8
@@ -370,22 +370,23 @@ export default function EventsPage() {
         </Card>
       ) : viewMode === "table" ? (
         /* TABLE VIEW */
-        <Card className="border border-border/80 shadow-2xs overflow-hidden">
+        <Card className="p-0 py-0 gap-0 border border-border/80 shadow-2xs overflow-hidden">
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-none">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/40 hover:bg-muted/40">
-                    <TableHead className="w-[320px]">Event</TableHead>
+                    <TableHead className="w-16 text-center text-xs font-semibold">S.No</TableHead>
+                    <TableHead>Event</TableHead>
                     <TableHead>Date & Time</TableHead>
                     <TableHead>Location</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right pr-6">Quick Actions</TableHead>
+                    <TableHead className="w-28 text-center text-xs font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedEvents.map((event) => (
+                  {paginatedEvents.map((event, index) => (
                     <TableRow
                       key={event.id}
                       onClick={() => router.push(`/admin/events/${event.id}`)}
@@ -398,28 +399,35 @@ export default function EventsPage() {
                         }
                       }}
                     >
-                      {/* Title + Thumbnail */}
+                      {/* S.No */}
+                      <TableCell className="text-center font-medium text-xs text-muted-foreground w-16">
+                        {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+                      </TableCell>
+
+                      {/* Title + Thumbnail + Short Abstract */}
                       <TableCell>
                         <div className="flex items-center gap-3">
                           {event.image ? (
                             <img
                               src={event.image}
                               alt={event.title}
-                              className="size-11 rounded-lg object-cover border border-border/80 shrink-0"
+                              className="size-9 rounded-lg object-cover border border-border/80 shrink-0"
                               loading="lazy"
                             />
                           ) : (
-                            <div className="size-11 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border/60">
-                              <Calendar className="size-5 text-muted-foreground" />
+                            <div className="size-9 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border/60">
+                              <Calendar className="size-4 text-muted-foreground" />
                             </div>
                           )}
-                          <div className="min-w-0">
-                            <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                          <div className="min-w-0 max-w-[260px] sm:max-w-xs">
+                            <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors truncate">
                               {event.title}
                             </p>
-                            <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                              {event.short_description || event.description}
-                            </p>
+                            {(event.short_description || event.description) && (
+                              <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
+                                {event.short_description || event.description}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </TableCell>
@@ -451,8 +459,10 @@ export default function EventsPage() {
                       {/* Category */}
                       <TableCell>
                         <Badge
-                          variant="outline"
-                          className={cn("text-[11px] px-2 py-0.5 font-medium capitalize", categoryBadgeStyles[event.category])}
+                          className={cn(
+                            "text-[11px] px-2.5 py-0.5 font-semibold capitalize border-0 shadow-2xs",
+                            categoryBadgeStyles[event.category] || categoryBadgeStyles.general
+                          )}
                         >
                           {event.category}
                         </Badge>
@@ -461,8 +471,10 @@ export default function EventsPage() {
                       {/* Status */}
                       <TableCell>
                         <Badge
-                          variant="outline"
-                          className={cn("text-[11px] px-2 py-0.5 font-medium capitalize", statusBadgeStyles[event.status])}
+                          className={cn(
+                            "text-[11px] px-2.5 py-0.5 font-semibold capitalize border-0 shadow-2xs",
+                            statusBadgeStyles[event.status] || statusBadgeStyles.draft
+                          )}
                         >
                           {event.status === "published" && <Eye className="mr-1 h-3 w-3 inline" />}
                           {event.status === "draft" && <EyeOff className="mr-1 h-3 w-3 inline" />}
@@ -470,18 +482,19 @@ export default function EventsPage() {
                         </Badge>
                       </TableCell>
 
-                      {/* Actions */}
-                      <TableCell className="text-right pr-6" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5">
+                      {/* Actions with Micro-interactions */}
+                      <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-center gap-1.5">
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             asChild
-                            className="h-8 px-2.5 text-xs gap-1.5 shadow-2xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                            className="size-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                            title="Registrations"
+                            aria-label="Registrations"
                           >
                             <Link href={`/admin/events/${event.id}`}>
-                              <Users className="size-3.5" />
-                              <span>Registrations</span>
+                              <Users className="size-4 transition-transform duration-200 group-hover/btn:scale-110" />
                             </Link>
                           </Button>
 
@@ -489,11 +502,12 @@ export default function EventsPage() {
                             variant="ghost"
                             size="sm"
                             asChild
-                            className="h-8 px-2.5 text-xs gap-1 hover:bg-muted"
+                            className="size-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                            title="Settings"
+                            aria-label="Settings"
                           >
                             <Link href={`/admin/events/${event.id}/settings`}>
-                              <Settings className="size-3.5 text-muted-foreground" />
-                              <span className="hidden sm:inline">Settings</span>
+                              <Settings className="size-4 transition-transform duration-300 group-hover/btn:rotate-45" />
                             </Link>
                           </Button>
 
@@ -502,11 +516,12 @@ export default function EventsPage() {
                               variant="ghost"
                               size="sm"
                               asChild
-                              className="h-8 px-2 text-xs"
-                              title="View Public Summit Page"
+                              className="size-8 p-0 text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                              title="View Public Page"
+                              aria-label="View Public Page"
                             >
                               <Link href={`/events/${event.slug || event.id}`} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="size-3.5 text-muted-foreground" />
+                                <ExternalLink className="size-4 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                               </Link>
                             </Button>
                           )}
@@ -526,7 +541,7 @@ export default function EventsPage() {
             <Card
               key={event.id}
               onClick={() => router.push(`/admin/events/${event.id}`)}
-              className="border border-border/80 shadow-2xs overflow-hidden cursor-pointer hover:border-border hover:shadow-xs transition-all flex flex-col justify-between group"
+              className="p-0 py-0 gap-0 border border-border/80 shadow-2xs overflow-hidden cursor-pointer hover:border-border hover:shadow-xs transition-all flex flex-col justify-between group"
             >
               <div>
                 {/* Poster / Header Image */}
@@ -548,14 +563,18 @@ export default function EventsPage() {
                   {/* Top Floating Badges */}
                   <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2">
                     <Badge
-                      variant="outline"
-                      className={cn("text-[10px] px-2 py-0.5 font-semibold capitalize backdrop-blur-md bg-background/80 shadow-2xs", categoryBadgeStyles[event.category])}
+                      className={cn(
+                        "text-[10px] px-2.5 py-0.5 font-semibold capitalize border-0 shadow-xs",
+                        categoryBadgeStyles[event.category] || categoryBadgeStyles.general
+                      )}
                     >
                       {event.category}
                     </Badge>
                     <Badge
-                      variant="outline"
-                      className={cn("text-[10px] px-2 py-0.5 font-semibold capitalize backdrop-blur-md bg-background/80 shadow-2xs", statusBadgeStyles[event.status])}
+                      className={cn(
+                        "text-[10px] px-2.5 py-0.5 font-semibold capitalize border-0 shadow-xs",
+                        statusBadgeStyles[event.status] || statusBadgeStyles.draft
+                      )}
                     >
                       {event.status === "published" && <Eye className="mr-1 h-3 w-3 inline" />}
                       {event.status === "draft" && <EyeOff className="mr-1 h-3 w-3 inline" />}
@@ -569,9 +588,11 @@ export default function EventsPage() {
                   <h3 className="font-semibold text-base leading-snug line-clamp-1 text-foreground group-hover:text-primary transition-colors">
                     {event.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {event.short_description || event.description || "No description provided."}
-                  </p>
+                  {(event.short_description || event.description) && (
+                    <p className="text-xs text-muted-foreground line-clamp-1 truncate leading-relaxed">
+                      {event.short_description || event.description}
+                    </p>
+                  )}
 
                   <div className="pt-2 border-t border-border/60 space-y-1.5 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
@@ -594,7 +615,7 @@ export default function EventsPage() {
                 </CardContent>
               </div>
 
-              {/* Card Footer Actions */}
+              {/* Card Footer Actions - Full Width Quick Actions */}
               <div
                 className="p-3 bg-muted/20 border-t border-border/60 flex items-center gap-2"
                 onClick={(e) => e.stopPropagation()}
@@ -603,22 +624,22 @@ export default function EventsPage() {
                   variant="outline"
                   size="sm"
                   asChild
-                  className="flex-1 h-8 text-xs gap-1.5 shadow-2xs hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                  className="flex-1 h-8.5 text-xs font-medium gap-1.5 shadow-2xs hover:bg-primary/10 hover:text-primary hover:border-primary/40 transition-all duration-150 active:scale-[0.98] group/btn"
                 >
                   <Link href={`/admin/events/${event.id}`}>
-                    <Users className="size-3.5" />
+                    <Users className="size-3.5 transition-transform duration-200 group-hover/btn:scale-110" />
                     <span>Registrations</span>
                   </Link>
                 </Button>
 
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   asChild
-                  className="h-8 text-xs gap-1 px-3 shadow-2xs"
+                  className="flex-1 h-8.5 text-xs font-medium gap-1.5 shadow-2xs hover:bg-muted transition-all duration-150 active:scale-[0.98] group/btn"
                 >
                   <Link href={`/admin/events/${event.id}/settings`}>
-                    <Settings className="size-3.5" />
+                    <Settings className="size-3.5 transition-transform duration-300 group-hover/btn:rotate-45" />
                     <span>Settings</span>
                   </Link>
                 </Button>
@@ -628,11 +649,12 @@ export default function EventsPage() {
                     variant="ghost"
                     size="sm"
                     asChild
-                    className="h-8 px-2 text-xs"
+                    className="size-8.5 p-0 shrink-0 text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 group/btn"
                     title="View Public Page"
+                    aria-label="View Public Page"
                   >
                     <Link href={`/events/${event.slug || event.id}`} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="size-3.5 text-muted-foreground" />
+                      <ExternalLink className="size-4 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                     </Link>
                   </Button>
                 )}
