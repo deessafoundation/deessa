@@ -1,5 +1,12 @@
 export type AdminRole = "SUPER_ADMIN" | "ADMIN" | "EDITOR" | "FINANCE"
 
+export interface AdminUserPreferences {
+  defaultLandingPage?: string
+  ledgerDefaultView?: "timeline" | "table"
+  density?: "comfortable" | "compact"
+  soundEnabled?: boolean
+}
+
 export interface AdminUser {
   id: string
   user_id: string
@@ -8,6 +15,11 @@ export interface AdminUser {
   role: AdminRole
   avatar_url?: string
   is_active: boolean
+  designation?: string | null
+  phone?: string | null
+  password_changed_at?: string | null
+  preferences?: AdminUserPreferences | null
+  last_sign_in_at?: string | null
   created_at: string
   updated_at: string
 }
