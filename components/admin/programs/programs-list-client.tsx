@@ -511,29 +511,29 @@ export function ProgramsListClient({ initialPrograms }: ProgramsListClientProps)
               type="button"
               variant={viewMode === "table" ? "secondary" : "ghost"}
               size="sm"
-              className={cn("h-8 text-xs font-semibold px-2.5", viewMode === "table" && "shadow-xs")}
+              className={cn("size-8 p-0 rounded-lg", viewMode === "table" && "shadow-xs")}
               onClick={() => {
                 setUserToggledView(true)
                 setViewMode("table")
               }}
+              title="Table View"
               aria-label="Table View"
             >
-              <TableIcon className="size-3.5 mr-1.5" />
-              Table
+              <TableIcon className="size-4" />
             </Button>
             <Button
               type="button"
               variant={viewMode === "cards" ? "secondary" : "ghost"}
               size="sm"
-              className={cn("h-8 text-xs font-semibold px-2.5", viewMode === "cards" && "shadow-xs")}
+              className={cn("size-8 p-0 rounded-lg", viewMode === "cards" && "shadow-xs")}
               onClick={() => {
                 setUserToggledView(true)
                 setViewMode("cards")
               }}
+              title="Cards View"
               aria-label="Cards View"
             >
-              <LayoutGrid className="size-3.5 mr-1.5" />
-              Cards
+              <LayoutGrid className="size-4" />
             </Button>
           </div>
         </div>
@@ -585,21 +585,22 @@ export function ProgramsListClient({ initialPrograms }: ProgramsListClientProps)
 
       {/* DESKTOP TABLE VIEW (Compact, Clean & Clickable Rows) */}
       {filteredPrograms.length > 0 && viewMode === "table" && (
-        <Card className="border overflow-hidden shadow-2xs">
+        <Card className="p-0 py-0 gap-0 border overflow-hidden shadow-2xs">
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-none">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/40">
+                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableHead className="w-16 text-center text-xs font-semibold">S.No</TableHead>
                     <TableHead className="min-w-[320px]">Program &amp; Details</TableHead>
                     <TableHead className="w-[140px]">Category</TableHead>
                     <TableHead className="w-[130px]">Status</TableHead>
                     <TableHead className="w-[120px]">Updated</TableHead>
-                    <TableHead className="w-[180px] text-right">Actions</TableHead>
+                    <TableHead className="w-[180px] text-center text-xs font-semibold">Quick Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredPrograms.map((program) => {
+                  {filteredPrograms.map((program, index) => {
                     const cat = CATEGORY_CONFIG[program.category] || CATEGORY_CONFIG.service
                     const Icon = cat.icon
                     const isPublished = program.status === "published"
@@ -610,7 +611,19 @@ export function ProgramsListClient({ initialPrograms }: ProgramsListClientProps)
                         key={program.id}
                         onClick={() => router.push(`/admin/programs/${program.id}/edit`)}
                         className="hover:bg-muted/40 transition-colors cursor-pointer group"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault()
+                            router.push(`/admin/programs/${program.id}/edit`)
+                          }
+                        }}
                       >
+                        {/* S.No */}
+                        <TableCell className="text-center font-medium text-xs text-muted-foreground w-16">
+                          {index + 1}
+                        </TableCell>
+
                         {/* Thumbnail & Title */}
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -662,47 +675,72 @@ export function ProgramsListClient({ initialPrograms }: ProgramsListClientProps)
                           {new Date(program.updated_at).toLocaleDateString()}
                         </TableCell>
 
-                        {/* Actions */}
-                        <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-1">
+                        {/* Quick Actions (Centered with Micro-interactions) */}
+                        <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-center gap-1.5">
                             {/* Preview Draft Layout */}
-                            <Button variant="ghost" size="icon" className="size-8" asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              asChild
+                              className="size-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                              title="Preview draft layout"
+                              aria-label="Preview draft layout"
+                            >
                               <Link
                                 href={`/admin/programs/${program.id}/preview`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                title="Preview draft layout"
                               >
-                                <Eye className="size-3.5 text-muted-foreground hover:text-foreground" />
+                                <Eye className="size-4 transition-transform duration-200 group-hover/btn:scale-110" />
                               </Link>
                             </Button>
 
                             {/* View Live Page (if published) */}
                             {isPublished && (
-                              <Button variant="ghost" size="icon" className="size-8" asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                asChild
+                                className="size-8 p-0 text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                                title="View live public program"
+                                aria-label="View live public program"
+                              >
                                 <Link
                                   href={`/whatwedo/${program.slug}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  title="View live public program"
                                 >
-                                  <ExternalLink className="size-3.5 text-muted-foreground hover:text-foreground" />
+                                  <ExternalLink className="size-4 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                                 </Link>
                               </Button>
                             )}
 
                             {/* Edit */}
-                            <Button variant="ghost" size="icon" className="size-8" asChild>
-                              <Link href={`/admin/programs/${program.id}/edit`} title="Edit program">
-                                <Pencil className="size-3.5" />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              asChild
+                              className="size-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                              title="Edit program"
+                              aria-label="Edit program"
+                            >
+                              <Link href={`/admin/programs/${program.id}/edit`}>
+                                <Pencil className="size-4 transition-transform duration-200 group-hover/btn:scale-110 group-hover/btn:-rotate-6" />
                               </Link>
                             </Button>
 
                             {/* More Options Dropdown */}
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="size-8" title="More options">
-                                  <MoreVertical className="size-3.5 text-muted-foreground hover:text-foreground" />
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="size-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all duration-200 hover:scale-110 active:scale-95 group/btn"
+                                  title="More options"
+                                  aria-label="More options"
+                                >
+                                  <MoreVertical className="size-4 transition-transform duration-200 group-hover/btn:scale-110" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-52">
@@ -803,158 +841,188 @@ export function ProgramsListClient({ initialPrograms }: ProgramsListClientProps)
                 onClick={() => router.push(`/admin/programs/${program.id}/edit`)}
                 className={cn(
                   styles.programCard,
-                  "flex flex-col overflow-hidden transition-all hover:shadow-md cursor-pointer group border",
+                  "p-0 py-0 gap-0 flex flex-col justify-between overflow-hidden transition-all hover:shadow-md cursor-pointer group border shadow-2xs",
                   !isPublished && "border-dashed"
                 )}
               >
-                {/* 16:9 Thumbnail Banner */}
-                <div className="relative aspect-video bg-neutral-900 border-b overflow-hidden">
-                  {program.hero_thumb ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={program.hero_thumb}
-                      alt=""
-                      className={cn("w-full h-full object-cover", !isPublished && "opacity-80")}
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-muted-foreground/60 bg-muted/40">
-                      <Layers className="size-10 stroke-1" />
+                <div>
+                  {/* 16:9 Thumbnail Banner */}
+                  <div className="relative aspect-video bg-neutral-900 border-b border-border/60 overflow-hidden">
+                    {program.hero_thumb ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={program.hero_thumb}
+                        alt=""
+                        className={cn(
+                          "w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300",
+                          !isPublished && "opacity-80"
+                        )}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-muted-foreground/60 bg-muted/40">
+                        <Layers className="size-10 stroke-1" />
+                      </div>
+                    )}
+
+                    {/* Category Badge on top left */}
+                    <div className="absolute left-3 top-3">
+                      <Badge variant="outline" className={cn("px-2.5 py-1 text-xs font-bold shadow-xs backdrop-blur-md", cat.colorClass)}>
+                        <Icon className="size-3 mr-1" />
+                        {cat.label}
+                      </Badge>
                     </div>
-                  )}
 
-                  {/* Category Badge on top left */}
-                  <div className="absolute left-3 top-3">
-                    <Badge variant="outline" className={cn("px-2.5 py-1 text-xs font-bold shadow-xs backdrop-blur-md", cat.colorClass)}>
-                      <Icon className="size-3 mr-1" />
-                      {cat.label}
-                    </Badge>
+                    {/* Status Badge on top right */}
+                    <div className="absolute right-3 top-3 flex items-center gap-1.5">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "px-2 py-0.5 text-xs font-semibold backdrop-blur-md capitalize",
+                          isPublished
+                            ? "bg-emerald-500/90 text-white border-transparent"
+                            : isDraft
+                              ? "bg-amber-500/90 text-white border-transparent"
+                              : "bg-background/90 text-foreground border"
+                        )}
+                      >
+                        {program.status}
+                      </Badge>
+                    </div>
                   </div>
 
-                  {/* Status Badge on top right */}
-                  <div className="absolute right-3 top-3 flex items-center gap-1.5">
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "px-2 py-0.5 text-xs font-semibold backdrop-blur-md capitalize",
-                        isPublished
-                          ? "bg-emerald-500/90 text-white border-transparent"
-                          : isDraft
-                            ? "bg-amber-500/90 text-white border-transparent"
-                            : "bg-background/90 text-foreground border"
-                      )}
-                    >
-                      {program.status}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <CardContent className="flex flex-1 flex-col justify-between gap-3 p-4">
-                  <div className="space-y-1">
-                    <h3 className="font-bold text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                  {/* Content */}
+                  <CardContent className="p-4 space-y-2.5">
+                    <h3 className="font-bold text-base leading-snug line-clamp-1 group-hover:text-primary transition-colors">
                       {program.title}
                     </h3>
                     {program.short_description && (
-                      <p className="text-xs text-muted-foreground line-clamp-2">
+                      <p className="text-xs text-muted-foreground line-clamp-1 truncate leading-relaxed">
                         {program.short_description}
                       </p>
                     )}
-                    <p className="text-[11px] text-muted-foreground/70 font-mono truncate pt-1">
-                      /whatwedo/{program.slug}
-                    </p>
-                  </div>
 
-                  {/* Card Footer Actions */}
-                  <div
-                    className="flex items-center justify-between border-t pt-3 text-xs text-muted-foreground"
-                    onClick={(e) => e.stopPropagation()}
+                    <div className="pt-2 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1.5 min-w-0 font-mono text-[11px] text-muted-foreground/70">
+                        <Globe className="size-3.5 shrink-0" />
+                        <span className="truncate">/whatwedo/{program.slug}</span>
+                      </div>
+                      <span className="font-mono text-[11px] shrink-0">
+                        {new Date(program.updated_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </CardContent>
+                </div>
+
+                {/* Card Footer Actions - Full Width Quick Actions */}
+                <div
+                  className="p-3 bg-muted/20 border-t border-border/60 flex items-center gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="flex-1 h-8.5 text-xs font-medium gap-1.5 shadow-2xs hover:bg-primary/10 hover:text-primary hover:border-primary/40 transition-all duration-150 active:scale-[0.98] group/btn"
                   >
-                    <span className="font-mono text-[11px]">
-                      {new Date(program.updated_at).toLocaleDateString()}
-                    </span>
+                    <Link href={`/admin/programs/${program.id}/edit`}>
+                      <Pencil className="size-3.5 transition-transform duration-200 group-hover/btn:scale-110" />
+                      <span>Edit</span>
+                    </Link>
+                  </Button>
 
-                    <div className="flex items-center gap-1">
-                      {/* Preview */}
-                      <Button variant="ghost" size="sm" className="h-8 px-2 text-xs" asChild>
-                        <Link
-                          href={`/admin/programs/${program.id}/preview`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Preview draft layout"
-                        >
-                          <Eye className="size-3.5 mr-1" />
-                          Preview
-                        </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="flex-1 h-8.5 text-xs font-medium gap-1.5 shadow-2xs hover:bg-muted transition-all duration-150 active:scale-[0.98] group/btn"
+                  >
+                    <Link
+                      href={`/admin/programs/${program.id}/preview`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Preview draft layout"
+                    >
+                      <Eye className="size-3.5 transition-transform duration-200 group-hover/btn:scale-110" />
+                      <span>Preview</span>
+                    </Link>
+                  </Button>
+
+                  {isPublished && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="size-8.5 p-0 shrink-0 text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 group/btn"
+                      title="View live public program"
+                      aria-label="View live public program"
+                    >
+                      <Link href={`/whatwedo/${program.slug}`} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="size-4 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                      </Link>
+                    </Button>
+                  )}
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="size-8.5 p-0 shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                        title="More options"
+                        aria-label="More options"
+                      >
+                        <MoreVertical className="size-4" />
                       </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52">
+                      <DropdownMenuItem onClick={() => handleCopyLink(program)}>
+                        {copiedId === program.id ? (
+                          <>
+                            <Check className="size-4 mr-2 text-emerald-600" />
+                            <span>Copied Link!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="size-4 mr-2" />
+                            <span>Copy Public URL</span>
+                          </>
+                        )}
+                      </DropdownMenuItem>
 
-                      {/* Live (if published) */}
-                      {isPublished && (
-                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs" asChild>
-                          <Link href={`/whatwedo/${program.slug}`} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="size-3.5 mr-1" />
-                            Live
-                          </Link>
-                        </Button>
+                      <DropdownMenuItem asChild>
+                        <Link href={`/admin/programs/${program.id}/edit`}>
+                          <Pencil className="size-4 mr-2" />
+                          Edit Content &amp; Hero
+                        </Link>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuSeparator />
+
+                      {program.status !== "archived" ? (
+                        <DropdownMenuItem onClick={() => handleArchive(program)}>
+                          <Archive className="size-4 mr-2 text-amber-600" />
+                          Archive Program
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => handleRestore(program)}>
+                          <RotateCcw className="size-4 mr-2 text-primary" />
+                          Restore to Draft
+                        </DropdownMenuItem>
                       )}
 
-                      {/* Edit */}
-                      <Button variant="outline" size="sm" className="h-8 px-2.5 text-xs font-medium" asChild>
-                        <Link href={`/admin/programs/${program.id}/edit`}>
-                          <Pencil className="size-3 mr-1" />
-                          Edit
-                        </Link>
-                      </Button>
+                      <DropdownMenuSeparator />
 
-                      {/* More Dropdown */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8" title="More options">
-                            <MoreVertical className="size-3.5" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onClick={() => handleCopyLink(program)}>
-                            {copiedId === program.id ? (
-                              <>
-                                <Check className="size-4 mr-2 text-emerald-600" />
-                                <span>Copied Link!</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="size-4 mr-2" />
-                                <span>Copy Public URL</span>
-                              </>
-                            )}
-                          </DropdownMenuItem>
-
-                          <DropdownMenuSeparator />
-
-                          {program.status !== "archived" ? (
-                            <DropdownMenuItem onClick={() => handleArchive(program)}>
-                              <Archive className="size-4 mr-2 text-amber-600" />
-                              Archive Program
-                            </DropdownMenuItem>
-                          ) : (
-                            <DropdownMenuItem onClick={() => handleRestore(program)}>
-                              <RotateCcw className="size-4 mr-2 text-primary" />
-                              Restore to Draft
-                            </DropdownMenuItem>
-                          )}
-
-                          <DropdownMenuSeparator />
-
-                          <DropdownMenuItem
-                            onClick={() => setPendingDelete(program)}
-                            className="text-destructive focus:text-destructive focus:bg-destructive/10"
-                          >
-                            <Trash2 className="size-4 mr-2" />
-                            Delete Program
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                </CardContent>
+                      <DropdownMenuItem
+                        onClick={() => setPendingDelete(program)}
+                        className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                      >
+                        <Trash2 className="size-4 mr-2" />
+                        Delete Program
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </Card>
             )
           })}

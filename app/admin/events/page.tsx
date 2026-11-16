@@ -382,7 +382,7 @@ export default function EventsPage() {
                     <TableHead>Location</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right pr-4">Actions</TableHead>
+                    <TableHead className="w-28 text-center text-xs font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -483,8 +483,8 @@ export default function EventsPage() {
                       </TableCell>
 
                       {/* Actions with Micro-interactions */}
-                      <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5">
+                      <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-center gap-1.5">
                           <Button
                             variant="ghost"
                             size="sm"
