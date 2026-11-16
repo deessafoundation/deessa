@@ -617,9 +617,17 @@ export function EventSettingsClient({ eventId }: EventSettingsClientProps) {
               <div className="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg shrink-0">
                 <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <div className="min-w-0">
-                <p className="text-lg sm:text-2xl font-bold text-foreground truncate">
-                  {stats.isFree ? "Free" : `NPR ${stats.revenue.toLocaleString()}`}
+              <div className="min-w-0 flex-1">
+                {!stats.isFree && (
+                  <span className="block text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider leading-none mb-0.5">
+                    NPR
+                  </span>
+                )}
+                <p
+                  className="text-lg sm:text-2xl font-bold text-foreground truncate leading-tight"
+                  title={stats.isFree ? "Free" : `NPR ${stats.revenue.toLocaleString()}`}
+                >
+                  {stats.isFree ? "Free" : stats.revenue.toLocaleString()}
                 </p>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">Revenue</p>
               </div>
