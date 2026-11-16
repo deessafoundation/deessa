@@ -1,26 +1,65 @@
-import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Pencil, CheckCircle, XCircle } from "lucide-react"
-import { canManageUsers, getRoleDisplayName, type AdminRole } from "@/lib/types/admin"
+import { canManageUsers, type AdminRole, type AdminUser } from "@/lib/types/admin"
+import { AdminUsersClient } from "@/components/admin/users/admin-users-client"
 
-async function getAdminUsers() {
-  const supabase = await createClient()
-  const { data } = await supabase.from("admin_users").select("*").order("created_at", { ascending: false })
-  return data || []
+export const metadata = {
+  title: "Admin Users | Management Portal",
+  description: "Manage system access, privileged roles, security policies, and team credentials.",
 }
 
-const roleColors: Record<string, string> = {
-  SUPER_ADMIN: "bg-red-100 text-red-800",
-  ADMIN: "bg-blue-100 text-blue-800",
-  EDITOR: "bg-green-100 text-green-800",
-  FINANCE: "bg-purple-100 text-purple-800",
+async function getAdminUsers(): Promise<AdminUser[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("admin_users")
+    .select("*")
+    .order("created_at", { ascending: false })
+
+  if (error || !data) {
+    console.error("Failed to load admin users:", error)
+    return []
+  }
+
+  const users = data as AdminUser[]
+
+  // Enrich with last_sign_in_at from Supabase Auth admin
+  try {
+    const supabaseAdmin = createServiceRoleClient()
+    const authMap = new Map<string, string | undefined>()
+    let page = 1
+    const maxPages = 10 // Safety cap (up to 1,000 users)
+
+    while (page <= maxPages) {
+      const { data: authData, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+        page,
+        perPage: 100,
+      })
+
+      if (listError || !authData?.users || authData.users.length === 0) {
+        break
+      }
+
+      for (const u of authData.users) {
+        authMap.set(u.id, u.last_sign_in_at)
+      }
+
+      if (authData.users.length < 100) {
+        break
+      }
+      page++
+    }
+
+    return users.map((u) => ({
+      ...u,
+      last_sign_in_at: u.user_id ? authMap.get(u.user_id) || null : null,
+    }))
+  } catch (authErr) {
+    console.warn("Could not enrich admin users with auth metadata:", authErr)
+  }
+
+  return users
 }
 
 export default async function AdminUsersPage() {
@@ -33,87 +72,10 @@ export default async function AdminUsersPage() {
   const users = await getAdminUsers()
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Admin Users</h1>
-          <p className="text-muted-foreground">Manage admin access and roles</p>
-        </div>
-        {currentAdmin.role === "SUPER_ADMIN" && (
-          <Button asChild>
-            <Link href="/admin/users/new">
-              <Plus className="mr-2 h-4 w-4" />
-              Add User
-            </Link>
-          </Button>
-        )}
-      </div>
-
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        {user.avatar_url && (
-                          <AvatarImage src={user.avatar_url} alt={user.full_name} className="object-cover" />
-                        )}
-                        <AvatarFallback className="bg-primary font-medium text-primary-foreground">
-                          {user.full_name?.charAt(0) || "A"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{user.full_name}</p>
-                        <p className="text-sm text-muted-foreground">{user.email}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary" className={roleColors[user.role]}>
-                      {getRoleDisplayName(user.role as AdminRole)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {user.is_active ? (
-                      <Badge variant="default" className="bg-green-600">
-                        <CheckCircle className="mr-1 h-3 w-3" />
-                        Active
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">
-                        <XCircle className="mr-1 h-3 w-3" />
-                        Inactive
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-right">
-                    {currentAdmin.role === "SUPER_ADMIN" && user.id !== currentAdmin.id && (
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/users/${user.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+    <AdminUsersClient
+      initialUsers={users}
+      currentAdminId={currentAdmin.id}
+      currentAdminRole={currentAdmin.role as AdminRole}
+    />
   )
 }
