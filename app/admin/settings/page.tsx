@@ -7,7 +7,7 @@ import { getAccessibilityConfig } from "@/lib/data/accessibility-settings"
 import { getTypographyConfig } from "@/lib/typography/settings"
 import { createClient } from "@/lib/supabase/server"
 import { hasPermission, type AdminRole } from "@/lib/types/admin"
-import { SettingsTabs } from "@/components/admin/settings/settings-tabs"
+import { SettingsHub } from "@/components/admin/settings/settings-hub"
 
 export default async function SiteSettingsPage() {
   const admin = await getCurrentAdmin()
@@ -48,14 +48,17 @@ export default async function SiteSettingsPage() {
     return acc
   }, {} as Record<PaymentProvider, boolean>)
 
+  const supportRaw = settingsObj["support_enabled"]
+  const supportEnabled = supportRaw === undefined ? true : Boolean(supportRaw)
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage site-wide configurations and features</p>
+        <p className="text-muted-foreground mt-1">Configure site identity, branding, payments, and system controls</p>
       </div>
 
-      <SettingsTabs
+      <SettingsHub
         siteSettings={settingsObj}
         paymentSettings={paymentSettings}
         envConfigured={envConfigured}
@@ -63,6 +66,7 @@ export default async function SiteSettingsPage() {
         introVideoConfig={introConfig}
         accessibilityConfig={a11yConfig}
         typographyConfig={typographyConfig}
+        supportEnabled={supportEnabled}
       />
     </div>
   )
