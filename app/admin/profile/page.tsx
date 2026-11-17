@@ -1,13 +1,33 @@
+import { Suspense } from "react"
 import { redirect } from "next/navigation"
+import { headers } from "next/headers"
 import { getCurrentAdmin } from "@/lib/actions/admin-auth"
-import { getActivityHistory } from "@/lib/actions/admin-profile"
-import { ProfileForm } from "@/components/admin/profile/profile-form"
-import { PasswordForm } from "@/components/admin/profile/password-form"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, Lock, Clock, Shield } from "lucide-react"
+import { getActivityHistory, getPasswordHygiene } from "@/lib/actions/admin-profile"
+import { ProfileHub } from "@/components/admin/profile/profile-hub"
+
+export const metadata = {
+  title: "Admin Profile | Management Portal",
+  description: "Manage your administrator account credentials, preferences, and security settings.",
+}
+
+function parseUserAgent(ua: string) {
+  let browser = "Web Browser"
+  if (ua.includes("Firefox/")) browser = "Firefox"
+  else if (ua.includes("Edg/")) browser = "Microsoft Edge"
+  else if (ua.includes("Chrome/")) browser = "Google Chrome"
+  else if (ua.includes("Safari/")) browser = "Apple Safari"
+  else if (ua.includes("OPR/") || ua.includes("Opera/")) browser = "Opera"
+
+  let os = "Desktop OS"
+  if (ua.includes("Windows NT 10.0")) os = "Windows 10/11"
+  else if (ua.includes("Windows")) os = "Windows"
+  else if (ua.includes("Mac OS X")) os = "macOS"
+  else if (ua.includes("Android")) os = "Android"
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"
+  else if (ua.includes("Linux")) os = "Linux"
+
+  return { browser, os, device: `${browser} on ${os}` }
+}
 
 export default async function ProfilePage() {
   const adminUser = await getCurrentAdmin()
@@ -16,163 +36,39 @@ export default async function ProfilePage() {
     redirect("/admin/login")
   }
 
-  const activityLogs = await getActivityHistory(10)
+  // Extract client telemetry from request headers
+  const headerList = await headers()
+  const forwarded = headerList.get("x-forwarded-for")
+  const clientIp = (forwarded ? forwarded.split(",")[0].trim() : headerList.get("x-real-ip")) || "127.0.0.1"
+  const rawUa = headerList.get("user-agent") || ""
+  const clientInfo = parseUserAgent(rawUa)
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
-
-  const getActionLabel = (action: string) => {
-    const labels: Record<string, string> = {
-      LOGIN: "Logged in",
-      LOGOUT: "Logged out",
-      CREATE: "Created",
-      UPDATE: "Updated",
-      DELETE: "Deleted",
-    }
-    return labels[action] || action
-  }
-
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case "SUPER_ADMIN":
-        return "destructive"
-      case "ADMIN":
-        return "default"
-      case "EDITOR":
-        return "secondary"
-      case "FINANCE":
-        return "outline"
-      default:
-        return "secondary"
-    }
-  }
+  // Fetch recent activity audit log & credential hygiene metrics concurrently
+  const [activityLogs, passwordHygiene] = await Promise.all([
+    getActivityHistory(40),
+    getPasswordHygiene(),
+  ])
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Profile Overview Card */}
-        <Card className="lg:col-span-1">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center">
-              <Avatar className="h-20 w-20">
-                {adminUser.avatar_url && (
-                  <AvatarImage
-                    src={adminUser.avatar_url}
-                    alt={adminUser.full_name}
-                    className="object-cover"
-                  />
-                )}
-                <AvatarFallback className="bg-primary text-2xl font-bold text-primary-foreground">
-                  {adminUser.full_name?.charAt(0) || "A"}
-                </AvatarFallback>
-              </Avatar>
-              <h2 className="mt-4 text-xl font-semibold">{adminUser.full_name}</h2>
-              <p className="text-sm text-muted-foreground">{adminUser.email}</p>
-              <Badge variant={getRoleBadgeVariant(adminUser.role)} className="mt-2">
-                {adminUser.role.replace("_", " ")}
-              </Badge>
-              <div className="mt-4 w-full space-y-2 text-sm">
-                <div className="flex justify-between border-t pt-2">
-                  <span className="text-muted-foreground">Member since</span>
-                  <span>{new Date(adminUser.created_at).toLocaleDateString()}</span>
-                </div>
-                <div className="flex justify-between border-t pt-2">
-                  <span className="text-muted-foreground">Status</span>
-                  <Badge variant={adminUser.is_active ? "default" : "secondary"}>
-                    {adminUser.is_active ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Settings Tabs */}
-        <Card className="lg:col-span-2">
-          <Tabs defaultValue="profile" className="w-full">
-            <CardHeader>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="profile" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">Profile</span>
-                </TabsTrigger>
-                <TabsTrigger value="security" className="flex items-center gap-2">
-                  <Lock className="h-4 w-4" />
-                  <span className="hidden sm:inline">Security</span>
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span className="hidden sm:inline">Activity</span>
-                </TabsTrigger>
-              </TabsList>
-            </CardHeader>
-            <CardContent>
-              <TabsContent value="profile" className="mt-0">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-medium">Profile Information</h3>
-                    <p className="text-sm text-muted-foreground">Update your personal information</p>
-                  </div>
-                  <ProfileForm adminUser={adminUser} />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="security" className="mt-0">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-medium">Change Password</h3>
-                    <p className="text-sm text-muted-foreground">Ensure your account stays secure</p>
-                  </div>
-                  <PasswordForm />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="activity" className="mt-0">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-medium">Recent Activity</h3>
-                    <p className="text-sm text-muted-foreground">Your recent actions in the admin panel</p>
-                  </div>
-                  {activityLogs.length > 0 ? (
-                    <div className="space-y-3">
-                      {activityLogs.map((log: any) => (
-                        <div key={log.id} className="flex items-start gap-3 rounded-lg border p-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                            <Shield className="h-4 w-4 text-muted-foreground" />
-                          </div>
-                          <div className="flex-1 space-y-1">
-                            <p className="text-sm font-medium">
-                              {getActionLabel(log.action)}{" "}
-                              {log.entity_type !== "auth" && (
-                                <span className="text-muted-foreground">{log.entity_type}</span>
-                              )}
-                            </p>
-                            <p className="text-xs text-muted-foreground">{formatDate(log.created_at)}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No recent activity</p>
-                  )}
-                </div>
-              </TabsContent>
-            </CardContent>
-          </Tabs>
-        </Card>
-      </div>
-    </div>
+    <Suspense
+      fallback={
+        <div className="space-y-6 animate-pulse">
+          <div className="h-10 w-48 bg-muted rounded-xl" />
+          <div className="h-12 w-full bg-muted/60 rounded-2xl" />
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2 h-96 bg-muted/40 rounded-2xl" />
+            <div className="lg:col-span-1 h-96 bg-muted/40 rounded-2xl" />
+          </div>
+        </div>
+      }
+    >
+      <ProfileHub
+        adminUser={adminUser}
+        clientIp={clientIp}
+        clientInfo={clientInfo}
+        activityLogs={activityLogs}
+        passwordHygiene={passwordHygiene}
+      />
+    </Suspense>
   )
 }
