@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { getCurrentAdmin } from "./admin-auth"
+import { validateSetting } from "@/lib/validations/settings"
 
 export async function getSiteSettings() {
   const supabase = await createClient()
@@ -20,24 +21,31 @@ export async function getSiteSetting(key: string) {
   return data
 }
 
-export async function updateSiteSetting(key: string, value: Record<string, unknown>) {
+export async function updateSiteSetting(key: string, value: Record<string, unknown> | unknown) {
   const admin = await getCurrentAdmin()
   if (!admin) return { error: "Unauthorized" }
   if (admin.role !== "SUPER_ADMIN" && admin.role !== "ADMIN") {
     return { error: "Only admins can update site settings" }
   }
 
+  // Validate value against schema if schema exists
+  const validation = validateSetting(key, value)
+  if (!validation.success) {
+    return { error: validation.error }
+  }
+  const payloadToSave = validation.data
+
   const supabase = await createClient()
 
   // Check if setting exists
-  const { data: existing } = await supabase.from("site_settings").select("id").eq("key", key).single()
+  const { data: existing } = await supabase.from("site_settings").select("id, value").eq("key", key).single()
 
   let error
   if (existing) {
-    const result = await supabase.from("site_settings").update({ value, updated_by: admin.id }).eq("key", key)
+    const result = await supabase.from("site_settings").update({ value: payloadToSave, updated_by: admin.id }).eq("key", key)
     error = result.error
   } else {
-    const result = await supabase.from("site_settings").insert({ key, value, updated_by: admin.id })
+    const result = await supabase.from("site_settings").insert({ key, value: payloadToSave, updated_by: admin.id })
     error = result.error
   }
 
@@ -47,7 +55,11 @@ export async function updateSiteSetting(key: string, value: Record<string, unkno
     user_id: admin.id,
     action: "UPDATE",
     entity_type: "site_setting",
-    new_data: { key, value },
+    new_data: {
+      key,
+      value: payloadToSave,
+      previous_value: existing?.value ?? null,
+    },
   })
 
   revalidatePath("/admin/settings")
