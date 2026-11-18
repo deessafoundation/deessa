@@ -45,10 +45,15 @@ export function AccessibilitySettingsManager({
   initialConfig,
 }: AccessibilitySettingsManagerProps) {
   const router = useRouter()
-  const [config, setConfig] = useState<AccessibilityConfig>(
-    initialConfig || DEFAULT_ACCESSIBILITY_CONFIG
-  )
+  const baselineConfig = initialConfig || DEFAULT_ACCESSIBILITY_CONFIG
+  const [config, setConfig] = useState<AccessibilityConfig>(baselineConfig)
   const [isSaving, setIsSaving] = useState(false)
+
+  const isDirty = JSON.stringify(config) !== JSON.stringify(baselineConfig)
+
+  const handleReset = () => {
+    setConfig(baselineConfig)
+  }
 
   const toggleFeature = (key: keyof AccessibilityFeaturesConfig, val: boolean) => {
     setConfig((prev) => ({
@@ -390,26 +395,48 @@ export function AccessibilitySettingsManager({
         </Card>
       </div>
 
-      {/* Footer Actions */}
-      <div className="flex items-center justify-between pt-4 border-t">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setConfig(DEFAULT_ACCESSIBILITY_CONFIG)}
-          className="gap-2"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Reset All Tools to Defaults
-        </Button>
-
-        <Button onClick={handleSave} disabled={isSaving} className="gap-2">
-          {isSaving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+      {/* Floating Action Bar */}
+      <div className="flex items-center justify-between p-4 bg-card rounded-xl border shadow-sm sticky bottom-4 z-10">
+        <div className="text-sm text-muted-foreground">
+          {isDirty ? (
+            <span className="text-amber-600 dark:text-amber-400 font-medium">
+              You have unsaved changes in accessibility tool defaults.
+            </span>
           ) : (
-            <CheckCircle2 className="h-4 w-4" />
+            <span>All accessibility defaults are up-to-date and live.</span>
           )}
-          Save Accessibility Configuration
-        </Button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleReset}
+            disabled={!isDirty || isSaving}
+            className="h-10"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Discard
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={!isDirty || isSaving}
+            className="h-10 min-w-[170px]"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Save Accessibility
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )

@@ -4,22 +4,21 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   Type,
   CheckCircle2,
-  Sparkles,
-  BookOpen,
   Eye,
   Loader2,
   Save,
   RotateCcw,
+  Sparkles,
 } from "lucide-react"
 import { notifications } from "@/lib/notifications"
 import { updateTypographyConfig } from "@/lib/actions/typography-settings"
@@ -36,10 +35,12 @@ interface TypographyManagerProps {
 
 export function TypographyManager({ initialConfig }: TypographyManagerProps) {
   const router = useRouter()
-  const [config, setConfig] = useState<TypographyConfig>(
-    initialConfig || DEFAULT_TYPOGRAPHY_CONFIG
-  )
+  const baselineConfig = initialConfig || DEFAULT_TYPOGRAPHY_CONFIG
+  const [config, setConfig] = useState<TypographyConfig>(baselineConfig)
   const [isSaving, setIsSaving] = useState(false)
+  const [customPhrase, setCustomPhrase] = useState("")
+
+  const isDirty = config.theme !== baselineConfig.theme
 
   const handleSelectTheme = (theme: TypographyTheme) => {
     setConfig((prev) => ({ ...prev, theme }))
@@ -50,20 +51,29 @@ export function TypographyManager({ initialConfig }: TypographyManagerProps) {
     try {
       const res = await updateTypographyConfig(config)
       if (res?.error) {
-        notifications.error("Failed to save typography settings: " + res.error)
+        notifications.showError({
+          title: "Save Failed",
+          description: "Failed to save typography settings: " + res.error,
+        })
       } else {
-        notifications.success("Typography theme updated successfully! Changes are live across the website.")
+        notifications.showSuccess({
+          title: "Typography Updated",
+          description: "Typography theme updated successfully! Changes are live across the website.",
+        })
         router.refresh()
       }
     } catch {
-      notifications.error("An unexpected error occurred while saving settings.")
+      notifications.showError({
+        title: "Error",
+        description: "An unexpected error occurred while saving settings.",
+      })
     } finally {
       setIsSaving(false)
     }
   }
 
   const handleReset = () => {
-    setConfig(DEFAULT_TYPOGRAPHY_CONFIG)
+    setConfig(baselineConfig)
   }
 
   const themes: Array<{
@@ -134,11 +144,13 @@ export function TypographyManager({ initialConfig }: TypographyManagerProps) {
     },
   ]
 
+  const defaultHeadline = "Every child deserves space to thrive"
+
   return (
     <div className="space-y-6">
       {/* Header card */}
-      <Card className="border-border/60 bg-gradient-to-br from-card to-card/50">
-        <CardHeader className="pb-4">
+      <Card className="border-border/80 bg-gradient-to-r from-primary/5 via-primary/[0.02] to-transparent shadow-sm">
+        <CardHeader className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -146,37 +158,22 @@ export function TypographyManager({ initialConfig }: TypographyManagerProps) {
               </div>
               <div>
                 <CardTitle className="text-xl font-bold tracking-tight">
-                  Typography & Brand Fonts
+                  Typography & Brand Typefaces
                 </CardTitle>
-                <CardDescription className="text-sm">
-                  Control the global typography system across all public pages.
+                <CardDescription className="text-sm mt-0.5">
+                  Select the global heading and body font pairing applied across all public pages.
                 </CardDescription>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleReset}
-                disabled={isSaving}
-                className="min-h-10 text-xs gap-1.5"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span>Reset to Recommended</span>
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                size="sm"
-                className="min-h-10 text-xs gap-1.5"
-              >
-                {isSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                <span>{isSaving ? "Saving..." : "Save Typography"}</span>
-              </Button>
+
+            {/* Test Phrase Input */}
+            <div className="w-full sm:w-72">
+              <Input
+                placeholder="Type custom test phrase..."
+                value={customPhrase}
+                onChange={(e) => setCustomPhrase(e.target.value)}
+                className="h-9 text-xs"
+              />
             </div>
           </div>
         </CardHeader>
@@ -239,7 +236,7 @@ export function TypographyManager({ initialConfig }: TypographyManagerProps) {
                 </p>
                 <div className="space-y-2">
                   <p className={cn("text-xl leading-tight text-foreground", t.headingStyle)}>
-                    Every child deserves space to thrive
+                    {customPhrase || defaultHeadline}
                   </p>
                   <p className={cn("text-xs leading-relaxed text-muted-foreground", t.bodyStyle)}>
                     Through creativity, learning, and everyday connection, deessa builds a world
@@ -272,6 +269,51 @@ export function TypographyManager({ initialConfig }: TypographyManagerProps) {
             </div>
           )
         })}
+      </div>
+
+      {/* Floating Action Bar */}
+      <div className="flex items-center justify-between p-4 bg-card rounded-xl border shadow-sm sticky bottom-4 z-10">
+        <div className="text-sm text-muted-foreground">
+          {isDirty ? (
+            <span className="text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4" />
+              Theme change selected. Click save to apply live across the public site.
+            </span>
+          ) : (
+            <span>Current typography theme is active on the website.</span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleReset}
+            disabled={!isDirty || isSaving}
+            className="h-10"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Discard
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={!isDirty || isSaving}
+            className="h-10 min-w-[150px]"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                Save Typography
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )
