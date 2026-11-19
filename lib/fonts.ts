@@ -5,11 +5,15 @@ import localFont from "next/font/local"
  * Nunito Sans
  * Warm, friendly geometric sans-serif with subtle rounded terminals.
  * Ideal for welcoming, empathetic headings and key accents.
+ *
+ * NOTE: Nunito Sans is a variable font. We omit explicit weight arrays so that
+ * Google Fonts serves the single static variable .woff2 asset rather than dynamic
+ * multi-slice kit URLs (/l/font?kit=...&skey=...), which triggers an internal
+ * Turbopack query parser crash ("next/font/google queries have exactly one entry").
  */
 export const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
   variable: "--font-nunito-sans",
-  weight: ["400", "600", "700", "800"],
   display: "swap",
 })
 
