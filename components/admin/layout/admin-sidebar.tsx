@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AdminLink as Link } from "@/components/admin/common/admin-navigation-guard"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -25,6 +25,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
   const pathname = usePathname()
   const { isCollapsed, setIsCollapsed } = useSidebar()
   const [tooltipsReady, setTooltipsReady] = useState(false)
+  const navRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     setTooltipsReady(false)
@@ -32,12 +33,48 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin"
+    if (href === "/admin/users") {
+      return pathname === "/admin/users" || (pathname.startsWith("/admin/users") && !pathname.startsWith("/admin/users/audit"))
+    }
     if (href.includes("?")) {
       const [path] = href.split("?")
       return pathname.startsWith(path)
     }
     return pathname.startsWith(href)
   }
+
+  // Automatically scroll the sidebar smoothly to keep the active navigation item comfortably in view
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const nav = navRef.current
+      if (!nav) return
+
+      const activeEl = nav.querySelector<HTMLElement>('[data-active="true"]')
+      if (!activeEl) return
+
+      const navRect = nav.getBoundingClientRect()
+      const activeRect = activeEl.getBoundingClientRect()
+
+      // Check if already comfortably visible with generous top and bottom breathing room
+      const isComfortablyVisible =
+        activeRect.top >= navRect.top + 40 &&
+        activeRect.bottom <= navRect.bottom - 40
+
+      if (!isComfortablyVisible) {
+        const currentScroll = nav.scrollTop
+        const relativeOffset = activeRect.top - navRect.top
+        // Center the active element in the viewport of the scrollable sidebar container
+        const targetScroll = currentScroll + relativeOffset - (nav.clientHeight / 2) + (activeRect.height / 2)
+
+        nav.scrollTo({
+          top: Math.max(0, targetScroll),
+          behavior: "smooth",
+        })
+      }
+    }, 150)
+
+    return () => clearTimeout(timeout)
+  }, [pathname, isCollapsed])
 
   const shouldShowTooltips = isCollapsed && tooltipsReady
 
@@ -89,7 +126,11 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
         )}
       </div>
 
-      <nav onClick={(e) => e.stopPropagation()} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-hide px-4 pt-4 pb-10 space-y-4">
+      <nav
+        ref={navRef}
+        onClick={(e) => e.stopPropagation()}
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-hide px-4 pt-4 pb-10 space-y-4"
+      >
         {adminNavSections.map((section) => {
           const items = section.items.filter((item) => canAccessAdminNavItem(adminUser.role, item))
 
@@ -113,12 +154,15 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
               )}
               <div className="space-y-1">
                 {items.map((item) => {
+                  const active = isActive(item.href)
                   const link = (
                     <Link
                       href={item.href}
+                      data-active={active ? "true" : undefined}
+                      aria-current={active ? "page" : undefined}
                       className={cn(
                         "flex items-center rounded-xl py-2 text-sm font-medium transition-all duration-200 group relative border border-transparent",
-                        isActive(item.href)
+                        active
                           ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-md scale-[1.01] border-primary/30"
                           : "text-muted-foreground hover:bg-background/80 hover:text-primary hover:border-border/80 hover:scale-[1.01]",
                         isCollapsed ? "justify-center px-0 mx-auto w-10 h-10" : "gap-3 px-3"
@@ -126,7 +170,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
                     >
                       <item.icon className={cn(
                         "h-4 w-4 flex-shrink-0 transition-all",
-                        isActive(item.href) && "animate-pulse"
+                        active && "animate-pulse"
                       )} />
                       <span className={cn(
                         "transition-all duration-200 font-semibold",
@@ -134,7 +178,7 @@ export function AdminSidebar({ adminUser }: AdminSidebarProps) {
                       )}>
                         {item.name}
                       </span>
-                      {isActive(item.href) && !isCollapsed && (
+                      {active && !isCollapsed && (
                         <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-100 animate-shimmer pointer-events-none" />
                       )}
                     </Link>

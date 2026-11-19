@@ -24,6 +24,7 @@ import {
   Handshake,
   User,
   Globe,
+  History,
 } from "lucide-react"
 import { type AdminRole, hasPermission, canViewFinance, canManageUsers } from "@/lib/types/admin"
 
@@ -67,7 +68,7 @@ export const adminNavSections: AdminNavSection[] = [
       { name: "Stories", href: "/admin/stories", icon: FileText, permission: "stories", description: "Changemaker voices" },
       { name: "Podcasts", href: "/admin/podcasts", icon: Podcast, permission: "stories", description: "Audio episodes & series" },
       { name: "Team & Governance", href: "/admin/team", icon: Users, permission: "team", description: "Leadership tiers & hero portraits" },
-      { name: "Partners", href: "/admin/about?tab=partners", icon: Handshake, permission: "partners", alternatePermission: "settings", description: "Supporters & institutional alliances" },
+      { name: "Partners", href: "/admin/partners", icon: Handshake, permission: "partners", alternatePermission: "settings", description: "Supporters & institutional alliances" },
       { name: "Impact Stats", href: "/admin/stats", icon: BarChart3, permission: "stats", description: "Key performance indicators" },
     ],
   },
@@ -88,6 +89,7 @@ export const adminNavSections: AdminNavSection[] = [
       { name: "SEO & Social Hub", href: "/admin/seo", icon: Globe, permission: "settings", description: "Search engine & social cards" },
       { name: "Site Settings", href: "/admin/settings", icon: Settings, permission: "settings", description: "General configuration & fonts" },
       { name: "Admin Users", href: "/admin/users", icon: UserCog, permission: "users", requiresAdmin: true, description: "Roles & permissions" },
+      { name: "Audit Trail", href: "/admin/users/audit", icon: History, permission: "users", requiresAdmin: true, description: "Security & activity ledger" },
       { name: "My Profile", href: "/admin/profile", icon: User, permission: null, description: "Account credentials & security" },
     ],
   },

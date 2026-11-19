@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AdminLink as Link } from "@/components/admin/common/admin-navigation-guard"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
@@ -29,15 +29,52 @@ interface AdminHeaderProps {
 export function AdminHeader({ adminUser }: AdminHeaderProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const mobileNavRef = useRef<HTMLElement | null>(null)
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin"
+    if (href === "/admin/users") {
+      return pathname === "/admin/users" || (pathname.startsWith("/admin/users") && !pathname.startsWith("/admin/users/audit"))
+    }
     if (href.includes("?")) {
       const [path] = href.split("?")
       return pathname.startsWith(path)
     }
     return pathname.startsWith(href)
   }
+
+  // Smoothly scroll mobile navigation drawer to the active item when opened
+  useEffect(() => {
+    if (!mobileOpen) return
+
+    const timeout = setTimeout(() => {
+      const nav = mobileNavRef.current
+      if (!nav) return
+
+      const activeEl = nav.querySelector<HTMLElement>('[data-active="true"]')
+      if (!activeEl) return
+
+      const navRect = nav.getBoundingClientRect()
+      const activeRect = activeEl.getBoundingClientRect()
+
+      const isComfortablyVisible =
+        activeRect.top >= navRect.top + 40 &&
+        activeRect.bottom <= navRect.bottom - 40
+
+      if (!isComfortablyVisible) {
+        const currentScroll = nav.scrollTop
+        const relativeOffset = activeRect.top - navRect.top
+        const targetScroll = currentScroll + relativeOffset - (nav.clientHeight / 2) + (activeRect.height / 2)
+
+        nav.scrollTo({
+          top: Math.max(0, targetScroll),
+          behavior: "smooth",
+        })
+      }
+    }, 200)
+
+    return () => clearTimeout(timeout)
+  }, [mobileOpen, pathname])
 
   // Generate breadcrumbs from pathname
   const pathSegments = pathname.split("/").filter(Boolean)
@@ -78,6 +115,7 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
 
           {/* Truly Scrollable Nav Container */}
           <nav
+            ref={mobileNavRef}
             aria-label="Mobile admin navigation"
             className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-4 pb-10 space-y-4 touch-pan-y scrollbar-hide"
           >
@@ -101,6 +139,8 @@ export function AdminHeader({ adminUser }: AdminHeaderProps) {
                         <Link
                           key={item.name}
                           href={item.href}
+                          data-active={active ? "true" : undefined}
+                          aria-current={active ? "page" : undefined}
                           className={cn(
                             "flex items-center rounded-xl py-2 text-sm font-medium transition-all duration-200 group relative border border-transparent gap-3 px-3",
                             active
