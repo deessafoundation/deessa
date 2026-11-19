@@ -179,6 +179,90 @@ export async function deleteStory(id: string) {
   redirect("/admin/stories")
 }
 
+export async function deleteStoryAction(id: string) {
+  const admin = await getCurrentAdmin()
+  if (!admin) return { error: "Unauthorized" }
+
+  const supabase = await createClient()
+
+  const { data: story } = await supabase.from("stories").select("*").eq("id", id).single()
+
+  const { error } = await supabase.from("stories").delete().eq("id", id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  await supabase.from("activity_logs").insert({
+    user_id: admin.id,
+    action: "DELETE",
+    entity_type: "story",
+    entity_id: id,
+    old_data: story,
+  })
+
+  revalidatePath("/admin/stories")
+  revalidatePath("/stories")
+  return { success: true }
+}
+
+export async function toggleStoryFeaturedAction(id: string, isFeatured: boolean) {
+  const admin = await getCurrentAdmin()
+  if (!admin) return { error: "Unauthorized" }
+
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from("stories")
+    .update({ is_featured: isFeatured, updated_at: new Date().toISOString() })
+    .eq("id", id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath("/admin/stories")
+  revalidatePath("/stories")
+  return { success: true }
+}
+
+export async function toggleStoryPublishedAction(id: string, isPublished: boolean) {
+  const admin = await getCurrentAdmin()
+  if (!admin) return { error: "Unauthorized" }
+
+  const supabase = await createClient()
+
+  const updateData: Record<string, unknown> = {
+    is_published: isPublished,
+    updated_at: new Date().toISOString(),
+  }
+
+  if (isPublished) {
+    const { data: existing } = await supabase
+      .from("stories")
+      .select("published_at")
+      .eq("id", id)
+      .single()
+
+    if (!existing?.published_at) {
+      updateData.published_at = new Date().toISOString()
+    }
+  }
+
+  const { error } = await supabase
+    .from("stories")
+    .update(updateData)
+    .eq("id", id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath("/admin/stories")
+  revalidatePath("/stories")
+  return { success: true }
+}
+
 export async function autosaveStory(storyId: string, content: string) {
   const admin = await getCurrentAdmin()
   if (!admin) return { error: "Unauthorized" }
