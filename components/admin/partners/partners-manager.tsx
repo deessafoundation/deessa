@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Building, Plus, Pencil, ExternalLink, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -50,25 +51,29 @@ export function PartnersManager({ initialPartners, loadError, initialPartner }: 
   const [dirty, setDirty] = useState(false)
   useUnsavedChanges(dirty, busy)
 
-  useEffect(() => {
-    if (initialPartners !== null) setPartners(initialPartners)
-  }, [initialPartners])
+  const [prevInitial, setPrevInitial] = useState(initialPartners)
+  if (initialPartners !== prevInitial) {
+    setPrevInitial(initialPartners)
+    setPartners(initialPartners)
+  }
 
   useEffect(() => {
     if (!initialPartner) { handledPartner.current = undefined; return }
     if (handledPartner.current === initialPartner) return
-    if (initialPartner === "new") {
-      handledPartner.current = initialPartner
-      setEditor("new")
-    }
-    else {
-      const records = initialPartners ?? partners
-      if (!records) return
-      handledPartner.current = initialPartner
-      const partner = records.find((item) => item.id === initialPartner)
-      if (partner) setEditor(partner)
-      else setError("This partner could not be found. Choose a partner from the list below.")
-    }
+    queueMicrotask(() => {
+      if (initialPartner === "new") {
+        handledPartner.current = initialPartner
+        setEditor("new")
+      }
+      else {
+        const records = initialPartners ?? partners
+        if (!records) return
+        handledPartner.current = initialPartner
+        const partner = records.find((item) => item.id === initialPartner)
+        if (partner) setEditor(partner)
+        else setError("This partner could not be found. Choose a partner from the list below.")
+      }
+    })
   }, [initialPartner, initialPartners, partners])
 
   async function refresh() {
@@ -111,9 +116,18 @@ export function PartnersManager({ initialPartners, loadError, initialPartner }: 
           <p className="max-w-2xl text-sm text-muted-foreground">Manage partners, donors, and sponsors here. Save each partner in its form; page content is saved separately.</p>
           <p className="max-w-2xl text-sm text-muted-foreground">The Who We Are page currently displays partner categories. These records do not replace those category tiles.</p>
         </div>
-        <Button ref={addButton} className="min-h-11" data-contrast="filled" disabled={loading} onClick={(event) => { returnFocus.current = event.currentTarget; setEditor("new"); setNotice("") }}>
-          <Plus className="size-4" aria-hidden="true" /> Add partner
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline" className="min-h-11 gap-1.5 font-medium">
+            <Link href="/admin/partners">
+              <Building className="size-4" />
+              <span>Open Master Hub</span>
+              <ExternalLink className="size-3.5" />
+            </Link>
+          </Button>
+          <Button ref={addButton} className="min-h-11" data-contrast="filled" disabled={loading} onClick={(event) => { returnFocus.current = event.currentTarget; setEditor("new"); setNotice("") }}>
+            <Plus className="size-4" aria-hidden="true" /> Add partner
+          </Button>
+        </div>
       </div>
       {notice && <p role="status" className="rounded-lg border bg-background p-3 text-sm">{notice}</p>}
       {error && <div role="alert" className="flex flex-wrap items-center gap-3 rounded-lg border border-destructive bg-background p-3">
@@ -132,6 +146,7 @@ export function PartnersManager({ initialPartners, loadError, initialPartner }: 
                 const logo = safeUrl(partner.logo, true)
                 return <TableRow key={partner.id}>
                   <TableCell><div className="flex min-w-52 items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     {logo ? <img src={logo} alt="" className="size-12 shrink-0 rounded-lg border bg-background object-contain p-1" /> : <Building className="size-8 shrink-0 text-muted-foreground" aria-hidden="true" />}
                     <div><p className="font-medium">{partner.name}</p>{partner.description && <p className="max-w-sm whitespace-normal text-sm text-muted-foreground">{partner.description}</p>}</div>
                   </div></TableCell>
