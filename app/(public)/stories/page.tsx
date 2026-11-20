@@ -1,14 +1,23 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { getPublishedStories, getFeaturedStory } from "@/lib/data/stories"
 import { StoriesSections } from "./StoriesSections"
 import { getPageMetadata } from "@/lib/seo/page-metadata"
+import { getSiteUiFlags } from "@/lib/site-status/settings"
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export async function generateMetadata(): Promise<Metadata> {
+  const flags = await getSiteUiFlags()
+  if (!flags.storiesEnabled) {
+    return {
+      title: "Page Not Found",
+      robots: { index: false, follow: false },
+    }
+  }
   return getPageMetadata("/stories")
 }
 
@@ -31,6 +40,11 @@ interface StoriesPageProps {
 }
 
 export default async function StoriesPage(props: StoriesPageProps) {
+  const flags = await getSiteUiFlags()
+  if (!flags.storiesEnabled) {
+    notFound()
+  }
+
   let searchParams: { filter?: string } = {}
   
   try {

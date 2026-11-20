@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, ArrowRight, Clock3, CalendarDays, Sparkles, Tag, Share2, ArrowUpRight, Copy } from "lucide-react"
+import { ArrowLeft, ArrowRight, Clock3, CalendarDays, Sparkles, Tag, Share2 } from "lucide-react"
 import { Facebook, Linkedin } from "@/components/shared/icons/social-icons"
 import { Section } from "@/components/ui/section"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,7 @@ import { sanitizeStoryContent } from "@/lib/sanitize/story-content"
 import { processStoryContent } from "@/lib/utils/legacy-story"
 import { StructuredData } from "@/components/seo/structured-data"
 import { getArticleStructuredData, getBreadcrumbStructuredData } from "@/lib/seo/structured-data"
+import { getSiteUiFlags } from "@/lib/site-status/settings"
 import "@/app/print-styles.css"
 
 // Use ISR (Incremental Static Regeneration) for better SEO and performance
@@ -35,6 +36,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const flags = await getSiteUiFlags()
+  if (!flags.storiesEnabled) {
+    return { title: "Page Not Found", robots: { index: false, follow: false } }
+  }
+
   const { slug } = await params
   const story = await getStoryBySlug(slug)
 
@@ -81,6 +87,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function StoryDetailPage({ params }: PageProps) {
+  const flags = await getSiteUiFlags()
+  if (!flags.storiesEnabled) {
+    notFound()
+  }
+
   const { slug } = await params
   const [story, allStories] = await Promise.all([getStoryBySlug(slug), getPublishedStories()])
 
