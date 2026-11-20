@@ -1,0 +1,105 @@
+/* Impact Statistics Hub Styling - Scoped styles, animations & contrast tokens */
+
+.oceanShimmerTab {
+  position: relative;
+  overflow: hidden;
+}
+
+.oceanShimmerTab::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  animation: tabShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tabShimmer {
+  0% {
+    left: -100%;
+  }
+  40%, 100% {
+    left: 200%;
+  }
+}
+
+.kpiCard {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+}
+
+.statBentoCard {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.statBentoCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(63, 171, 222, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(63, 171, 222, 0.08), 0 8px 10px -6px rgba(63, 171, 222, 0.05);
+}
+
+/* Icon canvas wrapper (High-contrast safe container) */
+.iconCanvas {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* Category Badge Variants */
+.badgeHome {
+  background-color: rgba(63, 171, 222, 0.12);
+  color: #0b5f8a;
+  border-color: rgba(63, 171, 222, 0.35);
+}
+
+.badgeImpact {
+  background-color: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+:global(.dark) .badgeHome {
+  background-color: rgba(63, 171, 222, 0.18);
+  color: #3fabde;
+  border-color: rgba(63, 171, 222, 0.45);
+}
+
+:global(.dark) .badgeImpact {
+  background-color: rgba(99, 102, 241, 0.18);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+/* High Contrast Mode Overrides */
+:global(body.high-contrast) .iconCanvas {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.high-contrast) .statBentoCard {
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .iconCanvas {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.inverted-contrast) .statBentoCard {
+  border: 2px solid #ffffff !important;
+}
