@@ -106,6 +106,8 @@ interface PartnerModalState {
   secondaryLogo: string
   secondaryLogoName: string
   secondaryUploadMethod: "upload" | "url"
+  /** 1-based position within the category (edit mode only); string so the input can be cleared while typing */
+  position?: string
 }
 
 export function PartnersEditor({
@@ -202,6 +204,16 @@ export function PartnersEditor({
     return { total, visible, hidden, categoryCount }
   }, [linkedPartners, categories])
 
+  // Edit modal: position input is only offered while the partner stays in its current category
+  const sortedInCategory = (categoryKey: string) =>
+    linkedPartners
+      .filter((p) => p.category_key === categoryKey)
+      .sort((a, b) => a.partner_display_order - b.partner_display_order)
+  const editingPartner =
+    partnerModal.mode === "edit" ? linkedPartners.find((p) => p.id === partnerModal.linkId) : undefined
+  const showPositionField = !!editingPartner && editingPartner.category_key === partnerModal.category_key
+  const positionMax = showPositionField ? sortedInCategory(partnerModal.category_key).length : 0
+
   // Filtered partners based on search and category tab
   const filteredPartners = useMemo(() => {
     return linkedPartners.filter((partner) => {
@@ -279,6 +291,15 @@ export function PartnersEditor({
       secondaryLogo: initialSecondaryLogo,
       secondaryLogoName: initialSecondaryLogoName,
       secondaryUploadMethod: initialSecondaryUploadMethod,
+      position: String(
+        Math.max(
+          1,
+          linkedPartners
+            .filter((p) => p.category_key === partner.category_key)
+            .sort((a, b) => a.partner_display_order - b.partner_display_order)
+            .findIndex((p) => p.id === partner.id) + 1
+        )
+      ),
     })
   }
 
@@ -490,6 +511,16 @@ export function PartnersEditor({
           }
         }
 
+        // 2b. Move to the typed position (same category only). Started before the optimistic
+        // update below so that update is applied on top of the reordered list.
+        let reorderPromise: Promise<void> | undefined
+        if (existingPartner && existingPartner.category_key === partnerModal.category_key) {
+          const list = sortedInCategory(partnerModal.category_key)
+          const from = list.findIndex((p) => p.id === partnerModal.linkId)
+          const to = Math.min(Math.max(parseInt(partnerModal.position || "", 10) || from + 1, 1), list.length) - 1
+          if (from >= 0 && to !== from) reorderPromise = handleMovePartner(partnerModal.category_key, from, to)
+        }
+
         // 3. Optimistic local state update
         const matchingCategory = categories.find((c) => c.category_key === partnerModal.category_key)
         setLinkedPartners((prev) =>
@@ -509,6 +540,7 @@ export function PartnersEditor({
           })
         )
 
+        await reorderPromise
         setPartnerModal((prev) => ({ ...prev, isOpen: false }))
         notifications.showSuccess({ description: `Partner "${trimmedName}" updated successfully` })
         onUpdate?.()
@@ -557,12 +589,13 @@ export function PartnersEditor({
 
   // Move Partner with Instant Optimistic UI Reordering
   const handleMovePartner = useCallback(
-    async (categoryKey: string, currentIndex: number, direction: "up" | "down") => {
+    async (categoryKey: string, currentIndex: number, direction: "up" | "down" | number) => {
       const categoryPartners = linkedPartners
         .filter((p) => p.category_key === categoryKey)
         .sort((a, b) => a.partner_display_order - b.partner_display_order)
 
-      const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1
+      // A number is an absolute 0-based target index (used by the edit modal's position field)
+      const targetIndex = typeof direction === "number" ? direction : direction === "up" ? currentIndex - 1 : currentIndex + 1
       if (targetIndex < 0 || targetIndex >= categoryPartners.length) return
 
       // Optimistic reorder
@@ -600,6 +633,48 @@ export function PartnersEditor({
         // Revert to original order
         setLinkedPartners(linkedPartners)
         notifications.showError({ description: "Failed to save partner order" })
+      }
+    },
+    [linkedPartners, eventId, onUpdate]
+  )
+
+  // Sort one or more categories A–Z by partner name and save immediately
+  const handleSortAlphabetically = useCallback(
+    async (categoryKeys: string[]) => {
+      const previous = linkedPartners
+      const orderByLink = new Map<string, number>()
+      const payloads = categoryKeys.map((key) => {
+        const sorted = previous
+          .filter((p) => p.category_key === key)
+          .sort((a, b) => a.partner_name.localeCompare(b.partner_name, undefined, { numeric: true, sensitivity: "base" }))
+        sorted.forEach((p, idx) => orderByLink.set(p.id, idx))
+        return {
+          category_key: key,
+          partner_orders: sorted.map((p, idx) => ({ partner_id: p.partner_id, display_order: idx })),
+        }
+      })
+
+      setActionLoading("sort-az")
+      setLinkedPartners(
+        previous.map((p) => (orderByLink.has(p.id) ? { ...p, partner_display_order: orderByLink.get(p.id)! } : p))
+      )
+
+      try {
+        const results = await Promise.all(
+          payloads.map((payload) =>
+            reorderPartners({ context_type: "event", context_id: eventId, ...payload })
+          )
+        )
+        if (results.some((r) => !r.success)) throw new Error("Failed to save alphabetical order")
+        notifications.showSuccess({
+          description: categoryKeys.length === 1 ? "Sorted A–Z" : "All sections sorted A–Z",
+        })
+        onUpdate?.()
+      } catch {
+        setLinkedPartners(previous)
+        notifications.showError({ description: "Failed to save alphabetical order" })
+      } finally {
+        setActionLoading(null)
       }
     },
     [linkedPartners, eventId, onUpdate]
@@ -803,6 +878,24 @@ export function PartnersEditor({
                 {categories.length > 0 && (
                   <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSortAlphabetically(categories.map((c) => c.category_key))}
+                    disabled={actionLoading === "sort-az"}
+                    className="h-9 shadow-xs font-medium"
+                  >
+                    {actionLoading === "sort-az" ? (
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                    ) : (
+                      <ArrowUpDown className="mr-1.5 h-4 w-4" />
+                    )}
+                    Sort All A–Z
+                  </Button>
+                )}
+
+                {categories.length > 0 && (
+                  <Button
+                    type="button"
                     size="sm"
                     onClick={() => handleOpenAddModal()}
                     className="h-9 shadow-xs font-medium"
@@ -953,16 +1046,29 @@ export function PartnersEditor({
                               </span>
                             </div>
 
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              className="h-7 text-xs font-medium"
-                              onClick={() => handleOpenAddModal(cat.category_key)}
-                            >
-                              <Plus className="mr-1 h-3.5 w-3.5" />
-                              Add to Category
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-7 text-xs font-medium"
+                                disabled={totalInCat < 2 || actionLoading === "sort-az"}
+                                onClick={() => handleSortAlphabetically([cat.category_key])}
+                              >
+                                <ArrowUpDown className="mr-1 h-3.5 w-3.5" />
+                                Sort A–Z
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-7 text-xs font-medium"
+                                onClick={() => handleOpenAddModal(cat.category_key)}
+                              >
+                                <Plus className="mr-1 h-3.5 w-3.5" />
+                                Add to Category
+                              </Button>
+                            </div>
                           </div>
 
                           {/* Category Content: Partner Cards */}
@@ -1541,6 +1647,26 @@ export function PartnersEditor({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Position within category */}
+            {showPositionField && (
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium">Position</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min={1}
+                    max={positionMax}
+                    value={partnerModal.position ?? ""}
+                    onChange={(e) => setPartnerModal((prev) => ({ ...prev, position: e.target.value }))}
+                    className="h-9 w-24 text-xs"
+                  />
+                  <span className="text-[11px] text-muted-foreground">
+                    of {positionMax} in this category. Others shift automatically.
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Website URL */}
             <div className="space-y-1.5">
