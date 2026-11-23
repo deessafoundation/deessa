@@ -1,11 +1,16 @@
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { canViewFinance, type AdminRole } from "@/lib/types/admin"
 import { PaymentDetailClient } from "@/components/admin/payments/payment-detail-client"
 
 export const metadata = {
   title: "Payment Detail | Admin",
+  description: "Unified polymorphic transaction dossier, ledger telemetry, and deposit slip verification.",
 }
+
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 async function checkFinancePermission() {
   const supabase = await createClient()
@@ -15,7 +20,11 @@ async function checkFinancePermission() {
 
   if (!user) return null
 
-  const { data: adminUser } = await supabase.from("admin_users").select("role").eq("user_id", user.id).single()
+  const { data: adminUser } = await supabase
+    .from("admin_users")
+    .select("role")
+    .eq("user_id", user.id)
+    .single()
 
   if (!adminUser) return null
   if (!canViewFinance(adminUser.role as AdminRole)) return null
@@ -24,16 +33,17 @@ async function checkFinancePermission() {
 }
 
 async function getDonationData(id: string) {
-  const supabase = await createClient()
+  const serviceSupabase = createServiceRoleClient()
 
-  const { data: donation, error } = await supabase
+  const { data: donation, error } = await serviceSupabase
     .from("donations")
     .select(`
       id, amount, currency, payment_status, provider, receipt_number,
       receipt_sent_at, created_at, confirmed_at, reviewed_at, reviewed_by,
       review_status, donor_name, donor_email, donor_phone, donor_message,
       payment_id, verification_id, is_monthly, stripe_session_id,
-      khalti_pidx, esewa_transaction_uuid, archived_at
+      khalti_pidx, esewa_transaction_uuid, archived_at,
+      bank_account_id, bank_transfer_date, bank_proof_path
     `)
     .eq("id", id)
     .single()
@@ -41,27 +51,27 @@ async function getDonationData(id: string) {
   if (error || !donation) return null
 
   const [paymentEventsResult, paymentsResult, reviewNotesResult, statusChangesResult] = await Promise.all([
-    supabase
+    serviceSupabase
       .from("payment_events")
       .select("*")
       .eq("donation_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("payments")
       .select("transaction_id, payment_intent_id, session_id, subscription_id, customer_id, provider")
       .eq("donation_id", id)
       .order("created_at", { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
       .then((res) => (res.error ? null : res.data)),
-    supabase
+    serviceSupabase
       .from("review_notes")
       .select(`
         id,
         note_text,
         created_at,
-        admin_users!inner (
+        admin_users (
           full_name,
           email
         )
@@ -69,7 +79,7 @@ async function getDonationData(id: string) {
       .eq("donation_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("status_change_log")
       .select(`
         id,
@@ -77,7 +87,7 @@ async function getDonationData(id: string) {
         new_status,
         reason,
         created_at,
-        admin_users!inner (
+        admin_users (
           full_name
         )
       `)
@@ -88,12 +98,21 @@ async function getDonationData(id: string) {
 
   let reviewedByName = null
   if (donation.reviewed_by) {
-    const { data } = await supabase
+    const { data } = await serviceSupabase
       .from("admin_users")
       .select("full_name")
       .eq("id", donation.reviewed_by)
       .single()
     reviewedByName = data?.full_name || null
+  }
+
+  // Mint signed URL for bank slip if available
+  let bankProofUrl: string | null = null
+  if (donation.bank_proof_path) {
+    const { data: signed } = await serviceSupabase.storage
+      .from("bank-transfer-proofs")
+      .createSignedUrl(donation.bank_proof_path, 60 * 60)
+    bankProofUrl = signed?.signedUrl ?? null
   }
 
   return {
@@ -119,14 +138,17 @@ async function getDonationData(id: string) {
     reviewStatus: donation.review_status,
     reviewedAt: donation.reviewed_at,
     reviewedByName,
+    bankProofUrl,
+    bankAccountId: donation.bank_account_id,
+    bankTransferDate: donation.bank_transfer_date,
     sessionRefs: {
       stripeSessionId: donation.stripe_session_id,
       khaltiPidx: donation.khalti_pidx,
       esewaTransactionUuid: donation.esewa_transaction_uuid,
-      paymentIntentId: paymentsResult?.payment_intent_id,
-      sessionId: paymentsResult?.session_id,
-      subscriptionId: paymentsResult?.subscription_id,
-      customerId: paymentsResult?.customer_id,
+      paymentIntentId: paymentsResult?.payment_intent_id || null,
+      sessionId: paymentsResult?.session_id || null,
+      subscriptionId: paymentsResult?.subscription_id || null,
+      customerId: paymentsResult?.customer_id || null,
     },
     paymentEvents: paymentEventsResult,
     reviewNotes: reviewNotesResult,
@@ -146,9 +168,9 @@ async function getDonationData(id: string) {
 }
 
 async function getEventData(id: string) {
-  const supabase = await createClient()
+  const serviceSupabase = createServiceRoleClient()
 
-  const { data: reg, error } = await supabase
+  const { data: reg, error } = await serviceSupabase
     .from("event_registrations")
     .select(`
       id, full_name, email, phone, payment_amount, payment_currency,
@@ -157,6 +179,7 @@ async function getEventData(id: string) {
       expires_at, status, stripe_session_id, khalti_pidx,
       esewa_transaction_uuid, organization, archived_at,
       review_status, reviewed_at, reviewed_by,
+      payment_screenshot_url, payment_method,
       event:events(id, title, event_date, slug),
       ticket_type:event_ticket_types(id, name, price)
     `)
@@ -169,26 +192,26 @@ async function getEventData(id: string) {
   const ticket = (reg as any).ticket_type as { id: string; name: string; price: number } | null
 
   const [paymentEvents, reviewNotes, statusChanges] = await Promise.all([
-    supabase
+    serviceSupabase
       .from("payment_events")
       .select("*")
       .eq("event_registration_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("review_notes")
       .select(`
         id, note_text, created_at,
-        admin_users!inner ( full_name, email )
+        admin_users ( full_name, email )
       `)
       .eq("event_registration_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("status_change_log")
       .select(`
         id, old_status, new_status, reason, created_at,
-        admin_users!inner ( full_name )
+        admin_users ( full_name )
       `)
       .eq("event_registration_id", id)
       .order("created_at", { ascending: false })
@@ -197,12 +220,22 @@ async function getEventData(id: string) {
 
   let reviewedByName = null
   if ((reg as any).reviewed_by) {
-    const { data } = await supabase
+    const { data } = await serviceSupabase
       .from("admin_users")
       .select("full_name")
       .eq("id", (reg as any).reviewed_by)
       .single()
     reviewedByName = data?.full_name || null
+  }
+
+  let bankProofUrl: string | null = (reg as any).payment_screenshot_url || null
+  if (bankProofUrl && !bankProofUrl.startsWith("http")) {
+    const { data: signed } = await serviceSupabase.storage
+      .from("bank-transfer-proofs")
+      .createSignedUrl(bankProofUrl, 60 * 60)
+    if (signed?.signedUrl) {
+      bankProofUrl = signed.signedUrl
+    }
   }
 
   return {
@@ -213,12 +246,12 @@ async function getEventData(id: string) {
     phone: reg.phone,
     amount: reg.payment_amount,
     currency: reg.payment_currency || "NPR",
-    provider: reg.payment_provider,
+    provider: reg.payment_provider || (reg as any).payment_method || null,
     status: reg.payment_status || "unpaid",
     paymentId: reg.payment_id,
     verificationId: null,
     createdAt: reg.created_at,
-    confirmedAt: null,
+    confirmedAt: reg.confirmed_at || null,
     context: evt?.title || "Event",
     contextDetail: ticket ? `${ticket.name} — ${reg.payment_currency || "NPR"} ${ticket.price}` : undefined,
     donorMessage: null,
@@ -228,6 +261,9 @@ async function getEventData(id: string) {
     reviewStatus: (reg as any).review_status || null,
     reviewedAt: (reg as any).reviewed_at || null,
     reviewedByName,
+    bankProofUrl,
+    bankAccountId: null,
+    bankTransferDate: null,
     sessionRefs: {
       stripeSessionId: reg.stripe_session_id,
       khaltiPidx: reg.khalti_pidx,
@@ -246,7 +282,7 @@ async function getEventData(id: string) {
     eventTitle: evt?.title || null,
     eventDate: evt?.event_date || null,
     expiresAt: reg.expires_at,
-    paymentOverrideBy: null,
+    paymentOverrideBy: (reg as any).payment_override_by || null,
     paymentInitiatedAt: reg.payment_initiated_at,
     paymentPaidAt: reg.payment_paid_at,
     paymentFailedAt: reg.payment_failed_at,
@@ -255,9 +291,9 @@ async function getEventData(id: string) {
 }
 
 async function getConferenceData(id: string) {
-  const supabase = await createClient()
+  const serviceSupabase = createServiceRoleClient()
 
-  const { data: reg, error } = await supabase
+  const { data: reg, error } = await serviceSupabase
     .from("conference_registrations")
     .select(`
       id, full_name, email, phone, organization, payment_amount,
@@ -274,26 +310,26 @@ async function getConferenceData(id: string) {
   if (error || !reg) return null
 
   const [paymentEvents, reviewNotes, statusChanges] = await Promise.all([
-    supabase
+    serviceSupabase
       .from("payment_events")
       .select("*")
       .eq("conference_registration_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("review_notes")
       .select(`
         id, note_text, created_at,
-        admin_users!inner ( full_name, email )
+        admin_users ( full_name, email )
       `)
       .eq("conference_registration_id", id)
       .order("created_at", { ascending: false })
       .then((res) => (res.error ? [] : res.data || [])),
-    supabase
+    serviceSupabase
       .from("status_change_log")
       .select(`
         id, old_status, new_status, reason, created_at,
-        admin_users!inner ( full_name )
+        admin_users ( full_name )
       `)
       .eq("conference_registration_id", id)
       .order("created_at", { ascending: false })
@@ -302,7 +338,7 @@ async function getConferenceData(id: string) {
 
   let reviewedByName = null
   if ((reg as any).reviewed_by) {
-    const { data } = await supabase
+    const { data } = await serviceSupabase
       .from("admin_users")
       .select("full_name")
       .eq("id", (reg as any).reviewed_by)
@@ -333,6 +369,9 @@ async function getConferenceData(id: string) {
     reviewStatus: (reg as any).review_status || null,
     reviewedAt: (reg as any).reviewed_at || null,
     reviewedByName,
+    bankProofUrl: null,
+    bankAccountId: null,
+    bankTransferDate: null,
     sessionRefs: {
       stripeSessionId: reg.stripe_session_id,
       khaltiPidx: reg.khalti_pidx,
@@ -380,8 +419,8 @@ export default async function PaymentDetailPage({
   } else if (type === "conference") {
     data = await getConferenceData(id)
   } else {
-    // Try all three
-    data = await getDonationData(id) || await getEventData(id) || await getConferenceData(id)
+    // Try all three polymorphically
+    data = (await getDonationData(id)) || (await getEventData(id)) || (await getConferenceData(id))
   }
 
   if (!data) notFound()
