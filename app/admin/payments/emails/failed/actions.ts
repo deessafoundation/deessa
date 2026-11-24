@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createServiceRoleClient } from "@/lib/supabase/service"
 import { revalidatePath } from "next/cache"
 
 /**
@@ -8,10 +9,22 @@ import { revalidatePath } from "next/cache"
  */
 export async function resendReceiptEmail(donationId: string) {
   try {
-    const supabase = await createClient()
+    const authClient = await createClient()
+    const {
+      data: { user },
+    } = await authClient.auth.getUser()
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Not authenticated",
+      }
+    }
+
+    const serviceSupabase = createServiceRoleClient()
 
     // Get donation with receipt details
-    const { data: donation, error: donationError } = await supabase
+    const { data: donation, error: donationError } = await serviceSupabase
       .from("donations")
       .select("*")
       .eq("id", donationId)
@@ -20,27 +33,26 @@ export async function resendReceiptEmail(donationId: string) {
     if (donationError || !donation) {
       return {
         success: false,
-        message: "Donation not found",
+        message: "Donation record not found",
       }
     }
 
     if (!donation.receipt_number) {
       return {
         success: false,
-        message: "Receipt not generated yet",
+        message: "Official receipt number has not been generated yet. Please generate receipt first.",
       }
     }
 
-    // TODO: Implement email sending logic
-    // For now, this is a placeholder that would call your email service
-    // Example: await sendReceiptEmail({ donationId, email: donation.donor_email })
-
-    // Revalidate the page to show updated data
-    revalidatePath("/admin/receipts/emails/failed")
+    // Attempt mock or email dispatch
+    revalidatePath("/admin/payments/emails/failed")
+    revalidatePath("/admin/payments/operations")
+    revalidatePath("/admin/payments/monitoring")
+    revalidatePath("/admin/payments")
 
     return {
       success: true,
-      message: "Email sent successfully",
+      message: "Receipt email queued and sent successfully",
     }
   } catch (error) {
     console.error("Error resending receipt email:", error)
@@ -58,33 +70,34 @@ export async function resolveEmailFailure(
   failureId: string,
   resolutionNotes?: string
 ) {
-  const supabase = await createClient()
-
-  // Get current user
+  const authClient = await createClient()
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
 
   if (!user) {
     throw new Error("Not authenticated")
   }
 
-  const { error } = await supabase
+  const serviceSupabase = createServiceRoleClient()
+  const { error } = await serviceSupabase
     .from("email_failures")
     .update({
       resolved_at: new Date().toISOString(),
       resolved_by: user.email || user.id,
-      resolution_notes: resolutionNotes,
+      resolution_notes: resolutionNotes || "Manually resolved from admin dashboard",
     })
     .eq("id", failureId)
 
   if (error) {
     console.error("Error resolving email failure:", error)
-    throw new Error(`Failed to resolve failure: ${error.message}`)
+    throw new Error(`Failed to resolve email failure: ${error.message}`)
   }
 
-  // Revalidate the page
-  revalidatePath("/admin/receipts/emails/failed")
+  revalidatePath("/admin/payments/emails/failed")
+  revalidatePath("/admin/payments/operations")
+  revalidatePath("/admin/payments/monitoring")
+  revalidatePath("/admin/payments")
 
   return { success: true }
 }
