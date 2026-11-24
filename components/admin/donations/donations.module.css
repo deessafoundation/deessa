@@ -1,0 +1,138 @@
+/* Donations Hub Styling - Scoped animations, shimmer rail & contrast tokens */
+
+.oceanShimmerTab {
+  position: relative;
+  overflow: hidden;
+}
+
+.oceanShimmerTab::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  animation: tabShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tabShimmer {
+  0% {
+    left: -100%;
+  }
+  40%, 100% {
+    left: 200%;
+  }
+}
+
+.kpiCard {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+}
+
+.donationBentoCard {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.donationBentoCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(63, 171, 222, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(63, 171, 222, 0.08), 0 8px 10px -6px rgba(63, 171, 222, 0.05);
+}
+
+/* Provider badges */
+.badgeStripe {
+  background-color: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.badgeKhalti {
+  background-color: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.badgeEsewa {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badgeBank {
+  background-color: rgba(63, 171, 222, 0.12);
+  color: #0b5f8a;
+  border-color: rgba(63, 171, 222, 0.35);
+}
+
+:global(.dark) .badgeStripe {
+  background-color: rgba(99, 102, 241, 0.18);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+:global(.dark) .badgeKhalti {
+  background-color: rgba(139, 92, 246, 0.18);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.45);
+}
+
+:global(.dark) .badgeEsewa {
+  background-color: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+:global(.dark) .badgeBank {
+  background-color: rgba(63, 171, 222, 0.18);
+  color: #3fabde;
+  border-color: rgba(63, 171, 222, 0.45);
+}
+
+/* Detail Page Enhancements */
+.voucherPreview {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.voucherPreview:hover {
+  transform: scale(1.015);
+  box-shadow: 0 12px 30px -8px rgba(63, 171, 222, 0.25);
+}
+
+.stepperActive {
+  background-color: #3fabde;
+  box-shadow: 0 0 0 4px rgba(63, 171, 222, 0.2);
+}
+
+.stepperCompleted {
+  background-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+.reviewNoteCard {
+  border-left: 3px solid #3fabde;
+  background-color: rgba(63, 171, 222, 0.04);
+}
+
+:global(.dark) .reviewNoteCard {
+  border-left: 3px solid #3fabde;
+  background-color: rgba(63, 171, 222, 0.08);
+}
+
+/* High Contrast Mode Overrides */
+:global(body.high-contrast) .donationBentoCard {
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .donationBentoCard {
+  border: 2px solid #ffffff !important;
+}

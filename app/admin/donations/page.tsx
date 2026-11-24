@@ -1,10 +1,20 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ExternalLink, ShieldCheck, FileText } from "lucide-react"
 import { canViewFinance, type AdminRole } from "@/lib/types/admin"
 import Link from "next/link"
-import { DonationsDashboard } from "../../../components/admin/donations/donations-table-client"
+import { DonationsDashboard } from "@/components/admin/donations/donations-table-client"
+
+export const metadata: Metadata = {
+  title: "Donations Ledger | Admin",
+  description: "Track, inspect, and manage financial contributions and donor transactions.",
+}
+
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 const PAGE_SIZE = 25
 
@@ -40,22 +50,38 @@ async function getDonations() {
 async function getDonationStats() {
   const supabase = await createClient()
 
-  const { data: donations } = await supabase.from("donations").select("amount, is_monthly, payment_status, currency")
+  const { data: donations } = await supabase
+    .from("donations")
+    .select("amount, is_monthly, payment_status, currency")
 
-  const totals = donations?.reduce((acc, d) => {
-    if (d.payment_status === "completed") {
-      const currency = d.currency || "NPR"
-      acc[currency] = (acc[currency] || 0) + (d.amount || 0)
-    }
-    return acc
-  }, {} as Record<string, number>) || {}
+  const totals =
+    donations?.reduce((acc, d) => {
+      if (d.payment_status === "completed") {
+        const currency = d.currency || "NPR"
+        acc[currency] = (acc[currency] || 0) + (d.amount || 0)
+      }
+      return acc
+    }, {} as Record<string, number>) || {}
 
-  const monthlyDonors = donations?.filter((d) => d.is_monthly && d.payment_status === "completed").length || 0
-  const totalDonors = donations?.filter((d) => d.payment_status === "completed").length || 0
-  const pendingCount = donations?.filter((d) => d.payment_status === "pending").length || 0
-  const failedCount = donations?.filter((d) => d.payment_status === "failed").length || 0
+  const monthlyDonors =
+    donations?.filter((d) => d.is_monthly && d.payment_status === "completed").length || 0
+  const totalDonors =
+    donations?.filter((d) => d.payment_status === "completed").length || 0
+  const pendingCount =
+    donations?.filter((d) => d.payment_status === "pending" || d.payment_status === "review").length || 0
+  const failedCount =
+    donations?.filter((d) => d.payment_status === "failed").length || 0
 
   return { totals, monthlyDonors, totalDonors, pendingCount, failedCount }
+}
+
+async function getReviewQueueCount() {
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from("donations")
+    .select("id", { count: "exact", head: true })
+    .eq("payment_status", "review")
+  return count || 0
 }
 
 export default async function DonationsPage() {
@@ -64,42 +90,59 @@ export default async function DonationsPage() {
     redirect("/admin")
   }
 
-  const [{ donations, total }, stats] = await Promise.all([getDonations(), getDonationStats()])
+  const [{ donations, total }, stats, reviewCount] = await Promise.all([
+    getDonations(),
+    getDonationStats(),
+    getReviewQueueCount(),
+  ])
 
   return (
     <div className="space-y-6">
-      {/* ── Header ──────────────────────────────────────────────────── */}
+      {/* ── Page Header ─────────────────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-              <FileText className="h-5 w-5 text-primary" />
+            <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <FileText className="size-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Donations</h1>
-              <p className="text-sm text-muted-foreground">
-                Track and manage all donation records
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Donations</h1>
+                <Badge variant="outline" className="text-xs font-semibold px-2 py-0.5">
+                  {total} records
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Audit, track, and manage verified donor contributions across all currencies.
               </p>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/verify" className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4" />
-              Verify Receipt
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline" size="sm" className="h-9 gap-1.5 shadow-2xs">
+            <Link href="/verify">
+              <ShieldCheck className="size-4" />
+              <span>Verify Receipt</span>
             </Link>
           </Button>
-          <Button asChild size="sm">
-            <Link href="/admin/donations/review" className="flex items-center gap-2">
-              Review Donations
-              <ExternalLink className="h-3.5 w-3.5" />
+
+          <Button asChild size="sm" className="h-9 gap-1.5 shadow-2xs font-semibold">
+            <Link href="/admin/donations/review">
+              <span>Review Queue</span>
+              {reviewCount > 0 ? (
+                <span className="bg-amber-400 text-amber-950 font-bold px-1.5 py-0.2 rounded-full text-[11px]">
+                  {reviewCount}
+                </span>
+              ) : (
+                <ExternalLink className="size-3.5" />
+              )}
             </Link>
           </Button>
         </div>
       </div>
 
-      {/* ── Dashboard (stats + filters + table) ─────────────────────── */}
+      {/* ── Main Dashboard (Stats Strip + Shimmer Scope Rail + Table / Bento) ── */}
       <DonationsDashboard
         initialDonations={donations}
         initialTotal={total}
