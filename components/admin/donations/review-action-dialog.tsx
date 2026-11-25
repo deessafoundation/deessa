@@ -13,10 +13,10 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, CheckCircle2, XCircle, Loader2 } from "lucide-react"
-import { toast } from "sonner"
+import { AlertCircle, CheckCircle2, XCircle, Loader2, Sparkles } from "lucide-react"
 import { reviewDonation } from "@/lib/actions/admin-donation-review"
 import { formatCurrency } from "@/lib/utils/currency"
+import { notifications } from "@/lib/notifications"
 
 interface Donation {
   id: string
@@ -35,6 +35,20 @@ interface ReviewActionDialogProps {
   onComplete: (donationId: string) => void
 }
 
+const APPROVAL_PRESETS = [
+  "Amount discrepancy verified manually with gateway provider.",
+  "Bank statement verified against submitted deposit voucher.",
+  "Payment cleared after temporary 3DS bank delay.",
+  "Approved per supervisor authorization.",
+]
+
+const REJECTION_PRESETS = [
+  "Payment could not be verified in gateway or bank statement.",
+  "Amount mismatch could not be resolved. Please re-initiate donation.",
+  "Invalid or unreadable deposit slip voucher.",
+  "Duplicate payment pledge canceled per donor request.",
+]
+
 export function ReviewActionDialog({
   donation,
   actionType,
@@ -44,9 +58,15 @@ export function ReviewActionDialog({
   const [notes, setNotes] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const isApprove = actionType === "approve"
+  const presets = isApprove ? APPROVAL_PRESETS : REJECTION_PRESETS
+
   const handleSubmit = async () => {
     if (!notes.trim()) {
-      toast.error("Please provide notes for this action")
+      notifications.showError({
+        title: "Notes Required",
+        description: "Please provide explanatory notes for this audit action.",
+      })
       return
     }
 
@@ -60,138 +80,188 @@ export function ReviewActionDialog({
       })
 
       if (result.success) {
-        toast.success(result.message)
+        notifications.showSuccess(result.message)
         onComplete(donation.id)
       } else {
-        toast.error(result.message)
+        notifications.showError({
+          title: "Action Failed",
+          description: result.message,
+        })
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "An unexpected error occurred")
+      notifications.showError({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const isApprove = actionType === "approve"
-
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <Dialog open={true} onOpenChange={(open) => !open && !isSubmitting && onClose()}>
+      <DialogContent className="sm:max-w-[540px] p-0 overflow-hidden max-h-[92vh] flex flex-col">
+        {/* Header */}
+        <DialogHeader className="p-4 sm:p-5 border-b border-border/60 bg-muted/20 shrink-0">
+          <DialogTitle className="flex items-center gap-2 text-lg font-bold">
             {isApprove ? (
               <>
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
-                Approve Donation
+                <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+                  <CheckCircle2 className="size-5" />
+                </div>
+                <span>Approve & Confirm Donation</span>
               </>
             ) : (
               <>
-                <XCircle className="h-5 w-5 text-red-600" />
-                Reject Donation
+                <div className="size-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                  <XCircle className="size-5" />
+                </div>
+                <span>Reject Flagged Donation</span>
               </>
             )}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs text-muted-foreground mt-0.5">
             {isApprove
-              ? "Approve this donation and trigger receipt generation"
-              : "Reject this donation and notify the donor"}
+              ? "Confirm receipt of funds, generate an official receipt, and notify the donor."
+              : "Mark this transaction as failed and inform the donor with a resolution notice."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          {/* Donation Summary */}
-          <div className="rounded-lg border p-4 space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Donor:</span>
-              <span className="text-sm">{donation.donor_name}</span>
+        {/* Scrollable Body */}
+        <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1">
+          {/* Donation Summary Card */}
+          <div className="rounded-xl border border-border/80 bg-muted/30 p-3.5 sm:p-4 space-y-2 text-xs sm:text-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground font-medium">Donor Name:</span>
+              <span className="font-semibold text-foreground truncate max-w-[200px]">
+                {donation.donor_name || "Anonymous"}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Email:</span>
-              <span className="text-sm">{donation.donor_email}</span>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground font-medium">Donor Email:</span>
+              <span className="font-medium text-foreground truncate max-w-[220px]">
+                {donation.donor_email || "—"}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Amount:</span>
-              <span className="text-sm font-bold">
+            <div className="flex justify-between items-center pt-1 border-t border-border/40">
+              <span className="text-muted-foreground font-medium">Contribution Amount:</span>
+              <span className="text-base font-bold text-foreground tabular-nums">
                 {formatCurrency(donation.amount, donation.currency, { showCode: true })}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Provider:</span>
-              <span className="text-sm capitalize">{donation.provider || "Unknown"}</span>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground font-medium">Payment Provider:</span>
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-primary">
+                {donation.provider || "Direct"}
+              </span>
             </div>
           </div>
 
-          {/* Warning Alert */}
-          <Alert variant={isApprove ? "default" : "destructive"}>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+          {/* Audit Alert */}
+          <Alert
+            variant={isApprove ? "default" : "destructive"}
+            className={
+              isApprove
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-300"
+                : ""
+            }
+          >
+            <AlertCircle className="size-4" />
+            <AlertDescription className="text-xs leading-relaxed">
               {isApprove ? (
                 <>
-                  <strong>Confirm Approval:</strong> This will mark the donation as confirmed and
-                  generate a receipt. The donor will receive a receipt email.
+                  <strong>Audit Impact:</strong> Marking this transaction as confirmed will generate
+                  an official tax receipt and email it directly to <strong>{donation.donor_email}</strong>.
                 </>
               ) : (
                 <>
-                  <strong>Confirm Rejection:</strong> This will mark the donation as failed. The
-                  donor will be notified via email with the reason you provide below.
+                  <strong>Audit Impact:</strong> Marking this transaction as failed will cancel receipt
+                  generation and deliver your rejection notice to <strong>{donation.donor_email}</strong>.
                 </>
               )}
             </AlertDescription>
           </Alert>
 
-          {/* Notes Input */}
+          {/* Notes & Quick Presets */}
           <div className="space-y-2">
-            <Label htmlFor="notes">
-              {isApprove ? "Approval Notes" : "Rejection Reason"} <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="review-notes" className="text-xs font-semibold">
+                {isApprove ? "Audit Approval Notes" : "Rejection Reason (Emailed to Donor)"} <span className="text-destructive">*</span>
+              </Label>
+              <span className="text-[11px] text-muted-foreground font-medium">Required for Audit</span>
+            </div>
+
             <Textarea
-              id="notes"
+              id="review-notes"
               placeholder={
                 isApprove
-                  ? "e.g., Amount verified manually with provider support"
-                  : "e.g., Amount mismatch could not be resolved - please retry donation"
+                  ? "e.g., Verified in Nepal Bank statement reference #94821"
+                  : "e.g., Deposit slip voucher could not be matched with bank ledger."
               }
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              rows={4}
+              rows={3}
               disabled={isSubmitting}
+              className="text-xs sm:text-sm font-medium"
             />
-            <p className="text-xs text-muted-foreground">
-              {isApprove
-                ? "Document why you're approving this donation for audit purposes"
-                : "This message will be included in the email sent to the donor"}
-            </p>
+
+            {/* Quick Presets */}
+            <div className="pt-1">
+              <span className="text-[11px] text-muted-foreground flex items-center gap-1 mb-1.5 font-medium">
+                <Sparkles className="size-3 text-primary" /> Quick Audit Presets:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {presets.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setNotes(preset)}
+                    className="text-[11px] px-2 py-1 rounded-md border border-border/80 bg-background hover:bg-muted text-muted-foreground hover:text-foreground text-left transition-colors cursor-pointer"
+                  >
+                    {preset.slice(0, 36)}...
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+        {/* Modal Footer with Side-by-Side Mobile Buttons */}
+        <DialogFooter className="p-3.5 sm:p-4 border-t border-border/60 bg-muted/20 flex flex-row items-center justify-end gap-2.5 sm:gap-3 shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="flex-1 sm:flex-none h-10 px-4 font-medium text-xs cursor-pointer"
+          >
             Cancel
           </Button>
           <Button
+            type="button"
             onClick={handleSubmit}
             disabled={isSubmitting || !notes.trim()}
             variant={isApprove ? "default" : "destructive"}
-            className={isApprove ? "bg-green-600 hover:bg-green-700" : ""}
+            className={
+              isApprove
+                ? "flex-1 sm:flex-none h-10 px-5 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white text-xs cursor-pointer"
+                : "flex-1 sm:flex-none h-10 px-5 font-semibold text-xs cursor-pointer"
+            }
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing...
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                <span>Processing...</span>
+              </>
+            ) : isApprove ? (
+              <>
+                <CheckCircle2 className="mr-2 size-4" />
+                <span>Confirm Approval</span>
               </>
             ) : (
               <>
-                {isApprove ? (
-                  <>
-                    <CheckCircle2 className="mr-2 h-4 w-4" />
-                    Approve Donation
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="mr-2 h-4 w-4" />
-                    Reject Donation
-                  </>
-                )}
+                <XCircle className="mr-2 size-4" />
+                <span>Confirm Rejection</span>
               </>
             )}
           </Button>
