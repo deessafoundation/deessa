@@ -1,0 +1,193 @@
+/* Volunteers Page Scoped Styles */
+
+.heroSection {
+  position: relative;
+  background-color: var(--background, #ffffff);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  padding: 4.5rem 1rem 3.5rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background-color: rgba(2, 132, 199, 0.1);
+  color: var(--primary, #0284c7);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+
+.roleCard {
+  background-color: var(--card, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 1rem;
+  padding: 1.75rem;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.roleCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08);
+  border-color: var(--primary, #0284c7);
+}
+
+.roleIconBox {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 0.75rem;
+  background-color: rgba(2, 132, 199, 0.1);
+  color: var(--primary, #0284c7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.statCard {
+  padding: 1.5rem;
+  border-radius: 0.875rem;
+  background-color: var(--card, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  text-align: center;
+}
+
+.statValue {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--primary, #0284c7);
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted-foreground, #64748b);
+}
+
+.faqCard {
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 0.75rem;
+  background-color: var(--card, #ffffff);
+  padding: 1.25rem 1.5rem;
+}
+
+/* ── Accessibility: High Contrast Mode ────────────────────────────────────────── */
+
+:global(body.high-contrast) .heroSection {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .heroBadge {
+  background-color: #000000 !important;
+  border: 2px solid #ffff00 !important;
+  color: #ffff00 !important;
+}
+
+:global(body.high-contrast) .roleCard {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .roleCard:hover {
+  border-color: #ffff00 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .roleIconBox {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .roleIconBox svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .statCard {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .statValue {
+  color: #ffff00 !important;
+}
+
+:global(body.high-contrast) .statLabel {
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .faqCard {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* ── Accessibility: Inverted Contrast Mode ──────────────────────────────────── */
+
+:global(body.inverted-contrast) .heroSection {
+  background-color: #ffffff !important;
+  border-bottom: 2px solid #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .heroBadge {
+  background-color: #ffffff !important;
+  border: 2px solid #0000ff !important;
+  color: #0000ff !important;
+}
+
+:global(body.inverted-contrast) .roleCard {
+  background-color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .roleCard:hover {
+  border-color: #0000ff !important;
+  box-shadow: none !important;
+}
+
+:global(body.inverted-contrast) .roleIconBox {
+  background-color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .roleIconBox svg {
+  stroke: #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .statCard {
+  background-color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .statValue {
+  color: #0000ff !important;
+}
+
+:global(body.inverted-contrast) .statLabel {
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .faqCard {
+  background-color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  color: #000000 !important;
+}

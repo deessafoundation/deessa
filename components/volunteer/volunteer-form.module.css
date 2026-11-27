@@ -1,0 +1,158 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.modalCard {
+  position: relative;
+  width: 100%;
+  max-width: 42rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modalHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--background, #ffffff);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.modalBody {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  background-color: var(--muted, #f1f5f9);
+  color: var(--foreground, #0f172a);
+  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.closeButton:hover,
+.closeButton:focus-visible {
+  background-color: var(--border, #e2e8f0);
+  outline: 2px solid var(--primary, #0284c7);
+  outline-offset: 2px;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border, #e2e8f0);
+  background-color: var(--background, #ffffff);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.checkboxItem:hover {
+  background-color: var(--muted, #f8fafc);
+  border-color: var(--primary, #0284c7);
+}
+
+.checkboxItemActive {
+  border-color: var(--primary, #0284c7);
+  background-color: rgba(2, 132, 199, 0.06);
+}
+
+/* ── Accessibility: High Contrast Mode ────────────────────────────────────────── */
+
+:global(body.high-contrast) .modalCard {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .modalHeader {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .closeButton {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+:global(body.high-contrast) .closeButton svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .checkboxItem {
+  background-color: #000000 !important;
+  border: 1px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+:global(body.high-contrast) .checkboxItemActive {
+  background-color: #1a1a1a !important;
+  border: 2px solid #ffff00 !important;
+  color: #ffffff !important;
+}
+
+/* ── Accessibility: Inverted Contrast Mode ──────────────────────────────────── */
+
+:global(body.inverted-contrast) .modalCard {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .modalHeader {
+  background-color: #ffffff !important;
+  border-bottom: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .closeButton {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+:global(body.inverted-contrast) .closeButton svg {
+  stroke: #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .checkboxItem {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  color: #000000 !important;
+}
+
+:global(body.inverted-contrast) .checkboxItemActive {
+  background-color: #f0f0f0 !important;
+  border: 2px solid #0000ff !important;
+  color: #000000 !important;
+}
