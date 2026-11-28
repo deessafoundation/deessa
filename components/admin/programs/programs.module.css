@@ -1,0 +1,88 @@
+.root .track {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.root .tab {
+  background: transparent;
+  color: var(--muted-foreground);
+  border: 0;
+  font-weight: 500;
+  box-shadow: none;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.root .tab:not([data-state="active"]):hover {
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.root .tab[data-state="active"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+}
+
+.root .tab:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Program Card & Thumb */
+.programCard {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.programCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
+}
+
+/* Category Accent Dots / Badges */
+.categoryService {
+  background: color-mix(in oklab, #0284c7 12%, transparent);
+  color: #0284c7;
+  border-color: color-mix(in oklab, #0284c7 25%, transparent);
+}
+
+.categoryCampaign {
+  background: color-mix(in oklab, #9333ea 12%, transparent);
+  color: #9333ea;
+  border-color: color-mix(in oklab, #9333ea 25%, transparent);
+}
+
+.categoryOutreach {
+  background: color-mix(in oklab, #ea580c 12%, transparent);
+  color: #ea580c;
+  border-color: color-mix(in oklab, #ea580c 25%, transparent);
+}
+
+.categoryResearch {
+  background: color-mix(in oklab, #0d9488 12%, transparent);
+  color: #0d9488;
+  border-color: color-mix(in oklab, #0d9488 25%, transparent);
+}
+
+/* High Contrast Overrides */
+:global(body.high-contrast) .root .track,
+:global(body.inverted-contrast) .root .track {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+}
+
+:global(body.high-contrast) .root .tab,
+:global(body.inverted-contrast) .root .tab {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+:global(body.high-contrast) .root .tab[data-state="active"],
+:global(body.inverted-contrast) .root .tab[data-state="active"] {
+  background: #000 !important;
+  color: #fff !important;
+}
