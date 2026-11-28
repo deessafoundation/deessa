@@ -1,0 +1,88 @@
+/* Volunteer Management Console - Scoped Animations & Tokens */
+
+.oceanShimmerTab {
+  position: relative;
+  overflow: hidden;
+}
+
+.oceanShimmerTab::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  animation: tabShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tabShimmer {
+  0% {
+    left: -100%;
+  }
+  40%, 100% {
+    left: 200%;
+  }
+}
+
+.kpiCard {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(63, 171, 222, 0.4);
+}
+
+.volunteerBentoCard {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.volunteerBentoCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(63, 171, 222, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(63, 171, 222, 0.08), 0 8px 10px -6px rgba(63, 171, 222, 0.05);
+}
+
+/* Status Badges */
+.badgePending {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badgeApproved {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badgeRejected {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:global(.dark) .badgePending {
+  background-color: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+:global(.dark) .badgeApproved {
+  background-color: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+:global(.dark) .badgeRejected {
+  background-color: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.4);
+}
