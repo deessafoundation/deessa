@@ -67,9 +67,6 @@ export async function POST(request: NextRequest) {
       if (settings.marquee !== undefined) {
         updates.push({ key: HOMEPAGE_SETTINGS_KEYS.MARQUEE, value: settings.marquee })
       }
-      if (settings.seo !== undefined) {
-        updates.push({ key: HOMEPAGE_SETTINGS_KEYS.SEO, value: settings.seo })
-      }
       if (settings.flags !== undefined) {
         updates.push({ key: HOMEPAGE_SETTINGS_KEYS.FLAGS, value: settings.flags })
       }

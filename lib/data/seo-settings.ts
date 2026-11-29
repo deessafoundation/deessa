@@ -267,6 +267,107 @@ export const DEFAULT_PAGE_SEO_MAP: Record<string, Omit<PageSEORecord, "id">> = {
     is_published: true,
     updated_by: null,
   },
+  "/get-involved": {
+    path: "/get-involved",
+    page_name: "Get Involved & Volunteer",
+    category: "engagement",
+    title: "Get Involved - Volunteer, Partner, or Support Autism Inclusion | deessa Foundation",
+    description:
+      "Join our mission in Nepal as a field volunteer, remote contributor, or community advocate to support autistic children and inclusive education.",
+    keywords: [
+      "volunteer Nepal",
+      "autism volunteer",
+      "get involved Nepal",
+      "disability volunteer",
+      "deessa foundation volunteer",
+      "support autism Nepal",
+    ],
+    og_image: "/home/hero/art_banner.jpeg",
+    og_image_alt: "Community members and volunteers collaborating in Nepal",
+    canonical_url: null,
+    no_index: false,
+    is_published: true,
+    updated_by: null,
+  },
+  "/support": {
+    path: "/support",
+    page_name: "Support & Feedback",
+    category: "engagement",
+    title: "Support & Feedback - Help Us Improve | deessa Foundation",
+    description:
+      "Report bugs, submit suggestions, or request assistance to help us make deessa Foundation more accessible and helpful for everyone.",
+    keywords: [
+      "deessa support",
+      "autism foundation feedback",
+      "accessibility support Nepal",
+      "contact support",
+    ],
+    og_image: "/home/hero/art_banner.jpeg",
+    og_image_alt: "Support and feedback center for deessa Foundation",
+    canonical_url: null,
+    no_index: false,
+    is_published: true,
+    updated_by: null,
+  },
+  "/privacy": {
+    path: "/privacy",
+    page_name: "Privacy Policy",
+    category: "core",
+    title: "Privacy Policy - Data Protection & Transparency | deessa Foundation",
+    description:
+      "Learn how deessa Foundation protects donor, volunteer, and community information with complete transparency and privacy standards.",
+    keywords: [
+      "privacy policy",
+      "data protection Nepal",
+      "deessa foundation privacy",
+      "donor privacy",
+    ],
+    og_image: "/home/hero/art_banner.jpeg",
+    og_image_alt: "Privacy Policy - deessa Foundation",
+    canonical_url: null,
+    no_index: false,
+    is_published: true,
+    updated_by: null,
+  },
+  "/terms": {
+    path: "/terms",
+    page_name: "Terms of Use",
+    category: "core",
+    title: "Terms of Use | deessa Foundation",
+    description:
+      "Read the terms and conditions governing the use of the deessa Foundation website, resources, and community platform.",
+    keywords: [
+      "terms of use",
+      "terms and conditions",
+      "deessa foundation terms",
+    ],
+    og_image: "/home/hero/art_banner.jpeg",
+    og_image_alt: "Terms of Use - deessa Foundation",
+    canonical_url: null,
+    no_index: false,
+    is_published: true,
+    updated_by: null,
+  },
+  "/newsletter-archive": {
+    path: "/newsletter-archive",
+    page_name: "Newsletter Archive",
+    category: "media",
+    title: "Newsletter Archive - Community Updates & Stories | deessa Foundation",
+    description:
+      "Browse past editions of the deessa Foundation monthly newsletter featuring field updates, stories, and autism advocacy milestones.",
+    keywords: [
+      "deessa newsletter",
+      "autism updates Nepal",
+      "newsletter archive",
+      "disability newsletter",
+    ],
+    og_image: "/home/hero/art_banner.jpeg",
+    og_image_alt: "Newsletter Archive - deessa Foundation",
+    canonical_url: null,
+    no_index: false,
+    is_published: true,
+    updated_by: null,
+  },
 }
 
 /**
@@ -314,6 +415,26 @@ export async function getPageSEO(path: string): Promise<PageSEORecord> {
               description: hpSEO.description || defaultFallback.description,
               keywords: hpSEO.keywords && hpSEO.keywords.length > 0 ? hpSEO.keywords : defaultFallback.keywords,
               og_image: hpSEO.ogImage || defaultFallback.og_image,
+            }
+          }
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      if (normalizedPath === "/about") {
+        try {
+          const { getPublicAboutPageSettings } = await import("@/lib/data/about-settings")
+          const aboutSettings = await getPublicAboutPageSettings()
+          if (aboutSettings?.seo && (aboutSettings.seo.title || aboutSettings.seo.description)) {
+            return {
+              ...defaultFallback,
+              title: aboutSettings.seo.title || defaultFallback.title,
+              description: aboutSettings.seo.description || defaultFallback.description,
+              keywords: aboutSettings.seo.keywords && aboutSettings.seo.keywords.length > 0 ? aboutSettings.seo.keywords : defaultFallback.keywords,
+              og_image: aboutSettings.seo.image || defaultFallback.og_image,
+              og_image_alt: aboutSettings.seo.imageAlt || defaultFallback.og_image_alt,
+              no_index: Boolean(aboutSettings.seo.noIndex),
             }
           }
         } catch {
