@@ -3,7 +3,17 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowDown, ArrowRight, ArrowUpRight, CalendarDays, MapPin, Search, X } from "lucide-react"
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  CalendarDays,
+  ChevronDown,
+  MapPin,
+  Search,
+  SlidersHorizontal,
+  X,
+} from "lucide-react"
 import type { EventModuleEvent } from "@/lib/types/events-module"
 import { cn } from "@/lib/utils"
 import styles from "./events-landing.module.css"
@@ -78,7 +88,7 @@ function EventImage({ event, featured = false }: { event: ListingEvent; featured
           unoptimized
           loading={featured ? "eager" : "lazy"}
           sizes={featured ? "(min-width: 1024px) 55vw, 100vw" : "(min-width: 768px) 180px, 100vw"}
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           onError={() => setFailed(true)}
         />
       ) : (
@@ -125,6 +135,8 @@ export function EventsLanding({
   const [category, setCategory] = useState("all")
   const [query, setQuery] = useState("")
   const [freeOnly, setFreeOnly] = useState(false)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
   const isPast = (event: ListingEvent) => (event.event_end_date || event.event_date).slice(0, 10) < today
   const upcoming = events.filter((event) => !isPast(event))
   const past = events.filter(isPast).reverse()
@@ -138,7 +150,10 @@ export function EventsLanding({
         .toLowerCase()
         .includes(query.trim().toLowerCase())
   )
-  const filtered = query.trim() || category !== "all" || freeOnly
+
+  const activeFilterCount = (query.trim() ? 1 : 0) + (category !== "all" ? 1 : 0) + (freeOnly ? 1 : 0)
+  const isFilterActive = activeFilterCount > 0
+
   function resetFilters() {
     setQuery("")
     setCategory("all")
@@ -168,20 +183,20 @@ export function EventsLanding({
                 href="#upcoming"
                 className={cn(
                   styles.primary,
-                  "inline-flex min-h-11 items-center gap-3 rounded-full px-5 py-2.5 text-sm font-bold"
+                  "inline-flex min-h-11 w-full sm:w-auto items-center justify-center gap-3 rounded-full px-5 py-2.5 text-sm font-bold"
                 )}
               >
-                Explore events
+                <span>Explore events</span>
                 <ArrowDown className="size-4" aria-hidden="true" />
               </a>
               <Link
                 href="/contact"
                 className={cn(
                   styles.secondary,
-                  "inline-flex min-h-11 items-center gap-3 rounded-full border px-5 py-2.5 text-sm font-bold"
+                  "inline-flex min-h-11 w-full sm:w-auto items-center justify-center gap-3 rounded-full border px-5 py-2.5 text-sm font-bold"
                 )}
               >
-                Host an event with us
+                <span>Host an event with us</span>
                 <ArrowUpRight className="size-4" aria-hidden="true" />
               </Link>
             </div>
@@ -272,7 +287,7 @@ export function EventsLanding({
         aria-labelledby="calendar-heading"
         className={cn(styles.calendar, "scroll-mt-28 py-8 sm:py-10")}
       >
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
             <div>
               <h2 id="calendar-heading" className={cn(styles.title, "text-3xl leading-tight sm:text-4xl")}>
@@ -306,65 +321,116 @@ export function EventsLanding({
           </div>
 
           {events.length > 1 && (
-            <details className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <summary className={cn(styles.textLink, "w-fit cursor-pointer font-bold select-none")}>
-                Search and filter events
-              </summary>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <div className="relative w-full sm:w-72">
-                  <label htmlFor="event-search" className="sr-only">
-                    Search events by name or location
-                  </label>
-                  <Search
-                    className={cn(styles.muted, "pointer-events-none absolute left-3 top-3.5 size-4")}
+            <div className={cn(styles.filterContainer, "mb-6 overflow-hidden rounded-2xl border transition-all")}>
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4">
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen(!filtersOpen)}
+                  aria-expanded={filtersOpen || isFilterActive}
+                  className={cn(
+                    styles.filterToggle,
+                    "inline-flex min-h-11 cursor-pointer items-center gap-2.5 rounded-full px-4 text-sm font-bold transition-colors"
+                  )}
+                >
+                  <SlidersHorizontal className="size-4 shrink-0" aria-hidden="true" />
+                  <span>Search & filter</span>
+                  {activeFilterCount > 0 && (
+                    <span className={cn(styles.filterBadge, "ml-1 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-bold")}>
+                      {activeFilterCount}
+                    </span>
+                  )}
+                  <ChevronDown
+                    className={cn(
+                      "size-4 shrink-0 transition-transform duration-200",
+                      (filtersOpen || isFilterActive) && "rotate-180"
+                    )}
                     aria-hidden="true"
                   />
-                  <input
-                    id="event-search"
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search events or places"
-                    className={cn(styles.input, "min-h-11 w-full rounded-lg border py-2.5 pl-10 pr-3 text-base")}
-                  />
-                </div>
-                <label className={cn(styles.muted, "flex min-h-11 cursor-pointer items-center gap-2 text-sm font-bold")}>
-                  <input
-                    type="checkbox"
-                    checked={freeOnly}
-                    onChange={(e) => setFreeOnly(e.target.checked)}
-                    className="size-4"
-                  />
-                  Free events only
-                </label>
-                <div className="flex flex-wrap gap-2" role="group" aria-label="Event categories">
+                </button>
+                {isFilterActive && (
                   <button
                     type="button"
-                    onClick={() => setCategory("all")}
-                    aria-pressed={category === "all"}
-                    className={cn(styles.filter, "min-h-11 cursor-pointer rounded-full border px-4 py-2 text-sm font-bold")}
+                    onClick={resetFilters}
+                    className={cn(styles.textLink, "inline-flex min-h-11 cursor-pointer items-center gap-1.5 text-xs font-bold sm:text-sm")}
                   >
-                    All types
+                    <span>Reset filters</span>
+                    <X className="size-3.5" aria-hidden="true" />
                   </button>
-                  {Object.entries(categories)
-                    .filter(([key]) => events.some((event) => event.category === key))
-                    .map(([key, label]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setCategory(key)}
-                        aria-pressed={category === key}
-                        className={cn(
-                          styles.filter,
-                          "min-h-11 cursor-pointer rounded-full border px-4 py-2 text-sm font-bold"
-                        )}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                </div>
+                )}
               </div>
-            </details>
+
+              {(filtersOpen || isFilterActive) && (
+                <div className="border-t border-inherit px-3.5 pb-4 pt-3 sm:px-4 sm:pb-5">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="relative w-full sm:w-80">
+                        <label htmlFor="event-search" className="sr-only">
+                          Search events by name or location
+                        </label>
+                        <Search
+                          className={cn(styles.muted, "pointer-events-none absolute left-3 top-3.5 size-4")}
+                          aria-hidden="true"
+                        />
+                        <input
+                          id="event-search"
+                          type="search"
+                          value={query}
+                          onChange={(e) => setQuery(e.target.value)}
+                          placeholder="Search events or places"
+                          className={cn(styles.input, "min-h-11 w-full rounded-xl border py-2.5 pl-10 pr-9 text-base")}
+                        />
+                        {query && (
+                          <button
+                            type="button"
+                            onClick={() => setQuery("")}
+                            className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600"
+                            aria-label="Clear search input"
+                          >
+                            <X className="size-4" />
+                          </button>
+                        )}
+                      </div>
+                      <label className={cn(styles.muted, "flex min-h-11 cursor-pointer items-center gap-2.5 text-sm font-bold select-none")}>
+                        <input
+                          type="checkbox"
+                          checked={freeOnly}
+                          onChange={(e) => setFreeOnly(e.target.checked)}
+                          className="size-4 rounded"
+                        />
+                        Free events only
+                      </label>
+                    </div>
+
+                    <div className="flex w-full items-center gap-2 overflow-x-auto pb-1 pt-0.5" role="group" aria-label="Event categories">
+                      <button
+                        type="button"
+                        onClick={() => setCategory("all")}
+                        aria-pressed={category === "all"}
+                        className={cn(styles.filter, "min-h-10 shrink-0 cursor-pointer rounded-full border px-4 py-1.5 text-xs font-bold sm:text-sm")}
+                      >
+                        All types
+                      </button>
+                      {Object.entries(categories)
+                        .filter(([key]) => events.some((event) => event.category === key))
+                        .map(([key, label]) => (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() => setCategory(key)}
+                            aria-pressed={category === key}
+                            className={cn(
+                              styles.filter,
+                              "min-h-10 shrink-0 cursor-pointer rounded-full border px-4 py-1.5 text-xs font-bold sm:text-sm"
+                            )}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
@@ -382,10 +448,10 @@ export function EventsLanding({
                   <article
                     className={cn(
                       styles.eventRow,
-                      "grid min-w-0 overflow-hidden rounded-2xl border border-slate-200 lg:grid-cols-[0.85fr_1.15fr]"
+                      "group relative grid min-w-0 overflow-hidden rounded-2xl border border-slate-200 lg:grid-cols-[0.85fr_1.15fr]"
                     )}
                   >
-                    <div className="relative min-h-64 sm:min-h-72">
+                    <div className="relative aspect-[16/10] sm:aspect-video lg:aspect-auto min-h-52 sm:min-h-64 lg:min-h-full overflow-hidden">
                       <EventImage key={`${event.id}-${event.image}`} event={event} featured={event.id === featured?.id} />
                     </div>
                     <div className="min-w-0 p-5 sm:p-6 lg:p-7">
@@ -428,7 +494,10 @@ export function EventsLanding({
                             )}
                           </div>
                           <h3 className={cn(styles.title, "text-2xl leading-tight sm:text-3xl")}>
-                            <Link href={`/events/${event.slug}`} className={styles.eventTitle}>
+                            <Link
+                              href={`/events/${event.slug}`}
+                              className={cn(styles.eventTitle, "hover:underline focus:outline-none after:absolute after:inset-0 after:z-0")}
+                            >
                               {event.title}
                             </Link>
                           </h3>
@@ -438,7 +507,7 @@ export function EventsLanding({
                             </p>
                           )}
                           <EventDetails event={event} />
-                          <div className="mt-5 flex flex-wrap items-center gap-4">
+                          <div className="relative z-10 mt-5 flex flex-wrap items-center gap-4">
                             <Link
                               href={`/events/${event.slug}`}
                               aria-label={`View details for ${event.title}`}
@@ -492,13 +561,13 @@ export function EventsLanding({
                 </button>
               )}
               {unavailable && (
-                <a
+                <Link
                   href="/events"
                   className={cn(styles.textLink, "mt-4 inline-flex min-h-11 items-center gap-2 font-bold")}
                 >
                   Try again
                   <ArrowRight className="size-4" aria-hidden="true" />
-                </a>
+                </Link>
               )}
             </div>
           )}
@@ -507,7 +576,7 @@ export function EventsLanding({
 
       {/* Collaborate & Host Section */}
       <section aria-labelledby="join-heading" className="py-8 sm:py-12 bg-white border-t border-slate-200">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
             className={cn(
               styles.join,
@@ -526,7 +595,7 @@ export function EventsLanding({
               href="/contact"
               className={cn(
                 styles.secondary,
-                "inline-flex min-h-12 shrink-0 items-center justify-center gap-3 rounded-full border px-6 py-3 font-bold"
+                "inline-flex min-h-12 w-full sm:w-auto shrink-0 items-center justify-center gap-3 rounded-full border px-6 py-3 font-bold"
               )}
             >
               <span>Host an event with us</span>
