@@ -206,7 +206,7 @@ export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
     events.push({
       id: change.id,
       type: "status_change",
-      actor: change.admin_users.full_name,
+      actor: change.admin_users?.full_name || "Admin",
       timestamp: change.created_at,
       description: `Changed status from ${change.old_status} to ${change.new_status}`,
       metadata: {
@@ -222,7 +222,7 @@ export function buildActivityTimeline(data: TimelineData): TimelineEvent[] {
     events.push({
       id: note.id,
       type: "note_added",
-      actor: note.admin_users.full_name,
+      actor: note.admin_users?.full_name || "Admin",
       timestamp: note.created_at,
       description: "Added review note",
       metadata: {
