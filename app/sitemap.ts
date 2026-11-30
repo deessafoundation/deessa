@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import { accessibilitySummit } from '@/lib/data/accessibility-summit'
+import { getSiteUiFlags } from '@/lib/site-status/settings'
 
 /**
  * Dynamic sitemap generation for deessa Foundation
@@ -89,6 +90,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/volunteers`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/donate`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -121,21 +128,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // Fetch dynamic content from database
-  const dynamicRoutes = await getDynamicRoutes(baseUrl)
+  const siteFlags = await getSiteUiFlags().catch(() => ({ storiesEnabled: true }))
+  const isStoriesActive = siteFlags.storiesEnabled !== false
+  const filteredStaticRoutes = isStoriesActive
+    ? staticRoutes
+    : staticRoutes.filter((route) => route.url !== `${baseUrl}/stories`)
+  const dynamicRoutes = await getDynamicRoutes(baseUrl, isStoriesActive)
 
   const summitRoute: MetadataRoute.Sitemap[number] = {
     url: `${baseUrl}/events/${accessibilitySummit.slug}`,
     changeFrequency: 'weekly',
     priority: 0.8,
   }
-  return [...staticRoutes, summitRoute, ...dynamicRoutes.filter((route) => route.url !== summitRoute.url)]
+  return [...filteredStaticRoutes, summitRoute, ...dynamicRoutes.filter((route) => route.url !== summitRoute.url)]
 }
 
 /**
  * Fetch all published dynamic content (stories, programs, podcasts, events)
  * Uses service role client for build-time compatibility
  */
-async function getDynamicRoutes(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+async function getDynamicRoutes(baseUrl: string, storiesEnabled = true): Promise<MetadataRoute.Sitemap> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -149,10 +161,10 @@ async function getDynamicRoutes(baseUrl: string): Promise<MetadataRoute.Sitemap>
     const routes: MetadataRoute.Sitemap = []
 
     // Fetch published stories
-    const { data: stories } = await supabase
+    const { data: stories } = storiesEnabled ? await supabase
       .from('stories')
       .select('slug, updated_at, published_at')
-      .eq('is_published', true)
+      .eq('is_published', true) : { data: null }
 
     if (stories) {
       stories.forEach((story) => {
